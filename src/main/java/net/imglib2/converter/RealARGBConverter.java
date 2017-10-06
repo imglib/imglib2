@@ -11,13 +11,13 @@
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice,
  *    this list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  *    this list of conditions and the following disclaimer in the documentation
  *    and/or other materials provided with the distribution.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -39,11 +39,15 @@ import net.imglib2.type.numeric.ARGBType;
 import net.imglib2.type.numeric.RealType;
 
 /**
- * 
+ *
  * @author Stephan Saalfeld
+ * @author Philipp Hanslovsky
  */
 public class RealARGBConverter< R extends RealType< ? > > extends AbstractLinearRange implements Converter< R, ARGBType >
 {
+
+	private int alpha = 0xff000000;
+
 	public RealARGBConverter()
 	{
 		super();
@@ -58,8 +62,18 @@ public class RealARGBConverter< R extends RealType< ? > > extends AbstractLinear
 	public void convert( final R input, final ARGBType output )
 	{
 		final double a = input.getRealDouble();
-		final int b = Math.min( 255, roundPositive( Math.max( 0, ( ( a - min ) / scale * 255.0 ) ) ) );
-		final int argb = 0xff000000 | ( ( ( b << 8 ) | b ) << 8 ) | b;
+		final int b = Math.min( 255, roundPositive( Math.max( 0, ( a - min ) / scale * 255.0 ) ) );
+		final int argb = this.alpha | ( b << 8 | b ) << 8 | b;
 		output.set( argb );
+	}
+
+	public void setAlpha( final int alpha )
+	{
+		this.alpha = ( alpha & 0xff ) << 24;
+	}
+
+	public int getAlpha()
+	{
+		return this.alpha >>> 24;
 	}
 }
