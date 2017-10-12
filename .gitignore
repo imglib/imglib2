@@ -10,5 +10,10 @@ target
 *.class
 *~
 *.orig
+
 # For Fiji #
 *.jar
+
+# IntelliJ
+.idea/
+*.iml
