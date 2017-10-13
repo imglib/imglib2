@@ -115,7 +115,7 @@ public class SingleDimensionPermutationTransformTest
 		final TransformView< IntType > transformed = new TransformView< IntType >( this.img, transform );
 		final TransformView< IntType > inversed = new TransformView< IntType >( transformed, inverse );
 
-		final IntervalView< IntType > viewTransformed = Views.permuteCoordinateInverse( this.img, this.lut, this.d );
+		final IntervalView< IntType > viewTransformed = Views.permuteCoordinatesInverse( this.img, this.lut, this.d );
 		final IntervalView< IntType > identity = Views.permuteCoordinates( viewTransformed, this.lut, this.d );
 
 		final ArrayCursor< IntType > ref = this.img.cursor();
