@@ -126,12 +126,11 @@ public class BitType extends AbstractIntegerType< BitType > implements BooleanTy
 	@Override
 	public void set( final boolean value ) {
 		/*
-		final int k = i * 2;
 		final int i1 = k >>> 6; // k / 64;
 		final long shift = k % 64;
 		*/
 		// Same as above, minus one multiplication, plus one shift to multiply the reminder by 2
-		final int i1 = (int)(i >>> 6); // Same as (i * 2) / 64 = (i << 1) >>> 6
+		final int i1 = (int)(i >>> 6); // Same as i / 64
 		final long bit = 1l << (i & 63);
 		synchronized ( dataAccess ) {
 			// Clear or set the bit
