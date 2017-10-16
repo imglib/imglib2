@@ -48,7 +48,7 @@ import net.imglib2.util.Util;
  *
  * @author Albert Cardona
  */
-public abstract class AbstractIntegerBitType<T extends AbstractIntegerBitType<T>> extends AbstractBitType<T> implements IntegerType<T>
+public abstract class AbstractIntegerBitType< T extends AbstractIntegerBitType< T > > extends AbstractBitType< T > implements IntegerType< T >
 {
 	// Maximum count is Integer.MAX_VALUE * (64 / getBitsPerPixel())
 	//protected long i = 0;

@@ -32,15 +32,13 @@
  * #L%
  */
 
-
 package net.imglib2.type.numeric.integer;
 
 import net.imglib2.img.NativeImg;
-import net.imglib2.img.NativeImgFactory;
 import net.imglib2.img.basictypeaccess.LongAccess;
 import net.imglib2.img.basictypeaccess.array.LongArray;
+import net.imglib2.type.PrimitiveTypeInfo;
 import net.imglib2.type.Type;
-import net.imglib2.util.Fraction;
 
 /**
  * A {@link Type} with a bit depth of 2.
@@ -76,28 +74,28 @@ public class Unsigned2BitType extends AbstractIntegerBitType< Unsigned2BitType >
 	}
 
 	// this is the constructor if you want it to be a variable
-	public Unsigned2BitType() { this( 0 ); }
-
-	@Override
-	public NativeImg< Unsigned2BitType, ? extends LongAccess > createSuitableNativeImg( final NativeImgFactory< Unsigned2BitType > storageFactory, final long dim[] )
+	public Unsigned2BitType()
 	{
-		// create the container
-		final NativeImg< Unsigned2BitType, ? extends LongAccess > container = storageFactory.createLongInstance( dim, new Fraction( getBitsPerPixel(), 64 ) );
-
-		// create a Type that is linked to the container
-		final Unsigned2BitType linkedType = new Unsigned2BitType( container );
-
-		// pass it to the NativeContainer
-		container.setLinkedType( linkedType );
-
-		return container;
+		this( 0 );
 	}
 
 	@Override
-	public Unsigned2BitType duplicateTypeOnSameNativeImg() { return new Unsigned2BitType( img ); }
+	public Unsigned2BitType duplicateTypeOnSameNativeImg()
+	{
+		return new Unsigned2BitType( img );
+	}
+
+	private static final PrimitiveTypeInfo< Unsigned2BitType, LongAccess > info = PrimitiveTypeInfo.LONG( img -> new Unsigned2BitType( img ) );
 
 	@Override
-	public long get() {
+	public PrimitiveTypeInfo< Unsigned2BitType, LongAccess > getPrimitiveTypeInfo()
+	{
+		return info;
+	}
+
+	@Override
+	public long get()
+	{
 		/*
 		final int k = i * 2;
 		return (dataAccess.getValue(k >>> 6) >>> (k % 64)) & mask;
@@ -106,32 +104,40 @@ public class Unsigned2BitType extends AbstractIntegerBitType< Unsigned2BitType >
 		//return (dataAccess.getValue((int)(i >>> 5)) >>> ((i % 32) << 1)) & mask;
 		// Even less operations
 		// div 32 == shr 5
-		return (dataAccess.getValue((int)(i >>> 5)) >>> ((i & 31) << 1)) & mask;
+		return ( dataAccess.getValue( ( int ) ( i >>> 5 ) ) >>> ( ( i & 31 ) << 1 ) ) & mask;
 	}
 
 	// Crops value to within mask
 	@Override
-	public void set( final long value ) {
+	public void set( final long value )
+	{
 		/*
 		final int k = i * 2;
 		final int i1 = k >>> 6; // k / 64;
 		final long shift = k % 64;
 		*/
 		// Same as above, minus one multiplication, plus one shift to multiply the reminder by 2
-		final int i1 = (int)(i >>> 5); // Same as (i * 2) / 64 = (i << 1) >>> 6
-		final long shift = (i << 1) & 63; // Same as (i * 2) % 64
+		final int i1 = ( int ) ( i >>> 5 ); // Same as (i * 2) / 64 = (i << 1) >>> 6
+		final long shift = ( i << 1 ) & 63; // Same as (i * 2) % 64
 		// Clear the bits first, then or the masked value
 
-		final long bitsToRetain = ~(mask << shift);
-		final long bitsToSet = (value & mask) << shift;
-		synchronized ( dataAccess ) {
-			dataAccess.setValue(i1, (dataAccess.getValue(i1) & bitsToRetain) | bitsToSet);
+		final long bitsToRetain = ~( mask << shift );
+		final long bitsToSet = ( value & mask ) << shift;
+		synchronized ( dataAccess )
+		{
+			dataAccess.setValue( i1, ( dataAccess.getValue( i1 ) & bitsToRetain ) | bitsToSet );
 		}
 	}
 
 	@Override
-	public Unsigned2BitType createVariable(){ return new Unsigned2BitType( 0 ); }
+	public Unsigned2BitType createVariable()
+	{
+		return new Unsigned2BitType( 0 );
+	}
 
 	@Override
-	public Unsigned2BitType copy(){ return new Unsigned2BitType( get() ); }
+	public Unsigned2BitType copy()
+	{
+		return new Unsigned2BitType( get() );
+	}
 }

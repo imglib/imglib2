@@ -37,17 +37,12 @@ package net.imglib2.img.cell;
 import net.imglib2.exception.IncompatibleTypeException;
 import net.imglib2.img.ImgFactory;
 import net.imglib2.img.NativeImgFactory;
+import net.imglib2.img.basictypeaccess.ArrayDataAccessFactory;
 import net.imglib2.img.basictypeaccess.array.ArrayDataAccess;
-import net.imglib2.img.basictypeaccess.array.ByteArray;
-import net.imglib2.img.basictypeaccess.array.CharArray;
-import net.imglib2.img.basictypeaccess.array.DoubleArray;
-import net.imglib2.img.basictypeaccess.array.FloatArray;
-import net.imglib2.img.basictypeaccess.array.IntArray;
-import net.imglib2.img.basictypeaccess.array.LongArray;
-import net.imglib2.img.basictypeaccess.array.ShortArray;
 import net.imglib2.img.list.ListImg;
 import net.imglib2.img.list.ListLocalizingCursor;
 import net.imglib2.type.NativeType;
+import net.imglib2.type.PrimitiveTypeInfo;
 import net.imglib2.util.Fraction;
 import net.imglib2.util.Intervals;
 
@@ -142,65 +137,26 @@ public class CellImgFactory< T extends NativeType< T > > extends NativeImgFactor
 	}
 
 	@Override
-	public CellImg< T, ? > create( final long[] dim, final T type )
+	public CellImg< T, ? > create( final long[] dimensions, final T type )
 	{
-		return ( CellImg< T, ? > ) type.createSuitableNativeImg( this, dim );
+		return create( type.getPrimitiveTypeInfo(), dimensions, type.getEntitiesPerPixel() );
 	}
 
-	@Override
-	public CellImg< T, ByteArray > createByteInstance( final long[] dimensions, final Fraction entitiesPerPixel )
+	private < A > CellImg< T, ? > create(
+			final PrimitiveTypeInfo< T, A > info,
+			final long[] dimensions,
+			final Fraction entitiesPerPixel )
 	{
-		return createInstance( new ByteArray( 1 ), dimensions, entitiesPerPixel );
+		return createInstance( ArrayDataAccessFactory.get( info ).createArray( 0 ), info, dimensions, entitiesPerPixel );
+		// calling createArray( 0 ) is necessary here, because otherwise javac
+		// will not infer the ArrayDataAccess type
 	}
 
-	@Override
-	public CellImg< T, CharArray > createCharInstance( final long[] dimensions, final Fraction entitiesPerPixel )
-	{
-		return createInstance( new CharArray( 1 ), dimensions, entitiesPerPixel );
-	}
-
-	@Override
-	public CellImg< T, ShortArray > createShortInstance( final long[] dimensions, final Fraction entitiesPerPixel )
-	{
-		return createInstance( new ShortArray( 1 ), dimensions, entitiesPerPixel );
-	}
-
-	@Override
-	public CellImg< T, IntArray > createIntInstance( final long[] dimensions, final Fraction entitiesPerPixel )
-	{
-		return createInstance( new IntArray( 1 ), dimensions, entitiesPerPixel );
-	}
-
-	@Override
-	public CellImg< T, LongArray > createLongInstance( final long[] dimensions, final Fraction entitiesPerPixel )
-	{
-		return createInstance( new LongArray( 1 ), dimensions, entitiesPerPixel );
-	}
-
-	@Override
-	public CellImg< T, FloatArray > createFloatInstance( final long[] dimensions, final Fraction entitiesPerPixel )
-	{
-		return createInstance( new FloatArray( 1 ), dimensions, entitiesPerPixel );
-	}
-
-	@Override
-	public CellImg< T, DoubleArray > createDoubleInstance( final long[] dimensions, final Fraction entitiesPerPixel )
-	{
-		return createInstance( new DoubleArray( 1 ), dimensions, entitiesPerPixel );
-	}
-
-	@SuppressWarnings( { "unchecked", "rawtypes" } )
-	@Override
-	public < S > ImgFactory< S > imgFactory( final S type ) throws IncompatibleTypeException
-	{
-		if ( NativeType.class.isInstance( type ) )
-			return new CellImgFactory( defaultCellDimensions );
-		throw new IncompatibleTypeException( this, type.getClass().getCanonicalName() + " does not implement NativeType." );
-	}
-
-	private < A extends ArrayDataAccess< A > >
-			CellImg< T, A >
-			createInstance( final A creator, final long[] dimensions, final Fraction entitiesPerPixel )
+	private < A extends ArrayDataAccess< A > > CellImg< T, A > createInstance(
+			final A creator,
+			final PrimitiveTypeInfo< T, ? super A > info,
+			final long[] dimensions,
+			final Fraction entitiesPerPixel )
 	{
 		verifyDimensions( dimensions );
 
@@ -227,6 +183,17 @@ public class CellImgFactory< T extends NativeType< T > > extends NativeImgFactor
 			cellCursor.set( new Cell<>( cellDims, cellMin, data ) );
 		}
 
-		return new CellImg<>( this, grid, cells, entitiesPerPixel );
+		final CellImg< T, A > img = new CellImg<>( this, grid, cells, entitiesPerPixel );
+		img.setLinkedType( info.createLinkedType( img ) );
+		return img;
+	}
+
+	@SuppressWarnings( { "unchecked", "rawtypes" } )
+	@Override
+	public < S > ImgFactory< S > imgFactory( final S type ) throws IncompatibleTypeException
+	{
+		if ( NativeType.class.isInstance( type ) )
+			return new CellImgFactory( defaultCellDimensions );
+		throw new IncompatibleTypeException( this, type.getClass().getCanonicalName() + " does not implement NativeType." );
 	}
 }

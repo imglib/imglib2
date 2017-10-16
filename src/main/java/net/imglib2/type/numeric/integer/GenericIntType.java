@@ -38,6 +38,7 @@ import net.imglib2.img.NativeImg;
 import net.imglib2.img.basictypeaccess.IntAccess;
 import net.imglib2.img.basictypeaccess.array.IntArray;
 import net.imglib2.type.NativeType;
+import net.imglib2.type.PrimitiveTypeInfo;
 import net.imglib2.util.Fraction;
 import net.imglib2.util.Util;
 
@@ -47,7 +48,7 @@ import net.imglib2.util.Util;
  * @author Stephan Preibisch
  * @author Stephan Saalfeld
  */
-public abstract class GenericIntType< T extends GenericIntType< T >> extends AbstractIntegerType< T > implements NativeType< T >
+public abstract class GenericIntType< T extends GenericIntType< T > > extends AbstractIntegerType< T > implements NativeType< T >
 {
 	int i = 0;
 
@@ -84,13 +85,19 @@ public abstract class GenericIntType< T extends GenericIntType< T >> extends Abs
 	}
 
 	@Override
-	public Fraction getEntitiesPerPixel() { return new Fraction(); }
+	public Fraction getEntitiesPerPixel()
+	{
+		return new Fraction();
+	}
 
 	@Override
 	public void updateContainer( final Object c )
 	{
 		dataAccess = img.update( c );
 	}
+
+	@Override
+	public abstract PrimitiveTypeInfo< T, IntAccess > getPrimitiveTypeInfo();
 
 	/**
 	 * @deprecated Use {@link #getInt()} instead.

@@ -37,9 +37,8 @@ package net.imglib2.type.numeric.integer;
 import java.math.BigInteger;
 
 import net.imglib2.img.NativeImg;
-import net.imglib2.img.NativeImgFactory;
 import net.imglib2.img.basictypeaccess.ByteAccess;
-import net.imglib2.util.Fraction;
+import net.imglib2.type.PrimitiveTypeInfo;
 import net.imglib2.util.Util;
 
 /**
@@ -95,24 +94,17 @@ public class UnsignedByteType extends GenericByteType< UnsignedByteType >
 	}
 
 	@Override
-	public NativeImg< UnsignedByteType, ? extends ByteAccess > createSuitableNativeImg( final NativeImgFactory< UnsignedByteType > storageFactory, final long dim[] )
-	{
-		// create the container
-		final NativeImg<UnsignedByteType, ? extends ByteAccess> container = storageFactory.createByteInstance( dim, new Fraction() );
-
-		// create a Type that is linked to the container
-		final UnsignedByteType linkedType = new UnsignedByteType( container );
-
-		// pass it to the NativeContainer
-		container.setLinkedType( linkedType );
-
-		return container;
-	}
-
-	@Override
 	public UnsignedByteType duplicateTypeOnSameNativeImg()
 	{
 		return new UnsignedByteType( img );
+	}
+
+	private final PrimitiveTypeInfo< UnsignedByteType, ByteAccess > info = PrimitiveTypeInfo.BYTE( img -> new UnsignedByteType( img ) );
+
+	@Override
+	public PrimitiveTypeInfo< UnsignedByteType, ByteAccess > getPrimitiveTypeInfo()
+	{
+		return info;
 	}
 
 	@Override
@@ -195,7 +187,7 @@ public class UnsignedByteType extends GenericByteType< UnsignedByteType >
 	}
 
 	@Override
-	public void setBigInteger(final BigInteger b)
+	public void setBigInteger( final BigInteger b )
 	{
 		set( b.intValue() );
 	}

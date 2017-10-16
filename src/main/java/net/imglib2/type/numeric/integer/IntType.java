@@ -37,9 +37,8 @@ package net.imglib2.type.numeric.integer;
 import java.math.BigInteger;
 
 import net.imglib2.img.NativeImg;
-import net.imglib2.img.NativeImgFactory;
 import net.imglib2.img.basictypeaccess.IntAccess;
-import net.imglib2.util.Fraction;
+import net.imglib2.type.PrimitiveTypeInfo;
 
 /**
  * TODO
@@ -74,24 +73,17 @@ public class IntType extends GenericIntType< IntType >
 	}
 
 	@Override
-	public NativeImg< IntType, ? extends IntAccess > createSuitableNativeImg( final NativeImgFactory< IntType > storageFactory, final long dim[] )
-	{
-		// create the container
-		final NativeImg<IntType, ? extends IntAccess> container = storageFactory.createIntInstance( dim, new Fraction() );
-
-		// create a Type that is linked to the container
-		final IntType linkedType = new IntType( container );
-
-		// pass it to the NativeContainer
-		container.setLinkedType( linkedType );
-
-		return container;
-	}
-
-	@Override
 	public IntType duplicateTypeOnSameNativeImg()
 	{
 		return new IntType( img );
+	}
+
+	private static final PrimitiveTypeInfo< IntType, IntAccess > info = PrimitiveTypeInfo.INT( img -> new IntType( img ) );
+
+	@Override
+	public PrimitiveTypeInfo< IntType, IntAccess > getPrimitiveTypeInfo()
+	{
+		return info;
 	}
 
 	public int get()
@@ -135,7 +127,7 @@ public class IntType extends GenericIntType< IntType >
 	}
 
 	@Override
-	public void setBigInteger(final BigInteger b)
+	public void setBigInteger( final BigInteger b )
 	{
 		set( b.intValue() );
 	}

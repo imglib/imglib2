@@ -37,9 +37,8 @@ package net.imglib2.type.numeric.integer;
 import java.math.BigInteger;
 
 import net.imglib2.img.NativeImg;
-import net.imglib2.img.NativeImgFactory;
 import net.imglib2.img.basictypeaccess.ByteAccess;
-import net.imglib2.util.Fraction;
+import net.imglib2.type.PrimitiveTypeInfo;
 
 /**
  * TODO
@@ -73,19 +72,12 @@ public class ByteType extends GenericByteType< ByteType >
 		super( ( byte ) 0 );
 	}
 
+	private final PrimitiveTypeInfo< ByteType, ByteAccess > info = PrimitiveTypeInfo.BYTE( img -> new ByteType( img ) );
+
 	@Override
-	public NativeImg< ByteType, ? extends ByteAccess > createSuitableNativeImg( final NativeImgFactory< ByteType > storageFactory, final long dim[] )
+	public PrimitiveTypeInfo< ByteType, ByteAccess > getPrimitiveTypeInfo()
 	{
-		// create the container
-		final NativeImg<ByteType, ? extends ByteAccess> container = storageFactory.createByteInstance( dim, new Fraction() );
-
-		// create a Type that is linked to the container
-		final ByteType linkedType = new ByteType( container );
-
-		// pass it to the NativeContainer
-		container.setLinkedType( linkedType );
-
-		return container;
+		return info;
 	}
 
 	@Override

@@ -32,15 +32,13 @@
  * #L%
  */
 
-
 package net.imglib2.type.numeric.integer;
 
 import net.imglib2.img.NativeImg;
-import net.imglib2.img.NativeImgFactory;
 import net.imglib2.img.basictypeaccess.LongAccess;
 import net.imglib2.img.basictypeaccess.array.LongArray;
+import net.imglib2.type.PrimitiveTypeInfo;
 import net.imglib2.type.Type;
-import net.imglib2.util.Fraction;
 
 /**
  * A {@link Type} with a bit depth of 4.
@@ -49,7 +47,7 @@ import net.imglib2.util.Fraction;
  *
  * @author Albert Cardona
  */
-public class Unsigned4BitType extends AbstractIntegerBitType<Unsigned4BitType>
+public class Unsigned4BitType extends AbstractIntegerBitType< Unsigned4BitType >
 {
 	// A mask for bit and, containing nBits of 1
 	private final static long mask = 15; // 1111 in binary
@@ -76,54 +74,62 @@ public class Unsigned4BitType extends AbstractIntegerBitType<Unsigned4BitType>
 	}
 
 	// this is the constructor if you want it to be a variable
-	public Unsigned4BitType() { this( 0 ); }
-
-	@Override
-	public NativeImg< Unsigned4BitType, ? extends LongAccess > createSuitableNativeImg( final NativeImgFactory< Unsigned4BitType > storageFactory, final long dim[] )
+	public Unsigned4BitType()
 	{
-		// create the container
-		final NativeImg< Unsigned4BitType, ? extends LongAccess > container = storageFactory.createLongInstance( dim, new Fraction( getBitsPerPixel(), 64 ) );
-
-		// create a Type that is linked to the container
-		final Unsigned4BitType linkedType = new Unsigned4BitType( container );
-
-		// pass it to the NativeContainer
-		container.setLinkedType( linkedType );
-
-		return container;
+		this( 0 );
 	}
 
 	@Override
-	public Unsigned4BitType duplicateTypeOnSameNativeImg() { return new Unsigned4BitType( img ); }
+	public Unsigned4BitType duplicateTypeOnSameNativeImg()
+	{
+		return new Unsigned4BitType( img );
+	}
+
+	private static final PrimitiveTypeInfo< Unsigned4BitType, LongAccess > info = PrimitiveTypeInfo.LONG( img -> new Unsigned4BitType( img ) );
 
 	@Override
-	public long get() {
-		return (dataAccess.getValue((int)(i >>> 4)) >>> ((i & 15) << 2)) & mask;
+	public PrimitiveTypeInfo< Unsigned4BitType, LongAccess > getPrimitiveTypeInfo()
+	{
+		return info;
+	}
+
+	@Override
+	public long get()
+	{
+		return ( dataAccess.getValue( ( int ) ( i >>> 4 ) ) >>> ( ( i & 15 ) << 2 ) ) & mask;
 	}
 
 	// Crops value to within mask
 	@Override
-	public void set( final long value ) {
+	public void set( final long value )
+	{
 		/*
 		final int k = i * 4;
 		final int i1 = k >>> 6; // k / 64;
 		final long shift = k % 64;
 		*/
 		// Same as above minus one multiplication, plus one shift (to multiply by 4)
-		final int i1 = (int)(i >>> 4); //  Same as (i * 4) / 64 = ((i << 2) >>> 6)
-		final long shift = (i << 2) & 63; // Same as (i * 4) % 64
+		final int i1 = ( int ) ( i >>> 4 ); // Same as (i * 4) / 64 = ((i << 2) >>> 6)
+		final long shift = ( i << 2 ) & 63; // Same as (i * 4) % 64
 		// Clear the bits first, then or the masked value
 
-		final long bitsToRetain = ~(mask << shift);
-		final long bitsToSet = (value & mask) << shift;
-		synchronized ( dataAccess ) {
-			dataAccess.setValue(i1, (dataAccess.getValue(i1) & bitsToRetain) | bitsToSet);
+		final long bitsToRetain = ~( mask << shift );
+		final long bitsToSet = ( value & mask ) << shift;
+		synchronized ( dataAccess )
+		{
+			dataAccess.setValue( i1, ( dataAccess.getValue( i1 ) & bitsToRetain ) | bitsToSet );
 		}
 	}
 
 	@Override
-	public Unsigned4BitType createVariable(){ return new Unsigned4BitType( 0 ); }
+	public Unsigned4BitType createVariable()
+	{
+		return new Unsigned4BitType( 0 );
+	}
 
 	@Override
-	public Unsigned4BitType copy(){ return new Unsigned4BitType( get() ); }
+	public Unsigned4BitType copy()
+	{
+		return new Unsigned4BitType( get() );
+	}
 }

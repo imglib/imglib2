@@ -35,15 +35,16 @@
 package net.imglib2.type.numeric.real;
 
 import net.imglib2.img.NativeImg;
-import net.imglib2.img.NativeImgFactory;
 import net.imglib2.img.basictypeaccess.DoubleAccess;
 import net.imglib2.img.basictypeaccess.array.DoubleArray;
 import net.imglib2.type.NativeType;
+import net.imglib2.type.PrimitiveType;
+import net.imglib2.type.PrimitiveTypeInfo;
 import net.imglib2.util.Fraction;
 
 /**
  * TODO
- * 
+ *
  * @author Stephan Preibisch
  * @author Stephan Saalfeld
  */
@@ -84,21 +85,6 @@ public class DoubleType extends AbstractRealType< DoubleType > implements Native
 	}
 
 	@Override
-	public NativeImg< DoubleType, ? extends DoubleAccess > createSuitableNativeImg( final NativeImgFactory< DoubleType > storageFactory, final long dim[] )
-	{
-		// create the container
-		final NativeImg<DoubleType, ? extends DoubleAccess> container = storageFactory.createDoubleInstance( dim, new Fraction() );
-		
-		// create a Type that is linked to the container
-		final DoubleType linkedType = new DoubleType( container );
-
-		// pass it to the NativeContainer
-		container.setLinkedType( linkedType );
-
-		return container;
-	}
-
-	@Override
 	public void updateContainer( final Object c )
 	{
 		dataAccess = img.update( c );
@@ -108,6 +94,14 @@ public class DoubleType extends AbstractRealType< DoubleType > implements Native
 	public DoubleType duplicateTypeOnSameNativeImg()
 	{
 		return new DoubleType( img );
+	}
+
+	private static final PrimitiveTypeInfo< DoubleType, DoubleAccess > info = PrimitiveTypeInfo.DOUBLE( img -> new DoubleType( img ) );
+
+	@Override
+	public PrimitiveTypeInfo< DoubleType, DoubleAccess > getPrimitiveTypeInfo()
+	{
+		return info;
 	}
 
 	public double get()
@@ -223,7 +217,7 @@ public class DoubleType extends AbstractRealType< DoubleType > implements Native
 	}
 
 	@Override
-	public boolean valueEquals( DoubleType t )
+	public boolean valueEquals( final DoubleType t )
 	{
 		return get() == t.get();
 	}

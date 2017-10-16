@@ -37,9 +37,8 @@ package net.imglib2.type.numeric.integer;
 import java.math.BigInteger;
 
 import net.imglib2.img.NativeImg;
-import net.imglib2.img.NativeImgFactory;
 import net.imglib2.img.basictypeaccess.ShortAccess;
-import net.imglib2.util.Fraction;
+import net.imglib2.type.PrimitiveTypeInfo;
 
 /**
  * TODO
@@ -74,24 +73,17 @@ public class ShortType extends GenericShortType< ShortType >
 	}
 
 	@Override
-	public NativeImg< ShortType, ? extends ShortAccess > createSuitableNativeImg( final NativeImgFactory< ShortType > storageFactory, final long dim[] )
-	{
-		// create the container
-		final NativeImg<ShortType, ? extends ShortAccess> container = storageFactory.createShortInstance( dim, new Fraction() );
-
-		// create a Type that is linked to the container
-		final ShortType linkedType = new ShortType( container );
-
-		// pass it to the NativeContainer
-		container.setLinkedType( linkedType );
-
-		return container;
-	}
-
-	@Override
 	public ShortType duplicateTypeOnSameNativeImg()
 	{
 		return new ShortType( img );
+	}
+
+	private static final PrimitiveTypeInfo< ShortType, ShortAccess > info = PrimitiveTypeInfo.SHORT( img -> new ShortType( img ) );
+
+	@Override
+	public PrimitiveTypeInfo< ShortType, ShortAccess > getPrimitiveTypeInfo()
+	{
+		return info;
 	}
 
 	public short get()
@@ -135,7 +127,7 @@ public class ShortType extends GenericShortType< ShortType >
 	}
 
 	@Override
-	public void setBigInteger( final BigInteger b)
+	public void setBigInteger( final BigInteger b )
 	{
 		set( b.shortValue() );
 	}

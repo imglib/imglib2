@@ -38,6 +38,7 @@ import net.imglib2.img.NativeImg;
 import net.imglib2.img.basictypeaccess.ShortAccess;
 import net.imglib2.img.basictypeaccess.array.ShortArray;
 import net.imglib2.type.NativeType;
+import net.imglib2.type.PrimitiveTypeInfo;
 import net.imglib2.type.numeric.IntegerType;
 import net.imglib2.util.Fraction;
 import net.imglib2.util.Util;
@@ -88,13 +89,19 @@ public abstract class GenericShortType< T extends GenericShortType< T > >
 	}
 
 	@Override
-	public Fraction getEntitiesPerPixel() { return new Fraction(); }
+	public Fraction getEntitiesPerPixel()
+	{
+		return new Fraction();
+	}
 
 	@Override
 	public void updateContainer( final Object c )
 	{
 		dataAccess = img.update( c );
 	}
+
+	@Override
+	public abstract PrimitiveTypeInfo< T, ShortAccess > getPrimitiveTypeInfo();
 
 	/**
 	 * @deprecated Use {@link #getShort()} instead.

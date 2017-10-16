@@ -35,17 +35,17 @@
 package net.imglib2.type.label;
 
 import net.imglib2.img.NativeImg;
-import net.imglib2.img.NativeImgFactory;
 import net.imglib2.img.basictypeaccess.CharAccess;
 import net.imglib2.img.basictypeaccess.array.CharArray;
 import net.imglib2.type.AbstractNativeType;
 import net.imglib2.type.BasePairType;
+import net.imglib2.type.PrimitiveTypeInfo;
 import net.imglib2.type.label.BasePairBitType.Base;
 import net.imglib2.util.Fraction;
 
 /**
- * Representation of base pairs using one char per entry, supported characters: gap, N, A, T, G, C, U
- * Bases are handled using the {@link Base} enumeration.
+ * Representation of base pairs using one char per entry, supported characters:
+ * gap, N, A, T, G, C, U Bases are handled using the {@link Base} enumeration.
  *
  * @author Stephan Preibisch
  * @author Stephan Saalfeld
@@ -53,7 +53,10 @@ import net.imglib2.util.Fraction;
 public class BasePairCharType extends AbstractNativeType< BasePairCharType > implements BasePairType< BasePairCharType >
 {
 	@Override
-	public Fraction getEntitiesPerPixel() { return new Fraction(); }
+	public Fraction getEntitiesPerPixel()
+	{
+		return new Fraction();
+	}
 
 	final protected NativeImg< ?, ? extends CharAccess > img;
 
@@ -89,21 +92,6 @@ public class BasePairCharType extends AbstractNativeType< BasePairCharType > imp
 	}
 
 	@Override
-	public NativeImg< BasePairCharType, ? extends CharAccess > createSuitableNativeImg( final NativeImgFactory< BasePairCharType > storageFactory, final long dim[] )
-	{
-		// create the container
-		final NativeImg<BasePairCharType, ? extends CharAccess> container = storageFactory.createCharInstance( dim, new Fraction() );
-
-		// create a Type that is linked to the container
-		final BasePairCharType linkedType = new BasePairCharType( container );
-
-		// pass it to the NativeContainer
-		container.setLinkedType( linkedType );
-
-		return container;
-	}
-
-	@Override
 	public void updateContainer( final Object c )
 	{
 		dataAccess = img.update( c );
@@ -113,6 +101,14 @@ public class BasePairCharType extends AbstractNativeType< BasePairCharType > imp
 	public BasePairCharType duplicateTypeOnSameNativeImg()
 	{
 		return new BasePairCharType( img );
+	}
+
+	private static final PrimitiveTypeInfo< BasePairCharType, CharAccess > info = PrimitiveTypeInfo.CHAR( img -> new BasePairCharType( img ) );
+
+	@Override
+	public PrimitiveTypeInfo< BasePairCharType, CharAccess > getPrimitiveTypeInfo()
+	{
+		return info;
 	}
 
 	public char getChar()

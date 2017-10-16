@@ -37,11 +37,11 @@ package net.imglib2.type.logic;
 import java.math.BigInteger;
 
 import net.imglib2.img.NativeImg;
-import net.imglib2.img.NativeImgFactory;
 import net.imglib2.img.basictypeaccess.LongAccess;
 import net.imglib2.img.basictypeaccess.array.LongArray;
 import net.imglib2.type.BooleanType;
 import net.imglib2.type.NativeType;
+import net.imglib2.type.PrimitiveTypeInfo;
 import net.imglib2.type.numeric.IntegerType;
 import net.imglib2.type.numeric.integer.AbstractIntegerType;
 import net.imglib2.util.Fraction;
@@ -79,7 +79,7 @@ public class BitType extends AbstractIntegerType< BitType > implements BooleanTy
 	// this is the constructor if you want to specify the dataAccess
 	public BitType( final LongAccess access )
 	{
-		this( (NativeImg<BitType, ? extends LongAccess>)null );
+		this( ( NativeImg< BitType, ? extends LongAccess > ) null );
 		dataAccess = access;
 	}
 
@@ -87,21 +87,6 @@ public class BitType extends AbstractIntegerType< BitType > implements BooleanTy
 	public BitType()
 	{
 		this( false );
-	}
-
-	@Override
-	public NativeImg<BitType, ? extends LongAccess> createSuitableNativeImg( final NativeImgFactory<BitType> storageFactory, final long dim[] )
-	{
-		// create the container
-		final NativeImg<BitType, ? extends LongAccess> container = storageFactory.createLongInstance( dim, new Fraction( 1, 64 ) );
-
-		// create a Type that is linked to the container
-		final BitType linkedType = new BitType( container );
-
-		// pass it to the NativeContainer
-		container.setLinkedType( linkedType );
-
-		return container;
 	}
 
 	@Override
@@ -116,28 +101,38 @@ public class BitType extends AbstractIntegerType< BitType > implements BooleanTy
 		return new BitType( img );
 	}
 
+	private static final PrimitiveTypeInfo< BitType, LongAccess > info = PrimitiveTypeInfo.LONG( img -> new BitType( img ) );
+
+	@Override
+	public PrimitiveTypeInfo< BitType, LongAccess > getPrimitiveTypeInfo()
+	{
+		return info;
+	}
+
 	@Override
 	public boolean get()
 	{
-		return 1 == ((dataAccess.getValue((int)(i >>> 6)) >>> ((i & 63))) & 1l);
+		return 1 == ( ( dataAccess.getValue( i >>> 6 ) >>> ( ( i & 63 ) ) ) & 1l );
 	}
 
 	// Crops value to within mask
 	@Override
-	public void set( final boolean value ) {
+	public void set( final boolean value )
+	{
 		/*
 		final int i1 = k >>> 6; // k / 64;
 		final long shift = k % 64;
 		*/
 		// Same as above, minus one multiplication, plus one shift to multiply the reminder by 2
-		final int i1 = (int)(i >>> 6); // Same as i / 64
+		final int i1 = i >>> 6; // Same as i / 64
 		final long bit = 1l << (i & 63);
-		synchronized ( dataAccess ) {
+		synchronized ( dataAccess )
+		{
 			// Clear or set the bit
 			if ( value )
-				dataAccess.setValue( i1, dataAccess.getValue(i1) | bit );
+				dataAccess.setValue( i1, dataAccess.getValue( i1 ) | bit );
 			else
-				dataAccess.setValue( i1, dataAccess.getValue(i1) & ~bit );
+				dataAccess.setValue( i1, dataAccess.getValue( i1 ) & ~bit );
 		}
 	}
 
@@ -178,10 +173,10 @@ public class BitType extends AbstractIntegerType< BitType > implements BooleanTy
 	}
 
 	@Override
-	public void setBigInteger(final BigInteger b)
+	public void setBigInteger( final BigInteger b )
 	{
-		if ( b.compareTo(BigInteger.ZERO) > 0 )
-			set ( true );
+		if ( b.compareTo( BigInteger.ZERO ) > 0 )
+			set( true );
 		else
 			set( false );
 	}
@@ -199,19 +194,34 @@ public class BitType extends AbstractIntegerType< BitType > implements BooleanTy
 	}
 
 	@Override
-	public void set( final BitType c ) { set( c.get() ); }
+	public void set( final BitType c )
+	{
+		set( c.get() );
+	}
 
 	@Override
-	public void and( final BitType c ) { set( get() && c.get() ); }
+	public void and( final BitType c )
+	{
+		set( get() && c.get() );
+	}
 
 	@Override
-	public void or( final BitType c ) { set( get() || c.get() ); }
+	public void or( final BitType c )
+	{
+		set( get() || c.get() );
+	}
 
 	@Override
-	public void xor( final BitType c ) { set( get() ^ c.get() ); }
+	public void xor( final BitType c )
+	{
+		set( get() ^ c.get() );
+	}
 
 	@Override
-	public void not() { set( !get() ); }
+	public void not()
+	{
+		set( !get() );
+	}
 
 	@Override
 	public void add( final BitType c )
@@ -256,16 +266,28 @@ public class BitType extends AbstractIntegerType< BitType > implements BooleanTy
 	}
 
 	@Override
-	public void setOne() { set( true ); }
+	public void setOne()
+	{
+		set( true );
+	}
 
 	@Override
-	public void setZero() { set( false ); }
+	public void setZero()
+	{
+		set( false );
+	}
 
 	@Override
-	public void inc() { not(); }
+	public void inc()
+	{
+		not();
+	}
 
 	@Override
-	public void dec() { not(); }
+	public void dec()
+	{
+		not();
+	}
 
 	@Override
 	public int compareTo( final BitType c )
@@ -288,7 +310,10 @@ public class BitType extends AbstractIntegerType< BitType > implements BooleanTy
 	}
 
 	@Override
-	public BitType copy(){ return new BitType( get() ); }
+	public BitType copy()
+	{
+		return new BitType( get() );
+	}
 
 	@Override
 	public String toString()
@@ -299,7 +324,10 @@ public class BitType extends AbstractIntegerType< BitType > implements BooleanTy
 	}
 
 	@Override
-	public Fraction getEntitiesPerPixel() { return new Fraction(); }
+	public Fraction getEntitiesPerPixel()
+	{
+		return new Fraction();
+	}
 
 	@Override
 	public void updateIndex( final int index )

@@ -32,7 +32,6 @@
  * #L%
  */
 
-
 package net.imglib2.type;
 
 import net.imglib2.img.NativeImg;
@@ -40,7 +39,8 @@ import net.imglib2.img.basictypeaccess.LongAccess;
 import net.imglib2.util.Fraction;
 
 /**
- * Provides basic infrastructure to implement Types based on single bits stored in a LongAccess
+ * Provides basic infrastructure to implement Types based on single bits stored
+ * in a LongAccess
  *
  * @author Albert Cardona
  * @author Stephan Preibisch
@@ -61,18 +61,27 @@ public abstract class AbstractBitType< T extends AbstractBitType< T > > implemen
 
 	// this is the constructor if you want it to read from an array
 	public AbstractBitType(
-			final NativeImg< ?, ? extends LongAccess> bitStorage,
-			final int nBits)
+			final NativeImg< ?, ? extends LongAccess > bitStorage,
+			final int nBits )
 	{
 		img = bitStorage;
 		this.nBits = nBits;
 	}
 
 	@Override
-	public void updateContainer( final Object c ) { dataAccess = img.update( c ); }
+	public void updateContainer( final Object c )
+	{
+		dataAccess = img.update( c );
+	}
 
 	@Override
-	public int getIndex() { return ( int )i; }
+	public abstract PrimitiveTypeInfo< T, LongAccess > getPrimitiveTypeInfo();
+
+	@Override
+	public int getIndex()
+	{
+		return ( int ) i;
+	}
 
 	@Override
 	public void updateIndex( final int index )
@@ -105,5 +114,8 @@ public abstract class AbstractBitType< T extends AbstractBitType< T > > implemen
 	}
 
 	@Override
-	public Fraction getEntitiesPerPixel() { return new Fraction( nBits, 64 ); }
+	public Fraction getEntitiesPerPixel()
+	{
+		return new Fraction( nBits, 64 );
+	}
 }

@@ -37,9 +37,8 @@ package net.imglib2.type.numeric.integer;
 import java.math.BigInteger;
 
 import net.imglib2.img.NativeImg;
-import net.imglib2.img.NativeImgFactory;
 import net.imglib2.img.basictypeaccess.ShortAccess;
-import net.imglib2.util.Fraction;
+import net.imglib2.type.PrimitiveTypeInfo;
 import net.imglib2.util.Util;
 
 /**
@@ -95,24 +94,17 @@ public class UnsignedShortType extends GenericShortType< UnsignedShortType >
 	}
 
 	@Override
-	public NativeImg< UnsignedShortType, ? extends ShortAccess > createSuitableNativeImg( final NativeImgFactory< UnsignedShortType > storageFactory, final long dim[] )
-	{
-		// create the container
-		final NativeImg<UnsignedShortType, ? extends ShortAccess> container = storageFactory.createShortInstance( dim, new Fraction() );
-
-		// create a Type that is linked to the container
-		final UnsignedShortType linkedType = new UnsignedShortType( container );
-
-		// pass it to the NativeContainer
-		container.setLinkedType( linkedType );
-
-		return container;
-	}
-
-	@Override
 	public UnsignedShortType duplicateTypeOnSameNativeImg()
 	{
 		return new UnsignedShortType( img );
+	}
+
+	private static final PrimitiveTypeInfo< UnsignedShortType, ShortAccess > info = PrimitiveTypeInfo.SHORT( img -> new UnsignedShortType( img ) );
+
+	@Override
+	public PrimitiveTypeInfo< UnsignedShortType, ShortAccess > getPrimitiveTypeInfo()
+	{
+		return info;
 	}
 
 	@Override
@@ -204,7 +196,7 @@ public class UnsignedShortType extends GenericShortType< UnsignedShortType >
 	}
 
 	@Override
-	public void setBigInteger(final BigInteger b)
+	public void setBigInteger( final BigInteger b )
 	{
 		set( b.intValue() );
 	}

@@ -35,10 +35,10 @@
 package net.imglib2.type.label;
 
 import net.imglib2.img.NativeImg;
-import net.imglib2.img.NativeImgFactory;
 import net.imglib2.img.basictypeaccess.LongAccess;
 import net.imglib2.type.AbstractBit64Type;
 import net.imglib2.type.BasePairType;
+import net.imglib2.type.PrimitiveTypeInfo;
 
 /**
  * Representation of base pairs using 3 bits per entry, supported characters: gap, N, A, T, G, C, U
@@ -70,23 +70,15 @@ public class BasePairBitType extends AbstractBit64Type< BasePairBitType > implem
 	}
 
 	@Override
-	public NativeImg< BasePairBitType, ? extends LongAccess > createSuitableNativeImg( final NativeImgFactory< BasePairBitType > storageFactory, final long dim[] )
-	{
-		// create the container
-		final NativeImg< BasePairBitType, ? extends LongAccess > container = storageFactory.createLongInstance( dim, getEntitiesPerPixel() );
-
-		// create a Type that is linked to the container
-		final BasePairBitType linkedType = new BasePairBitType( container );
-
-		// pass it to the NativeContainer
-		container.setLinkedType( linkedType );
-
-		return container;
-	}
-
-	@Override
 	public BasePairBitType duplicateTypeOnSameNativeImg() { return new BasePairBitType( img ); }
 
+	private static final PrimitiveTypeInfo< BasePairBitType, LongAccess > info = PrimitiveTypeInfo.LONG( img -> new BasePairBitType( img ) );
+
+	@Override
+	public PrimitiveTypeInfo< BasePairBitType, LongAccess > getPrimitiveTypeInfo()
+	{
+		return info;
+	}
 
 	@Override
 	public void set( final Base base )

@@ -37,6 +37,7 @@ import net.imglib2.img.NativeImg;
 import net.imglib2.img.basictypeaccess.LongAccess;
 import net.imglib2.img.basictypeaccess.array.LongArray;
 import net.imglib2.type.NativeType;
+import net.imglib2.type.PrimitiveTypeInfo;
 import net.imglib2.util.Fraction;
 import net.imglib2.util.Util;
 
@@ -45,8 +46,8 @@ import net.imglib2.util.Util;
  *
  * @author Mark Hiner
  */
-public abstract class GenericLongType < T extends GenericLongType< T >> extends AbstractIntegerType< T > implements NativeType< T > {
-
+public abstract class GenericLongType< T extends GenericLongType< T > > extends AbstractIntegerType< T > implements NativeType< T >
+{
 	int i = 0;
 
 	final protected NativeImg< ?, ? extends LongAccess > img;
@@ -82,13 +83,19 @@ public abstract class GenericLongType < T extends GenericLongType< T >> extends 
 	}
 
 	@Override
-	public Fraction getEntitiesPerPixel() { return new Fraction(); }
+	public Fraction getEntitiesPerPixel()
+	{
+		return new Fraction();
+	}
 
 	@Override
 	public void updateContainer( final Object c )
 	{
 		dataAccess = img.update( c );
 	}
+
+	@Override
+	public abstract PrimitiveTypeInfo< T, LongAccess > getPrimitiveTypeInfo();
 
 	/**
 	 * @deprecated Use {@link #getLong()} instead.
@@ -125,7 +132,6 @@ public abstract class GenericLongType < T extends GenericLongType< T >> extends 
 	{
 		dataAccess.setValue( i, f );
 	}
-
 
 	@Override
 	public void mul( final float c )
@@ -167,7 +173,7 @@ public abstract class GenericLongType < T extends GenericLongType< T >> extends 
 	public int hashCode()
 	{
 		// NB: Use the same hash code as java.lang.Long#hashCode().
-		return ( (Long)getLong() ).hashCode();
+		return ( ( Long ) getLong() ).hashCode();
 	}
 
 	@Override

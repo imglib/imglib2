@@ -35,15 +35,15 @@
 package net.imglib2.type.numeric.real;
 
 import net.imglib2.img.NativeImg;
-import net.imglib2.img.NativeImgFactory;
 import net.imglib2.img.basictypeaccess.FloatAccess;
 import net.imglib2.img.basictypeaccess.array.FloatArray;
 import net.imglib2.type.NativeType;
+import net.imglib2.type.PrimitiveTypeInfo;
 import net.imglib2.util.Fraction;
 
 /**
  * TODO
- * 
+ *
  * @author Stephan Preibisch
  * @author Stephan Saalfeld
  */
@@ -84,21 +84,6 @@ public class FloatType extends AbstractRealType< FloatType > implements NativeTy
 	}
 
 	@Override
-	public NativeImg< FloatType, ? extends FloatAccess > createSuitableNativeImg( final NativeImgFactory< FloatType > storageFactory, final long dim[] )
-	{
-		// create the container
-		final NativeImg<FloatType, ? extends FloatAccess> container = storageFactory.createFloatInstance( dim, new Fraction() );
-		
-		// create a Type that is linked to the container
-		final FloatType linkedType = new FloatType( container );
-
-		// pass it to the NativeContainer
-		container.setLinkedType( linkedType );
-
-		return container;
-	}
-
-	@Override
 	public void updateContainer( final Object c )
 	{
 		dataAccess = img.update( c );
@@ -108,6 +93,14 @@ public class FloatType extends AbstractRealType< FloatType > implements NativeTy
 	public FloatType duplicateTypeOnSameNativeImg()
 	{
 		return new FloatType( img );
+	}
+
+	private static final PrimitiveTypeInfo< FloatType, FloatAccess > info = PrimitiveTypeInfo.FLOAT( img -> new FloatType( img ) );
+
+	@Override
+	public PrimitiveTypeInfo< FloatType, FloatAccess > getPrimitiveTypeInfo()
+	{
+		return info;
 	}
 
 	public float get()
@@ -202,7 +195,7 @@ public class FloatType extends AbstractRealType< FloatType > implements NativeTy
 	public int hashCode()
 	{
 		// NB: Use the same hash code as java.lang.Float#hashCode().
-		return Float.floatToIntBits(get());
+		return Float.floatToIntBits( get() );
 	}
 
 	@Override
@@ -263,8 +256,11 @@ public class FloatType extends AbstractRealType< FloatType > implements NativeTy
 	}
 
 	@Override
-	public Fraction getEntitiesPerPixel() { return new Fraction(); }
-	
+	public Fraction getEntitiesPerPixel()
+	{
+		return new Fraction();
+	}
+
 	@Override
 	public void updateIndex( final int index )
 	{
@@ -308,7 +304,7 @@ public class FloatType extends AbstractRealType< FloatType > implements NativeTy
 	}
 
 	@Override
-	public boolean valueEquals( FloatType t )
+	public boolean valueEquals( final FloatType t )
 	{
 		return get() == t.get();
 	}

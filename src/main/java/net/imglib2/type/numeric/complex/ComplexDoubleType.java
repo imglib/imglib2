@@ -35,10 +35,10 @@
 package net.imglib2.type.numeric.complex;
 
 import net.imglib2.img.NativeImg;
-import net.imglib2.img.NativeImgFactory;
 import net.imglib2.img.basictypeaccess.DoubleAccess;
 import net.imglib2.img.basictypeaccess.array.DoubleArray;
 import net.imglib2.type.NativeType;
+import net.imglib2.type.PrimitiveTypeInfo;
 import net.imglib2.util.Fraction;
 
 /**
@@ -87,21 +87,6 @@ public class ComplexDoubleType extends AbstractComplexType< ComplexDoubleType > 
 	}
 
 	@Override
-	public NativeImg< ComplexDoubleType, ? extends DoubleAccess > createSuitableNativeImg( final NativeImgFactory< ComplexDoubleType > storageFactory, final long dim[] )
-	{
-		// create the container
-		final NativeImg<ComplexDoubleType, ? extends DoubleAccess> container = storageFactory.createDoubleInstance( dim, new Fraction( 2, 1 ) );
-
-		// create a Type that is linked to the container
-		final ComplexDoubleType linkedType = new ComplexDoubleType( container );
-
-		// pass it to the NativeContainer
-		container.setLinkedType( linkedType );
-
-		return container;
-	}
-
-	@Override
 	public void updateContainer( final Object c )
 	{
 		dataAccess = img.update( c );
@@ -111,6 +96,14 @@ public class ComplexDoubleType extends AbstractComplexType< ComplexDoubleType > 
 	public ComplexDoubleType duplicateTypeOnSameNativeImg()
 	{
 		return new ComplexDoubleType( img );
+	}
+
+	private static final PrimitiveTypeInfo< ComplexDoubleType, DoubleAccess > info = PrimitiveTypeInfo.DOUBLE( img -> new ComplexDoubleType( img ) );
+
+	@Override
+	public PrimitiveTypeInfo< ComplexDoubleType, DoubleAccess > getPrimitiveTypeInfo()
+	{
+		return info;
 	}
 
 	@Override
@@ -187,7 +180,10 @@ public class ComplexDoubleType extends AbstractComplexType< ComplexDoubleType > 
 	}
 
 	@Override
-	public Fraction getEntitiesPerPixel() { return new Fraction( 2, 1 ); }
+	public Fraction getEntitiesPerPixel()
+	{
+		return new Fraction( 2, 1 );
+	}
 
 	@Override
 	public void updateIndex( final int index )
@@ -241,8 +237,7 @@ public class ComplexDoubleType extends AbstractComplexType< ComplexDoubleType > 
 	@Override
 	public boolean valueEquals( final ComplexDoubleType t )
 	{
-		return
-				( getRealDouble() == t.getRealDouble() ) &&
+		return ( getRealDouble() == t.getRealDouble() ) &&
 				( getImaginaryDouble() == t.getImaginaryDouble() );
 	}
 }

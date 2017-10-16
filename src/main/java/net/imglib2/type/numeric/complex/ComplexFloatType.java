@@ -35,10 +35,10 @@
 package net.imglib2.type.numeric.complex;
 
 import net.imglib2.img.NativeImg;
-import net.imglib2.img.NativeImgFactory;
 import net.imglib2.img.basictypeaccess.FloatAccess;
 import net.imglib2.img.basictypeaccess.array.FloatArray;
 import net.imglib2.type.NativeType;
+import net.imglib2.type.PrimitiveTypeInfo;
 import net.imglib2.util.Fraction;
 
 /**
@@ -87,21 +87,6 @@ public class ComplexFloatType extends AbstractComplexType< ComplexFloatType > im
 	}
 
 	@Override
-	public NativeImg< ComplexFloatType, ? extends FloatAccess > createSuitableNativeImg( final NativeImgFactory< ComplexFloatType > storageFactory, final long dim[] )
-	{
-		// create the container
-		final NativeImg<ComplexFloatType, ? extends FloatAccess> container = storageFactory.createFloatInstance( dim, new Fraction( 2, 1 ) );
-
-		// create a Type that is linked to the container
-		final ComplexFloatType linkedType = new ComplexFloatType( container );
-
-		// pass it to the NativeContainer
-		container.setLinkedType( linkedType );
-
-		return container;
-	}
-
-	@Override
 	public void updateContainer( final Object c )
 	{
 		dataAccess = img.update( c );
@@ -111,6 +96,14 @@ public class ComplexFloatType extends AbstractComplexType< ComplexFloatType > im
 	public ComplexFloatType duplicateTypeOnSameNativeImg()
 	{
 		return new ComplexFloatType( img );
+	}
+
+	private static final PrimitiveTypeInfo< ComplexFloatType, FloatAccess > info = PrimitiveTypeInfo.FLOAT( img -> new ComplexFloatType( img ) );
+
+	@Override
+	public PrimitiveTypeInfo< ComplexFloatType, FloatAccess > getPrimitiveTypeInfo()
+	{
+		return info;
 	}
 
 	@Override
@@ -241,7 +234,10 @@ public class ComplexFloatType extends AbstractComplexType< ComplexFloatType > im
 	}
 
 	@Override
-	public Fraction getEntitiesPerPixel() { return new Fraction( 2, 1 ); }
+	public Fraction getEntitiesPerPixel()
+	{
+		return new Fraction( 2, 1 );
+	}
 
 	@Override
 	public void updateIndex( final int index )
@@ -295,8 +291,7 @@ public class ComplexFloatType extends AbstractComplexType< ComplexFloatType > im
 	@Override
 	public boolean valueEquals( final ComplexFloatType t )
 	{
-		return
-				( getRealFloat() == t.getRealFloat() ) &&
+		return ( getRealFloat() == t.getRealFloat() ) &&
 				( getImaginaryFloat() == t.getImaginaryFloat() );
 	}
 }

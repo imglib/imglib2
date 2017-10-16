@@ -36,21 +36,17 @@ package net.imglib2.img.planar;
 
 import net.imglib2.exception.IncompatibleTypeException;
 import net.imglib2.img.ImgFactory;
-import net.imglib2.img.NativeImg;
 import net.imglib2.img.NativeImgFactory;
-import net.imglib2.img.basictypeaccess.array.ByteArray;
-import net.imglib2.img.basictypeaccess.array.CharArray;
-import net.imglib2.img.basictypeaccess.array.DoubleArray;
-import net.imglib2.img.basictypeaccess.array.FloatArray;
-import net.imglib2.img.basictypeaccess.array.IntArray;
-import net.imglib2.img.basictypeaccess.array.LongArray;
-import net.imglib2.img.basictypeaccess.array.ShortArray;
+import net.imglib2.img.basictypeaccess.ArrayDataAccessFactory;
+import net.imglib2.img.basictypeaccess.array.ArrayDataAccess;
 import net.imglib2.type.NativeType;
+import net.imglib2.type.PrimitiveTypeInfo;
 import net.imglib2.util.Fraction;
 
 /**
  * Factory that creates an appropriate {@link PlanarImg}.
- * 
+ *
+ * @author Tobias Pietzsch
  * @author Jan Funke
  * @author Stephan Preibisch
  * @author Stephan Saalfeld
@@ -59,51 +55,31 @@ import net.imglib2.util.Fraction;
 public class PlanarImgFactory< T extends NativeType< T > > extends NativeImgFactory< T >
 {
 	@Override
-	public PlanarImg< T, ? > create( final long[] dim, final T type )
+	public PlanarImg< T, ? > create( final long[] dimensions, final T type )
 	{
-		return ( PlanarImg< T, ? > ) type.createSuitableNativeImg( this, dim );
+		return create( type.getPrimitiveTypeInfo(), dimensions, type.getEntitiesPerPixel() );
 	}
 
-	@Override
-	public NativeImg< T, ByteArray > createByteInstance( final long[] dimensions, final Fraction entitiesPerPixel )
+	private < A > PlanarImg< T, ? > create(
+			final PrimitiveTypeInfo< T, A > info,
+			final long[] dimensions,
+			final Fraction entitiesPerPixel )
 	{
-		return new PlanarImg< T, ByteArray >( new ByteArray( 1 ), dimensions, entitiesPerPixel );
+		return create( ArrayDataAccessFactory.get( info ).createArray( 0 ), info, dimensions, entitiesPerPixel );
+		// calling createArray( 0 ) is necessary here, because otherwise javac
+		// will not infer the ArrayDataAccess type
+
 	}
 
-	@Override
-	public NativeImg< T, CharArray > createCharInstance( final long[] dimensions, final Fraction entitiesPerPixel )
+	private < A extends ArrayDataAccess< A > > PlanarImg< T, ? > create(
+			final A creator,
+			final PrimitiveTypeInfo< T, ? super A > info,
+			final long[] dimensions,
+			final Fraction entitiesPerPixel )
 	{
-		return new PlanarImg< T, CharArray >( new CharArray( 1 ), dimensions, entitiesPerPixel );
-	}
-
-	@Override
-	public NativeImg< T, DoubleArray > createDoubleInstance( final long[] dimensions, final Fraction entitiesPerPixel )
-	{
-		return new PlanarImg< T, DoubleArray >( new DoubleArray( 1 ), dimensions, entitiesPerPixel );
-	}
-
-	@Override
-	public NativeImg< T, FloatArray > createFloatInstance( final long[] dimensions, final Fraction entitiesPerPixel )
-	{
-		return new PlanarImg< T, FloatArray >( new FloatArray( 1 ), dimensions, entitiesPerPixel );
-	}
-
-	@Override
-	public NativeImg< T, IntArray > createIntInstance( final long[] dimensions, final Fraction entitiesPerPixel )
-	{
-		return new PlanarImg< T, IntArray >( new IntArray( 1 ), dimensions, entitiesPerPixel );
-	}
-
-	@Override
-	public NativeImg< T, LongArray > createLongInstance( final long[] dimensions, final Fraction entitiesPerPixel )
-	{
-		return new PlanarImg< T, LongArray >( new LongArray( 1 ), dimensions, entitiesPerPixel );
-	}
-
-	@Override
-	public NativeImg< T, ShortArray > createShortInstance( final long[] dimensions, final Fraction entitiesPerPixel )
-	{
-		return new PlanarImg< T, ShortArray >( new ShortArray( 1 ), dimensions, entitiesPerPixel );
+		final PlanarImg< T, A > img = new PlanarImg<>( creator, dimensions, entitiesPerPixel );
+		img.setLinkedType( info.createLinkedType( img ) );
+		return img;
 	}
 
 	@SuppressWarnings( { "unchecked", "rawtypes" } )
