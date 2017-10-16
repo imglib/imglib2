@@ -39,7 +39,6 @@ import java.util.function.Supplier;
 import net.imglib2.Dimensions;
 import net.imglib2.exception.IncompatibleTypeException;
 import net.imglib2.type.NativeType;
-import net.imglib2.type.Type;
 import net.imglib2.util.Util;
 
 /**
@@ -51,39 +50,39 @@ import net.imglib2.util.Util;
 public abstract class ImgFactory< T >
 {
 	/**
-	 * The {@link ImgFactory} can decide how to create the {@link Img}. A
-	 * {@link NativeImgFactory} will ask the {@link Type} to create a suitable
-	 * {@link NativeImg}.
+	 * Create an {@code Img} of the specified {@code type} with specified
+	 * {@code dimensions}.
 	 *
-	 * @return {@link Img}
+	 * @return {@link Img} new image of specified {@code type} and
+	 *         {@code dimensions}.
 	 */
-	public abstract Img< T > create( final long[] dim, final T type );
+	public abstract Img< T > create( final long[] dimensions, final T type );
 
 	/**
-	 * The {@link ImgFactory} can decide how to create the {@link Img}. A
-	 * {@link NativeImgFactory} will ask the {@link Type} to create a suitable
-	 * {@link NativeImg}.
+	 * Create an {@code Img} of the specified {@code type} with specified
+	 * {@code dimensions}.
 	 *
-	 * @return {@link Img}
+	 * @return {@link Img} new image of specified {@code type} and
+	 *         {@code dimensions}.
 	 */
-	public Img< T > create( final Dimensions dim, final T type )
+	public Img< T > create( final Dimensions dimensions, final T type )
 	{
-		final long[] size = new long[ dim.numDimensions() ];
-		dim.dimensions( size );
+		final long[] size = new long[ dimensions.numDimensions() ];
+		dimensions.dimensions( size );
 
 		return create( size, type );
 	}
 
 	/**
-	 * The {@link ImgFactory} can decide how to create the {@link Img}. A
-	 * {@link NativeImgFactory} will ask the {@link Type} to create a suitable
-	 * {@link NativeImg}.
+	 * Create an {@code Img} of the specified {@code type} with specified
+	 * {@code dimensions}.
 	 *
-	 * @return {@link Img}
+	 * @return {@link Img} new image of specified {@code type} and
+	 *         {@code dimensions}.
 	 */
-	public Img< T > create( final int[] dim, final T type )
+	public Img< T > create( final int[] dimensions, final T type )
 	{
-		return create( Util.int2long( dim ), type );
+		return create( Util.int2long( dimensions ), type );
 	}
 
 	/**
@@ -105,44 +104,45 @@ public abstract class ImgFactory< T >
 	public abstract < S > ImgFactory< S > imgFactory( final S type ) throws IncompatibleTypeException;
 
 	/**
-	 * The {@link ImgFactory} can decide how to create the {@link Img}. A
-	 * {@link NativeImgFactory} will ask the supplied {@link Type} to create a
-	 * suitable {@link NativeImg}.
+	 * Create an {@code Img} of the supplied {@code type} with specified
+	 * {@code dimensions}.
 	 *
-	 * @return {@link Img}
+	 * @return {@link Img} new image of specified {@code type} and
+	 *         {@code dimensions}.
 	 */
-	public Img< T > create( final Supplier< T > typeSupplier, final long... dim ) {
-		return create( dim, typeSupplier.get() );
+	public Img< T > create( final Supplier< T > typeSupplier, final long... dimensions ) {
+		return create( dimensions, typeSupplier.get() );
 	}
 
 	/**
-	 * The {@link ImgFactory} can decide how to create the {@link Img}. A
-	 * {@link NativeImgFactory} will ask the supplied {@link Type} to create a
-	 * suitable {@link NativeImg}.
+	 * Create an {@code Img} of the supplied {@code type} with specified
+	 * {@code dimensions}.
 	 *
-	 * @return {@link Img}
+	 * @return {@link Img} new image of specified {@code type} and
+	 *         {@code dimensions}.
 	 */
-	public Img< T > create( final Supplier< T > typeSupplier, final Dimensions dim )
+	public Img< T > create( final Supplier< T > typeSupplier, final Dimensions dimensions )
 	{
-		return create( dim, typeSupplier.get() );
+		return create( dimensions, typeSupplier.get() );
 	}
 
 	/**
-	 * The {@link ImgFactory} can decide how to create the {@link Img}. A
-	 * {@link NativeImgFactory} will ask the supplied {@link Type} to create a
-	 * suitable {@link NativeImg}.
+	 * Create an {@code Img} of the supplied {@code type} with specified
+	 * {@code dimensions}.
 	 *
 	 * <p>
-	 * Note: This is not a vararg function because the underlying int[]
-	 * based methods alreay copies the int[] dimensions into a disposable
-	 * long[] anyways.  This would be an unnecessary copy for int... varargs.
+	 * Note: This is not a vararg function because the underlying {@code int[]}
+	 * based methods already copies the {@code int[]} dimensions into a
+	 * disposable {@code long[]} anyways. This would be an unnecessary copy for
+	 * {@code int...} varargs.
 	 * </p>
 	 *
-	 * @return {@link Img}
+	 * @return {@link Img} new image of specified {@code type} and
+	 *         {@code dimensions}.
 	 */
-	public Img< T > create( final Supplier< T > typeSupplier, final int[] dim )
+	public Img< T > create( final Supplier< T > typeSupplier, final int[] dimensions )
 	{
-		return create( dim, typeSupplier.get() );
+		return create( dimensions, typeSupplier.get() );
 	}
 
 	/**
