@@ -82,7 +82,7 @@ public class RealComposite< T extends RealType< T > > extends AbstractNumericCom
 		final T t = sourceAccess.get();
 		final Img< T > img;
 		if ( NativeType.class.isInstance( t ) )
-			img = ( ( NativeType )t ).createSuitableNativeImg( new ArrayImgFactory(), new long[]{ length } );
+			img = new ArrayImgFactory().create( new long[] { length }, ( NativeType ) t );
 		else
 			img = new ListImgFactory< T >().create( new long[]{ length }, t );
 		return new RealComposite< T >( img.randomAccess(), length );
