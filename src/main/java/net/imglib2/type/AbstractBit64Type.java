@@ -53,7 +53,7 @@ import net.imglib2.img.basictypeaccess.array.LongArray;
  * @author Albert Cardona
  * @author Stephan Preibisch
  */
-public abstract class AbstractBit64Type<T extends AbstractBit64Type<T>> extends AbstractBitType< T >
+public abstract class AbstractBit64Type< T extends AbstractBit64Type< T > > extends AbstractBitType< T >
 {
 	// A mask for bit and, containing nBits of 1
 	private final long mask;

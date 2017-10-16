@@ -45,9 +45,9 @@ public final class BooleanNtree implements NtreeAccess< Boolean, BooleanNtree >
 
 	private final Ntree< Boolean > data;
 
-	public BooleanNtree( final long[] dimenions, final long[] position, final boolean value )
+	public BooleanNtree( final long[] dimensions, final long[] position, final boolean value )
 	{
-		this.data = new Ntree< Boolean >( dimenions, value );
+		this.data = new Ntree<>( dimensions, value );
 		this.position = position;
 	}
 

@@ -56,7 +56,7 @@ import net.imglib2.util.Fraction;
  *
  * @author Albert Cardona
  */
-public class Unsigned128BitType extends AbstractIntegerType<Unsigned128BitType> implements NativeType<Unsigned128BitType>
+public class Unsigned128BitType extends AbstractIntegerType< Unsigned128BitType > implements NativeType< Unsigned128BitType >
 {
 	private int i = 0;
 

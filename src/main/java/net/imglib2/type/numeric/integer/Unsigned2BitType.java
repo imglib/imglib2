@@ -49,7 +49,7 @@ import net.imglib2.util.Fraction;
  *
  * @author Albert Cardona
  */
-public class Unsigned2BitType extends AbstractIntegerBitType<Unsigned2BitType>
+public class Unsigned2BitType extends AbstractIntegerBitType< Unsigned2BitType >
 {
 	// A mask for bit and, containing nBits of 1
 	private final static long mask = 3; // 11 in binary

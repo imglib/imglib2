@@ -46,22 +46,19 @@ import net.imglib2.util.Fraction;
  * @author Tobias Pietzsch
  * 
  */
-public final class NtreeImg< T extends NativeType< T >, A extends NtreeAccess< ?, A >> extends AbstractNativeImg< T, A > implements Serializable
+public final class NtreeImg< T extends NativeType< T >, A extends NtreeAccess< ?, A > > extends AbstractNativeImg< T, A > implements Serializable
 {
-
 	/**
 	 * TODO: remove with proper serialization
 	 */
 	private static final long serialVersionUID = 1L;
 
-	// final Ntree<?> ntree;
 	final A data;
 
 	public NtreeImg( final A data, final long[] dim, final Fraction entitiesPerPixel )
 	{
 		super( dim, entitiesPerPixel );
 
-		// this.ntree = new Ntree<Integer>(dimensions, 0);
 		this.data = data;
 	}
 
@@ -69,7 +66,6 @@ public final class NtreeImg< T extends NativeType< T >, A extends NtreeAccess< ?
 	{
 		super( img.dimension, new Fraction() );
 
-		// this.ntree = new Ntree<Integer>(img.dimension, 0);
 		this.data = img.data;
 	}
 
@@ -79,28 +75,23 @@ public final class NtreeImg< T extends NativeType< T >, A extends NtreeAccess< ?
 	}
 
 	// updater is the RandomAccess / Cursor etc
-	// each call creates a new IntAccess wrapper
+	// each call creates a new NtreeAccess wrapper
 	@Override
 	public A update( final Object updater )
 	{
 		return data.createInstance( ( ( PositionProvider ) updater ).getPosition() );
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see net.imglib2.RandomAccessible#randomAccess()
-	 */
 	@Override
 	public NtreeRandomAccess< T > randomAccess()
 	{
-		return new NtreeRandomAccess< T >( this );
+		return new NtreeRandomAccess<>( this );
 	}
 
 	@Override
 	public NtreeCursor< T > cursor()
 	{
-		return new NtreeCursor< T >( this );
+		return new NtreeCursor<>( this );
 	}
 
 	@Override
@@ -112,7 +103,7 @@ public final class NtreeImg< T extends NativeType< T >, A extends NtreeAccess< ?
 	@Override
 	public ImgFactory< T > factory()
 	{
-		return new NtreeImgFactory< T >();
+		return new NtreeImgFactory<>();
 	}
 
 	@Override

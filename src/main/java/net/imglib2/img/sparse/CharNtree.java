@@ -47,9 +47,9 @@ public final class CharNtree implements CharAccess, NtreeAccess< Character, Char
 
 	private final Ntree< Character > data;
 
-	public CharNtree( final long[] dimenions, final long[] position, final Character value )
+	public CharNtree( final long[] dimensions, final long[] position, final char value )
 	{
-		this.data = new Ntree< Character >( dimenions, value );
+		this.data = new Ntree<>( dimensions, value );
 		this.position = position;
 	}
 

@@ -47,9 +47,9 @@ public final class FloatNtree implements FloatAccess, NtreeAccess< Float, FloatN
 
 	private final Ntree< Float > data;
 
-	public FloatNtree( final long[] dimenions, final long[] position, final Float value )
+	public FloatNtree( final long[] dimensions, final long[] position, final float value )
 	{
-		this.data = new Ntree< Float >( dimenions, value );
+		this.data = new Ntree<>( dimensions, value );
 		this.position = position;
 	}
 
