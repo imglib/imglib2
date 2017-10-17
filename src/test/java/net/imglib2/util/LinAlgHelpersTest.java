@@ -176,6 +176,22 @@ public class LinAlgHelpersTest
 	}
 
 	@Test
+	public void testQuaternionToRLarge()
+	{
+		final double[] q = new double[] { Double.MAX_VALUE, 0, Double.MAX_VALUE, 0 };
+		final double[][] expectedR = new double[][] {
+		                { Double.NaN, 0, Double.POSITIVE_INFINITY },
+				{ 0, Double.POSITIVE_INFINITY, 0 },
+				{ Double.NEGATIVE_INFINITY, 0, Double.NaN }
+		};
+		final double[][] R = new double[ 3 ][ 3 ];
+		LinAlgHelpers.quaternionToR( q, R );
+		assertArrayEquals( expectedR[ 0 ], R[ 0 ], delta );
+		assertArrayEquals( expectedR[ 1 ], R[ 1 ], delta );
+		assertArrayEquals( expectedR[ 2 ], R[ 2 ], delta );
+	}
+
+	@Test
 	public void testQuaternionFromR()
 	{
 		final double[][] R = new double[][] {
