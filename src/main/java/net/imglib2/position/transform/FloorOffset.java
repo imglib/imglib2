@@ -199,10 +199,11 @@ public class FloorOffset< LocalizablePositionable extends Localizable & Position
 	@Override
 	public void setPosition( final RealLocalizable localizable )
 	{
-		for(int d = 0; d < n; d++)
-			position[d] = localizable.getDoublePosition(d);
 		for ( int d = 0; d < n; ++d )
+		{
+			position[ d ] = localizable.getDoublePosition( d );
 			discrete[ d ] = f( position[ d ], offset[ d ] );
+		}
 		target.setPosition( discrete );
 	}
 

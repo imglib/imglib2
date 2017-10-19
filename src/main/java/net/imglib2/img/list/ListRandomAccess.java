@@ -11,13 +11,13 @@
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice,
  *    this list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  *    this list of conditions and the following disclaimer in the documentation
  *    and/or other materials provided with the distribution.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -40,10 +40,10 @@ import net.imglib2.RandomAccess;
 
 /**
  * {@link RandomAccess} on a {@link ListImg}.
- * 
+ *
  * @param <T>
  *            the pixel type
- * 
+ *
  * @author Stephan Preibisch
  * @author Stephan Saalfeld
  * @author Tobias Pietzsch
@@ -137,11 +137,12 @@ public class ListRandomAccess< T > extends AbstractLocalizableInt implements Ran
 	@Override
 	public void setPosition( final Localizable localizable )
 	{
-		for(int d = 0; d < n; d++)
-			position[d] = localizable.getIntPosition(d);
-		i = position[ 0 ];
+		position[ 0 ] = i = localizable.getIntPosition( 0 );
 		for ( int d = 1; d < n; ++d )
+		{
+			position[ d ] = localizable.getIntPosition( d );
 			i += position[ d ] * img.step[ d ];
+		}
 	}
 
 	@Override
