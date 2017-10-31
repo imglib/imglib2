@@ -35,8 +35,11 @@
 package net.imglib2.converter;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.function.Supplier;
 
 import net.imglib2.Cursor;
+import net.imglib2.Interval;
 import net.imglib2.IterableInterval;
 import net.imglib2.RandomAccess;
 import net.imglib2.RandomAccessible;
@@ -58,8 +61,13 @@ import net.imglib2.converter.readwrite.WriteConvertedRandomAccessible;
 import net.imglib2.converter.readwrite.WriteConvertedRandomAccessibleInterval;
 import net.imglib2.type.Type;
 import net.imglib2.type.numeric.ARGBType;
+import net.imglib2.type.numeric.NumericType;
+import net.imglib2.type.numeric.RealType;
 import net.imglib2.type.numeric.integer.UnsignedByteType;
 import net.imglib2.view.Views;
+import net.imglib2.view.composite.Composite;
+import net.imglib2.view.composite.NumericComposite;
+import net.imglib2.view.composite.RealComposite;
 
 /**
  * Convenience factory methods for sample conversion.
@@ -349,5 +357,128 @@ public class Converters
 			hyperSlices.add( argbChannel( source, channels[ c ] ) );
 
 		return Views.stack( hyperSlices );
+	}
+
+	/**
+	 * Compose a list of same {@link Interval} and same {@link RealType} A
+	 * {@link RandomAccessibleInterval RandomAccessibleIntervals} into a
+	 * {@link RandomAccessibleInterval} of some target {@link Type} B using a
+	 * {@link Converter} from {@link Composite} of A to B.
+	 *
+	 * @param components
+	 * @param composer
+	 * @param targetType
+	 * @return
+	 */
+	final static public < A extends RealType< A >, B extends Type< B > > RandomAccessibleInterval< B > composeReal(
+			final List< RandomAccessibleInterval< A > > components,
+			final Converter< RealComposite< A >, B > composer,
+			final B targetType )
+	{
+		return convert(
+				Views.collapseReal( Views.stack( components ) ),
+				composer,
+				targetType );
+	}
+
+	/**
+	 * Compose a list of same {@link Interval} and same {@link RealType} A
+	 * {@link RandomAccessibleInterval RandomAccessibleIntervals} into a
+	 * {@link RandomAccessibleInterval} of some target {@link Type} B using a
+	 * {@link Converter} from {@link Composite} of A to B.
+	 *
+	 * @param components
+	 * @param composer
+	 * @param targetTypeSupplier
+	 * @return
+	 */
+	final static public < A extends RealType< A >, B extends Type< B > > RandomAccessibleInterval< B > composeReal(
+			final List< RandomAccessibleInterval< A > > components,
+			final Converter< RealComposite< A >, B > composer,
+			final Supplier< B > targetTypeSupplier )
+	{
+		return composeReal( components, composer, targetTypeSupplier.get() );
+	}
+
+	/**
+	 * Compose a list of same {@link Interval} and same {@link NumericType} A
+	 * {@link RandomAccessibleInterval RandomAccessibleIntervals} into a
+	 * {@link RandomAccessibleInterval} of some target {@link Type} B using a
+	 * {@link Converter} from {@link Composite} of A to B.
+	 *
+	 * @param components
+	 * @param composer
+	 * @param targetType
+	 * @return
+	 */
+	final static public < A extends NumericType< A >, B extends Type< B > > RandomAccessibleInterval< B > composeNumeric(
+			final List< RandomAccessibleInterval< A > > components,
+			final Converter< NumericComposite< A >, B > composer,
+			final B targetType )
+	{
+		return convert(
+				Views.collapseNumeric( Views.stack( components ) ),
+				composer,
+				targetType );
+	}
+
+	/**
+	 * Compose a list of same {@link Interval} and same {@link NumericType} A
+	 * {@link RandomAccessibleInterval RandomAccessibleIntervals} into a
+	 * {@link RandomAccessibleInterval} of some target {@link Type} B using a
+	 * {@link Converter} from {@link Composite} of A to B.
+	 *
+	 * @param components
+	 * @param composer
+	 * @param targetTypeSupplier
+	 * @return
+	 */
+	final static public < A extends NumericType< A >, B extends Type< B > > RandomAccessibleInterval< B > composeNumeric(
+			final List< RandomAccessibleInterval< A > > components,
+			final Converter< NumericComposite< A >, B > composer,
+			final Supplier< B > targetTypeSupplier )
+	{
+		return composeNumeric( components, composer, targetTypeSupplier.get() );
+	}
+
+	/**
+	 * Compose a list of same {@link Interval} and same {@link Type} A
+	 * {@link RandomAccessibleInterval RandomAccessibleIntervals} into a
+	 * {@link RandomAccessibleInterval} of some target {@link Type} B using a
+	 * {@link Converter} from {@link Composite} of A to B.
+	 *
+	 * @param components
+	 * @param composer
+	 * @param targetType
+	 * @return
+	 */
+	final static public < A, B extends Type< B > > RandomAccessibleInterval< B > compose(
+			final List< RandomAccessibleInterval< A > > components,
+			final Converter< Composite< A >, B > composer,
+			final B targetType )
+	{
+		return convert(
+				Views.collapse( Views.stack( components ) ),
+				composer,
+				targetType );
+	}
+
+	/**
+	 * Compose a list of same {@link Interval} and same {@link Type} A
+	 * {@link RandomAccessibleInterval RandomAccessibleIntervals} into a
+	 * {@link RandomAccessibleInterval} of some target {@link Type} B using a
+	 * {@link Converter} from {@link Composite} of A to B.
+	 *
+	 * @param components
+	 * @param composer
+	 * @param targetTypeSupplier
+	 * @return
+	 */
+	final static public < A, B extends Type< B > > RandomAccessibleInterval< B > compose(
+			final List< RandomAccessibleInterval< A > > components,
+			final Converter< Composite< A >, B > composer,
+			final Supplier< B > targetTypeSupplier )
+	{
+		return compose( components, composer, targetTypeSupplier.get() );
 	}
 }
