@@ -384,7 +384,7 @@ final public class ArrayImgs
 	 */
 	final static public < A extends LongAccess > ArrayImg< Unsigned2BitType, A > unsigned2Bits( final A access, final long... dim )
 	{
-		final ArrayImg< Unsigned2BitType, A > img = new ArrayImg<>( access, dim, new Fraction( 1, 64 ) );
+		final ArrayImg< Unsigned2BitType, A > img = new ArrayImg<>( access, dim, new Fraction( 2, 64 ) );
 		final Unsigned2BitType t = new Unsigned2BitType( img );
 		img.setLinkedType( t );
 		return img;
@@ -405,7 +405,7 @@ final public class ArrayImgs
 	 */
 	final static public < A extends LongAccess > ArrayImg< Unsigned4BitType, A > unsigned4Bits( final A access, final long... dim )
 	{
-		final ArrayImg< Unsigned4BitType, A > img = new ArrayImg<>( access, dim, new Fraction( 1, 64 ) );
+		final ArrayImg< Unsigned4BitType, A > img = new ArrayImg<>( access, dim, new Fraction( 4, 64 ) );
 		final Unsigned4BitType t = new Unsigned4BitType( img );
 		img.setLinkedType( t );
 		return img;
@@ -426,7 +426,7 @@ final public class ArrayImgs
 	 */
 	final static public < A extends LongAccess > ArrayImg< Unsigned12BitType, A > unsigned12Bits( final A access, final long... dim )
 	{
-		final ArrayImg< Unsigned12BitType, A > img = new ArrayImg<>( access, dim, new Fraction( 1, 64 ) );
+		final ArrayImg< Unsigned12BitType, A > img = new ArrayImg<>( access, dim, new Fraction( 12, 64 ) );
 		final Unsigned12BitType t = new Unsigned12BitType( img );
 		img.setLinkedType( t );
 		return img;
@@ -447,7 +447,7 @@ final public class ArrayImgs
 	 */
 	final static public < A extends LongAccess > ArrayImg< Unsigned128BitType, A > unsigned128Bits( final A access, final long... dim )
 	{
-		final ArrayImg< Unsigned128BitType, A > img = new ArrayImg<>( access, dim, new Fraction( 1, 64 ) );
+		final ArrayImg< Unsigned128BitType, A > img = new ArrayImg<>( access, dim, new Fraction( 128, 64 ) );
 		final Unsigned128BitType t = new Unsigned128BitType( img );
 		img.setLinkedType( t );
 		return img;
@@ -468,7 +468,7 @@ final public class ArrayImgs
 	 */
 	final static public < A extends LongAccess > ArrayImg< UnsignedVariableBitLengthType, A > unsignedVariableBitLengths( final A access, final int nbits, final long... dim )
 	{
-		final ArrayImg< UnsignedVariableBitLengthType, A > img = new ArrayImg<>( access, dim, new Fraction( 1, 64 ) );
+		final ArrayImg< UnsignedVariableBitLengthType, A > img = new ArrayImg<>( access, dim, new Fraction( nbits, 64 ) );
 		final UnsignedVariableBitLengthType t = new UnsignedVariableBitLengthType( img, nbits );
 		img.setLinkedType( t );
 		return img;
