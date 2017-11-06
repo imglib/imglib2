@@ -43,6 +43,10 @@ package net.imglib2;
  * A function over an n-dimensional integer interval that can create a random
  * access {@link Sampler}.
  * </p>
+ * <p>
+ * By convention, a RandomAccessibleInterval represents a function that is
+ * <em>defined at all coordinates of the interval</em>.
+ * </p>
  *
  * @author Stephan Saalfeld
  */

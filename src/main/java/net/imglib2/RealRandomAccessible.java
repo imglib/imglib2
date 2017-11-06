@@ -48,6 +48,10 @@ package net.imglib2;
  * expect that the domain is infinite. (In contrast to this,
  * {@link RealRandomAccessibleRealInterval}s have a finite domain.)
  * </p>
+ * <p>
+ * Similarly to a {@link RandomAccessible}, a {@code RealRandomAccessible} might
+ * be defined only partially within the space.
+ * </p>
  * 
  * @author Stephan Saalfeld
  */
