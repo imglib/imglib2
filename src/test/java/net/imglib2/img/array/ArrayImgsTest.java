@@ -250,7 +250,7 @@ public class ArrayImgsTest
 		};
 		
 		long[] actual = img.update( null ).getCurrentStorageArray();
-		for(long l: actual) System.out.println( Long.toHexString( l ) );
+		assertArrayEquals( expected, actual );
 	}
 
 	@Test
