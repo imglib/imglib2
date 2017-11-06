@@ -33,10 +33,10 @@
  */
 package net.imglib2.loops;
 
-import org.junit.Test;
-
 import static junit.framework.TestCase.assertNotSame;
 import static org.junit.Assert.assertEquals;
+
+import org.junit.Test;
 
 /**
  * Tests {@link ClassCopier}.
@@ -50,17 +50,17 @@ public class ClassCopierTest
 	public void testExecuteCopy()
 			throws IllegalAccessException, InstantiationException
 	{
-		ClassCopier< MyInterface > copier = new ClassCopier<>( MyClass.class, MyInterface.class );
-		MyInterface copy = copier.copy().newInstance();
+		final ClassCopier< MyInterface > copier = new ClassCopier<>( MyClass.class, MyInterface.class );
+		final MyInterface copy = copier.copy().newInstance();
 		assertEquals( "Hello World!", copy.toString() );
 	}
 
 	@Test
 	public void testCopy() throws IllegalAccessException, InstantiationException
 	{
-		Class< ? extends MyInterface > originalClass = MyClass.class;
-		ClassCopier< MyInterface > copier = new ClassCopier<>( originalClass, MyInterface.class );
-		Class< ? extends MyInterface > copiedClass = copier.copy();
+		final Class< ? extends MyInterface > originalClass = MyClass.class;
+		final ClassCopier< MyInterface > copier = new ClassCopier<>( originalClass, MyInterface.class );
+		final Class< ? extends MyInterface > copiedClass = copier.copy();
 		assertNotSame( originalClass, copiedClass );
 	}
 
@@ -69,12 +69,13 @@ public class ClassCopierTest
 			throws IllegalAccessException, InstantiationException
 	{
 		// NB: An instance of a copy of MyClass, cannot be assigned to MyClass.
-		MyClass copy = new ClassCopier<>( MyClass.class, MyClass.class ).copy().newInstance();
+		final MyClass copy = new ClassCopier<>( MyClass.class, MyClass.class ).copy().newInstance();
 	}
 
 	public static class MyClass implements MyInterface
 	{
 
+		@Override
 		public String toString()
 		{
 			return "Hello World!";

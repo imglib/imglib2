@@ -33,6 +33,12 @@
  */
 package net.imglib2.loops;
 
+import static org.junit.Assert.assertEquals;
+
+import java.util.Random;
+
+import org.junit.Test;
+
 import net.imglib2.Cursor;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.img.Img;
@@ -40,46 +46,39 @@ import net.imglib2.img.array.ArrayImgs;
 import net.imglib2.type.numeric.integer.IntType;
 import net.imglib2.util.Intervals;
 import net.imglib2.view.Views;
-import org.junit.Test;
-
-import java.util.Random;
-
-import static org.junit.Assert.assertEquals;
 
 public class LoopBuilderTest
 {
 
-	private RandomAccessibleInterval< IntType > imageA = randomImage( 1 );
+	private final RandomAccessibleInterval< IntType > imageA = randomImage( 1 );
 
-	private RandomAccessibleInterval< IntType > imageB = randomImage( 42 );
+	private final RandomAccessibleInterval< IntType > imageB = randomImage( 42 );
 
 	@Test
 	public void testLoopBuilderRun()
 	{
-		RandomAccessibleInterval< IntType > sum = ArrayImgs.ints(
-				Intervals.dimensionsAsLongArray( imageA )
-		);
+		final RandomAccessibleInterval< IntType > sum = ArrayImgs.ints(
+				Intervals.dimensionsAsLongArray( imageA ) );
 		LoopBuilder.setImages( imageA, imageB, sum ).forEachPixel(
 				( a, b, s ) -> {
 					s.set( a.get() + b.get() );
-				}
-		);
+				} );
 		assertSum( sum );
 	}
 
-	private RandomAccessibleInterval< IntType > randomImage( int randomSeed )
+	private RandomAccessibleInterval< IntType > randomImage( final int randomSeed )
 	{
-		Img< IntType > result = ArrayImgs.ints( 3, 2, 5 );
-		Random random = new Random( randomSeed );
+		final Img< IntType > result = ArrayImgs.ints( 3, 2, 5 );
+		final Random random = new Random( randomSeed );
 		result.forEach( x -> x.set( random.nextInt() ) );
 		return Views.translate( result, random.nextInt(), random.nextInt(), random.nextInt() );
 	}
 
-	private void assertSum( RandomAccessibleInterval< IntType > sum )
+	private void assertSum( final RandomAccessibleInterval< IntType > sum )
 	{
-		Cursor< IntType > a = Views.iterable( imageA ).cursor();
-		Cursor< IntType > b = Views.iterable( imageB ).cursor();
-		Cursor< IntType > s = Views.iterable( sum ).cursor();
+		final Cursor< IntType > a = Views.iterable( imageA ).cursor();
+		final Cursor< IntType > b = Views.iterable( imageB ).cursor();
+		final Cursor< IntType > s = Views.iterable( sum ).cursor();
 		while ( s.hasNext() )
 			assertEquals( s.next().get(), a.next().get() + b.next().get() );
 	}

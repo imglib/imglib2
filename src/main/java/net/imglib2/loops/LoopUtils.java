@@ -33,15 +33,15 @@
  */
 package net.imglib2.loops;
 
-import net.imglib2.Dimensions;
-import net.imglib2.Positionable;
-
 import java.util.Arrays;
 import java.util.List;
 
+import net.imglib2.Dimensions;
+import net.imglib2.Positionable;
+
 /**
- * {@link LoopUtils} contains methods to simplify writing a loop over
- * an image line or image interval.
+ * {@link LoopUtils} contains methods to simplify writing a loop over an image
+ * line or image interval.
  *
  * @author Matthias Arzt
  */
@@ -57,12 +57,13 @@ final public class LoopUtils
 
 	/**
 	 * <p>
-	 * Returns a loop, that moves the given positonable along a line,
-	 * and executes the given operation for each pixel of the line.
-	 * The method uses {@link ClassCopyProvider}, such that the returned loop can be optimised gracefully by the java
-	 * just-in-time compiler.
-	 * Aside from that, the result is functionally equivalent to:
+	 * Returns a loop, that moves the given positonable along a line, and
+	 * executes the given operation for each pixel of the line. The method uses
+	 * {@link ClassCopyProvider}, such that the returned loop can be optimised
+	 * gracefully by the java just-in-time compiler. Aside from that, the result
+	 * is functionally equivalent to:
 	 * </p>
+	 *
 	 * <pre>
 	 * {@code Runnable result = () -> {
 	 *     for (long i = 0; i < length; i++) {
@@ -71,41 +72,50 @@ final public class LoopUtils
 	 *     }
 	 *     positionable.move(- length, dimension);
 	 * }
-	 * }</pre>
+	 * }
+	 * </pre>
 	 *
-	 * @param positionable Positionable that is moved (along a line). Defines the starting point of the line.
-	 *                     After the loops execution the positionable is moved back to the starting point.
-	 * @param length       Length of the line.
-	 * @param dimension    Direction of the line.
-	 * @param action    Operation that is executed for each pixel along the line.
+	 * @param positionable
+	 *            Positionable that is moved (along a line). Defines the
+	 *            starting point of the line. After the loops execution the
+	 *            positionable is moved back to the starting point.
+	 * @param length
+	 *            Length of the line.
+	 * @param dimension
+	 *            Direction of the line.
+	 * @param action
+	 *            Operation that is executed for each pixel along the line.
 	 * @return A {@link Runnable} that is functionally equivalent to:
 	 */
-	public static Runnable createLineLoop( Positionable positionable, long length, int dimension, Runnable action )
+	public static Runnable createLineLoop( final Positionable positionable, final long length, final int dimension, final Runnable action )
 	{
-		List< Object > key = Arrays.asList( action.getClass() );
+		final List< Object > key = Arrays.asList( action.getClass() );
 		return factory.newInstanceForKey( key, action, positionable, length, dimension );
 	}
 
 	/**
-	 * Returns a {@link Runnable} containing a loop.
-	 * The loop moves the given positionable over all the pixels of an interval.
-	 * For each pixel of the interval the given operation is executed.
+	 * Returns a {@link Runnable} containing a loop. The loop moves the given
+	 * positionable over all the pixels of an interval. For each pixel of the
+	 * interval the given operation is executed.
 	 *
-	 * @param positionable Positionable that is moved. Defines the minimum point of the interval.
-	 *                     After the loops execution the positionable is moved back to the starting point.
-	 * @param dimensions   Dimensions of the interval.
-	 * @param action    Operation that is executed for each pixel of the interval.
+	 * @param positionable
+	 *            Positionable that is moved. Defines the minimum point of the
+	 *            interval. After the loops execution the positionable is moved
+	 *            back to the starting point.
+	 * @param dimensions
+	 *            Dimensions of the interval.
+	 * @param action
+	 *            Operation that is executed for each pixel of the interval.
 	 */
-	public static Runnable createIntervalLoop( Positionable positionable, Dimensions dimensions, Runnable action )
+	public static Runnable createIntervalLoop( final Positionable positionable, final Dimensions dimensions, Runnable action )
 	{
 		for ( int i = 0; i < dimensions.numDimensions(); i++ )
 		{
-			long dimension = dimensions.dimension( i );
+			final long dimension = dimensions.dimension( i );
 			if ( dimension > 1 )
 				action = createLineLoop( positionable, dimension, i, action );
 			else if ( dimension <= 0 )
-				action = () -> {
-				};
+				action = () -> {};
 		}
 		return action;
 	}
@@ -121,7 +131,7 @@ final public class LoopUtils
 
 		private final int dimension;
 
-		public LineProcessor( Runnable action, Positionable positionable, long length, int dimension )
+		public LineProcessor( final Runnable action, final Positionable positionable, final long length, final int dimension )
 		{
 			this.action = action;
 			this.positionable = positionable;
@@ -129,6 +139,7 @@ final public class LoopUtils
 			this.dimension = dimension;
 		}
 
+		@Override
 		public void run()
 		{
 			for ( long i = 0; i < lineLength; i++ )

@@ -37,23 +37,26 @@ import java.io.DataInputStream;
 import java.io.IOException;
 
 /**
- * {@link ClassCopier} helps copying a class. The resulting class works as the original.
+ * {@link ClassCopier} helps copying a class. The resulting class works as the
+ * original.
  * <p>
  * Why would you want to copy a class?
  * <p>
- * The problem is described in <a href="https://github.com/tpietzsch/none/">https://github.com/tpietzsch/none/</a>.
- * The solution suggested there is to copy a specific method of a class, but copying a whole class is easier.
+ * The problem is described in <a href=
+ * "https://github.com/tpietzsch/none/">https://github.com/tpietzsch/none/</a>.
+ * The solution suggested there is to copy a specific method of a class, but
+ * copying a whole class is easier.
  *
  * @author Matthias Arzt
  */
 class ClassCopier< T >
 {
 
-	private Class< ? extends T > original;
+	private final Class< ? extends T > original;
 
-	private byte[] bytes;
+	private final byte[] bytes;
 
-	public ClassCopier( Class< ? extends T > original, Class< T > interfaceOfOriginal )
+	public ClassCopier( final Class< ? extends T > original, final Class< T > interfaceOfOriginal )
 	{
 		if ( !interfaceOfOriginal.isAssignableFrom( original ) || interfaceOfOriginal.equals( original ) )
 			throw new IllegalArgumentException( "\"original\" must be a implementation of interface \"interfaceOfOriginal\"" );
@@ -65,21 +68,21 @@ class ClassCopier< T >
 	{
 		System.err.println( "Copy class: " + original );
 		@SuppressWarnings( "unchecked" )
-		Class< ? extends T > copy = ( Class< ? extends T > ) new ClassCopyLoader().bytesToClass( original.getName(), bytes );
+		final Class< ? extends T > copy = ( Class< ? extends T > ) new ClassCopyLoader().bytesToClass( original.getName(), bytes );
 		return copy;
 	}
 
-	private byte[] classToBytes( Class< ? > aClass )
+	private byte[] classToBytes( final Class< ? > aClass )
 	{
-		String className = aClass.getName();
-		String classAsPath = className.replace( '.', '/' ) + ".class";
+		final String className = aClass.getName();
+		final String classAsPath = className.replace( '.', '/' ) + ".class";
 		try (DataInputStream stream = new DataInputStream( aClass.getClassLoader().getResourceAsStream( classAsPath ) ))
 		{
-			byte[] bytes = new byte[ stream.available() ];
+			final byte[] bytes = new byte[ stream.available() ];
 			stream.readFully( bytes );
 			return bytes;
 		}
-		catch ( IOException e )
+		catch ( final IOException e )
 		{
 			throw new RuntimeException( e );
 		}
@@ -88,9 +91,9 @@ class ClassCopier< T >
 	private static class ClassCopyLoader extends ClassLoader
 	{
 
-		private Class< ? > bytesToClass( String className, byte[] bytes )
+		private Class< ? > bytesToClass( final String className, final byte[] bytes )
 		{
-			Class< ? > copiedClass = super.defineClass( className, bytes, 0, bytes.length );
+			final Class< ? > copiedClass = super.defineClass( className, bytes, 0, bytes.length );
 			super.resolveClass( copiedClass );
 			return copiedClass;
 		}

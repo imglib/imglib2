@@ -52,18 +52,17 @@ class ClassCopyProvider< T >
 
 	private final Class< ? >[] signature;
 
-	public ClassCopyProvider( Class< ? extends T > clazz, Class< T > interfaceOfClazz, Class< ? >... constructorSignature )
+	public ClassCopyProvider( final Class< ? extends T > clazz, final Class< T > interfaceOfClazz, final Class< ? >... constructorSignature )
 	{
 		this.copier = new ClassCopier<>( clazz, interfaceOfClazz );
-		this.signature = ( constructorSignature == null || constructorSignature.length == 0 ) ?
-				assumeConstructorSignature( clazz ) : constructorSignature;
+		this.signature = ( constructorSignature == null || constructorSignature.length == 0 ) ? assumeConstructorSignature( clazz ) : constructorSignature;
 	}
 
-	private static Class< ? >[] assumeConstructorSignature( Class< ? > clazz )
+	private static Class< ? >[] assumeConstructorSignature( final Class< ? > clazz )
 	{
 		if ( hasDefaultConstructor( clazz ) )
 			return new Class[ 0 ];
-		Constructor< ? >[] constructors = clazz.getConstructors();
+		final Constructor< ? >[] constructors = clazz.getConstructors();
 		if ( constructors.length == 1 )
 			return constructors[ 0 ].getParameterTypes();
 		if ( constructors.length == 0 )
@@ -71,18 +70,18 @@ class ClassCopyProvider< T >
 		throw new IllegalArgumentException( "ClassCopyProvider: Please specify constructor signature." );
 	}
 
-	private static boolean hasDefaultConstructor( Class< ? > clazz )
+	private static boolean hasDefaultConstructor( final Class< ? > clazz )
 	{
 		return Stream.of( clazz.getConstructors() )
 				.anyMatch( constructor -> constructor.getParameterCount() == 0 );
 	}
 
-	Class< ? extends T > classForKey( Object key )
+	Class< ? extends T > classForKey( final Object key )
 	{
 		return map.computeIfAbsent( key, k -> copier.copy() );
 	}
 
-	public boolean matches( Object... parameters )
+	public boolean matches( final Object... parameters )
 	{
 		if ( parameters.length != signature.length )
 			return false;
@@ -97,13 +96,13 @@ class ClassCopyProvider< T >
 		return Arrays.asList( signature );
 	}
 
-	T newInstanceForKey( Object key, Object... parameters )
+	T newInstanceForKey( final Object key, final Object... parameters )
 	{
 		try
 		{
 			return classForKey( key ).getConstructor( signature ).newInstance( parameters );
 		}
-		catch ( Exception e )
+		catch ( final Exception e )
 		{
 			throw new RuntimeException( e );
 		}

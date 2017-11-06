@@ -33,28 +33,33 @@
  */
 package net.imglib2.loops;
 
-import net.imglib2.Localizable;
-import net.imglib2.Positionable;
-
 import java.util.Arrays;
 import java.util.List;
 
+import net.imglib2.Localizable;
+import net.imglib2.Positionable;
+
 /**
- * Helper for the implementation of {@link LoopBuilder}.
- * Used to bind together a list of {@link Positionable}s:
+ * Helper for the implementation of {@link LoopBuilder}. Used to bind together a
+ * list of {@link Positionable}s:
  * <p>
  * {@code
  * Positionable synced = SyncedPositionables.create(listOfPositionables);
  * }
- * </p><p>
- * A call of a method for relative movement of {@code synced} moves
- * all the {@link Positionable}s in the list ({@code listOfPositionable}) accordingly.
- * </p><p>
+ * </p>
+ * <p>
+ * A call of a method for relative movement of {@code synced} moves all the
+ * {@link Positionable}s in the list ({@code listOfPositionable}) accordingly.
+ * </p>
+ * <p>
  * e.g.: A call to {@code synced.fwd(d)}, is functionally equivalent to
  * {@code for(Positionable p : listOfPostionables) { p.fwd(d); }}
- * </p><p>
- * Methods {@link Positionable#fwd}, {@link Positionable#bck} and {@link Positionable#move} are supported.
- * But calling {@link Positionable#setPosition} or {@link Positionable#numDimensions} will throw an {@link UnsupportedOperationException}.
+ * </p>
+ * <p>
+ * Methods {@link Positionable#fwd}, {@link Positionable#bck} and
+ * {@link Positionable#move} are supported. But calling
+ * {@link Positionable#setPosition} or {@link Positionable#numDimensions} will
+ * throw an {@link UnsupportedOperationException}.
  * </p>
  *
  * @author Matthias Arzt
@@ -67,7 +72,7 @@ public final class SyncedPositionables
 		// prevent class from instantiation
 	}
 
-	public static Positionable create( List< ? extends Positionable > positionables )
+	public static Positionable create( final List< ? extends Positionable > positionables )
 	{
 		switch ( positionables.size() )
 		{
@@ -84,7 +89,7 @@ public final class SyncedPositionables
 		}
 	}
 
-	public static Positionable create( Positionable... positionables )
+	public static Positionable create( final Positionable... positionables )
 	{
 		return create( Arrays.asList( positionables ) );
 	}
@@ -93,64 +98,64 @@ public final class SyncedPositionables
 	{
 
 		@Override
-		default void bck( int d )
+		default void bck( final int d )
 		{
 			move( -1, d );
 		}
 
 		@Override
-		default void move( int distance, int d )
+		default void move( final int distance, final int d )
 		{
 			move( ( long ) distance, d );
 		}
 
 		@Override
-		default void move( Localizable localizable )
+		default void move( final Localizable localizable )
 		{
 			for ( int i = 0; i < localizable.numDimensions(); i++ )
 				move( localizable.getLongPosition( i ), i );
 		}
 
 		@Override
-		default void move( int[] distance )
+		default void move( final int[] distance )
 		{
 			for ( int i = 0; i < distance.length; i++ )
 				move( ( long ) distance[ i ], i );
 		}
 
 		@Override
-		default void move( long[] distance )
+		default void move( final long[] distance )
 		{
 			for ( int i = 0; i < distance.length; i++ )
 				move( distance[ i ], i );
 		}
 
 		@Override
-		default void setPosition( Localizable localizable )
+		default void setPosition( final Localizable localizable )
 		{
 			throw new UnsupportedOperationException();
 		}
 
 		@Override
-		default void setPosition( int[] position )
+		default void setPosition( final int[] position )
 		{
 			throw new UnsupportedOperationException();
 		}
 
 		@Override
-		default void setPosition( long[] position )
+		default void setPosition( final long[] position )
 		{
 			throw new UnsupportedOperationException();
 		}
 
 		@Override
-		default void setPosition( int position, int d )
+		default void setPosition( final int position, final int d )
 		{
 			throw new UnsupportedOperationException();
 		}
 
 		@Override
-		default void setPosition( long position, int d )
+		default void setPosition( final long position, final int d )
 		{
 			throw new UnsupportedOperationException();
 		}
@@ -167,19 +172,19 @@ public final class SyncedPositionables
 
 		private final Positionable a;
 
-		public Forwarder1( List< ? extends Positionable > values )
+		public Forwarder1( final List< ? extends Positionable > values )
 		{
 			this.a = values.get( 0 );
 		}
 
 		@Override
-		public void fwd( int d )
+		public void fwd( final int d )
 		{
 			a.fwd( d );
 		}
 
 		@Override
-		public void move( long offset, int d )
+		public void move( final long offset, final int d )
 		{
 			a.move( offset, d );
 		}
@@ -190,21 +195,21 @@ public final class SyncedPositionables
 
 		private final Positionable a, b;
 
-		public Forwarder2( List< ? extends Positionable > values )
+		public Forwarder2( final List< ? extends Positionable > values )
 		{
 			this.a = values.get( 0 );
 			this.b = values.get( 1 );
 		}
 
 		@Override
-		public void fwd( int d )
+		public void fwd( final int d )
 		{
 			a.fwd( d );
 			b.fwd( d );
 		}
 
 		@Override
-		public void move( long offset, int d )
+		public void move( final long offset, final int d )
 		{
 			a.move( offset, d );
 			b.move( offset, d );
@@ -216,7 +221,7 @@ public final class SyncedPositionables
 
 		private final Positionable a, b, c;
 
-		public Forwarder3( List< ? extends Positionable > values )
+		public Forwarder3( final List< ? extends Positionable > values )
 		{
 			this.a = values.get( 0 );
 			this.b = values.get( 1 );
@@ -224,7 +229,7 @@ public final class SyncedPositionables
 		}
 
 		@Override
-		public void fwd( int d )
+		public void fwd( final int d )
 		{
 			a.fwd( d );
 			b.fwd( d );
@@ -232,7 +237,7 @@ public final class SyncedPositionables
 		}
 
 		@Override
-		public void move( long offset, int d )
+		public void move( final long offset, final int d )
 		{
 			a.move( offset, d );
 			b.move( offset, d );
@@ -245,22 +250,22 @@ public final class SyncedPositionables
 
 		private final Positionable[] values;
 
-		public GeneralForwarder( List< ? extends Positionable > values )
+		public GeneralForwarder( final List< ? extends Positionable > values )
 		{
 			this.values = values.toArray( new Positionable[ values.size() ] );
 		}
 
 		@Override
-		public void fwd( int d )
+		public void fwd( final int d )
 		{
-			for ( Positionable positionable : values )
+			for ( final Positionable positionable : values )
 				positionable.fwd( d );
 		}
 
 		@Override
-		public void move( long offset, int d )
+		public void move( final long offset, final int d )
 		{
-			for ( Positionable positionable : values )
+			for ( final Positionable positionable : values )
 				positionable.move( offset, d );
 		}
 	}

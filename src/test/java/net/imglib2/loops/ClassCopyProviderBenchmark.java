@@ -33,7 +33,10 @@
  */
 package net.imglib2.loops;
 
-import net.imglib2.type.numeric.integer.IntType;
+import java.util.function.BiConsumer;
+import java.util.function.Consumer;
+import java.util.function.IntConsumer;
+
 import org.openjdk.jmh.annotations.Benchmark;
 import org.openjdk.jmh.annotations.Scope;
 import org.openjdk.jmh.annotations.State;
@@ -43,20 +46,18 @@ import org.openjdk.jmh.runner.options.Options;
 import org.openjdk.jmh.runner.options.OptionsBuilder;
 import org.openjdk.jmh.runner.options.TimeValue;
 
-import java.util.function.BiConsumer;
-import java.util.function.Consumer;
-import java.util.function.IntConsumer;
+import net.imglib2.type.numeric.integer.IntType;
 
 /**
  * How to speed up a method like "forEach", by using {@link ClassCopyProvider}.
  * <p>
- * {@link ClassCopyProviderBenchmark} demonstrates how to solve the problem described
- * <a href="https://github.com/tpietzsch/none/">https://github.com/tpietzsch/none/</a>
+ * {@link ClassCopyProviderBenchmark} demonstrates how to solve the problem
+ * described <a href=
+ * "https://github.com/tpietzsch/none/">https://github.com/tpietzsch/none/</a>
  * by using {@link ClassCopyProvider}.
  * <p>
- * There is a significant speedup using Java 8.
- * ClassCopyProvider might be removed in the future,
- * if there is no speedup with more recent Java versions.
+ * There is a significant speedup using Java 8. ClassCopyProvider might be
+ * removed in the future, if there is no speedup with more recent Java versions.
  *
  * @author Matthias Arzt
  */
@@ -78,55 +79,54 @@ public class ClassCopyProviderBenchmark
 		calculateSumMinAndMax( this::fasterForEach );
 	}
 
-	private void calculateSumMinAndMax( Consumer< IntConsumer > loop )
+	private void calculateSumMinAndMax( final Consumer< IntConsumer > loop )
 	{
 		for ( int i = 0; i < 10; i++ )
 		{
-			IntType sum = new IntType( 0 );
+			final IntType sum = new IntType( 0 );
 			loop.accept( x -> sum.set( sum.get() + x ) );
-			IntType min = new IntType( Integer.MAX_VALUE );
+			final IntType min = new IntType( Integer.MAX_VALUE );
 			loop.accept( x -> min.set( Math.min( min.get(), x ) ) );
-			IntType max = new IntType( Integer.MIN_VALUE );
+			final IntType max = new IntType( Integer.MIN_VALUE );
 			loop.accept( x -> max.set( Math.max( max.get(), x ) ) );
 		}
 	}
 
-	private void normalForEach( IntConsumer action )
+	private void normalForEach( final IntConsumer action )
 	{
-		for ( int value : values )
+		for ( final int value : values )
 			action.accept( value );
 	}
 
-	private void fasterForEach( IntConsumer action )
+	private void fasterForEach( final IntConsumer action )
 	{
 		// NB: For every different "action.getClass()", "loopFactory" will make
 		// a copy of the class "Loop" and it's byte code
 		// and return an instance of this copied class.
-		Object key = action.getClass();
-		LoopInterface loop = loopFactory.newInstanceForKey( key );
+		final Object key = action.getClass();
+		final LoopInterface loop = loopFactory.newInstanceForKey( key );
 		loop.accept( values, action );
 	}
 
-	private static final ClassCopyProvider< LoopInterface > loopFactory =
-			new ClassCopyProvider<>( Loop.class, LoopInterface.class );
+	private static final ClassCopyProvider< LoopInterface > loopFactory = new ClassCopyProvider<>( Loop.class, LoopInterface.class );
 
 	public static class Loop implements LoopInterface
 	{
 
-		@Override public void accept( int[] values, IntConsumer action )
+		@Override
+		public void accept( final int[] values, final IntConsumer action )
 		{
-			for ( int value : values )
+			for ( final int value : values )
 				action.accept( value );
 		}
 	}
 
 	public interface LoopInterface extends BiConsumer< int[], IntConsumer >
-	{
-	}
+	{}
 
-	public static void main( String... args ) throws RunnerException
+	public static void main( final String... args ) throws RunnerException
 	{
-		Options opt = new OptionsBuilder()
+		final Options opt = new OptionsBuilder()
 				.include( ClassCopyProviderBenchmark.class.getSimpleName() )
 				.forks( 0 )
 				.warmupIterations( 4 )

@@ -33,13 +33,6 @@
  */
 package net.imglib2.loops;
 
-import net.imglib2.Cursor;
-import net.imglib2.RandomAccess;
-import net.imglib2.RandomAccessibleInterval;
-import net.imglib2.img.array.ArrayImgs;
-import net.imglib2.type.numeric.real.DoubleType;
-import net.imglib2.util.Intervals;
-import net.imglib2.view.Views;
 import org.openjdk.jmh.annotations.Benchmark;
 import org.openjdk.jmh.annotations.Scope;
 import org.openjdk.jmh.annotations.State;
@@ -48,6 +41,14 @@ import org.openjdk.jmh.runner.RunnerException;
 import org.openjdk.jmh.runner.options.Options;
 import org.openjdk.jmh.runner.options.OptionsBuilder;
 import org.openjdk.jmh.runner.options.TimeValue;
+
+import net.imglib2.Cursor;
+import net.imglib2.RandomAccess;
+import net.imglib2.RandomAccessibleInterval;
+import net.imglib2.img.array.ArrayImgs;
+import net.imglib2.type.numeric.real.DoubleType;
+import net.imglib2.util.Intervals;
+import net.imglib2.view.Views;
 
 /**
  * Performance benchmark to demonstrate {@link LoopBuilder} performance.
@@ -100,16 +101,15 @@ public class LoopPerformanceBenchmark
 	@Benchmark
 	public void gradient_niceAndFast()
 	{
-		RandomAccessibleInterval< DoubleType > backSource = Views.interval( in, Intervals.translate( out, -1, 0 ) );
-		RandomAccessibleInterval< DoubleType > frontSource = Views.interval( in, Intervals.translate( out, 1, 0 ) );
+		final RandomAccessibleInterval< DoubleType > backSource = Views.interval( in, Intervals.translate( out, -1, 0 ) );
+		final RandomAccessibleInterval< DoubleType > frontSource = Views.interval( in, Intervals.translate( out, 1, 0 ) );
 
 		LoopBuilder.setImages( out, backSource, frontSource ).forEachPixel(
 				( result, back, front ) -> {
 					result.set( front );
 					result.sub( back );
 					result.mul( 0.5 );
-				}
-		);
+				} );
 	}
 
 	@Benchmark
@@ -124,9 +124,9 @@ public class LoopPerformanceBenchmark
 		LoopBuilder.setImages( Views.interval( in, out ), out ).forEachPixel( ( in, out ) -> out.set( in ) );
 	}
 
-	public static void main( String... args ) throws RunnerException
+	public static void main( final String... args ) throws RunnerException
 	{
-		Options opt = new OptionsBuilder()
+		final Options opt = new OptionsBuilder()
 				.include( LoopPerformanceBenchmark.class.getSimpleName() )
 				.forks( 0 )
 				.warmupIterations( 4 )

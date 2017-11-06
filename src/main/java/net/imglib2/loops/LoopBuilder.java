@@ -33,6 +33,14 @@
  */
 package net.imglib2.loops;
 
+import java.util.Arrays;
+import java.util.List;
+import java.util.Objects;
+import java.util.function.BiConsumer;
+import java.util.function.Consumer;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
 import net.imglib2.Dimensions;
 import net.imglib2.FinalInterval;
 import net.imglib2.Interval;
@@ -42,18 +50,13 @@ import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.Sampler;
 import net.imglib2.util.Intervals;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
-import java.util.function.BiConsumer;
-import java.util.function.Consumer;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
 /**
- * {@link LoopBuilder} provides an easy way to write fast loops on {@link RandomAccessibleInterval}s.
- * For example, this is a loop that calculates the sum of two images:
- * <pre>{@code
+ * {@link LoopBuilder} provides an easy way to write fast loops on
+ * {@link RandomAccessibleInterval}s. For example, this is a loop that
+ * calculates the sum of two images:
+ *
+ * <pre>
+ * {@code
  * RandomAccessibleInterval<DoubleType> imageA = ...
  * RandomAccessibleInterval<DoubleType> imageB = ...
  * RandomAccessibleInterval<DoubleType> sum = ...
@@ -63,9 +66,12 @@ import java.util.stream.Stream;
  *          s.setReal(a.getRealDouble() + b.getRealDouble());
  *     }
  * );
- * }</pre>
- * The {@link RandomAccessibleInterval}s {@code imageA}, {@code imageB} and {@code sum} must have equal dimensions,
- * but the bounds of there {@link Intervals} can differ.
+ * }
+ * </pre>
+ *
+ * The {@link RandomAccessibleInterval}s {@code imageA}, {@code imageB} and
+ * {@code sum} must have equal dimensions, but the bounds of there
+ * {@link Intervals} can differ.
  *
  * @author Matthias Arzt
  */
@@ -76,47 +82,47 @@ public class LoopBuilder< T >
 
 	private final RandomAccessibleInterval< ? >[] images;
 
-	private LoopBuilder( RandomAccessibleInterval< ? >... images )
+	private LoopBuilder( final RandomAccessibleInterval< ? >... images )
 	{
 		this.images = images;
 		this.dimensions = new FinalInterval( images[ 0 ] );
 		Arrays.asList( images ).forEach( this::checkDimensions );
 	}
 
-	private void checkDimensions( Interval interval )
+	private void checkDimensions( final Interval interval )
 	{
-		long[] a = Intervals.dimensionsAsLongArray( dimensions );
-		long[] b = Intervals.dimensionsAsLongArray( interval );
+		final long[] a = Intervals.dimensionsAsLongArray( dimensions );
+		final long[] b = Intervals.dimensionsAsLongArray( interval );
 		if ( !Arrays.equals( a, b ) )
 			throw new IllegalArgumentException( "Dimensions do not fit." );
 	}
 
-	public static < A > LoopBuilder< Consumer< A > > setImages( RandomAccessibleInterval< A > a )
+	public static < A > LoopBuilder< Consumer< A > > setImages( final RandomAccessibleInterval< A > a )
 	{
 		return new LoopBuilder<>( a );
 	}
 
-	public static < A, B > LoopBuilder< BiConsumer< A, B > > setImages( RandomAccessibleInterval< A > a, RandomAccessibleInterval< B > b )
+	public static < A, B > LoopBuilder< BiConsumer< A, B > > setImages( final RandomAccessibleInterval< A > a, final RandomAccessibleInterval< B > b )
 	{
 		return new LoopBuilder<>( a, b );
 	}
 
-	public static < A, B, C > LoopBuilder< TriConsumer< A, B, C > > setImages( RandomAccessibleInterval< A > a, RandomAccessibleInterval< B > b, RandomAccessibleInterval< C > c )
+	public static < A, B, C > LoopBuilder< TriConsumer< A, B, C > > setImages( final RandomAccessibleInterval< A > a, final RandomAccessibleInterval< B > b, final RandomAccessibleInterval< C > c )
 	{
 		return new LoopBuilder<>( a, b, c );
 	}
 
-	public void forEachPixel( T action )
+	public void forEachPixel( final T action )
 	{
 		Objects.requireNonNull( action );
-		List< RandomAccess< ? > > samplers = Stream.of( images ).map( this::initRandomAccess ).collect( Collectors.toList() );
-		Positionable synced = SyncedPositionables.create( samplers );
+		final List< RandomAccess< ? > > samplers = Stream.of( images ).map( this::initRandomAccess ).collect( Collectors.toList() );
+		final Positionable synced = SyncedPositionables.create( samplers );
 		LoopUtils.createIntervalLoop( synced, dimensions, RunnableFactory.bindActionToSamplers( action, samplers ) ).run();
 	}
 
-	private RandomAccess< ? > initRandomAccess( RandomAccessibleInterval< ? > image )
+	private RandomAccess< ? > initRandomAccess( final RandomAccessibleInterval< ? > image )
 	{
-		RandomAccess< ? > ra = image.randomAccess();
+		final RandomAccess< ? > ra = image.randomAccess();
 		ra.setPosition( Intervals.minAsLongArray( image ) );
 		return ra;
 	}
@@ -132,37 +138,51 @@ public class LoopBuilder< T >
 		private static final List< ClassCopyProvider< Runnable > > factories = Arrays.asList(
 				new ClassCopyProvider<>( ConsumerRunnable.class, Runnable.class ),
 				new ClassCopyProvider<>( BiConsumerRunnable.class, Runnable.class ),
-				new ClassCopyProvider<>( TriConsumerRunnable.class, Runnable.class )
-		);
+				new ClassCopyProvider<>( TriConsumerRunnable.class, Runnable.class ) );
 
 		/**
 		 * For example.: Given a BiConsumer and two Samplers:
-		 * <pre>{@code
+		 *
+		 * <pre>
+		 * {@code
 		 * BiConsumer<A, B> biConsumer = ... ;
 		 * Sampler<A> samplerA = ... ;
 		 * Sampler<B> samplerB = ... ;
-		 * }</pre>
-		 * This method {@code bindConsumerToSamplers(biConsumer, Arrays.asList(samplerA, samplerB))} will return a Runnable that is
-		 * functionally equivalent to:
-		 * <pre>{@code
-		 * Runnable result = () -> {
-		 *     biConsumer.accept(sampleA.get(), samplerB.get());
-		 * };
-		 * }</pre>
-		 * It does it in such manner, that the returned {@link Runnable} can be gracefully optimised by the Java
-		 * just-in-time compiler.
+		 * }
+		 * </pre>
 		 *
-		 * @param action This must be an instance of {@link Consumer}, {@link BiConsumer} of {@link TriConsumer}.
-		 * @param samplers A list of {@link Sampler}, the size of the list must fit the consumer given by {@param operation}.
-		 * @throws IllegalArgumentException if the number of sampler does not fit the given consumer.
+		 * This method
+		 * {@code bindConsumerToSamplers(biConsumer, Arrays.asList(samplerA, samplerB))}
+		 * will return a Runnable that is functionally equivalent to:
+		 *
+		 * <pre>
+		 * {
+		 * 	&#64;code
+		 * 	Runnable result = () -> {
+		 * 		biConsumer.accept( sampleA.get(), samplerB.get() );
+		 * 	};
+		 * }
+		 * </pre>
+		 *
+		 * It does it in such manner, that the returned {@link Runnable} can be
+		 * gracefully optimised by the Java just-in-time compiler.
+		 *
+		 * @param action
+		 *            This must be an instance of {@link Consumer},
+		 *            {@link BiConsumer} of {@link TriConsumer}.
+		 * @param samplers
+		 *            A list of {@link Sampler}, the size of the list must fit
+		 *            the consumer given by {@param operation}.
+		 * @throws IllegalArgumentException
+		 *             if the number of sampler does not fit the given consumer.
 		 */
-		public static Runnable bindActionToSamplers( Object action, List< ? extends Sampler< ? > > samplers )
+		public static Runnable bindActionToSamplers( final Object action, final List< ? extends Sampler< ? > > samplers )
 		{
-			Object[] arguments = Stream.concat( Stream.of( action ), samplers.stream() ).toArray();
-			for ( ClassCopyProvider< Runnable > factory : factories )
+			final Object[] arguments = Stream.concat( Stream.of( action ), samplers.stream() ).toArray();
+			for ( final ClassCopyProvider< Runnable > factory : factories )
 				if ( factory.matches( arguments ) )
 				{
-					List< Class< ? extends Object > > key = Stream.of( arguments ).map( Object::getClass ).collect( Collectors.toList() );
+					final List< Class< ? extends Object > > key = Stream.of( arguments ).map( Object::getClass ).collect( Collectors.toList() );
 					return factory.newInstanceForKey( key, arguments );
 				}
 			throw new IllegalArgumentException();
@@ -175,7 +195,7 @@ public class LoopBuilder< T >
 
 			private final Sampler< A > samplerA;
 
-			public ConsumerRunnable( Consumer< A > action, Sampler< A > samplerA )
+			public ConsumerRunnable( final Consumer< A > action, final Sampler< A > samplerA )
 			{
 				this.action = action;
 				this.samplerA = samplerA;
@@ -197,7 +217,7 @@ public class LoopBuilder< T >
 
 			private final Sampler< B > samplerB;
 
-			public BiConsumerRunnable( BiConsumer< A, B > action, Sampler< A > samplerA, Sampler< B > samplerB )
+			public BiConsumerRunnable( final BiConsumer< A, B > action, final Sampler< A > samplerA, final Sampler< B > samplerB )
 			{
 				this.action = action;
 				this.samplerA = samplerA;
@@ -222,7 +242,7 @@ public class LoopBuilder< T >
 
 			private final Sampler< C > samplerC;
 
-			public TriConsumerRunnable( TriConsumer< A, B, C > action, Sampler< A > samplerA, Sampler< B > samplerB, Sampler< C > samplerC )
+			public TriConsumerRunnable( final TriConsumer< A, B, C > action, final Sampler< A > samplerA, final Sampler< B > samplerB, final Sampler< C > samplerC )
 			{
 				this.action = action;
 				this.samplerA = samplerA;

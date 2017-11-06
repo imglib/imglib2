@@ -33,12 +33,12 @@
  */
 package net.imglib2.loops;
 
-import org.junit.Test;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
 
 import java.util.function.IntSupplier;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotEquals;
+import org.junit.Test;
 
 /**
  * Tests {@link ClassCopyProvider}.
@@ -49,41 +49,39 @@ public class ClassCopyProviderTest
 	@Test
 	public void testCreate()
 	{
-		ClassCopyProvider< IntSupplier > provider =
-				new ClassCopyProvider<>( MyRunnable.class, IntSupplier.class );
-		IntSupplier supplier = provider.newInstanceForKey( "key", 42 );
+		final ClassCopyProvider< IntSupplier > provider = new ClassCopyProvider<>( MyRunnable.class, IntSupplier.class );
+		final IntSupplier supplier = provider.newInstanceForKey( "key", 42 );
 		assertEquals( 12, supplier.getAsInt() );
 	}
 
 	@Test
 	public void testEqualClass()
 	{
-		ClassCopyProvider< IntSupplier > provider =
-				new ClassCopyProvider<>( MyRunnable.class, IntSupplier.class );
-		IntSupplier a = provider.newInstanceForKey( "key", 42 );
-		IntSupplier b = provider.newInstanceForKey( "key", 42 );
+		final ClassCopyProvider< IntSupplier > provider = new ClassCopyProvider<>( MyRunnable.class, IntSupplier.class );
+		final IntSupplier a = provider.newInstanceForKey( "key", 42 );
+		final IntSupplier b = provider.newInstanceForKey( "key", 42 );
 		assertEquals( a.getClass(), b.getClass() );
 	}
 
 	@Test
 	public void testDifferentClass()
 	{
-		ClassCopyProvider< IntSupplier > provider =
-				new ClassCopyProvider<>( MyRunnable.class, IntSupplier.class );
-		IntSupplier a = provider.newInstanceForKey( "A", 42 );
-		IntSupplier b = provider.newInstanceForKey( "B", 42 );
+		final ClassCopyProvider< IntSupplier > provider = new ClassCopyProvider<>( MyRunnable.class, IntSupplier.class );
+		final IntSupplier a = provider.newInstanceForKey( "A", 42 );
+		final IntSupplier b = provider.newInstanceForKey( "B", 42 );
 		assertNotEquals( a.getClass(), b.getClass() );
 	}
 
 	public static class MyRunnable implements IntSupplier
 	{
 
-		public MyRunnable( int parameter )
+		public MyRunnable( final int parameter )
 		{
 			assertEquals( 42, parameter );
 		}
 
-		@Override public int getAsInt()
+		@Override
+		public int getAsInt()
 		{
 			return 12;
 		}

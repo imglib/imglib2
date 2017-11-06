@@ -33,13 +33,14 @@
  */
 package net.imglib2.loops;
 
+import static org.junit.Assert.assertEquals;
+
+import org.junit.Test;
+
 import net.imglib2.RandomAccess;
 import net.imglib2.img.Img;
 import net.imglib2.img.array.ArrayImgs;
 import net.imglib2.type.numeric.integer.IntType;
-import org.junit.Test;
-
-import static org.junit.Assert.assertEquals;
 
 public class LoopUtilsTest
 {
@@ -47,12 +48,11 @@ public class LoopUtilsTest
 	public void testLoopLine()
 	{
 		// setup
-		Img< IntType > img = ArrayImgs.ints( 1, 1, 5 );
-		RandomAccess< IntType > ra = img.randomAccess();
+		final Img< IntType > img = ArrayImgs.ints( 1, 1, 5 );
+		final RandomAccess< IntType > ra = img.randomAccess();
 		// process
-		Runnable loop = LoopUtils.createLineLoop( ra, img.dimension( 2 ), 2,
-				() -> ra.get().set( 42 )
-		);
+		final Runnable loop = LoopUtils.createLineLoop( ra, img.dimension( 2 ), 2,
+				() -> ra.get().set( 42 ) );
 		loop.run();
 		// test
 		img.forEach( value -> assertEquals( 42, value.get() ) );
@@ -62,12 +62,11 @@ public class LoopUtilsTest
 	public void testIntervalLoop()
 	{
 		// setup
-		Img< IntType > img = ArrayImgs.ints( 1, 20, 5 );
-		RandomAccess< IntType > ra = img.randomAccess();
+		final Img< IntType > img = ArrayImgs.ints( 1, 20, 5 );
+		final RandomAccess< IntType > ra = img.randomAccess();
 		// process
-		Runnable loop = LoopUtils.createIntervalLoop( ra, img,
-				() -> ra.get().set( 42 )
-		);
+		final Runnable loop = LoopUtils.createIntervalLoop( ra, img,
+				() -> ra.get().set( 42 ) );
 		loop.run();
 		// test
 		img.forEach( value -> assertEquals( 42, value.get() ) );
