@@ -98,7 +98,7 @@ public class Converters
 	{
 		if ( TypeIdentity.class.isInstance( converter ) )
 			return ( RandomAccessible< B > ) source;
-		return new ConvertedRandomAccessible< A, B >( source, converter, b );
+		return new ConvertedRandomAccessible<>( source, converter, b );
 	}
 
 	/**
@@ -116,7 +116,7 @@ public class Converters
 			final RandomAccessible< A > source,
 			final SamplerConverter< ? super A, B > converter )
 	{
-		return new WriteConvertedRandomAccessible< A, B >( source, converter );
+		return new WriteConvertedRandomAccessible<>( source, converter );
 	}
 
 	/**
@@ -140,7 +140,7 @@ public class Converters
 	{
 		if ( TypeIdentity.class.isInstance( converter ) )
 			return ( RandomAccessibleInterval< B > ) source;
-		return new ConvertedRandomAccessibleInterval< A, B >( source, converter, b );
+		return new ConvertedRandomAccessibleInterval<>( source, converter, b );
 	}
 
 	/**
@@ -158,7 +158,7 @@ public class Converters
 			final RandomAccessibleInterval< A > source,
 			final SamplerConverter< ? super A, B > converter )
 	{
-		return new WriteConvertedRandomAccessibleInterval< A, B >( source, converter );
+		return new WriteConvertedRandomAccessibleInterval<>( source, converter );
 	}
 
 	/**
@@ -181,7 +181,7 @@ public class Converters
 	{
 		if ( TypeIdentity.class.isInstance( converter ) )
 			return ( IterableInterval< B > ) source;
-		return new ConvertedIterableInterval< A, B >( source, converter, b );
+		return new ConvertedIterableInterval<>( source, converter, b );
 	}
 
 	/**
@@ -198,7 +198,7 @@ public class Converters
 			final IterableInterval< A > source,
 			final SamplerConverter< ? super A, B > converter )
 	{
-		return new WriteConvertedIterableInterval< A, B >( source, converter );
+		return new WriteConvertedIterableInterval<>( source, converter );
 	}
 
 	/**
@@ -218,7 +218,7 @@ public class Converters
 					final S source,
 					final SamplerConverter< ? super A, B > converter )
 	{
-		return new WriteConvertedIterableRandomAccessibleInterval< A, B, S >( source, converter );
+		return new WriteConvertedIterableRandomAccessibleInterval<>( source, converter );
 	}
 
 	/**
@@ -242,7 +242,7 @@ public class Converters
 	{
 		if ( TypeIdentity.class.isInstance( converter ) )
 			return ( RealRandomAccessibleRealInterval< B > ) source;
-		return new ConvertedRealRandomAccessibleRealInterval< A, B >( source, converter, b );
+		return new ConvertedRealRandomAccessibleRealInterval<>( source, converter, b );
 	}
 
 	/**
@@ -266,7 +266,7 @@ public class Converters
 	{
 		if ( TypeIdentity.class.isInstance( converter ) )
 			return ( RealRandomAccessible< B > ) source;
-		return new ConvertedRealRandomAccessible< A, B >( source, converter, b );
+		return new ConvertedRealRandomAccessible<>( source, converter, b );
 	}
 
 	/**
