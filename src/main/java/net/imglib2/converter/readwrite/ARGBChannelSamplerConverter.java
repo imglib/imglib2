@@ -49,7 +49,7 @@ public final class ARGBChannelSamplerConverter implements SamplerConverter< ARGB
 			0x00ffffff,
 			0xff00ffff,
 			0xffff00ff,
-			0x00ffff00
+			0xffffff00
 	};
 
 	static final private int[] shifts = new int[]{
