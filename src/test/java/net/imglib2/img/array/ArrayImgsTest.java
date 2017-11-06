@@ -34,10 +34,10 @@
 
 package net.imglib2.img.array;
 
+import static org.junit.Assert.assertArrayEquals;
+
 import java.math.BigInteger;
 import java.util.Random;
-
-import static org.junit.Assert.assertArrayEquals;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -88,152 +88,163 @@ public class ArrayImgsTest
 
 	/** Tests {@link ArrayImgs#unsigned2Bits}. */
 	@Test
-	public void testUnsigned2Bits() {
-		final long[] size = {5, 20};
-		final long[] data = new long[100];
-		for(long d = 0; d < data.length; d++) {
-			data[(int) d] = d;
+	public void testUnsigned2Bits()
+	{
+		final long[] size = { 5, 20 };
+		final long[] data = new long[ 100 ];
+		for ( long d = 0; d < data.length; d++ )
+		{
+			data[ ( int ) d ] = d;
 		}
-		final LongArray access = new LongArray(data);
+		final LongArray access = new LongArray( data );
 
-		final ArrayImg< Unsigned2BitType, LongArray > img = ArrayImgs.unsigned2Bits(size);
+		final ArrayImg< Unsigned2BitType, LongArray > img = ArrayImgs.unsigned2Bits( size );
 		int previous = 1, current = 1;
-		for(final Unsigned2BitType t: img) {
+		for ( final Unsigned2BitType t : img )
+		{
 			t.set( current % 4 );
-			int next = current + previous;
+			final int next = current + previous;
 			previous = current;
 			current = next;
 		}
 
-		long[] expected = { //
+		final long[] expected = { //
 				0b1001010001111001010001111001010001111001010001111001010001111001L, //
 				0b0111100101000111100101000111100101000111100101000111100101000111L, //
 				0b0100011110010100011110010100011110010100011110010100011110010100L, //
 				0b0000000000000000000000000000000000000000000000000000000001111001L //
 		};
-		long[] actual = img.update( null ).getCurrentStorageArray();
+		final long[] actual = img.update( null ).getCurrentStorageArray();
 		assertArrayEquals( expected, actual );
 	}
-	
+
 	@Test
 	public void testUnsigned4Bits()
 	{
 		final long[] size = { 5, 10 };
 
-		final ArrayImg< Unsigned4BitType, LongArray > img = ArrayImgs.unsigned4Bits(size);
+		final ArrayImg< Unsigned4BitType, LongArray > img = ArrayImgs.unsigned4Bits( size );
 		int previous = 1, current = 1;
 		for ( final Unsigned4BitType t : img )
 		{
 			t.set( current % 16 );
-			int next = current + previous;
+			final int next = current + previous;
 			previous = current;
 			current = next;
 		}
-		
-		long[] expected = {
+
+		final long[] expected = {
 				0xdb29909725d85321L,
 				0x25d85321101f2d58L,
 				0x101f2d58db299097L,
 				0x0000000000000021L
 		};
-		long[] actual = img.update( null ).getCurrentStorageArray();
-		assertArrayEquals(expected, actual);
+		final long[] actual = img.update( null ).getCurrentStorageArray();
+		assertArrayEquals( expected, actual );
 	}
-	
+
 	@Test
-	public void testUnsigned12Bits() {
-		final long[] size = {5, 5};
-		
+	public void testUnsigned12Bits()
+	{
+		final long[] size = { 5, 5 };
+
 		final ArrayImg< Unsigned12BitType, LongArray > img = ArrayImgs.unsigned12Bits( size );
 		int previous = 1, current = 1, next = 0;
-		for(final Unsigned12BitType t : img) {
+		for ( final Unsigned12BitType t : img )
+		{
 			t.set( current % 4096 );
-			next = current + (2 * previous);
+			next = current + ( 2 * previous );
 			previous = current;
 			current = next;
 		}
-		
-		long[] expected = {
+
+		final long[] expected = {
 				0b1011000000010101000000001011000000000101000000000011000000000001L,
 				0b0101010100101010101100010101010100001010101100000101010100000010L,
 				0b1010101010110101010101011010101010110101010101011010101010110101L,
 				0b1011010101010101101010101011010101010101101010101011010101010101L,
 				0b0000000000000000000001010101010110101010101101010101010110101010L
 		};
-		
-		long[] actual = img.update( null ).getCurrentStorageArray();
-		assertArrayEquals(expected, actual);
+
+		final long[] actual = img.update( null ).getCurrentStorageArray();
+		assertArrayEquals( expected, actual );
 	}
-	
+
 	@Test
-	public void testUnsigned128Bits() {
-		final long[] size = {5, 5};
-		
-		final ArrayImg< Unsigned128BitType, LongArray> img = ArrayImgs.unsigned128Bits( size );
+	public void testUnsigned128Bits()
+	{
+		final long[] size = { 5, 5 };
+
+		final ArrayImg< Unsigned128BitType, LongArray > img = ArrayImgs.unsigned128Bits( size );
 		BigInteger previous = BigInteger.ONE, current = BigInteger.ONE, next = BigInteger.ZERO;
 		BigInteger modulus = BigInteger.valueOf( 2 );
 		modulus = modulus.pow( 128 );
-		for(final Unsigned128BitType t: img) {
+		for ( final Unsigned128BitType t : img )
+		{
 			t.set( current.mod( modulus ) );
 			next = current.add( previous.multiply( BigInteger.valueOf( 579 ) ) );
 			previous = current;
 			current = next;
 		}
-		
-		long[] expected = {
+
+		final long[] expected = {
 				0x1L, 0x0L, 0x244L, 0x0L, 0x487L, 0x0L, 0x52453L, 0x0L, 0xf61a8L,
-				0x0L, 0xbb08961L, 0x0L, 0x2e7a6859L, 0x0L, 0x1a9ec11ebcL, 0x0L, 
+				0x0L, 0xbb08961L, 0x0L, 0x2e7a6859L, 0x0L, 0x1a9ec11ebcL, 0x0L,
 				0x83bd9b2007L, 0x0L, 0x3cb8cc63a33bL, 0x0L, 0x166aea23d1310L, 0x0L,
-				0x8abca4e7974181L, 0x0L, 0x3b5f99dd7b95eb1L, 0x0L, 0x3d7ea295a2d28574L, 
-				0x1L, 0xa21232948b13afc7L, 0x9L, 0xb77beb03cd378523L, 0x2d7L, 
-				0x46a450fa5abe1438L, 0x18a1L, 0x43e8da937f503261L, 0x68685L, 
-				0x98c00cebb37ed09L, 0x3e3b48L, 0xa1325c67ad99de6cL, 0xf007ab0L, 
-				0x38d82ff91d16f9c7L, 0x9bc08e9eL, 0xcdbf2e76c019080bL, 0x2289d60c1aL, 
-				0x5eb3aee38b0ff520L, 0x182ce589bf5L, 0xb619c57803ad2601L, 
+				0x8abca4e7974181L, 0x0L, 0x3b5f99dd7b95eb1L, 0x0L, 0x3d7ea295a2d28574L,
+				0x1L, 0xa21232948b13afc7L, 0x9L, 0xb77beb03cd378523L, 0x2d7L,
+				0x46a450fa5abe1438L, 0x18a1L, 0x43e8da937f503261L, 0x68685L,
+				0x98c00cebb37ed09L, 0x3e3b48L, 0xa1325c67ad99de6cL, 0xf007ab0L,
+				0x38d82ff91d16f9c7L, 0x9bc08e9eL, 0xcdbf2e76c019080bL, 0x2289d60c1aL,
+				0x5eb3aee38b0ff520L, 0x182ce589bf5L, 0xb619c57803ad2601L,
 				0x4fa08d75fc94L, 0xe67e521b88c48d61L, 0x3ba793fdeb889L
 		};
-		
-		long[] actual = img.update( null ).getCurrentStorageArray();
-		assertArrayEquals(expected, actual);
+
+		final long[] actual = img.update( null ).getCurrentStorageArray();
+		assertArrayEquals( expected, actual );
 	}
-	
+
 	@Test
-	public void testUnsignedVariableBits7() {
-		final long[] size = {5, 5};
-		
-		final ArrayImg< UnsignedVariableBitLengthType, LongArray> img = ArrayImgs.unsignedVariableBitLengths( 7, size );
+	public void testUnsignedVariableBits7()
+	{
+		final long[] size = { 5, 5 };
+
+		final ArrayImg< UnsignedVariableBitLengthType, LongArray > img = ArrayImgs.unsignedVariableBitLengths( 7, size );
 		long previous = 1, current = 1, next = 0;
-		for(final UnsignedVariableBitLengthType t: img) {
+		for ( final UnsignedVariableBitLengthType t : img )
+		{
 			t.set( current % 128 );
 			next = current + previous;
 			previous = current;
 			current = next;
 		}
-		
-		long[] expected = {
+
+		final long[] expected = {
 				0xb744546880a0c101L,
 				0x6a987b6f179d242cL,
 				0x00003122838af85bL
 		};
-		
-		long[] actual = img.update( null ).getCurrentStorageArray();
-		assertArrayEquals(expected, actual);
+
+		final long[] actual = img.update( null ).getCurrentStorageArray();
+		assertArrayEquals( expected, actual );
 	}
-	
+
 	@Test
-	public void testUnsignedVariableBits33() {
-		final long[] size = {5, 5};
-		
-		final ArrayImg< UnsignedVariableBitLengthType, LongArray> img = ArrayImgs.unsignedVariableBitLengths( 33, size );
+	public void testUnsignedVariableBits33()
+	{
+		final long[] size = { 5, 5 };
+
+		final ArrayImg< UnsignedVariableBitLengthType, LongArray > img = ArrayImgs.unsignedVariableBitLengths( 33, size );
 		long previous = 1, current = 1, next = 0;
-		for(final UnsignedVariableBitLengthType t: img) {
+		for ( final UnsignedVariableBitLengthType t : img )
+		{
 			t.set( current % 8589934592L );
 			next = current + previous;
 			previous = current;
 			current = next;
 		}
-		
-		long[] expected = {
+
+		final long[] expected = {
 				0x0000000400000001L,
 				0x000000280000000cL,
 				0x000001a000000080L,
@@ -248,8 +259,8 @@ public class ArrayImgsTest
 				0x8880002d4800000dL,
 				0x000001da31000092L
 		};
-		
-		long[] actual = img.update( null ).getCurrentStorageArray();
+
+		final long[] actual = img.update( null ).getCurrentStorageArray();
 		assertArrayEquals( expected, actual );
 	}
 

@@ -457,9 +457,9 @@ final public class ArrayImgs
 	 * Create an {@link ArrayImg}&lt;{@link UnsignedVariableBitLengthType}, {@link LongArray}&gt;.
 	 */
 	@SuppressWarnings( "unchecked" )
-	final static public ArrayImg< UnsignedVariableBitLengthType, LongArray > unsignedVariableBitLengths(final int nbits, final long... dim )
+	final static public ArrayImg< UnsignedVariableBitLengthType, LongArray > unsignedVariableBitLengths( final int nbits, final long... dim )
 	{
-		return ( ArrayImg< UnsignedVariableBitLengthType, LongArray > ) new ArrayImgFactory< UnsignedVariableBitLengthType >().create( dim, new UnsignedVariableBitLengthType(nbits) );
+		return ( ArrayImg< UnsignedVariableBitLengthType, LongArray > ) new ArrayImgFactory< UnsignedVariableBitLengthType >().create( dim, new UnsignedVariableBitLengthType( nbits ) );
 	}
 
 	/**
