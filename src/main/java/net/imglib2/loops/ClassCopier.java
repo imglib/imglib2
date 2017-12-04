@@ -66,7 +66,6 @@ class ClassCopier< T >
 
 	public Class< ? extends T > copy()
 	{
-		System.err.println( "Copy class: " + original );
 		@SuppressWarnings( "unchecked" )
 		final Class< ? extends T > copy = ( Class< ? extends T > ) new ClassCopyLoader().bytesToClass( original.getName(), bytes );
 		return copy;
