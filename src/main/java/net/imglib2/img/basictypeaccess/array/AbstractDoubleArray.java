@@ -72,4 +72,9 @@ abstract public class AbstractDoubleArray< A extends AbstractDoubleArray< A > > 
 	{
 		return data;
 	}
+
+	@Override
+	public int getArrayLength() {
+		return data.length;
+	}
 }

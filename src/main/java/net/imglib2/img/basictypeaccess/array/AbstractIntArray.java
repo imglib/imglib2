@@ -72,4 +72,9 @@ abstract public class AbstractIntArray< A extends AbstractIntArray< A > > implem
 	{
 		return data;
 	}
+
+	@Override
+	public int getArrayLength() {
+		return data.length;
+	}
 }

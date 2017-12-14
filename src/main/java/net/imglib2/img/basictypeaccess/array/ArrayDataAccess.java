@@ -48,4 +48,6 @@ public interface ArrayDataAccess< A > extends Serializable
 	A createArray( int numEntities );
 
 	Object getCurrentStorageArray();
+
+	int getArrayLength();
 }
