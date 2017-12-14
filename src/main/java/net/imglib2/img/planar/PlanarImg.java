@@ -34,9 +34,6 @@
 
 package net.imglib2.img.planar;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import net.imglib2.Cursor;
 import net.imglib2.FlatIterationOrder;
 import net.imglib2.Interval;
@@ -48,6 +45,9 @@ import net.imglib2.type.NativeType;
 import net.imglib2.util.Fraction;
 import net.imglib2.util.Intervals;
 import net.imglib2.view.iteration.SubIntervalIterable;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A {@link NativeImg} that stores data in an list of primitive arrays, one per
@@ -76,22 +76,27 @@ public class PlanarImg< T extends NativeType< T >, A extends ArrayDataAccess< A 
 
 	final protected List< A > mirror;
 
+	public PlanarImg( final List< A > slices, final long[] dim, final Fraction entitiesPerPixel )
+	{
+		super( dim, entitiesPerPixel );
+		this.dimensions = longToIntArray( dim );
+		this.sliceSteps = computeSliceSteps( dim );
+		this.numSlices = numberOfSlices( dim );
+		if(slices.size() != numSlices)
+			throw new IllegalArgumentException();
+		this.mirror = slices;
+	}
+
+	/** @deprecated Use {@link this#PlanarImg(List, long[], Fraction)} instead. */
+	@Deprecated
 	public PlanarImg( final long[] dim, final Fraction entitiesPerPixel )
 	{
-		this( null, dim, entitiesPerPixel );
+		this( emptySlices( dim ), dim, entitiesPerPixel );
 	}
 
 	PlanarImg( final A creator, final long[] dim, final Fraction entitiesPerPixel )
 	{
-		super( dim, entitiesPerPixel );
-
-		this.dimensions = longToIntArray( dim );
-		this.sliceSteps = computeSliceSteps( dim );
-		this.numSlices = numberOfSlices( dim );
-
-		mirror = ( creator == null ) ?
-				emptySlices( dim ) :
-				createSlices( creator, dim, entitiesPerPixel );
+		this( createSlices( creator, dim, entitiesPerPixel ), dim, entitiesPerPixel );
 	}
 
 	/**
