@@ -330,12 +330,11 @@ public abstract class AbstractLongListImg< T > extends AbstractImg< T >
 		@Override
 		public void setPosition( final Localizable localizable )
 		{
-			position[ 0 ] = i = localizable.getLongPosition( 0 );
+			for(int d = 0; d < n; d++)
+				position[d] = localizable.getLongPosition(d);
+			i = position[ 0 ];
 			for ( int d = 1; d < n; ++d )
-			{
-				position[ d ] = localizable.getLongPosition( d );
 				i += position[ d ] * step[ d ];
-			}
 		}
 
 		@Override
