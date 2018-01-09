@@ -160,8 +160,7 @@ public class ArrayRandomAccess< T extends NativeType< T > > extends AbstractLoca
 	@Override
 	public void setPosition( final Localizable localizable )
 	{
-		for(int d = 0; d < n; d++)
-			position[d] = localizable.getIntPosition(d);
+		localizable.localize( position );
 		int index = 0;
 		for ( int d = 0; d < n; ++d )
 			index += position[ d ] * img.steps[ d ];
