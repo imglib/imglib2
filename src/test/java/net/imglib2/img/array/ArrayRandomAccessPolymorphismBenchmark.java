@@ -36,9 +36,11 @@ package net.imglib2.img.array;
 import net.imglib2.Cursor;
 import net.imglib2.RandomAccess;
 import net.imglib2.img.Img;
+import net.imglib2.img.basictypeaccess.array.DoubleArray;
+import net.imglib2.img.cell.CellImgFactory;
+import net.imglib2.img.planar.PlanarImgs;
 import net.imglib2.loops.LoopBuilder;
 import net.imglib2.type.numeric.real.DoubleType;
-import net.imglib2.view.Views;
 import org.openjdk.jmh.annotations.Benchmark;
 import org.openjdk.jmh.annotations.Scope;
 import org.openjdk.jmh.annotations.State;
@@ -49,19 +51,33 @@ import org.openjdk.jmh.annotations.State;
  * @author Matthias Arzt
  */
 @State( Scope.Benchmark )
-public class ArrayRandomAccessBenchmark
+public class ArrayRandomAccessPolymorphismBenchmark
 {
 
-	Img< DoubleType > in = ArrayImgs.doubles( 300, 300 );
+	Img< DoubleType > inArray = ArrayImgs.doubles( 300, 300 );
+	Img< DoubleType > inPlaner = PlanarImgs.doubles( 300, 300 );
+	Img< DoubleType > inCell = new CellImgFactory<DoubleType>().create(DoubleType::new, 300, 300 );
+	Img< DoubleType > out = initOut( inArray, inPlaner, inCell );
 
-	Img< DoubleType > out = ArrayImgs.doubles( 300, 300 );
+	private ArrayImg< DoubleType, DoubleArray > initOut( Img< DoubleType > in, Img< DoubleType > in2, Img< DoubleType > in3 )
+	{
+		ArrayImg< DoubleType, DoubleArray > out = ArrayImgs.doubles( 300, 300 );
+		// NB: copy and setPosition, need to be applied to different Cursors / Localizables.
+		// The just in time compile would otherwise perform unrealistic optimisations.
+		for ( int i = 0; i < 10; i++ )
+		{
+			copy( in, out );
+			copy( in2, out );
+			copy( in3, out );
+		}
+		return out;
+	}
 
 	@Benchmark
-	public void copyImage()
+	public void copyLocalizingCursorArray()
 	{
-		final Cursor< DoubleType > cursor = in.cursor();
+		final Cursor< DoubleType > cursor = inArray.localizingCursor();
 		final RandomAccess< DoubleType > ra = out.randomAccess();
-
 		while ( cursor.hasNext() ) {
 			cursor.fwd();
 			ra.setPosition( cursor );
@@ -70,30 +86,55 @@ public class ArrayRandomAccessBenchmark
 	}
 
 	@Benchmark
-	public void copyLocalizingCursor()
+	public void copyLocalizingCursorPlanar()
+	{
+		final Cursor< DoubleType > cursor = inPlaner.localizingCursor();
+		final RandomAccess< DoubleType > ra = out.randomAccess();
+		while ( cursor.hasNext() ) {
+			cursor.fwd();
+			ra.setPosition( cursor );
+			ra.get().set(cursor.get());
+		}
+	}
+
+	@Benchmark
+	public void copyLocalizingCursorCell()
+	{
+		final Cursor< DoubleType > cursor = inCell.localizingCursor();
+		final RandomAccess< DoubleType > ra = out.randomAccess();
+		while ( cursor.hasNext() ) {
+			cursor.fwd();
+			ra.setPosition( cursor );
+			ra.get().set(cursor.get());
+		}
+	}
+
+	@Benchmark
+	public void copyFunctionLocalizingCursorArray()
+	{
+		copy( inArray, out );
+	}
+
+	@Benchmark
+	public void copyFunctionLocalizingCursorPlanar()
+	{
+		copy( inPlaner, out );
+	}
+
+	@Benchmark
+	public void copyFunctionLocalizingCursorCell()
+	{
+		copy( inCell, out );
+	}
+
+	private void copy( Img< DoubleType > in, Img< DoubleType > out )
 	{
 		final Cursor< DoubleType > cursor = in.localizingCursor();
 		final RandomAccess< DoubleType > ra = out.randomAccess();
-
 		while ( cursor.hasNext() ) {
 			cursor.fwd();
 			ra.setPosition( cursor );
 			ra.get().set(cursor.get());
 		}
-	}
-
-	@Benchmark
-	public void copyFlatIterable()
-	{
-		final Cursor< DoubleType > a = Views.flatIterable( in ).cursor();
-		final Cursor< DoubleType > b = Views.flatIterable( out ).cursor();
-		while ( a.hasNext() )
-			b.next().set( a.next() );
-	}
-
-	@Benchmark
-	public void copyLoopBuilder()
-	{
-		LoopBuilder.setImages( in, out ).forEachPixel( (i, o) -> o.set(i) );
 	}
 }
