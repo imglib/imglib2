@@ -38,6 +38,7 @@ import net.imglib2.RandomAccess;
 import net.imglib2.img.Img;
 import net.imglib2.loops.LoopBuilder;
 import net.imglib2.type.numeric.real.DoubleType;
+import net.imglib2.view.Views;
 import org.openjdk.jmh.annotations.Benchmark;
 import org.openjdk.jmh.annotations.Scope;
 import org.openjdk.jmh.annotations.State;
@@ -71,6 +72,34 @@ public class ArrayRandomAccessBenchmark
 			ra.setPosition( cursor );
 			ra.get().set(cursor.get());
 		}
+	}
+
+	@Benchmark
+	public void copyLocalizingCursor()
+	{
+		final Cursor< DoubleType > cursor = in.localizingCursor();
+		final RandomAccess< DoubleType > ra = out.randomAccess();
+
+		while ( cursor.hasNext() ) {
+			cursor.fwd();
+			ra.setPosition( cursor );
+			ra.get().set(cursor.get());
+		}
+	}
+
+	@Benchmark
+	public void copyFlatIterable()
+	{
+		final Cursor< DoubleType > a = Views.flatIterable( in ).cursor();
+		final Cursor< DoubleType > b = Views.flatIterable( out ).cursor();
+		while ( a.hasNext() )
+			b.next().set( a.next() );
+	}
+
+	@Benchmark
+	public void copyLoopBuilder()
+	{
+		LoopBuilder.setImages( in, out ).forEachPixel( (i, o) -> o.set(i) );
 	}
 
 	public static void main( final String... args ) throws RunnerException
