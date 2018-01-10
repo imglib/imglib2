@@ -13,6 +13,7 @@ public class RunBenchmarks
 		final Options opt = new OptionsBuilder()
 				.include( ArrayRandomAccessBenchmark.class.getSimpleName() )
 				.include( ArrayRandomAccessPolymorphismBenchmark.class.getSimpleName() )
+				.include( SetPositionBenchmark.class.getSimpleName() )
 				.forks( 0 )
 				.warmupIterations( 15 )
 				.measurementIterations( 8 )
