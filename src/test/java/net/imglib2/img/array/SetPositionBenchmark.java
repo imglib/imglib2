@@ -36,10 +36,14 @@ public class SetPositionBenchmark
 	private ArrayRandomAccess< DoubleType > initRandomAccess(Localizable... localizables)
 	{
 		ArrayRandomAccess< DoubleType > randomAccess = ArrayImgs.doubles( 10, 10, 10 ).randomAccess();
-		// NB : Polymorphism has a huge effect on the performance of setPosition
+
+		// NB: We need to apply setPosition to different classes implementing Localizable.
+		// Otherwise the in time compiler will optimise setPosition for only one implementation of Localizable,
+		// which makes the benchmark result less realistic.
 		for ( int i = 0; i < 100000; i++ )
 			for ( Localizable l : localizables )
 				randomAccess.setPosition(l);
+
 		return randomAccess;
 	}
 
