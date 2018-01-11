@@ -38,7 +38,7 @@ package net.imglib2.exception;
  * @author Curtis Rueden
  * @author Stephan Preibisch
  */
-public class ImgLibException extends Exception
+public class ImgLibException extends RuntimeException
 {
 	public ImgLibException( final String message )
 	{
