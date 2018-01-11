@@ -37,9 +37,11 @@ package net.imglib2.img.list;
 import java.util.ArrayList;
 import java.util.function.Supplier;
 
+import net.imglib2.Dimensions;
 import net.imglib2.exception.IncompatibleTypeException;
 import net.imglib2.img.ImgFactory;
 import net.imglib2.type.Type;
+import net.imglib2.util.Util;
 
 /**
  * {@link ImgFactory} for {@link ListImg} of any type T. You can us {@link Type}
@@ -75,10 +77,37 @@ public class ListImgFactory< T > extends ImgFactory< T >
 	}
 
 	@Override
+	public ListImg< T > create( final Dimensions dimensions )
+	{
+		final long[] size = new long[ dimensions.numDimensions() ];
+		dimensions.dimensions( size );
+
+		return create( size );
+	}
+
+	@Override
+	public ListImg< T > create( final int[] dimensions )
+	{
+		return create( Util.int2long( dimensions ) );
+	}
+
+	@Override
 	public < S > ImgFactory< S > imgFactory( final S type ) throws IncompatibleTypeException
 	{
 		return new ListImgFactory<>( type );
 	}
+
+
+	/*
+	 * -----------------------------------------------------------------------
+	 *
+	 * Deprecated API.
+	 *
+	 * Supports backwards compatibility with ImgFactories that are constructed
+	 * without a type instance or supplier.
+	 *
+	 * -----------------------------------------------------------------------
+	 */
 
 	@Deprecated
 	public ListImgFactory()
@@ -90,7 +119,7 @@ public class ListImgFactory< T > extends ImgFactory< T >
 	@Override
 	public ListImg< T > create( final long[] dim, final T type )
 	{
-		T cachedType = cache( type );
+		final T cachedType = cache( type );
 		return new ListImg<>( dim, cachedType );
 	}
 

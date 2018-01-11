@@ -51,7 +51,7 @@ public abstract class ImgFactory< T >
 {
 	private final Supplier< T > supplier;
 
-	private T t;
+	private T t; // TODO: reinstate final modifier once the deprecated API has been removed
 
 	public ImgFactory( final T type )
 	{
@@ -67,7 +67,8 @@ public abstract class ImgFactory< T >
 
 	public T type()
 	{
-		if ( t == null ) t = supplier.get();
+		if ( t == null )
+			t = supplier.get();
 		return t;
 	}
 
@@ -148,30 +149,17 @@ public abstract class ImgFactory< T >
 		return imgFactory( typeSupplier.get() );
 	}
 
-	/**
-	 * Makes a best effort to return a non-null type instance, caching the given
-	 * type if a cached type is not already in place.
-	 * <p>
-	 * Furthermore, if the cached type instance was previously null, the given
-	 * {@code type} becomes the cached instance. In this way, if the factory was
-	 * created using one of the deprecated typeless constructor signatures, but
-	 * then one of the deprecated {@code create} methods is called (i.e.: a
-	 * method which provides a type instance as an argument), the provided type
-	 * becomes the cached type instance so that subsequent invocations of the
-	 * typeless {@code create} methods will work as desired.
-	 * </p>
-	 * 
-	 * @param type
-	 *            The type to return, and cache if needed.
-	 * @return A type instance matching the type of the factory. If the given
-	 *         {@code type} argument is non-null, it is returned. Otherwise, the
-	 *         cached type instance {@link #t} is returned.
+
+	/*
+	 * -----------------------------------------------------------------------
+	 *
+	 * Deprecated API.
+	 *
+	 * Supports backwards compatibility with ImgFactories that are constructed
+	 * without a type instance or supplier.
+	 *
+	 * -----------------------------------------------------------------------
 	 */
-	protected T cache( final T type )
-	{
-		if ( t == null ) t = type;
-		return type == null ? t : type;
-	}
 
 	@Deprecated
 	public ImgFactory() {
@@ -209,9 +197,35 @@ public abstract class ImgFactory< T >
 		return create( dim, cache( typeSupplier.get() ) );
 	}
 
+	@Deprecated
 	public Img< T > create( final Supplier< T > typeSupplier, final int[] dim )
 	{
 		return create( dim, cache( typeSupplier.get() ) );
 	}
 
+	/**
+	 * Makes a best effort to return a non-null type instance, caching the given
+	 * type if a cached type is not already in place.
+	 * <p>
+	 * Furthermore, if the cached type instance was previously null, the given
+	 * {@code type} becomes the cached instance. In this way, if the factory was
+	 * created using one of the deprecated typeless constructor signatures, but
+	 * then one of the deprecated {@code create} methods is called (i.e.: a
+	 * method which provides a type instance as an argument), the provided type
+	 * becomes the cached type instance so that subsequent invocations of the
+	 * typeless {@code create} methods will work as desired.
+	 * </p>
+	 *
+	 * @param type
+	 *            The type to return, and cache if needed.
+	 * @return A type instance matching the type of the factory. If the given
+	 *         {@code type} argument is non-null, it is returned. Otherwise, the
+	 *         cached type instance {@link #t} is returned.
+	 */
+	@Deprecated
+	protected T cache( final T type )
+	{
+		if ( t == null ) t = type;
+		return type == null ? t : type;
+	}
 }

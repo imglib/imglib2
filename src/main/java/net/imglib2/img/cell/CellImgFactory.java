@@ -36,6 +36,7 @@ package net.imglib2.img.cell;
 
 import java.util.function.Supplier;
 
+import net.imglib2.Dimensions;
 import net.imglib2.exception.IncompatibleTypeException;
 import net.imglib2.img.ImgFactory;
 import net.imglib2.img.NativeImgFactory;
@@ -47,6 +48,7 @@ import net.imglib2.type.NativeType;
 import net.imglib2.type.PrimitiveTypeInfo;
 import net.imglib2.util.Fraction;
 import net.imglib2.util.Intervals;
+import net.imglib2.util.Util;
 
 /**
  * Factory for creating {@link AbstractCellImg CellImgs}. The cell dimensions
@@ -157,6 +159,21 @@ public class CellImgFactory< T extends NativeType< T > > extends NativeImgFactor
 		return create( type().getPrimitiveTypeInfo(), dimensions, type().getEntitiesPerPixel() );
 	}
 
+	@Override
+	public CellImg< T, ? > create( final Dimensions dimensions )
+	{
+		final long[] size = new long[ dimensions.numDimensions() ];
+		dimensions.dimensions( size );
+
+		return create( size );
+	}
+
+	@Override
+	public CellImg< T, ? > create( final int[] dimensions )
+	{
+		return create( Util.int2long( dimensions ) );
+	}
+
 	private < A > CellImg< T, ? > create(
 			final PrimitiveTypeInfo< T, A > info,
 			final long[] dimensions,
@@ -212,6 +229,18 @@ public class CellImgFactory< T extends NativeType< T > > extends NativeImgFactor
 		throw new IncompatibleTypeException( this, type.getClass().getCanonicalName() + " does not implement NativeType." );
 	}
 
+
+	/*
+	 * -----------------------------------------------------------------------
+	 *
+	 * Deprecated API.
+	 *
+	 * Supports backwards compatibility with ImgFactories that are constructed
+	 * without a type instance or supplier.
+	 *
+	 * -----------------------------------------------------------------------
+	 */
+
 	@Deprecated
 	public CellImgFactory()
 	{
@@ -229,7 +258,7 @@ public class CellImgFactory< T extends NativeType< T > > extends NativeImgFactor
 	@Override
 	public CellImg< T, ? > create( final long[] dimensions, final T type )
 	{
-		T cachedType = cache( type );
+		final T cachedType = cache( type );
 		return create( cachedType.getPrimitiveTypeInfo(), dimensions, cachedType.getEntitiesPerPixel() );
 	}
 }

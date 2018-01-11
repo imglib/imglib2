@@ -36,6 +36,7 @@ package net.imglib2.img.planar;
 
 import java.util.function.Supplier;
 
+import net.imglib2.Dimensions;
 import net.imglib2.exception.IncompatibleTypeException;
 import net.imglib2.img.ImgFactory;
 import net.imglib2.img.NativeImgFactory;
@@ -44,6 +45,7 @@ import net.imglib2.img.basictypeaccess.array.ArrayDataAccess;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.PrimitiveTypeInfo;
 import net.imglib2.util.Fraction;
+import net.imglib2.util.Util;
 
 /**
  * Factory that creates an appropriate {@link PlanarImg}.
@@ -80,7 +82,21 @@ public class PlanarImgFactory< T extends NativeType< T > > extends NativeImgFact
 		return create( ArrayDataAccessFactory.get( info ).createArray( 0 ), info, dimensions, entitiesPerPixel );
 		// calling createArray( 0 ) is necessary here, because otherwise javac
 		// will not infer the ArrayDataAccess type
+	}
 
+	@Override
+	public PlanarImg< T, ? > create( final Dimensions dimensions )
+	{
+		final long[] size = new long[ dimensions.numDimensions() ];
+		dimensions.dimensions( size );
+
+		return create( size );
+	}
+
+	@Override
+	public PlanarImg< T, ? > create( final int[] dimensions )
+	{
+		return create( Util.int2long( dimensions ) );
 	}
 
 	private < A extends ArrayDataAccess< A > > PlanarImg< T, ? > create(
@@ -103,6 +119,18 @@ public class PlanarImgFactory< T extends NativeType< T > > extends NativeImgFact
 		throw new IncompatibleTypeException( this, type.getClass().getCanonicalName() + " does not implement NativeType." );
 	}
 
+
+	/*
+	 * -----------------------------------------------------------------------
+	 *
+	 * Deprecated API.
+	 *
+	 * Supports backwards compatibility with ImgFactories that are constructed
+	 * without a type instance or supplier.
+	 *
+	 * -----------------------------------------------------------------------
+	 */
+
 	@Deprecated
 	public PlanarImgFactory()
 	{
@@ -113,7 +141,7 @@ public class PlanarImgFactory< T extends NativeType< T > > extends NativeImgFact
 	@Override
 	public PlanarImg< T, ? > create( final long[] dimensions, final T type )
 	{
-		T cachedType = cache( type );
+		final T cachedType = cache( type );
 		return create( cachedType.getPrimitiveTypeInfo(), dimensions, cachedType.getEntitiesPerPixel() );
 	}
 

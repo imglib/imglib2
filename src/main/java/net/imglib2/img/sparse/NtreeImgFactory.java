@@ -36,12 +36,14 @@ package net.imglib2.img.sparse;
 
 import java.util.function.Supplier;
 
+import net.imglib2.Dimensions;
 import net.imglib2.exception.IncompatibleTypeException;
 import net.imglib2.img.ImgFactory;
 import net.imglib2.img.NativeImgFactory;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.PrimitiveTypeInfo;
 import net.imglib2.util.Fraction;
+import net.imglib2.util.Util;
 
 /**
  * @author Tobias Pietzsch
@@ -63,6 +65,21 @@ public class NtreeImgFactory< T extends NativeType< T > > extends NativeImgFacto
 	public NtreeImg< T, ? extends NtreeAccess< ?, ? > > create( final long... dimensions )
 	{
 		return create( dimensions, type(), type().getPrimitiveTypeInfo() );
+	}
+
+	@Override
+	public NtreeImg< T, ? > create( final Dimensions dimensions )
+	{
+		final long[] size = new long[ dimensions.numDimensions() ];
+		dimensions.dimensions( size );
+
+		return create( size );
+	}
+
+	@Override
+	public NtreeImg< T, ? > create( final int[] dimensions )
+	{
+		return create( Util.int2long( dimensions ) );
 	}
 
 	private < A > NtreeImg< T, ? > create( final long[] dimensions, final T type, final PrimitiveTypeInfo< T, A > info )
@@ -117,6 +134,18 @@ public class NtreeImgFactory< T extends NativeType< T > > extends NativeImgFacto
 		throw new IncompatibleTypeException( this, type.getClass().getCanonicalName() + " does not implement NativeType." );
 	}
 
+
+	/*
+	 * -----------------------------------------------------------------------
+	 *
+	 * Deprecated API.
+	 *
+	 * Supports backwards compatibility with ImgFactories that are constructed
+	 * without a type instance or supplier.
+	 *
+	 * -----------------------------------------------------------------------
+	 */
+
 	@Deprecated
 	public NtreeImgFactory()
 	{
@@ -127,7 +156,7 @@ public class NtreeImgFactory< T extends NativeType< T > > extends NativeImgFacto
 	@Override
 	public NtreeImg< T, ? > create( final long[] dimensions, final T type )
 	{
-		T cachedType = cache( type );
+		final T cachedType = cache( type );
 		return create( dimensions, cachedType, cachedType.getPrimitiveTypeInfo() );
 	}
 

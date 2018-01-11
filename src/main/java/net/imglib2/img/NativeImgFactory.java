@@ -36,11 +36,12 @@ package net.imglib2.img;
 
 import java.util.function.Supplier;
 
+import net.imglib2.Dimensions;
 import net.imglib2.type.NativeType;
+import net.imglib2.util.Util;
 
 /**
- * TODO: Either override all ImgFactory signatures to return NativeImg or get
- * rid of {@link NativeImgFactory} all together.
+ * TODO: get rid of {@link NativeImgFactory}???
  */
 public abstract class NativeImgFactory< T extends NativeType< T > > extends ImgFactory< T >
 {
@@ -54,20 +55,61 @@ public abstract class NativeImgFactory< T extends NativeType< T > > extends ImgF
 		super( supplier );
 	}
 
+	/**
+	 * Create a {@link NativeImg} with the specified {@code dimensions}.
+	 *
+	 * @param dimension
+	 *            the dimensions of the image.
+	 *
+	 * @return new {@link NativeImg} with the specified {@code dimensions}.
+	 */
 	@Override
 	public abstract NativeImg< T, ? > create( final long... dimensions );
 
 	/**
-	 * Create a {@link NativeImg} of the specified {@code type} with specified
-	 * {@code dimensions}.
+	 * Create an {@code Img<T>} with the specified {@code dimensions}.
 	 *
-	 * @param dimension
-	 *            the dimensions of the image.
-	 * @param type
-	 *            the pixel type, must be a {@link NativeType}.
-	 *
-	 * @return new {@link NativeImg} of specified {@code type} and {@code dimensions}.
+	 * @return new image with the specified {@code dimensions}.
 	 */
+	@Override
+	public NativeImg< T, ? > create( final Dimensions dimensions )
+	{
+		final long[] size = new long[ dimensions.numDimensions() ];
+		dimensions.dimensions( size );
+
+		return create( size );
+	}
+
+	/**
+	 * Create an {@code Img<T>} with the specified {@code dimensions}.
+	 *
+	 * <p>
+	 * Note: This is not a vararg function because the underlying {@code int[]}
+	 * based methods already copies the {@code int[]} dimensions into a
+	 * disposable {@code long[]} anyways. This would be an unnecessary copy for
+	 * {@code int...} varargs.
+	 * </p>
+	 *
+	 * @return new image with the specified {@code dimensions}.
+	 */
+	@Override
+	public NativeImg< T, ? > create( final int[] dimensions )
+	{
+		return create( Util.int2long( dimensions ) );
+	}
+
+
+	/*
+	 * -----------------------------------------------------------------------
+	 *
+	 * Deprecated API.
+	 *
+	 * Supports backwards compatibility with ImgFactories that are constructed
+	 * without a type instance or supplier.
+	 *
+	 * -----------------------------------------------------------------------
+	 */
+
 	@Override
 	@Deprecated
 	public abstract NativeImg< T, ? > create( final long[] dimension, final T type );
