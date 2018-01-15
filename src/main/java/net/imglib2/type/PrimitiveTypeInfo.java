@@ -61,37 +61,37 @@ public final class PrimitiveTypeInfo< T extends NativeType< T >, A >
 		return createLinkedType.apply( img );
 	}
 
-	public static < T extends NativeType< T > > PrimitiveTypeInfo< T, ByteAccess > BYTE( final Function< NativeImg< T, ? extends ByteAccess >, T > createLinkedType )
+	public static < T extends NativeType< T >, A extends ByteAccess > PrimitiveTypeInfo< T, A > BYTE( final Function< NativeImg< T, ? extends A >, T > createLinkedType )
 	{
 		return new PrimitiveTypeInfo<>( PrimitiveType.BYTE, createLinkedType );
 	}
 
-	public static < T extends NativeType< T > > PrimitiveTypeInfo< T, CharAccess > CHAR( final Function< NativeImg< T, ? extends CharAccess >, T > createLinkedType )
+	public static < T extends NativeType< T >, A extends CharAccess > PrimitiveTypeInfo< T, A > CHAR( final Function< NativeImg< T, ? extends A >, T > createLinkedType )
 	{
 		return new PrimitiveTypeInfo<>( PrimitiveType.CHAR, createLinkedType );
 	}
 
-	public static < T extends NativeType< T > > PrimitiveTypeInfo< T, ShortAccess > SHORT( final Function< NativeImg< T, ? extends ShortAccess >, T > createLinkedType )
+	public static < T extends NativeType< T >, A extends ShortAccess > PrimitiveTypeInfo< T, A > SHORT( final Function< NativeImg< T, ? extends A >, T > createLinkedType )
 	{
 		return new PrimitiveTypeInfo<>( PrimitiveType.SHORT, createLinkedType );
 	}
 
-	public static < T extends NativeType< T > > PrimitiveTypeInfo< T, IntAccess > INT( final Function< NativeImg< T, ? extends IntAccess >, T > createLinkedType )
+	public static < T extends NativeType< T >, A extends IntAccess > PrimitiveTypeInfo< T, A > INT( final Function< NativeImg< T, ? extends A >, T > createLinkedType )
 	{
 		return new PrimitiveTypeInfo<>( PrimitiveType.INT, createLinkedType );
 	}
 
-	public static < T extends NativeType< T > > PrimitiveTypeInfo< T, LongAccess > LONG( final Function< NativeImg< T, ? extends LongAccess >, T > createLinkedType )
+	public static < T extends NativeType< T >, A extends LongAccess > PrimitiveTypeInfo< T, A > LONG( final Function< NativeImg< T, ? extends A >, T > createLinkedType )
 	{
 		return new PrimitiveTypeInfo<>( PrimitiveType.LONG, createLinkedType );
 	}
 
-	public static < T extends NativeType< T > > PrimitiveTypeInfo< T, FloatAccess > FLOAT( final Function< NativeImg< T, ? extends FloatAccess >, T > createLinkedType )
+	public static < T extends NativeType< T >, A extends FloatAccess > PrimitiveTypeInfo< T, A > FLOAT( final Function< NativeImg< T, ? extends A >, T > createLinkedType )
 	{
 		return new PrimitiveTypeInfo<>( PrimitiveType.FLOAT, createLinkedType );
 	}
 
-	public static < T extends NativeType< T > > PrimitiveTypeInfo< T, DoubleAccess > DOUBLE( final Function< NativeImg< T, ? extends DoubleAccess >, T > createLinkedType )
+	public static < T extends NativeType< T >, A extends DoubleAccess > PrimitiveTypeInfo< T, A > DOUBLE( final Function< NativeImg< T, ? extends A >, T > createLinkedType )
 	{
 		return new PrimitiveTypeInfo<>( PrimitiveType.DOUBLE, createLinkedType );
 	}
