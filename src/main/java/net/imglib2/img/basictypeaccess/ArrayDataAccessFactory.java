@@ -29,6 +29,7 @@ import net.imglib2.img.basictypeaccess.volatiles.array.VolatileFloatArray;
 import net.imglib2.img.basictypeaccess.volatiles.array.VolatileIntArray;
 import net.imglib2.img.basictypeaccess.volatiles.array.VolatileLongArray;
 import net.imglib2.img.basictypeaccess.volatiles.array.VolatileShortArray;
+import net.imglib2.type.NativeType;
 import net.imglib2.type.PrimitiveType;
 import net.imglib2.type.PrimitiveTypeInfo;
 
@@ -41,9 +42,16 @@ import net.imglib2.type.PrimitiveTypeInfo;
  */
 public class ArrayDataAccessFactory
 {
+	public static < T extends NativeType< T >, A > A get(
+			final T type,
+			final AccessFlags... flags )
+	{
+		return get( type.getPrimitiveTypeInfo().getPrimitiveType(), flags );
+	}
+
 	public static < A extends ArrayDataAccess< A > > A get(
 			final PrimitiveTypeInfo< ?, ? super A > primitiveTypeInfo,
-			final AccessFlags ... flags )
+			final AccessFlags... flags )
 	{
 		return get( primitiveTypeInfo.getPrimitiveType(), flags );
 	}
@@ -51,7 +59,7 @@ public class ArrayDataAccessFactory
 	@SuppressWarnings( "unchecked" )
 	public static < A extends ArrayDataAccess< A > > A get(
 			final PrimitiveType primitiveType,
-			final AccessFlags ... flags )
+			final AccessFlags... flags )
 	{
 		final boolean dirty = AccessFlags.isDirty( flags );
 		final boolean volatil = AccessFlags.isVolatile( flags );
