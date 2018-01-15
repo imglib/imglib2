@@ -43,6 +43,7 @@ import net.imglib2.img.NativeImgFactory;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.PrimitiveTypeInfo;
 import net.imglib2.util.Fraction;
+import net.imglib2.util.Intervals;
 import net.imglib2.util.Util;
 
 /**
@@ -62,7 +63,7 @@ public class NtreeImgFactory< T extends NativeType< T > > extends NativeImgFacto
 	}
 
 	@Override
-	public NtreeImg< T, ? extends NtreeAccess< ?, ? > > create( final long... dimensions )
+	public NtreeImg< T, ? > create( final long... dimensions )
 	{
 		return create( dimensions, type(), type().getPrimitiveTypeInfo() );
 	}
@@ -70,10 +71,7 @@ public class NtreeImgFactory< T extends NativeType< T > > extends NativeImgFacto
 	@Override
 	public NtreeImg< T, ? > create( final Dimensions dimensions )
 	{
-		final long[] size = new long[ dimensions.numDimensions() ];
-		dimensions.dimensions( size );
-
-		return create( size );
+		return create( Intervals.dimensionsAsLongArray( dimensions ) );
 	}
 
 	@Override

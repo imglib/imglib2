@@ -162,10 +162,7 @@ public class CellImgFactory< T extends NativeType< T > > extends NativeImgFactor
 	@Override
 	public CellImg< T, ? > create( final Dimensions dimensions )
 	{
-		final long[] size = new long[ dimensions.numDimensions() ];
-		dimensions.dimensions( size );
-
-		return create( size );
+		return create( Intervals.dimensionsAsLongArray( dimensions ) );
 	}
 
 	@Override

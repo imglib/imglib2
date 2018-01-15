@@ -41,6 +41,7 @@ import net.imglib2.Dimensions;
 import net.imglib2.exception.IncompatibleTypeException;
 import net.imglib2.img.ImgFactory;
 import net.imglib2.type.Type;
+import net.imglib2.util.Intervals;
 import net.imglib2.util.Util;
 
 /**
@@ -79,10 +80,7 @@ public class ListImgFactory< T > extends ImgFactory< T >
 	@Override
 	public ListImg< T > create( final Dimensions dimensions )
 	{
-		final long[] size = new long[ dimensions.numDimensions() ];
-		dimensions.dimensions( size );
-
-		return create( size );
+		return create( Intervals.dimensionsAsLongArray( dimensions ) );
 	}
 
 	@Override

@@ -38,6 +38,7 @@ import java.util.function.Supplier;
 
 import net.imglib2.Dimensions;
 import net.imglib2.type.NativeType;
+import net.imglib2.util.Intervals;
 import net.imglib2.util.Util;
 
 /**
@@ -74,10 +75,7 @@ public abstract class NativeImgFactory< T extends NativeType< T > > extends ImgF
 	@Override
 	public NativeImg< T, ? > create( final Dimensions dimensions )
 	{
-		final long[] size = new long[ dimensions.numDimensions() ];
-		dimensions.dimensions( size );
-
-		return create( size );
+		return create( Intervals.dimensionsAsLongArray( dimensions ) );
 	}
 
 	/**

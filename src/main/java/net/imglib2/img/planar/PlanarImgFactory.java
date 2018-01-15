@@ -45,6 +45,7 @@ import net.imglib2.img.basictypeaccess.array.ArrayDataAccess;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.PrimitiveTypeInfo;
 import net.imglib2.util.Fraction;
+import net.imglib2.util.Intervals;
 import net.imglib2.util.Util;
 
 /**
@@ -87,10 +88,7 @@ public class PlanarImgFactory< T extends NativeType< T > > extends NativeImgFact
 	@Override
 	public PlanarImg< T, ? > create( final Dimensions dimensions )
 	{
-		final long[] size = new long[ dimensions.numDimensions() ];
-		dimensions.dimensions( size );
-
-		return create( size );
+		return create( Intervals.dimensionsAsLongArray( dimensions ) );
 	}
 
 	@Override
