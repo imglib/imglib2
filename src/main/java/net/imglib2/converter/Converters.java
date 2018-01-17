@@ -353,8 +353,8 @@ public class Converters
 	final static public RandomAccessibleInterval< UnsignedByteType > argbChannels( final RandomAccessibleInterval< ARGBType > source, final int... channels )
 	{
 		final ArrayList< RandomAccessibleInterval< UnsignedByteType > > hyperSlices = new ArrayList<>();
-		for ( final int c : channels )
-			hyperSlices.add( argbChannel( source, channels[ c ] ) );
+		for ( final int channel : channels )
+			hyperSlices.add( argbChannel( source, channel ) );
 
 		return Views.stack( hyperSlices );
 	}
