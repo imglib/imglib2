@@ -49,27 +49,21 @@ import net.imglib2.util.Util;
  */
 public abstract class ImgFactory< T >
 {
-	private final Supplier< T > supplier;
-
-	private T t; // TODO: reinstate final modifier once the deprecated API has been removed
+	private T type;
 
 	public ImgFactory( final T type )
 	{
-		t = type;
-		supplier = null;
+		this.type = type;
 	}
 
 	public ImgFactory( final Supplier< T > supplier )
 	{
-		t = null;
-		this.supplier = supplier;
+		this.type = supplier.get();
 	}
 
 	public T type()
 	{
-		if ( t == null )
-			t = supplier.get();
-		return t;
+		return type;
 	}
 
 	/**
@@ -163,8 +157,7 @@ public abstract class ImgFactory< T >
 
 	@Deprecated
 	public ImgFactory() {
-		t = null;
-		supplier = null;
+		type = null;
 	}
 
 	@Deprecated
@@ -176,38 +169,35 @@ public abstract class ImgFactory< T >
 		final long[] size = new long[ dim.numDimensions() ];
 		dim.dimensions( size );
 
-		return create( size, cache( type ) );
+		return create( size, cacheAndReturn( type ) );
 	}
 
 	@Deprecated
 	public Img< T > create( final int[] dim, final T type )
 	{
-		return create( Util.int2long( dim ), cache( type ) );
+		return create( Util.int2long( dim ), cacheAndReturn( type ) );
 	}
 
 	@Deprecated
 	public Img< T > create( final Supplier< T > typeSupplier, final long... dim )
 	{
-		return create( dim, cache( typeSupplier.get() ) );
+		return create( dim, cacheAndReturn( typeSupplier.get() ) );
 	}
 
 	@Deprecated
 	public Img< T > create( final Supplier< T > typeSupplier, final Dimensions dim )
 	{
-		return create( dim, cache( typeSupplier.get() ) );
+		return create( dim, cacheAndReturn( typeSupplier.get() ) );
 	}
 
 	@Deprecated
 	public Img< T > create( final Supplier< T > typeSupplier, final int[] dim )
 	{
-		return create( dim, cache( typeSupplier.get() ) );
+		return create( dim, cacheAndReturn( typeSupplier.get() ) );
 	}
 
 	/**
-	 * Makes a best effort to return a non-null type instance, caching the given
-	 * type if a cached type is not already in place.
-	 * <p>
-	 * Furthermore, if the cached type instance was previously null, the given
+	 * If the cached type instance was previously null, the given
 	 * {@code type} becomes the cached instance. In this way, if the factory was
 	 * created using one of the deprecated typeless constructor signatures, but
 	 * then one of the deprecated {@code create} methods is called (i.e.: a
@@ -218,14 +208,12 @@ public abstract class ImgFactory< T >
 	 *
 	 * @param type
 	 *            The type to return, and cache if needed.
-	 * @return A type instance matching the type of the factory. If the given
-	 *         {@code type} argument is non-null, it is returned. Otherwise, the
-	 *         cached type instance {@link #t} is returned.
+	 * @return Value equals the parameter.
 	 */
 	@Deprecated
-	protected T cache( final T type )
+	protected T cacheAndReturn( final T type )
 	{
-		if ( t == null ) t = type;
-		return type == null ? t : type;
+		if ( this.type == null ) this.type = type;
+		return type;
 	}
 }

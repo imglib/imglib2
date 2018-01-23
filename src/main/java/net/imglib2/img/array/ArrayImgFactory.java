@@ -136,7 +136,7 @@ public class ArrayImgFactory< T extends NativeType< T > > extends NativeImgFacto
 	@Override
 	public ArrayImg< T, ? > create( final long[] dim, final T type )
 	{
-		final T cachedType = cache( type );
+		final T cachedType = cacheAndReturn( type );
 		return create( dim, cachedType, cachedType.getPrimitiveTypeInfo() );
 	}
 }

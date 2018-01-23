@@ -117,7 +117,7 @@ public class ListImgFactory< T > extends ImgFactory< T >
 	@Override
 	public ListImg< T > create( final long[] dim, final T type )
 	{
-		final T cachedType = cache( type );
+		final T cachedType = cacheAndReturn( type );
 		return new ListImg<>( dim, cachedType );
 	}
 
