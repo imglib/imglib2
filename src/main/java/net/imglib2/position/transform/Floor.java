@@ -160,11 +160,9 @@ public class Floor< LocalizablePositionable extends Localizable & Positionable >
 	@Override
 	public void setPosition( final RealLocalizable localizable )
 	{
+		localizable.localize( position );
 		for ( int d = 0; d < n; ++d )
-		{
-			position[ d ] = localizable.getDoublePosition( d );
 			discrete[ d ] = floor( position[ d ] );
-		}
 		target.setPosition( discrete );
 	}
 

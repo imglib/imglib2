@@ -11,13 +11,13 @@
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- *
+ * 
  * 1. Redistributions of source code must retain the above copyright notice,
  *    this list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  *    this list of conditions and the following disclaimer in the documentation
  *    and/or other materials provided with the distribution.
- *
+ * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -41,9 +41,9 @@ import net.imglib2.type.NativeType;
 
 /**
  * {@link RandomAccess} on an {@link ArrayImg}.
- *
+ * 
  * @param <T>
- *
+ * 
  * @author Stephan Preibisch
  * @author Stephan Saalfeld
  * @author Tobias Pietzsch
@@ -160,12 +160,10 @@ public class ArrayRandomAccess< T extends NativeType< T > > extends AbstractLoca
 	@Override
 	public void setPosition( final Localizable localizable )
 	{
+		localizable.localize( position );
 		int index = 0;
 		for ( int d = 0; d < n; ++d )
-		{
-			position[ d ] = localizable.getIntPosition( d );
 			index += position[ d ] * img.steps[ d ];
-		}
 		type.updateIndex( index );
 	}
 
@@ -242,7 +240,7 @@ public class ArrayRandomAccess< T extends NativeType< T > > extends AbstractLoca
 
 	/**
 	 * Moves n steps in dimension 0
-	 *
+	 * 
 	 * @param distance
 	 *            - how many steps (positive or negative)
 	 */
@@ -254,7 +252,7 @@ public class ArrayRandomAccess< T extends NativeType< T > > extends AbstractLoca
 
 	/**
 	 * Moves n steps in dimension 0
-	 *
+	 * 
 	 * @param distance
 	 *            - how many steps (positive or negative)
 	 */
@@ -266,10 +264,10 @@ public class ArrayRandomAccess< T extends NativeType< T > > extends AbstractLoca
 
 	/**
 	 * Sets the {@link ArrayRandomAccess} to a certain position in dimension 0
-	 *
+	 * 
 	 * Careful: it assumes that it is only a one-dimensional image, all other
 	 * dimensions would be set to zero (this saves one subtraction)
-	 *
+	 * 
 	 * @param pos
 	 *            - the new position
 	 */
@@ -281,10 +279,10 @@ public class ArrayRandomAccess< T extends NativeType< T > > extends AbstractLoca
 
 	/**
 	 * Sets the {@link ArrayRandomAccess} to a certain position in dimension 0
-	 *
+	 * 
 	 * Careful: it assumes that it is only a one-dimensional image, all other
 	 * dimensions would be set to zero (this saves one subtraction)
-	 *
+	 * 
 	 * @param pos
 	 *            - the new position
 	 */
