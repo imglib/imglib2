@@ -38,6 +38,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
+import java.util.function.Supplier;
 
 import net.imglib2.EuclideanSpace;
 import net.imglib2.FlatIterationOrder;
@@ -53,6 +54,8 @@ import net.imglib2.interpolation.Interpolant;
 import net.imglib2.interpolation.InterpolatorFactory;
 import net.imglib2.outofbounds.OutOfBoundsBorderFactory;
 import net.imglib2.outofbounds.OutOfBoundsConstantValueFactory;
+import net.imglib2.outofbounds.OutOfBoundsConstantValueNoGenericBounds;
+import net.imglib2.outofbounds.OutOfBoundsConstantValueNoGenericBoundsFactory;
 import net.imglib2.outofbounds.OutOfBoundsFactory;
 import net.imglib2.outofbounds.OutOfBoundsMirrorFactory;
 import net.imglib2.outofbounds.OutOfBoundsPeriodicFactory;
@@ -168,6 +171,23 @@ public class Views
 	public static < T, F extends RandomAccessibleInterval< T > > ExtendedRandomAccessibleInterval< T, F > extendMirrorDouble( final F source )
 	{
 		return new ExtendedRandomAccessibleInterval< T, F >( source, new OutOfBoundsMirrorFactory< T, F >( OutOfBoundsMirrorFactory.Boundary.DOUBLE ) );
+	}
+
+	/**
+	 * Extend a RandomAccessibleInterval with a constant-value out-of-bounds
+	 * strategy.
+	 *
+	 * @param source
+	 *            the interval to extend.
+	 * @param extensionSupplier
+	 *            generates the constant extension when requested
+	 * @return (unbounded) RandomAccessible which extends the input interval to
+	 *         infinity.
+	 * @see net.imglib2.outofbounds.OutOfBoundsConstantValue
+	 */
+	public static < T, F extends RandomAccessibleInterval< T > > ExtendedRandomAccessibleInterval< T, F > extendValue( final F source, final Supplier< T > extensionSupplier )
+	{
+		return new ExtendedRandomAccessibleInterval< T, F >( source, new OutOfBoundsConstantValueNoGenericBoundsFactory<>( extensionSupplier) );
 	}
 
 	/**
@@ -1323,6 +1343,22 @@ public class Views
 	public static < T > IntervalView< T > expandMirrorDouble( final RandomAccessibleInterval< T > source, final long... border )
 	{
 		return interval( extendMirrorDouble( source ), Intervals.expand( source, border ) );
+	}
+
+	/**
+	 * Expand a RandomAccessibleInterval as specified by border. source will be
+	 * extended with a constant value specified by the caller.
+	 *
+	 * @param source
+	 *            the interval to expand.
+	 * @param extensionSupplier
+	 *            generates the constant extension when requested
+	 * @return Expansion of the {@link RandomAccessibleInterval} source as
+	 *         specified by t and border.
+	 */
+	public static < T > IntervalView< T > expandValue( final RandomAccessibleInterval< T > source, final Supplier< T > extensionSupplier, final long... border )
+	{
+		return interval( extendValue( source, extensionSupplier ), Intervals.expand( source, border ) );
 	}
 
 	/**

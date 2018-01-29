@@ -39,17 +39,17 @@ import net.imglib2.Interval;
 import net.imglib2.Localizable;
 import net.imglib2.RandomAccess;
 import net.imglib2.RandomAccessible;
-import net.imglib2.type.Type;
 
 /**
- * 
+ *
  * @param <T>
- * 
+ *
  * @author Stephan Preibisch
  * @author Stephan Saalfeld
  * @author Tobias Pietzsch
+ * @author Philipp Hanslovsky
  */
-public abstract class AbstractOutOfBoundsValue< T extends Type< T > > extends AbstractLocalizable implements OutOfBounds< T >
+public abstract class AbstractOutOfBoundsValue< T > extends AbstractLocalizable implements OutOfBounds< T >
 {
 	final protected RandomAccess< T > sampler;
 
