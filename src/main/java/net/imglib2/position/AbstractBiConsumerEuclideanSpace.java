@@ -34,38 +34,36 @@
 
 package net.imglib2.position;
 
-import static org.junit.Assert.assertTrue;
+import java.util.function.BiConsumer;
+import java.util.function.Supplier;
 
-import org.junit.Test;
+import net.imglib2.EuclideanSpace;
 
-import net.imglib2.type.logic.BoolType;
+/**
+ * Abstract base class for functions that generate values through a
+ * {@link BiConsumer}.
+ *
+ * @author Stephan Saalfeld
+ */
+public abstract class AbstractBiConsumerEuclideanSpace< P, T > implements EuclideanSpace
+{
+	protected final int n;
+	protected final BiConsumer< P, T > function;
+	protected final Supplier< T > typeSupplier;
 
-
-public class FunctionTest {
-
-	@Test
-	public void test() {
-
-		final Function< BoolType > function = new Function< BoolType >(
-				4,
-				(pos, val) -> val.set(
-						pos.getDoublePosition(0) > 0 &&
-						pos.getDoublePosition(1) > 1 &&
-						pos.getDoublePosition(2) > 2 &&
-						pos.getDoublePosition(3) > 3 ),
-				BoolType::new );
-
-		Function<BoolType>.FunctionRandomAccess access = function.randomAccess();
-		access.setPosition( new long[] {1, 2, 3, 4} );
-		assertTrue( access.get().get() );
-		access.setPosition( new long[] {0, 2, 3, 4} );
-		assertTrue( !access.get().get() );
-		access.setPosition( new long[] {1, 0, 3, 4} );
-		assertTrue( !access.get().get() );
-		access.setPosition( new long[] {1, 2, -10, 4} );
-		assertTrue( !access.get().get() );
-		access.setPosition( new long[] {10, 50, 5, 5} );
-		assertTrue( access.get().get() );
+	public AbstractBiConsumerEuclideanSpace(
+			final int n,
+			final BiConsumer< P, T > function,
+			final Supplier< T > typeSupplier )
+	{
+		this.n = n;
+		this.function = function;
+		this.typeSupplier = typeSupplier;
 	}
 
+	@Override
+	public int numDimensions()
+	{
+		return n;
+	}
 }

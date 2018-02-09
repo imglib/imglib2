@@ -34,70 +34,54 @@
 
 package net.imglib2.position;
 
-import java.util.function.BiConsumer;
-import java.util.function.Supplier;
+import static org.junit.Assert.assertTrue;
 
-import net.imglib2.RealInterval;
-import net.imglib2.RealLocalizable;
-import net.imglib2.RealPoint;
-import net.imglib2.RealRandomAccess;
-import net.imglib2.RealRandomAccessible;
+import org.junit.After;
+import org.junit.AfterClass;
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.Test;
 
-/**
- * A {@link RealRandomAccessible} that generates a function value for each
- * position in real coordinate space by side-effect using a
- * {@link BiConsumer}.
- *
- * @author Stephan Saalfeld
- */
-public class RealFunction< T > extends AbstractFunction< RealLocalizable, T > implements RealRandomAccessible< T >
-{
-	public RealFunction(
-			final int n,
-			final BiConsumer< RealLocalizable, T > function,
-			final Supplier< T > typeSupplier )
-	{
-		super( n, function, typeSupplier );
+import net.imglib2.type.logic.BoolType;
+
+
+public class BiConsumerRealRandomAccessibleTest {
+
+	@BeforeClass
+	public static void setUpBeforeClass() throws Exception {}
+
+	@AfterClass
+	public static void tearDownAfterClass() throws Exception {}
+
+	@Before
+	public void setUp() throws Exception {}
+
+	@After
+	public void tearDown() throws Exception {}
+
+	@Test
+	public void test() {
+
+		final BiConsumerRealRandomAccessible< BoolType > function = new BiConsumerRealRandomAccessible< BoolType >(
+				4,
+				(pos, val) -> val.set(
+						pos.getDoublePosition(0) > 0 &&
+						pos.getDoublePosition(1) > 1 &&
+						pos.getDoublePosition(2) > 2 &&
+						pos.getDoublePosition(3) > 3 ),
+				BoolType::new );
+
+		BiConsumerRealRandomAccessible<BoolType>.RealFunctionRealRandomAccess access = function.realRandomAccess();
+		access.setPosition( new double[] {1, 2, 3, 4} );
+		assertTrue( access.get().get() );
+		access.setPosition( new double[] {0, 2, 3, 4} );
+		assertTrue( !access.get().get() );
+		access.setPosition( new double[] {1, 0, 3, 4} );
+		assertTrue( !access.get().get() );
+		access.setPosition( new double[] {1, 2, -10, 4} );
+		assertTrue( !access.get().get() );
+		access.setPosition( new double[] {10, 50, 5, 5} );
+		assertTrue( access.get().get() );
 	}
 
-	public class RealFunctionRealRandomAccess extends RealPoint implements RealRandomAccess< T >
-	{
-		private final T t = typeSupplier.get();
-
-		public RealFunctionRealRandomAccess()
-		{
-			super( RealFunction.this.n );
-		}
-
-		@Override
-		public T get()
-		{
-			function.accept( this, t );
-			return t;
-		}
-
-		@Override
-		public RealFunctionRealRandomAccess copy()
-		{
-			return new RealFunctionRealRandomAccess();
-		}
-
-		@Override
-		public RealFunctionRealRandomAccess copyRealRandomAccess()
-		{
-			return copy();
-		}
-	}
-
-	@Override
-	public RealFunctionRealRandomAccess realRandomAccess()
-	{
-		return new RealFunctionRealRandomAccess();
-	}
-
-	@Override
-	public RealFunctionRealRandomAccess realRandomAccess( final RealInterval interval )
-	{
-		return realRandomAccess();
-	}
 }

@@ -50,9 +50,9 @@ import net.imglib2.RandomAccessible;
  *
  * @author Stephan Saalfeld
  */
-public class Function< T > extends AbstractFunction< Localizable, T > implements RandomAccessible< T >
+public class BiConsumerRandomAccessible< T > extends AbstractBiConsumerEuclideanSpace< Localizable, T > implements RandomAccessible< T >
 {
-	public Function(
+	public BiConsumerRandomAccessible(
 			final int n,
 			final BiConsumer< Localizable, T > function,
 			final Supplier< T > typeSupplier )
@@ -66,7 +66,7 @@ public class Function< T > extends AbstractFunction< Localizable, T > implements
 
 		public FunctionRandomAccess()
 		{
-			super( Function.this.n );
+			super( BiConsumerRandomAccessible.this.n );
 		}
 
 		@Override
