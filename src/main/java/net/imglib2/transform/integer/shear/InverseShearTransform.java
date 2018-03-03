@@ -31,6 +31,7 @@
  * POSSIBILITY OF SUCH DAMAGE.
  * #L%
  */
+
 package net.imglib2.transform.integer.shear;
 
 
