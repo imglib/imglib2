@@ -46,12 +46,13 @@ public class ConstantDoubleAccess implements DoubleAccess
 
 	public ConstantDoubleAccess()
 	{
-		this( 0.0D );
+
 	}
 
 	public ConstantDoubleAccess( final double value )
 	{
-		this.value = value;
+		this();
+		setValue( 0, value );
 	}
 
 	@Override

@@ -46,12 +46,13 @@ public class ConstantFloatAccess implements FloatAccess
 
 	public ConstantFloatAccess()
 	{
-		this( 0.0F );
+
 	}
 
 	public ConstantFloatAccess( final float value )
 	{
-		this.value = value;
+		this();
+		setValue( 0, value );
 	}
 
 	@Override

@@ -46,12 +46,13 @@ public class ConstantIntAccess implements IntAccess
 
 	public ConstantIntAccess()
 	{
-		this( 0 );
+
 	}
 
 	public ConstantIntAccess( final int value )
 	{
-		this.value = value;
+		this();
+		setValue( 0, value );
 	}
 
 	@Override

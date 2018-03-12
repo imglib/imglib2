@@ -46,12 +46,13 @@ public class ConstantCharAccess implements CharAccess
 
 	public ConstantCharAccess()
 	{
-		this( ( char ) 0 );
+
 	}
 
 	public ConstantCharAccess( final char value )
 	{
-		this.value = value;
+		this();
+		setValue( 0, value );
 	}
 
 	@Override

@@ -46,12 +46,13 @@ public class ConstantLongAccess implements LongAccess
 
 	public ConstantLongAccess()
 	{
-		this( 0 );
+
 	}
 
 	public ConstantLongAccess( final long value )
 	{
-		this.value = value;
+		this();
+		setValue( 0, value );
 	}
 
 	@Override

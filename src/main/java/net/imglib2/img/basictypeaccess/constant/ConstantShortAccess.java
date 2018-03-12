@@ -46,12 +46,13 @@ public class ConstantShortAccess implements ShortAccess
 
 	public ConstantShortAccess()
 	{
-		this( ( short ) 0 );
+
 	}
 
 	public ConstantShortAccess( final short value )
 	{
-		this.value = value;
+		this();
+		setValue( 0, value );
 	}
 
 	@Override

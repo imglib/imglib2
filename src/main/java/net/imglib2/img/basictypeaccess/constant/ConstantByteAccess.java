@@ -46,12 +46,13 @@ public class ConstantByteAccess implements ByteAccess
 
 	public ConstantByteAccess()
 	{
-		this( ( byte ) 0 );
+
 	}
 
 	public ConstantByteAccess( final byte value )
 	{
-		this.value = value;
+		this();
+		setValue( 0, value );
 	}
 
 	@Override
