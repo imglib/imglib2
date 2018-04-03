@@ -34,8 +34,6 @@
 
 package net.imglib2.img.planar;
 
-import java.util.ArrayList;
-
 import net.imglib2.Cursor;
 import net.imglib2.FlatIterationOrder;
 import net.imglib2.Interval;
@@ -47,6 +45,9 @@ import net.imglib2.type.NativeType;
 import net.imglib2.util.Fraction;
 import net.imglib2.util.Intervals;
 import net.imglib2.view.iteration.SubIntervalIterable;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A {@link NativeImg} that stores data in an list of primitive arrays, one per
@@ -73,55 +74,29 @@ public class PlanarImg< T extends NativeType< T >, A extends ArrayDataAccess< A 
 
 	final protected int[] sliceSteps;
 
-	final protected ArrayList< A > mirror;
+	final protected List< A > mirror;
 
+	public PlanarImg( final List< A > slices, final long[] dim, final Fraction entitiesPerPixel )
+	{
+		super( dim, entitiesPerPixel );
+		this.dimensions = longToIntArray( dim );
+		this.sliceSteps = computeSliceSteps( dim );
+		this.numSlices = numberOfSlices( dim );
+		if(slices.size() != numSlices)
+			throw new IllegalArgumentException();
+		this.mirror = slices;
+	}
+
+	/** @deprecated Use {@link this#PlanarImg(List, long[], Fraction)} instead. */
+	@Deprecated
 	public PlanarImg( final long[] dim, final Fraction entitiesPerPixel )
 	{
-		this( null, dim, entitiesPerPixel );
+		this( emptySlices( dim ), dim, entitiesPerPixel );
 	}
 
 	PlanarImg( final A creator, final long[] dim, final Fraction entitiesPerPixel )
 	{
-		super( dim, entitiesPerPixel );
-
-		dimensions = new int[ n ];
-		for ( int d = 0; d < n; ++d )
-			dimensions[ d ] = ( int ) dim[ d ];
-
-		if ( n > 2 )
-		{
-			sliceSteps = new int[ n ];
-			sliceSteps[ 2 ] = 1;
-			for ( int i = 3; i < n; ++i )
-			{
-				final int j = i - 1;
-				sliceSteps[ i ] = dimensions[ j ] * sliceSteps[ j ];
-			}
-		}
-		else
-		{
-			sliceSteps = null;
-		}
-
-		// compute number of slices
-		int s = 1;
-		for ( int d = 2; d < n; ++d )
-			s *= dimensions[ d ];
-		numSlices = s;
-
-		mirror = new ArrayList< A >( numSlices );
-
-		if ( creator == null )
-		{
-			for ( int i = 0; i < numSlices; ++i )
-				mirror.add( null );
-		}
-		else
-		{
-			final int numEntitiesPerSlice = ( int ) entitiesPerPixel.mulCeil( ( ( n > 1 ) ? dimensions[ 1 ] : 1 ) * dimensions[ 0 ] );
-			for ( int i = 0; i < numSlices; ++i )
-				mirror.add( creator.createArray( numEntitiesPerSlice ) );
-		}
+		this( createSlices( creator, dim, entitiesPerPixel ), dim, entitiesPerPixel );
 	}
 
 	/**
@@ -361,5 +336,58 @@ public class PlanarImg< T extends NativeType< T >, A extends ArrayDataAccess< A 
 		assert ( supportsOptimizedCursor( interval ) );
 
 		return new PlanarPlaneSubsetLocalizingCursor< T >( this, interval );
+	}
+
+	/**
+	 * How many slices has a PlanarImg with the given dimensions?
+	 */
+	public static int numberOfSlices( long[] dimensions )
+	{
+		int s = 1;
+		for ( int d = 2; d < dimensions.length; ++d )
+			s *= dimensions[ d ];
+		return s;
+	}
+
+	// -- Helper methods --
+
+	private static int[] longToIntArray( long[] dim )
+	{
+		int[] dimensions = new int[ dim.length ];
+		for ( int d = 0; d < dim.length; ++d )
+			dimensions[ d ] = ( int ) dim[ d ];
+		return dimensions;
+	}
+
+	private static int[] computeSliceSteps( long[] dimensions )
+	{
+		final int n = dimensions.length;
+		if ( n <= 2 )
+			return null;
+		int[] sliceSteps = new int[ n ];
+		sliceSteps[ 2 ] = 1;
+		for ( int i = 3; i < n; ++i )
+			sliceSteps[ i ] = ( int ) dimensions[ i - 1 ] * sliceSteps[ i - 1 ];
+		return sliceSteps;
+	}
+
+	private static < A > List< A > emptySlices( long[] dim )
+	{
+		int numSlices = numberOfSlices( dim );
+		List< A > mirror = new ArrayList<>( numSlices );
+		for ( int i = 0; i < numSlices; ++i )
+			mirror.add( null );
+		return mirror;
+	}
+
+	private static < A extends ArrayDataAccess< A > > List< A > createSlices( A creator, long[] dim, Fraction entitiesPerPixel )
+	{
+		int numSlices = numberOfSlices( dim );
+		List< A > mirror = new ArrayList<>( numSlices );
+		final int pixelsPerPlane = (int) (( ( dim.length > 1 ) ? dim[ 1 ] : 1 ) * dim[ 0 ]);
+		final int numEntitiesPerSlice = ( int ) entitiesPerPixel.mulCeil( pixelsPerPlane );
+		for ( int i = 0; i < numSlices; ++i )
+			mirror.add( creator.createArray( numEntitiesPerSlice ) );
+		return mirror;
 	}
 }
