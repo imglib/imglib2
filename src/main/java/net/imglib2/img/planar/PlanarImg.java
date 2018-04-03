@@ -87,7 +87,7 @@ public class PlanarImg< T extends NativeType< T >, A extends ArrayDataAccess< A 
 		this.mirror = slices;
 	}
 
-	/** @deprecated Use {@link this#PlanarImg(List, long[], Fraction)} instead. */
+	/** @deprecated Use {@link #PlanarImg(List, long[], Fraction)} instead. */
 	@Deprecated
 	public PlanarImg( final long[] dim, final Fraction entitiesPerPixel )
 	{
