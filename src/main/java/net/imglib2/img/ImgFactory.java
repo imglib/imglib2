@@ -169,31 +169,32 @@ public abstract class ImgFactory< T >
 		final long[] size = new long[ dim.numDimensions() ];
 		dim.dimensions( size );
 
-		return create( size, cacheAndReturn( type ) );
+		cache( type );
+		return create( size, type );
 	}
 
 	@Deprecated
 	public Img< T > create( final int[] dim, final T type )
 	{
-		return create( Util.int2long( dim ), cacheAndReturn( type ) );
+		return create( Util.int2long( dim ), type );
 	}
 
 	@Deprecated
 	public Img< T > create( final Supplier< T > typeSupplier, final long... dim )
 	{
-		return create( dim, cacheAndReturn( typeSupplier.get() ) );
+		return create( dim, typeSupplier.get() );
 	}
 
 	@Deprecated
 	public Img< T > create( final Supplier< T > typeSupplier, final Dimensions dim )
 	{
-		return create( dim, cacheAndReturn( typeSupplier.get() ) );
+		return create( dim, typeSupplier.get() );
 	}
 
 	@Deprecated
 	public Img< T > create( final Supplier< T > typeSupplier, final int[] dim )
 	{
-		return create( dim, cacheAndReturn( typeSupplier.get() ) );
+		return create( dim, typeSupplier.get() );
 	}
 
 	/**
@@ -207,13 +208,12 @@ public abstract class ImgFactory< T >
 	 * </p>
 	 *
 	 * @param type
-	 *            The type to return, and cache if needed.
-	 * @return Value equals the parameter.
+	 *            The type to cache if needed.
 	 */
 	@Deprecated
-	protected T cacheAndReturn( final T type )
+	protected void cache( final T type )
 	{
-		if ( this.type == null ) this.type = type;
-		return type;
+		if ( this.type == null )
+			this.type = type;
 	}
 }

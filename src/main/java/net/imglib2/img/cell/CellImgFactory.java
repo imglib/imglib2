@@ -255,7 +255,7 @@ public class CellImgFactory< T extends NativeType< T > > extends NativeImgFactor
 	@Override
 	public CellImg< T, ? > create( final long[] dimensions, final T type )
 	{
-		final T cachedType = cacheAndReturn( type );
-		return create( cachedType.getPrimitiveTypeInfo(), dimensions, cachedType.getEntitiesPerPixel() );
+		cache( type );
+		return create( type.getPrimitiveTypeInfo(), dimensions, type.getEntitiesPerPixel() );
 	}
 }
