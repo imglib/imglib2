@@ -59,7 +59,7 @@ public abstract class NativeImgFactory< T extends NativeType< T > > extends ImgF
 	/**
 	 * Create a {@link NativeImg} with the specified {@code dimensions}.
 	 *
-	 * @param dimension
+	 * @param dimensions
 	 *            the dimensions of the image.
 	 *
 	 * @return new {@link NativeImg} with the specified {@code dimensions}.
