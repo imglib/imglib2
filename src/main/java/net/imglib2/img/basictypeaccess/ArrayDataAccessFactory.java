@@ -1,5 +1,10 @@
 package net.imglib2.img.basictypeaccess;
 
+import static net.imglib2.img.basictypeaccess.AccessFlags.DIRTY;
+import static net.imglib2.img.basictypeaccess.AccessFlags.VOLATILE;
+
+import java.util.Set;
+
 import net.imglib2.img.basictypeaccess.array.ArrayDataAccess;
 import net.imglib2.img.basictypeaccess.array.ByteArray;
 import net.imglib2.img.basictypeaccess.array.CharArray;
@@ -43,15 +48,27 @@ import net.imglib2.type.PrimitiveTypeInfo;
 public class ArrayDataAccessFactory
 {
 	public static < T extends NativeType< T >, A > A get(
+			final T type )
+	{
+		return get( type, AccessFlags.setOf() );
+	}
+
+	public static < T extends NativeType< T >, A > A get(
 			final T type,
-			final AccessFlags... flags )
+			final Set< AccessFlags > flags )
 	{
 		return get( type.getPrimitiveTypeInfo().getPrimitiveType(), flags );
 	}
 
 	public static < A extends ArrayDataAccess< A > > A get(
+			final PrimitiveTypeInfo< ?, ? super A > primitiveTypeInfo )
+	{
+		return get( primitiveTypeInfo.getPrimitiveType(), AccessFlags.setOf() );
+	}
+
+	public static < A extends ArrayDataAccess< A > > A get(
 			final PrimitiveTypeInfo< ?, ? super A > primitiveTypeInfo,
-			final AccessFlags... flags )
+			final Set< AccessFlags > flags )
 	{
 		return get( primitiveTypeInfo.getPrimitiveType(), flags );
 	}
@@ -59,10 +76,10 @@ public class ArrayDataAccessFactory
 	@SuppressWarnings( "unchecked" )
 	public static < A extends ArrayDataAccess< A > > A get(
 			final PrimitiveType primitiveType,
-			final AccessFlags... flags )
+			final Set< AccessFlags > flags )
 	{
-		final boolean dirty = AccessFlags.isDirty( flags );
-		final boolean volatil = AccessFlags.isVolatile( flags );
+		final boolean dirty = flags.contains( DIRTY );
+		final boolean volatil = flags.contains( VOLATILE );
 		switch ( primitiveType )
 		{
 		case BYTE:
