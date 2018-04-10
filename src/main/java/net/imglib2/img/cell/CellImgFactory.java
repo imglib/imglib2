@@ -176,9 +176,31 @@ public class CellImgFactory< T extends NativeType< T > > extends NativeImgFactor
 			final long[] dimensions,
 			final Fraction entitiesPerPixel )
 	{
-		return createInstance( ArrayDataAccessFactory.get( info ).createArray( 0 ), info, dimensions, entitiesPerPixel );
-		// calling createArray( 0 ) is necessary here, because otherwise javac
-		// will not infer the ArrayDataAccess type
+		/*
+		 * This should work.
+		 */
+//		return createInstance( ArrayDataAccessFactory.get( info ), info, dimensions, entitiesPerPixel );
+
+		/*
+		 * This does work with javac.
+		 * Calling createArray( 0 ) is necessary here, because otherwise javac will not infer the ArrayDataAccess type.
+		 */
+//		return createInstance( ArrayDataAccessFactory.get( info ).createArray( 0 ), info, dimensions, entitiesPerPixel );
+
+		/*
+		 * Workaround.
+		 *
+		 * The line above is compiled correctly by javac. It seems to compile
+		 * with eclipse, but results in a runtime exception:
+		 * java.lang.NoSuchMethodError:
+		 * java.lang.Object.createArray(I)Ljava/lang/Object;
+		 */
+		@SuppressWarnings( { "unchecked", "rawtypes" } )
+		final CellImg< T, ? > img = createInstance( ( ArrayDataAccess ) ArrayDataAccessFactory.get( info ), ( PrimitiveTypeInfo ) info, dimensions, entitiesPerPixel );
+		return img;
+		/*
+		 * TODO Revisit with newer eclipse and javac versions.
+		 */
 	}
 
 	private < A extends ArrayDataAccess< A > > CellImg< T, A > createInstance(

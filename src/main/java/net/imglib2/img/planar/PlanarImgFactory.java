@@ -80,9 +80,31 @@ public class PlanarImgFactory< T extends NativeType< T > > extends NativeImgFact
 			final long[] dimensions,
 			final Fraction entitiesPerPixel )
 	{
-		return create( ArrayDataAccessFactory.get( info ).createArray( 0 ), info, dimensions, entitiesPerPixel );
-		// calling createArray( 0 ) is necessary here, because otherwise javac
-		// will not infer the ArrayDataAccess type
+		/*
+		 * This should work.
+		 */
+//		return create( ArrayDataAccessFactory.get( info ), info, dimensions, entitiesPerPixel );
+
+		/*
+		 * This does work with javac.
+		 * Calling createArray( 0 ) is necessary here, because otherwise javac will not infer the ArrayDataAccess type.
+		 */
+//		return create( ArrayDataAccessFactory.get( info ).createArray( 0 ), info, dimensions, entitiesPerPixel );
+
+		/*
+		 * Workaround.
+		 *
+		 * The line above is compiled correctly by javac. It seems to compile
+		 * with eclipse, but results in a runtime exception:
+		 * java.lang.NoSuchMethodError:
+		 * java.lang.Object.createArray(I)Ljava/lang/Object;
+		 */
+		@SuppressWarnings( { "unchecked", "rawtypes" } )
+		final PlanarImg< T, ? > img = create( ( ArrayDataAccess ) ArrayDataAccessFactory.get( info ), ( PrimitiveTypeInfo ) info, dimensions, entitiesPerPixel );
+		return img;
+		/*
+		 * TODO Revisit with newer eclipse and javac versions.
+		 */
 	}
 
 	@Override

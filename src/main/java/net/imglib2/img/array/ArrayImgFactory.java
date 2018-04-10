@@ -42,6 +42,7 @@ import net.imglib2.img.AbstractImg;
 import net.imglib2.img.ImgFactory;
 import net.imglib2.img.NativeImgFactory;
 import net.imglib2.img.basictypeaccess.ArrayDataAccessFactory;
+import net.imglib2.img.basictypeaccess.array.ArrayDataAccess;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.PrimitiveTypeInfo;
 import net.imglib2.util.Fraction;
@@ -89,7 +90,23 @@ public class ArrayImgFactory< T extends NativeType< T > > extends NativeImgFacto
 	{
 		final Fraction entitiesPerPixel = type.getEntitiesPerPixel();
 		final int numEntities = numEntitiesRangeCheck( dimensions, entitiesPerPixel );
-		final A data = ArrayDataAccessFactory.get( info ).createArray( numEntities );
+
+//		final A data = ArrayDataAccessFactory.get( info ).createArray( numEntities );
+		/*
+		 * Workaround.
+		 *
+		 * The line above is compiled correctly by javac. It seems to compile
+		 * with eclipse, but results in a runtime exception:
+		 * java.lang.NoSuchMethodError:
+		 * java.lang.Object.createArray(I)Ljava/lang/Object;
+		 */
+		final Object f = ArrayDataAccessFactory.get( info );
+		@SuppressWarnings( { "unchecked", "rawtypes" } )
+		final A data = ( A ) ( ( ArrayDataAccess ) f ).createArray( numEntities );
+		/*
+		 * TODO Remove as soon as Eclipse compiler can deal with it.
+		 */
+
 		final ArrayImg< T, A > img = new ArrayImg<>( data, dimensions, entitiesPerPixel );
 		img.setLinkedType( info.createLinkedType( img ) );
 		return img;
