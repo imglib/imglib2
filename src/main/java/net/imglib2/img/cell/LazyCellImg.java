@@ -1,14 +1,11 @@
 package net.imglib2.img.cell;
 
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
-
 import net.imglib2.img.Img;
 import net.imglib2.img.ImgFactory;
-import net.imglib2.img.NativeImg;
 import net.imglib2.img.cell.LazyCellImg.LazyCells;
 import net.imglib2.img.list.AbstractLongListImg;
 import net.imglib2.type.NativeType;
+import net.imglib2.type.PrimitiveTypeInfo;
 import net.imglib2.util.Fraction;
 
 /**
@@ -35,14 +32,10 @@ public class LazyCellImg< T extends NativeType< T >, A >
 	public LazyCellImg( final CellGrid grid, final T type, final Get< Cell< A > > get )
 	{
 		super( grid, new LazyCells<>( grid.getGridDimensions(), get ), type.getEntitiesPerPixel() );
-		try
-		{
-			linkType( type, this );
-		}
-		catch ( NoSuchMethodException | SecurityException | InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e )
-		{
-			throw new RuntimeException( e );
-		}
+
+		@SuppressWarnings( "unchecked" )
+		final PrimitiveTypeInfo< T, ? super A > info = ( PrimitiveTypeInfo< T, ? super A > ) type.getPrimitiveTypeInfo();
+		setLinkedType( info.createLinkedType( this ) );
 	}
 
 	public LazyCellImg( final CellGrid grid, final Fraction entitiesPerPixel, final Get< Cell< A > > get )
@@ -94,32 +87,6 @@ public class LazyCellImg< T extends NativeType< T >, A >
 		public Img< T > copy()
 		{
 			throw new UnsupportedOperationException();
-		}
-	}
-
-
-	/**
-	 * Reflection hack because there is no {@code T NativeType
-	 * <T>.create(NativeImg<?, A>)} method in ImgLib2 Note that for this method
-	 * to be introduced, NativeType would need an additional generic parameter A
-	 * that specifies the accepted family of access objects that can be used in
-	 * the NativeImg... big change
-	 *
-	 * @throws SecurityException
-	 * @throws NoSuchMethodException
-	 * @throws InvocationTargetException
-	 * @throws IllegalArgumentException
-	 * @throws IllegalAccessException
-	 * @throws InstantiationException
-	 */
-	@SuppressWarnings( { "rawtypes", "unchecked" } )
-	public static void linkType( final NativeType t, final NativeImg img ) throws NoSuchMethodException, SecurityException, InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException
-	{
-		final Constructor constructor = t.getClass().getDeclaredConstructor( NativeImg.class );
-		if ( constructor != null )
-		{
-			final NativeType linkedType = ( NativeType )constructor.newInstance( img );
-			img.setLinkedType( linkedType );
 		}
 	}
 }
