@@ -39,7 +39,7 @@ import net.imglib2.img.basictypeaccess.IntAccess;
 import net.imglib2.img.basictypeaccess.array.IntArray;
 import net.imglib2.type.AbstractNativeType;
 import net.imglib2.type.NativeType;
-import net.imglib2.type.PrimitiveTypeInfo;
+import net.imglib2.type.NativeTypeFactory;
 import net.imglib2.util.Fraction;
 import net.imglib2.util.Util;
 
@@ -99,12 +99,12 @@ public class ARGBType extends AbstractNativeType< ARGBType > implements NumericT
 		return new ARGBType( img );
 	}
 
-	private static final PrimitiveTypeInfo< ARGBType, IntAccess > info = PrimitiveTypeInfo.INT( img -> new ARGBType( img ) );
+	private static final NativeTypeFactory< ARGBType, IntAccess > typeFactory = NativeTypeFactory.INT( img -> new ARGBType( img ) );
 
 	@Override
-	public PrimitiveTypeInfo< ARGBType, IntAccess > getPrimitiveTypeInfo()
+	public NativeTypeFactory< ARGBType, IntAccess > getNativeTypeFactory()
 	{
-		return info;
+		return typeFactory;
 	}
 
 	final public static int rgba( final int r, final int g, final int b, final int a )

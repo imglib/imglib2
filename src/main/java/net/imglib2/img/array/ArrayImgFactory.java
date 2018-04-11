@@ -44,7 +44,7 @@ import net.imglib2.img.NativeImgFactory;
 import net.imglib2.img.basictypeaccess.ArrayDataAccessFactory;
 import net.imglib2.img.basictypeaccess.array.ArrayDataAccess;
 import net.imglib2.type.NativeType;
-import net.imglib2.type.PrimitiveTypeInfo;
+import net.imglib2.type.NativeTypeFactory;
 import net.imglib2.util.Fraction;
 import net.imglib2.util.Intervals;
 import net.imglib2.util.Util;
@@ -72,7 +72,7 @@ public class ArrayImgFactory< T extends NativeType< T > > extends NativeImgFacto
 	public ArrayImg< T, ? > create( final long... dimensions )
 	{
 		@SuppressWarnings( { "unchecked", "rawtypes" } )
-		final ArrayImg< T, ? > img = create( dimensions, type(), ( PrimitiveTypeInfo ) type().getPrimitiveTypeInfo() );
+		final ArrayImg< T, ? > img = create( dimensions, type(), ( NativeTypeFactory ) type().getNativeTypeFactory() );
 		return img;
 	}
 
@@ -91,13 +91,13 @@ public class ArrayImgFactory< T extends NativeType< T > > extends NativeImgFacto
 	private < A extends ArrayDataAccess< A > > ArrayImg< T, A > create(
 			final long[] dimensions,
 			final T type,
-			final PrimitiveTypeInfo< T, A > info )
+			final NativeTypeFactory< T, A > typeFactory )
 	{
 		final Fraction entitiesPerPixel = type.getEntitiesPerPixel();
 		final int numEntities = numEntitiesRangeCheck( dimensions, entitiesPerPixel );
-		final A data = ArrayDataAccessFactory.get( info ).createArray( numEntities );
+		final A data = ArrayDataAccessFactory.get( typeFactory ).createArray( numEntities );
 		final ArrayImg< T, A > img = new ArrayImg<>( data, dimensions, entitiesPerPixel );
-		img.setLinkedType( info.createLinkedType( img ) );
+		img.setLinkedType( typeFactory.createLinkedType( img ) );
 		return img;
 	}
 
@@ -144,7 +144,7 @@ public class ArrayImgFactory< T extends NativeType< T > > extends NativeImgFacto
 	{
 		cache( type );
 		@SuppressWarnings( { "unchecked", "rawtypes" } )
-		final ArrayImg< T, ? > img = create( dim, type, ( PrimitiveTypeInfo ) type.getPrimitiveTypeInfo() );
+		final ArrayImg< T, ? > img = create( dim, type, ( NativeTypeFactory ) type.getNativeTypeFactory() );
 		return img;
 	}
 }

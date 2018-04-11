@@ -39,7 +39,7 @@ import java.math.BigInteger;
 import net.imglib2.img.NativeImg;
 import net.imglib2.img.basictypeaccess.LongAccess;
 import net.imglib2.img.basictypeaccess.array.LongArray;
-import net.imglib2.type.PrimitiveTypeInfo;
+import net.imglib2.type.NativeTypeFactory;
 import net.imglib2.util.Util;
 
 /**
@@ -90,12 +90,12 @@ public class UnsignedLongType extends GenericLongType< UnsignedLongType >
 		return new UnsignedLongType( img );
 	}
 
-	private static final PrimitiveTypeInfo< UnsignedLongType, LongAccess > info = PrimitiveTypeInfo.LONG( img -> new UnsignedLongType( img ) );
+	private static final NativeTypeFactory< UnsignedLongType, LongAccess > typeFactory = NativeTypeFactory.LONG( img -> new UnsignedLongType( img ) );
 
 	@Override
-	public PrimitiveTypeInfo< UnsignedLongType, LongAccess > getPrimitiveTypeInfo()
+	public NativeTypeFactory< UnsignedLongType, LongAccess > getNativeTypeFactory()
 	{
-		return info;
+		return typeFactory;
 	}
 
 	@Override

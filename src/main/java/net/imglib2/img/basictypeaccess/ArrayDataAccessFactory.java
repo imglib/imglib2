@@ -36,7 +36,7 @@ import net.imglib2.img.basictypeaccess.volatiles.array.VolatileLongArray;
 import net.imglib2.img.basictypeaccess.volatiles.array.VolatileShortArray;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.PrimitiveType;
-import net.imglib2.type.PrimitiveTypeInfo;
+import net.imglib2.type.NativeTypeFactory;
 
 /**
  * Given a {@link PrimitiveType} and {@link AccessFlags} creates a specific
@@ -57,20 +57,20 @@ public class ArrayDataAccessFactory
 			final T type,
 			final Set< AccessFlags > flags )
 	{
-		return get( type.getPrimitiveTypeInfo().getPrimitiveType(), flags );
+		return get( type.getNativeTypeFactory().getPrimitiveType(), flags );
 	}
 
 	public static < A extends ArrayDataAccess< A > > A get(
-			final PrimitiveTypeInfo< ?, ? super A > primitiveTypeInfo )
+			final NativeTypeFactory< ?, ? super A > typeFactory )
 	{
-		return get( primitiveTypeInfo.getPrimitiveType(), AccessFlags.setOf() );
+		return get( typeFactory.getPrimitiveType(), AccessFlags.setOf() );
 	}
 
 	public static < A extends ArrayDataAccess< A > > A get(
-			final PrimitiveTypeInfo< ?, ? super A > primitiveTypeInfo,
+			final NativeTypeFactory< ?, ? super A > typeFactory,
 			final Set< AccessFlags > flags )
 	{
-		return get( primitiveTypeInfo.getPrimitiveType(), flags );
+		return get( typeFactory.getPrimitiveType(), flags );
 	}
 
 	@SuppressWarnings( "unchecked" )

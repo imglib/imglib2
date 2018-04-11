@@ -43,7 +43,7 @@ import net.imglib2.img.NativeImgFactory;
 import net.imglib2.img.basictypeaccess.ArrayDataAccessFactory;
 import net.imglib2.img.basictypeaccess.array.ArrayDataAccess;
 import net.imglib2.type.NativeType;
-import net.imglib2.type.PrimitiveTypeInfo;
+import net.imglib2.type.NativeTypeFactory;
 import net.imglib2.util.Fraction;
 import net.imglib2.util.Intervals;
 import net.imglib2.util.Util;
@@ -73,7 +73,7 @@ public class PlanarImgFactory< T extends NativeType< T > > extends NativeImgFact
 	public PlanarImg< T, ? > create( final long... dimensions )
 	{
 		@SuppressWarnings( { "unchecked", "rawtypes" } )
-		final PlanarImg< T, ? > img = create( dimensions, type(), ( PrimitiveTypeInfo ) type().getPrimitiveTypeInfo() );
+		final PlanarImg< T, ? > img = create( dimensions, type(), ( NativeTypeFactory ) type().getNativeTypeFactory() );
 		return img;
 	}
 
@@ -92,11 +92,11 @@ public class PlanarImgFactory< T extends NativeType< T > > extends NativeImgFact
 	private < A extends ArrayDataAccess< A > > PlanarImg< T, ? > create(
 			final long[] dimensions,
 			final T type,
-			final PrimitiveTypeInfo< T, A > info )
+			final NativeTypeFactory< T, A > typeFactory )
 	{
 		final Fraction entitiesPerPixel = type.getEntitiesPerPixel();
-		final PlanarImg< T, A > img = new PlanarImg<>( ArrayDataAccessFactory.get( info ), dimensions, entitiesPerPixel );
-		img.setLinkedType( info.createLinkedType( img ) );
+		final PlanarImg< T, A > img = new PlanarImg<>( ArrayDataAccessFactory.get( typeFactory ), dimensions, entitiesPerPixel );
+		img.setLinkedType( typeFactory.createLinkedType( img ) );
 		return img;
 	}
 
@@ -133,7 +133,7 @@ public class PlanarImgFactory< T extends NativeType< T > > extends NativeImgFact
 	{
 		cache( type );
 		@SuppressWarnings( { "unchecked", "rawtypes" } )
-		final PlanarImg< T, ? > img = create( dimensions, type, ( PrimitiveTypeInfo ) type.getPrimitiveTypeInfo() );
+		final PlanarImg< T, ? > img = create( dimensions, type, ( NativeTypeFactory ) type.getNativeTypeFactory() );
 		return img;
 	}
 

@@ -38,7 +38,7 @@ import net.imglib2.img.NativeImg;
 import net.imglib2.img.basictypeaccess.ByteAccess;
 import net.imglib2.img.basictypeaccess.array.ByteArray;
 import net.imglib2.type.NativeType;
-import net.imglib2.type.PrimitiveTypeInfo;
+import net.imglib2.type.NativeTypeFactory;
 import net.imglib2.util.Fraction;
 import net.imglib2.util.Util;
 
@@ -97,7 +97,7 @@ public abstract class GenericByteType< T extends GenericByteType< T > > extends 
 	}
 
 	@Override
-	public abstract PrimitiveTypeInfo< T, ByteAccess > getPrimitiveTypeInfo();
+	public abstract NativeTypeFactory< T, ByteAccess > getNativeTypeFactory();
 
 	/**
 	 * @deprecated Use {@link #getByte()} instead.

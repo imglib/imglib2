@@ -45,7 +45,7 @@ import net.imglib2.img.basictypeaccess.array.ArrayDataAccess;
 import net.imglib2.img.list.ListImg;
 import net.imglib2.img.list.ListLocalizingCursor;
 import net.imglib2.type.NativeType;
-import net.imglib2.type.PrimitiveTypeInfo;
+import net.imglib2.type.NativeTypeFactory;
 import net.imglib2.util.Fraction;
 import net.imglib2.util.Intervals;
 import net.imglib2.util.Util;
@@ -157,7 +157,7 @@ public class CellImgFactory< T extends NativeType< T > > extends NativeImgFactor
 	public CellImg< T, ? > create( final long... dimensions )
 	{
 		@SuppressWarnings( { "unchecked", "rawtypes" } )
-		final CellImg< T, ? > img = create( dimensions, type(), ( PrimitiveTypeInfo ) type().getPrimitiveTypeInfo() );
+		final CellImg< T, ? > img = create( dimensions, type(), ( NativeTypeFactory ) type().getNativeTypeFactory() );
 		return img;
 	}
 
@@ -176,7 +176,7 @@ public class CellImgFactory< T extends NativeType< T > > extends NativeImgFactor
 	private < A extends ArrayDataAccess< A > > CellImg< T, A > create(
 			final long[] dimensions,
 			final T type,
-			final PrimitiveTypeInfo< T, A > info )
+			final NativeTypeFactory< T, A > typeFactory )
 	{
 		verifyDimensions( dimensions );
 
@@ -200,12 +200,12 @@ public class CellImgFactory< T extends NativeType< T > > extends NativeImgFactor
 			cellCursor.fwd();
 			cellCursor.localize( cellGridPosition );
 			grid.getCellDimensions( cellGridPosition, cellMin, cellDims );
-			final A data = ArrayDataAccessFactory.get( info ).createArray( ( int ) entitiesPerPixel.mulCeil( Intervals.numElements( cellDims ) ) );
+			final A data = ArrayDataAccessFactory.get( typeFactory ).createArray( ( int ) entitiesPerPixel.mulCeil( Intervals.numElements( cellDims ) ) );
 			cellCursor.set( new Cell<>( cellDims, cellMin, data ) );
 		}
 
 		final CellImg< T, A > img = new CellImg<>( this, grid, cells, entitiesPerPixel );
-		img.setLinkedType( info.createLinkedType( img ) );
+		img.setLinkedType( typeFactory.createLinkedType( img ) );
 		return img;
 	}
 
@@ -249,7 +249,7 @@ public class CellImgFactory< T extends NativeType< T > > extends NativeImgFactor
 	{
 		cache( type );
 		@SuppressWarnings( { "unchecked", "rawtypes" } )
-		final CellImg< T, ? > img = create( dimensions, type, ( PrimitiveTypeInfo ) type.getPrimitiveTypeInfo() );
+		final CellImg< T, ? > img = create( dimensions, type, ( NativeTypeFactory ) type.getNativeTypeFactory() );
 		return img;
 	}
 }

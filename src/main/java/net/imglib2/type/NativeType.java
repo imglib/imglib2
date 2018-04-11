@@ -90,7 +90,7 @@ public interface NativeType< T extends NativeType< T > > extends Type< T >
 	 */
 	public T duplicateTypeOnSameNativeImg();
 
-	public PrimitiveTypeInfo< T, ? > getPrimitiveTypeInfo();
+	public NativeTypeFactory< T, ? > getNativeTypeFactory();
 
 	/**
 	 * This method is used by an accessor (e.g., a {@link Cursor}) to request an

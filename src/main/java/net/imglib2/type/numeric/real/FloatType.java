@@ -38,7 +38,7 @@ import net.imglib2.img.NativeImg;
 import net.imglib2.img.basictypeaccess.FloatAccess;
 import net.imglib2.img.basictypeaccess.array.FloatArray;
 import net.imglib2.type.NativeType;
-import net.imglib2.type.PrimitiveTypeInfo;
+import net.imglib2.type.NativeTypeFactory;
 import net.imglib2.util.Fraction;
 
 /**
@@ -95,12 +95,12 @@ public class FloatType extends AbstractRealType< FloatType > implements NativeTy
 		return new FloatType( img );
 	}
 
-	private static final PrimitiveTypeInfo< FloatType, FloatAccess > info = PrimitiveTypeInfo.FLOAT( img -> new FloatType( img ) );
+	private static final NativeTypeFactory< FloatType, FloatAccess > typeFactory = NativeTypeFactory.FLOAT( img -> new FloatType( img ) );
 
 	@Override
-	public PrimitiveTypeInfo< FloatType, FloatAccess > getPrimitiveTypeInfo()
+	public NativeTypeFactory< FloatType, FloatAccess > getNativeTypeFactory()
 	{
-		return info;
+		return typeFactory;
 	}
 
 	public float get()

@@ -37,7 +37,7 @@ package net.imglib2.type.numeric.integer;
 import net.imglib2.img.NativeImg;
 import net.imglib2.img.basictypeaccess.LongAccess;
 import net.imglib2.img.basictypeaccess.array.LongArray;
-import net.imglib2.type.PrimitiveTypeInfo;
+import net.imglib2.type.NativeTypeFactory;
 import net.imglib2.type.Type;
 
 /**
@@ -86,12 +86,12 @@ public class Unsigned12BitType extends AbstractIntegerBitType< Unsigned12BitType
 		return new Unsigned12BitType( img );
 	}
 
-	private static final PrimitiveTypeInfo< Unsigned12BitType, LongAccess > info = PrimitiveTypeInfo.LONG( img -> new Unsigned12BitType( img ) );
+	private static final NativeTypeFactory< Unsigned12BitType, LongAccess > typeFactory = NativeTypeFactory.LONG( img -> new Unsigned12BitType( img ) );
 
 	@Override
-	public PrimitiveTypeInfo< Unsigned12BitType, LongAccess > getPrimitiveTypeInfo()
+	public NativeTypeFactory< Unsigned12BitType, LongAccess > getNativeTypeFactory()
 	{
-		return info;
+		return typeFactory;
 	}
 
 	@Override

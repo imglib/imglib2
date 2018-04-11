@@ -41,7 +41,7 @@ import net.imglib2.img.basictypeaccess.LongAccess;
 import net.imglib2.img.basictypeaccess.array.LongArray;
 import net.imglib2.type.BooleanType;
 import net.imglib2.type.NativeType;
-import net.imglib2.type.PrimitiveTypeInfo;
+import net.imglib2.type.NativeTypeFactory;
 import net.imglib2.type.numeric.IntegerType;
 import net.imglib2.type.numeric.integer.AbstractIntegerType;
 import net.imglib2.util.Fraction;
@@ -101,12 +101,12 @@ public class BitType extends AbstractIntegerType< BitType > implements BooleanTy
 		return new BitType( img );
 	}
 
-	private static final PrimitiveTypeInfo< BitType, LongAccess > info = PrimitiveTypeInfo.LONG( img -> new BitType( img ) );
+	private static final NativeTypeFactory< BitType, LongAccess > typeFactory = NativeTypeFactory.LONG( img -> new BitType( img ) );
 
 	@Override
-	public PrimitiveTypeInfo< BitType, LongAccess > getPrimitiveTypeInfo()
+	public NativeTypeFactory< BitType, LongAccess > getNativeTypeFactory()
 	{
-		return info;
+		return typeFactory;
 	}
 
 	@Override

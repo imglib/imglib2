@@ -75,7 +75,7 @@ public abstract class AbstractBitType< T extends AbstractBitType< T > > implemen
 	}
 
 	@Override
-	public abstract PrimitiveTypeInfo< T, LongAccess > getPrimitiveTypeInfo();
+	public abstract NativeTypeFactory< T, LongAccess > getNativeTypeFactory();
 
 	@Override
 	public int getIndex()

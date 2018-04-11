@@ -38,7 +38,7 @@ import net.imglib2.img.NativeImg;
 import net.imglib2.img.basictypeaccess.LongAccess;
 import net.imglib2.type.AbstractBit64Type;
 import net.imglib2.type.BasePairType;
-import net.imglib2.type.PrimitiveTypeInfo;
+import net.imglib2.type.NativeTypeFactory;
 
 /**
  * Representation of base pairs using 3 bits per entry, supported characters: gap, N, A, T, G, C, U
@@ -72,12 +72,12 @@ public class BasePairBitType extends AbstractBit64Type< BasePairBitType > implem
 	@Override
 	public BasePairBitType duplicateTypeOnSameNativeImg() { return new BasePairBitType( img ); }
 
-	private static final PrimitiveTypeInfo< BasePairBitType, LongAccess > info = PrimitiveTypeInfo.LONG( img -> new BasePairBitType( img ) );
+	private static final NativeTypeFactory< BasePairBitType, LongAccess > typeFactory = NativeTypeFactory.LONG( img -> new BasePairBitType( img ) );
 
 	@Override
-	public PrimitiveTypeInfo< BasePairBitType, LongAccess > getPrimitiveTypeInfo()
+	public NativeTypeFactory< BasePairBitType, LongAccess > getNativeTypeFactory()
 	{
-		return info;
+		return typeFactory;
 	}
 
 	@Override

@@ -38,7 +38,7 @@ import java.math.BigInteger;
 
 import net.imglib2.img.NativeImg;
 import net.imglib2.img.basictypeaccess.ByteAccess;
-import net.imglib2.type.PrimitiveTypeInfo;
+import net.imglib2.type.NativeTypeFactory;
 
 /**
  * TODO
@@ -72,12 +72,12 @@ public class ByteType extends GenericByteType< ByteType >
 		super( ( byte ) 0 );
 	}
 
-	private final PrimitiveTypeInfo< ByteType, ByteAccess > info = PrimitiveTypeInfo.BYTE( img -> new ByteType( img ) );
+	private final NativeTypeFactory< ByteType, ByteAccess > typeFactory = NativeTypeFactory.BYTE( img -> new ByteType( img ) );
 
 	@Override
-	public PrimitiveTypeInfo< ByteType, ByteAccess > getPrimitiveTypeInfo()
+	public NativeTypeFactory< ByteType, ByteAccess > getNativeTypeFactory()
 	{
-		return info;
+		return typeFactory;
 	}
 
 	@Override

@@ -39,7 +39,7 @@ import net.imglib2.img.basictypeaccess.CharAccess;
 import net.imglib2.img.basictypeaccess.array.CharArray;
 import net.imglib2.type.AbstractNativeType;
 import net.imglib2.type.BasePairType;
-import net.imglib2.type.PrimitiveTypeInfo;
+import net.imglib2.type.NativeTypeFactory;
 import net.imglib2.type.label.BasePairBitType.Base;
 import net.imglib2.util.Fraction;
 
@@ -103,12 +103,12 @@ public class BasePairCharType extends AbstractNativeType< BasePairCharType > imp
 		return new BasePairCharType( img );
 	}
 
-	private static final PrimitiveTypeInfo< BasePairCharType, CharAccess > info = PrimitiveTypeInfo.CHAR( img -> new BasePairCharType( img ) );
+	private static final NativeTypeFactory< BasePairCharType, CharAccess > typeFactory = NativeTypeFactory.CHAR( img -> new BasePairCharType( img ) );
 
 	@Override
-	public PrimitiveTypeInfo< BasePairCharType, CharAccess > getPrimitiveTypeInfo()
+	public NativeTypeFactory< BasePairCharType, CharAccess > getNativeTypeFactory()
 	{
-		return info;
+		return typeFactory;
 	}
 
 	public char getChar()

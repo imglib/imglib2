@@ -39,7 +39,7 @@ import java.math.BigInteger;
 import net.imglib2.img.NativeImg;
 import net.imglib2.img.basictypeaccess.LongAccess;
 import net.imglib2.type.AbstractBit64Type;
-import net.imglib2.type.PrimitiveTypeInfo;
+import net.imglib2.type.NativeTypeFactory;
 import net.imglib2.type.Type;
 import net.imglib2.type.numeric.IntegerType;
 import net.imglib2.util.Util;
@@ -104,12 +104,12 @@ public class UnsignedVariableBitLengthType extends AbstractBit64Type< UnsignedVa
 		return new UnsignedVariableBitLengthType( img, nBits );
 	}
 
-	private final PrimitiveTypeInfo< UnsignedVariableBitLengthType, LongAccess > info = PrimitiveTypeInfo.LONG( img -> new UnsignedVariableBitLengthType( img, nBits ) );
+	private final NativeTypeFactory< UnsignedVariableBitLengthType, LongAccess > typeFactory = NativeTypeFactory.LONG( img -> new UnsignedVariableBitLengthType( img, nBits ) );
 
 	@Override
-	public PrimitiveTypeInfo< UnsignedVariableBitLengthType, LongAccess > getPrimitiveTypeInfo()
+	public NativeTypeFactory< UnsignedVariableBitLengthType, LongAccess > getNativeTypeFactory()
 	{
-		return info;
+		return typeFactory;
 	}
 
 	@Override

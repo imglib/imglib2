@@ -38,7 +38,7 @@ import net.imglib2.img.NativeImg;
 import net.imglib2.img.basictypeaccess.IntAccess;
 import net.imglib2.img.basictypeaccess.array.IntArray;
 import net.imglib2.type.NativeType;
-import net.imglib2.type.PrimitiveTypeInfo;
+import net.imglib2.type.NativeTypeFactory;
 import net.imglib2.util.Fraction;
 import net.imglib2.util.Util;
 
@@ -97,7 +97,7 @@ public abstract class GenericIntType< T extends GenericIntType< T > > extends Ab
 	}
 
 	@Override
-	public abstract PrimitiveTypeInfo< T, IntAccess > getPrimitiveTypeInfo();
+	public abstract NativeTypeFactory< T, IntAccess > getNativeTypeFactory();
 
 	/**
 	 * @deprecated Use {@link #getInt()} instead.

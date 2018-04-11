@@ -18,7 +18,7 @@ import net.imglib2.img.basictypeaccess.ShortAccess;
  * {@link #DOUBLE(Function)}, etc. to prevent non-matching combinations of
  * {@code Access} interface and {@link PrimitiveType} constant.
  * <p>
- * The second purpose of {@link PrimitiveTypeInfo} is to
+ * The second purpose of {@link NativeTypeFactory} is to
  * {@link #createLinkedType(NativeImg) create} a linked type {@code T} for a
  * matching {@link NativeImg}.
  *
@@ -30,7 +30,7 @@ import net.imglib2.img.basictypeaccess.ShortAccess;
  *
  * @author Tobias Pietzsch
  */
-public final class PrimitiveTypeInfo< T extends NativeType< T >, A >
+public final class NativeTypeFactory< T extends NativeType< T >, A >
 {
 	private final PrimitiveType primitiveType;
 
@@ -43,7 +43,7 @@ public final class PrimitiveTypeInfo< T extends NativeType< T >, A >
 	 *            given a matching {@link NativeImg} creates a linked
 	 *            {@link NativeType} {@code T}.
 	 */
-	private PrimitiveTypeInfo(
+	private NativeTypeFactory(
 			final PrimitiveType primitiveType,
 			final Function< NativeImg< T, ? extends A >, T > createLinkedType )
 	{
@@ -61,38 +61,38 @@ public final class PrimitiveTypeInfo< T extends NativeType< T >, A >
 		return createLinkedType.apply( img );
 	}
 
-	public static < T extends NativeType< T >, A extends ByteAccess > PrimitiveTypeInfo< T, A > BYTE( final Function< NativeImg< T, ? extends A >, T > createLinkedType )
+	public static < T extends NativeType< T >, A extends ByteAccess > NativeTypeFactory< T, A > BYTE( final Function< NativeImg< T, ? extends A >, T > createLinkedType )
 	{
-		return new PrimitiveTypeInfo<>( PrimitiveType.BYTE, createLinkedType );
+		return new NativeTypeFactory<>( PrimitiveType.BYTE, createLinkedType );
 	}
 
-	public static < T extends NativeType< T >, A extends CharAccess > PrimitiveTypeInfo< T, A > CHAR( final Function< NativeImg< T, ? extends A >, T > createLinkedType )
+	public static < T extends NativeType< T >, A extends CharAccess > NativeTypeFactory< T, A > CHAR( final Function< NativeImg< T, ? extends A >, T > createLinkedType )
 	{
-		return new PrimitiveTypeInfo<>( PrimitiveType.CHAR, createLinkedType );
+		return new NativeTypeFactory<>( PrimitiveType.CHAR, createLinkedType );
 	}
 
-	public static < T extends NativeType< T >, A extends ShortAccess > PrimitiveTypeInfo< T, A > SHORT( final Function< NativeImg< T, ? extends A >, T > createLinkedType )
+	public static < T extends NativeType< T >, A extends ShortAccess > NativeTypeFactory< T, A > SHORT( final Function< NativeImg< T, ? extends A >, T > createLinkedType )
 	{
-		return new PrimitiveTypeInfo<>( PrimitiveType.SHORT, createLinkedType );
+		return new NativeTypeFactory<>( PrimitiveType.SHORT, createLinkedType );
 	}
 
-	public static < T extends NativeType< T >, A extends IntAccess > PrimitiveTypeInfo< T, A > INT( final Function< NativeImg< T, ? extends A >, T > createLinkedType )
+	public static < T extends NativeType< T >, A extends IntAccess > NativeTypeFactory< T, A > INT( final Function< NativeImg< T, ? extends A >, T > createLinkedType )
 	{
-		return new PrimitiveTypeInfo<>( PrimitiveType.INT, createLinkedType );
+		return new NativeTypeFactory<>( PrimitiveType.INT, createLinkedType );
 	}
 
-	public static < T extends NativeType< T >, A extends LongAccess > PrimitiveTypeInfo< T, A > LONG( final Function< NativeImg< T, ? extends A >, T > createLinkedType )
+	public static < T extends NativeType< T >, A extends LongAccess > NativeTypeFactory< T, A > LONG( final Function< NativeImg< T, ? extends A >, T > createLinkedType )
 	{
-		return new PrimitiveTypeInfo<>( PrimitiveType.LONG, createLinkedType );
+		return new NativeTypeFactory<>( PrimitiveType.LONG, createLinkedType );
 	}
 
-	public static < T extends NativeType< T >, A extends FloatAccess > PrimitiveTypeInfo< T, A > FLOAT( final Function< NativeImg< T, ? extends A >, T > createLinkedType )
+	public static < T extends NativeType< T >, A extends FloatAccess > NativeTypeFactory< T, A > FLOAT( final Function< NativeImg< T, ? extends A >, T > createLinkedType )
 	{
-		return new PrimitiveTypeInfo<>( PrimitiveType.FLOAT, createLinkedType );
+		return new NativeTypeFactory<>( PrimitiveType.FLOAT, createLinkedType );
 	}
 
-	public static < T extends NativeType< T >, A extends DoubleAccess > PrimitiveTypeInfo< T, A > DOUBLE( final Function< NativeImg< T, ? extends A >, T > createLinkedType )
+	public static < T extends NativeType< T >, A extends DoubleAccess > NativeTypeFactory< T, A > DOUBLE( final Function< NativeImg< T, ? extends A >, T > createLinkedType )
 	{
-		return new PrimitiveTypeInfo<>( PrimitiveType.DOUBLE, createLinkedType );
+		return new NativeTypeFactory<>( PrimitiveType.DOUBLE, createLinkedType );
 	}
 }

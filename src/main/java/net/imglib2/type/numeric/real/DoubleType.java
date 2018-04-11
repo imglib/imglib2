@@ -38,8 +38,7 @@ import net.imglib2.img.NativeImg;
 import net.imglib2.img.basictypeaccess.DoubleAccess;
 import net.imglib2.img.basictypeaccess.array.DoubleArray;
 import net.imglib2.type.NativeType;
-import net.imglib2.type.PrimitiveType;
-import net.imglib2.type.PrimitiveTypeInfo;
+import net.imglib2.type.NativeTypeFactory;
 import net.imglib2.util.Fraction;
 
 /**
@@ -96,12 +95,12 @@ public class DoubleType extends AbstractRealType< DoubleType > implements Native
 		return new DoubleType( img );
 	}
 
-	private static final PrimitiveTypeInfo< DoubleType, DoubleAccess > info = PrimitiveTypeInfo.DOUBLE( img -> new DoubleType( img ) );
+	private static final NativeTypeFactory< DoubleType, DoubleAccess > typeFactory = NativeTypeFactory.DOUBLE( img -> new DoubleType( img ) );
 
 	@Override
-	public PrimitiveTypeInfo< DoubleType, DoubleAccess > getPrimitiveTypeInfo()
+	public NativeTypeFactory< DoubleType, DoubleAccess > getNativeTypeFactory()
 	{
-		return info;
+		return typeFactory;
 	}
 
 	public double get()

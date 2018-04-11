@@ -38,7 +38,7 @@ import java.math.BigInteger;
 
 import net.imglib2.img.NativeImg;
 import net.imglib2.img.basictypeaccess.LongAccess;
-import net.imglib2.type.PrimitiveTypeInfo;
+import net.imglib2.type.NativeTypeFactory;
 
 /**
  * TODO
@@ -79,12 +79,12 @@ public class LongType extends GenericLongType< LongType >
 		return new LongType( img );
 	}
 
-	private static final PrimitiveTypeInfo< LongType, LongAccess > info = PrimitiveTypeInfo.LONG( img -> new LongType( img ) );
+	private static final NativeTypeFactory< LongType, LongAccess > typeFactory = NativeTypeFactory.LONG( img -> new LongType( img ) );
 
 	@Override
-	public PrimitiveTypeInfo< LongType, LongAccess > getPrimitiveTypeInfo()
+	public NativeTypeFactory< LongType, LongAccess > getNativeTypeFactory()
 	{
-		return info;
+		return typeFactory;
 	}
 
 	public long get()

@@ -41,7 +41,7 @@ import net.imglib2.exception.IncompatibleTypeException;
 import net.imglib2.img.ImgFactory;
 import net.imglib2.img.NativeImgFactory;
 import net.imglib2.type.NativeType;
-import net.imglib2.type.PrimitiveTypeInfo;
+import net.imglib2.type.NativeTypeFactory;
 import net.imglib2.util.Fraction;
 import net.imglib2.util.Intervals;
 import net.imglib2.util.Util;
@@ -65,7 +65,7 @@ public class NtreeImgFactory< T extends NativeType< T > > extends NativeImgFacto
 	@Override
 	public NtreeImg< T, ? > create( final long... dimensions )
 	{
-		return create( dimensions, type(), type().getPrimitiveTypeInfo() );
+		return create( dimensions, type(), type().getNativeTypeFactory() );
 	}
 
 	@Override
@@ -80,7 +80,7 @@ public class NtreeImgFactory< T extends NativeType< T > > extends NativeImgFacto
 		return create( Util.int2long( dimensions ) );
 	}
 
-	private < A > NtreeImg< T, ? > create( final long[] dimensions, final T type, final PrimitiveTypeInfo< T, A > info )
+	private < A > NtreeImg< T, ? > create( final long[] dimensions, final T type, final NativeTypeFactory< T, A > typeFactory )
 	{
 		final Fraction entitiesPerPixel = type.getEntitiesPerPixel();
 		if ( entitiesPerPixel.getNumerator() != entitiesPerPixel.getDenominator() )
@@ -88,21 +88,21 @@ public class NtreeImgFactory< T extends NativeType< T > > extends NativeImgFacto
 
 		final long[] pos = new long[ dimensions.length ];
 		final NtreeImg< T, ? extends A > img = new NtreeImg<>(
-				createNtreeAccess( info, dimensions ).createInstance( pos ),
+				createNtreeAccess( typeFactory, dimensions ).createInstance( pos ),
 				// calling createInstance(pos) is necessary here, because
 				// otherwise javac will not infer the NtreeAccess type
 				dimensions,
 				entitiesPerPixel );
-		img.setLinkedType( info.createLinkedType( img ) );
+		img.setLinkedType( typeFactory.createLinkedType( img ) );
 		return img;
 	}
 
 	@SuppressWarnings( "unchecked" )
 	public static < A extends NtreeAccess< ?, A > > A createNtreeAccess(
-			final PrimitiveTypeInfo< ?, ? super A > primitiveType,
+			final NativeTypeFactory< ?, ? super A > typeFactory,
 			final long[] dimensions )
 	{
-		switch ( primitiveType.getPrimitiveType() )
+		switch ( typeFactory.getPrimitiveType() )
 		{
 		case BYTE:
 			return ( A ) new ByteNtree( dimensions, null, ( byte ) 0 );
@@ -155,7 +155,7 @@ public class NtreeImgFactory< T extends NativeType< T > > extends NativeImgFacto
 	public NtreeImg< T, ? > create( final long[] dimensions, final T type )
 	{
 		cache( type );
-		return create( dimensions, type, type.getPrimitiveTypeInfo() );
+		return create( dimensions, type, type.getNativeTypeFactory() );
 	}
 
 }

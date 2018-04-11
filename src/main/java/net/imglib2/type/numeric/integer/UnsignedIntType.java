@@ -38,7 +38,7 @@ import java.math.BigInteger;
 
 import net.imglib2.img.NativeImg;
 import net.imglib2.img.basictypeaccess.IntAccess;
-import net.imglib2.type.PrimitiveTypeInfo;
+import net.imglib2.type.NativeTypeFactory;
 import net.imglib2.util.Util;
 
 /**
@@ -99,12 +99,12 @@ public class UnsignedIntType extends GenericIntType< UnsignedIntType >
 		return new UnsignedIntType( img );
 	}
 
-	private static final PrimitiveTypeInfo< UnsignedIntType, IntAccess > info = PrimitiveTypeInfo.INT( img -> new UnsignedIntType( img ) );
+	private static final NativeTypeFactory< UnsignedIntType, IntAccess > typeFactory = NativeTypeFactory.INT( img -> new UnsignedIntType( img ) );
 
 	@Override
-	public PrimitiveTypeInfo< UnsignedIntType, IntAccess > getPrimitiveTypeInfo()
+	public NativeTypeFactory< UnsignedIntType, IntAccess > getNativeTypeFactory()
 	{
-		return info;
+		return typeFactory;
 	}
 
 	@Override

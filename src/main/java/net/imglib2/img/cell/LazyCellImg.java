@@ -5,7 +5,7 @@ import net.imglib2.img.ImgFactory;
 import net.imglib2.img.cell.LazyCellImg.LazyCells;
 import net.imglib2.img.list.AbstractLongListImg;
 import net.imglib2.type.NativeType;
-import net.imglib2.type.PrimitiveTypeInfo;
+import net.imglib2.type.NativeTypeFactory;
 import net.imglib2.util.Fraction;
 
 /**
@@ -34,8 +34,8 @@ public class LazyCellImg< T extends NativeType< T >, A >
 		super( grid, new LazyCells<>( grid.getGridDimensions(), get ), type.getEntitiesPerPixel() );
 
 		@SuppressWarnings( "unchecked" )
-		final PrimitiveTypeInfo< T, ? super A > info = ( PrimitiveTypeInfo< T, ? super A > ) type.getPrimitiveTypeInfo();
-		setLinkedType( info.createLinkedType( this ) );
+		final NativeTypeFactory< T, ? super A > typeFactory = ( NativeTypeFactory< T, ? super A > ) type.getNativeTypeFactory();
+		setLinkedType( typeFactory.createLinkedType( this ) );
 	}
 
 	public LazyCellImg( final CellGrid grid, final Fraction entitiesPerPixel, final Get< Cell< A > > get )

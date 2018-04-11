@@ -38,7 +38,7 @@ import java.math.BigInteger;
 
 import net.imglib2.img.NativeImg;
 import net.imglib2.img.basictypeaccess.ShortAccess;
-import net.imglib2.type.PrimitiveTypeInfo;
+import net.imglib2.type.NativeTypeFactory;
 import net.imglib2.util.Util;
 
 /**
@@ -99,12 +99,12 @@ public class UnsignedShortType extends GenericShortType< UnsignedShortType >
 		return new UnsignedShortType( img );
 	}
 
-	private static final PrimitiveTypeInfo< UnsignedShortType, ShortAccess > info = PrimitiveTypeInfo.SHORT( img -> new UnsignedShortType( img ) );
+	private static final NativeTypeFactory< UnsignedShortType, ShortAccess > typeFactory = NativeTypeFactory.SHORT( img -> new UnsignedShortType( img ) );
 
 	@Override
-	public PrimitiveTypeInfo< UnsignedShortType, ShortAccess > getPrimitiveTypeInfo()
+	public NativeTypeFactory< UnsignedShortType, ShortAccess > getNativeTypeFactory()
 	{
-		return info;
+		return typeFactory;
 	}
 
 	@Override

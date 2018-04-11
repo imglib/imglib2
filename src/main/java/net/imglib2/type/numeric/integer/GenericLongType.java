@@ -37,7 +37,7 @@ import net.imglib2.img.NativeImg;
 import net.imglib2.img.basictypeaccess.LongAccess;
 import net.imglib2.img.basictypeaccess.array.LongArray;
 import net.imglib2.type.NativeType;
-import net.imglib2.type.PrimitiveTypeInfo;
+import net.imglib2.type.NativeTypeFactory;
 import net.imglib2.util.Fraction;
 import net.imglib2.util.Util;
 
@@ -95,7 +95,7 @@ public abstract class GenericLongType< T extends GenericLongType< T > > extends 
 	}
 
 	@Override
-	public abstract PrimitiveTypeInfo< T, LongAccess > getPrimitiveTypeInfo();
+	public abstract NativeTypeFactory< T, LongAccess > getNativeTypeFactory();
 
 	/**
 	 * @deprecated Use {@link #getLong()} instead.

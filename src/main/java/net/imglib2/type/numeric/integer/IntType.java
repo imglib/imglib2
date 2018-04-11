@@ -38,7 +38,7 @@ import java.math.BigInteger;
 
 import net.imglib2.img.NativeImg;
 import net.imglib2.img.basictypeaccess.IntAccess;
-import net.imglib2.type.PrimitiveTypeInfo;
+import net.imglib2.type.NativeTypeFactory;
 
 /**
  * TODO
@@ -78,12 +78,12 @@ public class IntType extends GenericIntType< IntType >
 		return new IntType( img );
 	}
 
-	private static final PrimitiveTypeInfo< IntType, IntAccess > info = PrimitiveTypeInfo.INT( img -> new IntType( img ) );
+	private static final NativeTypeFactory< IntType, IntAccess > typeFactory = NativeTypeFactory.INT( img -> new IntType( img ) );
 
 	@Override
-	public PrimitiveTypeInfo< IntType, IntAccess > getPrimitiveTypeInfo()
+	public NativeTypeFactory< IntType, IntAccess > getNativeTypeFactory()
 	{
-		return info;
+		return typeFactory;
 	}
 
 	public int get()

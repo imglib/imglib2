@@ -41,7 +41,7 @@ import net.imglib2.img.NativeImg;
 import net.imglib2.img.basictypeaccess.LongAccess;
 import net.imglib2.img.basictypeaccess.array.LongArray;
 import net.imglib2.type.NativeType;
-import net.imglib2.type.PrimitiveTypeInfo;
+import net.imglib2.type.NativeTypeFactory;
 import net.imglib2.type.Type;
 import net.imglib2.type.numeric.NumericType;
 import net.imglib2.util.Fraction;
@@ -115,12 +115,12 @@ public class Unsigned128BitType extends AbstractIntegerType< Unsigned128BitType 
 		return new Unsigned128BitType( img );
 	}
 
-	private static final PrimitiveTypeInfo< Unsigned128BitType, LongAccess > info = PrimitiveTypeInfo.LONG( img -> new Unsigned128BitType( img ) );
+	private static final NativeTypeFactory< Unsigned128BitType, LongAccess > typeFactory = NativeTypeFactory.LONG( img -> new Unsigned128BitType( img ) );
 
 	@Override
-	public PrimitiveTypeInfo< Unsigned128BitType, LongAccess > getPrimitiveTypeInfo()
+	public NativeTypeFactory< Unsigned128BitType, LongAccess > getNativeTypeFactory()
 	{
-		return info;
+		return typeFactory;
 	}
 
 	private final void intoBytes( final long lower, final long upper )

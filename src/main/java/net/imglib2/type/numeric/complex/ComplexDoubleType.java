@@ -38,7 +38,7 @@ import net.imglib2.img.NativeImg;
 import net.imglib2.img.basictypeaccess.DoubleAccess;
 import net.imglib2.img.basictypeaccess.array.DoubleArray;
 import net.imglib2.type.NativeType;
-import net.imglib2.type.PrimitiveTypeInfo;
+import net.imglib2.type.NativeTypeFactory;
 import net.imglib2.util.Fraction;
 
 /**
@@ -98,12 +98,12 @@ public class ComplexDoubleType extends AbstractComplexType< ComplexDoubleType > 
 		return new ComplexDoubleType( img );
 	}
 
-	private static final PrimitiveTypeInfo< ComplexDoubleType, DoubleAccess > info = PrimitiveTypeInfo.DOUBLE( img -> new ComplexDoubleType( img ) );
+	private static final NativeTypeFactory< ComplexDoubleType, DoubleAccess > typeFactory = NativeTypeFactory.DOUBLE( img -> new ComplexDoubleType( img ) );
 
 	@Override
-	public PrimitiveTypeInfo< ComplexDoubleType, DoubleAccess > getPrimitiveTypeInfo()
+	public NativeTypeFactory< ComplexDoubleType, DoubleAccess > getNativeTypeFactory()
 	{
-		return info;
+		return typeFactory;
 	}
 
 	@Override
