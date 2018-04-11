@@ -12,15 +12,18 @@ import net.imglib2.img.basictypeaccess.LongAccess;
 import net.imglib2.img.basictypeaccess.ShortAccess;
 
 /**
- * Binds a {@link PrimitiveType} enum constant to a {@code Access} interface
- * ({@code ByteAccess}, {@code DoubleAccess}, and so on). Instances can only be
- * constructed via static methods {@link #BYTE(Function)},
- * {@link #DOUBLE(Function)}, etc. to prevent non-matching combinations of
- * {@code Access} interface and {@link PrimitiveType} constant.
+ * {@code NativeTypeFactory} is used to {@link #createLinkedType(NativeImg)
+ * create} a linked type {@code T} for a matching {@link NativeImg}.
  * <p>
- * The second purpose of {@link NativeTypeFactory} is to
- * {@link #createLinkedType(NativeImg) create} a linked type {@code T} for a
- * matching {@link NativeImg}.
+ * It also {@link #getPrimitiveType() provides} information about the primitive
+ * java type that backs the type {@code T}.
+ * <p>
+ * {@code NativeTypeFactory} binds a {code PrimitiveType} enum constant to a
+ * {@code Access} interface ({@code ByteAccess}, {@code DoubleAccess}, and so
+ * on). Instances can only be constructed via static methods
+ * {@link #BYTE(Function)}, {@link #DOUBLE(Function)}, etc. to prevent
+ * non-matching combinations of {@code Access} interface and
+ * {@link PrimitiveType} constant.
  *
  * @param <T>
  *            the {@link NativeType} this is attached to
@@ -51,11 +54,25 @@ public final class NativeTypeFactory< T extends NativeType< T >, A >
 		this.createLinkedType = createLinkedType;
 	}
 
+	/**
+	 * Get the primitive java type that backs the {@code NativeType T}.
+	 *
+	 * @return primitive java type that backs {@code T}
+	 */
 	public PrimitiveType getPrimitiveType()
 	{
 		return primitiveType;
 	}
 
+	/**
+	 * Creates a new {@code T} instance which is linked to {@code img}. This
+	 * means that the instance will ask {@code img} for the {@code Access} that
+	 * stores the pixel data.
+	 *
+	 * @param img
+	 *            a matching {@link NativeImg}
+	 * @return a new {@code T} that is linked to on {@code img}.
+	 */
 	public T createLinkedType( final NativeImg< T, ? extends A > img )
 	{
 		return createLinkedType.apply( img );
