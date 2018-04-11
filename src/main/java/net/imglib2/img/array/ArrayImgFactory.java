@@ -34,6 +34,8 @@
 
 package net.imglib2.img.array;
 
+import java.util.function.Supplier;
+
 import net.imglib2.exception.IncompatibleTypeException;
 import net.imglib2.img.AbstractImg;
 import net.imglib2.img.ImgFactory;
@@ -57,10 +59,20 @@ import net.imglib2.util.Fraction;
  */
 public class ArrayImgFactory< T extends NativeType< T > > extends NativeImgFactory< T >
 {
-	@Override
-	public ArrayImg< T, ? > create( final long[] dim, final T type )
+	public ArrayImgFactory( final T type )
 	{
-		return ( ArrayImg< T, ? > ) type.createSuitableNativeImg( this, dim );
+		super( type );
+	}
+
+	public ArrayImgFactory( final Supplier< T > supplier )
+	{
+		super( supplier );
+	}
+
+	@Override
+	public ArrayImg< T, ? > create( final long[] dim )
+	{
+		return ( ArrayImg< T, ? > ) type().createSuitableNativeImg( this, dim );
 	}
 
 	public static int numEntitiesRangeCheck( final long[] dimensions, final Fraction entitiesPerPixel )
@@ -78,15 +90,15 @@ public class ArrayImgFactory< T extends NativeType< T > > extends NativeImgFacto
 	{
 		final int numEntities = numEntitiesRangeCheck( dimensions, entitiesPerPixel );
 
-		return new ArrayImg< T, ByteArray >( new ByteArray( numEntities ), dimensions, entitiesPerPixel );
+		return new ArrayImg< >( new ByteArray( numEntities ), dimensions, entitiesPerPixel );
 	}
 
 	@Override
-	public ArrayImg< T, CharArray> createCharInstance( final long[] dimensions, final Fraction entitiesPerPixel )
+	public ArrayImg< T, CharArray > createCharInstance( final long[] dimensions, final Fraction entitiesPerPixel )
 	{
 		final int numEntities = numEntitiesRangeCheck( dimensions, entitiesPerPixel );
 
-		return new ArrayImg< T, CharArray >( new CharArray( numEntities ), dimensions, entitiesPerPixel );
+		return new ArrayImg< >( new CharArray( numEntities ), dimensions, entitiesPerPixel );
 	}
 
 	@Override
@@ -94,7 +106,7 @@ public class ArrayImgFactory< T extends NativeType< T > > extends NativeImgFacto
 	{
 		final int numEntities = numEntitiesRangeCheck( dimensions, entitiesPerPixel );
 
-		return new ArrayImg< T, DoubleArray >( new DoubleArray( numEntities ), dimensions, entitiesPerPixel );
+		return new ArrayImg< >( new DoubleArray( numEntities ), dimensions, entitiesPerPixel );
 	}
 
 	@Override
@@ -102,7 +114,7 @@ public class ArrayImgFactory< T extends NativeType< T > > extends NativeImgFacto
 	{
 		final int numEntities = numEntitiesRangeCheck( dimensions, entitiesPerPixel );
 
-		return new ArrayImg< T, FloatArray >( new FloatArray( numEntities ), dimensions, entitiesPerPixel );
+		return new ArrayImg< >( new FloatArray( numEntities ), dimensions, entitiesPerPixel );
 	}
 
 	@Override
@@ -110,7 +122,7 @@ public class ArrayImgFactory< T extends NativeType< T > > extends NativeImgFacto
 	{
 		final int numEntities = numEntitiesRangeCheck( dimensions, entitiesPerPixel );
 
-		return new ArrayImg< T, IntArray >( new IntArray( numEntities ), dimensions, entitiesPerPixel );
+		return new ArrayImg< >( new IntArray( numEntities ), dimensions, entitiesPerPixel );
 	}
 
 	@Override
@@ -118,7 +130,7 @@ public class ArrayImgFactory< T extends NativeType< T > > extends NativeImgFacto
 	{
 		final int numEntities = numEntitiesRangeCheck( dimensions, entitiesPerPixel );
 
-		return new ArrayImg< T, LongArray >( new LongArray( numEntities ), dimensions, entitiesPerPixel );
+		return new ArrayImg< >( new LongArray( numEntities ), dimensions, entitiesPerPixel );
 	}
 
 	@Override
@@ -126,15 +138,28 @@ public class ArrayImgFactory< T extends NativeType< T > > extends NativeImgFacto
 	{
 		final int numEntities = numEntitiesRangeCheck( dimensions, entitiesPerPixel );
 
-		return new ArrayImg< T, ShortArray >( new ShortArray( numEntities ), dimensions, entitiesPerPixel );
+		return new ArrayImg< >( new ShortArray( numEntities ), dimensions, entitiesPerPixel );
 	}
 
 	@SuppressWarnings( { "unchecked", "rawtypes" } )
 	@Override
 	public < S > ImgFactory< S > imgFactory( final S type ) throws IncompatibleTypeException
 	{
-		if ( NativeType.class.isInstance( type ) )
-			return new ArrayImgFactory();
+		if ( type instanceof NativeType )
+			return new ArrayImgFactory( (NativeType) type );
 		throw new IncompatibleTypeException( this, type.getClass().getCanonicalName() + " does not implement NativeType." );
+	}
+
+	@Deprecated
+	public ArrayImgFactory()
+	{
+		super();
+	}
+
+	@Deprecated
+	@Override
+	public ArrayImg< T, ? > create( final long[] dim, final T type )
+	{
+		return ( ArrayImg< T, ? > ) cache( type ).createSuitableNativeImg( this, dim );
 	}
 }

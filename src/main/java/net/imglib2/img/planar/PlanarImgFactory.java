@@ -34,6 +34,8 @@
 
 package net.imglib2.img.planar;
 
+import java.util.function.Supplier;
+
 import net.imglib2.exception.IncompatibleTypeException;
 import net.imglib2.img.ImgFactory;
 import net.imglib2.img.NativeImg;
@@ -58,52 +60,62 @@ import net.imglib2.util.Fraction;
  */
 public class PlanarImgFactory< T extends NativeType< T > > extends NativeImgFactory< T >
 {
-	@Override
-	public PlanarImg< T, ? > create( final long[] dim, final T type )
+	public PlanarImgFactory( final T type )
 	{
-		return ( PlanarImg< T, ? > ) type.createSuitableNativeImg( this, dim );
+		super( type );
+	}
+
+	public PlanarImgFactory( final Supplier< T > supplier )
+	{
+		super( supplier );
+	}
+
+	@Override
+	public PlanarImg< T, ? > create( final long[] dim )
+	{
+		return ( PlanarImg< T, ? > ) type().createSuitableNativeImg( this, dim );
 	}
 
 	@Override
 	public NativeImg< T, ByteArray > createByteInstance( final long[] dimensions, final Fraction entitiesPerPixel )
 	{
-		return new PlanarImg< T, ByteArray >( new ByteArray( 1 ), dimensions, entitiesPerPixel );
+		return new PlanarImg< >( new ByteArray( 1 ), dimensions, entitiesPerPixel );
 	}
 
 	@Override
 	public NativeImg< T, CharArray > createCharInstance( final long[] dimensions, final Fraction entitiesPerPixel )
 	{
-		return new PlanarImg< T, CharArray >( new CharArray( 1 ), dimensions, entitiesPerPixel );
+		return new PlanarImg< >( new CharArray( 1 ), dimensions, entitiesPerPixel );
 	}
 
 	@Override
 	public NativeImg< T, DoubleArray > createDoubleInstance( final long[] dimensions, final Fraction entitiesPerPixel )
 	{
-		return new PlanarImg< T, DoubleArray >( new DoubleArray( 1 ), dimensions, entitiesPerPixel );
+		return new PlanarImg< >( new DoubleArray( 1 ), dimensions, entitiesPerPixel );
 	}
 
 	@Override
 	public NativeImg< T, FloatArray > createFloatInstance( final long[] dimensions, final Fraction entitiesPerPixel )
 	{
-		return new PlanarImg< T, FloatArray >( new FloatArray( 1 ), dimensions, entitiesPerPixel );
+		return new PlanarImg< >( new FloatArray( 1 ), dimensions, entitiesPerPixel );
 	}
 
 	@Override
 	public NativeImg< T, IntArray > createIntInstance( final long[] dimensions, final Fraction entitiesPerPixel )
 	{
-		return new PlanarImg< T, IntArray >( new IntArray( 1 ), dimensions, entitiesPerPixel );
+		return new PlanarImg< >( new IntArray( 1 ), dimensions, entitiesPerPixel );
 	}
 
 	@Override
 	public NativeImg< T, LongArray > createLongInstance( final long[] dimensions, final Fraction entitiesPerPixel )
 	{
-		return new PlanarImg< T, LongArray >( new LongArray( 1 ), dimensions, entitiesPerPixel );
+		return new PlanarImg< >( new LongArray( 1 ), dimensions, entitiesPerPixel );
 	}
 
 	@Override
 	public NativeImg< T, ShortArray > createShortInstance( final long[] dimensions, final Fraction entitiesPerPixel )
 	{
-		return new PlanarImg< T, ShortArray >( new ShortArray( 1 ), dimensions, entitiesPerPixel );
+		return new PlanarImg< >( new ShortArray( 1 ), dimensions, entitiesPerPixel );
 	}
 
 	@SuppressWarnings( { "unchecked", "rawtypes" } )
@@ -114,4 +126,18 @@ public class PlanarImgFactory< T extends NativeType< T > > extends NativeImgFact
 			return new PlanarImgFactory();
 		throw new IncompatibleTypeException( this, type.getClass().getCanonicalName() + " does not implement NativeType." );
 	}
+
+	@Deprecated
+	public PlanarImgFactory()
+	{
+		super();
+	}
+
+	@Deprecated
+	@Override
+	public PlanarImg< T, ? > create( final long[] dim, final T type )
+	{
+		return ( PlanarImg< T, ? > ) cache( type ).createSuitableNativeImg( this, dim );
+	}
+
 }

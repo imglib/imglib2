@@ -34,6 +34,8 @@
 
 package net.imglib2.img;
 
+import java.util.function.Supplier;
+
 import net.imglib2.img.basictypeaccess.ByteAccess;
 import net.imglib2.img.basictypeaccess.CharAccess;
 import net.imglib2.img.basictypeaccess.DoubleAccess;
@@ -51,6 +53,16 @@ import net.imglib2.util.Fraction;
  */
 public abstract class NativeImgFactory< T extends NativeType< T > > extends ImgFactory< T >
 {
+	public NativeImgFactory( final T type )
+	{
+		super( type );
+	}
+
+	public NativeImgFactory( final Supplier< T > supplier )
+	{
+		super( supplier );
+	}
+
 	/**
 	 * This class will ask the {@link Type} to create a suitable {@link Img} for
 	 * the {@link Type} and the dimensionality.
@@ -61,9 +73,9 @@ public abstract class NativeImgFactory< T extends NativeType< T > > extends ImgF
 	 * @return {@link Img} - the instantiated Container
 	 */
 	@Override
-	public NativeImg< T, ? > create( final long[] dim, final T type )
+	public NativeImg< T, ? > create( final long[] dim )
 	{
-		return type.createSuitableNativeImg( this, dim );
+		return type().createSuitableNativeImg( this, dim );
 	}
 
 	/* basic type containers */
@@ -80,4 +92,18 @@ public abstract class NativeImgFactory< T extends NativeType< T > > extends ImgF
 	public abstract NativeImg< T, ? extends FloatAccess > createFloatInstance( long[] dimensions, Fraction entitiesPerPixel );
 
 	public abstract NativeImg< T, ? extends DoubleAccess > createDoubleInstance( long[] dimensions, Fraction entitiesPerPixel );
+
+	@Deprecated
+	public NativeImgFactory( )
+	{
+		super();
+	}
+
+	@Override
+	@Deprecated
+	public NativeImg< T, ? > create( final long[] dim, final T type )
+	{
+		return cache( type ).createSuitableNativeImg( this, dim );
+	}
+
 }

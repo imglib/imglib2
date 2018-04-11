@@ -35,6 +35,7 @@
 package net.imglib2.img.list;
 
 import java.util.ArrayList;
+import java.util.function.Supplier;
 
 import net.imglib2.exception.IncompatibleTypeException;
 import net.imglib2.img.ImgFactory;
@@ -57,16 +58,39 @@ import net.imglib2.type.Type;
  */
 public class ListImgFactory< T > extends ImgFactory< T >
 {
-	@Override
-	public ListImg< T > create( final long[] dim, final T type )
+	public ListImgFactory( final T type )
 	{
-		return new ListImg< T >( dim, type );
+		super( type );
 	}
 
-	@SuppressWarnings( { "unchecked", "rawtypes" } )
+	public ListImgFactory( final Supplier< T > supplier )
+	{
+		super( supplier );
+	}
+
+	@Override
+	public ListImg< T > create( final long[] dim )
+	{
+		return new ListImg< >( dim, type() );
+	}
+
 	@Override
 	public < S > ImgFactory< S > imgFactory( final S type ) throws IncompatibleTypeException
 	{
-		return new ListImgFactory();
+		return new ListImgFactory< >( type );
 	}
+
+	@Deprecated
+	public ListImgFactory()
+	{
+		super();
+	}
+
+	@Deprecated
+	@Override
+	public ListImg< T > create( final long[] dim, final T type )
+	{
+		return new ListImg<>( dim, cache( type ) );
+	}
+
 }
