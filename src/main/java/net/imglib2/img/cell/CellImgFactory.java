@@ -156,7 +156,9 @@ public class CellImgFactory< T extends NativeType< T > > extends NativeImgFactor
 	@Override
 	public CellImg< T, ? > create( final long... dimensions )
 	{
-		return create( type().getPrimitiveTypeInfo(), dimensions, type().getEntitiesPerPixel() );
+		@SuppressWarnings( { "unchecked", "rawtypes" } )
+		final CellImg< T, ? > img = create( dimensions, type(), ( PrimitiveTypeInfo ) type().getPrimitiveTypeInfo() );
+		return img;
 	}
 
 	@Override
@@ -171,55 +173,23 @@ public class CellImgFactory< T extends NativeType< T > > extends NativeImgFactor
 		return create( Util.int2long( dimensions ) );
 	}
 
-	private < A > CellImg< T, ? > create(
-			final PrimitiveTypeInfo< T, A > info,
+	private < A extends ArrayDataAccess< A > > CellImg< T, A > create(
 			final long[] dimensions,
-			final Fraction entitiesPerPixel )
-	{
-		/*
-		 * This should work.
-		 */
-//		return createInstance( ArrayDataAccessFactory.get( info ), info, dimensions, entitiesPerPixel );
-
-		/*
-		 * This does work with javac.
-		 * Calling createArray( 0 ) is necessary here, because otherwise javac will not infer the ArrayDataAccess type.
-		 */
-//		return createInstance( ArrayDataAccessFactory.get( info ).createArray( 0 ), info, dimensions, entitiesPerPixel );
-
-		/*
-		 * Workaround.
-		 *
-		 * The line above is compiled correctly by javac. It seems to compile
-		 * with eclipse, but results in a runtime exception:
-		 * java.lang.NoSuchMethodError:
-		 * java.lang.Object.createArray(I)Ljava/lang/Object;
-		 */
-		@SuppressWarnings( { "unchecked", "rawtypes" } )
-		final CellImg< T, ? > img = createInstance( ( ArrayDataAccess ) ArrayDataAccessFactory.get( info ), ( PrimitiveTypeInfo ) info, dimensions, entitiesPerPixel );
-		return img;
-		/*
-		 * TODO Revisit with newer eclipse and javac versions.
-		 */
-	}
-
-	private < A extends ArrayDataAccess< A > > CellImg< T, A > createInstance(
-			final A creator,
-			final PrimitiveTypeInfo< T, ? super A > info,
-			final long[] dimensions,
-			final Fraction entitiesPerPixel )
+			final T type,
+			final PrimitiveTypeInfo< T, A > info )
 	{
 		verifyDimensions( dimensions );
 
 		final int n = dimensions.length;
+		final Fraction entitiesPerPixel = type.getEntitiesPerPixel();
 		final int[] cellDimensions = getCellDimensions( defaultCellDimensions, n, entitiesPerPixel );
 
 		final CellGrid grid = new CellGrid( dimensions, cellDimensions );
 		final long[] gridDimensions = new long[ grid.numDimensions() ];
 		grid.gridDimensions( gridDimensions );
 
-		final Cell< A > type = new Cell<>( new int[] { 1 }, new long[] { 1 }, null );
-		final ListImg< Cell< A > > cells = new ListImg<>( gridDimensions, type );
+		final Cell< A > cellType = new Cell<>( new int[] { 1 }, new long[] { 1 }, null );
+		final ListImg< Cell< A > > cells = new ListImg<>( gridDimensions, cellType );
 
 		final long[] cellGridPosition = new long[ n ];
 		final long[] cellMin = new long[ n ];
@@ -230,7 +200,7 @@ public class CellImgFactory< T extends NativeType< T > > extends NativeImgFactor
 			cellCursor.fwd();
 			cellCursor.localize( cellGridPosition );
 			grid.getCellDimensions( cellGridPosition, cellMin, cellDims );
-			final A data = creator.createArray( ( int ) entitiesPerPixel.mulCeil( Intervals.numElements( cellDims ) ) );
+			final A data = ArrayDataAccessFactory.get( info ).createArray( ( int ) entitiesPerPixel.mulCeil( Intervals.numElements( cellDims ) ) );
 			cellCursor.set( new Cell<>( cellDims, cellMin, data ) );
 		}
 
@@ -278,6 +248,8 @@ public class CellImgFactory< T extends NativeType< T > > extends NativeImgFactor
 	public CellImg< T, ? > create( final long[] dimensions, final T type )
 	{
 		cache( type );
-		return create( type.getPrimitiveTypeInfo(), dimensions, type.getEntitiesPerPixel() );
+		@SuppressWarnings( { "unchecked", "rawtypes" } )
+		final CellImg< T, ? > img = create( dimensions, type, ( PrimitiveTypeInfo ) type.getPrimitiveTypeInfo() );
+		return img;
 	}
 }

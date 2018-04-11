@@ -71,7 +71,9 @@ public class ArrayImgFactory< T extends NativeType< T > > extends NativeImgFacto
 	@Override
 	public ArrayImg< T, ? > create( final long... dimensions )
 	{
-		return create( dimensions, type(), type().getPrimitiveTypeInfo() );
+		@SuppressWarnings( { "unchecked", "rawtypes" } )
+		final ArrayImg< T, ? > img = create( dimensions, type(), ( PrimitiveTypeInfo ) type().getPrimitiveTypeInfo() );
+		return img;
 	}
 
 	@Override
@@ -86,27 +88,14 @@ public class ArrayImgFactory< T extends NativeType< T > > extends NativeImgFacto
 		return create( Util.int2long( dimensions ) );
 	}
 
-	private < A > ArrayImg< T, A > create( final long[] dimensions, final T type, final PrimitiveTypeInfo< T, A > info )
+	private < A extends ArrayDataAccess< A > > ArrayImg< T, A > create(
+			final long[] dimensions,
+			final T type,
+			final PrimitiveTypeInfo< T, A > info )
 	{
 		final Fraction entitiesPerPixel = type.getEntitiesPerPixel();
 		final int numEntities = numEntitiesRangeCheck( dimensions, entitiesPerPixel );
-
-//		final A data = ArrayDataAccessFactory.get( info ).createArray( numEntities );
-		/*
-		 * Workaround.
-		 *
-		 * The line above is compiled correctly by javac. It seems to compile
-		 * with eclipse, but results in a runtime exception:
-		 * java.lang.NoSuchMethodError:
-		 * java.lang.Object.createArray(I)Ljava/lang/Object;
-		 */
-		final Object f = ArrayDataAccessFactory.get( info );
-		@SuppressWarnings( { "unchecked", "rawtypes" } )
-		final A data = ( A ) ( ( ArrayDataAccess ) f ).createArray( numEntities );
-		/*
-		 * TODO Remove as soon as Eclipse compiler can deal with it.
-		 */
-
+		final A data = ArrayDataAccessFactory.get( info ).createArray( numEntities );
 		final ArrayImg< T, A > img = new ArrayImg<>( data, dimensions, entitiesPerPixel );
 		img.setLinkedType( info.createLinkedType( img ) );
 		return img;
@@ -154,6 +143,8 @@ public class ArrayImgFactory< T extends NativeType< T > > extends NativeImgFacto
 	public ArrayImg< T, ? > create( final long[] dim, final T type )
 	{
 		cache( type );
-		return create( dim, type, type.getPrimitiveTypeInfo() );
+		@SuppressWarnings( { "unchecked", "rawtypes" } )
+		final ArrayImg< T, ? > img = create( dim, type, ( PrimitiveTypeInfo ) type.getPrimitiveTypeInfo() );
+		return img;
 	}
 }

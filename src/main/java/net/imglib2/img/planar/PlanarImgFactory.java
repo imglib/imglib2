@@ -72,39 +72,9 @@ public class PlanarImgFactory< T extends NativeType< T > > extends NativeImgFact
 	@Override
 	public PlanarImg< T, ? > create( final long... dimensions )
 	{
-		return create( type().getPrimitiveTypeInfo(), dimensions, type().getEntitiesPerPixel() );
-	}
-
-	private < A > PlanarImg< T, ? > create(
-			final PrimitiveTypeInfo< T, A > info,
-			final long[] dimensions,
-			final Fraction entitiesPerPixel )
-	{
-		/*
-		 * This should work.
-		 */
-//		return create( ArrayDataAccessFactory.get( info ), info, dimensions, entitiesPerPixel );
-
-		/*
-		 * This does work with javac.
-		 * Calling createArray( 0 ) is necessary here, because otherwise javac will not infer the ArrayDataAccess type.
-		 */
-//		return create( ArrayDataAccessFactory.get( info ).createArray( 0 ), info, dimensions, entitiesPerPixel );
-
-		/*
-		 * Workaround.
-		 *
-		 * The line above is compiled correctly by javac. It seems to compile
-		 * with eclipse, but results in a runtime exception:
-		 * java.lang.NoSuchMethodError:
-		 * java.lang.Object.createArray(I)Ljava/lang/Object;
-		 */
 		@SuppressWarnings( { "unchecked", "rawtypes" } )
-		final PlanarImg< T, ? > img = create( ( ArrayDataAccess ) ArrayDataAccessFactory.get( info ), ( PrimitiveTypeInfo ) info, dimensions, entitiesPerPixel );
+		final PlanarImg< T, ? > img = create( dimensions, type(), ( PrimitiveTypeInfo ) type().getPrimitiveTypeInfo() );
 		return img;
-		/*
-		 * TODO Revisit with newer eclipse and javac versions.
-		 */
 	}
 
 	@Override
@@ -120,12 +90,12 @@ public class PlanarImgFactory< T extends NativeType< T > > extends NativeImgFact
 	}
 
 	private < A extends ArrayDataAccess< A > > PlanarImg< T, ? > create(
-			final A creator,
-			final PrimitiveTypeInfo< T, ? super A > info,
 			final long[] dimensions,
-			final Fraction entitiesPerPixel )
+			final T type,
+			final PrimitiveTypeInfo< T, A > info )
 	{
-		final PlanarImg< T, A > img = new PlanarImg<>( creator, dimensions, entitiesPerPixel );
+		final Fraction entitiesPerPixel = type.getEntitiesPerPixel();
+		final PlanarImg< T, A > img = new PlanarImg<>( ArrayDataAccessFactory.get( info ), dimensions, entitiesPerPixel );
 		img.setLinkedType( info.createLinkedType( img ) );
 		return img;
 	}
@@ -162,7 +132,9 @@ public class PlanarImgFactory< T extends NativeType< T > > extends NativeImgFact
 	public PlanarImg< T, ? > create( final long[] dimensions, final T type )
 	{
 		cache( type );
-		return create( type.getPrimitiveTypeInfo(), dimensions, type.getEntitiesPerPixel() );
+		@SuppressWarnings( { "unchecked", "rawtypes" } )
+		final PlanarImg< T, ? > img = create( dimensions, type, ( PrimitiveTypeInfo ) type.getPrimitiveTypeInfo() );
+		return img;
 	}
 
 }
