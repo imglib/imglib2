@@ -37,33 +37,76 @@ package net.imglib2.position;
 import java.util.function.BiConsumer;
 import java.util.function.Supplier;
 
-import net.imglib2.EuclideanSpace;
+import net.imglib2.Interval;
+import net.imglib2.Localizable;
+import net.imglib2.Point;
+import net.imglib2.RandomAccess;
+import net.imglib2.RandomAccessible;
 
 /**
- * Abstract base class for functions that generate values through a
+ * A {@link RandomAccessible} that generates a function value for each
+ * position in discrete coordinate space by side-effect using a
  * {@link BiConsumer}.
  *
  * @author Stephan Saalfeld
  */
-public abstract class AbstractBiConsumerEuclideanSpace< P, T > implements EuclideanSpace
+public class FunctionRandomAccessible< T > extends AbstractFunctionEuclideanSpace< Localizable, T > implements RandomAccessible< T >
 {
-	protected final int n;
-	protected final BiConsumer< P, T > function;
-	protected final Supplier< T > typeSupplier;
-
-	public AbstractBiConsumerEuclideanSpace(
+	public FunctionRandomAccessible(
 			final int n,
-			final BiConsumer< P, T > function,
+			final BiConsumer< Localizable, T > function,
 			final Supplier< T > typeSupplier )
 	{
-		this.n = n;
-		this.function = function;
-		this.typeSupplier = typeSupplier;
+		super(n, function, typeSupplier);
+	}
+
+	public FunctionRandomAccessible(
+			final int n,
+			final Supplier< BiConsumer< Localizable, T > > functionSupplier,
+			final Supplier< T > typeSupplier )
+	{
+		super(n, functionSupplier, typeSupplier);
+	}
+
+	public class FunctionRandomAccess extends Point implements RandomAccess< T >
+	{
+		private final T t = typeSupplier.get();
+		private final BiConsumer< Localizable, T > function = functionSupplier.get();
+
+		public FunctionRandomAccess()
+		{
+			super( FunctionRandomAccessible.this.n );
+		}
+
+		@Override
+		public T get()
+		{
+			function.accept( this, t );
+			return t;
+		}
+
+		@Override
+		public FunctionRandomAccess copy()
+		{
+			return new FunctionRandomAccess();
+		}
+
+		@Override
+		public FunctionRandomAccess copyRandomAccess()
+		{
+			return copy();
+		}
 	}
 
 	@Override
-	public int numDimensions()
+	public FunctionRandomAccess randomAccess()
 	{
-		return n;
+		return new FunctionRandomAccess();
+	}
+
+	@Override
+	public FunctionRandomAccess randomAccess( final Interval interval )
+	{
+		return randomAccess();
 	}
 }

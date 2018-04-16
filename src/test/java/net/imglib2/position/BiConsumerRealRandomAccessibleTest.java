@@ -62,7 +62,7 @@ public class BiConsumerRealRandomAccessibleTest {
 	@Test
 	public void test() {
 
-		final BiConsumerRealRandomAccessible< BoolType > function = new BiConsumerRealRandomAccessible< BoolType >(
+		final FunctionRealRandomAccessible< BoolType > function = new FunctionRealRandomAccessible< BoolType >(
 				4,
 				(pos, val) -> val.set(
 						pos.getDoublePosition(0) > 0 &&
@@ -71,7 +71,7 @@ public class BiConsumerRealRandomAccessibleTest {
 						pos.getDoublePosition(3) > 3 ),
 				BoolType::new );
 
-		BiConsumerRealRandomAccessible<BoolType>.RealFunctionRealRandomAccess access = function.realRandomAccess();
+		FunctionRealRandomAccessible<BoolType>.RealFunctionRealRandomAccess access = function.realRandomAccess();
 		access.setPosition( new double[] {1, 2, 3, 4} );
 		assertTrue( access.get().get() );
 		access.setPosition( new double[] {0, 2, 3, 4} );

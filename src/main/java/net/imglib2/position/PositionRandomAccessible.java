@@ -44,6 +44,13 @@ import net.imglib2.type.numeric.integer.LongType;
  * A {@link RandomAccessible} over the <em>d</em>-th position of discrete
  * coordinate space.
  *
+ * <p>
+ * TODO deprecate his implementation for
+ * <code>
+ * RandomAccessible<LongType> positionRandomAccessible = new FunctionRandomAccessible<LongType>(3, (x, y) -> y.set(x.getLongPosition(d)), LongType::new);
+ * </code>
+ * </p>
+ *
  * @author Stephan Saalfeld &lt;saalfelds@janelia.hhmi.org&gt;
  */
 public class PositionRandomAccessible implements RandomAccessible< LongType >

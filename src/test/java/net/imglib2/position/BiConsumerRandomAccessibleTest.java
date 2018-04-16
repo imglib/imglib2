@@ -46,7 +46,7 @@ public class BiConsumerRandomAccessibleTest {
 	@Test
 	public void test() {
 
-		final BiConsumerRandomAccessible< BoolType > function = new BiConsumerRandomAccessible< BoolType >(
+		final FunctionRandomAccessible< BoolType > function = new FunctionRandomAccessible< BoolType >(
 				4,
 				(pos, val) -> val.set(
 						pos.getDoublePosition(0) > 0 &&
@@ -55,7 +55,7 @@ public class BiConsumerRandomAccessibleTest {
 						pos.getDoublePosition(3) > 3 ),
 				BoolType::new );
 
-		BiConsumerRandomAccessible<BoolType>.FunctionRandomAccess access = function.randomAccess();
+		FunctionRandomAccessible<BoolType>.FunctionRandomAccess access = function.randomAccess();
 		access.setPosition( new long[] {1, 2, 3, 4} );
 		assertTrue( access.get().get() );
 		access.setPosition( new long[] {0, 2, 3, 4} );

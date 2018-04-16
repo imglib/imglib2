@@ -45,16 +45,23 @@ import net.imglib2.RealRandomAccessible;
 
 /**
  * A {@link RealRandomAccessible} that generates a function value for each
- * position in real coordinate space by side-effect using a
- * {@link BiConsumer}.
+ * position in real coordinate space by side-effect using a {@link BiConsumer}.
  *
  * @author Stephan Saalfeld
  */
-public class BiConsumerRealRandomAccessible< T > extends AbstractBiConsumerEuclideanSpace< RealLocalizable, T > implements RealRandomAccessible< T >
+public class FunctionRealRandomAccessible< T > extends AbstractFunctionEuclideanSpace< RealLocalizable, T > implements RealRandomAccessible< T >
 {
-	public BiConsumerRealRandomAccessible(
+	public FunctionRealRandomAccessible(
 			final int n,
 			final BiConsumer< RealLocalizable, T > function,
+			final Supplier< T > typeSupplier )
+	{
+		super( n, function, typeSupplier );
+	}
+
+	public FunctionRealRandomAccessible(
+			final int n,
+			final Supplier< BiConsumer< RealLocalizable, T > > function,
 			final Supplier< T > typeSupplier )
 	{
 		super( n, function, typeSupplier );
@@ -63,10 +70,11 @@ public class BiConsumerRealRandomAccessible< T > extends AbstractBiConsumerEucli
 	public class RealFunctionRealRandomAccess extends RealPoint implements RealRandomAccess< T >
 	{
 		private final T t = typeSupplier.get();
+		private final BiConsumer< RealLocalizable, T > function = functionSupplier.get();
 
 		public RealFunctionRealRandomAccess()
 		{
-			super( BiConsumerRealRandomAccessible.this.n );
+			super( FunctionRealRandomAccessible.this.n );
 		}
 
 		@Override

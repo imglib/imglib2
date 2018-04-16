@@ -37,67 +37,41 @@ package net.imglib2.position;
 import java.util.function.BiConsumer;
 import java.util.function.Supplier;
 
-import net.imglib2.Interval;
-import net.imglib2.Localizable;
-import net.imglib2.Point;
-import net.imglib2.RandomAccess;
-import net.imglib2.RandomAccessible;
+import net.imglib2.EuclideanSpace;
 
 /**
- * A {@link RandomAccessible} that generates a function value for each
- * position in discrete coordinate space by side-effect using a
+ * Abstract base class for functions that generate values through a
  * {@link BiConsumer}.
  *
  * @author Stephan Saalfeld
  */
-public class BiConsumerRandomAccessible< T > extends AbstractBiConsumerEuclideanSpace< Localizable, T > implements RandomAccessible< T >
+public abstract class AbstractFunctionEuclideanSpace< P, T > implements EuclideanSpace
 {
-	public BiConsumerRandomAccessible(
+	protected final int n;
+	protected final Supplier< BiConsumer< P, T > > functionSupplier;
+	protected final Supplier< T > typeSupplier;
+
+	public AbstractFunctionEuclideanSpace(
 			final int n,
-			final BiConsumer< Localizable, T > function,
+			final Supplier< BiConsumer< P, T > > functionSupplier,
 			final Supplier< T > typeSupplier )
 	{
-		super(n, function, typeSupplier);
+		this.n = n;
+		this.functionSupplier = functionSupplier;
+		this.typeSupplier = typeSupplier;
 	}
 
-	public class FunctionRandomAccess extends Point implements RandomAccess< T >
+	public AbstractFunctionEuclideanSpace(
+			final int n,
+			final BiConsumer< P, T > function,
+			final Supplier< T > typeSupplier )
 	{
-		private final T t = typeSupplier.get();
-
-		public FunctionRandomAccess()
-		{
-			super( BiConsumerRandomAccessible.this.n );
-		}
-
-		@Override
-		public T get()
-		{
-			function.accept( this, t );
-			return t;
-		}
-
-		@Override
-		public FunctionRandomAccess copy()
-		{
-			return new FunctionRandomAccess();
-		}
-
-		@Override
-		public FunctionRandomAccess copyRandomAccess()
-		{
-			return copy();
-		}
+		this(n, () -> function, typeSupplier);
 	}
 
 	@Override
-	public FunctionRandomAccess randomAccess()
+	public int numDimensions()
 	{
-		return new FunctionRandomAccess();
-	}
-
-	@Override
-	public FunctionRandomAccess randomAccess( final Interval interval )
-	{
-		return randomAccess();
+		return n;
 	}
 }

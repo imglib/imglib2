@@ -44,6 +44,13 @@ import net.imglib2.type.numeric.real.DoubleType;
  * A {@link RealRandomAccessible} over the <em>d</em>-th position of real
  * coordinate space.
  *
+ * <p>
+ * TODO deprecate his implementation for
+ * <code>
+ * RealRandomAccessible<DoubleType> realPositionRealRandomAccessible = new FunctionRealRandomAccessible<DoubleType>(3, (x, y) -> y.set(x.getDoublePosition(d)), DoubleType::new);
+ * </code>
+ * </p>
+ *
  * @author Stephan Saalfeld &lt;saalfelds@janelia.hhmi.org&gt;
  */
 public class RealPositionRealRandomAccessible implements RealRandomAccessible< DoubleType >
