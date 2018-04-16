@@ -109,9 +109,13 @@ public final class RandomAccessibleIntervalCursor< T > extends AbstractInterval 
 	@Override
 	public void fwd()
 	{
-		randomAccess.fwd( 0 );
-		if ( ++index > maxIndexOnLine )
+		if ( ++index > maxIndexOnLine ) {
 			nextLine();
+		}
+		else
+		{
+			randomAccess.fwd( 0 );
+		}
 	}
 
 	private void nextLine()
