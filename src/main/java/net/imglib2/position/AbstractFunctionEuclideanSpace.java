@@ -51,6 +51,13 @@ public abstract class AbstractFunctionEuclideanSpace< P, T > implements Euclidea
 	protected final Supplier< BiConsumer< P, T > > functionSupplier;
 	protected final Supplier< T > typeSupplier;
 
+	/**
+	 * Constructor for stateful functions that cannot be used concurrently.
+	 *
+	 * @param n
+	 * @param functionSupplier
+	 * @param typeSupplier
+	 */
 	public AbstractFunctionEuclideanSpace(
 			final int n,
 			final Supplier< BiConsumer< P, T > > functionSupplier,
@@ -61,6 +68,14 @@ public abstract class AbstractFunctionEuclideanSpace< P, T > implements Euclidea
 		this.typeSupplier = typeSupplier;
 	}
 
+	/**
+	 * Simplified constructor if the same function is stateless and can be used
+	 * concurrently.
+	 *
+	 * @param n
+	 * @param function
+	 * @param typeSupplier
+	 */
 	public AbstractFunctionEuclideanSpace(
 			final int n,
 			final BiConsumer< P, T > function,
