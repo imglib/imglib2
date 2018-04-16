@@ -200,7 +200,6 @@ public abstract class ImgFactory< T >
 	 * method which provides a type instance as an argument), the provided type
 	 * becomes the cached type instance so that subsequent invocations of the
 	 * typeless {@code create} methods will work as desired.
-	 * </p>
 	 *
 	 * @param type
 	 *            The type to cache if needed.
