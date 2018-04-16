@@ -97,7 +97,7 @@ public final class NtreeCursor< T extends NativeType< T >> extends
 	@Override
 	public NtreeCursor< T > copy()
 	{
-		return new NtreeCursor< T >( this );
+		return new NtreeCursor<>( this );
 	}
 
 	@Override

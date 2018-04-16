@@ -56,8 +56,8 @@ public class Unsigned2BitTypeTest
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception
 	{
-		
-		img = new ArrayImgFactory< Unsigned2BitType >().create( new long[]{ 10, 20, 30 }, new Unsigned2BitType() );
+
+		img = new ArrayImgFactory<>( new Unsigned2BitType() ).create( 10, 20, 30 );
 	}
 
 	/**

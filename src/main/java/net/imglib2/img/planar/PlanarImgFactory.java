@@ -11,13 +11,13 @@
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice,
  *    this list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  *    this list of conditions and the following disclaimer in the documentation
  *    and/or other materials provided with the distribution.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -34,23 +34,22 @@
 
 package net.imglib2.img.planar;
 
+import net.imglib2.Dimensions;
 import net.imglib2.exception.IncompatibleTypeException;
 import net.imglib2.img.ImgFactory;
-import net.imglib2.img.NativeImg;
 import net.imglib2.img.NativeImgFactory;
-import net.imglib2.img.basictypeaccess.array.ByteArray;
-import net.imglib2.img.basictypeaccess.array.CharArray;
-import net.imglib2.img.basictypeaccess.array.DoubleArray;
-import net.imglib2.img.basictypeaccess.array.FloatArray;
-import net.imglib2.img.basictypeaccess.array.IntArray;
-import net.imglib2.img.basictypeaccess.array.LongArray;
-import net.imglib2.img.basictypeaccess.array.ShortArray;
+import net.imglib2.img.basictypeaccess.ArrayDataAccessFactory;
+import net.imglib2.img.basictypeaccess.array.ArrayDataAccess;
 import net.imglib2.type.NativeType;
+import net.imglib2.type.NativeTypeFactory;
 import net.imglib2.util.Fraction;
+import net.imglib2.util.Intervals;
+import net.imglib2.util.Util;
 
 /**
  * Factory that creates an appropriate {@link PlanarImg}.
- * 
+ *
+ * @author Tobias Pietzsch
  * @author Jan Funke
  * @author Stephan Preibisch
  * @author Stephan Saalfeld
@@ -58,52 +57,40 @@ import net.imglib2.util.Fraction;
  */
 public class PlanarImgFactory< T extends NativeType< T > > extends NativeImgFactory< T >
 {
-	@Override
-	public PlanarImg< T, ? > create( final long[] dim, final T type )
+	public PlanarImgFactory( final T type )
 	{
-		return ( PlanarImg< T, ? > ) type.createSuitableNativeImg( this, dim );
+		super( type );
 	}
 
 	@Override
-	public NativeImg< T, ByteArray > createByteInstance( final long[] dimensions, final Fraction entitiesPerPixel )
+	public PlanarImg< T, ? > create( final long... dimensions )
 	{
-		return new PlanarImg< T, ByteArray >( new ByteArray( 1 ), dimensions, entitiesPerPixel );
+		@SuppressWarnings( { "unchecked", "rawtypes" } )
+		final PlanarImg< T, ? > img = create( dimensions, type(), ( NativeTypeFactory ) type().getNativeTypeFactory() );
+		return img;
 	}
 
 	@Override
-	public NativeImg< T, CharArray > createCharInstance( final long[] dimensions, final Fraction entitiesPerPixel )
+	public PlanarImg< T, ? > create( final Dimensions dimensions )
 	{
-		return new PlanarImg< T, CharArray >( new CharArray( 1 ), dimensions, entitiesPerPixel );
+		return create( Intervals.dimensionsAsLongArray( dimensions ) );
 	}
 
 	@Override
-	public NativeImg< T, DoubleArray > createDoubleInstance( final long[] dimensions, final Fraction entitiesPerPixel )
+	public PlanarImg< T, ? > create( final int[] dimensions )
 	{
-		return new PlanarImg< T, DoubleArray >( new DoubleArray( 1 ), dimensions, entitiesPerPixel );
+		return create( Util.int2long( dimensions ) );
 	}
 
-	@Override
-	public NativeImg< T, FloatArray > createFloatInstance( final long[] dimensions, final Fraction entitiesPerPixel )
+	private < A extends ArrayDataAccess< A > > PlanarImg< T, ? > create(
+			final long[] dimensions,
+			final T type,
+			final NativeTypeFactory< T, A > typeFactory )
 	{
-		return new PlanarImg< T, FloatArray >( new FloatArray( 1 ), dimensions, entitiesPerPixel );
-	}
-
-	@Override
-	public NativeImg< T, IntArray > createIntInstance( final long[] dimensions, final Fraction entitiesPerPixel )
-	{
-		return new PlanarImg< T, IntArray >( new IntArray( 1 ), dimensions, entitiesPerPixel );
-	}
-
-	@Override
-	public NativeImg< T, LongArray > createLongInstance( final long[] dimensions, final Fraction entitiesPerPixel )
-	{
-		return new PlanarImg< T, LongArray >( new LongArray( 1 ), dimensions, entitiesPerPixel );
-	}
-
-	@Override
-	public NativeImg< T, ShortArray > createShortInstance( final long[] dimensions, final Fraction entitiesPerPixel )
-	{
-		return new PlanarImg< T, ShortArray >( new ShortArray( 1 ), dimensions, entitiesPerPixel );
+		final Fraction entitiesPerPixel = type.getEntitiesPerPixel();
+		final PlanarImg< T, A > img = new PlanarImg<>( ArrayDataAccessFactory.get( typeFactory ), dimensions, entitiesPerPixel );
+		img.setLinkedType( typeFactory.createLinkedType( img ) );
+		return img;
 	}
 
 	@SuppressWarnings( { "unchecked", "rawtypes" } )
@@ -111,7 +98,36 @@ public class PlanarImgFactory< T extends NativeType< T > > extends NativeImgFact
 	public < S > ImgFactory< S > imgFactory( final S type ) throws IncompatibleTypeException
 	{
 		if ( NativeType.class.isInstance( type ) )
-			return new PlanarImgFactory();
+			return new PlanarImgFactory( ( NativeType ) type );
 		throw new IncompatibleTypeException( this, type.getClass().getCanonicalName() + " does not implement NativeType." );
 	}
+
+
+	/*
+	 * -----------------------------------------------------------------------
+	 *
+	 * Deprecated API.
+	 *
+	 * Supports backwards compatibility with ImgFactories that are constructed
+	 * without a type instance or supplier.
+	 *
+	 * -----------------------------------------------------------------------
+	 */
+
+	@Deprecated
+	public PlanarImgFactory()
+	{
+		super();
+	}
+
+	@Deprecated
+	@Override
+	public PlanarImg< T, ? > create( final long[] dimensions, final T type )
+	{
+		cache( type );
+		@SuppressWarnings( { "unchecked", "rawtypes" } )
+		final PlanarImg< T, ? > img = create( dimensions, type, ( NativeTypeFactory ) type.getNativeTypeFactory() );
+		return img;
+	}
+
 }

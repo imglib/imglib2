@@ -83,7 +83,7 @@ public class CopyTest
 			intDataSum += intData[ i ];
 		}
 
-		intImg = new PlanarImgFactory< IntType >().create( dimensions, new IntType() );
+		intImg = new PlanarImgFactory<>( new IntType() ).create( dimensions );
 
 		final long[] pos = new long[ dimensions.length ];
 		final RandomAccess< IntType > a = intImg.randomAccess();
@@ -144,7 +144,7 @@ public class CopyTest
 	@Test
 	public void testCopyToArrayContainerWithSourceIteration()
 	{
-		final ArrayImg< IntType, ? > array = new ArrayImgFactory< IntType >().create( dimensions, new IntType() );
+		final ArrayImg< IntType, ? > array = new ArrayImgFactory<>( new IntType() ).create( dimensions );
 		copyWithSourceIteration( intImg, array );
 		assertArrayEquals( intData, getImgAsInts( array ) );
 	}
@@ -152,7 +152,7 @@ public class CopyTest
 	@Test
 	public void testCopyToArrayContainerWithDestIteration()
 	{
-		final ArrayImg< IntType, ? > array = new ArrayImgFactory< IntType >().create( dimensions, new IntType() );
+		final ArrayImg< IntType, ? > array = new ArrayImgFactory<>( new IntType() ).create( dimensions );
 		copyWithDestIteration( intImg, array );
 		assertArrayEquals( intData, getImgAsInts( array ) );
 	}
@@ -160,7 +160,7 @@ public class CopyTest
 	@Test
 	public void testCopyToPlanarContainerWithSourceIteration()
 	{
-		final PlanarImg< IntType, ? > planarImg = new PlanarImgFactory< IntType >().create( dimensions, new IntType() );
+		final PlanarImg< IntType, ? > planarImg = new PlanarImgFactory<>( new IntType() ).create( dimensions );
 		copyWithSourceIteration( intImg, planarImg );
 		assertArrayEquals( intData, getImgAsInts( planarImg ) );
 	}
@@ -168,7 +168,7 @@ public class CopyTest
 	@Test
 	public void testCopyToPlanarContainerWithDestIteration()
 	{
-		final PlanarImg< IntType, ? > planarImg = new PlanarImgFactory< IntType >().create( dimensions, new IntType() );
+		final PlanarImg< IntType, ? > planarImg = new PlanarImgFactory<>( new IntType() ).create( dimensions );
 		copyWithDestIteration( intImg, planarImg );
 		assertArrayEquals( intData, getImgAsInts( planarImg ) );
 	}

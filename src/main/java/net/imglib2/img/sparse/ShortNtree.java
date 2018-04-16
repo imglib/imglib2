@@ -47,9 +47,9 @@ public final class ShortNtree implements ShortAccess, NtreeAccess< Short, ShortN
 
 	private final Ntree< Short > data;
 
-	public ShortNtree( final long[] dimenions, final long[] position, final short value )
+	public ShortNtree( final long[] dimensions, final long[] position, final short value )
 	{
-		this.data = new Ntree< Short >( dimenions, value );
+		this.data = new Ntree<>( dimensions, value );
 		this.position = position;
 	}
 

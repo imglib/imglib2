@@ -11,13 +11,13 @@
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice,
  *    this list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  *    this list of conditions and the following disclaimer in the documentation
  *    and/or other materials provided with the distribution.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -36,9 +36,12 @@ package net.imglib2.img.list;
 
 import java.util.ArrayList;
 
+import net.imglib2.Dimensions;
 import net.imglib2.exception.IncompatibleTypeException;
 import net.imglib2.img.ImgFactory;
 import net.imglib2.type.Type;
+import net.imglib2.util.Intervals;
+import net.imglib2.util.Util;
 
 /**
  * {@link ImgFactory} for {@link ListImg} of any type T. You can us {@link Type}
@@ -47,26 +50,69 @@ import net.imglib2.type.Type;
  * every reference in the {@link ListImg}. Instead, you can use the
  * {@link ListCursor#set(Object)} and {@link ListRandomAccess#set(Object)}
  * methods to alter the underlying {@link ArrayList}.
- * 
+ *
  * @param <T>
  *            The value type of the pixels.
- * 
+ *
  * @author Stephan Preibisch
  * @author Stephan Saalfeld
  * @author Tobias Pietzsch
  */
 public class ListImgFactory< T > extends ImgFactory< T >
 {
-	@Override
-	public ListImg< T > create( final long[] dim, final T type )
+	public ListImgFactory( final T type )
 	{
-		return new ListImg< T >( dim, type );
+		super( type );
 	}
 
-	@SuppressWarnings( { "unchecked", "rawtypes" } )
+	@Override
+	public ListImg< T > create( final long... dimensions )
+	{
+		return new ListImg<>( dimensions, type() );
+	}
+
+	@Override
+	public ListImg< T > create( final Dimensions dimensions )
+	{
+		return create( Intervals.dimensionsAsLongArray( dimensions ) );
+	}
+
+	@Override
+	public ListImg< T > create( final int[] dimensions )
+	{
+		return create( Util.int2long( dimensions ) );
+	}
+
 	@Override
 	public < S > ImgFactory< S > imgFactory( final S type ) throws IncompatibleTypeException
 	{
-		return new ListImgFactory();
+		return new ListImgFactory<>( type );
 	}
+
+
+	/*
+	 * -----------------------------------------------------------------------
+	 *
+	 * Deprecated API.
+	 *
+	 * Supports backwards compatibility with ImgFactories that are constructed
+	 * without a type instance or supplier.
+	 *
+	 * -----------------------------------------------------------------------
+	 */
+
+	@Deprecated
+	public ListImgFactory()
+	{
+		super();
+	}
+
+	@Deprecated
+	@Override
+	public ListImg< T > create( final long[] dim, final T type )
+	{
+		cache( type );
+		return new ListImg<>( dim, type );
+	}
+
 }

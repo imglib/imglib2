@@ -81,7 +81,7 @@ public class CellCursorTest
 			intDataSum += intData[ i ];
 		}
 
-		intImg = new CellImgFactory< IntType >( 4 ).create( dimensions, new IntType() );
+		intImg = new CellImgFactory<>( new IntType(), 4 ).create( dimensions );
 
 		final long[] pos = new long[ dimensions.length ];
 		final RandomAccess< IntType > a = intImg.randomAccess();

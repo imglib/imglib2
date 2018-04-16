@@ -155,7 +155,7 @@ public abstract class AbstractSubIntervalIterableCursorTest< T extends Img< IntT
 		int ctr = 0;
 		long sum = 0;
 
-		final RandomAccess< BitType > check = Views.translate( new ArrayImgFactory< BitType >().create( i, new BitType() ), min ).randomAccess();
+		final RandomAccess< BitType > check = Views.translate( new ArrayImgFactory<>( new BitType() ).create( i ), min ).randomAccess();
 
 		while ( cursor.hasNext() )
 		{

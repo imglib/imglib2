@@ -800,9 +800,9 @@ public class Util
 	public static < T extends NativeType< T > > ImgFactory< T > getArrayOrCellImgFactory( final Dimensions targetSize, final T type )
 	{
 		if ( Intervals.numElements( targetSize ) <= Integer.MAX_VALUE )
-			return new ArrayImgFactory< T >();
+			return new ArrayImgFactory<>( type );
 		final int cellSize = ( int ) Math.pow( Integer.MAX_VALUE / type.getEntitiesPerPixel().getRatio(), 1.0 / targetSize.numDimensions() );
-		return new CellImgFactory< T >( cellSize );
+		return new CellImgFactory<>( type, cellSize );
 	}
 
 	/**
@@ -824,13 +824,13 @@ public class Util
 	public static < T extends NativeType< T > > ImgFactory< T > getArrayOrCellImgFactory( final Dimensions targetSize, final int targetCellSize, final T type )
 	{
 		if ( Intervals.numElements( targetSize ) <= Integer.MAX_VALUE )
-			return new ArrayImgFactory< T >();
+			return new ArrayImgFactory<>( type );
 		final int cellSize;
 		if ( Math.pow( targetCellSize, targetSize.numDimensions() ) <= Integer.MAX_VALUE )
 			cellSize = targetCellSize;
 		else
 			cellSize = ( int ) Math.pow( Integer.MAX_VALUE / type.getEntitiesPerPixel().getRatio(), 1.0 / targetSize.numDimensions() );
-		return new CellImgFactory< T >( cellSize );
+		return new CellImgFactory<>( type, cellSize );
 	}
 
 	/**

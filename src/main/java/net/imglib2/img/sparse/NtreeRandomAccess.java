@@ -44,7 +44,7 @@ import net.imglib2.util.Util;
  * @author Tobias Pietzsch
  * 
  */
-public final class NtreeRandomAccess< T extends NativeType< T >> implements PositionProvider, RandomAccess< T >
+public final class NtreeRandomAccess< T extends NativeType< T > > implements PositionProvider, RandomAccess< T >
 {
 	private final NtreeImg< T, ? > img;
 
@@ -128,7 +128,7 @@ public final class NtreeRandomAccess< T extends NativeType< T >> implements Posi
 	@Override
 	public NtreeRandomAccess< T > copy()
 	{
-		return new NtreeRandomAccess< T >( this );
+		return new NtreeRandomAccess<>( this );
 	}
 
 	@Override

@@ -39,7 +39,6 @@ import java.util.function.Supplier;
 import net.imglib2.Dimensions;
 import net.imglib2.exception.IncompatibleTypeException;
 import net.imglib2.type.NativeType;
-import net.imglib2.type.Type;
 import net.imglib2.util.Util;
 
 /**
@@ -50,40 +49,53 @@ import net.imglib2.util.Util;
  */
 public abstract class ImgFactory< T >
 {
-	/**
-	 * The {@link ImgFactory} can decide how to create the {@link Img}. A
-	 * {@link NativeImgFactory} will ask the {@link Type} to create a suitable
-	 * {@link NativeImg}.
-	 *
-	 * @return {@link Img}
-	 */
-	public abstract Img< T > create( final long[] dim, final T type );
+	private T type;
 
-	/**
-	 * The {@link ImgFactory} can decide how to create the {@link Img}. A
-	 * {@link NativeImgFactory} will ask the {@link Type} to create a suitable
-	 * {@link NativeImg}.
-	 *
-	 * @return {@link Img}
-	 */
-	public Img< T > create( final Dimensions dim, final T type )
+	public ImgFactory( final T type )
 	{
-		final long[] size = new long[ dim.numDimensions() ];
-		dim.dimensions( size );
+		this.type = type;
+	}
 
-		return create( size, type );
+	public T type()
+	{
+		return type;
 	}
 
 	/**
-	 * The {@link ImgFactory} can decide how to create the {@link Img}. A
-	 * {@link NativeImgFactory} will ask the {@link Type} to create a suitable
-	 * {@link NativeImg}.
+	 * Create an {@code Img<T>} with the specified {@code dimensions}.
 	 *
-	 * @return {@link Img}
+	 * @return new image with the specified {@code dimensions}.
 	 */
-	public Img< T > create( final int[] dim, final T type )
+	public abstract Img< T > create( final long... dimensions );
+
+	/**
+	 * Create an {@code Img<T>} with the specified {@code dimensions}.
+	 *
+	 * @return new image with the specified {@code dimensions}.
+	 */
+	public Img< T > create( final Dimensions dimensions )
 	{
-		return create( Util.int2long( dim ), type );
+		final long[] size = new long[ dimensions.numDimensions() ];
+		dimensions.dimensions( size );
+
+		return create( size );
+	}
+
+	/**
+	 * Create an {@code Img<T>} with the specified {@code dimensions}.
+	 *
+	 * <p>
+	 * Note: This is not a vararg function because the underlying {@code int[]}
+	 * based methods already copies the {@code int[]} dimensions into a
+	 * disposable {@code long[]} anyways. This would be an unnecessary copy for
+	 * {@code int...} varargs.
+	 * </p>
+	 *
+	 * @return new image with the specified {@code dimensions}.
+	 */
+	public Img< T > create( final int[] dimensions )
+	{
+		return create( Util.int2long( dimensions ) );
 	}
 
 	/**
@@ -105,47 +117,6 @@ public abstract class ImgFactory< T >
 	public abstract < S > ImgFactory< S > imgFactory( final S type ) throws IncompatibleTypeException;
 
 	/**
-	 * The {@link ImgFactory} can decide how to create the {@link Img}. A
-	 * {@link NativeImgFactory} will ask the supplied {@link Type} to create a
-	 * suitable {@link NativeImg}.
-	 *
-	 * @return {@link Img}
-	 */
-	public Img< T > create( final Supplier< T > typeSupplier, final long... dim ) {
-		return create( dim, typeSupplier.get() );
-	}
-
-	/**
-	 * The {@link ImgFactory} can decide how to create the {@link Img}. A
-	 * {@link NativeImgFactory} will ask the supplied {@link Type} to create a
-	 * suitable {@link NativeImg}.
-	 *
-	 * @return {@link Img}
-	 */
-	public Img< T > create( final Supplier< T > typeSupplier, final Dimensions dim )
-	{
-		return create( dim, typeSupplier.get() );
-	}
-
-	/**
-	 * The {@link ImgFactory} can decide how to create the {@link Img}. A
-	 * {@link NativeImgFactory} will ask the supplied {@link Type} to create a
-	 * suitable {@link NativeImg}.
-	 *
-	 * <p>
-	 * Note: This is not a vararg function because the underlying int[]
-	 * based methods alreay copies the int[] dimensions into a disposable
-	 * long[] anyways.  This would be an unnecessary copy for int... varargs.
-	 * </p>
-	 *
-	 * @return {@link Img}
-	 */
-	public Img< T > create( final Supplier< T > typeSupplier, final int[] dim )
-	{
-		return create( dim, typeSupplier.get() );
-	}
-
-	/**
 	 * Creates the same {@link ImgFactory} for a different generic parameter if
 	 * possible.
 	 *
@@ -165,5 +136,78 @@ public abstract class ImgFactory< T >
 	public < S > ImgFactory< S > imgFactory( final Supplier< S > typeSupplier ) throws IncompatibleTypeException
 	{
 		return imgFactory( typeSupplier.get() );
+	}
+
+
+	/*
+	 * -----------------------------------------------------------------------
+	 *
+	 * Deprecated API.
+	 *
+	 * Supports backwards compatibility with ImgFactories that are constructed
+	 * without a type instance or supplier.
+	 *
+	 * -----------------------------------------------------------------------
+	 */
+
+	@Deprecated
+	public ImgFactory() {
+		type = null;
+	}
+
+	@Deprecated
+	public abstract Img< T > create( final long[] dim, final T type );
+
+	@Deprecated
+	public Img< T > create( final Dimensions dim, final T type )
+	{
+		final long[] size = new long[ dim.numDimensions() ];
+		dim.dimensions( size );
+
+		cache( type );
+		return create( size, type );
+	}
+
+	@Deprecated
+	public Img< T > create( final int[] dim, final T type )
+	{
+		return create( Util.int2long( dim ), type );
+	}
+
+	@Deprecated
+	public Img< T > create( final Supplier< T > typeSupplier, final long... dim )
+	{
+		return create( dim, typeSupplier.get() );
+	}
+
+	@Deprecated
+	public Img< T > create( final Supplier< T > typeSupplier, final Dimensions dim )
+	{
+		return create( dim, typeSupplier.get() );
+	}
+
+	@Deprecated
+	public Img< T > create( final Supplier< T > typeSupplier, final int[] dim )
+	{
+		return create( dim, typeSupplier.get() );
+	}
+
+	/**
+	 * If the cached type instance was previously null, the given
+	 * {@code type} becomes the cached instance. In this way, if the factory was
+	 * created using one of the deprecated typeless constructor signatures, but
+	 * then one of the deprecated {@code create} methods is called (i.e.: a
+	 * method which provides a type instance as an argument), the provided type
+	 * becomes the cached type instance so that subsequent invocations of the
+	 * typeless {@code create} methods will work as desired.
+	 *
+	 * @param type
+	 *            The type to cache if needed.
+	 */
+	@Deprecated
+	protected void cache( final T type )
+	{
+		if ( this.type == null )
+			this.type = type;
 	}
 }

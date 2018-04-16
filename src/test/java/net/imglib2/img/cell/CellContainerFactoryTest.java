@@ -71,9 +71,9 @@ public class CellContainerFactoryTest
 	{
 		final int defaultCellSize = 43;
 		final int[] expectedCellDims = { 43, 43, 43, 43 };
-		final CellImgFactory< T > factory = new CellImgFactory< T >( defaultCellSize );
+		final CellImgFactory< T > factory = new CellImgFactory<>( type, defaultCellSize );
 		final long[] dimension = { 100, 80, 4, 3 };
-		final CellImg< T, ? > img = factory.create( dimension, type );
+		final CellImg< T, ? > img = factory.create( dimension );
 		final int[] cellDims = new int[ dimension.length ];
 		img.getCellGrid().cellDimensions( cellDims );
 		assertArrayEquals( expectedCellDims, cellDims );
@@ -101,9 +101,9 @@ public class CellContainerFactoryTest
 	{
 		final int[] defaultCellDims = { 6, 8, 5, 3 };
 		final int[] expectedCellDims = defaultCellDims.clone();
-		final CellImgFactory< T > factory = new CellImgFactory< T >( defaultCellDims );
+		final CellImgFactory< T > factory = new CellImgFactory<>( type, defaultCellDims );
 		final long[] dimension = { 100, 80, 4, 3 };
-		final CellImg< T, ? > img = factory.create( dimension, type );
+		final CellImg< T, ? > img = factory.create( dimension );
 		final int[] cellDims = new int[ dimension.length ];
 		img.getCellGrid().cellDimensions( cellDims );
 		assertArrayEquals( expectedCellDims, cellDims );

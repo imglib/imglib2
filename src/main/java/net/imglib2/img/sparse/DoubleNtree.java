@@ -47,9 +47,9 @@ public final class DoubleNtree implements DoubleAccess, NtreeAccess< Double, Dou
 
 	private final Ntree< Double > data;
 
-	public DoubleNtree( final long[] dimenions, final long[] position, final Double value )
+	public DoubleNtree( final long[] dimensions, final long[] position, final double value )
 	{
-		this.data = new Ntree< Double >( dimenions, value );
+		this.data = new Ntree<>( dimensions, value );
 		this.position = position;
 	}
 

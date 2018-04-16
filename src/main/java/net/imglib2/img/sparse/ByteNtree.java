@@ -47,9 +47,9 @@ public final class ByteNtree implements ByteAccess, NtreeAccess< Byte, ByteNtree
 
 	private final Ntree< Byte > data;
 
-	public ByteNtree( final long[] dimenions, final long[] position, final Byte value )
+	public ByteNtree( final long[] dimensions, final long[] position, final byte value )
 	{
-		this.data = new Ntree< Byte >( dimenions, value );
+		this.data = new Ntree<>( dimensions, value );
 		this.position = position;
 	}
 

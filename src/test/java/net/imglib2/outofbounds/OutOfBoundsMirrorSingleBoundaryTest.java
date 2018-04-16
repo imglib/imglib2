@@ -95,9 +95,9 @@ public class OutOfBoundsMirrorSingleBoundaryTest
 	@Before
 	public void setUp() throws Exception
 	{
-		arrayImage = new ArrayImgFactory< IntType >().create( dim, new IntType() );
-		cellImage = new CellImgFactory< IntType >( 2 ).create( dim, new IntType() );
-		listImage = new ListImgFactory< IntType >().create( dim, new IntType() );
+		arrayImage = new ArrayImgFactory<>( new IntType() ).create( dim );
+		cellImage = new CellImgFactory<>( new IntType(), 2 ).create( dim );
+		listImage = new ListImgFactory<>( new IntType() ).create( dim );
 
 		int i = 0;
 		for ( final IntType t : arrayImage )

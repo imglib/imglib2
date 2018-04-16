@@ -58,7 +58,7 @@ public final class LongNtree implements LongAccess, NtreeAccess< Long, LongNtree
 	 */
 	public LongNtree( final long[] dimensions, final long[] position, final long value )
 	{
-		this.data = new Ntree< Long >( dimensions, value );
+		this.data = new Ntree<>( dimensions, value );
 
 		this.position = position;
 	}

@@ -109,12 +109,6 @@ public final class Ntree< T extends Comparable< T >>
 	 */
 	final long[] dimensions;
 
-	// /**
-	// * KNIME requirements, empty constructor for fast serialization
-	// */
-	// public Ntree() {
-	// }
-
 	/**
 	 * Create a ntree structure capable of representing an array of the given
 	 * dimensions. Initially, the tree contains only a root node and represents
@@ -141,7 +135,7 @@ public final class Ntree< T extends Comparable< T >>
 
 		this.numChildren = 1 << n;
 
-		this.root = new NtreeNode< T >( null, value );
+		this.root = new NtreeNode<>( null, value );
 	}
 
 	/**
@@ -151,7 +145,7 @@ public final class Ntree< T extends Comparable< T >>
 	@SuppressWarnings( "unchecked" )
 	private NtreeNode< T > copyRecursively( final NtreeNode< T > node, final NtreeNode< T > newParent )
 	{
-		final NtreeNode< T > copy = new NtreeNode< T >( newParent, node.getValue() );
+		final NtreeNode< T > copy = new NtreeNode<>( newParent, node.getValue() );
 		if ( node.hasChildren() )
 		{
 			copy.children = new NtreeNode[ numChildren ];
@@ -220,7 +214,7 @@ public final class Ntree< T extends Comparable< T >>
 			{
 				current.children = new NtreeNode[ numChildren ];
 				for ( int i = 0; i < numChildren; ++i )
-					current.children[ i ] = new NtreeNode< T >( current, current.getValue() );
+					current.children[ i ] = new NtreeNode<>( current, current.getValue() );
 			}
 
 			final long bitmask = 1 << l;
@@ -258,7 +252,7 @@ public final class Ntree< T extends Comparable< T >>
 
 				current.children = new NtreeNode[ numChildren ];
 				for ( int i = 0; i < numChildren; ++i )
-					current.children[ i ] = new NtreeNode< T >( current, current.getValue() );
+					current.children[ i ] = new NtreeNode<>( current, current.getValue() );
 			}
 
 			final long bitmask = 1 << l;

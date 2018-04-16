@@ -35,10 +35,10 @@
 package net.imglib2.type.numeric;
 
 import net.imglib2.img.NativeImg;
-import net.imglib2.img.NativeImgFactory;
 import net.imglib2.img.basictypeaccess.DoubleAccess;
 import net.imglib2.img.basictypeaccess.array.DoubleArray;
 import net.imglib2.type.NativeType;
+import net.imglib2.type.NativeTypeFactory;
 import net.imglib2.util.Fraction;
 
 /**
@@ -79,17 +79,6 @@ public class NativeARGBDoubleType extends AbstractARGBDoubleType< NativeARGBDoub
 	}
 
 	@Override
-	public NativeImg< NativeARGBDoubleType, ? extends DoubleAccess > createSuitableNativeImg(
-			final NativeImgFactory< NativeARGBDoubleType > storageFactory,
-			final long dim[] )
-	{
-		final NativeImg< NativeARGBDoubleType, ? extends DoubleAccess > container = storageFactory.createDoubleInstance( dim, new Fraction( 4, 1 ) );
-		final NativeARGBDoubleType linkedType = new NativeARGBDoubleType( container );
-		container.setLinkedType( linkedType );
-		return container;
-	}
-
-	@Override
 	public void updateContainer( final Object c )
 	{
 		dataAccess = img.update( c );
@@ -99,6 +88,14 @@ public class NativeARGBDoubleType extends AbstractARGBDoubleType< NativeARGBDoub
 	public NativeARGBDoubleType duplicateTypeOnSameNativeImg()
 	{
 		return new NativeARGBDoubleType( img );
+	}
+
+	private static final NativeTypeFactory< NativeARGBDoubleType, DoubleAccess > typeFactory = NativeTypeFactory.DOUBLE( img -> new NativeARGBDoubleType( img ) );
+
+	@Override
+	public NativeTypeFactory< NativeARGBDoubleType, DoubleAccess > getNativeTypeFactory()
+	{
+		return typeFactory;
 	}
 
 	@Override

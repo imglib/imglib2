@@ -58,7 +58,7 @@ public final class IntNtree implements IntAccess, NtreeAccess< Integer, IntNtree
 	 */
 	public IntNtree( final long[] dimensions, final long[] position, final int value )
 	{
-		this.data = new Ntree< Integer >( dimensions, value );
+		this.data = new Ntree<>( dimensions, value );
 
 		this.position = position;
 

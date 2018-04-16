@@ -107,7 +107,7 @@ public abstract class AbstractListImg< T > extends AbstractImg< T >
 	@Override
 	public ListImgFactory< T > factory()
 	{
-		return new ListImgFactory< T >();
+		return new ListImgFactory<>( get( 0 ) );
 	}
 
 	@Override
