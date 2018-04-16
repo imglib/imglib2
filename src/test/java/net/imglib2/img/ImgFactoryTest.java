@@ -52,6 +52,7 @@ public class ImgFactoryTest
 	 * Test method for {@link net.imglib2.img.ImgFactory#create(java.util.function.Supplier, long[])}.
 	 */
 	@Test
+	@Deprecated
 	public final void testCreateSupplierOfTLongArray()
 	{
 		final ArrayImg< UnsignedByteType, ByteArray > img = ArrayImgs.unsignedBytes(1, 2, 3);

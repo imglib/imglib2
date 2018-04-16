@@ -70,9 +70,9 @@ public class RandomAccessibleIntervalCursorBenchmark
 	public void setUp()
 	{
 		dimensions = new long[] { 207, 103, 1021 };
-		array1 = ( ArrayImg< IntType, IntArray > ) new ArrayImgFactory< IntType >().create( dimensions, new IntType() );
-		array2 = ( ArrayImg< IntType, IntArray > ) new ArrayImgFactory< IntType >().create( dimensions, new IntType() );
-		cell = ( CellImg< IntType, IntArray > ) new CellImgFactory< IntType >().create( dimensions, new IntType() );
+		array1 = ( ArrayImg< IntType, IntArray > ) new ArrayImgFactory<>( new IntType() ).create( dimensions );
+		array2 = ( ArrayImg< IntType, IntArray > ) new ArrayImgFactory<>( new IntType() ).create( dimensions );
+		cell = ( CellImg< IntType, IntArray > ) new CellImgFactory<>( new IntType() ).create( dimensions );
 
 		// fill intData with random values
 		numValues = 1;

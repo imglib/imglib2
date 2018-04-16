@@ -57,7 +57,7 @@ public class ArrayImgTest
 		for ( int i = 0; i < dim.length; ++i )
 		{
 			assertTrue( "ArrayImg failed for: dim=" + Util.printCoordinates( dim[ i ] ),
-					ImgTestHelper.testImg( dim[ i ], new ArrayImgFactory< FloatType >(), new ArrayImgFactory< FloatType >() ) );
+					ImgTestHelper.testImg( dim[ i ], new ArrayImgFactory<>( new FloatType() ), new ArrayImgFactory<>( new FloatType() ) ) );
 		}
 	}
 }

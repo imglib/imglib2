@@ -81,7 +81,7 @@ final public class PlanarImgs
 	@SuppressWarnings( "unchecked" )
 	final static public PlanarImg< UnsignedByteType, ByteArray > unsignedBytes( final long... dim )
 	{
-		return ( PlanarImg< UnsignedByteType, ByteArray > ) new PlanarImgFactory< UnsignedByteType >().create( dim, new UnsignedByteType() );
+		return ( PlanarImg< UnsignedByteType, ByteArray > ) new PlanarImgFactory<>( new UnsignedByteType() ).create( dim );
 	}
 
 	/**
@@ -90,7 +90,7 @@ final public class PlanarImgs
 	@SuppressWarnings( "unchecked" )
 	final static public PlanarImg< ByteType, ByteArray > bytes( final long... dim )
 	{
-		return ( PlanarImg< ByteType, ByteArray > ) new PlanarImgFactory< ByteType >().create( dim, new ByteType() );
+		return ( PlanarImg< ByteType, ByteArray > ) new PlanarImgFactory<>( new ByteType() ).create( dim );
 	}
 
 	/**
@@ -100,7 +100,7 @@ final public class PlanarImgs
 	@SuppressWarnings( "unchecked" )
 	final static public PlanarImg< UnsignedShortType, ShortArray > unsignedShorts( final long... dim )
 	{
-		return ( PlanarImg< UnsignedShortType, ShortArray > ) new PlanarImgFactory< UnsignedShortType >().create( dim, new UnsignedShortType() );
+		return ( PlanarImg< UnsignedShortType, ShortArray > ) new PlanarImgFactory<>( new UnsignedShortType() ).create( dim );
 	}
 
 	/**
@@ -109,7 +109,7 @@ final public class PlanarImgs
 	@SuppressWarnings( "unchecked" )
 	final static public PlanarImg< ShortType, ShortArray > shorts( final long... dim )
 	{
-		return ( PlanarImg< ShortType, ShortArray > ) new PlanarImgFactory< ShortType >().create( dim, new ShortType() );
+		return ( PlanarImg< ShortType, ShortArray > ) new PlanarImgFactory<>( new ShortType() ).create( dim );
 	}
 
 	/**
@@ -118,7 +118,7 @@ final public class PlanarImgs
 	@SuppressWarnings( "unchecked" )
 	final static public PlanarImg< UnsignedIntType, IntArray > unsignedInts( final long... dim )
 	{
-		return ( PlanarImg< UnsignedIntType, IntArray > ) new PlanarImgFactory< UnsignedIntType >().create( dim, new UnsignedIntType() );
+		return ( PlanarImg< UnsignedIntType, IntArray > ) new PlanarImgFactory<>( new UnsignedIntType() ).create( dim );
 	}
 
 	/**
@@ -127,7 +127,7 @@ final public class PlanarImgs
 	@SuppressWarnings( "unchecked" )
 	final static public PlanarImg< IntType, IntArray > ints( final long... dim )
 	{
-		return ( PlanarImg< IntType, IntArray > ) new PlanarImgFactory< IntType >().create( dim, new IntType() );
+		return ( PlanarImg< IntType, IntArray > ) new PlanarImgFactory<>( new IntType() ).create( dim );
 	}
 
 	/**
@@ -136,7 +136,7 @@ final public class PlanarImgs
 	@SuppressWarnings( "unchecked" )
 	final static public PlanarImg< LongType, LongArray > longs( final long... dim )
 	{
-		return ( PlanarImg< LongType, LongArray > ) new PlanarImgFactory< LongType >().create( dim, new LongType() );
+		return ( PlanarImg< LongType, LongArray > ) new PlanarImgFactory<>( new LongType() ).create( dim );
 	}
 
 	/**
@@ -145,7 +145,7 @@ final public class PlanarImgs
 	@SuppressWarnings( "unchecked" )
 	final static public PlanarImg< BitType, LongArray > bits( final long... dim )
 	{
-		return ( PlanarImg< BitType, LongArray > ) new PlanarImgFactory< BitType >().create( dim, new BitType() );
+		return ( PlanarImg< BitType, LongArray > ) new PlanarImgFactory<>( new BitType() ).create( dim );
 	}
 
 	/**
@@ -154,7 +154,7 @@ final public class PlanarImgs
 	@SuppressWarnings( "unchecked" )
 	final static public PlanarImg< FloatType, FloatArray > floats( final long... dim )
 	{
-		return ( PlanarImg< FloatType, FloatArray > ) new PlanarImgFactory< FloatType >().create( dim, new FloatType() );
+		return ( PlanarImg< FloatType, FloatArray > ) new PlanarImgFactory<>( new FloatType() ).create( dim );
 	}
 
 	/**
@@ -163,7 +163,7 @@ final public class PlanarImgs
 	@SuppressWarnings( "unchecked" )
 	final static public PlanarImg< DoubleType, DoubleArray > doubles( final long... dim )
 	{
-		return ( PlanarImg< DoubleType, DoubleArray > ) new PlanarImgFactory< DoubleType >().create( dim, new DoubleType() );
+		return ( PlanarImg< DoubleType, DoubleArray > ) new PlanarImgFactory<>( new DoubleType() ).create( dim );
 	}
 
 	/**
@@ -172,7 +172,7 @@ final public class PlanarImgs
 	@SuppressWarnings( "unchecked" )
 	final static public PlanarImg< ARGBType, IntArray > argbs( final long... dim )
 	{
-		return ( PlanarImg< ARGBType, IntArray > ) new PlanarImgFactory< ARGBType >().create( dim, new ARGBType() );
+		return ( PlanarImg< ARGBType, IntArray > ) new PlanarImgFactory<>( new ARGBType() ).create( dim );
 	}
 
 	/**
@@ -182,7 +182,7 @@ final public class PlanarImgs
 	@SuppressWarnings( "unchecked" )
 	final static public PlanarImg< ComplexFloatType, FloatArray > complexFloats( final long... dim )
 	{
-		return ( PlanarImg< ComplexFloatType, FloatArray > ) new PlanarImgFactory< ComplexFloatType >().create( dim, new ComplexFloatType() );
+		return ( PlanarImg< ComplexFloatType, FloatArray > ) new PlanarImgFactory<>( new ComplexFloatType() ).create( dim );
 	}
 
 	/**
@@ -192,6 +192,6 @@ final public class PlanarImgs
 	@SuppressWarnings( "unchecked" )
 	final static public PlanarImg< ComplexDoubleType, DoubleArray > complexDoubles( final long... dim )
 	{
-		return ( PlanarImg< ComplexDoubleType, DoubleArray > ) new PlanarImgFactory< ComplexDoubleType >().create( dim, new ComplexDoubleType() );
+		return ( PlanarImg< ComplexDoubleType, DoubleArray > ) new PlanarImgFactory<>( new ComplexDoubleType() ).create( dim );
 	}
 }

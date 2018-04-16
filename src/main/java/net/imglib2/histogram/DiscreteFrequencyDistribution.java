@@ -81,7 +81,7 @@ public class DiscreteFrequencyDistribution implements Img< LongType >
 
 		// then build object
 
-		counts = new ArrayImgFactory< LongType >().create( binCounts, new LongType() );
+		counts = new ArrayImgFactory<>( new LongType() ).create( binCounts );
 
 		accessor = counts.randomAccess();
 

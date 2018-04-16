@@ -103,7 +103,7 @@ public final class NtreeImg< T extends NativeType< T >, A extends NtreeAccess< ?
 	@Override
 	public ImgFactory< T > factory()
 	{
-		return new NtreeImgFactory<>();
+		return new NtreeImgFactory<>( linkedType );
 	}
 
 	@Override
@@ -111,7 +111,7 @@ public final class NtreeImg< T extends NativeType< T >, A extends NtreeAccess< ?
 	{
 		// TODO: More efficient way to create a copy of the img
 		@SuppressWarnings( "unchecked" )
-		final NtreeImg< T, A > copy = ( NtreeImg< T, A > ) factory().create( dimension, firstElement().createVariable() );
+		final NtreeImg< T, A > copy = ( NtreeImg< T, A > ) factory().create( dimension );
 
 		final NtreeCursor< T > source = this.cursor();
 		final NtreeCursor< T > target = copy.cursor();

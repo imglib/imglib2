@@ -284,13 +284,13 @@ public class PlanarImg< T extends NativeType< T >, A extends ArrayDataAccess< A 
 	@Override
 	public PlanarImgFactory< T > factory()
 	{
-		return new PlanarImgFactory< T >();
+		return new PlanarImgFactory<>( linkedType );
 	}
 
 	@Override
 	public PlanarImg< T, ? > copy()
 	{
-		final PlanarImg< T, ? > copy = factory().create( dimension, firstElement().createVariable() );
+		final PlanarImg< T, ? > copy = factory().create( dimension );
 
 		final PlanarCursor< T > cursor1 = this.cursor();
 		final PlanarCursor< T > cursor2 = copy.cursor();

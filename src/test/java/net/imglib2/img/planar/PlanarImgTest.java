@@ -58,11 +58,11 @@ public class PlanarImgTest
 		for ( int i = 0; i < dim.length; ++i )
 		{
 			assertTrue( "ArrayImg vs PlanarImg failed for dim = " + Util.printCoordinates( dim[ i ] ),
-					ImgTestHelper.testImg( dim[ i ], new ArrayImgFactory< FloatType >(), new PlanarImgFactory< FloatType >() ) );
+					ImgTestHelper.testImg( dim[ i ], new ArrayImgFactory<>( new FloatType() ), new PlanarImgFactory<>( new FloatType() ) ) );
 			assertTrue( "PlanarImg vs ArrayImg failed for dim = " + Util.printCoordinates( dim[ i ] ),
-					ImgTestHelper.testImg( dim[ i ], new PlanarImgFactory< FloatType >(), new ArrayImgFactory< FloatType >() ) );
+					ImgTestHelper.testImg( dim[ i ], new PlanarImgFactory<>( new FloatType() ), new ArrayImgFactory<>( new FloatType() ) ) );
 			assertTrue( "PlanarImg vs PlanarImg failed for dim = " + Util.printCoordinates( dim[ i ] ),
-					ImgTestHelper.testImg( dim[ i ], new PlanarImgFactory< FloatType >(), new PlanarImgFactory< FloatType >() ) );
+					ImgTestHelper.testImg( dim[ i ], new PlanarImgFactory<>( new FloatType() ), new PlanarImgFactory<>( new FloatType() ) ) );
 		}
 	}
 }

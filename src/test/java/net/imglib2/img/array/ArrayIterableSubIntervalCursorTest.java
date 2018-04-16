@@ -90,7 +90,7 @@ public class ArrayIterableSubIntervalCursorTest extends AbstractSubIntervalItera
 			intDataSum += intData[ i ];
 		}
 
-		img = ( ArrayImg< IntType, ? > ) new ArrayImgFactory< IntType >().create( dimensions, new IntType() );
+		img = new ArrayImgFactory<>( new IntType() ).create( dimensions );
 
 		long[] pos = new long[ dimensions.length ];
 		RandomAccess< IntType > a = img.randomAccess();

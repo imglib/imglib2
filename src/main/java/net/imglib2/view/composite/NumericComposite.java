@@ -81,9 +81,9 @@ public class NumericComposite< T extends NumericType< T > > extends AbstractNume
 		final T t = sourceAccess.get();
 		final Img< T > img;
 		if ( NativeType.class.isInstance( t ) )
-			img = new ArrayImgFactory().create( new long[] { length }, ( NativeType ) t );
+			img = new ArrayImgFactory( ( NativeType ) t ).create( length );
 		else
-			img = new ListImgFactory< T >().create( new long[]{ length }, t );
+			img = new ListImgFactory<>( t ).create( length );
 		return new NumericComposite< T >( img.randomAccess(), length );
 	}
 

@@ -273,8 +273,8 @@ public class HistogramNdTest
 	@Test
 	public void testRgbHist()
 	{
-		final ArrayImgFactory< ARGBType > factory = new ArrayImgFactory< ARGBType >();
-		final Img< ARGBType > img = factory.create( new long[] { 100, 200 }, new ARGBType() );
+		final ArrayImgFactory< ARGBType > factory = new ArrayImgFactory<>( new ARGBType() );
+		final Img< ARGBType > img = factory.create( 100, 200 );
 		for ( final ARGBType v : img )
 		{
 			v.set( ( int ) ( Math.random() * Integer.MAX_VALUE ) );

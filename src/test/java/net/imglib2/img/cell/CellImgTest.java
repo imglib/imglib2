@@ -60,11 +60,11 @@ public class CellImgTest
 			if ( dim[ i ].length > 1 )
 			{
 				assertTrue( "ArrayImg vs CellImg failed for dim = " + Util.printCoordinates( dim[ i ] ),
-						ImgTestHelper.testImg( dim[ i ], new ArrayImgFactory< FloatType >(), new CellImgFactory< FloatType >( 10 ) ) );
+						ImgTestHelper.testImg( dim[ i ], new ArrayImgFactory<>( new FloatType() ), new CellImgFactory<>( new FloatType(), 10 ) ) );
 				assertTrue( "CellImg vs ArrayImg failed for dim = " + Util.printCoordinates( dim[ i ] ),
-						ImgTestHelper.testImg( dim[ i ], new CellImgFactory< FloatType >(), new ArrayImgFactory< FloatType >() ) );
+						ImgTestHelper.testImg( dim[ i ], new CellImgFactory<>( new FloatType() ), new ArrayImgFactory<>( new FloatType() ) ) );
 				assertTrue( "CellImg vs CellImg failed for dim = " + Util.printCoordinates( dim[ i ] ),
-						ImgTestHelper.testImg( dim[ i ], new CellImgFactory< FloatType >( 5 ), new CellImgFactory< FloatType >() ) );
+						ImgTestHelper.testImg( dim[ i ], new CellImgFactory<>( new FloatType(), 5 ), new CellImgFactory<>( new FloatType() ) ) );
 			}
 		}
 	}

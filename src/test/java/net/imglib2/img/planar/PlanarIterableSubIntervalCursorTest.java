@@ -93,7 +93,7 @@ public class PlanarIterableSubIntervalCursorTest extends AbstractSubIntervalIter
 			intData[ i ] = random.nextInt();
 		}
 
-		img = ( PlanarImg< IntType, ? > ) new PlanarImgFactory< IntType >().create( dimensions, new IntType() );
+		img = new PlanarImgFactory<>( new IntType() ).create( dimensions );
 
 		long[] pos = new long[ dimensions.length ];
 		RandomAccess< IntType > a = img.randomAccess();

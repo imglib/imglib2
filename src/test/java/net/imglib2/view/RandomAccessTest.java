@@ -56,7 +56,7 @@ public class RandomAccessTest
 	public void setUp()
 	{
 		final long[] dimension = new long[] { 100, 60, 10, 30, 50 };
-		img = new ArrayImgFactory< UnsignedByteType >().create( dimension, new UnsignedByteType() );
+		img = new ArrayImgFactory<>( new UnsignedByteType() ).create( dimension );
 	}
 
 	@Test

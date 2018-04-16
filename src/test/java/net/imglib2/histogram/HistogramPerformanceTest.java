@@ -117,8 +117,8 @@ public class HistogramPerformanceTest< T extends IntegerType< T > & NativeType< 
 
 	private Img< T > createImage( final T type, final int max )
 	{
-		final ImgFactory< T > imFactory = new ArrayImgFactory< T >();
-		final Img< T > img = imFactory.create( DIMS, type );
+		final ImgFactory< T > imFactory = new ArrayImgFactory<>( type );
+		final Img< T > img = imFactory.create( DIMS );
 
 		// populate image with random samples
 		for ( final T t : img )

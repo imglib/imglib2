@@ -81,7 +81,7 @@ public class ArrayRandomAccessBenchmark
 			intDataSum += intData[ i ];
 		}
 
-		intImg = new ArrayImgFactory< IntType >().create( dimensions, new IntType() );
+		intImg = new ArrayImgFactory<>( new IntType() ).create( dimensions );
 	}
 
 	/**
@@ -182,7 +182,7 @@ public class ArrayRandomAccessBenchmark
 		} );
 		randomAccessBenchmark.intData = null;
 
-		randomAccessBenchmark.intImgCopy = new ArrayImgFactory< IntType >().create( randomAccessBenchmark.dimensions, new IntType() );
+		randomAccessBenchmark.intImgCopy = new ArrayImgFactory<>( new IntType() ).create( randomAccessBenchmark.dimensions );
 		System.out.println( "benchmarking copy to array" );
 		benchmark( new Benchmark()
 		{

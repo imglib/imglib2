@@ -64,7 +64,7 @@ public class StackRandomAccessibleIntervalsTest
 	public void setUp()
 	{
 		final long[] dimension = new long[] { 10, 10, 10 };
-		img = new ArrayImgFactory< UnsignedByteType >().create( dimension, new UnsignedByteType() );
+		img = new ArrayImgFactory<>( new UnsignedByteType() ).create( dimension );
 
 		final Cursor< UnsignedByteType > inCursor = img.localizingCursor();
 

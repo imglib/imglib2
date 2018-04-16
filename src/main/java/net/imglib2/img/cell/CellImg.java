@@ -25,7 +25,7 @@ public class CellImg< T extends NativeType< T >, A > extends AbstractCellImg< T,
 	public CellImg< T, A > copy()
 	{
 		@SuppressWarnings( "unchecked" )
-		final CellImg< T, A > copy = ( CellImg< T, A > ) factory().create( dimension, firstElement().createVariable() );
+		final CellImg< T, A > copy = ( CellImg< T, A > ) factory().create( dimension );
 		copyDataTo( copy );
 		return copy;
 	}

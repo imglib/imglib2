@@ -78,7 +78,7 @@ public class CellRandomAccessBenchmark
 			intDataSum += intData[ i ];
 		}
 
-		intImg = new CellImgFactory< IntType >( 40 ).create( dimensions, new IntType() );
+		intImg = new CellImgFactory<>( new IntType(), 40 ).create( dimensions );
 	}
 
 	/**
@@ -132,7 +132,7 @@ public class CellRandomAccessBenchmark
 		} );
 		randomAccessBenchmark.intData = null;
 
-		randomAccessBenchmark.intImgCopy = new CellImgFactory< IntType >( 32 ).create( randomAccessBenchmark.dimensions, new IntType() );
+		randomAccessBenchmark.intImgCopy = new CellImgFactory<>( new IntType(), 32 ).create( randomAccessBenchmark.dimensions );
 		System.out.println( "benchmarking copy to smaller" );
 		BenchmarkHelper.benchmarkAndPrint( 20, false, new Runnable()
 		{
@@ -144,7 +144,7 @@ public class CellRandomAccessBenchmark
 		} );
 		randomAccessBenchmark.intImgCopy = null;
 
-		randomAccessBenchmark.intImgCopy = new CellImgFactory< IntType >( 50 ).create( randomAccessBenchmark.dimensions, new IntType() );
+		randomAccessBenchmark.intImgCopy = new CellImgFactory<>( new IntType(), 50 ).create( randomAccessBenchmark.dimensions );
 		System.out.println( "benchmarking copy to larger" );
 		BenchmarkHelper.benchmarkAndPrint( 20, false, new Runnable()
 		{
@@ -156,7 +156,7 @@ public class CellRandomAccessBenchmark
 		} );
 		randomAccessBenchmark.intImgCopy = null;
 
-		randomAccessBenchmark.intImgCopy = new CellImgFactory< IntType >( new int[] { 32, 64, 16 } ).create( randomAccessBenchmark.dimensions, new IntType() );
+		randomAccessBenchmark.intImgCopy = new CellImgFactory<>( new IntType(), 32, 64, 16 ).create( randomAccessBenchmark.dimensions );
 		System.out.println( "benchmarking copy to mixed" );
 		BenchmarkHelper.benchmarkAndPrint( 20, false, new Runnable()
 		{

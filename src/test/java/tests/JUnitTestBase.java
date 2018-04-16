@@ -212,8 +212,8 @@ public class JUnitTestBase
 	 */
 	protected < T extends RealType< T > & NativeType< T >> Img< T > makeImage( final T type, final Function function, final long[] dims )
 	{
-		final ImgFactory< T > factory = new ArrayImgFactory< T >();
-		final Img< T > result = factory.create( dims, type );
+		final ImgFactory< T > factory = new ArrayImgFactory<>( type );
+		final Img< T > result = factory.create( dims );
 		final Cursor< T > cursor = result.cursor();
 		final long[] pos = new long[ cursor.numDimensions() ];
 		while ( cursor.hasNext() )

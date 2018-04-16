@@ -56,8 +56,8 @@ public class Unsigned12BitTypeTest
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception
 	{
-		
-		img = new ArrayImgFactory< Unsigned12BitType >().create( new long[]{ 10, 20, 30 }, new Unsigned12BitType() );
+
+		img = new ArrayImgFactory<>( new Unsigned12BitType() ).create( 10, 20, 30 );
 	}
 
 	/**

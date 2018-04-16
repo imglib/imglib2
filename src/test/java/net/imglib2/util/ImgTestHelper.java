@@ -77,8 +77,8 @@ public class ImgTestHelper
 	public static boolean testImg( final long[] size, final ImgFactory< FloatType > factory1, final ImgFactory< FloatType > factory2 )
 	{
 		// create the image
-		final Img< FloatType > img1 = factory1.create( size, new FloatType() );
-		final Img< FloatType > img2 = factory2.create( size, new FloatType() );
+		final Img< FloatType > img1 = factory1.create( size );
+		final Img< FloatType > img2 = factory2.create( size );
 
 		final int numDimensions = img1.numDimensions();
 
