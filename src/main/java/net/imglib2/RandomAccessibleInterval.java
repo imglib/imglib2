@@ -47,6 +47,15 @@ package net.imglib2;
  * By convention, a RandomAccessibleInterval represents a function that is
  * <em>defined at all coordinates of the interval</em>.
  * </p>
+ * <p>
+ * There is no guarantee regarding whether the function is defined outside the
+ * bounds of its interval. If the function is known to be defined for
+ * out-of-bounds values in a particular interval, the
+ * {@link #randomAccess(Interval)} method should be used to access those
+ * values&mdash;whereas the {@link #randomAccess()} (no arguments) method <em>is
+ * not intended to access out-of-bounds values</em>. See
+ * {@link RandomAccessible#randomAccess()} for related discussion.
+ * </p>
  *
  * @author Stephan Saalfeld
  */
