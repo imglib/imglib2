@@ -34,8 +34,6 @@
 
 package net.imglib2.img;
 
-import java.util.function.Supplier;
-
 import net.imglib2.Dimensions;
 import net.imglib2.type.NativeType;
 import net.imglib2.util.Intervals;
@@ -49,11 +47,6 @@ public abstract class NativeImgFactory< T extends NativeType< T > > extends ImgF
 	public NativeImgFactory( final T type )
 	{
 		super( type );
-	}
-
-	public NativeImgFactory( final Supplier< T > supplier )
-	{
-		super( supplier );
 	}
 
 	/**

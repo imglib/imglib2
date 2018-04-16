@@ -34,8 +34,6 @@
 
 package net.imglib2.img.cell;
 
-import java.util.function.Supplier;
-
 import net.imglib2.Dimensions;
 import net.imglib2.exception.IncompatibleTypeException;
 import net.imglib2.img.ImgFactory;
@@ -67,19 +65,7 @@ public class CellImgFactory< T extends NativeType< T > > extends NativeImgFactor
 		this( type, 10 );
 	}
 
-	public CellImgFactory( final Supplier< T > type )
-	{
-		this( type, 10 );
-	}
-
 	public CellImgFactory( final T type, final int... cellDimensions )
-	{
-		super( type );
-		defaultCellDimensions = cellDimensions.clone();
-		verifyDimensions( defaultCellDimensions );
-	}
-
-	public CellImgFactory( final Supplier< T > type, final int... cellDimensions )
 	{
 		super( type );
 		defaultCellDimensions = cellDimensions.clone();

@@ -34,8 +34,6 @@
 
 package net.imglib2.img.array;
 
-import java.util.function.Supplier;
-
 import net.imglib2.Dimensions;
 import net.imglib2.exception.IncompatibleTypeException;
 import net.imglib2.img.AbstractImg;
@@ -61,11 +59,6 @@ public class ArrayImgFactory< T extends NativeType< T > > extends NativeImgFacto
 	public ArrayImgFactory( final T type )
 	{
 		super( type );
-	}
-
-	public ArrayImgFactory( final Supplier< T > supplier )
-	{
-		super( supplier );
 	}
 
 	@Override

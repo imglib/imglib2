@@ -35,7 +35,6 @@
 package net.imglib2.img.list;
 
 import java.util.ArrayList;
-import java.util.function.Supplier;
 
 import net.imglib2.Dimensions;
 import net.imglib2.exception.IncompatibleTypeException;
@@ -64,11 +63,6 @@ public class ListImgFactory< T > extends ImgFactory< T >
 	public ListImgFactory( final T type )
 	{
 		super( type );
-	}
-
-	public ListImgFactory( final Supplier< T > supplier )
-	{
-		super( supplier );
 	}
 
 	@Override

@@ -56,11 +56,6 @@ public abstract class ImgFactory< T >
 		this.type = type;
 	}
 
-	public ImgFactory( final Supplier< T > supplier )
-	{
-		this.type = supplier.get();
-	}
-
 	public T type()
 	{
 		return type;

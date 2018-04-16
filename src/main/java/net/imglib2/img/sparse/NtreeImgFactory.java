@@ -34,8 +34,6 @@
 
 package net.imglib2.img.sparse;
 
-import java.util.function.Supplier;
-
 import net.imglib2.Dimensions;
 import net.imglib2.exception.IncompatibleTypeException;
 import net.imglib2.img.ImgFactory;
@@ -55,11 +53,6 @@ public class NtreeImgFactory< T extends NativeType< T > > extends NativeImgFacto
 	public NtreeImgFactory( final T type )
 	{
 		super( type );
-	}
-
-	public NtreeImgFactory( final Supplier< T > supplier )
-	{
-		super( supplier );
 	}
 
 	@Override

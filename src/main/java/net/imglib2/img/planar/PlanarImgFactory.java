@@ -34,8 +34,6 @@
 
 package net.imglib2.img.planar;
 
-import java.util.function.Supplier;
-
 import net.imglib2.Dimensions;
 import net.imglib2.exception.IncompatibleTypeException;
 import net.imglib2.img.ImgFactory;
@@ -62,11 +60,6 @@ public class PlanarImgFactory< T extends NativeType< T > > extends NativeImgFact
 	public PlanarImgFactory( final T type )
 	{
 		super( type );
-	}
-
-	public PlanarImgFactory( final Supplier< T > supplier )
-	{
-		super( supplier );
 	}
 
 	@Override
