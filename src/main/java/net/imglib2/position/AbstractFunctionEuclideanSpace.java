@@ -2,7 +2,7 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2018 Tobias Pietzsch, Stephan Preibisch, Stephan Saalfeld,
+ * Copyright (C) 2009 - 2017 Tobias Pietzsch, Stephan Preibisch, Stephan Saalfeld,
  * John Bogovic, Albert Cardona, Barry DeZonia, Christian Dietz, Jan Funke,
  * Aivar Grislis, Jonathan Hale, Grant Harris, Stefan Helfrich, Mark Hiner,
  * Martin Horn, Steffen Jaensch, Lee Kamentsky, Larry Lindsey, Melissa Linkert,
@@ -11,13 +11,13 @@
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice,
  *    this list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  *    this list of conditions and the following disclaimer in the documentation
  *    and/or other materials provided with the distribution.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -34,80 +34,59 @@
 
 package net.imglib2.position;
 
-import net.imglib2.RealInterval;
-import net.imglib2.RealPoint;
-import net.imglib2.RealRandomAccess;
-import net.imglib2.RealRandomAccessible;
-import net.imglib2.type.numeric.real.DoubleType;
+import java.util.function.BiConsumer;
+import java.util.function.Supplier;
+
+import net.imglib2.EuclideanSpace;
 
 /**
- * A {@link RealRandomAccessible} over the <em>d</em>-th position of real
- * coordinate space.
+ * Abstract base class for functions that generate values through a
+ * {@link BiConsumer}.
  *
- * <p>
- * TODO deprecate his implementation for
- * <code>
- * RealRandomAccessible<DoubleType> realPositionRealRandomAccessible = new FunctionRealRandomAccessible<DoubleType>(3, (x, y) -> y.set(x.getDoublePosition(d)), DoubleType::new);
- * </code>
- * </p>
- *
- * @author Stephan Saalfeld &lt;saalfelds@janelia.hhmi.org&gt;
+ * @author Stephan Saalfeld
  */
-public class RealPositionRealRandomAccessible implements RealRandomAccessible< DoubleType >
+public abstract class AbstractFunctionEuclideanSpace< P, T > implements EuclideanSpace
 {
-	private final int n;
-	private final int d;
+	protected final int n;
+	protected final Supplier< BiConsumer< P, T > > functionSupplier;
+	protected final Supplier< T > typeSupplier;
 
-	public RealPositionRealRandomAccessible( final int numDimensions, final int d )
+	/**
+	 * Constructor for stateful functions that cannot be used concurrently.
+	 *
+	 * @param n
+	 * @param functionSupplier
+	 * @param typeSupplier
+	 */
+	public AbstractFunctionEuclideanSpace(
+			final int n,
+			final Supplier< BiConsumer< P, T > > functionSupplier,
+			final Supplier< T > typeSupplier )
 	{
-		this.n = numDimensions;
-		this.d = d;
+		this.n = n;
+		this.functionSupplier = functionSupplier;
+		this.typeSupplier = typeSupplier;
 	}
 
-	public class RealPositionRealRandomAccess extends RealPoint implements RealRandomAccess< DoubleType >
+	/**
+	 * Simplified constructor if the same function is stateless and can be used
+	 * concurrently.
+	 *
+	 * @param n
+	 * @param function
+	 * @param typeSupplier
+	 */
+	public AbstractFunctionEuclideanSpace(
+			final int n,
+			final BiConsumer< P, T > function,
+			final Supplier< T > typeSupplier )
 	{
-		private final DoubleType t = new DoubleType();
-
-		public RealPositionRealRandomAccess()
-		{
-			super( RealPositionRealRandomAccessible.this.n );
-		}
-
-		@Override
-		public DoubleType get()
-		{
-			t.set( position[ d ] );
-			return t;
-		}
-
-		@Override
-		public RealPositionRealRandomAccess copy()
-		{
-			return new RealPositionRealRandomAccess();
-		}
-
-		@Override
-		public RealPositionRealRandomAccess copyRealRandomAccess()
-		{
-			return copy();
-		}
+		this(n, () -> function, typeSupplier);
 	}
 
 	@Override
 	public int numDimensions()
 	{
 		return n;
-	}
-
-	@Override
-	public RealPositionRealRandomAccess realRandomAccess()
-	{
-		return new RealPositionRealRandomAccess();
-	}
-
-	@Override
-	public RealPositionRealRandomAccess realRandomAccess( final RealInterval interval )
-	{
-		return realRandomAccess();
 	}
 }

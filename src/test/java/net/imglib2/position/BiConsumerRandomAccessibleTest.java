@@ -2,7 +2,7 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2018 Tobias Pietzsch, Stephan Preibisch, Stephan Saalfeld,
+ * Copyright (C) 2009 - 2017 Tobias Pietzsch, Stephan Preibisch, Stephan Saalfeld,
  * John Bogovic, Albert Cardona, Barry DeZonia, Christian Dietz, Jan Funke,
  * Aivar Grislis, Jonathan Hale, Grant Harris, Stefan Helfrich, Mark Hiner,
  * Martin Horn, Steffen Jaensch, Lee Kamentsky, Larry Lindsey, Melissa Linkert,
@@ -11,13 +11,13 @@
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice,
  *    this list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  *    this list of conditions and the following disclaimer in the documentation
  *    and/or other materials provided with the distribution.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -34,80 +34,38 @@
 
 package net.imglib2.position;
 
-import net.imglib2.Interval;
-import net.imglib2.Point;
-import net.imglib2.RandomAccess;
-import net.imglib2.RandomAccessible;
-import net.imglib2.type.numeric.integer.LongType;
+import static org.junit.Assert.assertTrue;
 
-/**
- * A {@link RandomAccessible} over the <em>d</em>-th position of discrete
- * coordinate space.
- *
- * <p>
- * TODO deprecate his implementation for
- * <code>
- * RandomAccessible<LongType> positionRandomAccessible = new FunctionRandomAccessible<LongType>(3, (x, y) -> y.set(x.getLongPosition(d)), LongType::new);
- * </code>
- * </p>
- *
- * @author Stephan Saalfeld &lt;saalfelds@janelia.hhmi.org&gt;
- */
-public class PositionRandomAccessible implements RandomAccessible< LongType >
-{
-	private final int n;
-	private final int d;
+import org.junit.Test;
 
-	public PositionRandomAccessible( final int numDimensions, final int d )
-	{
-		this.n = numDimensions;
-		this.d = d;
+import net.imglib2.type.logic.BoolType;
+
+
+public class BiConsumerRandomAccessibleTest {
+
+	@Test
+	public void test() {
+
+		final FunctionRandomAccessible< BoolType > function = new FunctionRandomAccessible< BoolType >(
+				4,
+				(pos, val) -> val.set(
+						pos.getDoublePosition(0) > 0 &&
+						pos.getDoublePosition(1) > 1 &&
+						pos.getDoublePosition(2) > 2 &&
+						pos.getDoublePosition(3) > 3 ),
+				BoolType::new );
+
+		FunctionRandomAccessible<BoolType>.FunctionRandomAccess access = function.randomAccess();
+		access.setPosition( new long[] {1, 2, 3, 4} );
+		assertTrue( access.get().get() );
+		access.setPosition( new long[] {0, 2, 3, 4} );
+		assertTrue( !access.get().get() );
+		access.setPosition( new long[] {1, 0, 3, 4} );
+		assertTrue( !access.get().get() );
+		access.setPosition( new long[] {1, 2, -10, 4} );
+		assertTrue( !access.get().get() );
+		access.setPosition( new long[] {10, 50, 5, 5} );
+		assertTrue( access.get().get() );
 	}
 
-	public class PositionRandomAccess extends Point implements RandomAccess< LongType >
-	{
-		private final LongType t = new LongType();
-
-		public PositionRandomAccess()
-		{
-			super( PositionRandomAccessible.this.n );
-		}
-
-		@Override
-		public LongType get()
-		{
-			t.set( position[ d ] );
-			return t;
-		}
-
-		@Override
-		public PositionRandomAccess copy()
-		{
-			return new PositionRandomAccess();
-		}
-
-		@Override
-		public RandomAccess< LongType > copyRandomAccess()
-		{
-			return copy();
-		}
-	}
-
-	@Override
-	public int numDimensions()
-	{
-		return n;
-	}
-
-	@Override
-	public RandomAccess< LongType > randomAccess()
-	{
-		return new PositionRandomAccess();
-	}
-
-	@Override
-	public RandomAccess< LongType > randomAccess( final Interval interval )
-	{
-		return randomAccess();
-	}
 }
