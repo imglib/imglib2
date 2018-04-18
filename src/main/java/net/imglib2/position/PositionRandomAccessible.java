@@ -46,9 +46,7 @@ import net.imglib2.type.numeric.integer.LongType;
  *
  * <p>
  * TODO deprecate his implementation for
- * <code>
- * RandomAccessible<LongType> positionRandomAccessible = new FunctionRandomAccessible<LongType>(3, (x, y) -> y.set(x.getLongPosition(d)), LongType::new);
- * </code>
+ * {@code RandomAccessible<LongType> positionRandomAccessible = new FunctionRandomAccessible<LongType>(3, (x, y) -> y.set(x.getLongPosition(d)), LongType::new);}
  * </p>
  *
  * @author Stephan Saalfeld &lt;saalfelds@janelia.hhmi.org&gt;
