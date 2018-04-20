@@ -2,7 +2,7 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2016 Tobias Pietzsch, Stephan Preibisch, Stephan Saalfeld,
+ * Copyright (C) 2009 - 2018 Tobias Pietzsch, Stephan Preibisch, Stephan Saalfeld,
  * John Bogovic, Albert Cardona, Barry DeZonia, Christian Dietz, Jan Funke,
  * Aivar Grislis, Jonathan Hale, Grant Harris, Stefan Helfrich, Mark Hiner,
  * Martin Horn, Steffen Jaensch, Lee Kamentsky, Larry Lindsey, Melissa Linkert,
@@ -47,9 +47,9 @@ public final class ShortNtree implements ShortAccess, NtreeAccess< Short, ShortN
 
 	private final Ntree< Short > data;
 
-	public ShortNtree( final long[] dimenions, final long[] position, final short value )
+	public ShortNtree( final long[] dimensions, final long[] position, final short value )
 	{
-		this.data = new Ntree< Short >( dimenions, value );
+		this.data = new Ntree<>( dimensions, value );
 		this.position = position;
 	}
 

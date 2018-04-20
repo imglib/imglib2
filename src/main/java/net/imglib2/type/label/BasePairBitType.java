@@ -2,7 +2,7 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2016 Tobias Pietzsch, Stephan Preibisch, Stephan Saalfeld,
+ * Copyright (C) 2009 - 2018 Tobias Pietzsch, Stephan Preibisch, Stephan Saalfeld,
  * John Bogovic, Albert Cardona, Barry DeZonia, Christian Dietz, Jan Funke,
  * Aivar Grislis, Jonathan Hale, Grant Harris, Stefan Helfrich, Mark Hiner,
  * Martin Horn, Steffen Jaensch, Lee Kamentsky, Larry Lindsey, Melissa Linkert,
@@ -11,13 +11,13 @@
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- *
+ * 
  * 1. Redistributions of source code must retain the above copyright notice,
  *    this list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  *    this list of conditions and the following disclaimer in the documentation
  *    and/or other materials provided with the distribution.
- *
+ * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -35,10 +35,10 @@
 package net.imglib2.type.label;
 
 import net.imglib2.img.NativeImg;
-import net.imglib2.img.NativeImgFactory;
 import net.imglib2.img.basictypeaccess.LongAccess;
 import net.imglib2.type.AbstractBit64Type;
 import net.imglib2.type.BasePairType;
+import net.imglib2.type.NativeTypeFactory;
 
 /**
  * Representation of base pairs using 3 bits per entry, supported characters: gap, N, A, T, G, C, U
@@ -70,23 +70,15 @@ public class BasePairBitType extends AbstractBit64Type< BasePairBitType > implem
 	}
 
 	@Override
-	public NativeImg< BasePairBitType, ? extends LongAccess > createSuitableNativeImg( final NativeImgFactory< BasePairBitType > storageFactory, final long dim[] )
-	{
-		// create the container
-		final NativeImg< BasePairBitType, ? extends LongAccess > container = storageFactory.createLongInstance( dim, getEntitiesPerPixel() );
-
-		// create a Type that is linked to the container
-		final BasePairBitType linkedType = new BasePairBitType( container );
-
-		// pass it to the NativeContainer
-		container.setLinkedType( linkedType );
-
-		return container;
-	}
-
-	@Override
 	public BasePairBitType duplicateTypeOnSameNativeImg() { return new BasePairBitType( img ); }
 
+	private static final NativeTypeFactory< BasePairBitType, LongAccess > typeFactory = NativeTypeFactory.LONG( img -> new BasePairBitType( img ) );
+
+	@Override
+	public NativeTypeFactory< BasePairBitType, LongAccess > getNativeTypeFactory()
+	{
+		return typeFactory;
+	}
 
 	@Override
 	public void set( final Base base )

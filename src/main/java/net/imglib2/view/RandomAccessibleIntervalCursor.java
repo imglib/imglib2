@@ -2,7 +2,7 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2016 Tobias Pietzsch, Stephan Preibisch, Stephan Saalfeld,
+ * Copyright (C) 2009 - 2018 Tobias Pietzsch, Stephan Preibisch, Stephan Saalfeld,
  * John Bogovic, Albert Cardona, Barry DeZonia, Christian Dietz, Jan Funke,
  * Aivar Grislis, Jonathan Hale, Grant Harris, Stefan Helfrich, Mark Hiner,
  * Martin Horn, Steffen Jaensch, Lee Kamentsky, Larry Lindsey, Melissa Linkert,
@@ -109,9 +109,10 @@ public final class RandomAccessibleIntervalCursor< T > extends AbstractInterval 
 	@Override
 	public void fwd()
 	{
-		randomAccess.fwd( 0 );
 		if ( ++index > maxIndexOnLine )
 			nextLine();
+		else
+			randomAccess.fwd( 0 );
 	}
 
 	private void nextLine()

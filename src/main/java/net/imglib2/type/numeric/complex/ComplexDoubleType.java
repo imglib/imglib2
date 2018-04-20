@@ -2,7 +2,7 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2016 Tobias Pietzsch, Stephan Preibisch, Stephan Saalfeld,
+ * Copyright (C) 2009 - 2018 Tobias Pietzsch, Stephan Preibisch, Stephan Saalfeld,
  * John Bogovic, Albert Cardona, Barry DeZonia, Christian Dietz, Jan Funke,
  * Aivar Grislis, Jonathan Hale, Grant Harris, Stefan Helfrich, Mark Hiner,
  * Martin Horn, Steffen Jaensch, Lee Kamentsky, Larry Lindsey, Melissa Linkert,
@@ -11,13 +11,13 @@
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- *
+ * 
  * 1. Redistributions of source code must retain the above copyright notice,
  *    this list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  *    this list of conditions and the following disclaimer in the documentation
  *    and/or other materials provided with the distribution.
- *
+ * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -35,10 +35,10 @@
 package net.imglib2.type.numeric.complex;
 
 import net.imglib2.img.NativeImg;
-import net.imglib2.img.NativeImgFactory;
 import net.imglib2.img.basictypeaccess.DoubleAccess;
 import net.imglib2.img.basictypeaccess.array.DoubleArray;
 import net.imglib2.type.NativeType;
+import net.imglib2.type.NativeTypeFactory;
 import net.imglib2.util.Fraction;
 
 /**
@@ -87,21 +87,6 @@ public class ComplexDoubleType extends AbstractComplexType< ComplexDoubleType > 
 	}
 
 	@Override
-	public NativeImg< ComplexDoubleType, ? extends DoubleAccess > createSuitableNativeImg( final NativeImgFactory< ComplexDoubleType > storageFactory, final long dim[] )
-	{
-		// create the container
-		final NativeImg<ComplexDoubleType, ? extends DoubleAccess> container = storageFactory.createDoubleInstance( dim, new Fraction( 2, 1 ) );
-
-		// create a Type that is linked to the container
-		final ComplexDoubleType linkedType = new ComplexDoubleType( container );
-
-		// pass it to the NativeContainer
-		container.setLinkedType( linkedType );
-
-		return container;
-	}
-
-	@Override
 	public void updateContainer( final Object c )
 	{
 		dataAccess = img.update( c );
@@ -111,6 +96,14 @@ public class ComplexDoubleType extends AbstractComplexType< ComplexDoubleType > 
 	public ComplexDoubleType duplicateTypeOnSameNativeImg()
 	{
 		return new ComplexDoubleType( img );
+	}
+
+	private static final NativeTypeFactory< ComplexDoubleType, DoubleAccess > typeFactory = NativeTypeFactory.DOUBLE( img -> new ComplexDoubleType( img ) );
+
+	@Override
+	public NativeTypeFactory< ComplexDoubleType, DoubleAccess > getNativeTypeFactory()
+	{
+		return typeFactory;
 	}
 
 	@Override
@@ -187,7 +180,10 @@ public class ComplexDoubleType extends AbstractComplexType< ComplexDoubleType > 
 	}
 
 	@Override
-	public Fraction getEntitiesPerPixel() { return new Fraction( 2, 1 ); }
+	public Fraction getEntitiesPerPixel()
+	{
+		return new Fraction( 2, 1 );
+	}
 
 	@Override
 	public void updateIndex( final int index )
@@ -241,8 +237,7 @@ public class ComplexDoubleType extends AbstractComplexType< ComplexDoubleType > 
 	@Override
 	public boolean valueEquals( final ComplexDoubleType t )
 	{
-		return
-				( getRealDouble() == t.getRealDouble() ) &&
+		return ( getRealDouble() == t.getRealDouble() ) &&
 				( getImaginaryDouble() == t.getImaginaryDouble() );
 	}
 }

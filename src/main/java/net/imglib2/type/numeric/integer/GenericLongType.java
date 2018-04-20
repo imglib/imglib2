@@ -2,7 +2,7 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2016 Tobias Pietzsch, Stephan Preibisch, Stephan Saalfeld,
+ * Copyright (C) 2009 - 2018 Tobias Pietzsch, Stephan Preibisch, Stephan Saalfeld,
  * John Bogovic, Albert Cardona, Barry DeZonia, Christian Dietz, Jan Funke,
  * Aivar Grislis, Jonathan Hale, Grant Harris, Stefan Helfrich, Mark Hiner,
  * Martin Horn, Steffen Jaensch, Lee Kamentsky, Larry Lindsey, Melissa Linkert,
@@ -11,13 +11,13 @@
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- *
+ * 
  * 1. Redistributions of source code must retain the above copyright notice,
  *    this list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  *    this list of conditions and the following disclaimer in the documentation
  *    and/or other materials provided with the distribution.
- *
+ * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -37,6 +37,7 @@ import net.imglib2.img.NativeImg;
 import net.imglib2.img.basictypeaccess.LongAccess;
 import net.imglib2.img.basictypeaccess.array.LongArray;
 import net.imglib2.type.NativeType;
+import net.imglib2.type.NativeTypeFactory;
 import net.imglib2.util.Fraction;
 import net.imglib2.util.Util;
 
@@ -45,8 +46,8 @@ import net.imglib2.util.Util;
  *
  * @author Mark Hiner
  */
-public abstract class GenericLongType < T extends GenericLongType< T >> extends AbstractIntegerType< T > implements NativeType< T > {
-
+public abstract class GenericLongType< T extends GenericLongType< T > > extends AbstractIntegerType< T > implements NativeType< T >
+{
 	int i = 0;
 
 	final protected NativeImg< ?, ? extends LongAccess > img;
@@ -82,13 +83,19 @@ public abstract class GenericLongType < T extends GenericLongType< T >> extends 
 	}
 
 	@Override
-	public Fraction getEntitiesPerPixel() { return new Fraction(); }
+	public Fraction getEntitiesPerPixel()
+	{
+		return new Fraction();
+	}
 
 	@Override
 	public void updateContainer( final Object c )
 	{
 		dataAccess = img.update( c );
 	}
+
+	@Override
+	public abstract NativeTypeFactory< T, LongAccess > getNativeTypeFactory();
 
 	/**
 	 * @deprecated Use {@link #getLong()} instead.
@@ -125,7 +132,6 @@ public abstract class GenericLongType < T extends GenericLongType< T >> extends 
 	{
 		dataAccess.setValue( i, f );
 	}
-
 
 	@Override
 	public void mul( final float c )
@@ -167,7 +173,7 @@ public abstract class GenericLongType < T extends GenericLongType< T >> extends 
 	public int hashCode()
 	{
 		// NB: Use the same hash code as java.lang.Long#hashCode().
-		return ( (Long)getLong() ).hashCode();
+		return ( ( Long ) getLong() ).hashCode();
 	}
 
 	@Override

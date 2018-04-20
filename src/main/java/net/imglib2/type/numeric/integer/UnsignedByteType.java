@@ -2,7 +2,7 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2016 Tobias Pietzsch, Stephan Preibisch, Stephan Saalfeld,
+ * Copyright (C) 2009 - 2018 Tobias Pietzsch, Stephan Preibisch, Stephan Saalfeld,
  * John Bogovic, Albert Cardona, Barry DeZonia, Christian Dietz, Jan Funke,
  * Aivar Grislis, Jonathan Hale, Grant Harris, Stefan Helfrich, Mark Hiner,
  * Martin Horn, Steffen Jaensch, Lee Kamentsky, Larry Lindsey, Melissa Linkert,
@@ -11,13 +11,13 @@
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- *
+ * 
  * 1. Redistributions of source code must retain the above copyright notice,
  *    this list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  *    this list of conditions and the following disclaimer in the documentation
  *    and/or other materials provided with the distribution.
- *
+ * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -37,9 +37,8 @@ package net.imglib2.type.numeric.integer;
 import java.math.BigInteger;
 
 import net.imglib2.img.NativeImg;
-import net.imglib2.img.NativeImgFactory;
 import net.imglib2.img.basictypeaccess.ByteAccess;
-import net.imglib2.util.Fraction;
+import net.imglib2.type.NativeTypeFactory;
 import net.imglib2.util.Util;
 
 /**
@@ -95,24 +94,17 @@ public class UnsignedByteType extends GenericByteType< UnsignedByteType >
 	}
 
 	@Override
-	public NativeImg< UnsignedByteType, ? extends ByteAccess > createSuitableNativeImg( final NativeImgFactory< UnsignedByteType > storageFactory, final long dim[] )
-	{
-		// create the container
-		final NativeImg<UnsignedByteType, ? extends ByteAccess> container = storageFactory.createByteInstance( dim, new Fraction() );
-
-		// create a Type that is linked to the container
-		final UnsignedByteType linkedType = new UnsignedByteType( container );
-
-		// pass it to the NativeContainer
-		container.setLinkedType( linkedType );
-
-		return container;
-	}
-
-	@Override
 	public UnsignedByteType duplicateTypeOnSameNativeImg()
 	{
 		return new UnsignedByteType( img );
+	}
+
+	private final NativeTypeFactory< UnsignedByteType, ByteAccess > typeFactory = NativeTypeFactory.BYTE( img -> new UnsignedByteType( img ) );
+
+	@Override
+	public NativeTypeFactory< UnsignedByteType, ByteAccess > getNativeTypeFactory()
+	{
+		return typeFactory;
 	}
 
 	@Override
@@ -195,7 +187,7 @@ public class UnsignedByteType extends GenericByteType< UnsignedByteType >
 	}
 
 	@Override
-	public void setBigInteger(final BigInteger b)
+	public void setBigInteger( final BigInteger b )
 	{
 		set( b.intValue() );
 	}

@@ -2,7 +2,7 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2016 Tobias Pietzsch, Stephan Preibisch, Stephan Saalfeld,
+ * Copyright (C) 2009 - 2018 Tobias Pietzsch, Stephan Preibisch, Stephan Saalfeld,
  * John Bogovic, Albert Cardona, Barry DeZonia, Christian Dietz, Jan Funke,
  * Aivar Grislis, Jonathan Hale, Grant Harris, Stefan Helfrich, Mark Hiner,
  * Martin Horn, Steffen Jaensch, Lee Kamentsky, Larry Lindsey, Melissa Linkert,
@@ -11,13 +11,13 @@
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- *
+ * 
  * 1. Redistributions of source code must retain the above copyright notice,
  *    this list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  *    this list of conditions and the following disclaimer in the documentation
  *    and/or other materials provided with the distribution.
- *
+ * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -37,7 +37,6 @@ package net.imglib2.type;
 import net.imglib2.Cursor;
 import net.imglib2.RandomAccess;
 import net.imglib2.img.NativeImg;
-import net.imglib2.img.NativeImgFactory;
 import net.imglib2.img.array.ArrayImg;
 import net.imglib2.img.cell.CellCursor;
 import net.imglib2.img.cell.CellImg;
@@ -68,37 +67,19 @@ import net.imglib2.util.Fraction;
  * @author Stephan Saalfeld
  * @author Tobias Pietzsch
  */
-public interface NativeType< T extends NativeType< T >> extends Type< T >
+public interface NativeType< T extends NativeType< T > > extends Type< T >
 {
 	/**
 	 * Get the number of entities in the storage array required to store one
 	 * pixel value. A pixel value may be spread over several or less than one
 	 * entity. For example, a complex number may require 2 entries of a float[]
-	 * array to store one pixel. Or a 12-bit type might need 12/64th entries
-	 * of a long[] array.
+	 * array to store one pixel. Or a 12-bit type might need 12/64th entries of
+	 * a long[] array.
 	 *
 	 * @return the number of storage type entities required to store one pixel
 	 *         value.
 	 */
 	public Fraction getEntitiesPerPixel();
-
-	/**
-	 * The {@link NativeType} creates the {@link NativeImg} used for storing
-	 * image data; based on the given storage strategy and its size. It
-	 * basically only decides here which BasicType it uses (float, int, byte,
-	 * bit, ...) and how many entities per pixel it needs (e.g. 2 floats per
-	 * pixel for a complex number). This enables the separation of containers
-	 * and the basic types.
-	 *
-	 * @param storageFactory
-	 *            which storage strategy is used
-	 * @param dim
-	 *            the dimensions
-	 *
-	 * @return the instantiated {@link NativeImg} where only the {@link Type}
-	 *         knows the BasicType it contains.
-	 */
-	public NativeImg< T, ? > createSuitableNativeImg( final NativeImgFactory< T > storageFactory, final long[] dim );
 
 	/**
 	 * Creates a new {@link NativeType} which stores in the same physical array.
@@ -108,6 +89,8 @@ public interface NativeType< T extends NativeType< T >> extends Type< T >
 	 *         {@link NativeImg}
 	 */
 	public T duplicateTypeOnSameNativeImg();
+
+	public NativeTypeFactory< T, ? > getNativeTypeFactory();
 
 	/**
 	 * This method is used by an accessor (e.g., a {@link Cursor}) to request an

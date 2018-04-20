@@ -2,7 +2,7 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2016 Tobias Pietzsch, Stephan Preibisch, Stephan Saalfeld,
+ * Copyright (C) 2009 - 2018 Tobias Pietzsch, Stephan Preibisch, Stephan Saalfeld,
  * John Bogovic, Albert Cardona, Barry DeZonia, Christian Dietz, Jan Funke,
  * Aivar Grislis, Jonathan Hale, Grant Harris, Stefan Helfrich, Mark Hiner,
  * Martin Horn, Steffen Jaensch, Lee Kamentsky, Larry Lindsey, Melissa Linkert,
@@ -11,13 +11,13 @@
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- *
+ * 
  * 1. Redistributions of source code must retain the above copyright notice,
  *    this list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  *    this list of conditions and the following disclaimer in the documentation
  *    and/or other materials provided with the distribution.
- *
+ * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -37,10 +37,9 @@ package net.imglib2.type.numeric.integer;
 import java.math.BigInteger;
 
 import net.imglib2.img.NativeImg;
-import net.imglib2.img.NativeImgFactory;
 import net.imglib2.img.basictypeaccess.LongAccess;
 import net.imglib2.img.basictypeaccess.array.LongArray;
-import net.imglib2.util.Fraction;
+import net.imglib2.type.NativeTypeFactory;
 import net.imglib2.util.Util;
 
 /**
@@ -86,24 +85,17 @@ public class UnsignedLongType extends GenericLongType< UnsignedLongType >
 	}
 
 	@Override
-	public NativeImg< UnsignedLongType, ? extends LongAccess > createSuitableNativeImg( final NativeImgFactory< UnsignedLongType > storageFactory, final long dim[] )
-	{
-		// create the container
-		final NativeImg< UnsignedLongType, ? extends LongAccess > container = storageFactory.createLongInstance( dim, new Fraction() );
-
-		// create a Type that is linked to the container
-		final UnsignedLongType linkedType = new UnsignedLongType( container );
-
-		// pass it to the NativeContainer
-		container.setLinkedType( linkedType );
-
-		return container;
-	}
-
-	@Override
 	public UnsignedLongType duplicateTypeOnSameNativeImg()
 	{
 		return new UnsignedLongType( img );
+	}
+
+	private static final NativeTypeFactory< UnsignedLongType, LongAccess > typeFactory = NativeTypeFactory.LONG( img -> new UnsignedLongType( img ) );
+
+	@Override
+	public NativeTypeFactory< UnsignedLongType, LongAccess > getNativeTypeFactory()
+	{
+		return typeFactory;
 	}
 
 	@Override
@@ -137,8 +129,8 @@ public class UnsignedLongType extends GenericLongType< UnsignedLongType >
 	 * Unsigned division of {@code d1} by {@code d2}.
 	 *
 	 * See "Division by Invariant Integers using Multiplication", by Torbjorn
-	 * Granlund and Peter L. Montgomery, 1994.
-	 * <a href="http://gmplib.org/~tege/divcnst-pldi94.pdf">http://gmplib.org/~tege/divcnst-pldi94.pdf</a>
+	 * Granlund and Peter L. Montgomery, 1994. <a href=
+	 * "http://gmplib.org/~tege/divcnst-pldi94.pdf">http://gmplib.org/~tege/divcnst-pldi94.pdf</a>
 	 *
 	 * @throws ArithmeticException
 	 *             when c equals zero.

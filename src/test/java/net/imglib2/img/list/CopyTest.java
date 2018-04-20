@@ -2,7 +2,7 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2016 Tobias Pietzsch, Stephan Preibisch, Stephan Saalfeld,
+ * Copyright (C) 2009 - 2018 Tobias Pietzsch, Stephan Preibisch, Stephan Saalfeld,
  * John Bogovic, Albert Cardona, Barry DeZonia, Christian Dietz, Jan Funke,
  * Aivar Grislis, Jonathan Hale, Grant Harris, Stefan Helfrich, Mark Hiner,
  * Martin Horn, Steffen Jaensch, Lee Kamentsky, Larry Lindsey, Melissa Linkert,
@@ -83,7 +83,7 @@ public class CopyTest
 			intDataSum += intData[ i ];
 		}
 
-		intImg = new ListImgFactory< IntType >().create( dimensions, new IntType() );
+		intImg = new ListImgFactory<>( new IntType() ).create( dimensions );
 
 		final long[] pos = new long[ dimensions.length ];
 		final RandomAccess< IntType > a = intImg.randomAccess();
@@ -144,7 +144,7 @@ public class CopyTest
 	@Test
 	public void testCopyToArrayImgWithSourceIteration()
 	{
-		final ArrayImg< IntType, ? > array = new ArrayImgFactory< IntType >().create( dimensions, new IntType() );
+		final ArrayImg< IntType, ? > array = new ArrayImgFactory<>( new IntType() ).create( dimensions );
 		copyWithSourceIteration( intImg, array );
 		assertArrayEquals( intData, getImgAsInts( array ) );
 	}
@@ -152,7 +152,7 @@ public class CopyTest
 	@Test
 	public void testCopyToArrayImgWithDestIteration()
 	{
-		final ArrayImg< IntType, ? > array = new ArrayImgFactory< IntType >().create( dimensions, new IntType() );
+		final ArrayImg< IntType, ? > array = new ArrayImgFactory<>( new IntType() ).create( dimensions );
 		copyWithDestIteration( intImg, array );
 		assertArrayEquals( intData, getImgAsInts( array ) );
 	}
@@ -160,7 +160,7 @@ public class CopyTest
 	@Test
 	public void testCopyToListImgWithSourceIteration()
 	{
-		final ListImg< IntType > listImg = new ListImgFactory< IntType >().create( dimensions, new IntType() );
+		final ListImg< IntType > listImg = new ListImgFactory<>( new IntType() ).create( dimensions );
 		copyWithSourceIteration( intImg, listImg );
 		assertArrayEquals( intData, getImgAsInts( listImg ) );
 	}
@@ -168,7 +168,7 @@ public class CopyTest
 	@Test
 	public void testCopyToPlanarImgWithDestIteration()
 	{
-		final ListImg< IntType > listImg = new ListImgFactory< IntType >().create( dimensions, new IntType() );
+		final ListImg< IntType > listImg = new ListImgFactory<>( new IntType() ).create( dimensions );
 		copyWithDestIteration( intImg, listImg );
 		assertArrayEquals( intData, getImgAsInts( listImg ) );
 	}

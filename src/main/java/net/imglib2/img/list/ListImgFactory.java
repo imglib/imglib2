@@ -2,7 +2,7 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2016 Tobias Pietzsch, Stephan Preibisch, Stephan Saalfeld,
+ * Copyright (C) 2009 - 2018 Tobias Pietzsch, Stephan Preibisch, Stephan Saalfeld,
  * John Bogovic, Albert Cardona, Barry DeZonia, Christian Dietz, Jan Funke,
  * Aivar Grislis, Jonathan Hale, Grant Harris, Stefan Helfrich, Mark Hiner,
  * Martin Horn, Steffen Jaensch, Lee Kamentsky, Larry Lindsey, Melissa Linkert,
@@ -36,9 +36,12 @@ package net.imglib2.img.list;
 
 import java.util.ArrayList;
 
+import net.imglib2.Dimensions;
 import net.imglib2.exception.IncompatibleTypeException;
 import net.imglib2.img.ImgFactory;
 import net.imglib2.type.Type;
+import net.imglib2.util.Intervals;
+import net.imglib2.util.Util;
 
 /**
  * {@link ImgFactory} for {@link ListImg} of any type T. You can us {@link Type}
@@ -47,26 +50,69 @@ import net.imglib2.type.Type;
  * every reference in the {@link ListImg}. Instead, you can use the
  * {@link ListCursor#set(Object)} and {@link ListRandomAccess#set(Object)}
  * methods to alter the underlying {@link ArrayList}.
- * 
+ *
  * @param <T>
  *            The value type of the pixels.
- * 
+ *
  * @author Stephan Preibisch
  * @author Stephan Saalfeld
  * @author Tobias Pietzsch
  */
 public class ListImgFactory< T > extends ImgFactory< T >
 {
-	@Override
-	public ListImg< T > create( final long[] dim, final T type )
+	public ListImgFactory( final T type )
 	{
-		return new ListImg< T >( dim, type );
+		super( type );
 	}
 
-	@SuppressWarnings( { "unchecked", "rawtypes" } )
+	@Override
+	public ListImg< T > create( final long... dimensions )
+	{
+		return new ListImg<>( dimensions, type() );
+	}
+
+	@Override
+	public ListImg< T > create( final Dimensions dimensions )
+	{
+		return create( Intervals.dimensionsAsLongArray( dimensions ) );
+	}
+
+	@Override
+	public ListImg< T > create( final int[] dimensions )
+	{
+		return create( Util.int2long( dimensions ) );
+	}
+
 	@Override
 	public < S > ImgFactory< S > imgFactory( final S type ) throws IncompatibleTypeException
 	{
-		return new ListImgFactory();
+		return new ListImgFactory<>( type );
 	}
+
+
+	/*
+	 * -----------------------------------------------------------------------
+	 *
+	 * Deprecated API.
+	 *
+	 * Supports backwards compatibility with ImgFactories that are constructed
+	 * without a type instance or supplier.
+	 *
+	 * -----------------------------------------------------------------------
+	 */
+
+	@Deprecated
+	public ListImgFactory()
+	{
+		super();
+	}
+
+	@Deprecated
+	@Override
+	public ListImg< T > create( final long[] dim, final T type )
+	{
+		cache( type );
+		return new ListImg<>( dim, type );
+	}
+
 }

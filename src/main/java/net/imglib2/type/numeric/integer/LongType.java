@@ -2,7 +2,7 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2016 Tobias Pietzsch, Stephan Preibisch, Stephan Saalfeld,
+ * Copyright (C) 2009 - 2018 Tobias Pietzsch, Stephan Preibisch, Stephan Saalfeld,
  * John Bogovic, Albert Cardona, Barry DeZonia, Christian Dietz, Jan Funke,
  * Aivar Grislis, Jonathan Hale, Grant Harris, Stefan Helfrich, Mark Hiner,
  * Martin Horn, Steffen Jaensch, Lee Kamentsky, Larry Lindsey, Melissa Linkert,
@@ -11,13 +11,13 @@
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- *
+ * 
  * 1. Redistributions of source code must retain the above copyright notice,
  *    this list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  *    this list of conditions and the following disclaimer in the documentation
  *    and/or other materials provided with the distribution.
- *
+ * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -37,9 +37,8 @@ package net.imglib2.type.numeric.integer;
 import java.math.BigInteger;
 
 import net.imglib2.img.NativeImg;
-import net.imglib2.img.NativeImgFactory;
 import net.imglib2.img.basictypeaccess.LongAccess;
-import net.imglib2.util.Fraction;
+import net.imglib2.type.NativeTypeFactory;
 
 /**
  * TODO
@@ -48,7 +47,7 @@ import net.imglib2.util.Fraction;
  * @author Stephan Saalfeld
  * @author Mark Hiner
  */
-public class LongType extends GenericLongType<LongType>
+public class LongType extends GenericLongType< LongType >
 {
 	// this is the constructor if you want it to read from an array
 	public LongType( final NativeImg< ?, ? extends LongAccess > longStorage )
@@ -59,7 +58,7 @@ public class LongType extends GenericLongType<LongType>
 	// this is the constructor if you want to specify the dataAccess
 	public LongType( final LongAccess access )
 	{
-		super ( access );
+		super( access );
 	}
 
 	// this is the constructor if you want it to be a variable
@@ -75,24 +74,17 @@ public class LongType extends GenericLongType<LongType>
 	}
 
 	@Override
-	public NativeImg< LongType, ? extends LongAccess > createSuitableNativeImg( final NativeImgFactory< LongType > storageFactory, final long dim[] )
-	{
-		// create the container
-		final NativeImg<LongType, ? extends LongAccess> container = storageFactory.createLongInstance( dim, new Fraction() );
-
-		// create a Type that is linked to the container
-		final LongType linkedType = new LongType( container );
-
-		// pass it to the NativeContainer
-		container.setLinkedType( linkedType );
-
-		return container;
-	}
-
-	@Override
 	public LongType duplicateTypeOnSameNativeImg()
 	{
 		return new LongType( img );
+	}
+
+	private static final NativeTypeFactory< LongType, LongAccess > typeFactory = NativeTypeFactory.LONG( img -> new LongType( img ) );
+
+	@Override
+	public NativeTypeFactory< LongType, LongAccess > getNativeTypeFactory()
+	{
+		return typeFactory;
 	}
 
 	public long get()
@@ -136,7 +128,7 @@ public class LongType extends GenericLongType<LongType>
 	}
 
 	@Override
-	public void setBigInteger( BigInteger b )
+	public void setBigInteger( final BigInteger b )
 	{
 		set( b.longValue() );
 	}
@@ -158,7 +150,7 @@ public class LongType extends GenericLongType<LongType>
 	{
 		// NB: Use the same hash code as java.lang.Long#hashCode().
 		final long value = get();
-		return (int) (value ^ (value >>> 32));
+		return ( int ) ( value ^ ( value >>> 32 ) );
 	}
 
 	@Override

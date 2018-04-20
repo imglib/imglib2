@@ -2,7 +2,7 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2016 Tobias Pietzsch, Stephan Preibisch, Stephan Saalfeld,
+ * Copyright (C) 2009 - 2018 Tobias Pietzsch, Stephan Preibisch, Stephan Saalfeld,
  * John Bogovic, Albert Cardona, Barry DeZonia, Christian Dietz, Jan Funke,
  * Aivar Grislis, Jonathan Hale, Grant Harris, Stefan Helfrich, Mark Hiner,
  * Martin Horn, Steffen Jaensch, Lee Kamentsky, Larry Lindsey, Melissa Linkert,
@@ -77,8 +77,8 @@ public class ImgTestHelper
 	public static boolean testImg( final long[] size, final ImgFactory< FloatType > factory1, final ImgFactory< FloatType > factory2 )
 	{
 		// create the image
-		final Img< FloatType > img1 = factory1.create( size, new FloatType() );
-		final Img< FloatType > img2 = factory2.create( size, new FloatType() );
+		final Img< FloatType > img1 = factory1.create( size );
+		final Img< FloatType > img2 = factory2.create( size );
 
 		final int numDimensions = img1.numDimensions();
 

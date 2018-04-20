@@ -2,7 +2,7 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2016 Tobias Pietzsch, Stephan Preibisch, Stephan Saalfeld,
+ * Copyright (C) 2009 - 2018 Tobias Pietzsch, Stephan Preibisch, Stephan Saalfeld,
  * John Bogovic, Albert Cardona, Barry DeZonia, Christian Dietz, Jan Funke,
  * Aivar Grislis, Jonathan Hale, Grant Harris, Stefan Helfrich, Mark Hiner,
  * Martin Horn, Steffen Jaensch, Lee Kamentsky, Larry Lindsey, Melissa Linkert,
@@ -11,13 +11,13 @@
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- *
+ * 
  * 1. Redistributions of source code must retain the above copyright notice,
  *    this list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  *    this list of conditions and the following disclaimer in the documentation
  *    and/or other materials provided with the distribution.
- *
+ * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -83,7 +83,7 @@ public class CopyTest
 			intDataSum += intData[ i ];
 		}
 
-		intImg = new CellImgFactory< IntType >( 10 ).create( dimensions, new IntType() );
+		intImg = new CellImgFactory<>( new IntType(), 10 ).create( dimensions );
 
 		final long[] pos = new long[ dimensions.length ];
 		final RandomAccess< IntType > a = intImg.randomAccess();
@@ -154,7 +154,7 @@ public class CopyTest
 	@Test
 	public void testCopyToArrayContainerWithSourceIteration()
 	{
-		final ArrayImg< IntType, ? > array = new ArrayImgFactory< IntType >().create( dimensions, new IntType() );
+		final ArrayImg< IntType, ? > array = new ArrayImgFactory<>( new IntType() ).create( dimensions );
 		copyWithSourceIteration( intImg, array );
 		assertArrayEquals( intData, getImgAsInts( array ) );
 	}
@@ -162,7 +162,7 @@ public class CopyTest
 	@Test
 	public void testCopyToArrayContainerWithDestIteration()
 	{
-		final ArrayImg< IntType, ? > array = new ArrayImgFactory< IntType >().create( dimensions, new IntType() );
+		final ArrayImg< IntType, ? > array = new ArrayImgFactory<>( new IntType() ).create( dimensions );
 		copyWithDestIteration( intImg, array );
 		assertArrayEquals( intData, getImgAsInts( array ) );
 	}
@@ -170,7 +170,7 @@ public class CopyTest
 	@Test
 	public void testCopyToCellContainerWithSourceIteration()
 	{
-		final CellImg< IntType, ? > cellImg = new CellImgFactory< IntType >( new int[] { 2, 7, 4 } ).create( dimensions, new IntType() );
+		final CellImg< IntType, ? > cellImg = new CellImgFactory<>( new IntType(), new int[] { 2, 7, 4 } ).create( dimensions );
 		copyWithSourceIteration( intImg, cellImg );
 		assertArrayEquals( intData, getImgAsInts( cellImg ) );
 	}
@@ -178,7 +178,7 @@ public class CopyTest
 	@Test
 	public void testCopyToCellContainerWithDestIteration()
 	{
-		final CellImg< IntType, ? > cellImg = new CellImgFactory< IntType >( new int[] { 2, 7, 4 } ).create( dimensions, new IntType() );
+		final CellImg< IntType, ? > cellImg = new CellImgFactory<>( new IntType(), new int[] { 2, 7, 4 } ).create( dimensions );
 		copyWithDestIteration( intImg, cellImg );
 		assertArrayEquals( intData, getImgAsInts( cellImg ) );
 	}
@@ -186,8 +186,8 @@ public class CopyTest
 	@Test
 	public void testCopyArrayToArrayWithIterationBoth()
 	{
-		final ArrayImg< IntType, ? > array2 = new ArrayImgFactory< IntType >().create( dimensions, new IntType() );
-		final ArrayImg< IntType, ? > array = new ArrayImgFactory< IntType >().create( dimensions, new IntType() );
+		final ArrayImg< IntType, ? > array2 = new ArrayImgFactory<>( new IntType() ).create( dimensions );
+		final ArrayImg< IntType, ? > array = new ArrayImgFactory<>( new IntType() ).create( dimensions );
 		copyWithDestIteration( intImg, array2 );
 		copyWithIterationBoth( array2, array );
 		assertArrayEquals( intData, getImgAsInts( array ) );

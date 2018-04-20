@@ -2,7 +2,7 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2016 Tobias Pietzsch, Stephan Preibisch, Stephan Saalfeld,
+ * Copyright (C) 2009 - 2018 Tobias Pietzsch, Stephan Preibisch, Stephan Saalfeld,
  * John Bogovic, Albert Cardona, Barry DeZonia, Christian Dietz, Jan Funke,
  * Aivar Grislis, Jonathan Hale, Grant Harris, Stefan Helfrich, Mark Hiner,
  * Martin Horn, Steffen Jaensch, Lee Kamentsky, Larry Lindsey, Melissa Linkert,
@@ -11,13 +11,13 @@
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- *
+ * 
  * 1. Redistributions of source code must retain the above copyright notice,
  *    this list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  *    this list of conditions and the following disclaimer in the documentation
  *    and/or other materials provided with the distribution.
- *
+ * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -35,10 +35,10 @@
 package net.imglib2.type.numeric.complex;
 
 import net.imglib2.img.NativeImg;
-import net.imglib2.img.NativeImgFactory;
 import net.imglib2.img.basictypeaccess.FloatAccess;
 import net.imglib2.img.basictypeaccess.array.FloatArray;
 import net.imglib2.type.NativeType;
+import net.imglib2.type.NativeTypeFactory;
 import net.imglib2.util.Fraction;
 
 /**
@@ -87,21 +87,6 @@ public class ComplexFloatType extends AbstractComplexType< ComplexFloatType > im
 	}
 
 	@Override
-	public NativeImg< ComplexFloatType, ? extends FloatAccess > createSuitableNativeImg( final NativeImgFactory< ComplexFloatType > storageFactory, final long dim[] )
-	{
-		// create the container
-		final NativeImg<ComplexFloatType, ? extends FloatAccess> container = storageFactory.createFloatInstance( dim, new Fraction( 2, 1 ) );
-
-		// create a Type that is linked to the container
-		final ComplexFloatType linkedType = new ComplexFloatType( container );
-
-		// pass it to the NativeContainer
-		container.setLinkedType( linkedType );
-
-		return container;
-	}
-
-	@Override
 	public void updateContainer( final Object c )
 	{
 		dataAccess = img.update( c );
@@ -111,6 +96,14 @@ public class ComplexFloatType extends AbstractComplexType< ComplexFloatType > im
 	public ComplexFloatType duplicateTypeOnSameNativeImg()
 	{
 		return new ComplexFloatType( img );
+	}
+
+	private static final NativeTypeFactory< ComplexFloatType, FloatAccess > typeFactory = NativeTypeFactory.FLOAT( img -> new ComplexFloatType( img ) );
+
+	@Override
+	public NativeTypeFactory< ComplexFloatType, FloatAccess > getNativeTypeFactory()
+	{
+		return typeFactory;
 	}
 
 	@Override
@@ -241,7 +234,10 @@ public class ComplexFloatType extends AbstractComplexType< ComplexFloatType > im
 	}
 
 	@Override
-	public Fraction getEntitiesPerPixel() { return new Fraction( 2, 1 ); }
+	public Fraction getEntitiesPerPixel()
+	{
+		return new Fraction( 2, 1 );
+	}
 
 	@Override
 	public void updateIndex( final int index )
@@ -295,8 +291,7 @@ public class ComplexFloatType extends AbstractComplexType< ComplexFloatType > im
 	@Override
 	public boolean valueEquals( final ComplexFloatType t )
 	{
-		return
-				( getRealFloat() == t.getRealFloat() ) &&
+		return ( getRealFloat() == t.getRealFloat() ) &&
 				( getImaginaryFloat() == t.getImaginaryFloat() );
 	}
 }

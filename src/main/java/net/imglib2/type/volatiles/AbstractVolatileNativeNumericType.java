@@ -2,7 +2,7 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2016 Tobias Pietzsch, Stephan Preibisch, Stephan Saalfeld,
+ * Copyright (C) 2009 - 2018 Tobias Pietzsch, Stephan Preibisch, Stephan Saalfeld,
  * John Bogovic, Albert Cardona, Barry DeZonia, Christian Dietz, Jan Funke,
  * Aivar Grislis, Jonathan Hale, Grant Harris, Stefan Helfrich, Mark Hiner,
  * Martin Horn, Steffen Jaensch, Lee Kamentsky, Larry Lindsey, Melissa Linkert,
@@ -11,13 +11,13 @@
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- *
+ * 
  * 1. Redistributions of source code must retain the above copyright notice,
  *    this list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  *    this list of conditions and the following disclaimer in the documentation
  *    and/or other materials provided with the distribution.
- *
+ * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -32,39 +32,72 @@
  * #L%
  */
 
-package net.imglib2.img.sparse;
+package net.imglib2.type.volatiles;
 
-import net.imglib2.img.basictypeaccess.IntAccess;
+import net.imglib2.type.NativeType;
+import net.imglib2.type.numeric.NumericType;
+import net.imglib2.util.Fraction;
 
-// TODO: REMOVE? This seems redundant with IntNTree?
 /**
- * IntAccess based on a {@link Ntree}{@code<Integer>}.
+ * Abstract base class for {@link VolatileNumericType}s that wrap
+ * {@link NativeType native} {@link NumericType}s.
  *
- * @author Tobias Pietzsch
+ * @param <N>
+ *            wrapped {@link NativeType native} {@link NumericType}.
+ * @param <T>
+ *            type of derived concrete class.
+ *
+ * @author Tobias Pietzsch &lt;tobias.pietzsch@gmail.com&gt;
+ * @author Stephan Saalfeld &lt;saalfelds@janelia.hhmi.org&gt;
  */
-public final class NtreeIntAccess implements IntAccess
+public abstract class AbstractVolatileNativeNumericType< N extends NumericType< N > & NativeType< N >, T extends AbstractVolatileNativeNumericType< N, T > >
+	extends AbstractVolatileNumericType< N, T >
+	implements NativeType< T >
 {
-	private final Ntree< Integer > ntree;
-
-	private final long[] position;
-
-	public NtreeIntAccess( final Ntree< Integer > ntree, final long[] position )
+	public AbstractVolatileNativeNumericType( final N t, final boolean valid )
 	{
-		this.ntree = ntree;
-		this.position = position;
+		super( t, valid );
 	}
 
 	@Override
-	public int getValue( final int index )
+	public Fraction getEntitiesPerPixel()
 	{
-		// ignore index, get tree position from RandomAccess/Cursor
-		return ntree.getNode( position ).getValue();
+		return t.getEntitiesPerPixel();
 	}
 
 	@Override
-	public void setValue( final int index, final int value )
+	public void updateIndex( final int i )
 	{
-		// ignore index, get tree position from RandomAccess/Cursor
-		ntree.createNodeWithValue( position, value );
+		t.updateIndex( i );
+	}
+
+	@Override
+	public int getIndex()
+	{
+		return t.getIndex();
+	}
+
+	@Override
+	public void incIndex()
+	{
+		t.incIndex();
+	}
+
+	@Override
+	public void incIndex( final int increment )
+	{
+		t.incIndex( increment );
+	}
+
+	@Override
+	public void decIndex()
+	{
+		t.decIndex();
+	}
+
+	@Override
+	public void decIndex( final int decrement )
+	{
+		t.decIndex( decrement );
 	}
 }

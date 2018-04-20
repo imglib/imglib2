@@ -2,7 +2,7 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2016 Tobias Pietzsch, Stephan Preibisch, Stephan Saalfeld,
+ * Copyright (C) 2009 - 2018 Tobias Pietzsch, Stephan Preibisch, Stephan Saalfeld,
  * John Bogovic, Albert Cardona, Barry DeZonia, Christian Dietz, Jan Funke,
  * Aivar Grislis, Jonathan Hale, Grant Harris, Stefan Helfrich, Mark Hiner,
  * Martin Horn, Steffen Jaensch, Lee Kamentsky, Larry Lindsey, Melissa Linkert,
@@ -81,7 +81,7 @@ public class ArrayRandomAccessBenchmark
 			intDataSum += intData[ i ];
 		}
 
-		intImg = new ArrayImgFactory< IntType >().create( dimensions, new IntType() );
+		intImg = new ArrayImgFactory<>( new IntType() ).create( dimensions );
 	}
 
 	/**
@@ -182,7 +182,7 @@ public class ArrayRandomAccessBenchmark
 		} );
 		randomAccessBenchmark.intData = null;
 
-		randomAccessBenchmark.intImgCopy = new ArrayImgFactory< IntType >().create( randomAccessBenchmark.dimensions, new IntType() );
+		randomAccessBenchmark.intImgCopy = new ArrayImgFactory<>( new IntType() ).create( randomAccessBenchmark.dimensions );
 		System.out.println( "benchmarking copy to array" );
 		benchmark( new Benchmark()
 		{

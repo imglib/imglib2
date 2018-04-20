@@ -2,7 +2,7 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2016 Tobias Pietzsch, Stephan Preibisch, Stephan Saalfeld,
+ * Copyright (C) 2009 - 2018 Tobias Pietzsch, Stephan Preibisch, Stephan Saalfeld,
  * John Bogovic, Albert Cardona, Barry DeZonia, Christian Dietz, Jan Funke,
  * Aivar Grislis, Jonathan Hale, Grant Harris, Stefan Helfrich, Mark Hiner,
  * Martin Horn, Steffen Jaensch, Lee Kamentsky, Larry Lindsey, Melissa Linkert,
@@ -44,7 +44,7 @@ import net.imglib2.util.Util;
  * @author Tobias Pietzsch
  * 
  */
-public final class NtreeRandomAccess< T extends NativeType< T >> implements PositionProvider, RandomAccess< T >
+public final class NtreeRandomAccess< T extends NativeType< T > > implements PositionProvider, RandomAccess< T >
 {
 	private final NtreeImg< T, ? > img;
 
@@ -128,7 +128,7 @@ public final class NtreeRandomAccess< T extends NativeType< T >> implements Posi
 	@Override
 	public NtreeRandomAccess< T > copy()
 	{
-		return new NtreeRandomAccess< T >( this );
+		return new NtreeRandomAccess<>( this );
 	}
 
 	@Override

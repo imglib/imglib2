@@ -2,7 +2,7 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2016 Tobias Pietzsch, Stephan Preibisch, Stephan Saalfeld,
+ * Copyright (C) 2009 - 2018 Tobias Pietzsch, Stephan Preibisch, Stephan Saalfeld,
  * John Bogovic, Albert Cardona, Barry DeZonia, Christian Dietz, Jan Funke,
  * Aivar Grislis, Jonathan Hale, Grant Harris, Stefan Helfrich, Mark Hiner,
  * Martin Horn, Steffen Jaensch, Lee Kamentsky, Larry Lindsey, Melissa Linkert,
@@ -117,8 +117,8 @@ public class HistogramPerformanceTest< T extends IntegerType< T > & NativeType< 
 
 	private Img< T > createImage( final T type, final int max )
 	{
-		final ImgFactory< T > imFactory = new ArrayImgFactory< T >();
-		final Img< T > img = imFactory.create( DIMS, type );
+		final ImgFactory< T > imFactory = new ArrayImgFactory<>( type );
+		final Img< T > img = imFactory.create( DIMS );
 
 		// populate image with random samples
 		for ( final T t : img )

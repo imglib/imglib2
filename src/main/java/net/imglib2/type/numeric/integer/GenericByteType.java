@@ -2,7 +2,7 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2016 Tobias Pietzsch, Stephan Preibisch, Stephan Saalfeld,
+ * Copyright (C) 2009 - 2018 Tobias Pietzsch, Stephan Preibisch, Stephan Saalfeld,
  * John Bogovic, Albert Cardona, Barry DeZonia, Christian Dietz, Jan Funke,
  * Aivar Grislis, Jonathan Hale, Grant Harris, Stefan Helfrich, Mark Hiner,
  * Martin Horn, Steffen Jaensch, Lee Kamentsky, Larry Lindsey, Melissa Linkert,
@@ -11,13 +11,13 @@
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- *
+ * 
  * 1. Redistributions of source code must retain the above copyright notice,
  *    this list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  *    this list of conditions and the following disclaimer in the documentation
  *    and/or other materials provided with the distribution.
- *
+ * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -38,6 +38,7 @@ import net.imglib2.img.NativeImg;
 import net.imglib2.img.basictypeaccess.ByteAccess;
 import net.imglib2.img.basictypeaccess.array.ByteArray;
 import net.imglib2.type.NativeType;
+import net.imglib2.type.NativeTypeFactory;
 import net.imglib2.util.Fraction;
 import net.imglib2.util.Util;
 
@@ -47,7 +48,7 @@ import net.imglib2.util.Util;
  * @author Stephan Preibisch
  * @author Stephan Saalfeld
  */
-public abstract class GenericByteType< T extends GenericByteType< T >> extends AbstractIntegerType< T > implements NativeType< T >
+public abstract class GenericByteType< T extends GenericByteType< T > > extends AbstractIntegerType< T > implements NativeType< T >
 {
 	int i = 0;
 
@@ -84,13 +85,19 @@ public abstract class GenericByteType< T extends GenericByteType< T >> extends A
 	}
 
 	@Override
-	public Fraction getEntitiesPerPixel() { return new Fraction(); }
+	public Fraction getEntitiesPerPixel()
+	{
+		return new Fraction();
+	}
 
 	@Override
 	public void updateContainer( final Object c )
 	{
 		dataAccess = img.update( c );
 	}
+
+	@Override
+	public abstract NativeTypeFactory< T, ByteAccess > getNativeTypeFactory();
 
 	/**
 	 * @deprecated Use {@link #getByte()} instead.

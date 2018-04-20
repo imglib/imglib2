@@ -2,7 +2,7 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2016 Tobias Pietzsch, Stephan Preibisch, Stephan Saalfeld,
+ * Copyright (C) 2009 - 2018 Tobias Pietzsch, Stephan Preibisch, Stephan Saalfeld,
  * John Bogovic, Albert Cardona, Barry DeZonia, Christian Dietz, Jan Funke,
  * Aivar Grislis, Jonathan Hale, Grant Harris, Stefan Helfrich, Mark Hiner,
  * Martin Horn, Steffen Jaensch, Lee Kamentsky, Larry Lindsey, Melissa Linkert,
@@ -34,50 +34,80 @@
 
 package net.imglib2.img;
 
-import net.imglib2.img.basictypeaccess.ByteAccess;
-import net.imglib2.img.basictypeaccess.CharAccess;
-import net.imglib2.img.basictypeaccess.DoubleAccess;
-import net.imglib2.img.basictypeaccess.FloatAccess;
-import net.imglib2.img.basictypeaccess.IntAccess;
-import net.imglib2.img.basictypeaccess.LongAccess;
-import net.imglib2.img.basictypeaccess.ShortAccess;
+import net.imglib2.Dimensions;
 import net.imglib2.type.NativeType;
-import net.imglib2.type.Type;
-import net.imglib2.util.Fraction;
+import net.imglib2.util.Intervals;
+import net.imglib2.util.Util;
 
 /**
- * TODO
- * 
+ * TODO: get rid of {@link NativeImgFactory}???
  */
 public abstract class NativeImgFactory< T extends NativeType< T > > extends ImgFactory< T >
 {
-	/**
-	 * This class will ask the {@link Type} to create a suitable {@link Img} for
-	 * the {@link Type} and the dimensionality.
-	 * 
-	 * {@link Type} will then call one of the abstract methods defined below to
-	 * create the {@link NativeImg}
-	 * 
-	 * @return {@link Img} - the instantiated Container
-	 */
-	@Override
-	public NativeImg< T, ? > create( final long[] dim, final T type )
+	public NativeImgFactory( final T type )
 	{
-		return type.createSuitableNativeImg( this, dim );
+		super( type );
 	}
 
-	/* basic type containers */
-	public abstract NativeImg< T, ? extends ByteAccess > createByteInstance( long[] dimensions, Fraction entitiesPerPixel );
+	/**
+	 * Create a {@link NativeImg} with the specified {@code dimensions}.
+	 *
+	 * @param dimensions
+	 *            the dimensions of the image.
+	 *
+	 * @return new {@link NativeImg} with the specified {@code dimensions}.
+	 */
+	@Override
+	public abstract NativeImg< T, ? > create( final long... dimensions );
 
-	public abstract NativeImg< T, ? extends CharAccess > createCharInstance( long[] dimensions, Fraction entitiesPerPixel );
+	/**
+	 * Create an {@code Img<T>} with the specified {@code dimensions}.
+	 *
+	 * @return new image with the specified {@code dimensions}.
+	 */
+	@Override
+	public NativeImg< T, ? > create( final Dimensions dimensions )
+	{
+		return create( Intervals.dimensionsAsLongArray( dimensions ) );
+	}
 
-	public abstract NativeImg< T, ? extends ShortAccess > createShortInstance( long[] dimensions, Fraction entitiesPerPixel );
+	/**
+	 * Create an {@code Img<T>} with the specified {@code dimensions}.
+	 *
+	 * <p>
+	 * Note: This is not a vararg function because the underlying {@code int[]}
+	 * based methods already copies the {@code int[]} dimensions into a
+	 * disposable {@code long[]} anyways. This would be an unnecessary copy for
+	 * {@code int...} varargs.
+	 * </p>
+	 *
+	 * @return new image with the specified {@code dimensions}.
+	 */
+	@Override
+	public NativeImg< T, ? > create( final int[] dimensions )
+	{
+		return create( Util.int2long( dimensions ) );
+	}
 
-	public abstract NativeImg< T, ? extends IntAccess > createIntInstance( long[] dimensions, Fraction entitiesPerPixel );
 
-	public abstract NativeImg< T, ? extends LongAccess > createLongInstance( long[] dimensions, Fraction entitiesPerPixel );
+	/*
+	 * -----------------------------------------------------------------------
+	 *
+	 * Deprecated API.
+	 *
+	 * Supports backwards compatibility with ImgFactories that are constructed
+	 * without a type instance or supplier.
+	 *
+	 * -----------------------------------------------------------------------
+	 */
 
-	public abstract NativeImg< T, ? extends FloatAccess > createFloatInstance( long[] dimensions, Fraction entitiesPerPixel );
+	@Override
+	@Deprecated
+	public abstract NativeImg< T, ? > create( final long[] dimension, final T type );
 
-	public abstract NativeImg< T, ? extends DoubleAccess > createDoubleInstance( long[] dimensions, Fraction entitiesPerPixel );
+	@Deprecated
+	public NativeImgFactory( )
+	{
+		super();
+	}
 }

@@ -2,7 +2,7 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2016 Tobias Pietzsch, Stephan Preibisch, Stephan Saalfeld,
+ * Copyright (C) 2009 - 2018 Tobias Pietzsch, Stephan Preibisch, Stephan Saalfeld,
  * John Bogovic, Albert Cardona, Barry DeZonia, Christian Dietz, Jan Funke,
  * Aivar Grislis, Jonathan Hale, Grant Harris, Stefan Helfrich, Mark Hiner,
  * Martin Horn, Steffen Jaensch, Lee Kamentsky, Larry Lindsey, Melissa Linkert,
@@ -11,13 +11,13 @@
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- *
+ * 
  * 1. Redistributions of source code must retain the above copyright notice,
  *    this list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  *    this list of conditions and the following disclaimer in the documentation
  *    and/or other materials provided with the distribution.
- *
+ * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -101,7 +101,7 @@ final public class ArrayImgs
 	@SuppressWarnings( "unchecked" )
 	final static public ArrayImg< UnsignedByteType, ByteArray > unsignedBytes( final long... dim )
 	{
-		return ( ArrayImg< UnsignedByteType, ByteArray > ) new ArrayImgFactory< UnsignedByteType >().create( dim, new UnsignedByteType() );
+		return ( ArrayImg< UnsignedByteType, ByteArray > ) new ArrayImgFactory<>( new UnsignedByteType() ).create( dim );
 	}
 
 	/**
@@ -131,7 +131,7 @@ final public class ArrayImgs
 	@SuppressWarnings( "unchecked" )
 	final static public ArrayImg< ByteType, ByteArray > bytes( final long... dim )
 	{
-		return ( ArrayImg< ByteType, ByteArray > ) new ArrayImgFactory< ByteType >().create( dim, new ByteType() );
+		return ( ArrayImg< ByteType, ByteArray > ) new ArrayImgFactory<>( new ByteType() ).create( dim );
 	}
 
 	/**
@@ -162,7 +162,7 @@ final public class ArrayImgs
 	@SuppressWarnings( "unchecked" )
 	final static public ArrayImg< UnsignedShortType, ShortArray > unsignedShorts( final long... dim )
 	{
-		return ( ArrayImg< UnsignedShortType, ShortArray > ) new ArrayImgFactory< UnsignedShortType >().create( dim, new UnsignedShortType() );
+		return ( ArrayImg< UnsignedShortType, ShortArray > ) new ArrayImgFactory<>( new UnsignedShortType() ).create( dim );
 	}
 
 	/**
@@ -192,7 +192,7 @@ final public class ArrayImgs
 	@SuppressWarnings( "unchecked" )
 	final static public ArrayImg< ShortType, ShortArray > shorts( final long... dim )
 	{
-		return ( ArrayImg< ShortType, ShortArray > ) new ArrayImgFactory< ShortType >().create( dim, new ShortType() );
+		return ( ArrayImg< ShortType, ShortArray > ) new ArrayImgFactory<>( new ShortType() ).create( dim );
 	}
 
 	/**
@@ -222,7 +222,7 @@ final public class ArrayImgs
 	@SuppressWarnings( "unchecked" )
 	final static public ArrayImg< UnsignedIntType, IntArray > unsignedInts( final long... dim )
 	{
-		return ( ArrayImg< UnsignedIntType, IntArray > ) new ArrayImgFactory< UnsignedIntType >().create( dim, new UnsignedIntType() );
+		return ( ArrayImg< UnsignedIntType, IntArray > ) new ArrayImgFactory<>( new UnsignedIntType() ).create( dim );
 	}
 
 	/**
@@ -252,7 +252,7 @@ final public class ArrayImgs
 	@SuppressWarnings( "unchecked" )
 	final static public ArrayImg< IntType, IntArray > ints( final long... dim )
 	{
-		return ( ArrayImg< IntType, IntArray > ) new ArrayImgFactory< IntType >().create( dim, new IntType() );
+		return ( ArrayImg< IntType, IntArray > ) new ArrayImgFactory<>( new IntType() ).create( dim );
 	}
 
 	/**
@@ -282,13 +282,13 @@ final public class ArrayImgs
 	@SuppressWarnings( "unchecked" )
 	final static public ArrayImg< UnsignedLongType, LongArray > unsignedLongs( final long... dim )
 	{
-		return ( ArrayImg< UnsignedLongType, LongArray > ) new ArrayImgFactory< UnsignedLongType >().create( dim, new UnsignedLongType() );
+		return ( ArrayImg< UnsignedLongType, LongArray > ) new ArrayImgFactory<>( new UnsignedLongType() ).create( dim );
 	}
 
 	/**
 	 * Creates an {@link ArrayImg}&lt;{@link UnsignedLongType}, {@link LongArray}&gt;
 	 * reusing a passed long[] array.
-	 * 
+	 *
 	 * @deprecated use {@link ArrayImgs#unsignedLongs(long[], long...)}
 	 */
 	@Deprecated
@@ -324,7 +324,7 @@ final public class ArrayImgs
 	@SuppressWarnings( "unchecked" )
 	final static public ArrayImg< LongType, LongArray > longs( final long... dim )
 	{
-		return ( ArrayImg< LongType, LongArray > ) new ArrayImgFactory< LongType >().create( dim, new LongType() );
+		return ( ArrayImg< LongType, LongArray > ) new ArrayImgFactory<>( new LongType() ).create( dim );
 	}
 
 	/**
@@ -354,7 +354,7 @@ final public class ArrayImgs
 	@SuppressWarnings( "unchecked" )
 	final static public ArrayImg< BitType, LongArray > bits( final long... dim )
 	{
-		return ( ArrayImg< BitType, LongArray > ) new ArrayImgFactory< BitType >().create( dim, new BitType() );
+		return ( ArrayImg< BitType, LongArray > ) new ArrayImgFactory<>( new BitType() ).create( dim );
 	}
 
 	/**
@@ -375,7 +375,7 @@ final public class ArrayImgs
 	@SuppressWarnings( "unchecked" )
 	final static public ArrayImg< Unsigned2BitType, LongArray > unsigned2Bits( final long... dim )
 	{
-		return ( ArrayImg< Unsigned2BitType, LongArray > ) new ArrayImgFactory< Unsigned2BitType >().create( dim, new Unsigned2BitType() );
+		return ( ArrayImg< Unsigned2BitType, LongArray > ) new ArrayImgFactory<>( new Unsigned2BitType() ).create( dim );
 	}
 
 	/**
@@ -396,7 +396,7 @@ final public class ArrayImgs
 	@SuppressWarnings( "unchecked" )
 	final static public ArrayImg< Unsigned4BitType, LongArray > unsigned4Bits( final long... dim )
 	{
-		return ( ArrayImg< Unsigned4BitType, LongArray > ) new ArrayImgFactory< Unsigned4BitType >().create( dim, new Unsigned4BitType() );
+		return ( ArrayImg< Unsigned4BitType, LongArray > ) new ArrayImgFactory<>( new Unsigned4BitType() ).create( dim );
 	}
 
 	/**
@@ -417,7 +417,7 @@ final public class ArrayImgs
 	@SuppressWarnings( "unchecked" )
 	final static public ArrayImg< Unsigned12BitType, LongArray > unsigned12Bits( final long... dim )
 	{
-		return ( ArrayImg< Unsigned12BitType, LongArray > ) new ArrayImgFactory< Unsigned12BitType >().create( dim, new Unsigned12BitType() );
+		return ( ArrayImg< Unsigned12BitType, LongArray > ) new ArrayImgFactory<>( new Unsigned12BitType() ).create( dim );
 	}
 
 	/**
@@ -438,7 +438,7 @@ final public class ArrayImgs
 	@SuppressWarnings( "unchecked" )
 	final static public ArrayImg< Unsigned128BitType, LongArray > unsigned128Bits( final long... dim )
 	{
-		return ( ArrayImg< Unsigned128BitType, LongArray > ) new ArrayImgFactory< Unsigned128BitType >().create( dim, new Unsigned128BitType() );
+		return ( ArrayImg< Unsigned128BitType, LongArray > ) new ArrayImgFactory<>( new Unsigned128BitType() ).create( dim );
 	}
 
 	/**
@@ -459,7 +459,7 @@ final public class ArrayImgs
 	@SuppressWarnings( "unchecked" )
 	final static public ArrayImg< UnsignedVariableBitLengthType, LongArray > unsignedVariableBitLengths( final int nbits, final long... dim )
 	{
-		return ( ArrayImg< UnsignedVariableBitLengthType, LongArray > ) new ArrayImgFactory< UnsignedVariableBitLengthType >().create( dim, new UnsignedVariableBitLengthType( nbits ) );
+		return ( ArrayImg< UnsignedVariableBitLengthType, LongArray > ) new ArrayImgFactory<>( new UnsignedVariableBitLengthType( nbits ) ).create( dim );
 	}
 
 	/**
@@ -480,7 +480,7 @@ final public class ArrayImgs
 	@SuppressWarnings( "unchecked" )
 	final static public ArrayImg< FloatType, FloatArray > floats( final long... dim )
 	{
-		return ( ArrayImg< FloatType, FloatArray > ) new ArrayImgFactory< FloatType >().create( dim, new FloatType() );
+		return ( ArrayImg< FloatType, FloatArray > ) new ArrayImgFactory<>( new FloatType() ).create( dim );
 	}
 
 	/**
@@ -510,7 +510,7 @@ final public class ArrayImgs
 	@SuppressWarnings( "unchecked" )
 	final static public ArrayImg< DoubleType, DoubleArray > doubles( final long... dim )
 	{
-		return ( ArrayImg< DoubleType, DoubleArray > ) new ArrayImgFactory< DoubleType >().create( dim, new DoubleType() );
+		return ( ArrayImg< DoubleType, DoubleArray > ) new ArrayImgFactory<>( new DoubleType() ).create( dim );
 	}
 
 	/**
@@ -540,7 +540,7 @@ final public class ArrayImgs
 	@SuppressWarnings( "unchecked" )
 	final static public ArrayImg< ARGBType, IntArray > argbs( final long... dim )
 	{
-		return ( ArrayImg< ARGBType, IntArray > ) new ArrayImgFactory< ARGBType >().create( dim, new ARGBType() );
+		return ( ArrayImg< ARGBType, IntArray > ) new ArrayImgFactory<>( new ARGBType() ).create( dim );
 	}
 
 	/**
@@ -570,7 +570,7 @@ final public class ArrayImgs
 	@SuppressWarnings( "unchecked" )
 	final static public ArrayImg< ComplexFloatType, FloatArray > complexFloats( final long... dim )
 	{
-		return ( ArrayImg< ComplexFloatType, FloatArray > ) new ArrayImgFactory< ComplexFloatType >().create( dim, new ComplexFloatType() );
+		return ( ArrayImg< ComplexFloatType, FloatArray > ) new ArrayImgFactory<>( new ComplexFloatType() ).create( dim );
 	}
 
 	/**
@@ -601,7 +601,7 @@ final public class ArrayImgs
 	@SuppressWarnings( "unchecked" )
 	final static public ArrayImg< ComplexDoubleType, DoubleArray > complexDoubles( final long... dim )
 	{
-		return ( ArrayImg< ComplexDoubleType, DoubleArray > ) new ArrayImgFactory< ComplexDoubleType >().create( dim, new ComplexDoubleType() );
+		return ( ArrayImg< ComplexDoubleType, DoubleArray > ) new ArrayImgFactory<>( new ComplexDoubleType() ).create( dim );
 	}
 
 	/**
