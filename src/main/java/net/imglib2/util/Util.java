@@ -50,6 +50,7 @@ import net.imglib2.img.ImgFactory;
 import net.imglib2.img.array.ArrayImg;
 import net.imglib2.img.array.ArrayImgFactory;
 import net.imglib2.img.cell.CellImgFactory;
+import net.imglib2.img.list.ListImgFactory;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.Type;
 
@@ -831,6 +832,31 @@ public class Util
 		else
 			cellSize = ( int ) Math.pow( Integer.MAX_VALUE / type.getEntitiesPerPixel().getRatio(), 1.0 / targetSize.numDimensions() );
 		return new CellImgFactory<>( type, cellSize );
+	}
+
+	/**
+	 * Create an appropriate {@link ImgFactory} for the requested
+	 * {@code targetSize} and {@code type}. If the type is a {@link NativeType},
+	 * then {@link #getArrayOrCellImgFactory(Dimensions, NativeType)} is used;
+	 * if not, a {@link ListImgFactory} is returned.
+	 * 
+	 * @param targetSize
+	 *            size of image that the factory should be able to create.
+	 * @param type
+	 *            type of the factory.
+	 * @return an {@link ArrayImgFactory}, {@link CellImgFactory} or
+	 *         {@link ListImgFactory} as appropriate.
+	 */
+	public static < T > ImgFactory< T > getSuitableImgFactory( final Dimensions targetSize, final T type )
+	{
+		if ( type instanceof NativeType )
+		{
+			// NB: Eclipse does not demand the cast to ImgFactory< T >, but javac does.
+			@SuppressWarnings( { "cast", "rawtypes", "unchecked" } )
+			final ImgFactory< T > arrayOrCellImgFactory = ( ImgFactory< T > ) getArrayOrCellImgFactory( targetSize, ( NativeType ) type );
+			return arrayOrCellImgFactory;
+		}
+		return new ListImgFactory<>( type );
 	}
 
 	/**
