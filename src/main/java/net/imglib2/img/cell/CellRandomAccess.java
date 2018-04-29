@@ -445,10 +445,6 @@ public class CellRandomAccess< T extends NativeType< T >, C extends Cell< ? > >
 	 * Update type to currentCellSteps, currentCellMin, and type after switching
 	 * cells. This is called after randomAccessOnCells and position fields have
 	 * been set.
-	 *
-	 * @param updateD
-	 *            the (first) dimension that triggered the call by moving out of
-	 *            current cell range.
 	 */
 	private void updatePosition( final boolean movedOutOfBounds )
 	{
