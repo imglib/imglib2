@@ -35,8 +35,17 @@
 package net.imglib2.util;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
+import net.imglib2.FinalInterval;
 import net.imglib2.RealLocalizable;
 import net.imglib2.RealPoint;
+import net.imglib2.img.ImgFactory;
+import net.imglib2.img.array.ArrayImgFactory;
+import net.imglib2.img.cell.CellImgFactory;
+import net.imglib2.img.list.ListImgFactory;
+import net.imglib2.type.logic.BitType;
+import net.imglib2.type.logic.BoolType;
 
 import org.junit.Test;
 
@@ -123,4 +132,15 @@ public class UtilTest
 
 	}
 
+	@Test
+	public void testGetSuitableImgFactory() {
+		final ImgFactory< BitType > smallBitFactory = Util.getSuitableImgFactory( new FinalInterval( 10, 10 ), new BitType() );
+		assertTrue( smallBitFactory instanceof ArrayImgFactory );
+
+		final ImgFactory< BitType > largeBitFactory = Util.getSuitableImgFactory( new FinalInterval( 1_000_000_000, 1_000_000_000 ), new BitType() );
+		assertTrue( largeBitFactory instanceof CellImgFactory );
+
+		final ImgFactory< BoolType > boolFactory = Util.getSuitableImgFactory( new FinalInterval( 10, 10 ), new BoolType() );
+		assertTrue( boolFactory instanceof ListImgFactory );
+	}
 }
