@@ -9,7 +9,7 @@
 	</parent>
 
 	<artifactId>imglib2</artifactId>
-	<version>5.0.1-SNAPSHOT</version>
+	<version>5.1.0</version>
 
 	<name>ImgLib2 Core Library</name>
 	<description>A multidimensional, type-agnostic image processing library.</description>
@@ -36,7 +36,7 @@
 	<scm>
 		<connection>scm:git:git://github.com/imglib/imglib2</connection>
 		<developerConnection>scm:git:git@github.com:imglib/imglib2</developerConnection>
-		<tag>HEAD</tag>
+		<tag>imglib2-5.1.0</tag>
 		<url>https://github.com/imglib/imglib2</url>
 	</scm>
 	<issueManagement>
@@ -62,9 +62,6 @@ Mark Longair, Brian Northan, Nick Perry, Curtis Rueden, Johannes Schindelin,
 Jean-Yves Tinevez and Michael Zinsmaier.</license.copyrightOwners>
 
 		<scijava.jvm.build.version>1.8.0-45</scijava.jvm.build.version>
-
-		<!-- NB: Deploy releases to the ImageJ Maven repository. -->
-		<releaseProfiles>deploy-to-imagej</releaseProfiles>
 	</properties>
 
 	<developers>
