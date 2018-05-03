@@ -399,6 +399,42 @@ public class Views
 	}
 
 	/**
+	 * Create view with permuted axes. fromAxis is moved to toAxis. While the
+	 * order of the other axes is preserved.
+	 *
+	 * If fromAxis=2 and toAxis=4, and axis order of image is XYCZT, then
+	 * a view to the image with axis order XYZTC would be created.
+	 */
+	public static < T > RandomAccessible< T > moveAxis( final RandomAccessible< T > image, final int fromAxis, final int toAxis )
+	{
+		if ( fromAxis == toAxis )
+			return image;
+		int direction = toAxis > fromAxis ? 1 : -1;
+		RandomAccessible< T > res = image;
+		for ( int i = fromAxis; i != toAxis; i += direction )
+			res = Views.permute( res, i, i + direction );
+		return res;
+	}
+
+	/**
+	 * Create view with permuted axes. fromAxis is moved to toAxis. While the
+	 * order of the other axes is preserved.
+	 *
+	 * If fromAxis=2 and toAxis=4, and axis order of image is XYCZT, then
+	 * a view to the image with axis order XYZTC would be created.
+	 */
+	public static < T > RandomAccessibleInterval< T > moveAxis( final RandomAccessibleInterval< T > image, final int fromAxis, final int toAxis )
+	{
+		if ( fromAxis == toAxis )
+			return image;
+		int direction = toAxis > fromAxis ? 1 : -1;
+		RandomAccessibleInterval< T > res = image;
+		for ( int i = fromAxis; i != toAxis; i += direction )
+			res = Views.permute( res, i, i + direction );
+		return res;
+	}
+
+	/**
 	 * Translate the source view by the given translation vector. Pixel
 	 * <em>x</em> in the source view has coordinates <em>(x + translation)</em>
 	 * in the resulting view.
