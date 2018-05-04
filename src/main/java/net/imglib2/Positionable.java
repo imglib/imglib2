@@ -83,11 +83,11 @@ public interface Positionable extends EuclideanSpace
 	 * Move the element relative to its current location using an
 	 * {@link Localizable} as distance vector.
 	 *
-	 * @param localizable
+	 * @param distance
 	 *            relative offset, {@link Localizable#numDimensions()} must be
 	 *            &ge; {@link #numDimensions()}
 	 */
-	public void move( Localizable localizable );
+	public void move( Localizable distance );
 
 	/**
 	 * Move the element relative to its current location using an int[] as
@@ -110,11 +110,11 @@ public interface Positionable extends EuclideanSpace
 	/**
 	 * Place the element at the same location as a given {@link Localizable}
 	 *
-	 * @param localizable
+	 * @param position
 	 *            absolute position, {@link Localizable#numDimensions()} must be
 	 *            &ge; {@link #numDimensions()}
 	 */
-	public void setPosition( Localizable localizable );
+	public void setPosition( Localizable position );
 
 	/**
 	 * Set the position of the element.
