@@ -1,4 +1,4 @@
-/*-
+/*
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
@@ -31,46 +31,28 @@
  * POSSIBILITY OF SUCH DAMAGE.
  * #L%
  */
-package net.imglib2.type;
 
-import net.imglib2.img.basictypeaccess.AccessFlags;
-import net.imglib2.img.basictypeaccess.array.ArrayDataAccess;
-import net.imglib2.img.basictypeaccess.volatiles.array.DirtyVolatileByteArray;
+package net.imglib2.img.basictypeaccess.array;
 
 /**
- * Enumeration of Java primitive types which can back {@link NativeType}s.
- * <p>
- * In conjunction with {@link AccessFlags} this describes a specific
- * {@link ArrayDataAccess}. For example, {@code BYTE} with flags {@code DIRTY}
- * and {@code VOLATILE} specifies {@link DirtyVolatileByteArray}.
- * </p>
  *
- * @author Tobias Pietzsch
  * @author Curtis Rueden
  */
-public enum PrimitiveType
+public class BooleanArray extends AbstractBooleanArray< BooleanArray >
 {
-	// NB: In theory, the number of bytes for boolean is implementation
-	// dependent; in practice, it is 1 for popular JVM implementations.
-	BOOLEAN( 1 ),
-	BYTE( Byte.BYTES ),
-	CHAR( Character.BYTES ),
-	SHORT( Short.BYTES ),
-	INT( Integer.BYTES ),
-	LONG( Long.BYTES ),
-	FLOAT( Float.BYTES ),
-	DOUBLE( Double.BYTES ),
-	UNDEFINED( -1 );
-
-	private final int byteCount;
-
-	private PrimitiveType( final int byteCount )
+	public BooleanArray( final int numEntities )
 	{
-		this.byteCount = byteCount;
+		super( numEntities );
 	}
 
-	int getByteCount()
+	public BooleanArray( final boolean[] data )
 	{
-		return byteCount;
+		super( data );
+	}
+
+	@Override
+	public BooleanArray createArray( final int numEntities )
+	{
+		return new BooleanArray( numEntities );
 	}
 }
