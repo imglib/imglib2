@@ -220,6 +220,39 @@ public class CellGrid
 	}
 
 	/**
+	 * From the position of a cell in the grid, compute the size of the cell in
+	 * dimension {@code d}. The size will be the standard
+	 * {@link #cellDimensions} unless the cell is at the border of the image in
+	 * which case it might be truncated.
+	 *
+	 * @param d
+	 *            dimension index
+	 * @param cellGridPosition
+	 *            grid coordinates of the cell in dimension {@code d}.
+	 * @return size of the cell in dimension {@code d}.
+	 */
+	public int getCellDimension( final int d, final long cellGridPosition )
+	{
+		return ( ( cellGridPosition + 1 == numCells[ d ] ) ? borderSize[ d ] : cellDimensions[ d ] );
+	}
+
+	/**
+	 * From the position of a cell in the grid, compute the image position in
+	 * dimension {@code d} of the first pixel of the cell (the offset of the
+	 * cell in image coordinates).
+	 *
+	 * @param d
+	 *            dimension index
+	 * @param cellGridPosition
+	 *            grid coordinates of the cell in dimension {@code d}.
+	 * @return offset of the cell in dimension {@code d} (in image coordinates).
+	 */
+	public long getCellMin( final int d, final long cellGridPosition )
+	{
+		return cellGridPosition * cellDimensions[ d ];
+	}
+
+	/**
 	 * From the flattened index of a cell in the grid, compute the position of a
 	 * cell in the grid.
 	 *
