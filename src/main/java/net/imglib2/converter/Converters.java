@@ -54,6 +54,7 @@ import net.imglib2.converter.read.ConvertedRandomAccessibleInterval;
 import net.imglib2.converter.read.ConvertedRealRandomAccessible;
 import net.imglib2.converter.read.ConvertedRealRandomAccessibleRealInterval;
 import net.imglib2.converter.readwrite.ARGBChannelSamplerConverter;
+import net.imglib2.converter.readwrite.CompositeARGBSamplerConverter;
 import net.imglib2.converter.readwrite.SamplerConverter;
 import net.imglib2.converter.readwrite.WriteConvertedIterableInterval;
 import net.imglib2.converter.readwrite.WriteConvertedIterableRandomAccessibleInterval;
@@ -357,6 +358,35 @@ public class Converters
 			hyperSlices.add( argbChannel( source, channel ) );
 
 		return Views.stack( hyperSlices );
+	}
+
+	/**
+	 * Create an <em>n</em>-dimensional color image from an
+	 * (<em>n</em>+1)-dimensional image of {@link UnsignedByteType}.
+	 * @param source The last dimension of the image must be the color channel.
+	 *               {@link Views#stack} could be used to create the source, if
+	 *               there is a separate image for each color channel.
+	 * @param channelOrder Order of the color channels.
+	 * @return Color view to the source image that can be used for reading and writing.
+	 */
+	final static public RandomAccessible< ARGBType > mergeARGB( final RandomAccessible< UnsignedByteType > source, ColorChannelOrder channelOrder ) {
+		return Converters.convert( Views.collapse( source ), new CompositeARGBSamplerConverter( channelOrder ) );
+	}
+
+	/**
+	 * Create an <em>n</em>-dimensional color image from an
+	 * (<em>n</em>+1)-dimensional image of {@link UnsignedByteType}.
+	 * @param source The last dimension of the image must be the color channel.
+	 *               {@link Views#stack} could be used to create the source, if
+	 *               there is a separate image for each color channel.
+	 * @param channelOrder Order of the color channels.
+	 * @return Color view to the source image that can be used for reading and writing.
+	 */
+	final static public RandomAccessibleInterval< ARGBType > mergeARGB( final RandomAccessibleInterval< UnsignedByteType > source, ColorChannelOrder channelOrder ) {
+		final int channelAxis = source.numDimensions() - 1;
+		if ( source.min( channelAxis ) > 0 || source.max( channelAxis ) < channelOrder.channelCount() - 1 )
+			throw new IllegalArgumentException();
+		return Converters.convert( Views.collapse( source ), new CompositeARGBSamplerConverter( channelOrder ) );
 	}
 
 	/**
