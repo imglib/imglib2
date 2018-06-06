@@ -36,6 +36,7 @@ package net.imglib2.converter;
 
 import java.util.Random;
 
+import net.imglib2.img.Img;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -120,5 +121,47 @@ public class ConvertersTest
 			Assert.assertEquals( b.get(), testValues[ i ] & 0xff );
 			++i;
 		}
+	}
+
+	@Test
+	public void testMergeARBGReading()
+	{
+		Img< UnsignedByteType > image = ArrayImgs.unsignedBytes( new byte[] { 1, 2, 3, 4 }, 4 );
+		RandomAccessibleInterval< ARGBType > argb = Converters.mergeARGB( image, ColorChannelOrder.ARGB );
+		Assert.assertEquals( 0x01020304, argb.randomAccess().get().get() );
+	}
+
+	@Test
+	public void testMergeARBGWriting()
+	{
+		// setup
+		byte[] pixels = new byte[ 4 ];
+		Img< UnsignedByteType > image = ArrayImgs.unsignedBytes( pixels, 4 );
+		// process
+		RandomAccessibleInterval< ARGBType > arbg = Converters.mergeARGB( image, ColorChannelOrder.ARGB );
+		arbg.randomAccess().get().set( new ARGBType( 0x01020304 ) );
+		// test
+		Assert.assertArrayEquals( new byte[] { 1, 2, 3, 4 }, pixels );
+	}
+
+	@Test
+	public void testMergeRGBReading()
+	{
+		Img< UnsignedByteType > image = ArrayImgs.unsignedBytes( new byte[] { 1, 2, 3 }, 4 );
+		RandomAccessibleInterval< ARGBType > argb = Converters.mergeARGB( image, ColorChannelOrder.RGB );
+		Assert.assertEquals( 0xff010203, argb.randomAccess().get().get() );
+	}
+
+	@Test
+	public void testMergbeRGBWriting()
+	{
+		// setup
+		byte[] pixels = new byte[ 3 ];
+		Img< UnsignedByteType > image = ArrayImgs.unsignedBytes( pixels, 3 );
+		// process
+		RandomAccessibleInterval< ARGBType > argb = Converters.mergeARGB( image, ColorChannelOrder.RGB );
+		// test
+		argb.randomAccess().get().set( new ARGBType( 0x00010203) );
+		Assert.assertArrayEquals( new byte[] { 1, 2, 3 }, pixels );
 	}
 }

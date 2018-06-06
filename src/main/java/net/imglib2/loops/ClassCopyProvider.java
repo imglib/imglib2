@@ -34,16 +34,20 @@
 package net.imglib2.loops;
 
 import java.lang.reflect.Constructor;
-import java.util.Arrays;
-import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Stream;
 
 /**
+ * Helper to create multiple copies of a class.
+ * <p>
+ * The copies of the class have individual copies of the byte code.
+ * The JIT compiler optimizes the class copies individually,
+ * which can increase performance.
+ *
  * @author Matthias Arzt
  */
-class ClassCopyProvider< T >
+public class ClassCopyProvider< T >
 {
 
 	private final Map< Object, Class< ? extends T > > map = new ConcurrentHashMap<>();
@@ -52,6 +56,15 @@ class ClassCopyProvider< T >
 
 	private final Class< ? >[] signature;
 
+	/**
+	 * Create a ClassCopyProvider to make copy a a given class.
+	 *
+	 * @param clazz                Class to be copied.
+	 * @param interfaceOfClazz     Interface that's implemented by the clazz. A class copies can only be used
+	 *                             through this interface.
+	 * @param constructorSignature Constructor signature to be used
+	 *                             when creating a new instance with {@link #newInstanceForKey}
+	 */
 	public ClassCopyProvider( final Class< ? extends T > clazz, final Class< T > interfaceOfClazz, final Class< ? >... constructorSignature )
 	{
 		this.copier = new ClassCopier<>( clazz, interfaceOfClazz );
@@ -76,11 +89,15 @@ class ClassCopyProvider< T >
 				.anyMatch( constructor -> constructor.getParameterCount() == 0 );
 	}
 
-	Class< ? extends T > classForKey( final Object key )
+	private Class< ? extends T > classForKey( final Object key )
 	{
 		return map.computeIfAbsent( key, k -> copier.copy() );
 	}
 
+	/**
+	 * Returns true if the given list of objects,
+	 * matches the constructor signature provided to {@link #ClassCopyProvider(Class, Class, Class[])}.
+	 */
 	public boolean matches( final Object... parameters )
 	{
 		if ( parameters.length != signature.length )
@@ -91,12 +108,22 @@ class ClassCopyProvider< T >
 		return true;
 	}
 
-	public List< Class< ? > > getSignature()
-	{
-		return Arrays.asList( signature );
-	}
-
-	T newInstanceForKey( final Object key, final Object... parameters )
+	/**
+	 * Returns an instance of a copy of the original class, that has been provided to the constructor.
+	 * <p>
+	 * Note: The returned object isn't an instance of the original class.
+	 * {@link Class#isInstance(Object)} and "instanceof" will return false.
+	 * And ClassCastException might occur if this is ignored.
+	 * <p>
+	 * The returned instance has a copy of the byte code of the original class.
+	 * This byte code is independently optimised by the JIT compiler.
+	 * The JIT compiler will optimise the byte code, if it's only used in a specific use case.
+	 * If used wisely a performance increase is the consequence.
+	 *
+	 * @param key        Instances created with the same key, share their byte code.
+	 * @param parameters Parameters that are passed to the constructor.
+	 */
+	public T newInstanceForKey( final Object key, final Object... parameters )
 	{
 		try
 		{
