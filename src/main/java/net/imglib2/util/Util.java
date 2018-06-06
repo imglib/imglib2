@@ -55,7 +55,8 @@ import net.imglib2.type.NativeType;
 import net.imglib2.type.Type;
 
 /**
- * TODO
+ * A collection of general-purpose utility methods for working with ImgLib2 data
+ * structures.
  * 
  * @author Stephan Preibisch
  * @author Stephan Saalfeld
