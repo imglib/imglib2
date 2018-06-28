@@ -19,9 +19,9 @@ public class BitTypeArrayImgSizeTest
 	public void testOverSizedBitImageExplicitStorageArray()
 	{
 
-		final int numLongs = ( int ) Math.ceil( 1000 * 1000 / 64 );
+		final int numLongs = ( int ) Math.ceil( 100 * 100 / 64d );
 
-		final ArrayImg< BitType, LongArray > img = ArrayImgs.bits( new LongArray( new long[ numLongs ] ), 1000, 1000 );
+		final ArrayImg< BitType, LongArray > img = ArrayImgs.bits( new LongArray( new long[ numLongs ] ), 100, 100 );
 		final Random r = new Random( 42l );
 		img.forEach( p -> {
 			p.set( r.nextBoolean() );
@@ -40,7 +40,8 @@ public class BitTypeArrayImgSizeTest
 	{
 		final ArrayImgFactory< BitType > factory = new ArrayImgFactory<>( new BitType() );
 
-		final int numLongs = ( int ) Math.ceil( 1000 * 1000 / 64 );
+		// evenly dividable by 64
+		final int numLongs =  1000 * 1000 / 64 ;
 
 		final ArrayImg< BitType, ? > img = factory.create( 1000, 1000 );
 
@@ -62,9 +63,9 @@ public class BitTypeArrayImgSizeTest
 	public void testOverSizedBitImageArrayImgs()
 	{
 
-		final int numLongs = ( int ) Math.ceil( 1000 * 1000 / 64 );
+		final int numLongs = ( int ) Math.ceil( 100 * 100 / 64d );
 
-		final ArrayImg< BitType, LongArray > img = ArrayImgs.bits( 1000, 1000 );
+		final ArrayImg< BitType, LongArray > img = ArrayImgs.bits( 100, 100 );
 
 		final Random r = new Random( 42l );
 		img.forEach( p -> {
