@@ -326,7 +326,7 @@ public class BitType extends AbstractIntegerType< BitType > implements BooleanTy
 	@Override
 	public Fraction getEntitiesPerPixel()
 	{
-		return new Fraction();
+		return new Fraction(1, 64);
 	}
 
 	@Override
