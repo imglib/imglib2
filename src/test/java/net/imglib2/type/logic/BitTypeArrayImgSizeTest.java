@@ -12,15 +12,18 @@ import net.imglib2.img.basictypeaccess.array.LongArray;
 
 import org.junit.Test;
 
+/**
+ * Tests that we do not allocate overly large storage arrays for BitType images.
+ *
+ * @author Gabriel Einsdorf
+ */
 public class BitTypeArrayImgSizeTest
 {
 
 	@Test
 	public void testOverSizedBitImageExplicitStorageArray()
 	{
-
 		final int numLongs = ( int ) Math.ceil( 100 * 100 / 64d );
-
 		final ArrayImg< BitType, LongArray > img = ArrayImgs.bits( new LongArray( new long[ numLongs ] ), 100, 100 );
 		final Random r = new Random( 42l );
 		img.forEach( p -> {
@@ -28,7 +31,6 @@ public class BitTypeArrayImgSizeTest
 		} );
 
 		final long[] storage = ( long[] ) ( ( ArrayDataAccess< ? > ) img.update( null ) ).getCurrentStorageArray();
-
 		final long[] sizes = new long[ img.numDimensions() ];
 		img.dimensions( sizes );
 
@@ -41,8 +43,7 @@ public class BitTypeArrayImgSizeTest
 		final ArrayImgFactory< BitType > factory = new ArrayImgFactory<>( new BitType() );
 
 		// evenly dividable by 64
-		final int numLongs =  1000 * 1000 / 64 ;
-
+		final int numLongs = 1000 * 1000 / 64;
 		final ArrayImg< BitType, ? > img = factory.create( 1000, 1000 );
 
 		final Random r = new Random( 42l );
@@ -54,17 +55,13 @@ public class BitTypeArrayImgSizeTest
 
 		final long[] sizes = new long[ img.numDimensions() ];
 		img.dimensions( sizes );
-
 		assertEquals( numLongs, storage.length );
-
 	}
 
 	@Test
 	public void testOverSizedBitImageArrayImgs()
 	{
-
 		final int numLongs = ( int ) Math.ceil( 100 * 100 / 64d );
-
 		final ArrayImg< BitType, LongArray > img = ArrayImgs.bits( 100, 100 );
 
 		final Random r = new Random( 42l );
@@ -73,7 +70,6 @@ public class BitTypeArrayImgSizeTest
 		} );
 
 		final long[] storage = ( long[] ) ( ( ArrayDataAccess< ? > ) img.update( null ) ).getCurrentStorageArray();
-
 		final long[] sizes = new long[ img.numDimensions() ];
 		img.dimensions( sizes );
 
