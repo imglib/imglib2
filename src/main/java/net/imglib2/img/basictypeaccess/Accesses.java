@@ -42,94 +42,409 @@ package net.imglib2.img.basictypeaccess;
 public interface Accesses
 {
 
-	public static void copy( final ByteAccess source, final ByteAccess target, final int size )
+	/**
+	 *
+	 * Following {@link System#arraycopy}, copies {@code length} elements from
+	 * the specified source access, beginning at the specified position
+	 * {@code srcPos}, to the specified position of the destination array
+	 * {@code destPos}. A subsequence of access components are copied from the
+	 * source access referenced by {@code src} to the destination access
+	 * referenced by {@code dest}. The number of components copied is equal to
+	 * the {@code length} argument. The components at positions {@code srcPos}
+	 * through {@code srcPos+length-1} in the source array are copied into
+	 * positions {@code destPos} through {@code destPos+length-1}, respectively,
+	 * of the destination array.
+	 *
+	 * If the {@code src} and {@code dest} arguments refer to the same array
+	 * object, then the copying is performed as if the components at positions
+	 * {@code srcPos} through {@code srcPos+length-1} were first copied to a
+	 * temporary array with {@code length} components and then the contents of
+	 * the temporary array were copied into positions destPos through
+	 * {@code destPos+length-1} of the destination array.
+	 *
+	 * @param src
+	 *            the source access.
+	 * @param srcPos
+	 *            starting position in the source access.
+	 * @param dest
+	 *            the destination access.
+	 * @param destPos
+	 *            starting position in the destination access.
+	 * @param length
+	 *            the number of access elements to be copied
+	 */
+	public static void copy(
+			final ByteAccess src,
+			final int srcPos,
+			final ByteAccess dest,
+			final int destPos,
+			final int length )
 	{
-		copy( source, target, 0, size );
-	}
 
-	public static void copy( final ByteAccess source, final ByteAccess target, final int start, final int stop )
-	{
-		for ( int index = start; index < stop; ++index )
+		if ( src == dest )
 		{
-			target.setValue( index, source.getValue( index ) );
+			if ( srcPos == destPos ) { return; }
+			if ( srcPos < destPos )
+			{
+				for ( int index = length - 1; index >= 0; --index )
+				{
+					dest.setValue( index + destPos, src.getValue( index + srcPos ) );
+				}
+			}
+			return;
+		}
+
+		for ( int index = 0; index < length; ++index )
+		{
+			dest.setValue( index + destPos, src.getValue( index + srcPos ) );
 		}
 	}
 
-	public static void copy( final CharAccess source, final CharAccess target, final int size )
+	/**
+	 *
+	 * Following {@link System#arraycopy}, copies {@code length} elements from
+	 * the specified source access, beginning at the specified position
+	 * {@code srcPos}, to the specified position of the destination array
+	 * {@code destPos}. A subsequence of access components are copied from the
+	 * source access referenced by {@code src} to the destination access
+	 * referenced by {@code dest}. The number of components copied is equal to
+	 * the {@code length} argument. The components at positions {@code srcPos}
+	 * through {@code srcPos+length-1} in the source array are copied into
+	 * positions {@code destPos} through {@code destPos+length-1}, respectively,
+	 * of the destination array.
+	 *
+	 * If the {@code src} and {@code dest} arguments refer to the same array
+	 * object, then the copying is performed as if the components at positions
+	 * {@code srcPos} through {@code srcPos+length-1} were first copied to a
+	 * temporary array with {@code length} components and then the contents of
+	 * the temporary array were copied into positions destPos through
+	 * {@code destPos+length-1} of the destination array.
+	 *
+	 * @param src
+	 *            the source access.
+	 * @param srcPos
+	 *            starting position in the source access.
+	 * @param dest
+	 *            the destination access.
+	 * @param destPos
+	 *            starting position in the destination access.
+	 * @param length
+	 *            the number of access elements to be copied
+	 */
+	public static void copy(
+			final CharAccess src,
+			final int srcPos,
+			final CharAccess dest,
+			final int destPos,
+			final int length )
 	{
-		copy( source, target, 0, size );
-	}
 
-	public static void copy( final CharAccess source, final CharAccess target, final int start, final int stop )
-	{
-		for ( int index = start; index < stop; ++index )
+		if ( src == dest )
 		{
-			target.setValue( index, source.getValue( index ) );
+			if ( srcPos == destPos ) { return; }
+			if ( srcPos < destPos )
+			{
+				for ( int index = length - 1; index >= 0; --index )
+				{
+					dest.setValue( index + destPos, src.getValue( index + srcPos ) );
+				}
+			}
+			return;
+		}
+
+		for ( int index = 0; index < length; ++index )
+		{
+			dest.setValue( index + destPos, src.getValue( index + srcPos ) );
 		}
 	}
 
-	public static void copy( final DoubleAccess source, final DoubleAccess target, final int size )
+	/**
+	 *
+	 * Following {@link System#arraycopy}, copies {@code length} elements from
+	 * the specified source access, beginning at the specified position
+	 * {@code srcPos}, to the specified position of the destination array
+	 * {@code destPos}. A subsequence of access components are copied from the
+	 * source access referenced by {@code src} to the destination access
+	 * referenced by {@code dest}. The number of components copied is equal to
+	 * the {@code length} argument. The components at positions {@code srcPos}
+	 * through {@code srcPos+length-1} in the source array are copied into
+	 * positions {@code destPos} through {@code destPos+length-1}, respectively,
+	 * of the destination array.
+	 *
+	 * If the {@code src} and {@code dest} arguments refer to the same array
+	 * object, then the copying is performed as if the components at positions
+	 * {@code srcPos} through {@code srcPos+length-1} were first copied to a
+	 * temporary array with {@code length} components and then the contents of
+	 * the temporary array were copied into positions destPos through
+	 * {@code destPos+length-1} of the destination array.
+	 *
+	 * @param src
+	 *            the source access.
+	 * @param srcPos
+	 *            starting position in the source access.
+	 * @param dest
+	 *            the destination access.
+	 * @param destPos
+	 *            starting position in the destination access.
+	 * @param length
+	 *            the number of access elements to be copied
+	 */
+	public static void copy(
+			final DoubleAccess src,
+			final int srcPos,
+			final DoubleAccess dest,
+			final int destPos,
+			final int length )
 	{
-		copy( source, target, 0, size );
-	}
 
-	public static void copy( final DoubleAccess source, final DoubleAccess target, final int start, final int stop )
-	{
-		for ( int index = start; index < stop; ++index )
+		if ( src == dest )
 		{
-			target.setValue( index, source.getValue( index ) );
+			if ( srcPos == destPos ) { return; }
+			if ( srcPos < destPos )
+			{
+				for ( int index = length - 1; index >= 0; --index )
+				{
+					dest.setValue( index + destPos, src.getValue( index + srcPos ) );
+				}
+			}
+			return;
+		}
+
+		for ( int index = 0; index < length; ++index )
+		{
+			dest.setValue( index + destPos, src.getValue( index + srcPos ) );
 		}
 	}
 
-	public static void copy( final FloatAccess source, final FloatAccess target, final int size )
+	/**
+	 *
+	 * Following {@link System#arraycopy}, copies {@code length} elements from
+	 * the specified source access, beginning at the specified position
+	 * {@code srcPos}, to the specified position of the destination array
+	 * {@code destPos}. A subsequence of access components are copied from the
+	 * source access referenced by {@code src} to the destination access
+	 * referenced by {@code dest}. The number of components copied is equal to
+	 * the {@code length} argument. The components at positions {@code srcPos}
+	 * through {@code srcPos+length-1} in the source array are copied into
+	 * positions {@code destPos} through {@code destPos+length-1}, respectively,
+	 * of the destination array.
+	 *
+	 * If the {@code src} and {@code dest} arguments refer to the same array
+	 * object, then the copying is performed as if the components at positions
+	 * {@code srcPos} through {@code srcPos+length-1} were first copied to a
+	 * temporary array with {@code length} components and then the contents of
+	 * the temporary array were copied into positions destPos through
+	 * {@code destPos+length-1} of the destination array.
+	 *
+	 * @param src
+	 *            the source access.
+	 * @param srcPos
+	 *            starting position in the source access.
+	 * @param dest
+	 *            the destination access.
+	 * @param destPos
+	 *            starting position in the destination access.
+	 * @param length
+	 *            the number of access elements to be copied
+	 */
+	public static void copy(
+			final FloatAccess src,
+			final int srcPos,
+			final FloatAccess dest,
+			final int destPos,
+			final int length )
 	{
-		copy( source, target, 0, size );
-	}
 
-	public static void copy( final FloatAccess source, final FloatAccess target, final int start, final int stop )
-	{
-		for ( int index = start; index < stop; ++index )
+		if ( src == dest )
 		{
-			target.setValue( index, source.getValue( index ) );
+			if ( srcPos == destPos ) { return; }
+			if ( srcPos < destPos )
+			{
+				for ( int index = length - 1; index >= 0; --index )
+				{
+					dest.setValue( index + destPos, src.getValue( index + srcPos ) );
+				}
+			}
+			return;
+		}
+
+		for ( int index = 0; index < length; ++index )
+		{
+			dest.setValue( index + destPos, src.getValue( index + srcPos ) );
 		}
 	}
 
-	public static void copy( final IntAccess source, final IntAccess target, final int size )
+	/**
+	 *
+	 * Following {@link System#arraycopy}, copies {@code length} elements from
+	 * the specified source access, beginning at the specified position
+	 * {@code srcPos}, to the specified position of the destination array
+	 * {@code destPos}. A subsequence of access components are copied from the
+	 * source access referenced by {@code src} to the destination access
+	 * referenced by {@code dest}. The number of components copied is equal to
+	 * the {@code length} argument. The components at positions {@code srcPos}
+	 * through {@code srcPos+length-1} in the source array are copied into
+	 * positions {@code destPos} through {@code destPos+length-1}, respectively,
+	 * of the destination array.
+	 *
+	 * If the {@code src} and {@code dest} arguments refer to the same array
+	 * object, then the copying is performed as if the components at positions
+	 * {@code srcPos} through {@code srcPos+length-1} were first copied to a
+	 * temporary array with {@code length} components and then the contents of
+	 * the temporary array were copied into positions destPos through
+	 * {@code destPos+length-1} of the destination array.
+	 *
+	 * @param src
+	 *            the source access.
+	 * @param srcPos
+	 *            starting position in the source access.
+	 * @param dest
+	 *            the destination access.
+	 * @param destPos
+	 *            starting position in the destination access.
+	 * @param length
+	 *            the number of access elements to be copied
+	 */
+	public static void copy(
+			final IntAccess src,
+			final int srcPos,
+			final IntAccess dest,
+			final int destPos,
+			final int length )
 	{
-		copy( source, target, 0, size );
-	}
 
-	public static void copy( final IntAccess source, final IntAccess target, final int start, final int stop )
-	{
-		for ( int index = start; index < stop; ++index )
+		if ( src == dest )
 		{
-			target.setValue( index, source.getValue( index ) );
+			if ( srcPos == destPos ) { return; }
+			if ( srcPos < destPos )
+			{
+				for ( int index = length - 1; index >= 0; --index )
+				{
+					dest.setValue( index + destPos, src.getValue( index + srcPos ) );
+				}
+			}
+			return;
+		}
+
+		for ( int index = 0; index < length; ++index )
+		{
+			dest.setValue( index + destPos, src.getValue( index + srcPos ) );
 		}
 	}
 
-	public static void copy( final LongAccess source, final LongAccess target, final int size )
+	/**
+	 *
+	 * Following {@link System#arraycopy}, copies {@code length} elements from
+	 * the specified source access, beginning at the specified position
+	 * {@code srcPos}, to the specified position of the destination array
+	 * {@code destPos}. A subsequence of access components are copied from the
+	 * source access referenced by {@code src} to the destination access
+	 * referenced by {@code dest}. The number of components copied is equal to
+	 * the {@code length} argument. The components at positions {@code srcPos}
+	 * through {@code srcPos+length-1} in the source array are copied into
+	 * positions {@code destPos} through {@code destPos+length-1}, respectively,
+	 * of the destination array.
+	 *
+	 * If the {@code src} and {@code dest} arguments refer to the same array
+	 * object, then the copying is performed as if the components at positions
+	 * {@code srcPos} through {@code srcPos+length-1} were first copied to a
+	 * temporary array with {@code length} components and then the contents of
+	 * the temporary array were copied into positions destPos through
+	 * {@code destPos+length-1} of the destination array.
+	 *
+	 * @param src
+	 *            the source access.
+	 * @param srcPos
+	 *            starting position in the source access.
+	 * @param dest
+	 *            the destination access.
+	 * @param destPos
+	 *            starting position in the destination access.
+	 * @param length
+	 *            the number of access elements to be copied
+	 */
+	public static void copy(
+			final LongAccess src,
+			final int srcPos,
+			final LongAccess dest,
+			final int destPos,
+			final int length )
 	{
-		copy( source, target, 0, size );
-	}
 
-	public static void copy( final LongAccess source, final LongAccess target, final int start, final int stop )
-	{
-		for ( int index = start; index < stop; ++index )
+		if ( src == dest )
 		{
-			target.setValue( index, source.getValue( index ) );
+			if ( srcPos == destPos ) { return; }
+			if ( srcPos < destPos )
+			{
+				for ( int index = length - 1; index >= 0; --index )
+				{
+					dest.setValue( index + destPos, src.getValue( index + srcPos ) );
+				}
+			}
+			return;
+		}
+
+		for ( int index = 0; index < length; ++index )
+		{
+			dest.setValue( index + destPos, src.getValue( index + srcPos ) );
 		}
 	}
 
-	public static void copy( final ShortAccess source, final ShortAccess target, final int size )
+	/**
+	 *
+	 * Following {@link System#arraycopy}, copies {@code length} elements from
+	 * the specified source access, beginning at the specified position
+	 * {@code srcPos}, to the specified position of the destination array
+	 * {@code destPos}. A subsequence of access components are copied from the
+	 * source access referenced by {@code src} to the destination access
+	 * referenced by {@code dest}. The number of components copied is equal to
+	 * the {@code length} argument. The components at positions {@code srcPos}
+	 * through {@code srcPos+length-1} in the source array are copied into
+	 * positions {@code destPos} through {@code destPos+length-1}, respectively,
+	 * of the destination array.
+	 *
+	 * If the {@code src} and {@code dest} arguments refer to the same array
+	 * object, then the copying is performed as if the components at positions
+	 * {@code srcPos} through {@code srcPos+length-1} were first copied to a
+	 * temporary array with {@code length} components and then the contents of
+	 * the temporary array were copied into positions destPos through
+	 * {@code destPos+length-1} of the destination array.
+	 *
+	 * @param src
+	 *            the source access.
+	 * @param srcPos
+	 *            starting position in the source access.
+	 * @param dest
+	 *            the destination access.
+	 * @param destPos
+	 *            starting position in the destination access.
+	 * @param length
+	 *            the number of access elements to be copied
+	 */
+	public static void copy(
+			final ShortAccess src,
+			final int srcPos,
+			final ShortAccess dest,
+			final int destPos,
+			final int length )
 	{
-		copy( source, target, 0, size );
-	}
 
-	public static void copy( final ShortAccess source, final ShortAccess target, final int start, final int stop )
-	{
-		for ( int index = start; index < stop; ++index )
+		if ( src == dest )
 		{
-			target.setValue( index, source.getValue( index ) );
+			if ( srcPos == destPos ) { return; }
+			if ( srcPos < destPos )
+			{
+				for ( int index = length - 1; index >= 0; --index )
+				{
+					dest.setValue( index + destPos, src.getValue( index + srcPos ) );
+				}
+			}
+			return;
+		}
+
+		for ( int index = 0; index < length; ++index )
+		{
+			dest.setValue( index + destPos, src.getValue( index + srcPos ) );
 		}
 	}
 

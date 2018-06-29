@@ -62,13 +62,13 @@ public class AccessesTest
 
 		{
 			final ByteArray target = new ByteArray( numEntities );
-			Accesses.copy( source, target, numEntities );
+			Accesses.copy( source, 0, target, 0, numEntities );
 			Assert.assertArrayEquals( source.getCurrentStorageArray(), target.getCurrentStorageArray() );
 		}
 
 		{
 			final ByteArray target = new ByteArray( numEntities );
-			Accesses.copy( source, target, start, stop );
+			Accesses.copy( source, start, target, start, stop - start );
 			for ( int i = 0; i < numEntities; ++i )
 			{
 				Assert.assertEquals( i < start || i >= stop ? 0 : source.getValue( i ), target.getValue( i ) );
@@ -85,13 +85,13 @@ public class AccessesTest
 
 		{
 			final CharArray target = new CharArray( numEntities );
-			Accesses.copy( source, target, numEntities );
+			Accesses.copy( source, 0, target, 0, numEntities );
 			Assert.assertArrayEquals( source.getCurrentStorageArray(), target.getCurrentStorageArray() );
 		}
 
 		{
 			final CharArray target = new CharArray( numEntities );
-			Accesses.copy( source, target, start, stop );
+			Accesses.copy( source, start, target, start, stop - start );
 			for ( int i = 0; i < numEntities; ++i )
 			{
 				Assert.assertEquals( i < start || i >= stop ? 0 : source.getValue( i ), target.getValue( i ) );
@@ -108,13 +108,13 @@ public class AccessesTest
 
 		{
 			final DoubleArray target = new DoubleArray( numEntities );
-			Accesses.copy( source, target, numEntities );
+			Accesses.copy( source, 0, target, 0, numEntities );
 			Assert.assertArrayEquals( source.getCurrentStorageArray(), target.getCurrentStorageArray(), 0.0 );
 		}
 
 		{
 			final DoubleArray target = new DoubleArray( numEntities );
-			Accesses.copy( source, target, start, stop );
+			Accesses.copy( source, start, target, start, stop - start );
 			for ( int i = 0; i < numEntities; ++i )
 			{
 				Assert.assertEquals( i < start || i >= stop ? 0 : source.getValue( i ), target.getValue( i ), 0.0 );
@@ -131,13 +131,13 @@ public class AccessesTest
 
 		{
 			final FloatArray target = new FloatArray( numEntities );
-			Accesses.copy( source, target, numEntities );
+			Accesses.copy( source, 0, target, 0, numEntities );
 			Assert.assertArrayEquals( source.getCurrentStorageArray(), target.getCurrentStorageArray(), 0.0f );
 		}
 
 		{
 			final FloatArray target = new FloatArray( numEntities );
-			Accesses.copy( source, target, start, stop );
+			Accesses.copy( source, start, target, start, stop - start );
 			for ( int i = 0; i < numEntities; ++i )
 			{
 				Assert.assertEquals( i < start || i >= stop ? 0 : source.getValue( i ), target.getValue( i ), 0.0f );
@@ -154,13 +154,13 @@ public class AccessesTest
 
 		{
 			final IntArray target = new IntArray( numEntities );
-			Accesses.copy( source, target, numEntities );
+			Accesses.copy( source, 0, target, 0, numEntities );
 			Assert.assertArrayEquals( source.getCurrentStorageArray(), target.getCurrentStorageArray() );
 		}
 
 		{
 			final IntArray target = new IntArray( numEntities );
-			Accesses.copy( source, target, start, stop );
+			Accesses.copy( source, start, target, start, stop - start );
 			for ( int i = 0; i < numEntities; ++i )
 			{
 				Assert.assertEquals( i < start || i >= stop ? 0 : source.getValue( i ), target.getValue( i ) );
@@ -177,13 +177,13 @@ public class AccessesTest
 
 		{
 			final LongArray target = new LongArray( numEntities );
-			Accesses.copy( source, target, numEntities );
+			Accesses.copy( source, 0, target, 0, numEntities );
 			Assert.assertArrayEquals( source.getCurrentStorageArray(), target.getCurrentStorageArray() );
 		}
 
 		{
 			final LongArray target = new LongArray( numEntities );
-			Accesses.copy( source, target, start, stop );
+			Accesses.copy( source, start, target, start, stop - start );
 			for ( int i = 0; i < numEntities; ++i )
 			{
 				Assert.assertEquals( i < start || i >= stop ? 0 : source.getValue( i ), target.getValue( i ) );
@@ -200,13 +200,13 @@ public class AccessesTest
 
 		{
 			final ShortArray target = new ShortArray( numEntities );
-			Accesses.copy( source, target, numEntities );
+			Accesses.copy( source, 0, target, 0, numEntities );
 			Assert.assertArrayEquals( source.getCurrentStorageArray(), target.getCurrentStorageArray() );
 		}
 
 		{
 			final ShortArray target = new ShortArray( numEntities );
-			Accesses.copy( source, target, start, stop );
+			Accesses.copy( source, start, target, start, stop - start );
 			for ( int i = 0; i < numEntities; ++i )
 			{
 				Assert.assertEquals( i < start || i >= stop ? 0 : source.getValue( i ), target.getValue( i ) );
