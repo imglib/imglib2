@@ -138,4 +138,25 @@ public final class FinalInterval extends AbstractInterval
 		}
 		return new FinalInterval( min, max );
 	}
+
+	/**
+	 * Create an Interval with the given minimum coordinates and size.
+	 * 
+	 * @param min
+	 *            the minimum of the interval
+	 * @param size
+	 *            the dimensions of the interval
+	 * @return interval with the specified boundaries
+	 */
+	public static FinalInterval createMinSize( final long[] min, final long[] size )
+	{
+		final int n = min.length;
+		assert n == size.length;
+		final long[] max = new long[ n ];
+		for ( int d = 0; d < n; ++d )
+		{
+			max[ d ] = min[ d ] + size[ d ] - 1;
+		}
+		return new FinalInterval( min, max );
+	}
 }
