@@ -39,6 +39,7 @@ import java.util.List;
 import net.imglib2.Dimensions;
 import net.imglib2.Interval;
 import net.imglib2.IterableInterval;
+import net.imglib2.Localizable;
 import net.imglib2.RandomAccess;
 import net.imglib2.RandomAccessible;
 import net.imglib2.RandomAccessibleInterval;
@@ -55,10 +56,12 @@ import net.imglib2.type.NativeType;
 import net.imglib2.type.Type;
 
 /**
- * TODO
+ * A collection of general-purpose utility methods for working with ImgLib2 data
+ * structures.
  * 
  * @author Stephan Preibisch
  * @author Stephan Saalfeld
+ * @author Curtis Rueden
  */
 public class Util
 {
@@ -890,6 +893,63 @@ public class Util
 				return false;
 		}
 
+		return true;
+	}
+
+	/**
+	 * Determines whether the two {@link Localizable} objects have the same
+	 * position, with {@code long} precision.
+	 * <p>
+	 * At first glance, this method may appear to be unnecessary, since there is
+	 * also {@link #locationsEqual(RealLocalizable, RealLocalizable)}, which is
+	 * more general. The difference is that this method compares the positions
+	 * using {@link Localizable#getLongPosition(int)}, which has higher
+	 * precision in integer space than
+	 * {@link RealLocalizable#getDoublePosition(int)} does, which is what the
+	 * {@link #locationsEqual(RealLocalizable, RealLocalizable)} method uses.
+	 * </p>
+	 * 
+	 * @param l1
+	 *            The first {@link Localizable}.
+	 * @param l2
+	 *            The second {@link Localizable}.
+	 * @return True iff the positions are the same, including dimensionality.
+	 * @see Localizable#getLongPosition(int)
+	 */
+	public static boolean locationsEqual( final Localizable l1, final Localizable l2 )
+	{
+		final int numDims = l1.numDimensions();
+		if ( l2.numDimensions() != numDims )
+			return false;
+		for ( int d = 0; d < numDims; d++ )
+		{
+			if ( l1.getLongPosition( d ) != l2.getLongPosition( d ) )
+				return false;
+		}
+		return true;
+	}
+
+	/**
+	 * Determines whether the two {@link RealLocalizable} objects have the same
+	 * position, with {@code double} precision.
+	 * 
+	 * @param l1
+	 *            The first {@link RealLocalizable}.
+	 * @param l2
+	 *            The second {@link RealLocalizable}.
+	 * @return True iff the positions are the same, including dimensionality.
+	 * @see RealLocalizable#getDoublePosition(int)
+	 */
+	public static boolean locationsEqual( final RealLocalizable l1, final RealLocalizable l2 )
+	{
+		final int numDims = l1.numDimensions();
+		if ( l2.numDimensions() != numDims )
+			return false;
+		for ( int d = 0; d < numDims; d++ )
+		{
+			if ( l1.getDoublePosition( d ) != l2.getDoublePosition( d ) )
+				return false;
+		}
 		return true;
 	}
 
