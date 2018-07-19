@@ -177,4 +177,23 @@ public class UnsignedLongTypeTest {
 
 		assertEquals( ul.get(), bi.longValue() );
 	}
+
+	@Test
+	public void testGetMaxValue() {
+		assertEquals( (double) Long.MAX_VALUE - (double) Long.MIN_VALUE, new UnsignedLongType().getMaxValue(), 0.0 );
+	}
+
+	@Test
+	public void testGetRealDouble() {
+
+		final UnsignedLongType ul = new UnsignedLongType( -1 );
+		assertEquals( ul.getMaxValue(), ul.getRealDouble(), 0.0 );
+	}
+
+	@Test
+	public void testGetRealFloat() {
+
+		final UnsignedLongType ul = new UnsignedLongType( -1 );
+		assertEquals( (float) ul.getMaxValue(), ul.getRealFloat(), 0.0f );
+	}
 }
