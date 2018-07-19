@@ -310,7 +310,8 @@ public class LoopMath
 		public void eval( final O output ) {
 			this.a.eval(this.scrap1);
 			this.b.eval(this.scrap2);
-			output.setReal( this.scrap1.getRealDouble() * this.scrap2.getRealDouble() );
+			output.set( this.scrap1 );
+			output.mul( this.scrap2 );
 		}
 
 		@Override
@@ -333,7 +334,8 @@ public class LoopMath
 		public void eval( final O output ) {
 			this.a.eval(this.scrap1);
 			this.b.eval(this.scrap2);
-			output.setReal( this.scrap1.getRealDouble() / this.scrap2.getRealDouble() );
+			output.set( this.scrap1 );
+			output.div( this.scrap2 );
 		}
 
 		@Override
@@ -356,7 +358,7 @@ public class LoopMath
 		public void eval( final O output ) {
 			this.a.eval( this.scrap1 );
 			this.b.eval( this.scrap2 );
-			output.setReal( Math.max( this.scrap1.getRealDouble(),  this.scrap2.getRealDouble() ) );
+			output.set( 1 == this.scrap1.compareTo( this.scrap2 ) ? this.scrap1 : this.scrap2 );
 		}
 
 		@Override
@@ -379,7 +381,7 @@ public class LoopMath
 		public void eval( final O output ) {
 			this.a.eval( this.scrap1 );
 			this.b.eval( this.scrap2 );
-			output.setReal( Math.min( this.scrap1.getRealDouble(),  this.scrap2.getRealDouble() ) );
+			output.set( -1 == this.scrap1.compareTo( this.scrap2 ) ? this.scrap1 : this.scrap2 );
 		}
 
 		@Override
@@ -402,7 +404,8 @@ public class LoopMath
 		public void eval( final O output ) {
 			this.a.eval( this.scrap1 );
 			this.b.eval( this.scrap2 );
-			output.setReal( this.scrap1.getRealDouble() + this.scrap2.getRealDouble() );
+			output.set( this.scrap1 );
+			output.add( this.scrap2 );
 		}
 
 		@Override
@@ -425,7 +428,8 @@ public class LoopMath
 		public void eval( final O output ) {
 			this.a.eval( this.scrap1 );
 			this.b.eval( this.scrap2 );
-			output.setReal( this.scrap1.getRealDouble() - this.scrap2.getRealDouble() );
+			output.set( this.scrap1 );
+			output.sub( this.scrap2 );
 		}
 
 		@Override
