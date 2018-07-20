@@ -280,7 +280,7 @@ public class LoopMath
 	{
 		protected final Function< O > a, b;
 
-		protected O scrap1, scrap2;
+		protected O scrap;
 		
 		public BinaryOp( final Object o1, final Object o2 )
 		{
@@ -291,8 +291,7 @@ public class LoopMath
 		public void setScrap( final O output )
 		{
 			if ( null == output ) return; 
-			this.scrap1 = output.copy();
-			this.scrap2 = output.copy();
+			this.scrap = output.copy();
 			this.a.setScrap( output );
 			this.b.setScrap( output );
 		}
@@ -308,16 +307,15 @@ public class LoopMath
 
 		@Override
 		public void eval( final O output ) {
-			this.a.eval(this.scrap1);
-			this.b.eval(this.scrap2);
-			output.set( this.scrap1 );
-			output.mul( this.scrap2 );
+			this.a.eval( output );
+			this.b.eval( this.scrap );
+			output.mul( this.scrap );
 		}
 
 		@Override
 		public Mul< O > copy() {
 			final Mul< O > f = new Mul< O >( this.a.copy(), this.b.copy() );
-			f.setScrap( this.scrap1 );
+			f.setScrap( this.scrap );
 			return f;
 		}
 	}
@@ -332,16 +330,15 @@ public class LoopMath
 
 		@Override
 		public void eval( final O output ) {
-			this.a.eval(this.scrap1);
-			this.b.eval(this.scrap2);
-			output.set( this.scrap1 );
-			output.div( this.scrap2 );
+			this.a.eval( output );
+			this.b.eval( this.scrap );
+			output.div( this.scrap );
 		}
 
 		@Override
 		public Div< O > copy() {
 			final Div< O > f = new Div< O >( this.a.copy(), this.b.copy() );
-			f.setScrap( this.scrap1 );
+			f.setScrap( this.scrap );
 			return f;
 		}
 	}
@@ -356,15 +353,16 @@ public class LoopMath
 
 		@Override
 		public void eval( final O output ) {
-			this.a.eval( this.scrap1 );
-			this.b.eval( this.scrap2 );
-			output.set( 1 == this.scrap1.compareTo( this.scrap2 ) ? this.scrap1 : this.scrap2 );
+			this.a.eval( output );
+			this.b.eval( this.scrap );
+			if ( -1 == output.compareTo( this.scrap ) )
+				output.set( this.scrap );
 		}
 
 		@Override
 		public Max< O > copy() {
 			final Max< O > f = new Max< O >( this.a.copy(), this.b.copy() );
-			f.setScrap( this.scrap1 );
+			f.setScrap( this.scrap );
 			return f;
 		}
 	}
@@ -379,15 +377,16 @@ public class LoopMath
 
 		@Override
 		public void eval( final O output ) {
-			this.a.eval( this.scrap1 );
-			this.b.eval( this.scrap2 );
-			output.set( -1 == this.scrap1.compareTo( this.scrap2 ) ? this.scrap1 : this.scrap2 );
+			this.a.eval( output );
+			this.b.eval( this.scrap );
+			if ( 1 == output.compareTo( this.scrap ) )
+				output.set( this.scrap );
 		}
 
 		@Override
 		public Min< O > copy() {
 			final Min< O > f = new Min< O >( this.a.copy(), this.b.copy() );
-			f.setScrap( this.scrap1 );
+			f.setScrap( this.scrap );
 			return f;
 		}
 	}
@@ -402,16 +401,15 @@ public class LoopMath
 
 		@Override
 		public void eval( final O output ) {
-			this.a.eval( this.scrap1 );
-			this.b.eval( this.scrap2 );
-			output.set( this.scrap1 );
-			output.add( this.scrap2 );
+			this.a.eval( output );
+			this.b.eval( this.scrap );
+			output.add( this.scrap );
 		}
 
 		@Override
 		public Add< O > copy() {
 			final Add< O > f = new Add< O >( this.a.copy(), this.b.copy() );
-			f.setScrap( this.scrap1 );
+			f.setScrap( this.scrap );
 			return f;
 		}
 	}
@@ -426,16 +424,15 @@ public class LoopMath
 
 		@Override
 		public void eval( final O output ) {
-			this.a.eval( this.scrap1 );
-			this.b.eval( this.scrap2 );
-			output.set( this.scrap1 );
-			output.sub( this.scrap2 );
+			this.a.eval( output );
+			this.b.eval( this.scrap );
+			output.sub( this.scrap );
 		}
 
 		@Override
 		public Sub< O > copy() {
 			final Sub< O > f = new Sub< O >( this.a.copy(), this.b.copy() );
-			f.setScrap( this.scrap1 );
+			f.setScrap( this.scrap );
 			return f;
 		}
 	}
