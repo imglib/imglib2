@@ -69,9 +69,6 @@ public class LoopMath
 			if ( op instanceof IterableOp )
 			{
 				images.addLast( ( ( IterableOp )op ).rai );
-			} else if ( op instanceof UnaryOp )
-			{
-				ops.addLast( ( ( UnaryOp )op ).a );
 			}
 			else if ( op instanceof BinaryOp )
 			{
@@ -216,63 +213,6 @@ public class LoopMath
 			
 			// Make it fail
 			return null;
-		}
-	}
-	
-	static abstract public class UnaryOp< O extends RealType< O > > extends Op< O > implements Function< O >
-	{
-		protected final Function< O > a;
-		
-		protected O scrap;
-		
-		@SuppressWarnings("unchecked")
-		public UnaryOp( final Object o ){
-			this.a = this.wrap( o );
-		}
-		
-		public void setScrap( final O output )
-		{
-			if ( null == output ) return;
-			this.scrap = output.copy();
-			this.a.setScrap( output );
-		}
-	}
-	
-	static public class Neg< O extends RealType< O > > extends UnaryOp< O >
-	{
-		public Neg( final Object o)
-		{
-			super( o );
-		}
-
-		@Override
-		public void eval( final O output ) {
-			output.setReal( - output.getRealDouble() );
-		}
-
-		@Override
-		public Neg<O> copy() {
-			return new Neg< O >( this.a.copy() );
-		}
-	}
-	
-	static public class Abs< O extends RealType< O > > extends UnaryOp< O >
-	{
-		public Abs( final Object o)
-		{
-			super( o );
-		}
-
-		@Override
-		public void eval( final O output ) {
-			output.setReal( Math.abs( output.getRealDouble() ) );
-		}
-
-		@Override
-		public Abs<O> copy() {
-			final Abs< O > f = new Abs< O >( this.a.copy() );
-			f.setScrap( this.scrap );
-			return f;
 		}
 	}
 
