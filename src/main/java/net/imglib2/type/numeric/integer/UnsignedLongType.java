@@ -52,6 +52,9 @@ import net.imglib2.util.Util;
  */
 public class UnsignedLongType extends GenericLongType< UnsignedLongType >
 {
+
+	private static final double MAX_VALUE_PLUS_ONE = Math.pow( 2, 64 ); // not precise, because double is not sufficient
+
 	// this is the constructor if you want it to read from an array
 	public UnsignedLongType( final NativeImg< ?, ? extends LongAccess > img )
 	{
@@ -282,7 +285,7 @@ public class UnsignedLongType extends GenericLongType< UnsignedLongType >
 	@Override
 	public double getMaxValue()
 	{
-		return Math.pow( 2, 64 ) - 1;
+		return MAX_VALUE_PLUS_ONE - 1;
 	} // imprecise
 
 	/**
@@ -338,4 +341,19 @@ public class UnsignedLongType extends GenericLongType< UnsignedLongType >
 	{
 		return new UnsignedLongType( get() );
 	}
+
+	@Override
+	public float getRealFloat()
+	{
+		long l = get();
+		return l >= 0 ? l : ((float) MAX_VALUE_PLUS_ONE + l);
+	}
+
+	@Override
+	public double getRealDouble()
+	{
+		long l = get();
+		return l >= 0 ? l : (MAX_VALUE_PLUS_ONE + l);
+	}
+
 }
