@@ -112,6 +112,21 @@ public class LoopBuilder< T >
 		return new LoopBuilder<>( a, b, c );
 	}
 
+	public static < A, B, C, D > LoopBuilder< FourConsumer< A, B, C, D > > setImages( final RandomAccessibleInterval< A > a, final RandomAccessibleInterval< B > b, final RandomAccessibleInterval< C > c, final RandomAccessibleInterval< D > d )
+	{
+		return new LoopBuilder<>( a, b, c, d );
+	}
+
+	public static < A, B, C, D, E > LoopBuilder< FiveConsumer< A, B, C, D, E > > setImages( final RandomAccessibleInterval< A > a, final RandomAccessibleInterval< B > b, final RandomAccessibleInterval< C > c, final RandomAccessibleInterval< D > d, final RandomAccessibleInterval< E > e )
+	{
+		return new LoopBuilder<>( a, b, c, d, e );
+	}
+
+	public static < A, B, C, D, E, F > LoopBuilder< SixConsumer< A, B, C, D, E, F > > setImages( final RandomAccessibleInterval< A > a, final RandomAccessibleInterval< B > b, final RandomAccessibleInterval< C > c, final RandomAccessibleInterval< D > d, final RandomAccessibleInterval< E > e, final RandomAccessibleInterval< F > f )
+	{
+		return new LoopBuilder<>( a, b, c, d, e, f );
+	}
+
 	public void forEachPixel( final T action )
 	{
 		Objects.requireNonNull( action );
@@ -132,13 +147,31 @@ public class LoopBuilder< T >
 		void accept( A a, B b, C c );
 	}
 
+	public interface FourConsumer< A, B, C, D >
+	{
+		void accept( A a, B b, C c, D d );
+	}
+
+	public interface FiveConsumer< A, B, C, D, E >
+	{
+		void accept( A a, B b, C c, D d, E e );
+	}
+
+	public interface SixConsumer< A, B, C, D, E, F >
+	{
+		void accept( A a, B b, C c, D d, E e, F f );
+	}
+
 	private static class RunnableFactory
 	{
 
 		private static final List< ClassCopyProvider< Runnable > > factories = Arrays.asList(
 				new ClassCopyProvider<>( ConsumerRunnable.class, Runnable.class ),
 				new ClassCopyProvider<>( BiConsumerRunnable.class, Runnable.class ),
-				new ClassCopyProvider<>( TriConsumerRunnable.class, Runnable.class ) );
+				new ClassCopyProvider<>( TriConsumerRunnable.class, Runnable.class ),
+				new ClassCopyProvider<>( FourConsumerRunnable.class, Runnable.class ),
+				new ClassCopyProvider<>( FiveConsumerRunnable.class, Runnable.class ),
+				new ClassCopyProvider<>( SixConsumerRunnable.class, Runnable.class ));
 
 		/**
 		 * For example.: Given a BiConsumer and two Samplers:
@@ -254,6 +287,102 @@ public class LoopBuilder< T >
 			public void run()
 			{
 				action.accept( samplerA.get(), samplerB.get(), samplerC.get() );
+			}
+		}
+
+		public static class FourConsumerRunnable< A, B, C, D > implements Runnable
+		{
+
+			private final FourConsumer< A, B, C, D > action;
+
+			private final Sampler< A > samplerA;
+
+			private final Sampler< B > samplerB;
+
+			private final Sampler< C > samplerC;
+
+			private final Sampler< D > samplerD;
+
+			public FourConsumerRunnable( final FourConsumer< A, B, C, D > action, final Sampler< A > samplerA, final Sampler< B > samplerB, final Sampler< C > samplerC, final Sampler< D > samplerD )
+			{
+				this.action = action;
+				this.samplerA = samplerA;
+				this.samplerB = samplerB;
+				this.samplerC = samplerC;
+				this.samplerD = samplerD;
+			}
+
+			@Override
+			public void run()
+			{
+				action.accept( samplerA.get(), samplerB.get(), samplerC.get(), samplerD.get() );
+			}
+		}
+
+		public static class FiveConsumerRunnable< A, B, C, D, E > implements Runnable
+		{
+
+			private final FiveConsumer< A, B, C, D, E > action;
+
+			private final Sampler< A > samplerA;
+
+			private final Sampler< B > samplerB;
+
+			private final Sampler< C > samplerC;
+
+			private final Sampler< D > samplerD;
+
+			private final Sampler< E > samplerE;
+
+			public FiveConsumerRunnable( final FiveConsumer< A, B, C, D, E > action, final Sampler< A > samplerA, final Sampler< B > samplerB, final Sampler< C > samplerC, final Sampler< D > samplerD, Sampler< E > samplerE )
+			{
+				this.action = action;
+				this.samplerA = samplerA;
+				this.samplerB = samplerB;
+				this.samplerC = samplerC;
+				this.samplerD = samplerD;
+				this.samplerE = samplerE;
+			}
+
+			@Override
+			public void run()
+			{
+				action.accept( samplerA.get(), samplerB.get(), samplerC.get(), samplerD.get(), samplerE.get() );
+			}
+		}
+
+		public static class SixConsumerRunnable< A, B, C, D, E, F > implements Runnable
+		{
+
+			private final SixConsumer< A, B, C, D, E, F > action;
+
+			private final Sampler< A > samplerA;
+
+			private final Sampler< B > samplerB;
+
+			private final Sampler< C > samplerC;
+
+			private final Sampler< D > samplerD;
+
+			private final Sampler< E > samplerE;
+
+			private final Sampler< F > samplerF;
+
+			public SixConsumerRunnable( final SixConsumer< A, B, C, D, E, F > action, final Sampler< A > samplerA, final Sampler< B > samplerB, final Sampler< C > samplerC, final Sampler< D > samplerD, final Sampler< E > samplerE, final Sampler< F > samplerF )
+			{
+				this.action = action;
+				this.samplerA = samplerA;
+				this.samplerB = samplerB;
+				this.samplerC = samplerC;
+				this.samplerD = samplerD;
+				this.samplerE = samplerE;
+				this.samplerF = samplerF;
+			}
+
+			@Override
+			public void run()
+			{
+				action.accept( samplerA.get(), samplerB.get(), samplerC.get(), samplerD.get(), samplerE.get(), samplerF.get() );
 			}
 		}
 	}
