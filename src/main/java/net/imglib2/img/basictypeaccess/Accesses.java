@@ -90,8 +90,8 @@ public interface Accesses
 				{
 					dest.setValue( index + destPos, src.getValue( index + srcPos ) );
 				}
+				return;
 			}
-			return;
 		}
 
 		for ( int index = 0; index < length; ++index )
@@ -148,8 +148,8 @@ public interface Accesses
 				{
 					dest.setValue( index + destPos, src.getValue( index + srcPos ) );
 				}
+				return;
 			}
-			return;
 		}
 
 		for ( int index = 0; index < length; ++index )
@@ -206,8 +206,8 @@ public interface Accesses
 				{
 					dest.setValue( index + destPos, src.getValue( index + srcPos ) );
 				}
+				return;
 			}
-			return;
 		}
 
 		for ( int index = 0; index < length; ++index )
@@ -264,8 +264,8 @@ public interface Accesses
 				{
 					dest.setValue( index + destPos, src.getValue( index + srcPos ) );
 				}
+				return;
 			}
-			return;
 		}
 
 		for ( int index = 0; index < length; ++index )
@@ -322,8 +322,8 @@ public interface Accesses
 				{
 					dest.setValue( index + destPos, src.getValue( index + srcPos ) );
 				}
+				return;
 			}
-			return;
 		}
 
 		for ( int index = 0; index < length; ++index )
@@ -380,8 +380,8 @@ public interface Accesses
 				{
 					dest.setValue( index + destPos, src.getValue( index + srcPos ) );
 				}
+				return;
 			}
-			return;
 		}
 
 		for ( int index = 0; index < length; ++index )
@@ -438,8 +438,8 @@ public interface Accesses
 				{
 					dest.setValue( index + destPos, src.getValue( index + srcPos ) );
 				}
+				return;
 			}
-			return;
 		}
 
 		for ( int index = 0; index < length; ++index )

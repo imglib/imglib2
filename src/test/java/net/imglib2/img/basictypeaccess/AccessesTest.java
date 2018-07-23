@@ -215,4 +215,158 @@ public class AccessesTest
 
 	}
 
+	@Test
+	public void testByteSourceSameAsTarget()
+	{
+		final ByteArray source = new ByteArray( numEntities );
+		for ( int i = 0; i < numEntities; ++i )
+		{
+			source.setValue( i, ( byte ) i );
+		}
+		final byte[] sourceCopy = source.getCurrentStorageArray().clone();
+
+		Accesses.copy( source, 0, source, 0, numEntities );
+		Assert.assertArrayEquals( sourceCopy, source.getCurrentStorageArray() );
+
+		System.arraycopy( sourceCopy, 0, sourceCopy, numEntities / 2, numEntities / 2 );
+		Accesses.copy( source, 0, source, numEntities / 2, numEntities / 2 );
+		Assert.assertArrayEquals( sourceCopy, source.getCurrentStorageArray() );
+
+		System.arraycopy( sourceCopy, numEntities / 4, sourceCopy, 0, numEntities / 2 );
+		Accesses.copy( source, numEntities / 4, source, 0, numEntities / 2 );
+		Assert.assertArrayEquals( sourceCopy, source.getCurrentStorageArray() );
+	}
+
+	@Test
+	public void testCharSourceSameAsTarget()
+	{
+		final CharArray source = new CharArray( numEntities );
+		for ( int i = 0; i < numEntities; ++i )
+		{
+			source.setValue( i, ( char ) i );
+		}
+		final char[] sourceCopy = source.getCurrentStorageArray().clone();
+
+		Accesses.copy( source, 0, source, 0, numEntities );
+		Assert.assertArrayEquals( sourceCopy, source.getCurrentStorageArray() );
+
+		System.arraycopy( sourceCopy, 0, sourceCopy, numEntities / 2, numEntities / 2 );
+		Accesses.copy( source, 0, source, numEntities / 2, numEntities / 2 );
+		Assert.assertArrayEquals( sourceCopy, source.getCurrentStorageArray() );
+
+		System.arraycopy( sourceCopy, numEntities / 4, sourceCopy, 0, numEntities / 2 );
+		Accesses.copy( source, numEntities / 4, source, 0, numEntities / 2 );
+		Assert.assertArrayEquals( sourceCopy, source.getCurrentStorageArray() );
+	}
+
+	@Test
+	public void testShortSourceSameAsTarget()
+	{
+		final ShortArray source = new ShortArray( numEntities );
+		for ( int i = 0; i < numEntities; ++i )
+		{
+			source.setValue( i, ( short ) i );
+		}
+		final short[] sourceCopy = source.getCurrentStorageArray().clone();
+
+		Accesses.copy( source, 0, source, 0, numEntities );
+		Assert.assertArrayEquals( sourceCopy, source.getCurrentStorageArray() );
+
+		System.arraycopy( sourceCopy, 0, sourceCopy, numEntities / 2, numEntities / 2 );
+		Accesses.copy( source, 0, source, numEntities / 2, numEntities / 2 );
+		Assert.assertArrayEquals( sourceCopy, source.getCurrentStorageArray() );
+
+		System.arraycopy( sourceCopy, numEntities / 4, sourceCopy, 0, numEntities / 2 );
+		Accesses.copy( source, numEntities / 4, source, 0, numEntities / 2 );
+		Assert.assertArrayEquals( sourceCopy, source.getCurrentStorageArray() );
+	}
+
+	@Test
+	public void testIntSourceSameAsTarget()
+	{
+		final IntArray source = new IntArray( numEntities );
+		for ( int i = 0; i < numEntities; ++i )
+		{
+			source.setValue( i, ( byte ) i );
+		}
+		final int[] sourceCopy = source.getCurrentStorageArray().clone();
+
+		Accesses.copy( source, 0, source, 0, numEntities );
+		Assert.assertArrayEquals( sourceCopy, source.getCurrentStorageArray() );
+
+		System.arraycopy( sourceCopy, 0, sourceCopy, numEntities / 2, numEntities / 2 );
+		Accesses.copy( source, 0, source, numEntities / 2, numEntities / 2 );
+		Assert.assertArrayEquals( sourceCopy, source.getCurrentStorageArray() );
+
+		System.arraycopy( sourceCopy, numEntities / 4, sourceCopy, 0, numEntities / 2 );
+		Accesses.copy( source, numEntities / 4, source, 0, numEntities / 2 );
+		Assert.assertArrayEquals( sourceCopy, source.getCurrentStorageArray() );
+	}
+
+	@Test
+	public void testLongSourceSameAsTarget()
+	{
+		final LongArray source = new LongArray( numEntities );
+		for ( int i = 0; i < numEntities; ++i )
+		{
+			source.setValue( i, ( byte ) i );
+		}
+		final long[] sourceCopy = source.getCurrentStorageArray().clone();
+
+		Accesses.copy( source, 0, source, 0, numEntities );
+		Assert.assertArrayEquals( sourceCopy, source.getCurrentStorageArray() );
+
+		System.arraycopy( sourceCopy, 0, sourceCopy, numEntities / 2, numEntities / 2 );
+		Accesses.copy( source, 0, source, numEntities / 2, numEntities / 2 );
+		Assert.assertArrayEquals( sourceCopy, source.getCurrentStorageArray() );
+
+		System.arraycopy( sourceCopy, numEntities / 4, sourceCopy, 0, numEntities / 2 );
+		Accesses.copy( source, numEntities / 4, source, 0, numEntities / 2 );
+		Assert.assertArrayEquals( sourceCopy, source.getCurrentStorageArray() );
+	}
+
+	@Test
+	public void testFloatSourceSameAsTarget()
+	{
+		final FloatArray source = new FloatArray( numEntities );
+		for ( int i = 0; i < numEntities; ++i )
+		{
+			source.setValue( i, ( byte ) i );
+		}
+		final float[] sourceCopy = source.getCurrentStorageArray().clone();
+
+		Accesses.copy( source, 0, source, 0, numEntities );
+		Assert.assertArrayEquals( sourceCopy, source.getCurrentStorageArray(), 0.0f );
+
+		System.arraycopy( sourceCopy, 0, sourceCopy, numEntities / 2, numEntities / 2 );
+		Accesses.copy( source, 0, source, numEntities / 2, numEntities / 2 );
+		Assert.assertArrayEquals( sourceCopy, source.getCurrentStorageArray(), 0.0f );
+
+		System.arraycopy( sourceCopy, numEntities / 4, sourceCopy, 0, numEntities / 2 );
+		Accesses.copy( source, numEntities / 4, source, 0, numEntities / 2 );
+		Assert.assertArrayEquals( sourceCopy, source.getCurrentStorageArray(), 0.0f );
+	}
+
+	@Test
+	public void testDoubleSourceSameAsTarget()
+	{
+		final DoubleArray source = new DoubleArray( numEntities );
+		for ( int i = 0; i < numEntities; ++i )
+		{
+			source.setValue( i, ( byte ) i );
+		}
+		final double[] sourceCopy = source.getCurrentStorageArray().clone();
+
+		Accesses.copy( source, 0, source, 0, numEntities );
+		Assert.assertArrayEquals( sourceCopy, source.getCurrentStorageArray(), 0.0 );
+
+		System.arraycopy( sourceCopy, 0, sourceCopy, numEntities / 2, numEntities / 2 );
+		Accesses.copy( source, 0, source, numEntities / 2, numEntities / 2 );
+		Assert.assertArrayEquals( sourceCopy, source.getCurrentStorageArray(), 0.0 );
+
+		System.arraycopy( sourceCopy, numEntities / 4, sourceCopy, 0, numEntities / 2 );
+		Accesses.copy( source, numEntities / 4, source, 0, numEntities / 2 );
+		Assert.assertArrayEquals( sourceCopy, source.getCurrentStorageArray(), 0.0 );
+	}
+
 }
