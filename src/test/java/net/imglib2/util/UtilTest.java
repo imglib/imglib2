@@ -34,20 +34,28 @@
 
 package net.imglib2.util;
 
+import static junit.framework.TestCase.assertFalse;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import net.imglib2.FinalInterval;
 import net.imglib2.RealLocalizable;
 import net.imglib2.RealPoint;
+import net.imglib2.img.Img;
 import net.imglib2.img.ImgFactory;
 import net.imglib2.img.array.ArrayImgFactory;
+import net.imglib2.img.array.ArrayImgs;
 import net.imglib2.img.cell.CellImgFactory;
 import net.imglib2.img.list.ListImgFactory;
 import net.imglib2.type.logic.BitType;
 import net.imglib2.type.logic.BoolType;
 
+import net.imglib2.type.numeric.RealType;
+import net.imglib2.type.numeric.integer.IntType;
+import net.imglib2.type.numeric.real.DoubleType;
 import org.junit.Test;
+
+import java.util.function.BiPredicate;
 
 public class UtilTest
 {
@@ -142,5 +150,32 @@ public class UtilTest
 
 		final ImgFactory< BoolType > boolFactory = Util.getSuitableImgFactory( new FinalInterval( 10, 10 ), new BoolType() );
 		assertTrue( boolFactory instanceof ListImgFactory );
+	}
+
+	@Test
+	public void testImagesEqual() {
+		assertTrue( Util.imagesEqual( intsImage(1,2,3), intsImage(1,2,3) ) );
+		assertFalse( Util.imagesEqual( intsImage(1), intsImage(1,2,3) ) );
+		assertFalse( Util.imagesEqual( intsImage(1,2,3), intsImage(1,4,3) ) );
+		assertTrue( Util.imagesEqual( doublesImage(1,2,3), doublesImage(1,2,3) ) );
+		assertFalse( Util.imagesEqual( doublesImage(1,2,3), doublesImage(1,4,3) ) );
+	}
+
+	@Test
+	public void testImagesEqualWithPredicate() {
+		BiPredicate< RealType<?>, RealType<?> > predicate = ( a, b ) -> a.getRealDouble() == b.getRealDouble();
+		assertTrue( Util.imagesEqual( intsImage(1,2,3), doublesImage(1,2,3), predicate ) );
+		assertFalse( Util.imagesEqual( intsImage(1), doublesImage(1,2,3), predicate ) );
+		assertFalse( Util.imagesEqual( intsImage(1,2,3), doublesImage(1,4,3), predicate ) );
+	}
+
+	private Img< IntType > intsImage( int... pixels )
+	{
+		return ArrayImgs.ints( pixels, pixels.length );
+	}
+
+	private Img<DoubleType > doublesImage( double... pixels )
+	{
+		return ArrayImgs.doubles( pixels, pixels.length );
 	}
 }

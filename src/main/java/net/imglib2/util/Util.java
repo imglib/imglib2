@@ -34,8 +34,6 @@
 
 package net.imglib2.util;
 
-import java.util.List;
-
 import net.imglib2.Dimensions;
 import net.imglib2.Interval;
 import net.imglib2.IterableInterval;
@@ -54,6 +52,11 @@ import net.imglib2.img.cell.CellImgFactory;
 import net.imglib2.img.list.ListImgFactory;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.Type;
+import net.imglib2.type.operators.ValueEquals;
+import net.imglib2.view.Views;
+
+import java.util.List;
+import java.util.function.BiPredicate;
 
 /**
  * A collection of general-purpose utility methods for working with ImgLib2 data
@@ -950,6 +953,28 @@ public class Util
 			if ( l1.getDoublePosition( d ) != l2.getDoublePosition( d ) )
 				return false;
 		}
+		return true;
+	}
+
+	/**
+	 * Checks if both images have equal intervals and content.
+	 */
+	public static < T extends ValueEquals< U >, U > boolean imagesEqual( final RandomAccessibleInterval< ? extends T > a, final RandomAccessibleInterval< ? extends U > b )
+	{
+		return imagesEqual( a, b, ValueEquals::valueEquals );
+	}
+
+	/**
+	 * Checks if both images have equal intervals and content.
+	 * A predicate must be given to check if two pixels are equal.
+	 */
+	public static < T, U > boolean imagesEqual( final RandomAccessibleInterval< ? extends T > a, final RandomAccessibleInterval< ? extends U > b, BiPredicate< T, U > pixelEquals )
+	{
+		if ( !Intervals.equals( a, b ) )
+			return false;
+		for ( Pair< ? extends T, ? extends U > pair : Views.interval( Views.pair( a, b ), b ) )
+			if ( !pixelEquals.test( pair.getA(), pair.getB() ) )
+				return false;
 		return true;
 	}
 
