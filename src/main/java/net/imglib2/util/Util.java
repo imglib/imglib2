@@ -45,6 +45,7 @@ import net.imglib2.RealInterval;
 import net.imglib2.RealLocalizable;
 import net.imglib2.RealRandomAccess;
 import net.imglib2.RealRandomAccessible;
+import net.imglib2.img.Img;
 import net.imglib2.img.ImgFactory;
 import net.imglib2.img.array.ArrayImg;
 import net.imglib2.img.array.ArrayImgFactory;
@@ -52,11 +53,13 @@ import net.imglib2.img.cell.CellImgFactory;
 import net.imglib2.img.list.ListImgFactory;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.Type;
+import net.imglib2.type.numeric.RealType;
 import net.imglib2.type.operators.ValueEquals;
 import net.imglib2.view.Views;
 
 import java.util.List;
 import java.util.function.BiPredicate;
+import java.util.stream.StreamSupport;
 
 /**
  * A collection of general-purpose utility methods for working with ImgLib2 data
@@ -1002,5 +1005,31 @@ public class Util
 		for ( int i = 0; i < a.length; ++i )
 			if ( b[ i ] > a[ i ] )
 				a[ i ] = b[ i ];
+	}
+
+	/**
+	 * Returns the content of {@code Iterable<RealType>} as array of doubles.
+	 */
+	public static double[] asDoubleArray( Iterable< ? extends RealType< ? > > iterable )
+	{
+		return StreamSupport.stream( iterable.spliterator(), false ).mapToDouble( RealType::getRealDouble ).toArray();
+	}
+
+	/**
+	 * Returns the pixels of an RandomAccessibleInterval of RealType as array of doubles.
+	 * The pixels are sorted in flat iteration order.
+	 */
+	public static double[] asDoubleArray( RandomAccessibleInterval< ? extends RealType< ? > > rai )
+	{
+		return asDoubleArray( Views.flatIterable( rai ) );
+	}
+
+	/**
+	 * Returns the pixels of an image of RealType as array of doubles.
+	 * The pixels are sorted in flat iteration order.
+	 */
+	public static double[] asDoubleArray( Img< ? extends RealType< ? > > image )
+	{
+		return asDoubleArray( ( RandomAccessibleInterval< ? extends RealType< ? > > ) image );
 	}
 }

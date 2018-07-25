@@ -34,10 +34,6 @@
 
 package net.imglib2.util;
 
-import static junit.framework.TestCase.assertFalse;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-
 import net.imglib2.FinalInterval;
 import net.imglib2.RealLocalizable;
 import net.imglib2.RealPoint;
@@ -49,13 +45,17 @@ import net.imglib2.img.cell.CellImgFactory;
 import net.imglib2.img.list.ListImgFactory;
 import net.imglib2.type.logic.BitType;
 import net.imglib2.type.logic.BoolType;
-
 import net.imglib2.type.numeric.RealType;
 import net.imglib2.type.numeric.integer.IntType;
 import net.imglib2.type.numeric.real.DoubleType;
 import org.junit.Test;
 
 import java.util.function.BiPredicate;
+
+import static junit.framework.TestCase.assertFalse;
+import static org.junit.Assert.assertArrayEquals;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class UtilTest
 {
@@ -177,5 +177,14 @@ public class UtilTest
 	private Img<DoubleType > doublesImage( double... pixels )
 	{
 		return ArrayImgs.doubles( pixels, pixels.length );
+	}
+
+	@Test
+	public void testAsDoubleArray()
+	{
+		double[] expected = { 1, 2, 3, 4 };
+		Img< DoubleType > img = ArrayImgs.doubles( expected, 2, 2 );
+		double[] result = Util.asDoubleArray( img );
+		assertArrayEquals( expected, result, 0.0 );
 	}
 }
