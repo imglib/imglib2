@@ -369,4 +369,60 @@ public class AccessesTest
 		Assert.assertArrayEquals( sourceCopy, source.getCurrentStorageArray(), 0.0 );
 	}
 
+	@Test
+	public void testByteWithDifferentAccesses()
+	{
+
+		final SomeByteAccess source = new SomeByteAccess( numEntities );
+
+		{
+			final ByteArray target = new ByteArray( numEntities );
+			Accesses.copy( source, 0, target, 0, numEntities );
+			Assert.assertArrayEquals( source.getCurrentStorageArray(), target.getCurrentStorageArray() );
+		}
+
+		{
+			final ByteArray target = new ByteArray( numEntities );
+			Accesses.copy( source, start, target, start, stop - start );
+			for ( int i = 0; i < numEntities; ++i )
+			{
+				Assert.assertEquals( i < start || i >= stop ? 0 : source.getValue( i ), target.getValue( i ) );
+			}
+		}
+
+	}
+
+	private static final class SomeByteAccess implements ByteAccess
+	{
+
+		private final byte[] data;
+
+		private SomeByteAccess( int numEntities )
+		{
+			this( new byte[ numEntities ] );
+		}
+
+		private SomeByteAccess( byte[] data )
+		{
+			this.data = data;
+		}
+
+		public byte[] getCurrentStorageArray()
+		{
+			return this.data;
+		}
+
+		@Override
+		public byte getValue( int index )
+		{
+			return data[ index ];
+		}
+
+		@Override
+		public void setValue(int index, byte value)
+		{
+			data[ index ] = value;
+		}
+	}
+
 }
