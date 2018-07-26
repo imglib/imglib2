@@ -77,7 +77,7 @@ public class AccessesTest
 
 	}
 
-	@Test
+	@Test( expected = IllegalArgumentException.class )
 	public void testChar()
 	{
 
@@ -237,7 +237,7 @@ public class AccessesTest
 		Assert.assertArrayEquals( sourceCopy, source.getCurrentStorageArray() );
 	}
 
-	@Test
+	@Test( expected = IllegalArgumentException.class )
 	public void testCharSourceSameAsTarget()
 	{
 		final CharArray source = new CharArray( numEntities );
