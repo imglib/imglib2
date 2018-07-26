@@ -39,9 +39,10 @@ package net.imglib2.img.basictypeaccess;
  *
  * @author Philipp Hanslovsky
  */
-public interface Accesses
+public class Accesses
 {
 
+	private Accesses() {}
 	/**
 	 *
 	 * Following {@link System#arraycopy}, copies {@code length} elements from
