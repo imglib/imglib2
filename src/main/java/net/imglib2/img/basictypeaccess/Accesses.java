@@ -52,6 +52,18 @@ import net.imglib2.type.numeric.real.FloatType;
 public class Accesses
 {
 
+	private static final Function< ByteAccess, ByteType> BYTE_FACTORY = ByteType::new;
+
+	private static final Function< ShortAccess, ShortType> SHORT_FACTORY =  ShortType::new;
+
+	private static final Function< IntAccess, IntType> INT_FACTORY =  IntType::new;
+
+	private static final Function< LongAccess, LongType> LONG_FACTORY =  LongType::new;
+
+	private static final Function< DoubleAccess, DoubleType> DOUBLE_FACTORY =  DoubleType::new;
+
+	private static final Function< FloatAccess, FloatType> FLOAT_FACTORY =  FloatType::new;
+
 	private Accesses() {}
 
 	/**
@@ -95,6 +107,12 @@ public class Accesses
 			final int length )
 	{
 		Function typeFactory = getTypeFactory( src );
+
+		if ( !typeFactory.equals( getTypeFactory( dest ) ) )
+			throw new IllegalArgumentException( "src and dest types are not compatible: "
+					+ src.getClass().getName() + " "
+					+ dest.getClass().getName() );
+
 		copy( src, srcPos, dest, destPos, length, typeFactory );
 	}
 
@@ -134,17 +152,17 @@ public class Accesses
 
 	private static < A > Function<A, ? extends NativeType< ? > > getTypeFactory( A a ) {
 		if ( a instanceof ByteAccess )
-			return ( Function< A, ByteType> ) access -> new ByteType( ( ByteAccess ) access );
+			return ( Function< A, ByteType> ) BYTE_FACTORY;
 		if ( a instanceof ShortAccess )
-			return ( Function< A, ShortType> ) access -> new ShortType( ( ShortAccess ) access );
+			return ( Function< A, ShortType> ) SHORT_FACTORY;
 		if ( a instanceof IntAccess )
-			return ( Function< A, IntType> ) access -> new IntType( ( IntAccess ) access );
+			return ( Function< A, IntType> ) INT_FACTORY;
 		if ( a instanceof LongAccess )
-			return ( Function< A, LongType> ) access -> new LongType( ( LongAccess ) access );
+			return ( Function< A, LongType> ) LONG_FACTORY;
 		if ( a instanceof DoubleAccess )
-			return ( Function< A, DoubleType> ) access -> new DoubleType( ( DoubleAccess ) access );
+			return ( Function< A, DoubleType> ) DOUBLE_FACTORY;
 		if ( a instanceof FloatAccess )
-			return( Function< A, FloatType> ) access -> new FloatType( ( FloatAccess ) access );
+			return( Function< A, FloatType> ) FLOAT_FACTORY;
 
 		throw new IllegalArgumentException( "Access is not supported: " + a.getClass().getName() );
 	}

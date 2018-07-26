@@ -369,6 +369,14 @@ public class AccessesTest
 		Assert.assertArrayEquals( sourceCopy, source.getCurrentStorageArray(), 0.0 );
 	}
 
+	@Test( expected = IllegalArgumentException.class )
+	public void testLongSourceByteTargetFail()
+	{
+		final LongArray source = new LongArray( numEntities );
+		final ByteArray target = new ByteArray( numEntities );
+		Accesses.copy( source, 0, target, 0, numEntities );
+	}
+
 	@Test
 	public void testByteWithDifferentAccesses()
 	{
