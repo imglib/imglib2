@@ -1450,7 +1450,9 @@ public class Views
 	 * @return {@link RandomAccessibleInterval} of concatenated sources.
 	 */
 	@SafeVarargs
-	public static < T > RandomAccessibleInterval< T > concatenate( final int concatenationAxis, final RandomAccessibleInterval< T >... sources )
+	public static < T > RandomAccessibleInterval< T > concatenate(
+			final int concatenationAxis,
+			final RandomAccessibleInterval< T >... sources )
 	{
 		return concatenate( concatenationAxis, StackView.StackAccessMode.DEFAULT, sources );
 	}
@@ -1467,7 +1469,9 @@ public class Views
 	 *            {@link RandomAccessibleInterval}s to be concatenated.
 	 * @return {@link RandomAccessibleInterval} of concatenated sources.
 	 */
-	public static < T > RandomAccessibleInterval< T > concatenate( final int concatenationAxis, final List< ? extends RandomAccessibleInterval< T > > sources )
+	public static < T > RandomAccessibleInterval< T > concatenate(
+			final int concatenationAxis,
+			final List< ? extends RandomAccessibleInterval< T > > sources )
 	{
 		return concatenate( concatenationAxis, StackView.StackAccessMode.DEFAULT, sources );
 	}
@@ -1489,7 +1493,10 @@ public class Views
 	 * @return {@link RandomAccessibleInterval} of concatenated sources.
 	 */
 	@SafeVarargs
-	public static < T > RandomAccessibleInterval< T > concatenate( final int concatenationAxis, final StackView.StackAccessMode mode, final RandomAccessibleInterval< T >... sources )
+	public static < T > RandomAccessibleInterval< T > concatenate(
+			final int concatenationAxis,
+			final StackView.StackAccessMode mode,
+			final RandomAccessibleInterval< T >... sources )
 	{
 		return concatenate( concatenationAxis, mode, Arrays.asList( sources ) );
 	}
@@ -1510,7 +1517,10 @@ public class Views
 	 *            {@link RandomAccessibleInterval}s to be concatenated.
 	 * @return {@link RandomAccessibleInterval} of concatenated sources.
 	 */
-	public static < T > RandomAccessibleInterval< T > concatenate( final int concatenationAxis, final StackView.StackAccessMode mode, final List< ? extends RandomAccessibleInterval< T > > sources )
+	public static < T > RandomAccessibleInterval< T > concatenate(
+			final int concatenationAxis,
+			final StackView.StackAccessMode mode,
+			final List< ? extends RandomAccessibleInterval< T > > sources )
 	{
 
 		assert sources.size() > 0;
@@ -1520,7 +1530,8 @@ public class Views
 			for ( long index = source.min( concatenationAxis ); index <= source.max( concatenationAxis ); ++index )
 				hyperSlices.add( Views.hyperSlice( source, concatenationAxis, index ) );
 
-		return Views.stack( mode, hyperSlices );
+		RandomAccessibleInterval< T > stacked = Views.stack( mode, hyperSlices );
+		return Views.moveAxis( stacked, stacked.numDimensions() - 1, concatenationAxis );
 	}
 
 }
