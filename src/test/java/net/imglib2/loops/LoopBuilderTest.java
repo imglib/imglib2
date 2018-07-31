@@ -33,9 +33,13 @@
  */
 package net.imglib2.loops;
 
+import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 
+import java.util.List;
 import java.util.Random;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import org.junit.Test;
 
@@ -81,5 +85,50 @@ public class LoopBuilderTest
 		final Cursor< IntType > s = Views.iterable( sum ).cursor();
 		while ( s.hasNext() )
 			assertEquals( s.next().get(), a.next().get() + b.next().get() );
+	}
+
+	@Test
+	public void testFourConsumer() {
+		List< Img< IntType > > images = createNImages( 4 );
+		LoopBuilder.setImages( images.get( 0 ), images.get( 1 ), images.get( 2 ), images.get( 3 ) )
+				.forEachPixel( ( a, b, c, d ) -> setIncreasing(a, b, c, d) );
+		assertIncreasing( images );
+	}
+
+	@Test
+	public void testFiveConsumer() {
+		List< Img< IntType > > images = createNImages( 5 );
+		LoopBuilder.setImages( images.get( 0 ), images.get( 1 ), images.get( 2 ), images.get( 3 ), images.get( 4 ) )
+				.forEachPixel( ( a, b, c, d, e ) -> setIncreasing(a, b, c, d, e) );
+		assertIncreasing( images );
+	}
+
+	@Test
+	public void testSixConsumer() {
+		List< Img< IntType > > images = createNImages( 6 );
+		LoopBuilder.setImages( images.get( 0 ), images.get( 1 ), images.get( 2 ), images.get( 3 ), images.get( 4 ), images.get( 5 ) )
+				.forEachPixel( ( a, b, c, d, e, f ) -> setIncreasing(a, b, c, d, e, f) );
+		assertIncreasing( images );
+	}
+
+	private List< Img< IntType > > createNImages(int n)
+	{
+		return IntStream.range( 0, n )
+					.mapToObj( ignore -> ArrayImgs.ints( 1 ) ).collect( Collectors.toList());
+	}
+
+	private void assertIncreasing( List< Img< IntType > > images )
+	{
+		for ( int i = 0; i < images.size(); i++ )
+		{
+			Img< IntType > image = images.get( i );
+			assertEquals( i, image.firstElement().get() );
+		}
+	}
+
+	private void setIncreasing( IntType... types )
+	{
+		for ( int i = 0; i < types.length; i++ )
+			types[i].setInteger( i );
 	}
 }
