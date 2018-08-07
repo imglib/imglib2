@@ -48,330 +48,98 @@ import net.imglib2.img.basictypeaccess.array.ShortArray;
 public class AccessesTest
 {
 
-	private final int numEntities = 10;
-
-	private final int start = 3;
-
-	private final int stop = 6;
-
 	@Test
 	public void testByte()
 	{
-
-		final ByteArray source = new ByteArray( numEntities );
-
-		{
-			final ByteArray target = new ByteArray( numEntities );
-			Accesses.copy( source, 0, target, 0, numEntities );
-			Assert.assertArrayEquals( source.getCurrentStorageArray(), target.getCurrentStorageArray() );
-		}
-
-		{
-			final ByteArray target = new ByteArray( numEntities );
-			Accesses.copy( source, start, target, start, stop - start );
-			for ( int i = 0; i < numEntities; ++i )
-			{
-				Assert.assertEquals( i < start || i >= stop ? 0 : source.getValue( i ), target.getValue( i ) );
-			}
-		}
-
+		final ByteArray source = new ByteArray( new byte[] { 1, 2, 3, 4, 5 } );
+		final ByteArray target = new ByteArray( new byte[] { -1, -2, -3, -4, -5 } );
+		Accesses.copy( source, 1, target, 3, 2 );
+		Assert.assertArrayEquals( new byte[] { -1, -2, -3, 2, 3 }, target.getCurrentStorageArray() );
 	}
 
 	@Test( expected = IllegalArgumentException.class )
 	public void testChar()
 	{
-
-		final CharArray source = new CharArray( numEntities );
-
-		{
-			final CharArray target = new CharArray( numEntities );
-			Accesses.copy( source, 0, target, 0, numEntities );
-			Assert.assertArrayEquals( source.getCurrentStorageArray(), target.getCurrentStorageArray() );
-		}
-
-		{
-			final CharArray target = new CharArray( numEntities );
-			Accesses.copy( source, start, target, start, stop - start );
-			for ( int i = 0; i < numEntities; ++i )
-			{
-				Assert.assertEquals( i < start || i >= stop ? 0 : source.getValue( i ), target.getValue( i ) );
-			}
-		}
-
+		final CharArray source = new CharArray( new char[] { 'a', 'b', 'c', 'd', 'e' } );
+		final CharArray target = new CharArray( new char[] { 'f', 'g', 'h', 'i', 'j' } );
+		Accesses.copy( source, 1, target, 3, 2 );
+		Assert.assertArrayEquals( new char[] { 'f', 'g', 'h', 'b', 'c' }, target.getCurrentStorageArray() );
 	}
 
 	@Test
 	public void testDouble()
 	{
-
-		final DoubleArray source = new DoubleArray( numEntities );
-
-		{
-			final DoubleArray target = new DoubleArray( numEntities );
-			Accesses.copy( source, 0, target, 0, numEntities );
-			Assert.assertArrayEquals( source.getCurrentStorageArray(), target.getCurrentStorageArray(), 0.0 );
-		}
-
-		{
-			final DoubleArray target = new DoubleArray( numEntities );
-			Accesses.copy( source, start, target, start, stop - start );
-			for ( int i = 0; i < numEntities; ++i )
-			{
-				Assert.assertEquals( i < start || i >= stop ? 0 : source.getValue( i ), target.getValue( i ), 0.0 );
-			}
-		}
-
+		final DoubleArray source = new DoubleArray( new double[] { 1, 2, 3, 4, 5 } );
+		final DoubleArray target = new DoubleArray( new double[] { -1, -2, -3, -4, -5 } );
+		Accesses.copy( source, 1, target, 3, 2 );
+		Assert.assertArrayEquals( new double[] { -1, -2, -3, 2, 3 }, target.getCurrentStorageArray(), 0.0 );
 	}
 
 	@Test
 	public void testFloat()
 	{
-
-		final FloatArray source = new FloatArray( numEntities );
-
-		{
-			final FloatArray target = new FloatArray( numEntities );
-			Accesses.copy( source, 0, target, 0, numEntities );
-			Assert.assertArrayEquals( source.getCurrentStorageArray(), target.getCurrentStorageArray(), 0.0f );
-		}
-
-		{
-			final FloatArray target = new FloatArray( numEntities );
-			Accesses.copy( source, start, target, start, stop - start );
-			for ( int i = 0; i < numEntities; ++i )
-			{
-				Assert.assertEquals( i < start || i >= stop ? 0 : source.getValue( i ), target.getValue( i ), 0.0f );
-			}
-		}
-
+		final FloatArray source = new FloatArray( new float[] { 1, 2, 3, 4, 5 } );
+		final FloatArray target = new FloatArray( new float[] { -1, -2, -3, -4, -5 } );
+		Accesses.copy( source, 1, target, 3, 2 );
+		Assert.assertArrayEquals( new float[] { -1, -2, -3, 2, 3 }, target.getCurrentStorageArray(), 0.0f );
 	}
 
 	@Test
 	public void testInt()
 	{
-
-		final IntArray source = new IntArray( numEntities );
-
-		{
-			final IntArray target = new IntArray( numEntities );
-			Accesses.copy( source, 0, target, 0, numEntities );
-			Assert.assertArrayEquals( source.getCurrentStorageArray(), target.getCurrentStorageArray() );
-		}
-
-		{
-			final IntArray target = new IntArray( numEntities );
-			Accesses.copy( source, start, target, start, stop - start );
-			for ( int i = 0; i < numEntities; ++i )
-			{
-				Assert.assertEquals( i < start || i >= stop ? 0 : source.getValue( i ), target.getValue( i ) );
-			}
-		}
-
+		final IntArray source = new IntArray( new int[] { 1, 2, 3, 4, 5 } );
+		final IntArray target = new IntArray( new int[] { -1, -2, -3, -4, -5 } );
+		Accesses.copy( source, 1, target, 3, 2 );
+		Assert.assertArrayEquals( new int[] { -1, -2, -3, 2, 3 }, target.getCurrentStorageArray() );
 	}
 
 	@Test
 	public void testLong()
 	{
-
-		final LongArray source = new LongArray( numEntities );
-
-		{
-			final LongArray target = new LongArray( numEntities );
-			Accesses.copy( source, 0, target, 0, numEntities );
-			Assert.assertArrayEquals( source.getCurrentStorageArray(), target.getCurrentStorageArray() );
-		}
-
-		{
-			final LongArray target = new LongArray( numEntities );
-			Accesses.copy( source, start, target, start, stop - start );
-			for ( int i = 0; i < numEntities; ++i )
-			{
-				Assert.assertEquals( i < start || i >= stop ? 0 : source.getValue( i ), target.getValue( i ) );
-			}
-		}
-
+		final LongArray source = new LongArray( new long[] { 1, 2, 3, 4, 5 } );
+		final LongArray target = new LongArray( new long[] { -1, -2, -3, -4, -5 } );
+		Accesses.copy( source, 1, target, 3, 2 );
+		Assert.assertArrayEquals( new long[] { -1, -2, -3, 2, 3 }, target.getCurrentStorageArray() );
 	}
 
 	@Test
 	public void testShort()
 	{
-
-		final ShortArray source = new ShortArray( numEntities );
-
-		{
-			final ShortArray target = new ShortArray( numEntities );
-			Accesses.copy( source, 0, target, 0, numEntities );
-			Assert.assertArrayEquals( source.getCurrentStorageArray(), target.getCurrentStorageArray() );
-		}
-
-		{
-			final ShortArray target = new ShortArray( numEntities );
-			Accesses.copy( source, start, target, start, stop - start );
-			for ( int i = 0; i < numEntities; ++i )
-			{
-				Assert.assertEquals( i < start || i >= stop ? 0 : source.getValue( i ), target.getValue( i ) );
-			}
-		}
-
+		final ShortArray source = new ShortArray( new short[] { 1, 2, 3, 4, 5 } );
+		final ShortArray target = new ShortArray( new short[] { -1, -2, -3, -4, -5 } );
+		Accesses.copy( source, 1, target, 3, 2 );
+		Assert.assertArrayEquals( new short[] { -1, -2, -3, 2, 3 }, target.getCurrentStorageArray() );
 	}
 
 	@Test
-	public void testByteSourceSameAsTarget()
+	public void testCopyInPlace()
 	{
-		final ByteArray source = new ByteArray( numEntities );
-		for ( int i = 0; i < numEntities; ++i )
-		{
-			source.setValue( i, ( byte ) i );
-		}
-		final byte[] sourceCopy = source.getCurrentStorageArray().clone();
-
-		Accesses.copy( source, 0, source, 0, numEntities );
-		Assert.assertArrayEquals( sourceCopy, source.getCurrentStorageArray() );
-
-		System.arraycopy( sourceCopy, 0, sourceCopy, numEntities / 2, numEntities / 2 );
-		Accesses.copy( source, 0, source, numEntities / 2, numEntities / 2 );
-		Assert.assertArrayEquals( sourceCopy, source.getCurrentStorageArray() );
-
-		System.arraycopy( sourceCopy, numEntities / 4, sourceCopy, 0, numEntities / 2 );
-		Accesses.copy( source, numEntities / 4, source, 0, numEntities / 2 );
-		Assert.assertArrayEquals( sourceCopy, source.getCurrentStorageArray() );
-	}
-
-	@Test( expected = IllegalArgumentException.class )
-	public void testCharSourceSameAsTarget()
-	{
-		final CharArray source = new CharArray( numEntities );
-		for ( int i = 0; i < numEntities; ++i )
-		{
-			source.setValue( i, ( char ) i );
-		}
-		final char[] sourceCopy = source.getCurrentStorageArray().clone();
-
-		Accesses.copy( source, 0, source, 0, numEntities );
-		Assert.assertArrayEquals( sourceCopy, source.getCurrentStorageArray() );
-
-		System.arraycopy( sourceCopy, 0, sourceCopy, numEntities / 2, numEntities / 2 );
-		Accesses.copy( source, 0, source, numEntities / 2, numEntities / 2 );
-		Assert.assertArrayEquals( sourceCopy, source.getCurrentStorageArray() );
-
-		System.arraycopy( sourceCopy, numEntities / 4, sourceCopy, 0, numEntities / 2 );
-		Accesses.copy( source, numEntities / 4, source, 0, numEntities / 2 );
-		Assert.assertArrayEquals( sourceCopy, source.getCurrentStorageArray() );
+		byte[] expected = { 1, 2, 3, 4, 5 };
+		final ByteArray access = new ByteArray( expected.clone() );
+		Accesses.copy( access, 0, access, 0, access.getArrayLength() );
+		Assert.assertArrayEquals( expected, access.getCurrentStorageArray() );
 	}
 
 	@Test
-	public void testShortSourceSameAsTarget()
+	public void testCopyInPlaceWithOffset()
 	{
-		final ShortArray source = new ShortArray( numEntities );
-		for ( int i = 0; i < numEntities; ++i )
-		{
-			source.setValue( i, ( short ) i );
-		}
-		final short[] sourceCopy = source.getCurrentStorageArray().clone();
-
-		Accesses.copy( source, 0, source, 0, numEntities );
-		Assert.assertArrayEquals( sourceCopy, source.getCurrentStorageArray() );
-
-		System.arraycopy( sourceCopy, 0, sourceCopy, numEntities / 2, numEntities / 2 );
-		Accesses.copy( source, 0, source, numEntities / 2, numEntities / 2 );
-		Assert.assertArrayEquals( sourceCopy, source.getCurrentStorageArray() );
-
-		System.arraycopy( sourceCopy, numEntities / 4, sourceCopy, 0, numEntities / 2 );
-		Accesses.copy( source, numEntities / 4, source, 0, numEntities / 2 );
-		Assert.assertArrayEquals( sourceCopy, source.getCurrentStorageArray() );
+		final ByteArray access = new ByteArray( new byte[] { 1, 2, 3, 4, 5 } );
+		Accesses.copy( access, 1, access, 2, 2 );
+		Assert.assertArrayEquals( new byte[] { 1, 2, 2, 3, 5 }, access.getCurrentStorageArray() );
 	}
 
 	@Test
-	public void testIntSourceSameAsTarget()
+	public void testCopyInPlaceWithNegativeOffset()
 	{
-		final IntArray source = new IntArray( numEntities );
-		for ( int i = 0; i < numEntities; ++i )
-		{
-			source.setValue( i, ( byte ) i );
-		}
-		final int[] sourceCopy = source.getCurrentStorageArray().clone();
-
-		Accesses.copy( source, 0, source, 0, numEntities );
-		Assert.assertArrayEquals( sourceCopy, source.getCurrentStorageArray() );
-
-		System.arraycopy( sourceCopy, 0, sourceCopy, numEntities / 2, numEntities / 2 );
-		Accesses.copy( source, 0, source, numEntities / 2, numEntities / 2 );
-		Assert.assertArrayEquals( sourceCopy, source.getCurrentStorageArray() );
-
-		System.arraycopy( sourceCopy, numEntities / 4, sourceCopy, 0, numEntities / 2 );
-		Accesses.copy( source, numEntities / 4, source, 0, numEntities / 2 );
-		Assert.assertArrayEquals( sourceCopy, source.getCurrentStorageArray() );
-	}
-
-	@Test
-	public void testLongSourceSameAsTarget()
-	{
-		final LongArray source = new LongArray( numEntities );
-		for ( int i = 0; i < numEntities; ++i )
-		{
-			source.setValue( i, ( byte ) i );
-		}
-		final long[] sourceCopy = source.getCurrentStorageArray().clone();
-
-		Accesses.copy( source, 0, source, 0, numEntities );
-		Assert.assertArrayEquals( sourceCopy, source.getCurrentStorageArray() );
-
-		System.arraycopy( sourceCopy, 0, sourceCopy, numEntities / 2, numEntities / 2 );
-		Accesses.copy( source, 0, source, numEntities / 2, numEntities / 2 );
-		Assert.assertArrayEquals( sourceCopy, source.getCurrentStorageArray() );
-
-		System.arraycopy( sourceCopy, numEntities / 4, sourceCopy, 0, numEntities / 2 );
-		Accesses.copy( source, numEntities / 4, source, 0, numEntities / 2 );
-		Assert.assertArrayEquals( sourceCopy, source.getCurrentStorageArray() );
-	}
-
-	@Test
-	public void testFloatSourceSameAsTarget()
-	{
-		final FloatArray source = new FloatArray( numEntities );
-		for ( int i = 0; i < numEntities; ++i )
-		{
-			source.setValue( i, ( byte ) i );
-		}
-		final float[] sourceCopy = source.getCurrentStorageArray().clone();
-
-		Accesses.copy( source, 0, source, 0, numEntities );
-		Assert.assertArrayEquals( sourceCopy, source.getCurrentStorageArray(), 0.0f );
-
-		System.arraycopy( sourceCopy, 0, sourceCopy, numEntities / 2, numEntities / 2 );
-		Accesses.copy( source, 0, source, numEntities / 2, numEntities / 2 );
-		Assert.assertArrayEquals( sourceCopy, source.getCurrentStorageArray(), 0.0f );
-
-		System.arraycopy( sourceCopy, numEntities / 4, sourceCopy, 0, numEntities / 2 );
-		Accesses.copy( source, numEntities / 4, source, 0, numEntities / 2 );
-		Assert.assertArrayEquals( sourceCopy, source.getCurrentStorageArray(), 0.0f );
-	}
-
-	@Test
-	public void testDoubleSourceSameAsTarget()
-	{
-		final DoubleArray source = new DoubleArray( numEntities );
-		for ( int i = 0; i < numEntities; ++i )
-		{
-			source.setValue( i, ( byte ) i );
-		}
-		final double[] sourceCopy = source.getCurrentStorageArray().clone();
-
-		Accesses.copy( source, 0, source, 0, numEntities );
-		Assert.assertArrayEquals( sourceCopy, source.getCurrentStorageArray(), 0.0 );
-
-		System.arraycopy( sourceCopy, 0, sourceCopy, numEntities / 2, numEntities / 2 );
-		Accesses.copy( source, 0, source, numEntities / 2, numEntities / 2 );
-		Assert.assertArrayEquals( sourceCopy, source.getCurrentStorageArray(), 0.0 );
-
-		System.arraycopy( sourceCopy, numEntities / 4, sourceCopy, 0, numEntities / 2 );
-		Accesses.copy( source, numEntities / 4, source, 0, numEntities / 2 );
-		Assert.assertArrayEquals( sourceCopy, source.getCurrentStorageArray(), 0.0 );
+		final ByteArray access = new ByteArray( new byte[] { 1, 2, 3, 4, 5 } );
+		Accesses.copy( access, 2, access, 1, 2 );
+		Assert.assertArrayEquals( new byte[] { 1, 3, 4, 4, 5 }, access.getCurrentStorageArray() );
 	}
 
 	@Test( expected = IllegalArgumentException.class )
 	public void testLongSourceByteTargetFail()
 	{
+		int numEntities = 5;
 		final LongArray source = new LongArray( numEntities );
 		final ByteArray target = new ByteArray( numEntities );
 		Accesses.copy( source, 0, target, 0, numEntities );
@@ -380,35 +148,16 @@ public class AccessesTest
 	@Test
 	public void testByteWithDifferentAccesses()
 	{
-
-		final SomeByteAccess source = new SomeByteAccess( numEntities );
-
-		{
-			final ByteArray target = new ByteArray( numEntities );
-			Accesses.copy( source, 0, target, 0, numEntities );
-			Assert.assertArrayEquals( source.getCurrentStorageArray(), target.getCurrentStorageArray() );
-		}
-
-		{
-			final ByteArray target = new ByteArray( numEntities );
-			Accesses.copy( source, start, target, start, stop - start );
-			for ( int i = 0; i < numEntities; ++i )
-			{
-				Assert.assertEquals( i < start || i >= stop ? 0 : source.getValue( i ), target.getValue( i ) );
-			}
-		}
-
+		final ByteArray source = new ByteArray( new byte[] { 1, 2, 3, 4, 5 } );
+		final SomeByteAccess target = new SomeByteAccess( new byte[] { -1, -2, -3, -4, -5 } );
+		Accesses.copy( source, 1, target, 3, 2 );
+		Assert.assertArrayEquals( new byte[] { -1, -2, -3, 2, 3 }, target.getCurrentStorageArray() );
 	}
 
 	private static final class SomeByteAccess implements ByteAccess
 	{
 
 		private final byte[] data;
-
-		private SomeByteAccess( int numEntities )
-		{
-			this( new byte[ numEntities ] );
-		}
 
 		private SomeByteAccess( byte[] data )
 		{
