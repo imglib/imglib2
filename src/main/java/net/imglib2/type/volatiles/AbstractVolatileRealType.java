@@ -35,6 +35,7 @@ package net.imglib2.type.volatiles;
 
 import net.imglib2.Volatile;
 import net.imglib2.type.numeric.RealType;
+import net.imglib2.util.Util;
 
 /**
  * Abstract base class for {@link VolatileRealType}s that wrap {@link RealType}.
@@ -251,5 +252,11 @@ public abstract class AbstractVolatileRealType< R extends RealType< R >, T exten
 	public boolean valueEquals( T other )
 	{
 		return ( isValid() && other.isValid() ) && t.valueEquals( other.t );
+	}
+
+	@Override
+	public boolean equals( Object obj )
+	{
+		return Util.valueEqualsObject( this, obj );
 	}
 }

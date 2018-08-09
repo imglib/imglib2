@@ -34,6 +34,8 @@
 
 package net.imglib2.type;
 
+import net.imglib2.util.Util;
+
 /**
  * TODO
  * 
@@ -82,4 +84,10 @@ public abstract class AbstractNativeType< T extends AbstractNativeType< T >> imp
 
 	@Override
 	public abstract String toString();
+
+	@Override
+	public boolean equals( Object obj )
+	{
+		return Util.valueEqualsObject( this, obj );
+	}
 }

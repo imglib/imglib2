@@ -166,4 +166,10 @@ abstract public class AbstractARGBDoubleType< T extends AbstractARGBDoubleType< 
 				( getG() == t.getG() ) &&
 				( getB() == t.getB() );
 	}
+
+	@Override
+	public boolean equals( Object obj )
+	{
+		return Util.valueEqualsObject( this, obj );
+	}
 }

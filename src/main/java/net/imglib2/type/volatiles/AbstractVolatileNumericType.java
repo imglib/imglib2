@@ -36,6 +36,7 @@ package net.imglib2.type.volatiles;
 
 import net.imglib2.Volatile;
 import net.imglib2.type.numeric.NumericType;
+import net.imglib2.util.Util;
 
 /**
  * Abstract base class for {@link VolatileNumericType}s that wrap a
@@ -125,5 +126,11 @@ abstract public class AbstractVolatileNumericType< N extends NumericType< N >, T
 	public boolean valueEquals( T other )
 	{
 		return ( isValid() && other.isValid() ) && t.valueEquals( other.t );
+	}
+
+	@Override
+	public boolean equals( Object obj )
+	{
+		return Util.valueEqualsObject( this, obj );
 	}
 }
