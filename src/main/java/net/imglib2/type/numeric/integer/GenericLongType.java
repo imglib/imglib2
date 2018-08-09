@@ -173,7 +173,7 @@ public abstract class GenericLongType< T extends GenericLongType< T > > extends 
 	public int hashCode()
 	{
 		// NB: Use the same hash code as java.lang.Long#hashCode().
-		return ( ( Long ) getLong() ).hashCode();
+		return Long.hashCode( getLong() );
 	}
 
 	@Override

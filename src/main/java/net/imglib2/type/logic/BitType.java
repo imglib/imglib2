@@ -376,4 +376,10 @@ public class BitType extends AbstractIntegerType< BitType > implements BooleanTy
 	{
 		return get() == t.get();
 	}
+
+	@Override
+	public int hashCode()
+	{
+		return Boolean.hashCode( get() );
+	}
 }

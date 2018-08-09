@@ -451,4 +451,12 @@ public class Unsigned128BitType extends AbstractIntegerType< Unsigned128BitType 
 		return ( dataAccess.getValue( k ) == t.dataAccess.getValue( kt ) ) &&
 				( dataAccess.getValue( k + 1 ) == t.dataAccess.getValue( kt + 1 ) );
 	}
+
+	@Override
+	public int hashCode()
+	{
+		final int k = i * 2;
+		return 31 * Long.hashCode( dataAccess.getValue( k + 1 ) )
+				+ Long.hashCode( dataAccess.getValue( k ) );
+	}
 }

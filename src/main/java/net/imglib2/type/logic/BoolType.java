@@ -199,4 +199,10 @@ public class BoolType extends AbstractIntegerType< BoolType > implements Boolean
 	{
 		return get() == t.get();
 	}
+
+	@Override
+	public int hashCode()
+	{
+		return Boolean.hashCode( get() );
+	}
 }
