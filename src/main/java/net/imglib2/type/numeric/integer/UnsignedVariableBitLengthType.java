@@ -359,4 +359,10 @@ public class UnsignedVariableBitLengthType extends AbstractBit64Type< UnsignedVa
 	{
 		return getBits() == t.getBits();
 	}
+
+	@Override
+	public int hashCode()
+	{
+		return Long.hashCode( getBits() );
+	}
 }

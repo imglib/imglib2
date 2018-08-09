@@ -259,4 +259,10 @@ public abstract class AbstractVolatileRealType< R extends RealType< R >, T exten
 	{
 		return Util.valueEqualsObject( this, obj );
 	}
+
+	@Override
+	public int hashCode()
+	{
+		return isValid() ? t.hashCode() : super.hashCode();
+	}
 }

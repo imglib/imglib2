@@ -79,6 +79,7 @@ import java.util.stream.Collectors;
 import static junit.framework.TestCase.assertFalse;
 import static junit.framework.TestCase.assertTrue;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assume.assumeFalse;
 import static org.junit.Assume.assumeTrue;
 
@@ -253,6 +254,24 @@ public class NumericTypeTest< T extends NumericType< T > >
 		T value = newNumber( 6 );
 		value.div( newNumber( 2 ) );
 		assertEquals( newNumber( 3 ), value );
+	}
+
+	@Test
+	public void testHashCodeEquals()
+	{
+		int hashA = newOne().hashCode();
+		int hashB = newOne().hashCode();
+		assertEquals(hashA, hashB);
+	}
+
+	@Test
+	public void testHashCodeChanges()
+	{
+		T variable = newZero();
+		int hashZero = variable.hashCode();
+		variable.set( newOne() );
+		int hashOne = variable.hashCode();
+		assertNotEquals(hashZero, hashOne);
 	}
 
 	// -- Helper methods --

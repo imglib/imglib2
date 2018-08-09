@@ -36,6 +36,8 @@ package net.imglib2.type.numeric;
 
 import net.imglib2.util.Util;
 
+import java.util.Objects;
+
 /**
  * 
  * @author Stephan Saalfeld
@@ -171,5 +173,16 @@ abstract public class AbstractARGBDoubleType< T extends AbstractARGBDoubleType< 
 	public boolean equals( Object obj )
 	{
 		return Util.valueEqualsObject( this, obj );
+	}
+
+	@Override
+	public int hashCode()
+	{
+		// NB: this is the same as Objects.hashCode( getA(), getR(), getG(), getB() ) but faster, no boxing, no memory allocation
+		int result = 31 + Double.hashCode( getA() );
+		result = 31 * result + Double.hashCode( getR() );
+		result = 31 * result + Double.hashCode( getG() );
+		result = 31 * result + Double.hashCode( getB() );
+		return result;
 	}
 }
