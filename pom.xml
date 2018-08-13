@@ -60,8 +60,6 @@ Aivar Grislis, Jonathan Hale, Grant Harris, Stefan Helfrich, Mark Hiner,
 Martin Horn, Steffen Jaensch, Lee Kamentsky, Larry Lindsey, Melissa Linkert,
 Mark Longair, Brian Northan, Nick Perry, Curtis Rueden, Johannes Schindelin,
 Jean-Yves Tinevez and Michael Zinsmaier.</license.copyrightOwners>
-
-		<scijava.jvm.build.version>1.8.0-45</scijava.jvm.build.version>
 	</properties>
 
 	<developers>
