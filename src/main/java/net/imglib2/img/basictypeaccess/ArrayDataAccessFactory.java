@@ -39,8 +39,10 @@ import static net.imglib2.img.basictypeaccess.AccessFlags.VOLATILE;
 import java.util.Set;
 
 import net.imglib2.img.basictypeaccess.array.ArrayDataAccess;
+import net.imglib2.img.basictypeaccess.array.BooleanArray;
 import net.imglib2.img.basictypeaccess.array.ByteArray;
 import net.imglib2.img.basictypeaccess.array.CharArray;
+import net.imglib2.img.basictypeaccess.array.DirtyBooleanArray;
 import net.imglib2.img.basictypeaccess.array.DirtyByteArray;
 import net.imglib2.img.basictypeaccess.array.DirtyCharArray;
 import net.imglib2.img.basictypeaccess.array.DirtyDoubleArray;
@@ -53,6 +55,7 @@ import net.imglib2.img.basictypeaccess.array.FloatArray;
 import net.imglib2.img.basictypeaccess.array.IntArray;
 import net.imglib2.img.basictypeaccess.array.LongArray;
 import net.imglib2.img.basictypeaccess.array.ShortArray;
+import net.imglib2.img.basictypeaccess.volatiles.array.DirtyVolatileBooleanArray;
 import net.imglib2.img.basictypeaccess.volatiles.array.DirtyVolatileByteArray;
 import net.imglib2.img.basictypeaccess.volatiles.array.DirtyVolatileCharArray;
 import net.imglib2.img.basictypeaccess.volatiles.array.DirtyVolatileDoubleArray;
@@ -60,6 +63,7 @@ import net.imglib2.img.basictypeaccess.volatiles.array.DirtyVolatileFloatArray;
 import net.imglib2.img.basictypeaccess.volatiles.array.DirtyVolatileIntArray;
 import net.imglib2.img.basictypeaccess.volatiles.array.DirtyVolatileLongArray;
 import net.imglib2.img.basictypeaccess.volatiles.array.DirtyVolatileShortArray;
+import net.imglib2.img.basictypeaccess.volatiles.array.VolatileBooleanArray;
 import net.imglib2.img.basictypeaccess.volatiles.array.VolatileByteArray;
 import net.imglib2.img.basictypeaccess.volatiles.array.VolatileCharArray;
 import net.imglib2.img.basictypeaccess.volatiles.array.VolatileDoubleArray;
@@ -115,6 +119,14 @@ public class ArrayDataAccessFactory
 		final boolean volatil = flags.contains( VOLATILE );
 		switch ( primitiveType )
 		{
+		case BOOLEAN:
+			return dirty
+					? ( volatil
+							? ( A ) new DirtyVolatileBooleanArray( 0, true )
+							: ( A ) new DirtyBooleanArray( 0 ) )
+					: ( volatil
+							? ( A ) new VolatileBooleanArray( 0, true )
+							: ( A ) new BooleanArray( 0 ) );
 		case BYTE:
 			return dirty
 					? ( volatil

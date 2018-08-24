@@ -31,46 +31,41 @@
  * POSSIBILITY OF SUCH DAMAGE.
  * #L%
  */
-package net.imglib2.type;
+package net.imglib2.img.basictypeaccess.volatiles.array;
 
-import net.imglib2.img.basictypeaccess.AccessFlags;
-import net.imglib2.img.basictypeaccess.array.ArrayDataAccess;
-import net.imglib2.img.basictypeaccess.volatiles.array.DirtyVolatileByteArray;
+import net.imglib2.img.basictypeaccess.array.AbstractBooleanArray;
+import net.imglib2.img.basictypeaccess.volatiles.VolatileArrayDataAccess;
 
 /**
- * Enumeration of Java primitive types which can back {@link NativeType}s.
- * <p>
- * In conjunction with {@link AccessFlags} this describes a specific
- * {@link ArrayDataAccess}. For example, {@code BYTE} with flags {@code DIRTY}
- * and {@code VOLATILE} specifies {@link DirtyVolatileByteArray}.
- * </p>
- *
- * @author Tobias Pietzsch
  * @author Curtis Rueden
  */
-public enum PrimitiveType
+public abstract class AbstractVolatileBooleanArray< A extends AbstractVolatileBooleanArray< A > >
+		extends AbstractBooleanArray< A >
+		implements VolatileArrayDataAccess< A >
 {
-	// NB: In theory, the number of bytes for boolean is implementation
-	// dependent; in practice, it is 1 for popular JVM implementations.
-	BOOLEAN( 1 ),
-	BYTE( Byte.BYTES ),
-	CHAR( Character.BYTES ),
-	SHORT( Short.BYTES ),
-	INT( Integer.BYTES ),
-	LONG( Long.BYTES ),
-	FLOAT( Float.BYTES ),
-	DOUBLE( Double.BYTES ),
-	UNDEFINED( -1 );
+	final protected boolean isValid;
 
-	private final int byteCount;
-
-	private PrimitiveType( final int byteCount )
+	public AbstractVolatileBooleanArray( final int numEntities, final boolean isValid )
 	{
-		this.byteCount = byteCount;
+		super( numEntities );
+		this.isValid = isValid;
 	}
 
-	int getByteCount()
+	public AbstractVolatileBooleanArray( final boolean[] data, final boolean isValid )
 	{
-		return byteCount;
+		super( data );
+		this.isValid = isValid;
+	}
+
+	@Override
+	public boolean isValid()
+	{
+		return isValid;
+	}
+
+	@Override
+	public A createArray( final int numEntities )
+	{
+		return createArray( numEntities, true );
 	}
 }
