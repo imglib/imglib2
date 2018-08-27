@@ -249,13 +249,13 @@ public abstract class AbstractVolatileRealType< R extends RealType< R >, T exten
 	}
 
 	@Override
-	public boolean valueEquals( T other )
+	public boolean valueEquals( final T other )
 	{
-		return ( isValid() && other.isValid() ) && t.valueEquals( other.t );
+		return ( isValid() == other.isValid() ) && t.valueEquals( other.t );
 	}
 
 	@Override
-	public boolean equals( Object obj )
+	public boolean equals( final Object obj )
 	{
 		return Util.valueEqualsObject( this, obj );
 	}
