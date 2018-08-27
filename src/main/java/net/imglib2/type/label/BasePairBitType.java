@@ -92,29 +92,13 @@ public class BasePairBitType extends AbstractBit64Type< BasePairBitType > implem
 	@Override
 	public Base get()
 	{
-		return Base.values()[ (int)getBits() ];
+		return Base.values()[ ( int ) getBits() ];
 	}
 
 	@Override
 	public int compareTo( final BasePairBitType c )
 	{
-		final Base input = get();
-		final Base compare = c.get();
-
-		if ( input == compare )
-		{
-			return 0;
-		}
-		switch ( input )
-		{
-			case gap: return -1;
-			case N: return compare == Base.gap ? 1 : -1;
-			case A: return compare == Base.gap || compare == Base.N ? 1 : -1;
-			case T: return compare == Base.G || compare == Base.C || compare == Base.U ? -1 : 1;
-			case G: return compare == Base.C || compare == Base.U ? -1 : 1;
-			case C: return compare == Base.U ? -1 : 1;
-			default: return 1;
-		}
+		return get().compareTo( c.get() );
 	}
 
 	@Override
