@@ -233,11 +233,4 @@ public class ComplexDoubleType extends AbstractComplexType< ComplexDoubleType > 
 	{
 		return i;
 	}
-
-	@Override
-	public boolean valueEquals( final ComplexDoubleType t )
-	{
-		return ( getRealDouble() == t.getRealDouble() ) &&
-				( getImaginaryDouble() == t.getImaginaryDouble() );
-	}
 }

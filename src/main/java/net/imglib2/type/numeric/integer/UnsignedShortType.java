@@ -214,27 +214,6 @@ public class UnsignedShortType extends GenericShortType< UnsignedShortType >
 	}
 
 	@Override
-	public int hashCode()
-	{
-		// NB: Use the same hash code as java.lang.Integer#hashCode().
-		return get();
-	}
-
-	@Override
-	public int compareTo( final UnsignedShortType c )
-	{
-		final int a = get();
-		final int b = c.get();
-
-		if ( a > b )
-			return 1;
-		else if ( a < b )
-			return -1;
-		else
-			return 0;
-	}
-
-	@Override
 	public UnsignedShortType createVariable()
 	{
 		return new UnsignedShortType( 0 );
@@ -250,5 +229,11 @@ public class UnsignedShortType extends GenericShortType< UnsignedShortType >
 	public String toString()
 	{
 		return "" + get();
+	}
+
+	@Override
+	public int compareTo( final UnsignedShortType other )
+	{
+		return Integer.compare( get(), other.get() );
 	}
 }

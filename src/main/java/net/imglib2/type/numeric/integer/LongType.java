@@ -89,7 +89,7 @@ public class LongType extends GenericLongType< LongType >
 
 	public long get()
 	{
-		return dataAccess.getValue( i );
+		return getLong();
 	}
 
 	public void set( final long f )
@@ -143,27 +143,6 @@ public class LongType extends GenericLongType< LongType >
 	public double getMinValue()
 	{
 		return Long.MIN_VALUE;
-	}
-
-	@Override
-	public int hashCode()
-	{
-		// NB: Use the same hash code as java.lang.Long#hashCode().
-		final long value = get();
-		return ( int ) ( value ^ ( value >>> 32 ) );
-	}
-
-	@Override
-	public int compareTo( final LongType c )
-	{
-		final long a = get();
-		final long b = c.get();
-		if ( a > b )
-			return 1;
-		else if ( a < b )
-			return -1;
-		else
-			return 0;
 	}
 
 	@Override

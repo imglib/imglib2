@@ -178,26 +178,6 @@ public abstract class GenericIntType< T extends GenericIntType< T > > extends Ab
 	}
 
 	@Override
-	public int hashCode()
-	{
-		// NB: Use the same hash code as java.lang.Integer#hashCode().
-		return getInt();
-	}
-
-	@Override
-	public int compareTo( final T c )
-	{
-		final int a = getInt();
-		final int b = c.getInt();
-		if ( a > b )
-			return 1;
-		else if ( a < b )
-			return -1;
-		else
-			return 0;
-	}
-
-	@Override
 	public void set( final T c )
 	{
 		setInt( c.getInt() );
@@ -278,8 +258,30 @@ public abstract class GenericIntType< T extends GenericIntType< T > > extends Ab
 	}
 
 	@Override
+	public int compareTo( final T other )
+	{
+		return Integer.compare( getInt(), other.getInt() );
+	}
+
+	@Override
 	public boolean valueEquals( final T t )
 	{
 		return getInt() == t.getInt();
+	}
+
+	@Override
+	public boolean equals( final Object obj )
+	{
+		if ( !getClass().isInstance( obj ) )
+			return false;
+		@SuppressWarnings( "unchecked" )
+		final T t = ( T ) obj;
+		return GenericIntType.this.valueEquals( t );
+	}
+
+	@Override
+	public int hashCode()
+	{
+		return Integer.hashCode( getInt() );
 	}
 }

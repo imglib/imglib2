@@ -166,4 +166,25 @@ abstract public class AbstractARGBDoubleType< T extends AbstractARGBDoubleType< 
 				( getG() == t.getG() ) &&
 				( getB() == t.getB() );
 	}
+
+	@Override
+	public boolean equals( final Object obj )
+	{
+		if ( ! getClass().isInstance( obj ) )
+			return false;
+		@SuppressWarnings( "unchecked" )
+		T t = ( T ) obj;
+		return AbstractARGBDoubleType.this.valueEquals( t );
+	}
+
+	@Override
+	public int hashCode()
+	{
+		// NB: this is the same as Objects.hashCode( getA(), getR(), getG(), getB() ) but faster, no boxing, no memory allocation
+		int result = 31 + Double.hashCode( getA() );
+		result = 31 * result + Double.hashCode( getR() );
+		result = 31 * result + Double.hashCode( getG() );
+		result = 31 * result + Double.hashCode( getB() );
+		return result;
+	}
 }

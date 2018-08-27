@@ -45,6 +45,7 @@ import net.imglib2.type.NativeTypeFactory;
 import net.imglib2.type.numeric.IntegerType;
 import net.imglib2.type.numeric.integer.AbstractIntegerType;
 import net.imglib2.util.Fraction;
+import net.imglib2.util.Util;
 
 /**
  * TODO
@@ -290,20 +291,6 @@ public class BitType extends AbstractIntegerType< BitType > implements BooleanTy
 	}
 
 	@Override
-	public int compareTo( final BitType c )
-	{
-		final boolean b1 = get();
-		final boolean b2 = c.get();
-
-		if ( b1 && !b2 )
-			return 1;
-		else if ( !b1 && b2 )
-			return -1;
-		else
-			return 0;
-	}
-
-	@Override
 	public BitType createVariable()
 	{
 		return new BitType();
@@ -372,8 +359,26 @@ public class BitType extends AbstractIntegerType< BitType > implements BooleanTy
 	}
 
 	@Override
+	public int compareTo( final BitType other )
+	{
+		return Boolean.compare( get(), other.get() );
+	}
+
+	@Override
 	public boolean valueEquals( final BitType t )
 	{
 		return get() == t.get();
+	}
+
+	@Override
+	public boolean equals( final Object obj )
+	{
+		return Util.valueEqualsObject( this, obj );
+	}
+
+	@Override
+	public int hashCode()
+	{
+		return Boolean.hashCode( get() );
 	}
 }

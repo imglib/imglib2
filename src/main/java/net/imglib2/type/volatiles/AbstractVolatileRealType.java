@@ -35,6 +35,7 @@ package net.imglib2.type.volatiles;
 
 import net.imglib2.Volatile;
 import net.imglib2.type.numeric.RealType;
+import net.imglib2.util.Util;
 
 /**
  * Abstract base class for {@link VolatileRealType}s that wrap {@link RealType}.
@@ -147,12 +148,6 @@ public abstract class AbstractVolatileRealType< R extends RealType< R >, T exten
 	}
 
 	@Override
-	public int compareTo( final T o )
-	{
-		return t.compareTo( o.t );
-	}
-
-	@Override
 	public void inc()
 	{
 		t.inc();
@@ -248,8 +243,30 @@ public abstract class AbstractVolatileRealType< R extends RealType< R >, T exten
 	}
 
 	@Override
+	public int compareTo( final T o )
+	{
+		return t.compareTo( o.t );
+	}
+
+	@Override
 	public boolean valueEquals( T other )
 	{
-		return ( isValid() && other.isValid() ) && t.valueEquals( other.t );
+		return isValid() == other.isValid() && t.valueEquals( other.t );
+	}
+
+	@Override
+	public boolean equals( final Object obj )
+	{
+		if ( ! getClass().isInstance( obj ) )
+			return false;
+		@SuppressWarnings( "unchecked" )
+		T t = ( T ) obj;
+		return AbstractVolatileRealType.this.valueEquals( t );
+	}
+
+	@Override
+	public int hashCode()
+	{
+		return Util.combineHash( Boolean.hashCode( isValid() ), t.hashCode() );
 	}
 }

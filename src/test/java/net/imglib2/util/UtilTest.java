@@ -48,13 +48,14 @@ import net.imglib2.type.logic.BoolType;
 import net.imglib2.type.numeric.RealType;
 import net.imglib2.type.numeric.integer.IntType;
 import net.imglib2.type.numeric.real.DoubleType;
+import net.imglib2.type.operators.ValueEquals;
 import org.junit.Test;
 
 import java.util.function.BiPredicate;
 
-import static junit.framework.TestCase.assertFalse;
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 public class UtilTest
@@ -186,5 +187,44 @@ public class UtilTest
 		Img< DoubleType > img = ArrayImgs.doubles( expected, 2, 2 );
 		double[] result = Util.asDoubleArray( img );
 		assertArrayEquals( expected, result, 0.0 );
+	}
+
+	/**
+	 * Tests {@link Util#valueEqualsObject(ValueEquals, Object)}.
+	 * <p>
+	 * Class {@link Simple} demonstrates how the method is supposed to be used.
+	 */
+	@Test
+	public void testValueEqualsObject()
+	{
+		Simple four = new Simple( 4 );
+		assertTrue( four.equals( four ) );
+		assertTrue( four.equals( new Simple( 4 ) ) );
+		assertFalse( four.equals( new Simple( 5 ) ) );
+		assertFalse( four.equals( new Object() ) );
+		assertFalse( four.equals( null ) );
+	}
+
+	private static class Simple implements ValueEquals< Simple >
+	{
+
+		private final int value;
+
+		private Simple( int value )
+		{
+			this.value = value;
+		}
+
+		@Override
+		public boolean valueEquals( Simple simple )
+		{
+			return this.value == simple.value;
+		}
+
+		@Override
+		public boolean equals( Object obj )
+		{
+			return Util.valueEqualsObject( this, obj );
+		}
 	}
 }

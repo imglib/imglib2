@@ -1032,4 +1032,24 @@ public class Util
 	{
 		return asDoubleArray( ( RandomAccessibleInterval< ? extends RealType< ? > > ) image );
 	}
+
+	/**
+	 * This method should be used in implementations of {@link ValueEquals}, to
+	 * override {@link Object#equals(Object)}.
+	 *
+	 * @see net.imglib2.type.AbstractNativeType#equals(Object)
+	 */
+	public static < T extends ValueEquals< T > > boolean valueEqualsObject( final T a, final Object b )
+	{
+		if ( !a.getClass().isInstance( b ) )
+			return false;
+		@SuppressWarnings( "unchecked" )
+		final T t = ( T ) b;
+		return a.valueEquals( t );
+	}
+
+	public static int combineHash( final int hash1, final int hash2 )
+	{
+		return 31 * hash1 + hash2;
+	}
 }

@@ -250,4 +250,16 @@ public class ARGBType extends AbstractNativeType< ARGBType > implements NumericT
 	{
 		return get() == t.get();
 	}
+
+	@Override
+	public boolean equals( final Object obj )
+	{
+		return Util.valueEqualsObject( this, obj );
+	}
+
+	@Override
+	public int hashCode()
+	{
+		return Integer.hashCode( get() );
+	}
 }

@@ -40,6 +40,7 @@ import net.imglib2.img.basictypeaccess.array.FloatArray;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.NativeTypeFactory;
 import net.imglib2.util.Fraction;
+import net.imglib2.util.Util;
 
 /**
  * TODO
@@ -192,26 +193,6 @@ public class FloatType extends AbstractRealType< FloatType > implements NativeTy
 	}
 
 	@Override
-	public int hashCode()
-	{
-		// NB: Use the same hash code as java.lang.Float#hashCode().
-		return Float.floatToIntBits( get() );
-	}
-
-	@Override
-	public int compareTo( final FloatType c )
-	{
-		final float a = get();
-		final float b = c.get();
-		if ( a > b )
-			return 1;
-		else if ( a < b )
-			return -1;
-		else
-			return 0;
-	}
-
-	@Override
 	public void set( final FloatType c )
 	{
 		set( c.get() );
@@ -304,8 +285,31 @@ public class FloatType extends AbstractRealType< FloatType > implements NativeTy
 	}
 
 	@Override
-	public boolean valueEquals( final FloatType t )
+	public int compareTo( final FloatType other )
 	{
-		return get() == t.get();
+		return Float.compare( get(), other.get() );
+	}
+
+	@Override
+	public boolean valueEquals( final FloatType other )
+	{
+		return FloatType.equals( get(), other.get() );
+	}
+
+	@Override
+	public boolean equals( final Object obj )
+	{
+		return Util.valueEqualsObject( this, obj );
+	}
+
+	@Override
+	public int hashCode()
+	{
+		return Float.hashCode( get() );
+	}
+
+	public static boolean equals( float a, float b )
+	{
+		return Float.floatToIntBits( a ) == Float.floatToIntBits( b );
 	}
 }
