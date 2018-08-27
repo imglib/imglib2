@@ -277,14 +277,7 @@ public class NativeBoolType extends AbstractIntegerType< NativeBoolType > implem
 	@Override
 	public int compareTo( final NativeBoolType c )
 	{
-		final boolean b1 = get();
-		final boolean b2 = c.get();
-
-		if ( b1 && !b2 )
-			return 1;
-		if ( !b1 && b2 )
-			return -1;
-		return 0;
+		return Boolean.compare( get(), c.get() );
 	}
 
 	@Override

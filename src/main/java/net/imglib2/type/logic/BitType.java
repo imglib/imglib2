@@ -292,15 +292,7 @@ public class BitType extends AbstractIntegerType< BitType > implements BooleanTy
 	@Override
 	public int compareTo( final BitType c )
 	{
-		final boolean b1 = get();
-		final boolean b2 = c.get();
-
-		if ( b1 && !b2 )
-			return 1;
-		else if ( !b1 && b2 )
-			return -1;
-		else
-			return 0;
+		return Boolean.compare( get(), c.get() );
 	}
 
 	@Override

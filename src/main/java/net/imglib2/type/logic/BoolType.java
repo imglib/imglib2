@@ -83,10 +83,7 @@ public class BoolType extends AbstractIntegerType< BoolType > implements Boolean
 	@Override
 	public int compareTo( final BoolType o )
 	{
-		if ( value )
-			return o.value ? 0 : 1;
-		else
-			return o.value ? -1 : 0;
+		return Boolean.compare( value, o.value );
 	}
 
 	@Override
@@ -193,7 +190,7 @@ public class BoolType extends AbstractIntegerType< BoolType > implements Boolean
 	{
 		set( b.compareTo(BigInteger.ZERO) > 0 );
 	}
-	
+
 	@Override
 	public boolean valueEquals( BoolType t )
 	{
