@@ -41,6 +41,8 @@ import net.imglib2.type.NativeType;
 import net.imglib2.type.NativeTypeFactory;
 import net.imglib2.util.Fraction;
 
+import static java.lang.Float.floatToIntBits;
+
 /**
  * TODO
  *
@@ -291,7 +293,7 @@ public class ComplexFloatType extends AbstractComplexType< ComplexFloatType > im
 	@Override
 	public boolean valueEquals( final ComplexFloatType t )
 	{
-		return ( getRealFloat() == t.getRealFloat() ) &&
-				( getImaginaryFloat() == t.getImaginaryFloat() );
+		return ( floatToIntBits( getRealFloat() ) == floatToIntBits( t.getRealFloat() ) ) &&
+				( floatToIntBits( getImaginaryFloat() ) == floatToIntBits( t.getImaginaryFloat() ) );
 	}
 }

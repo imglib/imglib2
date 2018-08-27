@@ -41,6 +41,8 @@ import net.imglib2.type.NativeType;
 import net.imglib2.type.NativeTypeFactory;
 import net.imglib2.util.Fraction;
 
+import static java.lang.Double.doubleToLongBits;
+
 /**
  * TODO
  *
@@ -237,7 +239,7 @@ public class ComplexDoubleType extends AbstractComplexType< ComplexDoubleType > 
 	@Override
 	public boolean valueEquals( final ComplexDoubleType t )
 	{
-		return ( getRealDouble() == t.getRealDouble() ) &&
-				( getImaginaryDouble() == t.getImaginaryDouble() );
+		return doubleToLongBits( getRealDouble() ) == doubleToLongBits( t.getRealDouble() ) &&
+				doubleToLongBits( getImaginaryDouble() ) == doubleToLongBits( t.getImaginaryDouble() );
 	}
 }
