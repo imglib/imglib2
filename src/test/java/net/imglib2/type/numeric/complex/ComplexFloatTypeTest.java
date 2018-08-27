@@ -82,7 +82,7 @@ public class ComplexFloatTypeTest
 	public void testHashCode()
 	{
 		final ComplexFloatType b = new ComplexFloatType( 1.234f, 5.678f );
-		assertEquals( 535103539, b.hashCode() );
+		assertEquals( 2133344667, b.hashCode() );
 	}
 
 }

@@ -242,4 +242,20 @@ public class ComplexDoubleType extends AbstractComplexType< ComplexDoubleType > 
 		return doubleToLongBits( getRealDouble() ) == doubleToLongBits( t.getRealDouble() ) &&
 				doubleToLongBits( getImaginaryDouble() ) == doubleToLongBits( t.getImaginaryDouble() );
 	}
+
+	@Override
+	public boolean equals( final Object o )
+	{
+		return ( o instanceof ComplexDoubleType )
+				&& valueEquals( ( ComplexDoubleType ) o );
+	}
+
+	@Override
+	public int hashCode()
+	{
+		// NB: Compute similar hash code to java.lang.Double#hashCode().
+		final long rBits = doubleToLongBits( getRealDouble() );
+		final long iBits = doubleToLongBits( getImaginaryDouble() );
+		return ( int ) ( rBits ^ ( rBits >>> 32 ) ^ iBits ^ ( iBits >>> 32 ) );
+	}
 }

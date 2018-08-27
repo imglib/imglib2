@@ -169,26 +169,6 @@ public abstract class AbstractComplexType< T extends AbstractComplexType< T >> i
 	}
 
 	@Override
-	public boolean equals( final Object o )
-	{
-		if ( !getClass().isInstance(o) )
-			return false;
-		@SuppressWarnings("unchecked")
-		final T t = (T) o;
-		return getRealDouble() == t.getRealDouble() &&
-			getImaginaryDouble() == t .getImaginaryDouble();
-	}
-
-	@Override
-	public int hashCode()
-	{
-		// NB: Compute similar hash code to java.lang.Double#hashCode().
-		final long rBits = Double.doubleToLongBits(getRealDouble());
-		final long iBits = Double.doubleToLongBits(getImaginaryDouble());
-		return (int) (rBits ^ (rBits >>> 32) ^ iBits ^ (iBits >>> 32));
-	}
-
-	@Override
 	public String toString()
 	{
 		return "(" + getRealDouble() + ") + (" + getImaginaryDouble() + ")i";

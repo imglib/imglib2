@@ -296,4 +296,20 @@ public class ComplexFloatType extends AbstractComplexType< ComplexFloatType > im
 		return ( floatToIntBits( getRealFloat() ) == floatToIntBits( t.getRealFloat() ) ) &&
 				( floatToIntBits( getImaginaryFloat() ) == floatToIntBits( t.getImaginaryFloat() ) );
 	}
+
+	@Override
+	public boolean equals( final Object o )
+	{
+		return ( o instanceof ComplexFloatType )
+				&& valueEquals( ( ComplexFloatType ) o );
+	}
+
+	@Override
+	public int hashCode()
+	{
+		// NB: Compute similar hash code to java.lang.Float#hashCode().
+		final int rBits = floatToIntBits( getRealFloat() );
+		final int iBits = floatToIntBits( getImaginaryFloat() );
+		return rBits ^ iBits;
+	}
 }
