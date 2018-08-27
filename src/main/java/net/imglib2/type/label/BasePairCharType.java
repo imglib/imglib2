@@ -124,54 +124,13 @@ public class BasePairCharType extends AbstractNativeType< BasePairCharType > imp
 	@Override
 	public void set( final Base base )
 	{
-		switch ( base )
-		{
-		case A:
-			setChar( 'A' );
-			return;
-		case T:
-			setChar( 'T' );
-			return;
-		case G:
-			setChar( 'G' );
-			return;
-		case C:
-			setChar( 'C' );
-			return;
-		case U:
-			setChar( 'U' );
-			return;
-		case gap:
-			setChar( ' ' );
-			return;
-		default:
-			setChar( 'N' );
-			return;
-		}
+		setChar( base.getChar() );
 	}
 
 	@Override
 	public Base get()
 	{
-		final char value = getChar();
-
-		switch ( value )
-		{
-		case 'A':
-			return Base.A;
-		case 'T':
-			return Base.T;
-		case 'G':
-			return Base.G;
-		case 'C':
-			return Base.C;
-		case 'U':
-			return Base.U;
-		case ' ':
-			return Base.gap;
-		default:
-			return Base.N;
-		}
+		return Base.fromChar( getChar() );
 	}
 
 	@Override
@@ -183,27 +142,7 @@ public class BasePairCharType extends AbstractNativeType< BasePairCharType > imp
 	@Override
 	public int compareTo( final BasePairCharType c )
 	{
-		final char input = getChar();
-		final char compare = c.getChar();
-
-		if ( input == compare ) { return 0; }
-		switch ( input )
-		{
-		case ' ':
-			return -1;
-		case 'N':
-			return compare == ' ' ? 1 : -1;
-		case 'A':
-			return compare == ' ' || compare == 'N' ? 1 : -1;
-		case 'T':
-			return compare == 'G' || compare == 'C' || compare == 'U' ? -1 : 1;
-		case 'G':
-			return compare == 'C' || compare == 'U' ? -1 : 1;
-		case 'C':
-			return compare == 'U' ? -1 : 1;
-		default:
-			return 1;
-		}
+		return get().compareTo( c.get() );
 	}
 
 	@Override
@@ -233,25 +172,7 @@ public class BasePairCharType extends AbstractNativeType< BasePairCharType > imp
 	@Override
 	public byte baseToValue()
 	{
-		final char base = getChar();
-
-		switch ( base )
-		{
-		case 'N':
-			return 1;
-		case 'A':
-			return 2;
-		case 'T':
-			return 3;
-		case 'G':
-			return 4;
-		case 'C':
-			return 5;
-		case 'U':
-			return 6;
-		default:
-			return 0;
-		}
+		return ( byte ) get().ordinal();
 	}
 
 	@Override

@@ -52,7 +52,49 @@ public class BasePairBitType extends AbstractBit64Type< BasePairBitType > implem
 	// hom many bits a BasePairBitType contains
 	private static final int NBITS = 3;
 
-	public static enum Base { gap, N, A, T, G, C, U; }
+	public enum Base
+	{
+		gap( ' ' ),
+		N( 'N' ),
+		A( 'A' ),
+		T( 'T' ),
+		G( 'G' ),
+		C( 'C' ),
+		U( 'U' );
+
+		private final char c;
+
+		Base( final char c )
+		{
+			this.c = c;
+		}
+
+		public char getChar()
+		{
+			return c;
+		}
+
+		public static Base fromChar( final char c )
+		{
+			switch ( c )
+			{
+			case 'A':
+				return A;
+			case 'T':
+				return T;
+			case 'G':
+				return G;
+			case 'C':
+				return C;
+			case 'U':
+				return U;
+			case ' ':
+				return gap;
+			default:
+				return N;
+			}
+		}
+	}
 
 	// this is the constructor if you want it to read from an array
 	public BasePairBitType( final NativeImg< ?, ? extends LongAccess > bitStorage )
@@ -119,25 +161,7 @@ public class BasePairBitType extends AbstractBit64Type< BasePairBitType > implem
 	@Override
 	public byte baseToValue()
 	{
-		final Base base = get();
-
-		switch ( base )
-		{
-		case N:
-			return 1;
-		case A:
-			return 2;
-		case T:
-			return 3;
-		case G:
-			return 4;
-		case C:
-			return 5;
-		case U:
-			return 6;
-		default:
-			return 0;
-		}
+		return ( byte ) get().ordinal();
 	}
 
 	@Override
