@@ -49,18 +49,21 @@ import net.imglib2.type.NativeTypeFactory;
  */
 public class BasePairBitType extends AbstractBit64Type< BasePairBitType > implements BasePairType< BasePairBitType >
 {
+	// hom many bits a BasePairBitType contains
+	private static final int NBITS = 3;
+
 	public static enum Base { gap, N, A, T, G, C, U; }
 
 	// this is the constructor if you want it to read from an array
 	public BasePairBitType( final NativeImg< ?, ? extends LongAccess > bitStorage )
 	{
-		super( bitStorage, 3 );
+		super( bitStorage, NBITS );
 	}
 
 	// this is the constructor if you want it to be a variable
 	public BasePairBitType( final Base value )
 	{
-		super( value.ordinal() );
+		super( value.ordinal(), NBITS );
 	}
 
 	// this is the constructor if you want it to be a variable
