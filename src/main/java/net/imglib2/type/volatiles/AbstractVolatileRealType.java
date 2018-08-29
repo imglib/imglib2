@@ -148,12 +148,6 @@ public abstract class AbstractVolatileRealType< R extends RealType< R >, T exten
 	}
 
 	@Override
-	public int compareTo( final T o )
-	{
-		return t.compareTo( o.t );
-	}
-
-	@Override
 	public void inc()
 	{
 		t.inc();
@@ -249,20 +243,30 @@ public abstract class AbstractVolatileRealType< R extends RealType< R >, T exten
 	}
 
 	@Override
-	public boolean valueEquals( final T other )
+	public int compareTo( final T o )
 	{
-		return ( isValid() == other.isValid() ) && t.valueEquals( other.t );
+		return t.compareTo( o.t );
+	}
+
+	@Override
+	public boolean valueEquals( T other )
+	{
+		return (isValid() == other.isValid()) && t.valueEquals( other.t );
 	}
 
 	@Override
 	public boolean equals( final Object obj )
 	{
-		return Util.valueEqualsObject( this, obj );
+		if( ! getClass().isInstance( obj ) )
+			return false;
+		@SuppressWarnings( "unchecked" )
+		T t = ( T ) obj;
+		return AbstractVolatileRealType.this.valueEquals( t );
 	}
 
 	@Override
 	public int hashCode()
 	{
-		return isValid() ? t.hashCode() : super.hashCode();
+		return Util.combineHash( Boolean.hashCode( isValid() ), t.hashCode() );
 	}
 }

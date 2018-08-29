@@ -38,8 +38,6 @@ import net.imglib2.Volatile;
 import net.imglib2.type.numeric.NumericType;
 import net.imglib2.util.Util;
 
-import java.util.Objects;
-
 /**
  * Abstract base class for {@link VolatileNumericType}s that wrap a
  * {@link NumericType} that is either VALID or INVALID.
@@ -127,18 +125,22 @@ abstract public class AbstractVolatileNumericType< N extends NumericType< N >, T
 	@Override
 	public boolean valueEquals( T other )
 	{
-		return ( isValid() && other.isValid() ) && t.valueEquals( other.t );
+		return (isValid() == other.isValid()) && t.valueEquals( other.t );
 	}
 
 	@Override
-	public boolean equals( Object obj )
+	public boolean equals( final Object obj )
 	{
-		return Util.valueEqualsObject( this, obj );
+		if( ! getClass().isInstance( obj ) )
+			return false;
+		@SuppressWarnings( "unchecked" )
+		T t = ( T ) obj;
+		return AbstractVolatileNumericType.this.valueEquals( t );
 	}
 
 	@Override
 	public int hashCode()
 	{
-		return isValid() ? t.hashCode() : super.hashCode();
+		return Util.combineHash( Boolean.hashCode( isValid() ), t.hashCode() );
 	}
 }

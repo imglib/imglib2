@@ -36,8 +36,6 @@ package net.imglib2.type.numeric;
 
 import net.imglib2.util.Util;
 
-import java.util.Objects;
-
 /**
  * 
  * @author Stephan Saalfeld
@@ -170,9 +168,13 @@ abstract public class AbstractARGBDoubleType< T extends AbstractARGBDoubleType< 
 	}
 
 	@Override
-	public boolean equals( Object obj )
+	public boolean equals( final Object obj )
 	{
-		return Util.valueEqualsObject( this, obj );
+		if( ! getClass().isInstance( obj ) )
+			return false;
+		@SuppressWarnings( "unchecked" )
+		T t = ( T ) obj;
+		return AbstractARGBDoubleType.this.valueEquals( t );
 	}
 
 	@Override

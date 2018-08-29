@@ -40,6 +40,7 @@ import net.imglib2.img.basictypeaccess.array.FloatArray;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.NativeTypeFactory;
 import net.imglib2.util.Fraction;
+import net.imglib2.util.Util;
 
 import static java.lang.Float.floatToIntBits;
 
@@ -293,23 +294,21 @@ public class ComplexFloatType extends AbstractComplexType< ComplexFloatType > im
 	@Override
 	public boolean valueEquals( final ComplexFloatType t )
 	{
-		return ( floatToIntBits( getRealFloat() ) == floatToIntBits( t.getRealFloat() ) ) &&
-				( floatToIntBits( getImaginaryFloat() ) == floatToIntBits( t.getImaginaryFloat() ) );
+		return getRealFloat() == t.getRealFloat() &&
+				getImaginaryFloat() == t.getImaginaryFloat();
 	}
 
 	@Override
-	public boolean equals( final Object o )
+	public boolean equals( final Object obj )
 	{
-		return ( o instanceof ComplexFloatType )
-				&& valueEquals( ( ComplexFloatType ) o );
+		return Util.valueEqualsObject( this, obj );
 	}
 
 	@Override
 	public int hashCode()
 	{
-		// NB: Compute similar hash code to java.lang.Float#hashCode().
-		final int rBits = floatToIntBits( getRealFloat() );
-		final int iBits = floatToIntBits( getImaginaryFloat() );
-		return rBits ^ iBits;
+		final int hash1 = Float.hashCode( getRealFloat() );
+		final int hash2 = Float.hashCode( getImaginaryFloat() );
+		return Util.combineHash( hash1, hash2 );
 	}
 }

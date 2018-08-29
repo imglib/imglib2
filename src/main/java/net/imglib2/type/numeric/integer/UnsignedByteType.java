@@ -205,27 +205,6 @@ public class UnsignedByteType extends GenericByteType< UnsignedByteType >
 	}
 
 	@Override
-	public int hashCode()
-	{
-		// NB: Use the same hash code as java.lang.Integer#hashCode().
-		return get();
-	}
-
-	@Override
-	public int compareTo( final UnsignedByteType c )
-	{
-		final int a = get();
-		final int b = c.get();
-
-		if ( a > b )
-			return 1;
-		else if ( a < b )
-			return -1;
-		else
-			return 0;
-	}
-
-	@Override
 	public UnsignedByteType createVariable()
 	{
 		return new UnsignedByteType( 0 );
@@ -241,5 +220,29 @@ public class UnsignedByteType extends GenericByteType< UnsignedByteType >
 	public String toString()
 	{
 		return "" + get();
+	}
+
+	@Override
+	public int compareTo( final UnsignedByteType other )
+	{
+		return Integer.compare( get(), other.get() );
+	}
+
+	@Override
+	public boolean valueEquals( UnsignedByteType type )
+	{
+		return getByte() == type.getByte();
+	}
+
+	@Override
+	public boolean equals( final Object obj )
+	{
+		return Util.valueEqualsObject( this, obj );
+	}
+
+	@Override
+	public int hashCode()
+	{
+		return Integer.hashCode( get() );
 	}
 }

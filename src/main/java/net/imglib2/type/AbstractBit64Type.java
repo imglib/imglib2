@@ -169,10 +169,4 @@ public abstract class AbstractBit64Type< T extends AbstractBit64Type< T > > exte
 			}
 		}
 	}
-
-	@Override
-	public boolean equals( Object obj )
-	{
-		return Util.valueEqualsObject( this, obj );
-	}
 }

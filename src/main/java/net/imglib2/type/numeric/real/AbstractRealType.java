@@ -130,34 +130,31 @@ public abstract class AbstractRealType< T extends AbstractRealType< T >> extends
 	}
 
 	@Override
-	public boolean equals( final Object o )
+	public int compareTo( final T other )
 	{
-		if ( !getClass().isInstance(o) )
+		return Double.compare( getRealDouble(), other.getRealDouble() );
+	}
+
+	@Override
+	public boolean valueEquals( T other )
+	{
+		return getRealDouble() == other.getRealDouble();
+	}
+
+	@Override
+	public boolean equals( final Object obj )
+	{
+		if ( !getClass().isInstance( obj ) )
 			return false;
 		@SuppressWarnings("unchecked")
-		final T t = (T) o;
-		return compareTo(t) == 0;
+		final T t = (T) obj;
+		return AbstractRealType.this.valueEquals( t );
 	}
 
 	@Override
 	public int hashCode()
 	{
-		// NB: Use the same hash code as java.lang.Double#hashCode().
-		final long bits = Double.doubleToLongBits(getRealDouble());
-		return (int) (bits ^ (bits >>> 32));
-	}
-
-	@Override
-	public int compareTo( final T c )
-	{
-		final double a = getRealDouble();
-		final double b = c.getRealDouble();
-		if ( a > b )
-			return 1;
-		else if ( a < b )
-			return -1;
-		else
-			return 0;
+		return Double.hashCode( getRealDouble() );
 	}
 
 	@Override

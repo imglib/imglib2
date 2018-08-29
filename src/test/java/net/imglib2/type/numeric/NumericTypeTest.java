@@ -74,6 +74,7 @@ import org.junit.runners.Parameterized;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import java.util.function.IntFunction;
 import java.util.stream.Collectors;
 
 import static junit.framework.TestCase.assertFalse;
@@ -272,6 +273,23 @@ public class NumericTypeTest< T extends NumericType< T > >
 		variable.set( newOne() );
 		int hashOne = variable.hashCode();
 		assertNotEquals(hashZero, hashOne);
+	}
+
+	@Test
+	public void testCompareTo() {
+		final T t = newZero();
+		if( ( t instanceof Comparable ) && !( t instanceof BooleanType ) )
+			testCompareTo( value -> (Comparable) newNumber( value ) );
+	}
+
+	private static void testCompareTo( IntFunction< Comparable > newNumber )
+	{
+		Comparable zero = newNumber.apply( 0 );
+		Comparable two = newNumber.apply( 2 );
+		Comparable anatherTwo = newNumber.apply( 2 );
+		assertEquals( -1, zero.compareTo( two ) );
+		assertEquals( 1, two.compareTo( zero ) );
+		assertEquals( 0, two.compareTo( anatherTwo ) );
 	}
 
 	// -- Helper methods --

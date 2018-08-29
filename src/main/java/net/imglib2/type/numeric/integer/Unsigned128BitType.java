@@ -45,6 +45,7 @@ import net.imglib2.type.NativeTypeFactory;
 import net.imglib2.type.Type;
 import net.imglib2.type.numeric.NumericType;
 import net.imglib2.util.Fraction;
+import net.imglib2.util.Util;
 
 /**
  * A {@link Type} with a bit depth of 128. Each value is stored in two adjacent
@@ -453,10 +454,17 @@ public class Unsigned128BitType extends AbstractIntegerType< Unsigned128BitType 
 	}
 
 	@Override
+	public boolean equals( final Object obj )
+	{
+		return Util.valueEqualsObject( this, obj );
+	}
+
+	@Override
 	public int hashCode()
 	{
 		final int k = i * 2;
-		return 31 * Long.hashCode( dataAccess.getValue( k + 1 ) )
-				+ Long.hashCode( dataAccess.getValue( k ) );
+		final int hash1 = Long.hashCode( dataAccess.getValue( k + 1 ) );
+		final int hash2 = Long.hashCode( dataAccess.getValue( k ) );
+		return Util.combineHash( hash1, hash2 );
 	}
 }

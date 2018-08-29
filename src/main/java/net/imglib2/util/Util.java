@@ -1039,12 +1039,17 @@ public class Util
 	 *
 	 * @see net.imglib2.type.AbstractNativeType#equals(Object)
 	 */
-	public static < T extends ValueEquals< S >, S extends T > boolean valueEqualsObject( T a, Object b )
+	public static <T extends ValueEquals<T>> boolean valueEqualsObject( T a, Object b )
 	{
 		if ( !a.getClass().isInstance( b ) )
 			return false;
 		@SuppressWarnings( "unchecked" )
-		S s = ( S ) b;
-		return a.valueEquals( s );
+		T t = ( T ) b;
+		return a.valueEquals( t );
+	}
+
+	public static int combineHash( int hash1, int hash2 )
+	{
+		return 31 * hash1 + hash2;
 	}
 }

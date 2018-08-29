@@ -181,14 +181,6 @@ public class UnsignedLongType extends GenericLongType< UnsignedLongType >
 	}
 
 	@Override
-	public int hashCode()
-	{
-		// NB: Use the same hash code as java.lang.Long#hashCode().
-		final long value = get();
-		return ( int ) ( value ^ ( value >>> 32 ) );
-	}
-
-	@Override
 	public void setOne()
 	{
 		set( 1 );
@@ -303,12 +295,6 @@ public class UnsignedLongType extends GenericLongType< UnsignedLongType >
 		return 0;
 	}
 
-	@Override
-	public int compareTo( final UnsignedLongType c )
-	{
-		return compare( get(), c.get() );
-	}
-
 	/**
 	 *
 	 * @param a
@@ -356,4 +342,27 @@ public class UnsignedLongType extends GenericLongType< UnsignedLongType >
 		return l >= 0 ? l : (MAX_VALUE_PLUS_ONE + l);
 	}
 
+	@Override
+	public int compareTo( final UnsignedLongType other )
+	{
+		return compare( get(), other.get() );
+	}
+
+	@Override
+	public boolean valueEquals( UnsignedLongType other )
+	{
+		return getLong() == other.getLong();
+	}
+
+	@Override
+	public boolean equals( final Object obj )
+	{
+		return Util.valueEqualsObject( this, obj );
+	}
+
+	@Override
+	public int hashCode()
+	{
+		return Long.hashCode( getLong() );
+	}
 }

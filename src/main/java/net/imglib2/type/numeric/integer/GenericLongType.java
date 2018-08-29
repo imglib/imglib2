@@ -170,26 +170,6 @@ public abstract class GenericLongType< T extends GenericLongType< T > > extends 
 	}
 
 	@Override
-	public int hashCode()
-	{
-		// NB: Use the same hash code as java.lang.Long#hashCode().
-		return Long.hashCode( getLong() );
-	}
-
-	@Override
-	public int compareTo( final T c )
-	{
-		final long a = getLong();
-		final long b = c.getLong();
-		if ( a > b )
-			return 1;
-		else if ( a < b )
-			return -1;
-		else
-			return 0;
-	}
-
-	@Override
 	public void set( final T c )
 	{
 		setLong( c.getLong() );
@@ -270,8 +250,30 @@ public abstract class GenericLongType< T extends GenericLongType< T > > extends 
 	}
 
 	@Override
-	public boolean valueEquals( final T t )
+	public int compareTo( final T other )
 	{
-		return getLong() == t.getLong();
+		return Long.compare( getLong(), other.getLong() );
+	}
+
+	@Override
+	public boolean valueEquals( final T other )
+	{
+		return getLong() == other.getLong();
+	}
+
+	@Override
+	public boolean equals( final Object obj )
+	{
+		if( ! getClass().isInstance( obj ) )
+			return false;
+		@SuppressWarnings( "unchecked" )
+		T t = ( T ) obj;
+		return GenericLongType.this.valueEquals( t );
+	}
+
+	@Override
+	public int hashCode()
+	{
+		return Long.hashCode( getLong() );
 	}
 }

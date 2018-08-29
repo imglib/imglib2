@@ -75,14 +75,4 @@ public class ComplexFloatTypeTest
 		assertTrue( b.equals( i4 ) );
 		assertTrue( i4.equals( b ) );
 	}
-
-
-	/** Tests {@link ComplexFloatType#hashCode()}. */
-	@Test
-	public void testHashCode()
-	{
-		final ComplexFloatType b = new ComplexFloatType( 1.234f, 5.678f );
-		assertEquals( 2133344667, b.hashCode() );
-	}
-
 }

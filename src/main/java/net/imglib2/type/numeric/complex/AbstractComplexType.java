@@ -35,6 +35,7 @@
 package net.imglib2.type.numeric.complex;
 
 import net.imglib2.type.numeric.ComplexType;
+import net.imglib2.util.Util;
 
 /**
  * TODO
@@ -166,6 +167,31 @@ public abstract class AbstractComplexType< T extends AbstractComplexType< T >> i
 	{
 		setReal( r );
 		setImaginary( i );
+	}
+
+	@Override
+	public boolean valueEquals( T other )
+	{
+		return getRealDouble() == other.getRealDouble() &&
+				getImaginaryDouble() == other.getImaginaryDouble();
+	}
+
+	@Override
+	public boolean equals( final Object obj )
+	{
+		if ( !getClass().isInstance(obj) )
+			return false;
+		@SuppressWarnings("unchecked")
+		final T t = (T) obj;
+		return AbstractComplexType.this.valueEquals( t );
+	}
+
+	@Override
+	public int hashCode()
+	{
+		final int hash1 = Double.hashCode( getRealDouble() );
+		final int hash2 = Double.hashCode( getImaginaryDouble() );
+		return Util.combineHash( hash1, hash2 );
 	}
 
 	@Override

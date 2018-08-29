@@ -84,10 +84,4 @@ public abstract class AbstractNativeType< T extends AbstractNativeType< T >> imp
 
 	@Override
 	public abstract String toString();
-
-	@Override
-	public boolean equals( Object obj )
-	{
-		return Util.valueEqualsObject( this, obj );
-	}
 }
