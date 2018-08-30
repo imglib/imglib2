@@ -35,6 +35,7 @@ package net.imglib2.type.volatiles;
 
 import net.imglib2.Volatile;
 import net.imglib2.type.numeric.RealType;
+import net.imglib2.util.Casts;
 import net.imglib2.util.Util;
 
 /**
@@ -257,11 +258,7 @@ public abstract class AbstractVolatileRealType< R extends RealType< R >, T exten
 	@Override
 	public boolean equals( final Object obj )
 	{
-		if( ! getClass().isInstance( obj ) )
-			return false;
-		@SuppressWarnings( "unchecked" )
-		T t = ( T ) obj;
-		return AbstractVolatileRealType.this.valueEquals( t );
+		return getClass().isInstance( obj ) && AbstractVolatileRealType.this.valueEquals( Casts.unchecked( t ) );
 	}
 
 	@Override

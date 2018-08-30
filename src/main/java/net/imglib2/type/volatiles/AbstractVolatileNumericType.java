@@ -36,6 +36,7 @@ package net.imglib2.type.volatiles;
 
 import net.imglib2.Volatile;
 import net.imglib2.type.numeric.NumericType;
+import net.imglib2.util.Casts;
 import net.imglib2.util.Util;
 
 /**
@@ -131,11 +132,7 @@ abstract public class AbstractVolatileNumericType< N extends NumericType< N >, T
 	@Override
 	public boolean equals( final Object obj )
 	{
-		if( ! getClass().isInstance( obj ) )
-			return false;
-		@SuppressWarnings( "unchecked" )
-		T t = ( T ) obj;
-		return AbstractVolatileNumericType.this.valueEquals( t );
+		return getClass().isInstance( obj ) && AbstractVolatileNumericType.this.valueEquals( Casts.unchecked( t ) );
 	}
 
 	@Override

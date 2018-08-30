@@ -34,6 +34,7 @@
 
 package net.imglib2.type.numeric;
 
+import net.imglib2.util.Casts;
 import net.imglib2.util.Util;
 
 /**
@@ -170,11 +171,7 @@ abstract public class AbstractARGBDoubleType< T extends AbstractARGBDoubleType< 
 	@Override
 	public boolean equals( final Object obj )
 	{
-		if( ! getClass().isInstance( obj ) )
-			return false;
-		@SuppressWarnings( "unchecked" )
-		T t = ( T ) obj;
-		return AbstractARGBDoubleType.this.valueEquals( t );
+		return getClass().isInstance( obj ) && AbstractARGBDoubleType.this.valueEquals( Casts.unchecked( obj ) );
 	}
 
 	@Override

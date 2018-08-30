@@ -36,6 +36,7 @@ package net.imglib2.type.numeric.real;
 
 import net.imglib2.type.numeric.RealType;
 import net.imglib2.type.numeric.complex.AbstractComplexType;
+import net.imglib2.util.Casts;
 
 /**
  * TODO
@@ -144,11 +145,7 @@ public abstract class AbstractRealType< T extends AbstractRealType< T >> extends
 	@Override
 	public boolean equals( final Object obj )
 	{
-		if ( !getClass().isInstance( obj ) )
-			return false;
-		@SuppressWarnings("unchecked")
-		final T t = (T) obj;
-		return AbstractRealType.this.valueEquals( t );
+		return getClass().isInstance( obj ) && AbstractRealType.this.valueEquals( Casts.unchecked( obj ) );
 	}
 
 	@Override

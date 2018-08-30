@@ -36,6 +36,7 @@ package net.imglib2.type.numeric.integer;
 
 import net.imglib2.type.numeric.IntegerType;
 import net.imglib2.type.numeric.real.AbstractRealType;
+import net.imglib2.util.Casts;
 import net.imglib2.util.Util;
 
 /**
@@ -119,11 +120,7 @@ public abstract class AbstractIntegerType< T extends AbstractIntegerType< T > > 
 	@Override
 	public boolean equals( final Object obj )
 	{
-		if ( !getClass().isInstance( obj ) )
-			return false;
-		@SuppressWarnings("unchecked")
-		final T t = ( T ) obj;
-		return AbstractIntegerType.this.valueEquals( t );
+		return getClass().isInstance( obj ) &&AbstractIntegerType.this.valueEquals( Casts.unchecked( obj ) );
 	}
 
 	@Override
