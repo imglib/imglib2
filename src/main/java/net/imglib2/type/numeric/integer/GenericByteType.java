@@ -260,8 +260,7 @@ public abstract class GenericByteType< T extends GenericByteType< T > > extends 
 	@Override
 	public int compareTo( final T other )
 	{
-		// NB: Use Integer.compare because Byte.compare returns values different from -1, 0, 1.
-		return Integer.compare( getByte(), other.getByte() );
+		return Byte.compare( getByte(), other.getByte() );
 	}
 
 	@Override
