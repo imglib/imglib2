@@ -264,8 +264,7 @@ public abstract class GenericShortType< T extends GenericShortType< T > >
 	@Override
 	public int compareTo( final T other )
 	{
-		// NB: Use Integer.compare because Short.compare returns values different from -1, 0, 1.
-		return Integer.compare( getShort(), other.getShort() );
+		return Short.compare( getShort(), other.getShort() );
 	}
 
 	@Override
@@ -280,7 +279,7 @@ public abstract class GenericShortType< T extends GenericShortType< T > >
 		if ( ! getClass().isInstance( obj ) )
 			return false;
 		@SuppressWarnings( "unchecked" )
-		T t = ( T ) obj;
+		final T t = ( T ) obj;
 		return GenericShortType.this.valueEquals( t );
 	}
 
