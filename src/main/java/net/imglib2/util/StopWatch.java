@@ -33,6 +33,8 @@
  */
 package net.imglib2.util;
 
+import java.text.DecimalFormat;
+
 /**
  * Utility class to measure time differences in nano-seconds, based on
  * {@link System#nanoTime()}. It compensates glitches in
@@ -43,6 +45,7 @@ package net.imglib2.util;
  * @author Tobias Pietzsch
  */
 public class StopWatch {
+
 	private long time;
 
 	private long total;
@@ -52,14 +55,32 @@ public class StopWatch {
 	private boolean running;
 
 	/**
-	 * Construct new {@link StopWatch}. It is not running initially. Call
-	 * {@link #start()} to start timing.
+	 * Use {@link #createStopped()} or {@link #createAndStart()} to create a StopWatch.
+	 * This constructor will also create a StopWatch, just like {@link #createStopped()},
+	 * but the more expressively named factory methods are preferred.
 	 */
-	public StopWatch() {
+	private StopWatch() {
 		time = System.nanoTime();
 		total = 0;
 		started = 0;
 		running = false;
+	}
+
+	/**
+	 * Construct new {@link StopWatch}. It is not running initially. Call
+	 * {@link #start()} to start timing.
+	 */
+	public static StopWatch createStopped() {
+		return new StopWatch();
+	}
+
+	/**
+	 * Construct and start a new {@link StopWatch}.
+	 */
+	public static StopWatch createAndStart() {
+		StopWatch sw = new StopWatch();
+		sw.start();
+		return sw;
 	}
 
 	private long safeNanos() {
@@ -100,5 +121,39 @@ public class StopWatch {
 			return total + safeNanos() - started;
 		else
 			return total;
+	}
+
+	/**
+	 * Get the total time the clock was running in seconds. Note that the
+	 * clock can be started and stopped multiple times, accumulating the time
+	 * intervals it was running in between.
+	 */
+	public double seconds() {
+		return nanoTime() * 1e-9;
+	}
+
+	/**
+	 * Get the total time the clock was running as string. Note that the
+	 * clock can be started and stopped multiple times, accumulating the time
+	 * intervals it was running in between.
+	 */
+	@Override
+	public String toString()
+	{
+		return secondsToString( seconds() );
+	}
+
+	private static DecimalFormat format = new DecimalFormat("#0.000");
+
+	public static String secondsToString( double seconds )
+	{
+		double abs = Math.abs( seconds );
+		if ( abs < 1e-6 )
+			return format.format( seconds * 1e9 ) + " ns";
+		if ( abs < 1e-3 )
+			return format.format( seconds * 1e6 ) + " \u00b5s";
+		if ( abs < 1 )
+			return format.format( seconds * 1e3 )+ " ms";
+		return format.format( seconds ) + " s";
 	}
 }
