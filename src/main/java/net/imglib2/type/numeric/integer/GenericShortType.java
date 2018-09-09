@@ -182,26 +182,6 @@ public abstract class GenericShortType< T extends GenericShortType< T > >
 	}
 
 	@Override
-	public int hashCode()
-	{
-		// NB: Use the same hash code as java.lang.Short#hashCode().
-		return getShort();
-	}
-
-	@Override
-	public int compareTo( final T c )
-	{
-		final short a = getShort();
-		final short b = c.getShort();
-		if ( a > b )
-			return 1;
-		else if ( a < b )
-			return -1;
-		else
-			return 0;
-	}
-
-	@Override
 	public void set( final T c )
 	{
 		setShort( c.getShort() );
@@ -282,8 +262,30 @@ public abstract class GenericShortType< T extends GenericShortType< T > >
 	}
 
 	@Override
+	public int compareTo( final T other )
+	{
+		return Short.compare( getShort(), other.getShort() );
+	}
+
+	@Override
 	public boolean valueEquals( final T t )
 	{
 		return getShort() == t.getShort();
+	}
+
+	@Override
+	public boolean equals( final Object obj )
+	{
+		if ( ! getClass().isInstance( obj ) )
+			return false;
+		@SuppressWarnings( "unchecked" )
+		final T t = ( T ) obj;
+		return GenericShortType.this.valueEquals( t );
+	}
+
+	@Override
+	public int hashCode()
+	{
+		return Short.hashCode( getShort() );
 	}
 }

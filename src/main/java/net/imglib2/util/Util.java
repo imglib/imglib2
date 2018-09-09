@@ -971,11 +971,11 @@ public class Util
 	 * Checks if both images have equal intervals and content.
 	 * A predicate must be given to check if two pixels are equal.
 	 */
-	public static < T, U > boolean imagesEqual( final RandomAccessibleInterval< ? extends T > a, final RandomAccessibleInterval< ? extends U > b, BiPredicate< T, U > pixelEquals )
+	public static < T, U > boolean imagesEqual( final RandomAccessibleInterval< ? extends T > a, final RandomAccessibleInterval< ? extends U > b, final BiPredicate< T, U > pixelEquals )
 	{
 		if ( !Intervals.equals( a, b ) )
 			return false;
-		for ( Pair< ? extends T, ? extends U > pair : Views.interval( Views.pair( a, b ), b ) )
+		for ( final Pair< ? extends T, ? extends U > pair : Views.interval( Views.pair( a, b ), b ) )
 			if ( !pixelEquals.test( pair.getA(), pair.getB() ) )
 				return false;
 		return true;
@@ -1010,7 +1010,7 @@ public class Util
 	/**
 	 * Returns the content of {@code Iterable<RealType>} as array of doubles.
 	 */
-	public static double[] asDoubleArray( Iterable< ? extends RealType< ? > > iterable )
+	public static double[] asDoubleArray( final Iterable< ? extends RealType< ? > > iterable )
 	{
 		return StreamSupport.stream( iterable.spliterator(), false ).mapToDouble( RealType::getRealDouble ).toArray();
 	}
@@ -1019,7 +1019,7 @@ public class Util
 	 * Returns the pixels of an RandomAccessibleInterval of RealType as array of doubles.
 	 * The pixels are sorted in flat iteration order.
 	 */
-	public static double[] asDoubleArray( RandomAccessibleInterval< ? extends RealType< ? > > rai )
+	public static double[] asDoubleArray( final RandomAccessibleInterval< ? extends RealType< ? > > rai )
 	{
 		return asDoubleArray( Views.flatIterable( rai ) );
 	}
@@ -1028,8 +1028,28 @@ public class Util
 	 * Returns the pixels of an image of RealType as array of doubles.
 	 * The pixels are sorted in flat iteration order.
 	 */
-	public static double[] asDoubleArray( Img< ? extends RealType< ? > > image )
+	public static double[] asDoubleArray( final Img< ? extends RealType< ? > > image )
 	{
 		return asDoubleArray( ( RandomAccessibleInterval< ? extends RealType< ? > > ) image );
+	}
+
+	/**
+	 * This method should be used in implementations of {@link ValueEquals}, to
+	 * override {@link Object#equals(Object)}.
+	 *
+	 * @see net.imglib2.type.AbstractNativeType#equals(Object)
+	 */
+	public static < T extends ValueEquals< T > > boolean valueEqualsObject( final T a, final Object b )
+	{
+		if ( !a.getClass().isInstance( b ) )
+			return false;
+		@SuppressWarnings( "unchecked" )
+		final T t = ( T ) b;
+		return a.valueEquals( t );
+	}
+
+	public static int combineHash( final int hash1, final int hash2 )
+	{
+		return 31 * hash1 + hash2;
 	}
 }

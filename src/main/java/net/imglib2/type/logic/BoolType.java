@@ -37,6 +37,7 @@ import java.math.BigInteger;
 
 import net.imglib2.type.BooleanType;
 import net.imglib2.type.numeric.integer.AbstractIntegerType;
+import net.imglib2.util.Util;
 
 /**
  * A {@link BooleanType} wrapping a single primitive {@code boolean} variable.
@@ -78,15 +79,6 @@ public class BoolType extends AbstractIntegerType< BoolType > implements Boolean
 	public void set( final BoolType c )
 	{
 		value = c.get();
-	}
-
-	@Override
-	public int compareTo( final BoolType o )
-	{
-		if ( value )
-			return o.value ? 0 : 1;
-		else
-			return o.value ? -1 : 0;
 	}
 
 	@Override
@@ -193,10 +185,28 @@ public class BoolType extends AbstractIntegerType< BoolType > implements Boolean
 	{
 		set( b.compareTo(BigInteger.ZERO) > 0 );
 	}
-	
+
+	@Override
+	public int compareTo( final BoolType other )
+	{
+		return Boolean.compare( get(), other.get() );
+	}
+
 	@Override
 	public boolean valueEquals( BoolType t )
 	{
 		return get() == t.get();
+	}
+
+	@Override
+	public boolean equals( final Object obj )
+	{
+		return Util.valueEqualsObject( this, obj );
+	}
+
+	@Override
+	public int hashCode()
+	{
+		return Boolean.hashCode( get() );
 	}
 }

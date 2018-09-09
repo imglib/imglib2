@@ -131,13 +131,6 @@ public class UnsignedVariableBitLengthType extends AbstractBit64Type< UnsignedVa
 		setBits( UnsignedLongType.divide( getBits(), t.getBits() ) );
 	}
 
-	/** @see UnsignedLongType#compare(long, long) */
-	@Override
-	public int compareTo( final UnsignedVariableBitLengthType t )
-	{
-		return UnsignedLongType.compare( getBits(), t.getBits() );
-	}
-
 	@Override
 	public void mul( final float c )
 	{
@@ -347,6 +340,12 @@ public class UnsignedVariableBitLengthType extends AbstractBit64Type< UnsignedVa
 	public void complexConjugate()
 	{}
 
+	@Override
+	public int compareTo( final UnsignedVariableBitLengthType t )
+	{
+		return Long.compareUnsigned( getBits(), t.getBits() );
+	}
+
 	/**
 	 * Default test at long precision. Please override for types longer than
 	 * 64bit.
@@ -358,5 +357,17 @@ public class UnsignedVariableBitLengthType extends AbstractBit64Type< UnsignedVa
 	public boolean valueEquals( final UnsignedVariableBitLengthType t )
 	{
 		return getBits() == t.getBits();
+	}
+
+	@Override
+	public boolean equals( final Object obj )
+	{
+		return Util.valueEqualsObject( this, obj );
+	}
+
+	@Override
+	public int hashCode()
+	{
+		return Long.hashCode( getBits() );
 	}
 }

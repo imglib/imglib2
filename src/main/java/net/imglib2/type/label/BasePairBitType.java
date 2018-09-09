@@ -49,18 +49,63 @@ import net.imglib2.type.NativeTypeFactory;
  */
 public class BasePairBitType extends AbstractBit64Type< BasePairBitType > implements BasePairType< BasePairBitType >
 {
-	public static enum Base { gap, N, A, T, G, C, U; }
+	// hom many bits a BasePairBitType contains
+	private static final int NBITS = 3;
+
+	public enum Base
+	{
+		gap( ' ' ),
+		N( 'N' ),
+		A( 'A' ),
+		T( 'T' ),
+		G( 'G' ),
+		C( 'C' ),
+		U( 'U' );
+
+		private final char c;
+
+		Base( final char c )
+		{
+			this.c = c;
+		}
+
+		public char getChar()
+		{
+			return c;
+		}
+
+		public static Base fromChar( final char c )
+		{
+			switch ( c )
+			{
+			case 'A':
+				return A;
+			case 'T':
+				return T;
+			case 'G':
+				return G;
+			case 'C':
+				return C;
+			case 'U':
+				return U;
+			case ' ':
+				return gap;
+			default:
+				return N;
+			}
+		}
+	}
 
 	// this is the constructor if you want it to read from an array
 	public BasePairBitType( final NativeImg< ?, ? extends LongAccess > bitStorage )
 	{
-		super( bitStorage, 3 );
+		super( bitStorage, NBITS );
 	}
 
 	// this is the constructor if you want it to be a variable
 	public BasePairBitType( final Base value )
 	{
-		super( value.ordinal() );
+		super( value.ordinal(), NBITS );
 	}
 
 	// this is the constructor if you want it to be a variable
@@ -89,29 +134,13 @@ public class BasePairBitType extends AbstractBit64Type< BasePairBitType > implem
 	@Override
 	public Base get()
 	{
-		return Base.values()[ (int)getBits() ];
+		return Base.values()[ ( int ) getBits() ];
 	}
 
 	@Override
 	public int compareTo( final BasePairBitType c )
 	{
-		final Base input = get();
-		final Base compare = c.get();
-
-		if ( input == compare )
-		{
-			return 0;
-		}
-		switch ( input )
-		{
-			case gap: return -1;
-			case N: return compare == Base.gap ? 1 : -1;
-			case A: return compare == Base.gap || compare == Base.N ? 1 : -1;
-			case T: return compare == Base.G || compare == Base.C || compare == Base.U ? -1 : 1;
-			case G: return compare == Base.C || compare == Base.U ? -1 : 1;
-			case C: return compare == Base.U ? -1 : 1;
-			default: return 1;
-		}
+		return get().compareTo( c.get() );
 	}
 
 	@Override
@@ -132,25 +161,7 @@ public class BasePairBitType extends AbstractBit64Type< BasePairBitType > implem
 	@Override
 	public byte baseToValue()
 	{
-		final Base base = get();
-
-		switch ( base )
-		{
-		case N:
-			return 1;
-		case A:
-			return 2;
-		case T:
-			return 3;
-		case G:
-			return 4;
-		case C:
-			return 5;
-		case U:
-			return 6;
-		default:
-			return 0;
-		}
+		return ( byte ) get().ordinal();
 	}
 
 	@Override
