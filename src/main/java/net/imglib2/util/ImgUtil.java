@@ -268,6 +268,26 @@ public class ImgUtil
 			dest[ this_offset ] = t.getInteger();
 		}
 	}
+	
+	/**
+	 * @see ImgUtil#copy(Img, double[], int, int[])
+	 */
+	public static < T extends IntegerType< T >> void copy( final Img< T > src, final short[] dest, final int offset, final int[] stride )
+	{
+		final Cursor< T > c = src.localizingCursor();
+		final int[] location = new int[ src.numDimensions() ];
+		while ( c.hasNext() )
+		{
+			final T t = c.next();
+			c.localize( location );
+			int this_offset = offset;
+			for ( int i = 0; ( i < stride.length ) && ( i < location.length ); i++ )
+			{
+				this_offset += location[ i ] * stride[ i ];
+			}
+			dest[ this_offset ] = (short) t.getInteger();
+		}
+	}
 
 	/**
 	 * @see ImgUtil#copy(Img, double[], int, int[])
