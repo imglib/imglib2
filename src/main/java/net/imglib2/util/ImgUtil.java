@@ -35,8 +35,10 @@
 package net.imglib2.util;
 
 import net.imglib2.Cursor;
+import net.imglib2.RandomAccess;
 import net.imglib2.img.Img;
 import net.imglib2.type.BooleanType;
+import net.imglib2.type.Type;
 import net.imglib2.type.numeric.IntegerType;
 import net.imglib2.type.numeric.RealType;
 
@@ -306,6 +308,38 @@ public class ImgUtil
 				this_offset += location[ i ] * stride[ i ];
 			}
 			dest[ this_offset ] = t.get();
+		}
+	}
+	
+	/**
+	 * Copy one {@link Img} into another.
+	 * If both have the same iteration order, the copy proceeds with two {@link Cursor}.
+	 * If they differ in iteration order, then they are copied with a {@link RandomAccess} approach.
+	 * 
+	 * @param src
+	 * @param dest
+	 * 
+	 */
+	public static < T extends Type< T >> void copy( final Img< T > src, final Img< T > dest )
+	{
+		if ( src.iterationOrder() == dest.iterationOrder() )
+		{
+			final Cursor< T > c1 = src.cursor(),
+							  c2 = dest.cursor();
+			while ( c1.hasNext() )
+				c2.next().set( c1.next() );
+		}
+		else
+		{
+			final Cursor< T > c = src.cursor();
+			final RandomAccess< T > r = dest.randomAccess();
+			
+			while ( c.hasNext() )
+			{
+				c.fwd();
+				r.setPosition( c );
+				r.get().set( c.get() );
+			}
 		}
 	}
 }
