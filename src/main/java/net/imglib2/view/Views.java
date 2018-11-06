@@ -468,17 +468,9 @@ public class Views
 	 */
 	public static < T > IntervalView< T > translate( final RandomAccessibleInterval< T > interval, final long... translation )
 	{
-		final int n = interval.numDimensions();
-		final long[] min = new long[ n ];
-		final long[] max = new long[ n ];
-		interval.min( min );
-		interval.max( max );
-		for ( int d = 0; d < n; ++d )
-		{
-			min[ d ] += translation[ d ];
-			max[ d ] += translation[ d ];
-		}
-		return Views.interval( Views.translate( ( RandomAccessible< T > ) interval, translation ), min, max );
+		return Views.interval(
+				Views.translate( ( RandomAccessible< T > ) interval, translation ),
+				Intervals.translate( interval, translation ) );
 	}
 
 	/**

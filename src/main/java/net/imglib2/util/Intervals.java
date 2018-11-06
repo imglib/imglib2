@@ -249,6 +249,33 @@ public class Intervals
 	}
 
 	/**
+	 * Translate an interval.
+	 *
+	 * Create a {@link FinalInterval} , which is the input interval shifted by
+	 * {@code translation}.
+	 *
+	 * @param interval
+	 *            the input interval
+	 * @param translation
+	 *            by how many pixels to shift the interval
+	 * @return translated interval
+	 */
+	public static FinalInterval translate( final Interval interval, final long... translation )
+	{
+		final int n = interval.numDimensions();
+		final long[] min = new long[ n ];
+		final long[] max = new long[ n ];
+		interval.min( min );
+		interval.max( max );
+		for ( int d = 0; d < n; ++d )
+		{
+			min[ d ] += translation[ d ];
+			max[ d ] += translation[ d ];
+		}
+		return new FinalInterval( min, max );
+	}
+
+	/**
 	 * Compute the intersection of two intervals.
 	 * 
 	 * Create a {@link FinalInterval} , which is the intersection of the input
