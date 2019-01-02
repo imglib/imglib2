@@ -127,7 +127,7 @@ public class SubsampleIntervalViewTest
 		SubsampleIntervalView< FloatType > subInterval;
 
 		RandomAccessibleInterval< FloatType > randAccessInterval = ConstantUtils.constantRandomAccessibleInterval(
-				new FloatType( 1f ), 5, interval );
+				new FloatType( 1f ), interval );
 
 		for ( long[] shift : testShifts )
 		{
