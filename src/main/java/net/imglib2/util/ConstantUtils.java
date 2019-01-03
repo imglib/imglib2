@@ -97,6 +97,12 @@ public class ConstantUtils
 		};
 	}
 
+	public static < T > RandomAccessibleInterval< T > constantRandomAccessibleInterval( final T constant, final Interval interval )
+	{
+		return Views.interval( constantRandomAccessible( constant, interval.numDimensions() ), interval );
+	}
+
+	@Deprecated
 	public static < T > RandomAccessibleInterval< T > constantRandomAccessibleInterval( final T constant, final int numDimensions, final Interval interval )
 	{
 		return Views.interval( constantRandomAccessible( constant, numDimensions ), interval );
