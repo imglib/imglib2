@@ -58,47 +58,134 @@ public interface Interval extends RealInterval, Dimensions
 {
 	/**
 	 * Get the minimum in dimension d.
-	 * 
+	 *
 	 * @param d
 	 *            dimension
 	 * @return minimum in dimension d.
 	 */
-	public long min( final int d );
+	long min( final int d );
 
 	/**
 	 * Write the minimum of each dimension into long[].
-	 * 
+	 *
 	 * @param min
 	 */
-	public void min( long[] min );
+	default void min( final long[] min )
+	{
+		final int n = numDimensions();
+		for ( int d = 0; d < n; d++ )
+			min[ d ] = min( d );
+	}
+
 
 	/**
 	 * Sets a {@link Positionable} to the minimum of this {@link Interval}
-	 * 
+	 *
 	 * @param min
 	 */
-	public void min( Positionable min );
+	default void min( final Positionable min )
+	{
+		final int n = numDimensions();
+		for ( int d = 0; d < n; d++ )
+			min.setPosition( min( d ), d );
+	}
 
 	/**
 	 * Get the maximum in dimension d.
-	 * 
+	 *
 	 * @param d
 	 *            dimension
 	 * @return maximum in dimension d.
 	 */
-	public long max( final int d );
+	long max( final int d );
 
 	/**
 	 * Write the maximum of each dimension into long[].
-	 * 
+	 *
 	 * @param max
 	 */
-	public void max( long[] max );
+	default void max( final long[] max )
+	{
+		final int n = numDimensions();
+		for ( int d = 0; d < n; d++ )
+			max[ d ] = max( d );
+	}
 
 	/**
 	 * Sets a {@link Positionable} to the maximum of this {@link Interval}
-	 * 
+	 *
 	 * @param max
 	 */
-	public void max( Positionable max );
+	default void max( final Positionable max )
+	{
+		final int n = numDimensions();
+		for ( int d = 0; d < n; d++ )
+			max.setPosition( max( d ), d );
+	}
+
+	/** Default implementation of {@link RealInterval#realMin(int)}. */
+	@Override
+	default double realMin( final int d )
+	{
+		return min( d );
+	}
+
+	/** Default implementation of {@link RealInterval#realMin(double[])} */
+	@Override
+	default void realMin( final double[] min )
+	{
+		final int n = numDimensions();
+		for ( int d = 0; d < n; d++ )
+			min[ d ] = realMin( d );
+	}
+
+	/** Default implementation of {@link RealInterval#realMin(RealPositionable)} */
+	@Override
+	default void realMin( final RealPositionable min )
+	{
+		final int n = numDimensions();
+		for ( int d = 0; d < n; d++ )
+			min.setPosition( realMin( d ), d );
+	}
+
+	/** Default implementation of {@link RealInterval#realMax(int)}. */
+	@Override
+	default double realMax( final int d )
+	{
+		return max( d );
+	}
+
+	/** Default implementation of {@link RealInterval#realMax(double[])}. */
+	@Override
+	default void realMax( final double[] max )
+	{
+		final int n = numDimensions();
+		for ( int d = 0; d < n; d++ )
+			max[ d ] = realMax( d );
+	}
+
+	/** Default implementation of {@link RealInterval#realMax(RealPositionable)}. */
+	@Override
+	default void realMax( final RealPositionable max )
+	{
+		final int n = numDimensions();
+		for ( int d = 0; d < n; d++ )
+			max.setPosition( realMax( d ), d );
+	}
+
+	/** Default implementation of {@link Dimensions#dimensions(long[])}. */
+	@Override
+	default void dimensions( final long[] dimensions )
+	{
+		final int n = numDimensions();
+		for ( int d = 0; d < n; d++ )
+			dimensions[ d ] = dimension( d );
+	}
+
+	/** Default implementation of {@link Dimensions#dimension(int)}. */
+	@Override
+	default long dimension( int d )
+	{
+		return max( d ) - min( d ) + 1;
+	}
 }
