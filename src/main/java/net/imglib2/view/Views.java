@@ -64,7 +64,9 @@ import net.imglib2.transform.integer.permutation.PermutationTransform;
 import net.imglib2.transform.integer.permutation.SingleDimensionPermutationTransform;
 import net.imglib2.transform.integer.shear.InverseShearTransform;
 import net.imglib2.transform.integer.shear.ShearTransform;
+import net.imglib2.type.BooleanType;
 import net.imglib2.type.Type;
+import net.imglib2.type.numeric.IntegerType;
 import net.imglib2.type.numeric.NumericType;
 import net.imglib2.type.numeric.RealType;
 import net.imglib2.util.Intervals;
@@ -183,6 +185,101 @@ public class Views
 	public static < T extends Type< T >, F extends RandomAccessibleInterval< T > > ExtendedRandomAccessibleInterval< T, F > extendValue( final F source, final T value )
 	{
 		return new ExtendedRandomAccessibleInterval<>( source, new OutOfBoundsConstantValueFactory<>( value ) );
+	}
+
+	/**
+	 * Extend a RandomAccessibleInterval with a constant-value out-of-bounds
+	 * strategy.
+	 *
+	 * @param source
+	 *            the interval to extend.
+	 * @param value
+	 *            the extension value
+	 * @return (unbounded) RandomAccessible which extends the input interval to
+	 *         infinity.
+	 * @see net.imglib2.outofbounds.OutOfBoundsConstantValue
+	 */
+	public static < T extends RealType< T >, F extends RandomAccessibleInterval< T > > ExtendedRandomAccessibleInterval< T, F > extendValue( final F source, final float value )
+	{
+		final T extension = Util.getTypeFromInterval( source ).createVariable();
+		extension.setReal( value );
+		return Views.extendValue( source, extension );
+	}
+
+	/**
+	 * Extend a RandomAccessibleInterval with a constant-value out-of-bounds
+	 * strategy.
+	 *
+	 * @param source
+	 *            the interval to extend.
+	 * @param value
+	 *            the extension value
+	 * @return (unbounded) RandomAccessible which extends the input interval to
+	 *         infinity.
+	 * @see net.imglib2.outofbounds.OutOfBoundsConstantValue
+	 */
+	public static < T extends RealType< T >, F extends RandomAccessibleInterval< T > > ExtendedRandomAccessibleInterval< T, F > extendValue( final F source, final double value )
+	{
+		final T extension = Util.getTypeFromInterval( source ).createVariable();
+		extension.setReal( value );
+		return Views.extendValue( source, extension );
+	}
+
+	/**
+	 * Extend a RandomAccessibleInterval with a constant-value out-of-bounds
+	 * strategy.
+	 *
+	 * @param source
+	 *            the interval to extend.
+	 * @param value
+	 *            the extension value
+	 * @return (unbounded) RandomAccessible which extends the input interval to
+	 *         infinity.
+	 * @see net.imglib2.outofbounds.OutOfBoundsConstantValue
+	 */
+	public static < T extends IntegerType< T >, F extends RandomAccessibleInterval< T > > ExtendedRandomAccessibleInterval< T, F > extendValue( final F source, final int value )
+	{
+		final T extension = Util.getTypeFromInterval( source ).createVariable();
+		extension.setInteger( value );
+		return Views.extendValue( source, extension );
+	}
+
+	/**
+	 * Extend a RandomAccessibleInterval with a constant-value out-of-bounds
+	 * strategy.
+	 *
+	 * @param source
+	 *            the interval to extend.
+	 * @param value
+	 *            the extension value
+	 * @return (unbounded) RandomAccessible which extends the input interval to
+	 *         infinity.
+	 * @see net.imglib2.outofbounds.OutOfBoundsConstantValue
+	 */
+	public static < T extends IntegerType< T >, F extends RandomAccessibleInterval< T > > ExtendedRandomAccessibleInterval< T, F > extendValue( final F source, final long value )
+	{
+		final T extension = Util.getTypeFromInterval( source ).createVariable();
+		extension.setInteger( value );
+		return Views.extendValue( source, extension );
+	}
+
+	/**
+	 * Extend a RandomAccessibleInterval with a constant-value out-of-bounds
+	 * strategy.
+	 *
+	 * @param source
+	 *            the interval to extend.
+	 * @param value
+	 *            the extension value
+	 * @return (unbounded) RandomAccessible which extends the input interval to
+	 *         infinity.
+	 * @see net.imglib2.outofbounds.OutOfBoundsConstantValue
+	 */
+	public static < T extends BooleanType< T >, F extends RandomAccessibleInterval< T > > ExtendedRandomAccessibleInterval< T, F > extendValue( final F source, final boolean value )
+	{
+		final T extension = Util.getTypeFromInterval( source ).createVariable();
+		extension.set( value );
+		return Views.extendValue( source, extension );
 	}
 
 	/**
@@ -1367,6 +1464,96 @@ public class Views
 	public static < T extends Type< T > > IntervalView< T > expandValue( final RandomAccessibleInterval< T > source, final T t, final long... border )
 	{
 		return interval( extendValue( source, t ), Intervals.expand( source, border ) );
+	}
+
+	/**
+	 * Expand a RandomAccessibleInterval as specified by border. source will be
+	 * extended with a constant value specified by the caller.
+	 *
+	 * @param source
+	 *            the interval to expand.
+	 * @param value
+	 *            Constant extension of source.
+	 * @return Expansion of the {@link RandomAccessibleInterval} source as
+	 *         specified by t and border.
+	 */
+	public static < T extends RealType< T > > IntervalView< T > expandValue( final RandomAccessibleInterval< T > source, final float value, final long... border )
+	{
+		final T extension = Util.getTypeFromInterval( source ).createVariable();
+		extension.setReal( value );
+		return Views.expandValue( source, extension, border );
+	}
+
+	/**
+	 * Expand a RandomAccessibleInterval as specified by border. source will be
+	 * extended with a constant value specified by the caller.
+	 *
+	 * @param source
+	 *            the interval to expand.
+	 * @param value
+	 *            Constant extension of source.
+	 * @return Expansion of the {@link RandomAccessibleInterval} source as
+	 *         specified by t and border.
+	 */
+	public static < T extends RealType< T > > IntervalView< T > expandValue( final RandomAccessibleInterval< T > source, final double value, final long... border )
+	{
+		final T extension = Util.getTypeFromInterval( source ).createVariable();
+		extension.setReal( value );
+		return Views.expandValue( source, extension, border );
+	}
+
+	/**
+	 * Expand a RandomAccessibleInterval as specified by border. source will be
+	 * extended with a constant value specified by the caller.
+	 *
+	 * @param source
+	 *            the interval to expand.
+	 * @param value
+	 *            Constant extension of source.
+	 * @return Expansion of the {@link RandomAccessibleInterval} source as
+	 *         specified by t and border.
+	 */
+	public static < T extends IntegerType< T > > IntervalView< T > expandValue( final RandomAccessibleInterval< T > source, final int value, final long... border )
+	{
+		final T extension = Util.getTypeFromInterval( source ).createVariable();
+		extension.setInteger( value );
+		return Views.expandValue( source, extension, border );
+	}
+
+	/**
+	 * Expand a RandomAccessibleInterval as specified by border. source will be
+	 * extended with a constant value specified by the caller.
+	 *
+	 * @param source
+	 *            the interval to expand.
+	 * @param value
+	 *            Constant extension of source.
+	 * @return Expansion of the {@link RandomAccessibleInterval} source as
+	 *         specified by t and border.
+	 */
+	public static < T extends IntegerType< T > > IntervalView< T > expandValue( final RandomAccessibleInterval< T > source, final long value, final long... border )
+	{
+		final T extension = Util.getTypeFromInterval( source ).createVariable();
+		extension.setInteger( value );
+		return Views.expandValue( source, extension, border );
+	}
+
+	/**
+	 * Expand a RandomAccessibleInterval as specified by border. source will be
+	 * extended with a constant value specified by the caller.
+	 *
+	 * @param source
+	 *            the interval to expand.
+	 * @param value
+	 *            Constant extension of source.
+	 * @return Expansion of the {@link RandomAccessibleInterval} source as
+	 *         specified by t and border.
+	 */
+	public static < T extends BooleanType< T > > IntervalView< T > expandValue( final RandomAccessibleInterval< T > source, final boolean value, final long... border )
+	{
+		final T extension = Util.getTypeFromInterval( source ).createVariable();
+		extension.set( value );
+		return Views.expandValue( source, extension, border );
 	}
 
 	/**
