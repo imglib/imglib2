@@ -59,7 +59,7 @@ import net.imglib2.outofbounds.OutOfBoundsMirrorFactory;
 import net.imglib2.outofbounds.OutOfBoundsPeriodicFactory;
 import net.imglib2.outofbounds.OutOfBoundsRandomValueFactory;
 import net.imglib2.transform.integer.BoundingBox;
-import net.imglib2.transform.integer.MixedTransform;
+import net.imglib2.transform.integer.Mixed;
 import net.imglib2.transform.integer.permutation.AbstractPermutationTransform;
 import net.imglib2.transform.integer.permutation.PermutationTransform;
 import net.imglib2.transform.integer.permutation.SingleDimensionPermutationTransform;
@@ -487,7 +487,7 @@ public class Views
 	public static < T > RandomAccessibleInterval< T > moveAxis( final RandomAccessibleInterval< T > image, final int fromAxis, final int toAxis )
 	{
 		final int n = image.numDimensions();
-		final MixedTransform t = MixedTransforms.getMoveAxisTransform(fromAxis, toAxis, n);
+		final Mixed t = MixedTransforms.getMoveAxisTransform(fromAxis, toAxis, n);
 		final int[] newAxisIndices = new int[n];
 		t.getComponentMapping(newAxisIndices);
 
@@ -515,7 +515,7 @@ public class Views
 	 */
 	public static < T > MixedTransformView< T > translate( final RandomAccessible< T > randomAccessible, final long... translation )
 	{
-		final MixedTransform t = MixedTransforms.getTranslationTransform(translation);
+		final Mixed t = MixedTransforms.getTranslationTransform(translation);
 		return new MixedTransformView<>( randomAccessible, t );
 	}
 
@@ -550,7 +550,7 @@ public class Views
 	 */
 	public static < T > MixedTransformView< T > offset( final RandomAccessible< T > randomAccessible, final long... offset )
 	{
-		final MixedTransform t = MixedTransforms.getOffsetTransform(offset);
+		final Mixed t = MixedTransforms.getOffsetTransform(offset);
 		return new MixedTransformView<>( randomAccessible, t );
 	}
 
@@ -566,18 +566,10 @@ public class Views
 	 */
 	public static < T > IntervalView< T > offset( final RandomAccessibleInterval< T > interval, final long... offset )
 	{
-		final int n = interval.numDimensions();
-		final long[] min = new long[ n ];
-		final long[] max = new long[ n ];
-		interval.min( min );
-		interval.max( max );
-		for ( int d = 0; d < n; ++d )
-		{
-			min[ d ] -= offset[ d ];
-			max[ d ] -= offset[ d ];
+		final Mixed t = MixedTransforms.getOffsetTransform(offset);
+		final Interval newInterval = Intervals.offset(interval, offset);
+		return Views.interval(new MixedTransformView<>( (RandomAccessible<T>)interval, t ), newInterval);
 		}
-		return Views.interval( Views.offset( ( RandomAccessible< T > ) interval, offset ), min, max );
-	}
 
 	/**
 	 * Translate the source such that the upper left corner is at the origin
@@ -588,15 +580,11 @@ public class Views
 	 */
 	public static < T > IntervalView< T > zeroMin( final RandomAccessibleInterval< T > interval )
 	{
-		final int n = interval.numDimensions();
-		final long[] min = new long[ n ];
-		final long[] max = new long[ n ];
-		final long[] offset = new long[ n ];
-		interval.min( offset );
-		interval.max( max );
-		for ( int d = 0; d < n; ++d )
-			max[ d ] -= offset[ d ];
-		return Views.interval( new MixedTransformView<>( interval, MixedTransforms.getZeroMinTransform(interval) ), min, max );
+		final Mixed t = MixedTransforms.getZeroMinTransform(interval);
+		final long[] offset = new long[interval.numDimensions()];
+		interval.min(offset);
+		final Interval newInterval = Intervals.offset(interval, offset);
+		return Views.interval( new MixedTransformView<>( interval, t), newInterval );
 	}
 
 	/**
@@ -606,7 +594,7 @@ public class Views
 	public static < T > MixedTransformView< T > hyperSlice( final RandomAccessible< T > view, final int d, final long pos )
 	{
 		final int m = view.numDimensions();
-		final MixedTransform t = MixedTransforms.getHyperSliceTransform(d, pos, m);
+		final Mixed t = MixedTransforms.getHyperSliceTransform(d, pos, m);
 		return new MixedTransformView<>( view, t );
 	}
 

@@ -276,6 +276,59 @@ public class Intervals
 	}
 
 	/**
+	 * Offset an interval in one dimension.
+	 * 
+	 * Create a {@link FinalInterval} , which is the input interval shifted by -o
+	 * in dimension d.
+	 * 
+	 * @param interval
+	 *            the input interval
+	 * @param o
+	 *            by how many pixels to shift the interval
+	 * @param d
+	 *            in which dimension
+	 * @return offsetted interval
+	 */
+	public static FinalInterval offset( final Interval interval, final long o, final int d )
+	{
+		final int n = interval.numDimensions();
+		final long[] min = new long[ n ];
+		final long[] max = new long[ n ];
+		interval.min( min );
+		interval.max( max );
+		min[ d ] += o;
+		max[ d ] += o;
+		return new FinalInterval( min, max );
+	}
+
+	/**
+	 * Offset an interval.
+	 *
+	 * Create a {@link FinalInterval} , which is the input interval shifted by
+	 * {@code -offset}.
+	 *
+	 * @param interval
+	 *            the input interval
+	 * @param offset
+	 *            by how many pixels to shift the interval
+	 * @return offsetted interval
+	 */
+	public static FinalInterval offset( final Interval interval, final long... offset )
+	{
+		final int n = interval.numDimensions();
+		final long[] min = new long[ n ];
+		final long[] max = new long[ n ];
+		interval.min( min );
+		interval.max( max );
+		for ( int d = 0; d < n; ++d )
+		{
+			min[ d ] -= offset[ d ];
+			max[ d ] -= offset[ d ];
+		}
+		return new FinalInterval( min, max );
+	}
+
+	/**
 	 * Compute the intersection of two intervals.
 	 * 
 	 * Create a {@link FinalInterval} , which is the intersection of the input
