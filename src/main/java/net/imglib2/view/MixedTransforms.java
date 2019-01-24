@@ -12,7 +12,7 @@ import net.imglib2.transform.integer.MixedTransform;
  * Utility methods to create mixed transforms for common operations. Used by {@link Views}.
  * 
  * @author Tobias Pietzsch
- * @author Carsten Haubold, KNIME GmbH
+ * @author Carsten Haubold, KNIME GmbH, Konstanz, Germany
  */
 public class MixedTransforms
 {
@@ -21,7 +21,7 @@ public class MixedTransforms
 	 * is specified by two axis indices, such that the {@code fromAxis} is
 	 * rotated to the {@code toAxis}.
 	 *
-	 * For example: {@code getRotationTransform(0, 1, 3)} creates a transform
+	 * For example: {@code rotate(0, 1, 3)} creates a transform
 	 * that rotates the X axis (of a XYZ space) to the Y axis. Applying the
 	 * transform to <em>(1,2,3)</em> yields <em>(2,-1,3)</em>.
 	 *
@@ -34,7 +34,7 @@ public class MixedTransforms
 	 * @return a transform that rotates the {@code fromAxis} to the
 	 *         {@code toAxis}.
 	 */
-	public static Mixed getRotationTransform( final int fromAxis, final int toAxis, final int n )
+	public static Mixed rotate( final int fromAxis, final int toAxis, final int n )
 	{
 		if ( fromAxis == toAxis )
 			return new MixedTransform(n, n);
@@ -78,7 +78,7 @@ public class MixedTransforms
 	 * @param n
 	 * @return
 	 */
-	public static Mixed getPermuteTransform( final int fromAxis, final int toAxis, final int n )
+	public static Mixed permute( final int fromAxis, final int toAxis, final int n )
 	{
 		if ( fromAxis == toAxis )
 			return new MixedTransform(n, n);
@@ -102,7 +102,7 @@ public class MixedTransforms
 	 * @param m
 	 * @return
 	 */
-	public static MixedTransform getHyperSliceTransform( final int d, final long pos, final int m )
+	public static MixedTransform hyperSlice( final int d, final long pos, final int m )
 	{
 		final int n = m - 1;
 		final MixedTransform t = new MixedTransform( n, m );
@@ -144,7 +144,7 @@ public class MixedTransforms
 	 *            in the source view becomes <em>(x + translation)</em> in the
 	 *            resulting view.
 	 */
-	public static MixedTransform getTranslationTransform( final long... translation )
+	public static MixedTransform translate( final long... translation )
 	{
 		final int n = translation.length;
 		final MixedTransform t = new MixedTransform( n, n );
@@ -161,7 +161,7 @@ public class MixedTransforms
 	 *            origin of resulting view.
 	 * @return transformation
 	 */
-	public static MixedTransform getOffsetTransform(final long... offset )
+	public static MixedTransform offset(final long... offset )
 	{
 		final int n = offset.length;
 		final MixedTransform t = new MixedTransform( n, n );
@@ -176,7 +176,7 @@ public class MixedTransforms
 	 * If fromAxis=2 and toAxis=4, and axis order of image is XYCZT, then
 	 * a view to the image with axis order XYZTC would be created.
 	 */
-	public static MixedTransform getMoveAxisTransform(final int fromAxis, final int toAxis, final int n) {
+	public static MixedTransform moveAxis(final int fromAxis, final int toAxis, final int n) {
 		if ( fromAxis == toAxis )
 			return new MixedTransform(n, n);
 
@@ -202,11 +202,11 @@ public class MixedTransforms
 	 *            the source.
 	 * @return transformation
 	 */
-	public static MixedTransform getZeroMinTransform( final Interval interval ) {
+	public static MixedTransform zeroMin( final Interval interval ) {
 		final int n = interval.numDimensions();
 		final long[] offset = new long[ n ];
 		interval.min( offset );
-		return MixedTransforms.getOffsetTransform(offset);
+		return MixedTransforms.offset(offset);
 	}
 
 	/**
@@ -214,7 +214,7 @@ public class MixedTransforms
 	 * @param currentNumDims
 	 * @return 
 	 */
-	public static MixedTransform getAddDimensionTransform( final int currentNumDims ) {
+	public static MixedTransform addDimension( final int currentNumDims ) {
 		final int newNumDims = currentNumDims + 1;
 		return new MixedTransform(newNumDims, currentNumDims);
 	}
@@ -225,7 +225,7 @@ public class MixedTransforms
 	 * @param n
 	 * @return
 	 */
-	public static MixedTransform getInvertAxisTransform( final int d , final int n ) {
+	public static MixedTransform invertAxis( final int d , final int n ) {
 		final boolean[] inv = new boolean[ n ];
 		inv[ d ] = true;
 		final MixedTransform t = new MixedTransform( n, n );

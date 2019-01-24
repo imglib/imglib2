@@ -395,7 +395,7 @@ public class Views
 	public static < T > MixedTransformView< T > rotate( final RandomAccessible< T > randomAccessible, final int fromAxis, final int toAxis )
 	{
 		final int n = randomAccessible.numDimensions();
-		return new MixedTransformView<>( randomAccessible, MixedTransforms.getRotationTransform(fromAxis, toAxis, n) );
+		return new MixedTransformView<>( randomAccessible, MixedTransforms.rotate( fromAxis, toAxis, n ) );
 	}
 
 	/**
@@ -424,7 +424,7 @@ public class Views
 	public static < T > MixedTransformView< T > permute( final RandomAccessible< T > randomAccessible, final int fromAxis, final int toAxis )
 	{
 		final int n = randomAccessible.numDimensions();
-		return new MixedTransformView<>( randomAccessible, MixedTransforms.getPermuteTransform(fromAxis, toAxis, n) );
+		return new MixedTransformView<>( randomAccessible, MixedTransforms.permute(fromAxis, toAxis, n) );
 	}
 
 	/**
@@ -448,7 +448,7 @@ public class Views
 	 */
 	public static < T > RandomAccessible< T > moveAxis( final RandomAccessible< T > image, final int fromAxis, final int toAxis )
 	{
-		return new MixedTransformView<>( image, MixedTransforms.getMoveAxisTransform( fromAxis, toAxis, image.numDimensions() ) );
+		return new MixedTransformView<>( image, MixedTransforms.moveAxis( fromAxis, toAxis, image.numDimensions() ) );
 	}
 
 	/**
@@ -461,7 +461,7 @@ public class Views
 	public static < T > RandomAccessibleInterval< T > moveAxis( final RandomAccessibleInterval< T > image, final int fromAxis, final int toAxis )
 	{
 		final int n = image.numDimensions();
-		final Mixed t = MixedTransforms.getMoveAxisTransform( fromAxis, toAxis, n );
+		final Mixed t = MixedTransforms.moveAxis( fromAxis, toAxis, n );
 		return Views.interval( new MixedTransformView<>( image, t ), Intervals.moveAxis( image, fromAxis, toAxis ) );
 	}
 
@@ -479,7 +479,7 @@ public class Views
 	 */
 	public static < T > MixedTransformView< T > translate( final RandomAccessible< T > randomAccessible, final long... translation )
 	{
-		final Mixed t = MixedTransforms.getTranslationTransform( translation );
+		final Mixed t = MixedTransforms.translate( translation );
 		return new MixedTransformView<>( randomAccessible, t );
 	}
 
@@ -514,7 +514,7 @@ public class Views
 	 */
 	public static < T > MixedTransformView< T > offset( final RandomAccessible< T > randomAccessible, final long... offset )
 	{
-		final Mixed t = MixedTransforms.getOffsetTransform(offset);
+		final Mixed t = MixedTransforms.offset(offset);
 		return new MixedTransformView<>( randomAccessible, t );
 	}
 
@@ -530,7 +530,7 @@ public class Views
 	 */
 	public static < T > IntervalView< T > offset( final RandomAccessibleInterval< T > interval, final long... offset )
 	{
-		final Mixed t = MixedTransforms.getOffsetTransform(offset);
+		final Mixed t = MixedTransforms.offset(offset);
 		final Interval newInterval = Intervals.offset(interval, offset);
 		return Views.interval(new MixedTransformView<>( (RandomAccessible<T>)interval, t ), newInterval);
 		}
@@ -544,7 +544,7 @@ public class Views
 	 */
 	public static < T > IntervalView< T > zeroMin( final RandomAccessibleInterval< T > interval )
 	{
-		final Mixed t = MixedTransforms.getZeroMinTransform(interval);
+		final Mixed t = MixedTransforms.zeroMin(interval);
 		final long[] offset = new long[interval.numDimensions()];
 		interval.min(offset);
 		final Interval newInterval = Intervals.offset(interval, offset);
@@ -558,7 +558,7 @@ public class Views
 	public static < T > MixedTransformView< T > hyperSlice( final RandomAccessible< T > view, final int d, final long pos )
 	{
 		final int m = view.numDimensions();
-		final Mixed t = MixedTransforms.getHyperSliceTransform(d, pos, m);
+		final Mixed t = MixedTransforms.hyperSlice(d, pos, m);
 		return new MixedTransformView<>( view, t );
 	}
 
@@ -586,7 +586,7 @@ public class Views
 	{
 		final int m = randomAccessible.numDimensions();
 		
-		return new MixedTransformView<>( randomAccessible, MixedTransforms.getAddDimensionTransform(m) );
+		return new MixedTransformView<>( randomAccessible, MixedTransforms.addDimension(m) );
 	}
 
 	/**
@@ -621,7 +621,7 @@ public class Views
 	public static < T > MixedTransformView< T > invertAxis( final RandomAccessible< T > randomAccessible, final int d )
 	{
 		final int n = randomAccessible.numDimensions();
-		return new MixedTransformView<>( randomAccessible, MixedTransforms.getInvertAxisTransform( d, n ) );
+		return new MixedTransformView<>( randomAccessible, MixedTransforms.invertAxis( d, n ) );
 	}
 
 	/**

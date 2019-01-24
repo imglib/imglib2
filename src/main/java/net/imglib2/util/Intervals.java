@@ -414,7 +414,7 @@ public class Intervals
 	public static FinalInterval moveAxis( final Interval interval, final int fromAxis, final int toAxis )
 	{
 		final int n = interval.numDimensions();
-		final Mixed t = MixedTransforms.getMoveAxisTransform( fromAxis, toAxis, n );
+		final Mixed t = MixedTransforms.moveAxis( fromAxis, toAxis, n );
 		final int[] newAxisIndices = new int[ n ];
 		t.getComponentMapping( newAxisIndices );
 
