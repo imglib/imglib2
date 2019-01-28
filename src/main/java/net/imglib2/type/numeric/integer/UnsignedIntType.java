@@ -99,7 +99,7 @@ public class UnsignedIntType extends GenericIntType< UnsignedIntType >
 		return new UnsignedIntType( img );
 	}
 
-	private static final NativeTypeFactory< UnsignedIntType, IntAccess > typeFactory = NativeTypeFactory.INT( img -> new UnsignedIntType( img ) );
+	private static final NativeTypeFactory< UnsignedIntType, IntAccess > typeFactory = NativeTypeFactory.INT( UnsignedIntType::new );
 
 	@Override
 	public NativeTypeFactory< UnsignedIntType, IntAccess > getNativeTypeFactory()

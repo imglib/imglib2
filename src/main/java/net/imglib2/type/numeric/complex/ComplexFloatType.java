@@ -100,7 +100,7 @@ public class ComplexFloatType extends AbstractComplexType< ComplexFloatType > im
 		return new ComplexFloatType( img );
 	}
 
-	private static final NativeTypeFactory< ComplexFloatType, FloatAccess > typeFactory = NativeTypeFactory.FLOAT( img -> new ComplexFloatType( img ) );
+	private static final NativeTypeFactory< ComplexFloatType, FloatAccess > typeFactory = NativeTypeFactory.FLOAT( ComplexFloatType::new );
 
 	@Override
 	public NativeTypeFactory< ComplexFloatType, FloatAccess > getNativeTypeFactory()

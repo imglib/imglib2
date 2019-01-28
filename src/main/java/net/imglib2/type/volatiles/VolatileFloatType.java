@@ -130,7 +130,7 @@ public class VolatileFloatType extends AbstractVolatileNativeRealType< FloatType
 		return v;
 	}
 
-	private static final NativeTypeFactory< VolatileFloatType, VolatileFloatAccess > typeFactory = NativeTypeFactory.FLOAT( img -> new VolatileFloatType( img ) );
+	private static final NativeTypeFactory< VolatileFloatType, VolatileFloatAccess > typeFactory = NativeTypeFactory.FLOAT( VolatileFloatType::new );
 
 	@Override
 	public NativeTypeFactory< VolatileFloatType, ? > getNativeTypeFactory()

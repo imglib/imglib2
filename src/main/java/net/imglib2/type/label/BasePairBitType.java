@@ -117,7 +117,7 @@ public class BasePairBitType extends AbstractBit64Type< BasePairBitType > implem
 	@Override
 	public BasePairBitType duplicateTypeOnSameNativeImg() { return new BasePairBitType( img ); }
 
-	private static final NativeTypeFactory< BasePairBitType, LongAccess > typeFactory = NativeTypeFactory.LONG( img -> new BasePairBitType( img ) );
+	private static final NativeTypeFactory< BasePairBitType, LongAccess > typeFactory = NativeTypeFactory.LONG( BasePairBitType::new );
 
 	@Override
 	public NativeTypeFactory< BasePairBitType, LongAccess > getNativeTypeFactory()

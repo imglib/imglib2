@@ -130,7 +130,7 @@ public class VolatileDoubleType extends AbstractVolatileNativeRealType< DoubleTy
 		return v;
 	}
 
-	private static final NativeTypeFactory< VolatileDoubleType, VolatileDoubleAccess > typeFactory = NativeTypeFactory.DOUBLE( img -> new VolatileDoubleType( img ) );
+	private static final NativeTypeFactory< VolatileDoubleType, VolatileDoubleAccess > typeFactory = NativeTypeFactory.DOUBLE( VolatileDoubleType::new );
 
 	@Override
 	public NativeTypeFactory< VolatileDoubleType, ? > getNativeTypeFactory()

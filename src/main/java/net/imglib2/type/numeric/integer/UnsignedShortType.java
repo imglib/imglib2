@@ -99,7 +99,7 @@ public class UnsignedShortType extends GenericShortType< UnsignedShortType >
 		return new UnsignedShortType( img );
 	}
 
-	private static final NativeTypeFactory< UnsignedShortType, ShortAccess > typeFactory = NativeTypeFactory.SHORT( img -> new UnsignedShortType( img ) );
+	private static final NativeTypeFactory< UnsignedShortType, ShortAccess > typeFactory = NativeTypeFactory.SHORT( UnsignedShortType::new );
 
 	@Override
 	public NativeTypeFactory< UnsignedShortType, ShortAccess > getNativeTypeFactory()

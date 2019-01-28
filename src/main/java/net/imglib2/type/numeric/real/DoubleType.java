@@ -95,7 +95,7 @@ public class DoubleType extends AbstractRealType< DoubleType > implements Native
 		return new DoubleType( img );
 	}
 
-	private static final NativeTypeFactory< DoubleType, DoubleAccess > typeFactory = NativeTypeFactory.DOUBLE( img -> new DoubleType( img ) );
+	private static final NativeTypeFactory< DoubleType, DoubleAccess > typeFactory = NativeTypeFactory.DOUBLE( DoubleType::new );
 
 	@Override
 	public NativeTypeFactory< DoubleType, DoubleAccess > getNativeTypeFactory()

@@ -102,7 +102,7 @@ public class BitType extends AbstractIntegerType< BitType > implements BooleanTy
 		return new BitType( img );
 	}
 
-	private static final NativeTypeFactory< BitType, LongAccess > typeFactory = NativeTypeFactory.LONG( img -> new BitType( img ) );
+	private static final NativeTypeFactory< BitType, LongAccess > typeFactory = NativeTypeFactory.LONG( BitType::new );
 
 	@Override
 	public NativeTypeFactory< BitType, LongAccess > getNativeTypeFactory()

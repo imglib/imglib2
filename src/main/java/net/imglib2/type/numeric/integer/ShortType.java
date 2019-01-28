@@ -78,7 +78,7 @@ public class ShortType extends GenericShortType< ShortType >
 		return new ShortType( img );
 	}
 
-	private static final NativeTypeFactory< ShortType, ShortAccess > typeFactory = NativeTypeFactory.SHORT( img -> new ShortType( img ) );
+	private static final NativeTypeFactory< ShortType, ShortAccess > typeFactory = NativeTypeFactory.SHORT( ShortType::new );
 
 	@Override
 	public NativeTypeFactory< ShortType, ShortAccess > getNativeTypeFactory()

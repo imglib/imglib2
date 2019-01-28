@@ -103,7 +103,7 @@ public class BasePairCharType extends AbstractNativeType< BasePairCharType > imp
 		return new BasePairCharType( img );
 	}
 
-	private static final NativeTypeFactory< BasePairCharType, CharAccess > typeFactory = NativeTypeFactory.CHAR( img -> new BasePairCharType( img ) );
+	private static final NativeTypeFactory< BasePairCharType, CharAccess > typeFactory = NativeTypeFactory.CHAR( BasePairCharType::new );
 
 	@Override
 	public NativeTypeFactory< BasePairCharType, CharAccess > getNativeTypeFactory()

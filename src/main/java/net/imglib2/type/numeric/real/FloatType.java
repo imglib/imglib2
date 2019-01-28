@@ -96,7 +96,7 @@ public class FloatType extends AbstractRealType< FloatType > implements NativeTy
 		return new FloatType( img );
 	}
 
-	private static final NativeTypeFactory< FloatType, FloatAccess > typeFactory = NativeTypeFactory.FLOAT( img -> new FloatType( img ) );
+	private static final NativeTypeFactory< FloatType, FloatAccess > typeFactory = NativeTypeFactory.FLOAT( FloatType::new );
 
 	@Override
 	public NativeTypeFactory< FloatType, FloatAccess > getNativeTypeFactory()

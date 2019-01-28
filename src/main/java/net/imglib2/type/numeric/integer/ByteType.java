@@ -72,7 +72,7 @@ public class ByteType extends GenericByteType< ByteType >
 		super( ( byte ) 0 );
 	}
 
-	private static final NativeTypeFactory< ByteType, ByteAccess > typeFactory = NativeTypeFactory.BYTE( img -> new ByteType( img ) );
+	private static final NativeTypeFactory< ByteType, ByteAccess > typeFactory = NativeTypeFactory.BYTE( ByteType::new );
 
 	@Override
 	public NativeTypeFactory< ByteType, ByteAccess > getNativeTypeFactory()

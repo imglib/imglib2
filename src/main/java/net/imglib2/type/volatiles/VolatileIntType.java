@@ -130,7 +130,7 @@ public class VolatileIntType extends AbstractVolatileNativeRealType< IntType, Vo
 		return v;
 	}
 
-	private static final NativeTypeFactory< VolatileIntType, VolatileIntAccess > typeFactory = NativeTypeFactory.INT( img -> new VolatileIntType( img ) );
+	private static final NativeTypeFactory< VolatileIntType, VolatileIntAccess > typeFactory = NativeTypeFactory.INT( VolatileIntType::new );
 
 	@Override
 	public NativeTypeFactory< VolatileIntType, ? > getNativeTypeFactory()

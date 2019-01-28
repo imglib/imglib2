@@ -79,7 +79,7 @@ public class LongType extends GenericLongType< LongType >
 		return new LongType( img );
 	}
 
-	private static final NativeTypeFactory< LongType, LongAccess > typeFactory = NativeTypeFactory.LONG( img -> new LongType( img ) );
+	private static final NativeTypeFactory< LongType, LongAccess > typeFactory = NativeTypeFactory.LONG( LongType::new );
 
 	@Override
 	public NativeTypeFactory< LongType, LongAccess > getNativeTypeFactory()

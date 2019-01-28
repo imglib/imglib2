@@ -93,7 +93,7 @@ public class UnsignedLongType extends GenericLongType< UnsignedLongType >
 		return new UnsignedLongType( img );
 	}
 
-	private static final NativeTypeFactory< UnsignedLongType, LongAccess > typeFactory = NativeTypeFactory.LONG( img -> new UnsignedLongType( img ) );
+	private static final NativeTypeFactory< UnsignedLongType, LongAccess > typeFactory = NativeTypeFactory.LONG( UnsignedLongType::new );
 
 	@Override
 	public NativeTypeFactory< UnsignedLongType, LongAccess > getNativeTypeFactory()
