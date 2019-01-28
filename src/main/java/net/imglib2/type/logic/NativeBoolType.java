@@ -87,7 +87,7 @@ public class NativeBoolType extends AbstractIntegerType< NativeBoolType > implem
 		this( false );
 	}
 
-	private final NativeTypeFactory< NativeBoolType, BooleanAccess > typeFactory = NativeTypeFactory.BOOLEAN( img -> new NativeBoolType( img ) );
+	private static final NativeTypeFactory< NativeBoolType, BooleanAccess > typeFactory = NativeTypeFactory.BOOLEAN( img -> new NativeBoolType( img ) );
 
 	@Override
 	public NativeTypeFactory< NativeBoolType, BooleanAccess > getNativeTypeFactory()

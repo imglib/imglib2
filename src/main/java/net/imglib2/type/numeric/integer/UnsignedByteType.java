@@ -99,7 +99,7 @@ public class UnsignedByteType extends GenericByteType< UnsignedByteType >
 		return new UnsignedByteType( img );
 	}
 
-	private final NativeTypeFactory< UnsignedByteType, ByteAccess > typeFactory = NativeTypeFactory.BYTE( img -> new UnsignedByteType( img ) );
+	private static final NativeTypeFactory< UnsignedByteType, ByteAccess > typeFactory = NativeTypeFactory.BYTE( UnsignedByteType::new );
 
 	@Override
 	public NativeTypeFactory< UnsignedByteType, ByteAccess > getNativeTypeFactory()
