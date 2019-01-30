@@ -67,7 +67,7 @@ class ClassCopier< T >
 	public Class< ? extends T > copy()
 	{
 		@SuppressWarnings( "unchecked" )
-		final Class< ? extends T > copy = ( Class< ? extends T > ) new ClassCopyLoader().bytesToClass( original.getName(), bytes );
+		final Class< ? extends T > copy = ( Class< ? extends T > ) new ClassCopyLoader( original.getClassLoader() ).bytesToClass( original.getName(), bytes );
 		return copy;
 	}
 
@@ -89,6 +89,11 @@ class ClassCopier< T >
 
 	private static class ClassCopyLoader extends ClassLoader
 	{
+
+		public ClassCopyLoader( ClassLoader parent )
+		{
+			super( parent );
+		}
 
 		private Class< ? > bytesToClass( final String className, final byte[] bytes )
 		{
