@@ -143,6 +143,33 @@ public class Converters
 			return ( RandomAccessibleInterval< B > ) source;
 		return new ConvertedRandomAccessibleInterval<>( source, converter, b );
 	}
+	
+	/**
+	 * Create a {@link RandomAccessibleInterval} whose {@link RandomAccess
+	 * RandomAccesses} {@link RandomAccess#get()} you a converted sample.
+	 * Conversion is done on-the-fly when reading values. Writing to the
+	 * converted {@link RandomAccessibleInterval} has no effect.
+	 *
+	 * Delegates to {@link Converters#convert(RandomAccessibleInterval, Converter, Type)}.
+	 * The different method name avoids situations where the compiler
+	 * or a scripting language interpreter picks the undesired method
+	 * for an object that implements both {@link RandomAccessibleInterval}
+	 * and {@link IterableInterval}.
+	 *
+	 * @param source
+	 * @param converter
+	 * @param b
+	 * @return a converted {@link RandomAccessibleInterval} whose
+	 *         {@link RandomAccess RandomAccesses} perform on-the-fly value
+	 *         conversion using the provided converter.
+	 */
+	final static public < A, B extends Type< B > > RandomAccessibleInterval< B > convertRAI(
+			final RandomAccessibleInterval< A > source,
+			final Converter< ? super A, ? super B > converter,
+			final B b )
+	{
+		return Converters.convert( source, converter, b );
+	}
 
 	/**
 	 * Create a {@link RandomAccessibleInterval} whose {@link RandomAccess
@@ -160,6 +187,30 @@ public class Converters
 			final SamplerConverter< ? super A, B > converter )
 	{
 		return new WriteConvertedRandomAccessibleInterval<>( source, converter );
+	}
+	
+	/**
+	 * Create a {@link RandomAccessibleInterval} whose {@link RandomAccess
+	 * RandomAccesses} {@link RandomAccess#get()} you a converted sample.
+	 * Conversion is done on-the-fly both when reading and writing values.
+	 * 
+	 * Delegates to {@link Converters#convert(RandomAccessibleInterval, SamplerConverter)}.
+	 * The different name avoids situations where the compiler
+	 * or a scripting language interpreter picks the undesired method
+	 * for an object that implements both {@link RandomAccessibleInterval}
+	 * and {@link IterableInterval}.
+	 *
+	 * @param source
+	 * @param converter
+	 * @return a converted {@link RandomAccessibleInterval} whose
+	 *         {@link RandomAccess RandomAccesses} perform on-the-fly value
+	 *         conversion using the provided converter.
+	 */
+	final static public < A, B extends Type< B > > WriteConvertedRandomAccessibleInterval< A, B > convertRAI(
+			final RandomAccessibleInterval< A > source,
+			final SamplerConverter< ? super A, B > converter )
+	{
+		return Converters.convert( source, converter );
 	}
 
 	/**
