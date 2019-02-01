@@ -52,10 +52,10 @@ public class MixedTransformsTest
     public void testTranslate() {
         RandomAccessible< Localizable > input = Localizables.randomAccessible( 3 );
         Mixed transform = MixedTransforms.translate(10, 9, 8);
-		RandomAccessible< Localizable > view = new MixedTransformView<>( input, transform );
-		RandomAccess< Localizable > ra = view.randomAccess();
-		ra.setPosition( new long[] {10, 11, 12} );
-		assertArrayEquals( new long[] {0, 2, 4}, Localizables.asLongArray( ra.get() ) );
+        RandomAccessible< Localizable > view = new MixedTransformView<>( input, transform );
+        RandomAccess< Localizable > ra = view.randomAccess();
+        ra.setPosition( new long[] {10, 11, 12} );
+        assertArrayEquals( new long[] {0, 2, 4}, Localizables.asLongArray( ra.get() ) );
     }
 
     @Test
@@ -63,39 +63,39 @@ public class MixedTransformsTest
         RandomAccessible< Localizable > input = Localizables.randomAccessible( 3 );
         Mixed transform = MixedTransforms.rotate( 1, 0, input.numDimensions() );
         RandomAccessible< Localizable > view = new MixedTransformView<>( input, transform );
-		RandomAccess< Localizable > ra = view.randomAccess();
-		ra.setPosition( new long[] {2, -1, 3} );
-		assertArrayEquals( new long[] {1, 2, 3}, Localizables.asLongArray( ra.get() ) );
+        RandomAccess< Localizable > ra = view.randomAccess();
+        ra.setPosition( new long[] {2, -1, 3} );
+        assertArrayEquals( new long[] {1, 2, 3}, Localizables.asLongArray( ra.get() ) );
     }
 
     @Test
     public void testPermute() {
         RandomAccessible< Localizable > input = Localizables.randomAccessible( 3 );
         Mixed transform = MixedTransforms.permute( 0, 2, input.numDimensions() );
-		RandomAccessible< Localizable > view = new MixedTransformView<>( input, transform );
-		RandomAccess< Localizable > ra = view.randomAccess();
-		ra.setPosition( new long[] {3, 2, 1} );
-		assertArrayEquals( new long[] {1, 2, 3}, Localizables.asLongArray( ra.get() ) );
+        RandomAccessible< Localizable > view = new MixedTransformView<>( input, transform );
+        RandomAccess< Localizable > ra = view.randomAccess();
+        ra.setPosition( new long[] {3, 2, 1} );
+        assertArrayEquals( new long[] {1, 2, 3}, Localizables.asLongArray( ra.get() ) );
     }
 
     @Test
     public void testMoveAxis() {
         RandomAccessible< Localizable > input = Localizables.randomAccessible( 3 );
         Mixed transform = MixedTransforms.moveAxis( 0, 2, input.numDimensions() );
-		RandomAccessible< Localizable > view = new MixedTransformView<>( input, transform );
-		RandomAccess< Localizable > ra = view.randomAccess();
-		ra.setPosition( new long[] {2, 3, 1} );
-		assertArrayEquals( new long[] {1, 2, 3}, Localizables.asLongArray( ra.get() ) );
+        RandomAccessible< Localizable > view = new MixedTransformView<>( input, transform );
+        RandomAccess< Localizable > ra = view.randomAccess();
+        ra.setPosition( new long[] {2, 3, 1} );
+        assertArrayEquals( new long[] {1, 2, 3}, Localizables.asLongArray( ra.get() ) );
     }
 
     @Test
     public void testInvertAxis() {
         RandomAccessible< Localizable > input = Localizables.randomAccessible( 3 );
         Mixed transform = MixedTransforms.invertAxis( 1, input.numDimensions() );
-		RandomAccessible< Localizable > view = new MixedTransformView<>( input, transform );
-		RandomAccess< Localizable > ra = view.randomAccess();
-		ra.setPosition( new long[] {1, -2, 3} );
-		assertArrayEquals( new long[] {1, 2, 3}, Localizables.asLongArray( ra.get() ) );
+        RandomAccessible< Localizable > view = new MixedTransformView<>( input, transform );
+        RandomAccess< Localizable > ra = view.randomAccess();
+        ra.setPosition( new long[] {1, -2, 3} );
+        assertArrayEquals( new long[] {1, 2, 3}, Localizables.asLongArray( ra.get() ) );
     }
 
     @Test
@@ -103,29 +103,29 @@ public class MixedTransformsTest
         RandomAccessible< Localizable > input = Localizables.randomAccessible( 3 );
         final Interval interval = Intervals.createMinMax( 1, 2, 3, 5, 7, 9 );
         Mixed transform = MixedTransforms.zeroMin(interval);
-		RandomAccessible< Localizable > view = new MixedTransformView<>( input, transform );
-		RandomAccess< Localizable > ra = view.randomAccess();
-		ra.setPosition( new long[] {0, 0, 0} );
-		assertArrayEquals( new long[] {1, 2, 3}, Localizables.asLongArray( ra.get() ) );
+        RandomAccessible< Localizable > view = new MixedTransformView<>( input, transform );
+        RandomAccess< Localizable > ra = view.randomAccess();
+        ra.setPosition( new long[] {0, 0, 0} );
+        assertArrayEquals( new long[] {1, 2, 3}, Localizables.asLongArray( ra.get() ) );
     }
 
     @Test
     public void testAddDimension() {
         RandomAccessible< Localizable > input = Localizables.randomAccessible( 3 );
         Mixed transform = MixedTransforms.addDimension( input.numDimensions() );
-		RandomAccessible< Localizable > view = new MixedTransformView<>( input, transform );
-		RandomAccess< Localizable > ra = view.randomAccess();
-		ra.setPosition( new long[] {1, 2, 3, 17} );
-		assertArrayEquals( new long[] {1, 2, 3}, Localizables.asLongArray( ra.get() ) );
+        RandomAccessible< Localizable > view = new MixedTransformView<>( input, transform );
+        RandomAccess< Localizable > ra = view.randomAccess();
+        ra.setPosition( new long[] {1, 2, 3, 17} );
+        assertArrayEquals( new long[] {1, 2, 3}, Localizables.asLongArray( ra.get() ) );
     }
 
     @Test
     public void testHyperSlice() {
         RandomAccessible< Localizable > input = Localizables.randomAccessible( 3 );
         Mixed transform = MixedTransforms.hyperSlice( 2, 3, input.numDimensions() );
-		RandomAccessible< Localizable > view = new MixedTransformView<>( input, transform );
-		RandomAccess< Localizable > ra = view.randomAccess();
-		ra.setPosition( new long[] {1, 2} );
-		assertArrayEquals( new long[] {1, 2, 3}, Localizables.asLongArray( ra.get() ) );
+        RandomAccessible< Localizable > view = new MixedTransformView<>( input, transform );
+        RandomAccess< Localizable > ra = view.randomAccess();
+        ra.setPosition( new long[] {1, 2} );
+        assertArrayEquals( new long[] {1, 2, 3}, Localizables.asLongArray( ra.get() ) );
     }
 }
