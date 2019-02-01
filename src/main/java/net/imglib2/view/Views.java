@@ -514,8 +514,8 @@ public class Views
 	 */
 	public static < T > MixedTransformView< T > offset( final RandomAccessible< T > randomAccessible, final long... offset )
 	{
-		final Mixed t = MixedTransforms.offset(offset);
-		return new MixedTransformView<>( randomAccessible, t );
+		final long[] translation = Arrays.stream(offset).map(o -> -o).toArray();
+		return Views.translate(randomAccessible, translation);
 	}
 
 	/**
@@ -530,10 +530,9 @@ public class Views
 	 */
 	public static < T > IntervalView< T > offset( final RandomAccessibleInterval< T > interval, final long... offset )
 	{
-		final Mixed t = MixedTransforms.offset(offset);
-		final Interval newInterval = Intervals.offset(interval, offset);
-		return Views.interval(new MixedTransformView<>( (RandomAccessible<T>)interval, t ), newInterval);
-		}
+		final long[] translation = Arrays.stream(offset).map(o -> -o).toArray();
+		return Views.translate(interval, translation);
+	}
 
 	/**
 	 * Translate the source such that the upper left corner is at the origin
@@ -547,7 +546,8 @@ public class Views
 		final Mixed t = MixedTransforms.zeroMin(interval);
 		final long[] offset = new long[interval.numDimensions()];
 		interval.min(offset);
-		final Interval newInterval = Intervals.offset(interval, offset);
+		final long[] translation = Arrays.stream(offset).map(o -> -o).toArray();
+		final Interval newInterval = Intervals.translate(interval, translation);
 		return Views.interval( new MixedTransformView<>( interval, t), newInterval );
 	}
 

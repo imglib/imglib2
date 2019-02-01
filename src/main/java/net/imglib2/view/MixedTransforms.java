@@ -34,6 +34,7 @@
 package net.imglib2.view;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.IntStream;
 
@@ -186,23 +187,6 @@ public class MixedTransforms
 	}
 
 	/**
-	 * Return a transformation such that a pixel at offset in a randomAccessible is at the origin
-	 * in the resulting view. This is equivalent to translating by -offset.
-	 * 
-	 * @param offset
-	 *            offset of the source view. The pixel at offset becomes the
-	 *            origin of resulting view.
-	 * @return transformation
-	 */
-	public static MixedTransform offset(final long... offset )
-	{
-		final int n = offset.length;
-		final MixedTransform t = new MixedTransform( n, n );
-		t.setTranslation( offset );
-		return t;
-	}
-
-	/**
 	 * Create a transformation that moves an axis. fromAxis is moved to toAxis. While the
 	 * order of the other axes is preserved.
 	 *
@@ -239,7 +223,8 @@ public class MixedTransforms
 		final int n = interval.numDimensions();
 		final long[] offset = new long[ n ];
 		interval.min( offset );
-		return MixedTransforms.offset(offset);
+		final long[] translation = Arrays.stream(offset).map(o -> -o).toArray();
+		return MixedTransforms.translate(translation);
 	}
 
 	/**
