@@ -424,7 +424,7 @@ public class Views
 	public static < T > MixedTransformView< T > permute( final RandomAccessible< T > randomAccessible, final int fromAxis, final int toAxis )
 	{
 		final int n = randomAccessible.numDimensions();
-		return new MixedTransformView<>( randomAccessible, MixedTransforms.permute(fromAxis, toAxis, n) );
+		return new MixedTransformView<>( randomAccessible, MixedTransforms.permute( fromAxis, toAxis, n ) );
 	}
 
 	/**
@@ -443,8 +443,8 @@ public class Views
 	 * Create view with permuted axes. fromAxis is moved to toAxis. While the
 	 * order of the other axes is preserved.
 	 *
-	 * If fromAxis=2 and toAxis=4, and axis order of image is XYCZT, then
-	 * a view to the image with axis order XYZTC would be created.
+	 * If fromAxis=2 and toAxis=4, and axis order of image is XYCZT, then a view
+	 * to the image with axis order XYZTC would be created.
 	 */
 	public static < T > RandomAccessible< T > moveAxis( final RandomAccessible< T > image, final int fromAxis, final int toAxis )
 	{
@@ -455,8 +455,8 @@ public class Views
 	 * Create view with permuted axes. fromAxis is moved to toAxis. While the
 	 * order of the other axes is preserved.
 	 *
-	 * If fromAxis=2 and toAxis=4, and axis order of image is XYCZT, then
-	 * a view to the image with axis order XYZTC would be created.
+	 * If fromAxis=2 and toAxis=4, and axis order of image is XYCZT, then a view
+	 * to the image with axis order XYZTC would be created.
 	 */
 	public static < T > RandomAccessibleInterval< T > moveAxis( final RandomAccessibleInterval< T > image, final int fromAxis, final int toAxis )
 	{
@@ -514,8 +514,8 @@ public class Views
 	 */
 	public static < T > MixedTransformView< T > offset( final RandomAccessible< T > randomAccessible, final long... offset )
 	{
-		final long[] translation = Arrays.stream(offset).map(o -> -o).toArray();
-		return Views.translate(randomAccessible, translation);
+		final long[] translation = Arrays.stream( offset ).map( o -> -o ).toArray();
+		return Views.translate( randomAccessible, translation );
 	}
 
 	/**
@@ -530,8 +530,8 @@ public class Views
 	 */
 	public static < T > IntervalView< T > offset( final RandomAccessibleInterval< T > interval, final long... offset )
 	{
-		final long[] translation = Arrays.stream(offset).map(o -> -o).toArray();
-		return Views.translate(interval, translation);
+		final long[] translation = Arrays.stream( offset ).map( o -> -o ).toArray();
+		return Views.translate( interval, translation );
 	}
 
 	/**
@@ -543,12 +543,12 @@ public class Views
 	 */
 	public static < T > IntervalView< T > zeroMin( final RandomAccessibleInterval< T > interval )
 	{
-		final Mixed t = MixedTransforms.zeroMin(interval);
-		final long[] offset = new long[interval.numDimensions()];
-		interval.min(offset);
-		final long[] translation = Arrays.stream(offset).map(o -> -o).toArray();
-		final Interval newInterval = Intervals.translate(interval, translation);
-		return Views.interval( new MixedTransformView<>( interval, t), newInterval );
+		final Mixed t = MixedTransforms.zeroMin( interval );
+		final long[] offset = new long[ interval.numDimensions() ];
+		interval.min( offset );
+		final long[] translation = Arrays.stream( offset ).map( o -> -o ).toArray();
+		final Interval newInterval = Intervals.translate( interval, translation );
+		return Views.interval( new MixedTransformView<>( interval, t ), newInterval );
 	}
 
 	/**
@@ -558,7 +558,7 @@ public class Views
 	public static < T > MixedTransformView< T > hyperSlice( final RandomAccessible< T > view, final int d, final long pos )
 	{
 		final int m = view.numDimensions();
-		final Mixed t = MixedTransforms.hyperSlice(d, pos, m);
+		final Mixed t = MixedTransforms.hyperSlice( d, pos, m );
 		return new MixedTransformView<>( view, t );
 	}
 
@@ -585,8 +585,8 @@ public class Views
 	public static < T > MixedTransformView< T > addDimension( final RandomAccessible< T > randomAccessible )
 	{
 		final int m = randomAccessible.numDimensions();
-		
-		return new MixedTransformView<>( randomAccessible, MixedTransforms.addDimension(m) );
+
+		return new MixedTransformView<>( randomAccessible, MixedTransforms.addDimension( m ) );
 	}
 
 	/**
@@ -607,7 +607,7 @@ public class Views
 	 */
 	public static < T > IntervalView< T > addDimension( final RandomAccessibleInterval< T > interval, final long minOfNewDim, final long maxOfNewDim )
 	{
-		return Views.interval( Views.addDimension( interval ), Intervals.addDimension(interval, minOfNewDim, maxOfNewDim) );
+		return Views.interval( Views.addDimension( interval ), Intervals.addDimension( interval, minOfNewDim, maxOfNewDim ) );
 	}
 
 	/**
@@ -1182,12 +1182,13 @@ public class Views
 	 *
 	 * @return {@link IntervalView} of permuted source.
 	 *
-	 * @deprecated use {@link Views#permuteCoordinatesInverse(RandomAccessibleInterval, int[], int)}
+	 * @deprecated use
+	 *             {@link Views#permuteCoordinatesInverse(RandomAccessibleInterval, int[], int)}
 	 */
 	@Deprecated
 	public static < T > IntervalView< T > permuteCoordinateInverse( final RandomAccessibleInterval< T > source, final int[] permutation, final int d )
 	{
-		return permuteCoordinatesInverse(source, permutation, d);
+		return permuteCoordinatesInverse( source, permutation, d );
 	}
 
 	/**

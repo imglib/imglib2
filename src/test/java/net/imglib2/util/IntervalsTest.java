@@ -34,100 +34,112 @@
 
 package net.imglib2.util;
 
-import org.junit.Test;
-
 import net.imglib2.Interval;
 import net.imglib2.test.ImgLib2Assert;
 
-public class IntervalsTest 
+import org.junit.Test;
+
+public class IntervalsTest
 {
-    @Test
-    public void testTranslateDim() {
-        final Interval input = Intervals.createMinMax( 1, 2, 3, 5, 7, 9 );
-        final Interval result = Intervals.translate( input, 10, 0 );
-        final Interval expected = Intervals.createMinMax( 11, 2, 3, 15, 7, 9 );
-        ImgLib2Assert.assertIntervalEquals( expected, result );
-    }
+	@Test
+	public void testTranslateDim()
+	{
+		final Interval input = Intervals.createMinMax( 1, 2, 3, 5, 7, 9 );
+		final Interval result = Intervals.translate( input, 10, 0 );
+		final Interval expected = Intervals.createMinMax( 11, 2, 3, 15, 7, 9 );
+		ImgLib2Assert.assertIntervalEquals( expected, result );
+	}
 
-    @Test
-    public void testTranslateUsesCorrectOverload() {
-        final Interval input = Intervals.createMinMax( 1, 2, 5, 7 );
-        // when the number of axes equals 2, then both translate() methods are applicable. 
-        // Which one is used?
-        final Interval result = Intervals.translate( input, 10, (long)1 );
-        final Interval expected = Intervals.createMinMax( 11, 3, 15, 8 );
-        ImgLib2Assert.assertIntervalEquals( expected, result );
-    }
+	@Test
+	public void testTranslateUsesCorrectOverload()
+	{
+		final Interval input = Intervals.createMinMax( 1, 2, 5, 7 );
+		// when the number of axes equals 2, then both translate() methods are
+		// applicable.
+		// Which one is used?
+		final Interval result = Intervals.translate( input, 10, ( long ) 1 );
+		final Interval expected = Intervals.createMinMax( 11, 3, 15, 8 );
+		ImgLib2Assert.assertIntervalEquals( expected, result );
+	}
 
-    @Test
-    public void testTranslateDimNegative() {
-        final Interval input = Intervals.createMinMax( 1, 2, 3, 5, 7, 9 );
-        final Interval result = Intervals.translate( input, -10, 2 );
-        final Interval expected = Intervals.createMinMax( 1, 2, -7, 5, 7, -1 );
-        ImgLib2Assert.assertIntervalEquals( expected, result );
-    }
+	@Test
+	public void testTranslateDimNegative()
+	{
+		final Interval input = Intervals.createMinMax( 1, 2, 3, 5, 7, 9 );
+		final Interval result = Intervals.translate( input, -10, 2 );
+		final Interval expected = Intervals.createMinMax( 1, 2, -7, 5, 7, -1 );
+		ImgLib2Assert.assertIntervalEquals( expected, result );
+	}
 
-    @Test
-    public void testTranslate() {
-        final Interval input = Intervals.createMinMax( 1, 2, 3, 5, 7, 9 );
-        final Interval result = Intervals.translate( input, 10, 9, 8 );
-        final Interval expected = Intervals.createMinMax( 11, 11, 11, 15, 16, 17 );
-        ImgLib2Assert.assertIntervalEquals( expected, result );
-    }
+	@Test
+	public void testTranslate()
+	{
+		final Interval input = Intervals.createMinMax( 1, 2, 3, 5, 7, 9 );
+		final Interval result = Intervals.translate( input, 10, 9, 8 );
+		final Interval expected = Intervals.createMinMax( 11, 11, 11, 15, 16, 17 );
+		ImgLib2Assert.assertIntervalEquals( expected, result );
+	}
 
-    @Test
-    public void testTranslateNegative() {
-        final Interval input = Intervals.createMinMax( 1, 2, 3, 5, 7, 9 );
-        final Interval result = Intervals.translate( input, -10, -11, -12 );
-        final Interval expected = Intervals.createMinMax( -9, -9, -9, -5, -4, -3 );
-        ImgLib2Assert.assertIntervalEquals( expected, result );
-    }
+	@Test
+	public void testTranslateNegative()
+	{
+		final Interval input = Intervals.createMinMax( 1, 2, 3, 5, 7, 9 );
+		final Interval result = Intervals.translate( input, -10, -11, -12 );
+		final Interval expected = Intervals.createMinMax( -9, -9, -9, -5, -4, -3 );
+		ImgLib2Assert.assertIntervalEquals( expected, result );
+	}
 
-    @Test
-    public void testRotate() {
-        final Interval input = Intervals.createMinMax( 1, 2, 3, 5, 7, 9 );
-        final Interval result = Intervals.rotate( input, 1, 0 );
-        final Interval expected = Intervals.createMinMax( 2, -5, 3, 7, -1, 9 );
-        ImgLib2Assert.assertIntervalEquals( expected, result );
-    }
-    
-    @Test
-    public void testAddDimension() {
-        final Interval input = Intervals.createMinMax( 1, 2, 3, 5, 7, 9 );
-        final Interval result = Intervals.addDimension( input, 4, 11 );
-        final Interval expected = Intervals.createMinMax( 1, 2, 3, 4, 5, 7, 9, 11 );
-        ImgLib2Assert.assertIntervalEquals( expected, result );
-    }
-    
-    @Test
-    public void testInvertAxis() {
-        final Interval input = Intervals.createMinMax( 1, 2, 3, 5, 7, 9 );
-        final Interval result = Intervals.invertAxis( input, 1 );
-        final Interval expected = Intervals.createMinMax( 1, -7, 3, 5, -2, 9 );
-        ImgLib2Assert.assertIntervalEquals( expected, result );
-    }
-    
-    @Test
-    public void testMoveAxis() {
-        final Interval input = Intervals.createMinMax( 1, 2, 3, 5, 7, 9 );
-        final Interval result = Intervals.moveAxis( input, 0, 2 );
-        final Interval expected = Intervals.createMinMax( 2, 3, 1, 7, 9, 5 );
-        ImgLib2Assert.assertIntervalEquals( expected, result );
-    }
-    
-    @Test
-    public void testPermuteAxis() {
-        final Interval input = Intervals.createMinMax( 1, 2, 3, 5, 7, 9 );
-        final Interval result = Intervals.permuteAxes( input, 0, 2 );
-        final Interval expected = Intervals.createMinMax( 3, 2, 1, 9, 7, 5 );
-        ImgLib2Assert.assertIntervalEquals( expected, result );
-    }
-    
-    @Test
-    public void testHyperSlice() {
-        final Interval input = Intervals.createMinMax( 1, 2, 3, 5, 7, 9 );
-        final Interval result = Intervals.hyperSlice( input, 2 );
-        final Interval expected = Intervals.createMinMax( 1, 2, 5, 7 );
-        ImgLib2Assert.assertIntervalEquals( expected, result );
-    }
+	@Test
+	public void testRotate()
+	{
+		final Interval input = Intervals.createMinMax( 1, 2, 3, 5, 7, 9 );
+		final Interval result = Intervals.rotate( input, 1, 0 );
+		final Interval expected = Intervals.createMinMax( 2, -5, 3, 7, -1, 9 );
+		ImgLib2Assert.assertIntervalEquals( expected, result );
+	}
+
+	@Test
+	public void testAddDimension()
+	{
+		final Interval input = Intervals.createMinMax( 1, 2, 3, 5, 7, 9 );
+		final Interval result = Intervals.addDimension( input, 4, 11 );
+		final Interval expected = Intervals.createMinMax( 1, 2, 3, 4, 5, 7, 9, 11 );
+		ImgLib2Assert.assertIntervalEquals( expected, result );
+	}
+
+	@Test
+	public void testInvertAxis()
+	{
+		final Interval input = Intervals.createMinMax( 1, 2, 3, 5, 7, 9 );
+		final Interval result = Intervals.invertAxis( input, 1 );
+		final Interval expected = Intervals.createMinMax( 1, -7, 3, 5, -2, 9 );
+		ImgLib2Assert.assertIntervalEquals( expected, result );
+	}
+
+	@Test
+	public void testMoveAxis()
+	{
+		final Interval input = Intervals.createMinMax( 1, 2, 3, 5, 7, 9 );
+		final Interval result = Intervals.moveAxis( input, 0, 2 );
+		final Interval expected = Intervals.createMinMax( 2, 3, 1, 7, 9, 5 );
+		ImgLib2Assert.assertIntervalEquals( expected, result );
+	}
+
+	@Test
+	public void testPermuteAxis()
+	{
+		final Interval input = Intervals.createMinMax( 1, 2, 3, 5, 7, 9 );
+		final Interval result = Intervals.permuteAxes( input, 0, 2 );
+		final Interval expected = Intervals.createMinMax( 3, 2, 1, 9, 7, 5 );
+		ImgLib2Assert.assertIntervalEquals( expected, result );
+	}
+
+	@Test
+	public void testHyperSlice()
+	{
+		final Interval input = Intervals.createMinMax( 1, 2, 3, 5, 7, 9 );
+		final Interval result = Intervals.hyperSlice( input, 2 );
+		final Interval expected = Intervals.createMinMax( 1, 2, 5, 7 );
+		ImgLib2Assert.assertIntervalEquals( expected, result );
+	}
 }

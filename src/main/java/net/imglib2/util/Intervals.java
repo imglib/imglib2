@@ -129,10 +129,10 @@ public class Intervals
 
 	/**
 	 * Grow/shrink an interval in all dimensions.
-	 * 
-	 * Create a {@link FinalInterval} , which is the input interval plus border
+	 *
+	 * Create a {@link FinalInterval}, which is the input interval plus border
 	 * pixels on every side, in every dimension.
-	 * 
+	 *
 	 * @param interval
 	 *            the input interval
 	 * @param border
@@ -166,11 +166,10 @@ public class Intervals
 	 *            how many pixels to add on every side
 	 * @return expanded interval
 	 */
-	public static FinalInterval expand( final Interval interval, final long ... border )
+	public static FinalInterval expand( final Interval interval, final long... border )
 	{
-		return expand(interval, new FinalDimensions( border ));
+		return expand( interval, new FinalDimensions( border ) );
 	}
-	
 	/**
 	 * Grow/shrink an interval in all dimensions.
 	 * 
@@ -200,10 +199,10 @@ public class Intervals
 
 	/**
 	 * Grow/shrink an interval in one dimensions.
-	 * 
-	 * Create a {@link FinalInterval} , which is the input interval plus border
+	 *
+	 * Create a {@link FinalInterval}, which is the input interval plus border
 	 * pixels on every side, in dimension d.
-	 * 
+	 *
 	 * @param interval
 	 *            the input interval
 	 * @param border
@@ -226,10 +225,10 @@ public class Intervals
 
 	/**
 	 * Translate an interval in one dimension.
-	 * 
-	 * Create a {@link FinalInterval} , which is the input interval shifted by t
+	 *
+	 * Create a {@link FinalInterval}, which is the input interval shifted by t
 	 * in dimension d.
-	 * 
+	 *
 	 * @param interval
 	 *            the input interval
 	 * @param t
@@ -253,7 +252,7 @@ public class Intervals
 	/**
 	 * Translate an interval.
 	 *
-	 * Create a {@link FinalInterval} , which is the input interval shifted by
+	 * Create a {@link FinalInterval}, which is the input interval shifted by
 	 * {@code translation}.
 	 *
 	 * @param interval
@@ -278,11 +277,11 @@ public class Intervals
 	}
 
 	/**
-	 * Create new interval by adding a dimension to the source
-	 * {@link Interval}. The {@link Interval} boundaries in the
-	 * additional dimension are set to the specified values.
+	 * Create new interval by adding a dimension to the source {@link Interval}.
+	 * The {@link Interval} boundaries in the additional dimension are set to
+	 * the specified values.
 	 *
-	 * The additional dimension is the last dimension. 
+	 * The additional dimension is the last dimension.
 	 *
 	 * @param interval
 	 *            the original interval
@@ -291,7 +290,8 @@ public class Intervals
 	 * @param maxOfNewDim
 	 *            Interval max in the additional dimension.
 	 */
-	public static FinalInterval addDimension( final Interval interval, final long minOfNewDim, final long maxOfNewDim ) {
+	public static FinalInterval addDimension( final Interval interval, final long minOfNewDim, final long maxOfNewDim )
+	{
 		final int m = interval.numDimensions();
 		final long[] min = new long[ m + 1 ];
 		final long[] max = new long[ m + 1 ];
@@ -313,7 +313,8 @@ public class Intervals
 	 * @param d
 	 *            the axis to invert
 	 */
-	public static FinalInterval invertAxis( final Interval interval, final int d ) {
+	public static FinalInterval invertAxis( final Interval interval, final int d )
+	{
 		final int n = interval.numDimensions();
 		final long[] min = new long[ n ];
 		final long[] max = new long[ n ];
@@ -352,11 +353,11 @@ public class Intervals
 	}
 
 	/**
-	 * Create an interval with permuted axes. The {@code fromAxis} is moved to {@code toAxis}, while the
-	 * order of the other axes is preserved.
+	 * Create an interval with permuted axes. The {@code fromAxis} is moved to
+	 * {@code toAxis}, while the order of the other axes is preserved.
 	 *
-	 * If fromAxis=2 and toAxis=4, and axis order of {@code interval} was XYCZT, then
-	 * an interval with axis order XYZTC would be created.
+	 * If fromAxis=2 and toAxis=4, and axis order of {@code interval} was XYCZT,
+	 * then an interval with axis order XYZTC would be created.
 	 */
 	public static FinalInterval moveAxis( final Interval interval, final int fromAxis, final int toAxis )
 	{
@@ -367,7 +368,8 @@ public class Intervals
 
 		final long[] min = new long[ n ];
 		final long[] max = new long[ n ];
-		for (int d = 0; d < n; d++) {
+		for ( int d = 0; d < n; d++ )
+		{
 			min[ newAxisIndices[ d ] ] = interval.min( d );
 			max[ newAxisIndices[ d ] ] = interval.max( d );
 		}
@@ -377,9 +379,9 @@ public class Intervals
 	/**
 	 * Create an interval with permuted axes. fromAxis and toAxis are swapped.
 	 *
-	 * If fromAxis=0 and toAxis=2, this means that the X-axis of the source interval
-	 * is mapped to the Z-Axis of the permuted interval and vice versa. For a XYZ
-	 * source, a ZYX interval would be created.
+	 * If fromAxis=0 and toAxis=2, this means that the X-axis of the source
+	 * interval is mapped to the Z-Axis of the permuted interval and vice versa.
+	 * For a XYZ source, a ZYX interval would be created.
 	 */
 	public static FinalInterval permuteAxes( final Interval interval, final int fromAxis, final int toAxis )
 	{
@@ -398,17 +400,18 @@ public class Intervals
 	}
 
 	/**
-	 * Create an interval that is rotated by 90 degrees. The rotation is specified by
-	 * the fromAxis and toAxis arguments.
+	 * Create an interval that is rotated by 90 degrees. The rotation is
+	 * specified by the fromAxis and toAxis arguments.
 	 *
-	 * If fromAxis=0 and toAxis=1, this means that the X-axis of the source interval
-	 * is mapped to the Y-Axis of the rotated interval. That is, it corresponds to a
-	 * 90 degree clock-wise rotation of the source interval in the XY plane.
+	 * If fromAxis=0 and toAxis=1, this means that the X-axis of the source
+	 * interval is mapped to the Y-Axis of the rotated interval. That is, it
+	 * corresponds to a 90 degree clock-wise rotation of the source interval in
+	 * the XY plane.
 	 *
 	 * fromAxis=1 and toAxis=0 corresponds to a counter-clock-wise rotation in
 	 * the XY plane.
 	 */
-	public static FinalInterval rotate( final Interval interval, final int fromAxis, final int toAxis ) 
+	public static FinalInterval rotate( final Interval interval, final int fromAxis, final int toAxis )
 	{
 		final int n = interval.numDimensions();
 		final long[] min = new long[ n ];
