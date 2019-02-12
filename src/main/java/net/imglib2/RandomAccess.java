@@ -40,6 +40,7 @@ package net.imglib2;
  * @author Tobias Pietzsch
  * @author Stephan Preibisch
  * @author Stephan Saalfeld
+ * @author Philipp Hanslovsky
  */
 public interface RandomAccess< T > extends Localizable, Positionable, Sampler< T >
 {
@@ -53,4 +54,83 @@ public interface RandomAccess< T > extends Localizable, Positionable, Sampler< T
 	RandomAccess< T > copyRandomAccess();
 //	@Override
 //	RandomAccess< T > copy();
+
+	/**
+	 * 
+	 * Convenience method to query a {@code RandomAccess} for the value at a
+	 * position and is shortcut for
+	 * 
+	 * <pre>
+	 * {@code
+	 * setPosition( position );
+	 * get();
+	 * }
+	 * </pre>
+	 * 
+	 * This is designed for convenience only. Avoid use in tight loops or other
+	 * scenarios where efficiency is crucial.
+	 * 
+	 * @param position
+	 * @return value of the the {@code RandomAccess} at {@code position}.
+	 */
+	default T get( long... position )
+	{
+		assert position.length == numDimensions();
+
+		setPosition( position );
+		return get();
+	}
+
+	/**
+	 * 
+	 * Convenience method to query a {@code RandomAccess} for the value at a
+	 * position and is shortcut for
+	 * 
+	 * <pre>
+	 * {@code
+	 * setPosition( position );
+	 * get();
+	 * }
+	 * </pre>
+	 * 
+	 * This is designed for convenience only. Avoid use in tight loops or other
+	 * scenarios where efficiency is crucial.
+	 * 
+	 * @param position
+	 * @return value of the the {@code RandomAccess} at {@code position}.
+	 */
+	default T get( int... position )
+	{
+		assert position.length == numDimensions();
+
+		setPosition( position );
+		return get();
+	}
+
+	/**
+	 * 
+	 * Convenience method to query a {@code RandomAccess} for the value at a
+	 * position and is shortcut for
+	 * 
+	 * <pre>
+	 * {@code
+	 * setPosition( position );
+	 * get();
+	 * }
+	 * </pre>
+	 * 
+	 * This is designed for convenience only. Avoid use in tight loops or other
+	 * scenarios where efficiency is crucial.
+	 * 
+	 * @param position
+	 * @return value of the the {@code RandomAccess} at {@code position}.
+	 */
+	default T get( Localizable position )
+	{
+		assert position.numDimensions() == numDimensions();
+
+		setPosition( position );
+		return get();
+	}
+
 }
