@@ -41,12 +41,12 @@ import org.junit.Test;
 
 import static org.junit.Assert.assertArrayEquals;
 
-public class MixedTransformsTest
+public class ViewTransformsTest
 {
 	@Test
 	public void testTranslate()
 	{
-		final Mixed transform = MixedTransforms.translate( 10, 9, 8 );
+		final Mixed transform = ViewTransforms.translate( 10, 9, 8 );
 		final long[] result = apply( transform, new long[] { 10, 11, 12 } );
 		assertArrayEquals( new long[] { 0, 2, 4 }, result );
 	}
@@ -54,7 +54,7 @@ public class MixedTransformsTest
 	@Test
 	public void testRotate()
 	{
-		final Mixed transform = MixedTransforms.rotate( 1, 0, 3 );
+		final Mixed transform = ViewTransforms.rotate( 1, 0, 3 );
 		final long[] result = apply( transform, new long[] { 2, -1, 3 } );
 		assertArrayEquals( new long[] { 1, 2, 3 }, result );
 	}
@@ -62,7 +62,7 @@ public class MixedTransformsTest
 	@Test
 	public void testPermute()
 	{
-		final Mixed transform = MixedTransforms.permute( 0, 2, 3 );
+		final Mixed transform = ViewTransforms.permute( 0, 2, 3 );
 		final long[] result = apply( transform, new long[] { 3, 2, 1 } );
 		assertArrayEquals( new long[] { 1, 2, 3 }, result );
 	}
@@ -70,7 +70,7 @@ public class MixedTransformsTest
 	@Test
 	public void testMoveAxis()
 	{
-		final Mixed transform = MixedTransforms.moveAxis( 0, 2, 3 );
+		final Mixed transform = ViewTransforms.moveAxis( 0, 2, 3 );
 		final long[] result = apply( transform, new long[] { 2, 3, 1 } );
 		assertArrayEquals( new long[] { 1, 2, 3 }, result );
 	}
@@ -78,7 +78,7 @@ public class MixedTransformsTest
 	@Test
 	public void testInvertAxis()
 	{
-		final Mixed transform = MixedTransforms.invertAxis( 1, 3 );
+		final Mixed transform = ViewTransforms.invertAxis( 1, 3 );
 		final long[] result = apply( transform, new long[] { 1, -2, 3 } );
 		assertArrayEquals( new long[] { 1, 2, 3 }, result );
 	}
@@ -87,7 +87,7 @@ public class MixedTransformsTest
 	public void testZeroMin()
 	{
 		final Interval interval = Intervals.createMinMax( 1, 2, 3, 5, 7, 9 );
-		final Mixed transform = MixedTransforms.zeroMin( interval );
+		final Mixed transform = ViewTransforms.zeroMin( interval );
 		final long[] result = apply( transform, new long[] { 0, 0, 0 } );
 		assertArrayEquals( new long[] { 1, 2, 3 }, result );
 	}
@@ -95,7 +95,7 @@ public class MixedTransformsTest
 	@Test
 	public void testAddDimension()
 	{
-		final Mixed transform = MixedTransforms.addDimension( 3 );
+		final Mixed transform = ViewTransforms.addDimension( 3 );
 		final long[] result = apply( transform, new long[] { 1, 2, 3, 17 } );
 		assertArrayEquals( new long[] { 1, 2, 3 }, result );
 	}
@@ -103,7 +103,7 @@ public class MixedTransformsTest
 	@Test
 	public void testHyperSlice()
 	{
-		final Mixed transform = MixedTransforms.hyperSlice( 2, 3, 3 );
+		final Mixed transform = ViewTransforms.hyperSlice( 2, 3, 3 );
 		final long[] result = apply( transform, new long[] { 1, 2 } );
 		assertArrayEquals( new long[] { 1, 2, 3 }, result );
 	}

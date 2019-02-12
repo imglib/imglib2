@@ -49,7 +49,7 @@ import net.imglib2.transform.integer.MixedTransform;
  * @author Tobias Pietzsch
  * @author Carsten Haubold, KNIME GmbH, Konstanz, Germany
  */
-public class MixedTransforms
+public class ViewTransforms
 {
 	/**
 	 * Create a {@link MixedTransform} that rotates by 90 degrees. The rotation
@@ -230,7 +230,7 @@ public class MixedTransforms
 		final long[] offset = new long[ n ];
 		interval.min( offset );
 		final long[] translation = Arrays.stream( offset ).map( o -> -o ).toArray();
-		return MixedTransforms.translate( translation );
+		return ViewTransforms.translate( translation );
 	}
 
 	/**
