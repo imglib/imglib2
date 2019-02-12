@@ -34,106 +34,85 @@
 
 package net.imglib2.view;
 
-import static org.junit.Assert.assertArrayEquals;
-
 import net.imglib2.Interval;
-import net.imglib2.Localizable;
-import net.imglib2.RandomAccess;
-import net.imglib2.RandomAccessible;
 import net.imglib2.transform.integer.Mixed;
 import net.imglib2.util.Intervals;
-import net.imglib2.util.Localizables;
-
 import org.junit.Test;
+
+import static org.junit.Assert.assertArrayEquals;
 
 public class MixedTransformsTest
 {
 	@Test
 	public void testTranslate()
 	{
-		final RandomAccessible< Localizable > input = Localizables.randomAccessible( 3 );
 		final Mixed transform = MixedTransforms.translate( 10, 9, 8 );
-		final RandomAccessible< Localizable > view = new MixedTransformView<>( input, transform );
-		final RandomAccess< Localizable > ra = view.randomAccess();
-		ra.setPosition( new long[] { 10, 11, 12 } );
-		assertArrayEquals( new long[] { 0, 2, 4 }, Localizables.asLongArray( ra.get() ) );
+		final long[] result = apply( transform, new long[] { 10, 11, 12 } );
+		assertArrayEquals( new long[] { 0, 2, 4 }, result );
 	}
 
 	@Test
 	public void testRotate()
 	{
-		final RandomAccessible< Localizable > input = Localizables.randomAccessible( 3 );
-		final Mixed transform = MixedTransforms.rotate( 1, 0, input.numDimensions() );
-		final RandomAccessible< Localizable > view = new MixedTransformView<>( input, transform );
-		final RandomAccess< Localizable > ra = view.randomAccess();
-		ra.setPosition( new long[] { 2, -1, 3 } );
-		assertArrayEquals( new long[] { 1, 2, 3 }, Localizables.asLongArray( ra.get() ) );
+		final Mixed transform = MixedTransforms.rotate( 1, 0, 3 );
+		final long[] result = apply( transform, new long[] { 2, -1, 3 } );
+		assertArrayEquals( new long[] { 1, 2, 3 }, result );
 	}
 
 	@Test
 	public void testPermute()
 	{
-		final RandomAccessible< Localizable > input = Localizables.randomAccessible( 3 );
-		final Mixed transform = MixedTransforms.permute( 0, 2, input.numDimensions() );
-		final RandomAccessible< Localizable > view = new MixedTransformView<>( input, transform );
-		final RandomAccess< Localizable > ra = view.randomAccess();
-		ra.setPosition( new long[] { 3, 2, 1 } );
-		assertArrayEquals( new long[] { 1, 2, 3 }, Localizables.asLongArray( ra.get() ) );
+		final Mixed transform = MixedTransforms.permute( 0, 2, 3 );
+		final long[] result = apply( transform, new long[] { 3, 2, 1 } );
+		assertArrayEquals( new long[] { 1, 2, 3 }, result );
 	}
 
 	@Test
 	public void testMoveAxis()
 	{
-		final RandomAccessible< Localizable > input = Localizables.randomAccessible( 3 );
-		final Mixed transform = MixedTransforms.moveAxis( 0, 2, input.numDimensions() );
-		final RandomAccessible< Localizable > view = new MixedTransformView<>( input, transform );
-		final RandomAccess< Localizable > ra = view.randomAccess();
-		ra.setPosition( new long[] { 2, 3, 1 } );
-		assertArrayEquals( new long[] { 1, 2, 3 }, Localizables.asLongArray( ra.get() ) );
+		final Mixed transform = MixedTransforms.moveAxis( 0, 2, 3 );
+		final long[] result = apply( transform, new long[] { 2, 3, 1 } );
+		assertArrayEquals( new long[] { 1, 2, 3 }, result );
 	}
 
 	@Test
 	public void testInvertAxis()
 	{
-		final RandomAccessible< Localizable > input = Localizables.randomAccessible( 3 );
-		final Mixed transform = MixedTransforms.invertAxis( 1, input.numDimensions() );
-		final RandomAccessible< Localizable > view = new MixedTransformView<>( input, transform );
-		final RandomAccess< Localizable > ra = view.randomAccess();
-		ra.setPosition( new long[] { 1, -2, 3 } );
-		assertArrayEquals( new long[] { 1, 2, 3 }, Localizables.asLongArray( ra.get() ) );
+		final Mixed transform = MixedTransforms.invertAxis( 1, 3 );
+		final long[] result = apply( transform, new long[] { 1, -2, 3 } );
+		assertArrayEquals( new long[] { 1, 2, 3 }, result );
 	}
 
 	@Test
 	public void testZeroMin()
 	{
-		final RandomAccessible< Localizable > input = Localizables.randomAccessible( 3 );
 		final Interval interval = Intervals.createMinMax( 1, 2, 3, 5, 7, 9 );
 		final Mixed transform = MixedTransforms.zeroMin( interval );
-		final RandomAccessible< Localizable > view = new MixedTransformView<>( input, transform );
-		final RandomAccess< Localizable > ra = view.randomAccess();
-		ra.setPosition( new long[] { 0, 0, 0 } );
-		assertArrayEquals( new long[] { 1, 2, 3 }, Localizables.asLongArray( ra.get() ) );
+		final long[] result = apply( transform, new long[] { 0, 0, 0 } );
+		assertArrayEquals( new long[] { 1, 2, 3 }, result );
 	}
 
 	@Test
 	public void testAddDimension()
 	{
-		final RandomAccessible< Localizable > input = Localizables.randomAccessible( 3 );
-		final Mixed transform = MixedTransforms.addDimension( input.numDimensions() );
-		final RandomAccessible< Localizable > view = new MixedTransformView<>( input, transform );
-		final RandomAccess< Localizable > ra = view.randomAccess();
-		ra.setPosition( new long[] { 1, 2, 3, 17 } );
-		assertArrayEquals( new long[] { 1, 2, 3 }, Localizables.asLongArray( ra.get() ) );
+		final Mixed transform = MixedTransforms.addDimension( 3 );
+		final long[] result = apply( transform, new long[] { 1, 2, 3, 17 } );
+		assertArrayEquals( new long[] { 1, 2, 3 }, result );
 	}
 
 	@Test
 	public void testHyperSlice()
 	{
-		final RandomAccessible< Localizable > input = Localizables.randomAccessible( 3 );
-		final Mixed transform = MixedTransforms.hyperSlice( 2, 3, input.numDimensions() );
-		final RandomAccessible< Localizable > view = new MixedTransformView<>( input, transform );
-		final RandomAccess< Localizable > ra = view.randomAccess();
-		ra.setPosition( new long[] { 1, 2 } );
-		assertArrayEquals( new long[] { 1, 2, 3 }, Localizables.asLongArray( ra.get() ) );
+		final Mixed transform = MixedTransforms.hyperSlice( 2, 3, 3 );
+		final long[] result = apply( transform, new long[] { 1, 2 } );
+		assertArrayEquals( new long[] { 1, 2, 3 }, result );
 	}
+
+	private long[] apply( Mixed transform, long[] source )
+	{
+		long[] result = new long[ 3 ];
+		transform.apply( source, result );
+		return result;
+	}
+
 }
