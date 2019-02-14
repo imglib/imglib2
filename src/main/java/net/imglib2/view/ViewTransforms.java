@@ -66,17 +66,17 @@ public class ViewTransforms
 	 * The rotation returned by this operation therefore is inverse to the
 	 * rotation described in {@link Views#rotate(RandomAccessible, int, int)}
 	 */
-	public static Mixed rotate( final int fromAxis, final int toAxis, final int n )
+	public static Mixed rotate( final int numDimensions, final int fromAxis, final int toAxis )
 	{
 		if ( fromAxis == toAxis )
-			return new MixedTransform( n, n );
+			return new MixedTransform( numDimensions, numDimensions );
 
-		final MixedTransform t = new MixedTransform( n, n );
+		final MixedTransform t = new MixedTransform( numDimensions, numDimensions );
 		if ( fromAxis != toAxis )
 		{
-			final int[] component = new int[ n ];
-			final boolean[] inv = new boolean[ n ];
-			for ( int e = 0; e < n; ++e )
+			final int[] component = new int[ numDimensions ];
+			final boolean[] inv = new boolean[ numDimensions ];
+			for ( int e = 0; e < numDimensions; ++e )
 			{
 				if ( e == toAxis )
 				{
@@ -107,17 +107,17 @@ public class ViewTransforms
 	 * But that's not important for this type of permutation. As
 	 * the permutation stays the same when inverted.
 	 */
-	public static Mixed permute( final int fromAxis, final int toAxis, final int n )
+	public static Mixed permute( final int numDimensions, final int fromAxis, final int toAxis )
 	{
 		if ( fromAxis == toAxis )
-			return new MixedTransform( n, n );
+			return new MixedTransform( numDimensions, numDimensions );
 
-		final int[] component = new int[ n ];
-		for ( int e = 0; e < n; ++e )
+		final int[] component = new int[ numDimensions ];
+		for ( int e = 0; e < numDimensions; ++e )
 			component[ e ] = e;
 		component[ fromAxis ] = toAxis;
 		component[ toAxis ] = fromAxis;
-		final MixedTransform t = new MixedTransform( n, n );
+		final MixedTransform t = new MixedTransform( numDimensions, numDimensions );
 		t.setComponentMapping( component );
 		return t;
 	}
@@ -130,22 +130,22 @@ public class ViewTransforms
 	 * inverse to the operations that are performed by the views.
 	 * <p>
 	 *
-	 * @param n             Number of dimensions including that dimension
+	 * @param numDimensions Number of dimensions including that dimension
 	 *                      that is sliced / inserted.
 	 * @param d             Index of that dimension that is sliced / inserted.
 	 * @param pos           Position of the slice / value of the coordinate that's
 	 *                      inserted.
 	 * @return Transformation that inserts a coordinate at the given index.
 	 */
-	public static MixedTransform hyperSlice( final int d, final long pos, final int m )
+	public static MixedTransform hyperSlice( final int numDimensions, final int d, final long pos )
 	{
-		final int n = m - 1;
-		final MixedTransform t = new MixedTransform( n, m );
-		final long[] translation = new long[ m ];
+		final int n = numDimensions - 1;
+		final MixedTransform t = new MixedTransform( n, numDimensions );
+		final long[] translation = new long[ numDimensions ];
 		translation[ d ] = pos;
-		final boolean[] zero = new boolean[ m ];
-		final int[] component = new int[ m ];
-		for ( int e = 0; e < m; ++e )
+		final boolean[] zero = new boolean[ numDimensions ];
+		final int[] component = new int[ numDimensions ];
+		for ( int e = 0; e < numDimensions; ++e )
 		{
 			if ( e < d )
 			{
@@ -196,23 +196,23 @@ public class ViewTransforms
 	 * Therefor the axis permutation return by this method
 	 * is actually inverse as described in {@link Views#moveAxis(RandomAccessible, int, int)}.
 	 */
-	public static MixedTransform moveAxis( final int fromAxis, final int toAxis, final int n )
+	public static MixedTransform moveAxis( final int numDimensions, final int fromAxis, final int toAxis )
 	{
 		if ( fromAxis == toAxis )
-			return new MixedTransform( n, n );
+			return new MixedTransform( numDimensions, numDimensions );
 
 		final List< Integer > axisIndices = new ArrayList<>();
-		IntStream.rangeClosed( 0, n - 1 ).forEach( axisIndices::add );
+		IntStream.rangeClosed( 0, numDimensions - 1 ).forEach( axisIndices::add );
 		axisIndices.remove( fromAxis );
 		axisIndices.add( toAxis, fromAxis );
 
-		final int components[] = new int[ n ];
-		for ( int i = 0; i < n; i++ )
+		final int components[] = new int[ numDimensions ];
+		for ( int i = 0; i < numDimensions; i++ )
 		{
 			components[ axisIndices.get( i ) ] = i;
 		}
 
-		final MixedTransform t = new MixedTransform( n, n );
+		final MixedTransform t = new MixedTransform( numDimensions, numDimensions );
 		t.setComponentMapping( components );
 		return t;
 	}
@@ -240,14 +240,14 @@ public class ViewTransforms
 	 * Warning: The transformation used by a view in {@link Views} is always
 	 * inverse to the operation that is performed by the View.
 	 *
-	 * @param currentNumDims Number of dimensions not including
+	 * @param numDimensions Number of dimensions without
 	 *                       the coordinate that's added/removed.
 	 * @return A transformation that removes the last coordinate.
 	 */
-	public static MixedTransform addDimension( final int currentNumDims )
+	public static MixedTransform addDimension( final int numDimensions )
 	{
-		final int newNumDims = currentNumDims + 1;
-		return new MixedTransform( newNumDims, currentNumDims );
+		final int newNumDims = numDimensions + 1;
+		return new MixedTransform( newNumDims, numDimensions );
 	}
 
 	/**
@@ -260,15 +260,15 @@ public class ViewTransforms
 	 * is the axis inversion itself.
 	 * <p>
 	 *
+	 * @param numDimensions Number of dimensions of the coordinate space.
 	 * @param d Index of the coordinate that's inverted.
-	 * @param n Number of dimensions of the coordinate space.
 	 * @return Transformation that inverts the specified coordinate.
 	 */
-	public static MixedTransform invertAxis( final int d, final int n )
+	public static MixedTransform invertAxis( final int numDimensions, final int d )
 	{
-		final boolean[] inv = new boolean[ n ];
+		final boolean[] inv = new boolean[ numDimensions ];
 		inv[ d ] = true;
-		final MixedTransform t = new MixedTransform( n, n );
+		final MixedTransform t = new MixedTransform( numDimensions, numDimensions );
 		t.setComponentInversion( inv );
 		return t;
 	}

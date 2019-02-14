@@ -54,7 +54,7 @@ public class ViewTransformsTest
 	@Test
 	public void testRotate()
 	{
-		final Mixed transform = ViewTransforms.rotate( 1, 0, 3 );
+		final Mixed transform = ViewTransforms.rotate( 3, 1, 0 );
 		final long[] result = apply( transform, new long[] { 2, -1, 3 } );
 		assertArrayEquals( new long[] { 1, 2, 3 }, result );
 	}
@@ -62,7 +62,7 @@ public class ViewTransformsTest
 	@Test
 	public void testPermute()
 	{
-		final Mixed transform = ViewTransforms.permute( 0, 2, 3 );
+		final Mixed transform = ViewTransforms.permute( 3, 0, 2 );
 		final long[] result = apply( transform, new long[] { 3, 2, 1 } );
 		assertArrayEquals( new long[] { 1, 2, 3 }, result );
 	}
@@ -70,7 +70,7 @@ public class ViewTransformsTest
 	@Test
 	public void testMoveAxis()
 	{
-		final Mixed transform = ViewTransforms.moveAxis( 0, 2, 3 );
+		final Mixed transform = ViewTransforms.moveAxis( 3, 0, 2 );
 		final long[] result = apply( transform, new long[] { 2, 3, 1 } );
 		assertArrayEquals( new long[] { 1, 2, 3 }, result );
 	}
@@ -78,7 +78,7 @@ public class ViewTransformsTest
 	@Test
 	public void testInvertAxis()
 	{
-		final Mixed transform = ViewTransforms.invertAxis( 1, 3 );
+		final Mixed transform = ViewTransforms.invertAxis( 3, 1 );
 		final long[] result = apply( transform, new long[] { 1, -2, 3 } );
 		assertArrayEquals( new long[] { 1, 2, 3 }, result );
 	}
@@ -103,7 +103,7 @@ public class ViewTransformsTest
 	@Test
 	public void testHyperSlice()
 	{
-		final Mixed transform = ViewTransforms.hyperSlice( 2, 3, 3 );
+		final Mixed transform = ViewTransforms.hyperSlice( 3, 2, 3 );
 		final long[] result = apply( transform, new long[] { 1, 2 } );
 		assertArrayEquals( new long[] { 1, 2, 3 }, result );
 	}
