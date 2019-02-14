@@ -31,9 +31,9 @@ public class RandomAccessTest
 			cursor.localize( longPosition );
 			cursor.localize( intPosition );
 
-			Assert.assertEquals( reference, access.get( cursor ) );
-			Assert.assertEquals( reference, access.get( longPosition ) );
-			Assert.assertEquals( reference, access.get( intPosition ) );
+			Assert.assertEquals( reference, access.getAt( cursor ) );
+			Assert.assertEquals( reference, access.getAt( longPosition ) );
+			Assert.assertEquals( reference, access.getAt( intPosition ) );
 		}
 
 	}
