@@ -33,18 +33,23 @@
  */
 package net.imglib2.view;
 
+import net.imglib2.Interval;
+import net.imglib2.RandomAccessible;
+import net.imglib2.RandomAccessibleInterval;
+import net.imglib2.transform.integer.Mixed;
+import net.imglib2.transform.integer.MixedTransform;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.IntStream;
 
-import net.imglib2.Interval;
-import net.imglib2.transform.integer.Mixed;
-import net.imglib2.transform.integer.MixedTransform;
-
 /**
- * Utility methods to create mixed transforms for common operations. Used by
- * {@link Views}.
+ * Utility methods to create transformation for the common
+ * operations that are provided in {@link Views}.
+ * <p>
+ * Warning: The transformations used in {@link Views} are always
+ * inverse to the operations that are performed by the views.
  *
  * @author Tobias Pietzsch
  * @author Carsten Haubold, KNIME GmbH, Konstanz, Germany
@@ -52,22 +57,14 @@ import net.imglib2.transform.integer.MixedTransform;
 public class ViewTransforms
 {
 	/**
-	 * Create a {@link MixedTransform} that rotates by 90 degrees. The rotation
-	 * is specified by two axis indices, such that the {@code fromAxis} is
-	 * rotated to the {@code toAxis}.
-	 *
-	 * For example: {@code rotate(0, 1, 3)} creates a transform that rotates the
-	 * X axis (of a XYZ space) to the Y axis. Applying the transform to
-	 * <em>(1,2,3)</em> yields <em>(2,-1,3)</em>.
-	 *
-	 * @param fromAxis
-	 *            axis index.
-	 * @param toAxis
-	 *            axis index.
-	 * @param n
-	 *            number of dimensions of the space.
-	 * @return a transform that rotates the {@code fromAxis} to the
-	 *         {@code toAxis}.
+	 * Returns the transformation that is used by
+	 * {@link Views#rotate(RandomAccessible, int, int)}.
+	 * <p>
+	 * Warning: The transformations used in {@link Views} are always
+	 * inverse to the operations that are performed by the views.
+	 * <p>
+	 * The rotation returned by this operation therefore is inverse to the
+	 * rotation described in {@link Views#rotate(RandomAccessible, int, int)}
 	 */
 	public static Mixed rotate( final int fromAxis, final int toAxis, final int n )
 	{
@@ -102,17 +99,13 @@ public class ViewTransforms
 	}
 
 	/**
-	 * Create a transformation that permutes axes. fromAxis and toAxis are
-	 * swapped.
-	 *
-	 * If fromAxis=0 and toAxis=2, this means that the X-axis of the source view
-	 * is mapped to the Z-Axis of the permuted view and vice versa. For a XYZ
-	 * source, a ZYX view would be created.
-	 *
-	 * @param fromAxis
-	 * @param toAxis
-	 * @param n
-	 * @return
+	 * Returns the transformation that is used by
+	 * {@link Views#permute(RandomAccessible, int, int)}.
+	 * <p>
+	 * Warning: The transformations used in {@link Views} are always
+	 * inverse to the operations that are performed by the views.
+	 * But that's not important for this type of permutation. As
+	 * the permutation stays the same when inverted.
 	 */
 	public static Mixed permute( final int fromAxis, final int toAxis, final int n )
 	{
@@ -130,13 +123,19 @@ public class ViewTransforms
 	}
 
 	/**
-	 * Create a transform that takes a (n-1)-dimensional slice of a
-	 * n-dimensional view, fixing d-component of coordinates to pos.
+	 * Returns the transformation that is used by
+	 * {@link Views#hyperSlice(RandomAccessible, int, long)}.
+	 * <p>
+	 * Warning: The transformations used in {@link Views} are always
+	 * inverse to the operations that are performed by the views.
+	 * <p>
 	 *
-	 * @param d
-	 * @param pos
-	 * @param m
-	 * @return
+	 * @param n             Number of dimensions including that dimension
+	 *                      that is sliced / inserted.
+	 * @param d             Index of that dimension that is sliced / inserted.
+	 * @param pos           Position of the slice / value of the coordinate that's
+	 *                      inserted.
+	 * @return Transformation that inserts a coordinate at the given index.
 	 */
 	public static MixedTransform hyperSlice( final int d, final long pos, final int m )
 	{
@@ -171,14 +170,13 @@ public class ViewTransforms
 	}
 
 	/**
-	 * Create a {@link MixedTransform} that describes the translation vector.
-	 * When applied to a View, each pixel <em>x</em> in the source view has
-	 * coordinates <em>(x + translation)</em> in the resulting view.
-	 *
-	 * @param translation
-	 *            translation vector of the source view. The pixel at <em>x</em>
-	 *            in the source view becomes <em>(x + translation)</em> in the
-	 *            resulting view.
+	 * Returns the transformation that is used by
+	 * {@link Views#translate(RandomAccessible, long...)}.
+	 * <p>
+	 * Warning: The transformation used by a view in {@link Views} is always
+	 * inverse to the operation that is performed by the View.
+	 * <p>
+	 * Therefor this method actually returns the inverse translation.
 	 */
 	public static MixedTransform translate( final long... translation )
 	{
@@ -189,11 +187,14 @@ public class ViewTransforms
 	}
 
 	/**
-	 * Create a transformation that moves an axis. fromAxis is moved to toAxis.
-	 * While the order of the other axes is preserved.
-	 *
-	 * If fromAxis=2 and toAxis=4, and axis order of image is XYCZT, then a view
-	 * to the image with axis order XYZTC would be created.
+	 * Returns the transformation that is used by
+	 * {@link Views#moveAxis(RandomAccessible, int, int)}.
+	 * <p>
+	 * Warning: The transformation used by a view in {@link Views} is always
+	 * inverse to the operation that is performed by the View.
+	 * <p>
+	 * Therefor the axis permutation return by this method
+	 * is actually inverse as described in {@link Views#moveAxis(RandomAccessible, int, int)}.
 	 */
 	public static MixedTransform moveAxis( final int fromAxis, final int toAxis, final int n )
 	{
@@ -217,12 +218,11 @@ public class ViewTransforms
 	}
 
 	/**
-	 * Create a transformation that moves the min coordinate of the given
-	 * interval to the origin
-	 *
-	 * @param interval
-	 *            the source.
-	 * @return transformation
+	 * Returns the transformation that is used by
+	 * {@link Views#zeroMin(RandomAccessibleInterval)}.
+	 * <p>
+	 * Warning: The transformation used by a view in {@link Views} is always
+	 * inverse to the operation that is performed by the View.
 	 */
 	public static MixedTransform zeroMin( final Interval interval )
 	{
@@ -234,10 +234,15 @@ public class ViewTransforms
 	}
 
 	/**
-	 * Create a transformation that adds a new dimension at the end
+	 * Returns the transformation that is used by
+	 * {@link Views#addDimension(RandomAccessible)}.
+	 * <p>
+	 * Warning: The transformation used by a view in {@link Views} is always
+	 * inverse to the operation that is performed by the View.
 	 *
-	 * @param currentNumDims
-	 * @return
+	 * @param currentNumDims Number of dimensions not including
+	 *                       the coordinate that's added/removed.
+	 * @return A transformation that removes the last coordinate.
 	 */
 	public static MixedTransform addDimension( final int currentNumDims )
 	{
@@ -246,11 +251,18 @@ public class ViewTransforms
 	}
 
 	/**
-	 * Create a transform that inverts the d'th axis of an n-dimensional space.
+	 * Returns the transformation that is used by
+	 * {@link Views#invertAxis(RandomAccessible, int)}.
+	 * <p>
+	 * Warning: The transformation used by a view in {@link Views} is always
+	 * inverse to the operation that is performed by the View.
+	 * But that's not relevant here, because inverse of an axis inversion
+	 * is the axis inversion itself.
+	 * <p>
 	 *
-	 * @param d
-	 * @param n
-	 * @return
+	 * @param d Index of the coordinate that's inverted.
+	 * @param n Number of dimensions of the coordinate space.
+	 * @return Transformation that inverts the specified coordinate.
 	 */
 	public static MixedTransform invertAxis( final int d, final int n )
 	{
