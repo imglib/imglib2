@@ -66,7 +66,7 @@ Jean-Yves Tinevez and Michael Zinsmaier.</license.copyrightOwners>
 		<developer>
 			<id>tpietzsch</id>
 			<name>Tobias Pietzsch</name>
-			<url>http://imagej.net/User:Pietzsch</url>
+			<url>https://imagej.net/User:Pietzsch</url>
 			<roles>
 				<role>lead</role>
 				<role>developer</role>
@@ -79,7 +79,7 @@ Jean-Yves Tinevez and Michael Zinsmaier.</license.copyrightOwners>
 		<developer>
 			<id>axtimwalde</id>
 			<name>Stephan Saalfeld</name>
-			<url>http://imagej.net/User:Saalfeld</url>
+			<url>https://imagej.net/User:Saalfeld</url>
 			<roles>
 				<role>founder</role>
 				<role>lead</role>
@@ -93,7 +93,7 @@ Jean-Yves Tinevez and Michael Zinsmaier.</license.copyrightOwners>
 		<developer>
 			<id>StephanPreibisch</id>
 			<name>Stephan Preibisch</name>
-			<url>http://imagej.net/User:StephanP</url>
+			<url>https://imagej.net/User:StephanP</url>
 			<roles>
 				<role>founder</role>
 				<role>lead</role>
@@ -107,7 +107,7 @@ Jean-Yves Tinevez and Michael Zinsmaier.</license.copyrightOwners>
 		<developer>
 			<id>ctrueden</id>
 			<name>Curtis Rueden</name>
-			<url>http://imagej.net/User:Rueden</url>
+			<url>https://imagej.net/User:Rueden</url>
 			<roles>
 				<role>maintainer</role>
 			</roles>
@@ -116,27 +116,27 @@ Jean-Yves Tinevez and Michael Zinsmaier.</license.copyrightOwners>
 	<contributors>
 		<contributor>
 			<name>Barry DeZonia</name>
-			<url>http://imagej.net/User:Bdezonia</url>
+			<url>https://imagej.net/User:Bdezonia</url>
 			<properties><id>bdezonia</id></properties>
 		</contributor>
 		<contributor>
 			<name>Albert Cardona</name>
-			<url>http://imagej.net/User:Albertcardona</url>
+			<url>https://imagej.net/User:Albertcardona</url>
 			<properties><id>acardona</id></properties>
 		</contributor>
 		<contributor>
 			<name>Christian Dietz</name>
-			<url>http://imagej.net/User:Dietzc</url>
+			<url>https://imagej.net/User:Dietzc</url>
 			<properties><id>dietzc</id></properties>
 		</contributor>
 		<contributor>
 			<name>Jean-Yves Tinevez</name>
-			<url>http://imagej.net/User:JeanYvesTinevez</url>
+			<url>https://imagej.net/User:JeanYvesTinevez</url>
 			<properties><id>tinevez</id></properties>
 		</contributor>
 		<contributor>
 			<name>Johannes Schindelin</name>
-			<url>http://imagej.net/User:Schindelin</url>
+			<url>https://imagej.net/User:Schindelin</url>
 			<properties><id>dscho</id></properties>
 		</contributor>
 		<contributor>
@@ -145,32 +145,32 @@ Jean-Yves Tinevez and Michael Zinsmaier.</license.copyrightOwners>
 		</contributor>
 		<contributor>
 			<name>Lee Kamentsky</name>
-			<url>http://imagej.net/User:Leek</url>
+			<url>https://imagej.net/User:Leek</url>
 			<properties><id>LeeKamentsky</id></properties>
 		</contributor>
 		<contributor>
 			<name>Larry Lindsey</name>
-			<url>http://imagej.net/User:Lindsey</url>
+			<url>https://imagej.net/User:Lindsey</url>
 			<properties><id>larrylindsey</id></properties>
 		</contributor>
 		<contributor>
 			<name>Ellen T Arena</name>
-			<url>http://imagej.net/User:Etarena</url>
+			<url>https://imagej.net/User:Etarena</url>
 			<properties><id>etarena</id></properties>
 		</contributor>
 		<contributor>
 			<name>John Bogovic</name>
-			<url>http://imagej.net/User:Bogovic</url>
+			<url>https://imagej.net/User:Bogovic</url>
 			<properties><id>bogovicj</id></properties>
 		</contributor>
 		<contributor>
 			<name>Jan Funke</name>
-			<url>http://imagej.net/User:Funke</url>
+			<url>https://imagej.net/User:Funke</url>
 			<properties><id>funkey</id></properties>
 		</contributor>
 		<contributor>
 			<name>Aivar Grislis</name>
-			<url>http://imagej.net/User:Grislis</url>
+			<url>https://imagej.net/User:Grislis</url>
 			<properties><id>grislis</id></properties>
 		</contributor>
 		<contributor>
@@ -179,17 +179,17 @@ Jean-Yves Tinevez and Michael Zinsmaier.</license.copyrightOwners>
 		</contributor>
 		<contributor>
 			<name>Grant Harris</name>
-			<url>http://imagej.net/User:Harris</url>
+			<url>https://imagej.net/User:Harris</url>
 			<properties><id>tnargsirrah</id></properties>
 		</contributor>
 		<contributor>
 			<name>Stefan Helfrich</name>
-			<url>http://imagej.net/User:Stelfrich</url>
+			<url>https://imagej.net/User:Stelfrich</url>
 			<properties><id>stelfrich</id></properties>
 		</contributor>
 		<contributor>
 			<name>Mark Hiner</name>
-			<url>http://imagej.net/User:Hinerm</url>
+			<url>https://imagej.net/User:Hinerm</url>
 			<properties><id>hinerm</id></properties>
 		</contributor>
 		<contributor>
@@ -199,22 +199,22 @@ Jean-Yves Tinevez and Michael Zinsmaier.</license.copyrightOwners>
 		<contributor><name>Steffen Jaensch</name></contributor>
 		<contributor>
 			<name>Melissa Linkert</name>
-			<url>http://imagej.net/User:Linkert</url>
+			<url>https://imagej.net/User:Linkert</url>
 			<properties><id>melissalinkert</id></properties>
 		</contributor>
 		<contributor>
 			<name>Mark Longair</name>
-			<url>http://imagej.net/User:Mark</url>
+			<url>https://imagej.net/User:Mark</url>
 			<properties><id>mhl</id></properties>
 		</contributor>
 		<contributor>
 			<name>Nick Perry</name>
-			<url>http://imagej.net/User:NicholasPerry</url>
+			<url>https://imagej.net/User:NicholasPerry</url>
 			<properties><id>nickp</id></properties>
 		</contributor>
 		<contributor>
 			<name>Alison Walter</name>
-			<url>http://imagej.net/User:Awalter2</url>
+			<url>https://imagej.net/User:Awalter2</url>
 			<properties><id>awalter17</id></properties>
 		</contributor>
 		<contributor>
