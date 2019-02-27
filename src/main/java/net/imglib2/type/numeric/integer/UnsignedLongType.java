@@ -209,7 +209,7 @@ public class UnsignedLongType extends GenericLongType< UnsignedLongType >
 	@Override
 	public String toString()
 	{
-		return "" + get();
+		return getBigInteger().toString();
 	}
 
 	/**
@@ -353,7 +353,11 @@ public class UnsignedLongType extends GenericLongType< UnsignedLongType >
 	@Override
 	public double getRealDouble()
 	{
-		long l = get();
+		return unsignedLongToDouble( get() );
+	}
+
+	static double unsignedLongToDouble( long l )
+	{
 		return l >= 0 ? l : (MAX_VALUE_PLUS_ONE + l);
 	}
 
@@ -362,4 +366,5 @@ public class UnsignedLongType extends GenericLongType< UnsignedLongType >
 	{
 		return Long.compareUnsigned( get(), other.get() );
 	}
+
 }

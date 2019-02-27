@@ -206,6 +206,22 @@ public class Unsigned128BitType extends AbstractIntegerType< Unsigned128BitType 
 	}
 
 	@Override
+	public float getRealFloat()
+	{
+		return (float) getRealDouble();
+	}
+
+	@Override
+	public double getRealDouble()
+	{
+		final int k = i * 2;
+		final long lower = dataAccess.getValue( k );
+		final long upper = dataAccess.getValue( k + 1 );
+		return UnsignedLongType.unsignedLongToDouble( lower ) +
+				UnsignedLongType.unsignedLongToDouble( upper ) * Math.pow( 2, 64 );
+	}
+
+	@Override
 	public void setInteger( final int value )
 	{
 		final int k = i * 2;
