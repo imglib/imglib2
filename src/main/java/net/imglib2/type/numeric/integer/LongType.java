@@ -39,6 +39,7 @@ import java.math.BigInteger;
 import net.imglib2.img.NativeImg;
 import net.imglib2.img.basictypeaccess.LongAccess;
 import net.imglib2.type.NativeTypeFactory;
+import net.imglib2.util.Util;
 
 /**
  * TODO
@@ -131,6 +132,12 @@ public class LongType extends GenericLongType< LongType >
 	public void setBigInteger( final BigInteger b )
 	{
 		set( b.longValue() );
+	}
+
+	@Override
+	public void setReal( float real )
+	{
+		set( Util.roundToLong( real ) );
 	}
 
 	@Override

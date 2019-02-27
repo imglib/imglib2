@@ -500,13 +500,34 @@ public class Util
 
 	public static int round( final float value )
 	{
-		return ( int ) ( value + ( 0.5f * Math.signum( value ) ) );
+		return roundToInt( value );
 	}
 
 	public static long round( final double value )
 	{
+		return roundToLong( value );
+	}
+
+	public static int roundToInt( final float value )
+	{
+		return ( int ) ( value + ( 0.5f * Math.signum( value ) ) );
+	}
+
+	public static int roundToInt( final double value )
+	{
+		return ( int ) ( value + ( 0.5d * Math.signum( value ) ) );
+	}
+
+	public static long roundToLong( final float value )
+	{
+		return ( long ) ( value + ( 0.5f * Math.signum( value ) ) );
+	}
+
+	public static long roundToLong( final double value )
+	{
 		return ( long ) ( value + ( 0.5d * Math.signum( value ) ) );
 	}
+
 
 	/**
 	 * This method creates a gaussian kernel
