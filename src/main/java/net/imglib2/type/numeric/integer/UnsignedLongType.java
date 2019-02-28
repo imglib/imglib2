@@ -270,10 +270,15 @@ public class UnsignedLongType extends GenericLongType< UnsignedLongType >
 	@Override
 	public void setReal( double real )
 	{
+		set( doubleToUnsignedLong( real ) );
+	}
+
+	static long doubleToUnsignedLong( double real )
+	{
 		double value = real < MAX_LONG_PLUS_ONE ?
 				Math.max(0, real) :
 				Math.min(-1, real - MAX_VALUE_PLUS_ONE);
-		set( Util.round(value) );
+		return Util.round( value );
 	}
 
 	@Override

@@ -243,6 +243,23 @@ public class Unsigned128BitType extends AbstractIntegerType< Unsigned128BitType 
 		set( b );
 	}
 
+	@Override
+	public void setReal( float real )
+	{
+		setReal( (double) real );
+	}
+
+	@Override
+	public void setReal( double real )
+	{
+		real = Math.floor( real + 0.5 );
+		final double base = Math.pow( 2, 64 );
+		double upper = Math.floor(real / base );
+		double lower = real - base * upper;
+		set( UnsignedLongType.doubleToUnsignedLong( lower ),
+				UnsignedLongType.doubleToUnsignedLong( upper ));
+	}
+
 	/**
 	 * The maximum value that can be stored is {@code Math.pow(2, 128) -1},
 	 * which cannot be represented with precision using a double
@@ -478,5 +495,11 @@ public class Unsigned128BitType extends AbstractIntegerType< Unsigned128BitType 
 		final int hash1 = Long.hashCode( dataAccess.getValue( k + 1 ) );
 		final int hash2 = Long.hashCode( dataAccess.getValue( k ) );
 		return Util.combineHash( hash1, hash2 );
+	}
+
+	@Override
+	public String toString()
+	{
+		return getBigInteger().toString();
 	}
 }
