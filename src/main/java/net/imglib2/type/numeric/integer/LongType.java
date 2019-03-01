@@ -144,7 +144,7 @@ public class LongType extends GenericLongType< LongType >
 	public double getMaxValue()
 	{
 		return Long.MAX_VALUE;
-	}
+	} // imprecise
 
 	@Override
 	public double getMinValue()

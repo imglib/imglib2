@@ -222,6 +222,12 @@ public class UnsignedLongTypeTest {
 	}
 
 	@Test
+	public void testSetMinMax() {
+		testSetRealDouble( new UnsignedLongType().getMaxValue(), -1l );
+		testSetRealDouble( new UnsignedLongType().getMinValue(), 0 );
+	}
+
+	@Test
 	public void testSetRealFloat() {
 		// simple values
 		testSetRealFloat( 0, 0 );
