@@ -34,6 +34,9 @@
 
 package net.imglib2.converter;
 
+import net.imglib2.RandomAccessibleInterval;
+import net.imglib2.img.array.ArrayImgs;
+import net.imglib2.test.ImgLib2Assert;
 import net.imglib2.type.logic.BitType;
 import net.imglib2.type.logic.BoolType;
 import net.imglib2.type.numeric.RealType;
@@ -178,6 +181,14 @@ public class RealTypeConvertersTest
 		testConverterType( new Unsigned12BitType(), new ShortType(), RealTypeConverters.LongConverter.class );
 		testConverterType( new BoolType(), new FloatType(), RealTypeConverters.FloatConverter.class );
 		testConverterType( new BoolType(), new IntType(), RealTypeConverters.IntegerConverter.class );
+	}
+
+	@Test
+	public void testConvertRandomAccessibleInterval() {
+		RandomAccessibleInterval<IntType> ints = ArrayImgs.ints( new int[] { 42 }, 1 );
+		RandomAccessibleInterval<UnsignedByteType> bytes = RealTypeConverters.convert( ints, new UnsignedByteType() );
+		RandomAccessibleInterval<UnsignedByteType> expected = ArrayImgs.unsignedBytes( new byte[] { 42 }, 1);
+		ImgLib2Assert.assertImageEquals( expected, bytes );
 	}
 
 	private void testConverterType( RealType< ? > inputType, RealType< ? > ouputType, Class< ? extends Converter > expected )

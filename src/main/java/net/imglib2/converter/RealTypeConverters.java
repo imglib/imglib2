@@ -34,6 +34,7 @@
 
 package net.imglib2.converter;
 
+import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.loops.ClassCopyProvider;
 import net.imglib2.type.BooleanType;
 import net.imglib2.type.numeric.IntegerType;
@@ -46,6 +47,7 @@ import net.imglib2.type.numeric.integer.IntType;
 import net.imglib2.type.numeric.integer.LongType;
 import net.imglib2.type.numeric.integer.UnsignedByteType;
 import net.imglib2.type.numeric.real.FloatType;
+import net.imglib2.util.Util;
 
 import java.util.Arrays;
 
@@ -55,6 +57,32 @@ public final class RealTypeConverters
 	private RealTypeConverters()
 	{
 		// prevent from instantiation
+	}
+
+	/**
+	 * Convert the pixel type of the given image to a given output pixel type.
+	 * <p>
+	 * Example, convert and image from {@link UnsignedByteType} to {@link IntType}:
+	 * <pre>
+	 * {@code
+	 *
+	 * RandomAccessibleInterval<UnsignedByteType> image = ...;
+	 * RandomAccessibleInterval<IntType> intImage =
+	 *     RealTypeConverters.convert( image, new IntType() );
+	 * }
+	 * </pre>
+	 *
+	 * The conversion is done on-the-fly when a pixel value is red.
+	 * @param image image to convert
+	 * @param pixelType pixel type of the result image
+	 */
+	public static <T extends RealType<T>> RandomAccessibleInterval<T> convert(
+			RandomAccessibleInterval<? extends RealType<?>> image,
+			T pixelType )
+	{
+		RealType<?> in = Util.getTypeFromInterval( image );
+		Converter< RealType<?>, T > converter = getConverter( in, pixelType );
+		return Converters.convert( image, converter, pixelType );
 	}
 
 	/**
