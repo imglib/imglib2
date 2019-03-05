@@ -43,7 +43,7 @@ import net.imglib2.Localizable;
 import net.imglib2.RealInterval;
 import net.imglib2.RealLocalizable;
 import net.imglib2.transform.integer.Mixed;
-import net.imglib2.view.MixedTransforms;
+import net.imglib2.view.ViewTransforms;
 
 /**
  * Convenience methods for manipulating {@link Interval Intervals}.
@@ -362,7 +362,7 @@ public class Intervals
 	public static FinalInterval moveAxis( final Interval interval, final int fromAxis, final int toAxis )
 	{
 		final int n = interval.numDimensions();
-		final Mixed t = MixedTransforms.moveAxis( fromAxis, toAxis, n );
+		final Mixed t = ViewTransforms.moveAxis( n, fromAxis, toAxis );
 		final int[] newAxisIndices = new int[ n ];
 		t.getComponentMapping( newAxisIndices );
 
