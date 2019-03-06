@@ -49,6 +49,7 @@ import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.type.BooleanType;
 import net.imglib2.type.numeric.IntegerType;
 import net.imglib2.type.numeric.RealType;
+import net.imglib2.view.Views;
 
 /**
  * Utility class for wrapping ImgLib2 images as read-only {@link Collection}s.
@@ -67,6 +68,14 @@ public final class FlatCollections
 	 * Wraps an {@link IterableInterval} as a {@link Collection}. The wrapped
 	 * collection is read-only, throwing {@link UnsupportedOperationException}
 	 * if the caller attempts to mutate it.
+	 * <p>
+	 * With this method, and <em>unlike
+	 * {@link #list(RandomAccessibleInterval, Function)}</em>, the iteration
+	 * order of the wrapped collection will <em>match that of the source
+	 * image</em>. It is best not to make any assumptions about the iteration
+	 * order of the collection&mdash;only that each element of the wrapped image
+	 * will appear once in the iteration.
+	 * </p>
 	 * 
 	 * @param image
 	 *            The {@link IterableInterval} to wrap as a Java collection.
@@ -163,6 +172,16 @@ public final class FlatCollections
 	 * Wraps a {@link RandomAccessibleInterval} as a {@link List}. The wrapped
 	 * list is read-only, throwing {@link UnsupportedOperationException} if the
 	 * caller attempts to mutate it.
+	 * <p>
+	 * With this method, and <em>unlike
+	 * {@link #collection(IterableInterval, Function)}</em>, the iteration order
+	 * of the wrapped list will <em>always be the
+	 * {@link net.imglib2.FlatIterationOrder flat iteration order}</em>, as
+	 * though {@link Views#flatIterable} were used on the source
+	 * {@link RandomAccessibleInterval} image. As such, iterating the original
+	 * image and the wrapped {@link List} may result in differing sequences of
+	 * elements.
+	 * </p>
 	 * 
 	 * @param image
 	 *            The {@link RandomAccessibleInterval} to wrap as a Java list.
