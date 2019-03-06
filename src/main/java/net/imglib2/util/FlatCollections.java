@@ -49,8 +49,6 @@ import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.type.BooleanType;
 import net.imglib2.type.numeric.IntegerType;
 import net.imglib2.type.numeric.RealType;
-import net.imglib2.type.numeric.integer.ByteType;
-import net.imglib2.type.numeric.integer.ShortType;
 
 /**
  * Utility class for wrapping ImgLib2 images as read-only {@link Collection}s.
@@ -92,19 +90,6 @@ public final class FlatCollections
 	 * @see #collection(IterableInterval, Function)
 	 */
 	public static < B extends BooleanType< B > > Collection< Boolean > booleanCollection( final IterableInterval< B > image )
-	{
-		return collection( image, t -> t.get() );
-	}
-
-	/**
-	 * Wraps a {@link ByteType} iterable image as a collection.
-	 * 
-	 * @param image
-	 *            The {@link IterableInterval} to wrap as a Java collection.
-	 * @return Wrapped {@link Collection} with {@link Byte} elements.
-	 * @see #collection(IterableInterval, Function)
-	 */
-	public static Collection< Byte > byteCollection( final IterableInterval< ByteType > image )
 	{
 		return collection( image, t -> t.get() );
 	}
@@ -162,19 +147,6 @@ public final class FlatCollections
 	}
 
 	/**
-	 * Wraps a {@link ShortType} iterable image as a collection.
-	 * 
-	 * @param image
-	 *            The {@link IterableInterval} to wrap as a Java collection.
-	 * @return Wrapped {@link Collection} with {@link Short} elements.
-	 * @see #collection(IterableInterval, Function)
-	 */
-	public static Collection< Short > shortCollection( final IterableInterval< ShortType > image )
-	{
-		return collection( image, t -> t.get() );
-	}
-
-	/**
 	 * Wraps an {@link IntegerType} iterable image as a collection.
 	 * 
 	 * @param image
@@ -214,19 +186,6 @@ public final class FlatCollections
 	 * @see #list(RandomAccessibleInterval, Function)
 	 */
 	public static < B extends BooleanType< B > > List< Boolean > booleanList( final RandomAccessibleInterval< B > image )
-	{
-		return list( image, t -> t.get() );
-	}
-
-	/**
-	 * Wraps a {@link ByteType} random-accessible image as a list.
-	 * 
-	 * @param image
-	 *            The {@link RandomAccessibleInterval} to wrap as a Java list.
-	 * @return Wrapped {@link List} with {@link Byte} elements.
-	 * @see #list(RandomAccessibleInterval, Function)
-	 */
-	public static List< Byte > byteList( final RandomAccessibleInterval< ByteType > image )
 	{
 		return list( image, t -> t.get() );
 	}
@@ -281,19 +240,6 @@ public final class FlatCollections
 	public static < T extends IntegerType< T > > List< Long > longList( final RandomAccessibleInterval< T > image )
 	{
 		return list( image, t -> t.getIntegerLong() );
-	}
-
-	/**
-	 * Wraps a {@link ShortType} random-accessible image as a list.
-	 * 
-	 * @param image
-	 *            The {@link RandomAccessibleInterval} to wrap as a Java list.
-	 * @return Wrapped {@link List} with {@link Short} elements.
-	 * @see #list(RandomAccessibleInterval, Function)
-	 */
-	public static List< Short > shortList( final RandomAccessibleInterval< ShortType > image )
-	{
-		return list( image, t -> t.get() );
 	}
 
 	/**

@@ -100,12 +100,6 @@ public final class FlatCollectionsTest
 	}
 
 	@Test
-	public void testByteCollection()
-	{
-		assertImageEqualsCollection( imgByte, FlatCollections.byteCollection( imgByte ), ( e, a ) -> e.get() == a );
-	}
-
-	@Test
 	public void testDoubleCollection()
 	{
 		assertImageEqualsCollection( imgDouble, FlatCollections.doubleCollection( imgDouble ), ( e, a ) -> e.get() == a );
@@ -141,12 +135,6 @@ public final class FlatCollectionsTest
 	}
 
 	@Test
-	public void testShortCollection()
-	{
-		assertImageEqualsCollection( imgShort, FlatCollections.shortCollection( imgShort ), ( e, a ) -> e.get() == a );
-	}
-
-	@Test
 	public void testBigIntegerCollection()
 	{
 		assertImageEqualsCollection( imgBig, FlatCollections.bigIntegerCollection( imgBig ), ( e, a ) -> Objects.equals( e.getBigInteger(), a ) );
@@ -162,12 +150,6 @@ public final class FlatCollectionsTest
 	public void testBooleanList()
 	{
 		assertImageEqualsCollection( imgBoolean, FlatCollections.booleanList( imgBoolean ), ( e, a ) -> e.get() == a );
-	}
-
-	@Test
-	public void testByteList()
-	{
-		assertImageEqualsCollection( imgByte, FlatCollections.byteList( imgByte ), ( e, a ) -> e.get() == a );
 	}
 
 	@Test
@@ -203,12 +185,6 @@ public final class FlatCollectionsTest
 		assertImageEqualsCollection( imgLong, FlatCollections.longList( imgLong ), ( e, a ) -> e.get() == a );
 		assertImageEqualsCollection( imgShort, FlatCollections.longList( imgShort ), ( e, a ) -> e.getIntegerLong() == a );
 		assertImageEqualsCollection( imgBig, FlatCollections.longList( imgBig ), ( e, a ) -> e.getIntegerLong() == a ); // lossy
-	}
-
-	@Test
-	public void testShortList()
-	{
-		assertImageEqualsCollection( imgShort, FlatCollections.shortList( imgShort ), ( e, a ) -> e.get() == a );
 	}
 
 	@Test
