@@ -176,7 +176,7 @@ public class ViewTransforms
 	 * Warning: The transformation used by a view in {@link Views} is always
 	 * inverse to the operation that is performed by the View.
 	 * <p>
-	 * Therefor this method actually returns the inverse translation.
+	 * Therefore this method actually returns the inverse translation.
 	 */
 	public static MixedTransform translate( final long... translation )
 	{
@@ -188,12 +188,29 @@ public class ViewTransforms
 
 	/**
 	 * Returns the transformation that is used by
+	 * {@link Views#translateInverse(RandomAccessible, long...)}.
+	 * <p>
+	 * Warning: The transformation used by a view in {@link Views} is always
+	 * inverse to the operation that is performed by the View.
+	 * <p>
+	 * Therefore this method actually returns the (not inverse) translation.
+	 */
+	public static MixedTransform translateInverse( final long... translation )
+	{
+		final int n = translation.length;
+		final MixedTransform t = new MixedTransform( n, n );
+		t.setTranslation( translation );
+		return t;
+	}
+
+	/**
+	 * Returns the transformation that is used by
 	 * {@link Views#moveAxis(RandomAccessible, int, int)}.
 	 * <p>
 	 * Warning: The transformation used by a view in {@link Views} is always
 	 * inverse to the operation that is performed by the View.
 	 * <p>
-	 * Therefor the axis permutation return by this method
+	 * Therefore the axis permutation return by this method
 	 * is actually inverse as described in {@link Views#moveAxis(RandomAccessible, int, int)}.
 	 */
 	public static MixedTransform moveAxis( final int numDimensions, final int fromAxis, final int toAxis )

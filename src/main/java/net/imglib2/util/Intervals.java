@@ -170,6 +170,7 @@ public class Intervals
 	{
 		return expand( interval, new FinalDimensions( border ) );
 	}
+
 	/**
 	 * Grow/shrink an interval in all dimensions.
 	 * 
@@ -272,6 +273,33 @@ public class Intervals
 		{
 			min[ d ] += translation[ d ];
 			max[ d ] += translation[ d ];
+		}
+		return new FinalInterval( min, max );
+	}
+
+	/**
+	 * Translate an interval by {@code -translation}.
+	 *
+	 * Create a {@link FinalInterval}, which is the input interval shifted by
+	 * {@code -translation}.
+	 *
+	 * @param interval
+	 *            the input interval
+	 * @param translation
+	 *            by how many pixels to inverse-shift the interval
+	 * @return translated interval
+	 */
+	public static FinalInterval translateInverse( final Interval interval, final long... translation )
+	{
+		final int n = interval.numDimensions();
+		final long[] min = new long[ n ];
+		final long[] max = new long[ n ];
+		interval.min( min );
+		interval.max( max );
+		for ( int d = 0; d < n; ++d )
+		{
+			min[ d ] -= translation[ d ];
+			max[ d ] -= translation[ d ];
 		}
 		return new FinalInterval( min, max );
 	}

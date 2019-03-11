@@ -503,11 +503,56 @@ public class Views
 	}
 
 	/**
-	 * @deprecated Please use {@link Views#translate(RandomAccessible, long...)}
-	 * with a negative offset instead.
+	 * Translate the source view by the given inverse translation vector. Pixel
+	 * <em>x</em> in the source view has coordinates <em>(x - translation)</em>
+	 * in the resulting view.
 	 * <p>
+	 * The effect is that the pixel at {@code translation} in
+	 * {@code randomAccessible} is at the origin in the resulting view.
+	 *
+	 * @param randomAccessible
+	 *            the source
+	 * @param translation
+	 *            inverse translation vector of the source view. The pixel at
+	 *            <em>x</em> in the source view becomes <em>(x -
+	 *            translation)</em> in the resulting view.
+	 */
+	public static < T > MixedTransformView< T > translateInverse( final RandomAccessible< T > randomAccessible, final long... translation )
+	{
+		final Mixed t = ViewTransforms.translateInverse( translation );
+		return new MixedTransformView<>( randomAccessible, t );
+	}
+
+	/**
+	 * Translate the source view by the given inverse translation vector. Pixel
+	 * <em>x</em> in the source view has coordinates <em>(x - translation)</em>
+	 * in the resulting view.
+	 * <p>
+	 * The effect is that the pixel at {@code translation} in {@code interval}
+	 * is at the origin in the resulting view.
+	 *
+	 * @param interval
+	 *            the source
+	 * @param translation
+	 *            inverse translation vector of the source view. The pixel at
+	 *            <em>x</em> in the source view becomes <em>(x -
+	 *            translation)</em> in the resulting view.
+	 */
+	public static < T > IntervalView< T > translateInverse( final RandomAccessibleInterval< T > interval, final long... translation )
+	{
+		return Views.interval(
+				Views.translateInverse( ( RandomAccessible< T > ) interval, translation ),
+				Intervals.translateInverse( interval, translation ) );
+	}
+
+	/**
 	 * Translate such that pixel at offset in randomAccessible is at the origin
 	 * in the resulting view. This is equivalent to translating by -offset.
+	 *
+	 * @deprecated Please use
+	 *             {@link Views#translateInverse(RandomAccessible, long...)}
+	 *             instead.
+	 *
 	 * @param randomAccessible
 	 *            the source
 	 * @param offset
@@ -517,16 +562,16 @@ public class Views
 	@Deprecated
 	public static < T > MixedTransformView< T > offset( final RandomAccessible< T > randomAccessible, final long... offset )
 	{
-		final long[] translation = Arrays.stream( offset ).map( o -> -o ).toArray();
-		return Views.translate( randomAccessible, translation );
+		return Views.translateInverse( randomAccessible, offset );
 	}
 
 	/**
-	 * @deprecated Please use {@link Views#translate(RandomAccessibleInterval, long...)}
-	 * with a negative offset instead.
-	 * <p>
 	 * Translate such that pixel at offset in interval is at the origin in the
 	 * resulting view. This is equivalent to translating by -offset.
+	 *
+	 * @deprecated Please use
+	 *             {@link Views#translateInverse(RandomAccessibleInterval, long...)}
+	 *             instead.
 	 *
 	 * @param interval
 	 *            the source
@@ -537,8 +582,7 @@ public class Views
 	@Deprecated
 	public static < T > IntervalView< T > offset( final RandomAccessibleInterval< T > interval, final long... offset )
 	{
-		final long[] translation = Arrays.stream( offset ).map( o -> -o ).toArray();
-		return Views.translate( interval, translation );
+		return Views.translateInverse( interval, offset );
 	}
 
 	/**
