@@ -92,7 +92,11 @@ public final class FlatCollections
 
 	/**
 	 * Wraps a {@link BooleanType} iterable image as a collection.
-	 * 
+	 * <p>
+	 * Warning: Don't make any assumption on the iteration order,
+	 * only that each pixel will appear once. Performance may be
+	 * low as the collection uses boxed types.
+	 *
 	 * @param image
 	 *            The {@link IterableInterval} to wrap as a Java collection.
 	 * @return Wrapped {@link Collection} with {@link Boolean} elements.
@@ -105,7 +109,11 @@ public final class FlatCollections
 
 	/**
 	 * Wraps a {@link RealType} iterable image as a collection.
-	 * 
+	 * <p>
+	 * Warning: Don't make any assumption on the iteration order,
+	 * only that each pixel will appear once. Performance may be
+	 * low as the collection uses boxed types.
+	 *
 	 * @param image
 	 *            The {@link IterableInterval} to wrap as a Java collection.
 	 * @return Wrapped {@link Collection} with {@link Double} elements.
@@ -118,7 +126,11 @@ public final class FlatCollections
 
 	/**
 	 * Wraps a {@link RealType} iterable image as a collection.
-	 * 
+	 * <p>
+	 * Warning: Don't make any assumption on the iteration order,
+	 * only that each pixel will appear once. Performance may be
+	 * low as the collection uses boxed types.
+	 *
 	 * @param image
 	 *            The {@link IterableInterval} to wrap as a Java collection.
 	 * @return Wrapped {@link Collection} with {@link Float} elements.
@@ -131,7 +143,11 @@ public final class FlatCollections
 
 	/**
 	 * Wraps an {@link IntegerType} iterable image as a collection.
-	 * 
+	 * <p>
+	 * Warning: Don't make any assumption on the iteration order,
+	 * only that each pixel will appear once. Performance may be
+	 * low as the collection uses boxed types.
+	 *
 	 * @param image
 	 *            The {@link IterableInterval} to wrap as a Java collection.
 	 * @return Wrapped {@link Collection} with {@link Integer} elements.
@@ -144,7 +160,11 @@ public final class FlatCollections
 
 	/**
 	 * Wraps an {@link IntegerType} iterable image as a collection.
-	 * 
+	 * <p>
+	 * Warning: Don't make any assumption on the iteration order,
+	 * only that each pixel will appear once. Performance may be
+	 * low as the collection uses boxed types.
+	 *
 	 * @param image
 	 *            The {@link IterableInterval} to wrap as a Java collection.
 	 * @return Wrapped {@link Collection} with {@link Long} elements.
@@ -157,7 +177,11 @@ public final class FlatCollections
 
 	/**
 	 * Wraps an {@link IntegerType} iterable image as a collection.
-	 * 
+	 * <p>
+	 * Warning: Don't make any assumption on the iteration order,
+	 * only that each pixel will appear once. Performance may be
+	 * low as the collection uses boxed types.
+	 *
 	 * @param image
 	 *            The {@link IterableInterval} to wrap as a Java collection.
 	 * @return Wrapped {@link Collection} with {@link BigInteger} elements.
@@ -198,7 +222,9 @@ public final class FlatCollections
 
 	/**
 	 * Wraps a {@link BooleanType} random-accessible image as a list.
-	 * 
+	 * <p>
+	 * Warning: Performance may be low, as the collection uses boxed types.
+	 *
 	 * @param image
 	 *            The {@link RandomAccessibleInterval} to wrap as a Java list.
 	 * @return Wrapped {@link List} with {@link Boolean} elements.
@@ -211,7 +237,9 @@ public final class FlatCollections
 
 	/**
 	 * Wraps a {@link RealType} random-accessible image as a list.
-	 * 
+	 * <p>
+	 * Warning: Performance may be low, as the collection uses boxed types.
+	 *
 	 * @param image
 	 *            The {@link RandomAccessibleInterval} to wrap as a Java list.
 	 * @return Wrapped {@link List} with {@link Double} elements.
@@ -224,7 +252,9 @@ public final class FlatCollections
 
 	/**
 	 * Wraps a {@link RealType} random-accessible image as a list.
-	 * 
+	 * <p>
+	 * Warning: Performance may be low, as the collection uses boxed types.
+	 *
 	 * @param image
 	 *            The {@link RandomAccessibleInterval} to wrap as a Java list.
 	 * @return Wrapped {@link List} with {@link Float} elements.
@@ -237,7 +267,9 @@ public final class FlatCollections
 
 	/**
 	 * Wraps an {@link IntegerType} random-accessible image as a list.
-	 * 
+	 * <p>
+	 * Warning: Performance may be low, as the collection uses boxed types.
+	 *
 	 * @param image
 	 *            The {@link RandomAccessibleInterval} to wrap as a Java list.
 	 * @return Wrapped {@link List} with {@link Integer} elements.
@@ -250,7 +282,9 @@ public final class FlatCollections
 
 	/**
 	 * Wraps an {@link IntegerType} random-accessible image as a list.
-	 * 
+	 * <p>
+	 * Warning: Performance may be low, as the collection uses boxed types.
+	 *
 	 * @param image
 	 *            The {@link RandomAccessibleInterval} to wrap as a Java list.
 	 * @return Wrapped {@link List} with {@link Long} elements.
@@ -263,7 +297,9 @@ public final class FlatCollections
 
 	/**
 	 * Wraps a {@link IntegerType} random-accessible image as a list.
-	 * 
+	 * <p>
+	 * Warning: Performance may be low, as the collection uses boxed types.
+	 *
 	 * @param image
 	 *            The {@link RandomAccessibleInterval} to wrap as a Java list.
 	 * @return Wrapped {@link List} with {@link BigInteger} elements.
