@@ -98,7 +98,7 @@ public final class FlatCollections
 	 * @return Wrapped {@link Collection} with {@link Boolean} elements.
 	 * @see #collection(IterableInterval, Function)
 	 */
-	public static < B extends BooleanType< B > > Collection< Boolean > booleanCollection( final IterableInterval< B > image )
+	public static Collection< Boolean > booleanCollection( final IterableInterval< ? extends BooleanType< ? > > image )
 	{
 		return collection( image, t -> t.get() );
 	}
@@ -111,7 +111,7 @@ public final class FlatCollections
 	 * @return Wrapped {@link Collection} with {@link Double} elements.
 	 * @see #collection(IterableInterval, Function)
 	 */
-	public static < T extends RealType< T > > Collection< Double > doubleCollection( final IterableInterval< T > image )
+	public static Collection< Double > doubleCollection( final IterableInterval< ? extends RealType< ? > > image )
 	{
 		return collection( image, t -> t.getRealDouble() );
 	}
@@ -124,7 +124,7 @@ public final class FlatCollections
 	 * @return Wrapped {@link Collection} with {@link Float} elements.
 	 * @see #collection(IterableInterval, Function)
 	 */
-	public static < T extends RealType< T > > Collection< Float > floatCollection( final IterableInterval< T > image )
+	public static Collection< Float > floatCollection( final IterableInterval< ? extends RealType< ? > > image )
 	{
 		return collection( image, t -> t.getRealFloat() );
 	}
@@ -137,7 +137,7 @@ public final class FlatCollections
 	 * @return Wrapped {@link Collection} with {@link Integer} elements.
 	 * @see #collection(IterableInterval, Function)
 	 */
-	public static < T extends IntegerType< T > > Collection< Integer > integerCollection( final IterableInterval< T > image )
+	public static Collection< Integer > integerCollection( final IterableInterval< ? extends IntegerType< ? > > image )
 	{
 		return collection( image, t -> t.getInteger() );
 	}
@@ -150,7 +150,7 @@ public final class FlatCollections
 	 * @return Wrapped {@link Collection} with {@link Long} elements.
 	 * @see #collection(IterableInterval, Function)
 	 */
-	public static < T extends IntegerType< T > > Collection< Long > longCollection( final IterableInterval< T > image )
+	public static Collection< Long > longCollection( final IterableInterval< ? extends IntegerType< ? > > image )
 	{
 		return collection( image, t -> t.getIntegerLong() );
 	}
@@ -163,7 +163,7 @@ public final class FlatCollections
 	 * @return Wrapped {@link Collection} with {@link BigInteger} elements.
 	 * @see #collection(IterableInterval, Function)
 	 */
-	public static < T extends IntegerType< T > > Collection< BigInteger > bigIntegerCollection( final IterableInterval< T > image )
+	public static Collection< BigInteger > bigIntegerCollection( final IterableInterval< ? extends IntegerType< ? > > image )
 	{
 		return collection( image, t -> t.getBigInteger() );
 	}
@@ -204,7 +204,7 @@ public final class FlatCollections
 	 * @return Wrapped {@link List} with {@link Boolean} elements.
 	 * @see #list(RandomAccessibleInterval, Function)
 	 */
-	public static < B extends BooleanType< B > > List< Boolean > booleanList( final RandomAccessibleInterval< B > image )
+	public static List< Boolean > booleanList( final RandomAccessibleInterval< ? extends BooleanType< ? > > image )
 	{
 		return list( image, t -> t.get() );
 	}
@@ -217,7 +217,7 @@ public final class FlatCollections
 	 * @return Wrapped {@link List} with {@link Double} elements.
 	 * @see #list(RandomAccessibleInterval, Function)
 	 */
-	public static < T extends RealType< T > > List< Double > doubleList( final RandomAccessibleInterval< T > image )
+	public static List< Double > doubleList( final RandomAccessibleInterval< ? extends RealType< ? > > image )
 	{
 		return list( image, t -> t.getRealDouble() );
 	}
@@ -230,7 +230,7 @@ public final class FlatCollections
 	 * @return Wrapped {@link List} with {@link Float} elements.
 	 * @see #list(RandomAccessibleInterval, Function)
 	 */
-	public static < T extends RealType< T > > List< Float > floatList( final RandomAccessibleInterval< T > image )
+	public static List< Float > floatList( final RandomAccessibleInterval< ? extends RealType< ? > > image )
 	{
 		return list( image, t -> t.getRealFloat() );
 	}
@@ -243,7 +243,7 @@ public final class FlatCollections
 	 * @return Wrapped {@link List} with {@link Integer} elements.
 	 * @see #list(RandomAccessibleInterval, Function)
 	 */
-	public static < T extends IntegerType< T > > List< Integer > integerList( final RandomAccessibleInterval< T > image )
+	public static List< Integer > integerList( final RandomAccessibleInterval< ? extends IntegerType< ? > > image )
 	{
 		return list( image, t -> t.getInteger() );
 	}
@@ -256,7 +256,7 @@ public final class FlatCollections
 	 * @return Wrapped {@link List} with {@link Long} elements.
 	 * @see #list(RandomAccessibleInterval, Function)
 	 */
-	public static < T extends IntegerType< T > > List< Long > longList( final RandomAccessibleInterval< T > image )
+	public static List< Long > longList( final RandomAccessibleInterval< ? extends IntegerType< ? > > image )
 	{
 		return list( image, t -> t.getIntegerLong() );
 	}
@@ -269,7 +269,7 @@ public final class FlatCollections
 	 * @return Wrapped {@link List} with {@link BigInteger} elements.
 	 * @see #list(RandomAccessibleInterval, Function)
 	 */
-	public static < T extends IntegerType< T > > List< BigInteger > bigIntegerList( final RandomAccessibleInterval< T > image )
+	public static List< BigInteger > bigIntegerList( final RandomAccessibleInterval< ? extends IntegerType< ? > > image )
 	{
 		return list( image, t -> t.getBigInteger() );
 	}
