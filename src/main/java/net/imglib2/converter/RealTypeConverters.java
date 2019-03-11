@@ -96,12 +96,12 @@ public final class RealTypeConverters
 	 * @param image image to convert
 	 * @param pixelType pixel type of the result image
 	 */
-	public static <T extends RealType<T>> RandomAccessibleInterval<T> convert(
-			RandomAccessibleInterval<? extends RealType<?>> image,
+	public static < T extends RealType< T > > RandomAccessibleInterval< T > convert(
+			RandomAccessibleInterval< ? extends RealType< ? > > image,
 			T pixelType )
 	{
-		RealType<?> in = Util.getTypeFromInterval( image );
-		Converter< RealType<?>, T > converter = getConverter( in, pixelType );
+		RealType< ? > in = Util.getTypeFromInterval( image );
+		Converter< RealType< ? >, T > converter = getConverter( in, pixelType );
 		return Converters.convert( image, converter, pixelType );
 	}
 
