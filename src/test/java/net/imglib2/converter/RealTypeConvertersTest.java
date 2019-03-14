@@ -35,165 +35,55 @@
 package net.imglib2.converter;
 
 import net.imglib2.RandomAccessibleInterval;
+import net.imglib2.img.Img;
 import net.imglib2.img.array.ArrayImgs;
 import net.imglib2.test.ImgLib2Assert;
-import net.imglib2.type.logic.BitType;
-import net.imglib2.type.logic.BoolType;
-import net.imglib2.type.numeric.RealType;
-import net.imglib2.type.numeric.integer.ByteType;
-import net.imglib2.type.numeric.integer.IntType;
-import net.imglib2.type.numeric.integer.LongType;
-import net.imglib2.type.numeric.integer.ShortType;
-import net.imglib2.type.numeric.integer.Unsigned128BitType;
-import net.imglib2.type.numeric.integer.Unsigned12BitType;
-import net.imglib2.type.numeric.integer.Unsigned2BitType;
-import net.imglib2.type.numeric.integer.Unsigned4BitType;
 import net.imglib2.type.numeric.integer.UnsignedByteType;
-import net.imglib2.type.numeric.integer.UnsignedIntType;
-import net.imglib2.type.numeric.integer.UnsignedLongType;
-import net.imglib2.type.numeric.integer.UnsignedShortType;
 import net.imglib2.type.numeric.real.DoubleType;
 import net.imglib2.type.numeric.real.FloatType;
 import org.junit.Test;
 
-import java.util.Arrays;
-import java.util.List;
-
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
 
+/**
+ * Tests {@link RealTypeConverters}.
+ *
+ * @author Matthias Arzt
+ */
 public class RealTypeConvertersTest
 {
-	public static final List< RealType< ? > > TYPES = Arrays.asList(
-			new BitType(),
-			new BoolType(),
-			new ByteType(),
-			new ShortType(),
-			new IntType(),
-			new LongType(),
-			new Unsigned2BitType(),
-			new Unsigned4BitType(),
-			new Unsigned12BitType(),
-			new UnsignedByteType(),
-			new UnsignedShortType(),
-			new UnsignedIntType(),
-			new UnsignedLongType(),
-			new Unsigned128BitType(),
-			new FloatType(),
-			new DoubleType()
-	);
-
-	private static final float HIGHEST_INTEGER_CORRECTLY_REPRESENTED_BY_FLOAT = ( float ) Math.pow( 2, 24 );
-
-	private static final float FLOAT_PRECISION = ( float ) Math.pow( 2.0, -24 );
 
 	@Test
-	public void testConvertUnsignedByteToFloatType()
-	{
-		UnsignedByteType in = new UnsignedByteType( 42 );
-		FloatType out = new FloatType();
-		Converter< UnsignedByteType, FloatType > converter = RealTypeConverters.getConverter( in, out );
-		converter.convert( in, out );
-		assertEquals( 42, out.getRealFloat(), 0 );
+	public void testGetConverter() {
+		UnsignedByteType input = new UnsignedByteType( 42 );
+		DoubleType output = new DoubleType();
+		Converter<UnsignedByteType, DoubleType> converter = RealTypeConverters.getConverter( input, output );
+		converter.convert( input, output );
+		assertEquals( 42, output.getRealDouble(), 0 );
 	}
 
 	@Test
-	public void testConvertImportantValuesBetweenAllTypes()
-	{
-		for ( RealType< ? > in : TYPES )
-			for ( RealType< ? > out : TYPES )
-			{
-				Converter< RealType< ? >, RealType< ? > > converter = RealTypeConverters.getConverter( in, out );
-				testMinValueConversion( converter, in.createVariable(), out.createVariable() );
-				testMaxValueConversion( converter, in.createVariable(), out.createVariable() );
-				testValueConversion( 0.0, converter, in, out );
-				testValueConversion( 1.0, converter, in, out );
-			}
-	}
-
-	private void testMinValueConversion( Converter< RealType< ? >, RealType< ? > > converter, RealType< ? > in, RealType< ? > out )
-	{
-		double value = Math.max( in.getMinValue(), out.getMinValue() );
-		testValueConversion( value, converter, in, out );
-	}
-
-	private void testMaxValueConversion( Converter< RealType< ? >, RealType< ? > > converter, RealType< ? > in, RealType< ? > out )
-	{
-		final double inMaxValue = in.getMaxValue();
-		final double outMaxValue = out.getMaxValue();
-		double value = decreaseMaxValue( Math.min( inMaxValue, outMaxValue ) );
-		testValueConversion( value, converter, in, out );
-	}
-
-	private double decreaseMaxValue( double value )
-	{
-		// NB: If an integer value is two high it cannot be represented
-		// correctly by float. This tends to round up Integer.MAX_VALUE
-		// Long.MAX_VALUE ... etc. The consequence is an integer overflow.
-		// The value is decreased by the float precision, to compensate
-		// for the rounding up.
-		if ( value <= HIGHEST_INTEGER_CORRECTLY_REPRESENTED_BY_FLOAT )
-			return value;
-		return value * ( 1.0 - FLOAT_PRECISION );
-	}
-
-	private void testValueConversion( double value, Converter< RealType< ? >, RealType< ? > > converter, RealType< ? > in, RealType< ? > out )
-	{
-		in.setReal( value );
-		converter.convert( in, out );
-		double delta = value * FLOAT_PRECISION;
-		assertEquals( "Conversion of value: " + value +
-						" from: " + in.getClass().getSimpleName() + " (" + in + ")" +
-						" to: " + out.getClass().getSimpleName() + " (" + out + ")",
-				in.getRealDouble(), out.getRealDouble(), delta );
+	public void testConvert() {
+		Img<UnsignedByteType> input = ArrayImgs.unsignedBytes( new byte[] { 42 }, 1 );
+		RandomAccessibleInterval< FloatType > result = RealTypeConverters.convert( input, new FloatType() );
+		ImgLib2Assert.assertImageEqualsRealType( input, result, 0 );
 	}
 
 	@Test
-	public void testSmallerThanInt()
+	public void testCopy()
 	{
-		assertTrue( RealTypeConverters.smallerThanInt( new IntType() ) );
-		assertFalse( RealTypeConverters.smallerThanInt( new UnsignedIntType() ) );
-		assertFalse( RealTypeConverters.smallerThanInt( new UnsignedLongType() ) );
-		assertFalse( RealTypeConverters.smallerThanInt( new LongType() ) );
-		assertFalse( RealTypeConverters.smallerThanInt( new Unsigned128BitType() ) );
+		Img< UnsignedByteType > source = ArrayImgs.unsignedBytes( new byte[] { 42 }, 1, 1 );
+		Img< UnsignedByteType > destination = ArrayImgs.unsignedBytes( 1, 1 );
+		RealTypeConverters.copyFromTo( source, destination );
+		ImgLib2Assert.assertImageEquals( source, destination );
 	}
 
 	@Test
-	public void testTypeIdentityConverters()
+	public void testCopyWithTypeConversion()
 	{
-		for ( RealType< ? > type : TYPES )
-			testConverterType( type.createVariable(), type.createVariable(), TypeIdentity.class );
-	}
-
-	@Test
-	public void testOptimalConverterTypes()
-	{
-		testConverterType( new BoolType(), new BitType(), RealTypeConverters.BooleanConverter.class );
-		testConverterType( new UnsignedByteType(), new ByteType(), RealTypeConverters.ByteConverter.class );
-		testConverterType( new UnsignedShortType(), new ShortType(), RealTypeConverters.ShortConverter.class );
-		testConverterType( new UnsignedIntType(), new IntType(), RealTypeConverters.IntegerConverter.class );
-		testConverterType( new UnsignedLongType(), new LongType(), RealTypeConverters.LongConverter.class );
-		testConverterType( new Unsigned12BitType(), new LongType(), RealTypeConverters.LongConverter.class );
-		testConverterType( new Unsigned12BitType(), new UnsignedLongType(), RealTypeConverters.LongConverter.class );
-		testConverterType( new Unsigned12BitType(), new IntType(), RealTypeConverters.IntegerConverter.class );
-		testConverterType( new Unsigned12BitType(), new UnsignedIntType(), RealTypeConverters.IntegerConverter.class );
-		testConverterType( new Unsigned12BitType(), new ShortType(), RealTypeConverters.LongConverter.class );
-		testConverterType( new BoolType(), new FloatType(), RealTypeConverters.FloatConverter.class );
-		testConverterType( new BoolType(), new IntType(), RealTypeConverters.IntegerConverter.class );
-	}
-
-	@Test
-	public void testConvertRandomAccessibleInterval() {
-		RandomAccessibleInterval<IntType> ints = ArrayImgs.ints( new int[] { 42 }, 1 );
-		RandomAccessibleInterval<UnsignedByteType> bytes = RealTypeConverters.convert( ints, new UnsignedByteType() );
-		RandomAccessibleInterval<UnsignedByteType> expected = ArrayImgs.unsignedBytes( new byte[] { 42 }, 1);
-		ImgLib2Assert.assertImageEquals( expected, bytes );
-	}
-
-	private void testConverterType( RealType< ? > inputType, RealType< ? > ouputType, Class< ? extends Converter > expected )
-	{
-		Converter< ?, ? > converter = RealTypeConverters.getConverter( inputType, ouputType );
-		assertEquals( expected.getName(), converter.getClass().getName() );
+		RandomAccessibleInterval< UnsignedByteType > source = ArrayImgs.unsignedBytes( new byte[] { 1, 2, 3, 4 }, 2, 2 );
+		RandomAccessibleInterval< DoubleType > destination = ArrayImgs.doubles( 2, 2 );
+		RealTypeConverters.copyFromTo( source, destination );
+		ImgLib2Assert.assertImageEqualsRealType( source, destination, 0 );
 	}
 }

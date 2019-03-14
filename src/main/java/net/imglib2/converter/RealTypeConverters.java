@@ -36,15 +36,9 @@ package net.imglib2.converter;
 
 import net.imglib2.RandomAccessible;
 import net.imglib2.RandomAccessibleInterval;
-import net.imglib2.loops.ClassCopyProvider;
 import net.imglib2.loops.LoopBuilder;
-import net.imglib2.type.BooleanType;
-import net.imglib2.type.numeric.IntegerType;
 import net.imglib2.type.numeric.RealType;
 import net.imglib2.type.numeric.integer.ByteType;
-import net.imglib2.type.numeric.integer.GenericByteType;
-import net.imglib2.type.numeric.integer.GenericIntType;
-import net.imglib2.type.numeric.integer.GenericShortType;
 import net.imglib2.type.numeric.integer.IntType;
 import net.imglib2.type.numeric.integer.LongType;
 import net.imglib2.type.numeric.integer.UnsignedByteType;
@@ -52,8 +46,6 @@ import net.imglib2.type.numeric.real.FloatType;
 import net.imglib2.util.Util;
 import net.imglib2.view.IntervalView;
 import net.imglib2.view.Views;
-
-import java.util.Arrays;
 
 public final class RealTypeConverters
 {
@@ -132,146 +124,7 @@ public final class RealTypeConverters
 	 */
 	public static < S extends RealType< ? >, T extends RealType< ? > > Converter< S, T > getConverter( S inputType, T outputType )
 	{
-		final ConverterFactory factory = getConverterFactory( inputType, outputType );
-		return factory.create( inputType, outputType );
+		return RealTypeConverterInternals.getConverter( inputType, outputType );
 	}
 
-	private static ConverterFactory getConverterFactory( RealType< ? > inputType, RealType< ? > outputType )
-	{
-		if ( inputType.getClass().equals( outputType.getClass() ) )
-			return TYPE_IDENTITY;
-		if ( ( inputType instanceof IntegerType ) && ( outputType instanceof IntegerType ) )
-			return integerConverterFactory( inputType, outputType );
-		return floatingPointConverterFactory( inputType, outputType );
-	}
-
-	private static ConverterFactory floatingPointConverterFactory( RealType< ? > inputType, RealType< ? > outputType )
-	{
-		if ( ( inputType instanceof FloatType ) || ( outputType instanceof FloatType ) )
-			return FLOAT;
-		return DOUBLE;
-	}
-
-	private static ConverterFactory integerConverterFactory( RealType< ? > inputType, RealType< ? > outputType )
-	{
-		if ( inputType instanceof LongType || outputType instanceof LongType )
-			return LONG;
-		if ( inputType instanceof IntType || outputType instanceof IntType )
-			return INTEGER;
-		if ( inputType instanceof GenericShortType && outputType instanceof GenericShortType )
-			return SHORT;
-		if ( inputType instanceof GenericByteType && outputType instanceof GenericByteType )
-			return BYTE;
-		if ( inputType instanceof BooleanType && outputType instanceof BooleanType )
-			return BOOLEAN;
-		if ( inputType instanceof GenericIntType && smallerThanInt( outputType ) ||
-				smallerThanInt( inputType ) && outputType instanceof GenericIntType )
-			return INTEGER;
-		return LONG;
-	}
-
-	static boolean smallerThanInt( RealType< ? > variable )
-	{
-		final boolean lowerBound = variable.getMinValue() >= Integer.MIN_VALUE;
-		final boolean upperBound = variable.getMaxValue() <= Integer.MAX_VALUE;
-		return lowerBound && upperBound;
-	}
-
-	private static ConverterFactory TYPE_IDENTITY = new ConverterFactory( TypeIdentity.class );
-
-	private static ConverterFactory DOUBLE = new ConverterFactory( DoubleConverter.class );
-
-	private static ConverterFactory FLOAT = new ConverterFactory( FloatConverter.class );
-
-	private static ConverterFactory INTEGER = new ConverterFactory( IntegerConverter.class );
-
-	private static ConverterFactory LONG = new ConverterFactory( LongConverter.class );
-
-	private static ConverterFactory BYTE = new ConverterFactory( ByteConverter.class );
-
-	private static ConverterFactory SHORT = new ConverterFactory( ShortConverter.class );
-
-	private static ConverterFactory BOOLEAN = new ConverterFactory( BooleanConverter.class );
-
-	/**
-	 * The class {@link ConverterFactory} encapsulates the {@link ClassCopyProvider}
-	 * that is used to create a {@link Converter}.
-	 */
-	private static class ConverterFactory
-	{
-		private final ClassCopyProvider< Converter > provider;
-
-		ConverterFactory( Class< ? extends Converter > converterClass )
-		{
-			this.provider = new ClassCopyProvider<>( converterClass, Converter.class );
-		}
-
-		public Converter create( RealType< ? > in, RealType< ? > out )
-		{
-			return provider.newInstanceForKey( Arrays.asList( in.getClass(), out.getClass() ) );
-		}
-	}
-
-	public static class DoubleConverter implements Converter< RealType< ? >, RealType< ? > >
-	{
-		@Override
-		public void convert( RealType< ? > input, RealType< ? > output )
-		{
-			output.setReal( input.getRealDouble() );
-		}
-	}
-
-	public static class FloatConverter implements Converter< RealType< ? >, RealType< ? > >
-	{
-		@Override
-		public void convert( RealType< ? > input, RealType< ? > output )
-		{
-			output.setReal( input.getRealFloat() );
-		}
-	}
-
-	public static class IntegerConverter implements Converter< IntegerType< ? >, IntegerType< ? > >
-	{
-		@Override
-		public void convert( IntegerType< ? > input, IntegerType< ? > output )
-		{
-			output.setInteger( input.getInteger() );
-		}
-	}
-
-	public static class LongConverter implements Converter< IntegerType< ? >, IntegerType< ? > >
-	{
-		@Override
-		public void convert( IntegerType< ? > input, IntegerType< ? > output )
-		{
-			output.setInteger( input.getIntegerLong() );
-		}
-	}
-
-	public static class ByteConverter implements Converter< GenericByteType< ? >, GenericByteType< ? > >
-	{
-		@Override
-		public void convert( GenericByteType< ? > input, GenericByteType< ? > output )
-		{
-			output.setByte( input.getByte() );
-		}
-	}
-
-	public static class ShortConverter implements Converter< GenericShortType< ? >, GenericShortType< ? > >
-	{
-		@Override
-		public void convert( GenericShortType< ? > input, GenericShortType< ? > output )
-		{
-			output.setShort( input.getShort() );
-		}
-	}
-
-	public static class BooleanConverter implements Converter< BooleanType< ? >, BooleanType< ? > >
-	{
-		@Override
-		public void convert( BooleanType< ? > input, BooleanType< ? > output )
-		{
-			output.set( input.get() );
-		}
-	}
 }
