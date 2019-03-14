@@ -34,8 +34,10 @@
 
 package net.imglib2.converter;
 
+import net.imglib2.RandomAccessible;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.loops.ClassCopyProvider;
+import net.imglib2.loops.LoopBuilder;
 import net.imglib2.type.BooleanType;
 import net.imglib2.type.numeric.IntegerType;
 import net.imglib2.type.numeric.RealType;
@@ -48,6 +50,8 @@ import net.imglib2.type.numeric.integer.LongType;
 import net.imglib2.type.numeric.integer.UnsignedByteType;
 import net.imglib2.type.numeric.real.FloatType;
 import net.imglib2.util.Util;
+import net.imglib2.view.IntervalView;
+import net.imglib2.view.Views;
 
 import java.util.Arrays;
 
@@ -57,6 +61,30 @@ public final class RealTypeConverters
 	private RealTypeConverters()
 	{
 		// prevent from instantiation
+	}
+
+	/**
+	 * Copy the image content from a source image to a destination image.
+	 * The area to be copied is defined by the destination.
+	 * <p>
+	 * Both images need to be of type {@link RealType}. So for example
+	 * {@link UnsignedByteType}, {@link IntType}, {@link FloatType}
+	 * and many more types are supported. A type conversion is done
+	 * if needed.
+	 *
+	 * @param source Image that is source of the copy operation.
+	 * @param destination Image that is destination of the copy operation.
+	 */
+	public static void copyFromTo(
+			RandomAccessible< ? extends RealType< ? > > source,
+			RandomAccessibleInterval< ? extends RealType< ? > > destination
+	)
+	{
+		IntervalView< ? extends RealType< ? > > sourceInterval = Views.interval( source, destination );
+		RealType< ? > s = Util.getTypeFromInterval( sourceInterval );
+		RealType< ? > d = Util.getTypeFromInterval( destination );
+		Converter< RealType< ? >, RealType< ? > > copy = getConverter( s, d );
+		LoopBuilder.setImages( sourceInterval, destination ).forEachPixel( copy::convert );
 	}
 
 	/**
