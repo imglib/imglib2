@@ -40,16 +40,13 @@ import static org.junit.Assert.assertTrue;
 
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
-import java.util.Random;
 import java.util.function.BiPredicate;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
-import net.imglib2.RandomAccess;
+import net.imglib2.Cursor;
+import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.img.Img;
 import net.imglib2.img.array.ArrayImgs;
 import net.imglib2.img.list.ListImg;
@@ -61,6 +58,7 @@ import net.imglib2.type.numeric.integer.ShortType;
 import net.imglib2.type.numeric.integer.UnsignedLongType;
 import net.imglib2.type.numeric.real.DoubleType;
 
+import net.imglib2.view.Views;
 import org.junit.Test;
 
 /**
@@ -85,7 +83,7 @@ public final class FlatCollectionsTest
 
 	private final Img< ShortType > imgShort = ArrayImgs.shorts( new short[] { 32767, 32766, 32765, 32764, 32763, 10000, 10001, 10002, 10003, -32768, -32767, -32766 }, 2, 3, 2 );
 
-	private final Img< UnsignedLongType > imgBig = ArrayImgs.unsignedLongs( new long[] { 2 * Long.MAX_VALUE, 3 * Long.MAX_VALUE, 4 * Long.MAX_VALUE, Long.MIN_VALUE, Long.MIN_VALUE / 2, Long.MIN_VALUE / 3 }, 3, 2 );
+	private final Img< UnsignedLongType > imgUnsignedLong = ArrayImgs.unsignedLongs( new long[] { Long.MAX_VALUE, Long.MAX_VALUE / 2, -1, Long.MIN_VALUE, Long.MIN_VALUE / 2, Long.MIN_VALUE / 3 }, 3, 2 );
 
 	@Test
 	public void testCollection()
@@ -122,7 +120,7 @@ public final class FlatCollectionsTest
 		assertImageEqualsCollection( imgInt, FlatCollections.integerCollection( imgInt ), ( e, a ) -> e.get() == a );
 		assertImageEqualsCollection( imgLong, FlatCollections.integerCollection( imgLong ), ( e, a ) -> e.getInteger() == a ); // lossy
 		assertImageEqualsCollection( imgShort, FlatCollections.integerCollection( imgShort ), ( e, a ) -> e.getInteger() == a );
-		assertImageEqualsCollection( imgBig, FlatCollections.integerCollection( imgBig ), ( e, a ) -> e.getInteger() == a ); // lossy
+		assertImageEqualsCollection( imgUnsignedLong, FlatCollections.integerCollection( imgUnsignedLong ), ( e, a ) -> e.getInteger() == a ); // lossy
 	}
 
 	@Test
@@ -131,77 +129,81 @@ public final class FlatCollectionsTest
 		assertImageEqualsCollection( imgByte, FlatCollections.longCollection( imgByte ), ( e, a ) -> e.getIntegerLong() == a );
 		assertImageEqualsCollection( imgLong, FlatCollections.longCollection( imgLong ), ( e, a ) -> e.get() == a );
 		assertImageEqualsCollection( imgShort, FlatCollections.longCollection( imgShort ), ( e, a ) -> e.getIntegerLong() == a );
-		assertImageEqualsCollection( imgBig, FlatCollections.longCollection( imgBig ), ( e, a ) -> e.getIntegerLong() == a ); // lossy
+		assertImageEqualsCollection( imgUnsignedLong, FlatCollections.longCollection( imgUnsignedLong ), ( e, a ) -> e.getIntegerLong() == a ); // lossy
 	}
 
 	@Test
 	public void testBigIntegerCollection()
 	{
-		assertImageEqualsCollection( imgBig, FlatCollections.bigIntegerCollection( imgBig ), ( e, a ) -> Objects.equals( e.getBigInteger(), a ) );
+		assertImageEqualsCollection( imgUnsignedLong, FlatCollections.bigIntegerCollection( imgUnsignedLong ), ( e, a ) -> Objects.equals( e.getBigInteger(), a ) );
 	}
 
 	@Test
 	public void testList()
 	{
-		assertImageEqualsCollection( imgString, FlatCollections.list( imgString, s -> s ), Objects::equals );
+		assertImageEqualsList( imgString, FlatCollections.list( imgString, s -> s ), Objects::equals );
 	}
 
 	@Test
 	public void testBooleanList()
 	{
-		assertImageEqualsCollection( imgBoolean, FlatCollections.booleanList( imgBoolean ), ( e, a ) -> e.get() == a );
+		assertImageEqualsList( imgBoolean, FlatCollections.booleanList( imgBoolean ), ( e, a ) -> e.get() == a );
 	}
 
 	@Test
 	public void testDoubleList()
 	{
-		assertImageEqualsCollection( imgDouble, FlatCollections.doubleList( imgDouble ), ( e, a ) -> e.get() == a );
-		assertImageEqualsCollection( imgByte, FlatCollections.doubleList( imgByte ), ( e, a ) -> e.getRealDouble() == a );
-		assertImageEqualsCollection( imgShort, FlatCollections.doubleList( imgShort ), ( e, a ) -> e.getRealDouble() == a );
+		assertImageEqualsList( imgDouble, FlatCollections.doubleList( imgDouble ), ( e, a ) -> e.get() == a );
+		assertImageEqualsList( imgByte, FlatCollections.doubleList( imgByte ), ( e, a ) -> e.getRealDouble() == a );
+		assertImageEqualsList( imgShort, FlatCollections.doubleList( imgShort ), ( e, a ) -> e.getRealDouble() == a );
 	}
 
 	@Test
 	public void testFloatList()
 	{
-		assertImageEqualsCollection( imgByte, FlatCollections.floatList( imgByte ), ( e, a ) -> e.getRealFloat() == a );
-		assertImageEqualsCollection( imgDouble, FlatCollections.floatList( imgDouble ), ( e, a ) -> e.getRealFloat() == a );
-		assertImageEqualsCollection( imgShort, FlatCollections.floatList( imgShort ), ( e, a ) -> e.getRealFloat() == a );
+		assertImageEqualsList( imgByte, FlatCollections.floatList( imgByte ), ( e, a ) -> e.getRealFloat() == a );
+		assertImageEqualsList( imgDouble, FlatCollections.floatList( imgDouble ), ( e, a ) -> e.getRealFloat() == a );
+		assertImageEqualsList( imgShort, FlatCollections.floatList( imgShort ), ( e, a ) -> e.getRealFloat() == a );
 	}
 
 	@Test
 	public void testIntegerList()
 	{
-		assertImageEqualsCollection( imgByte, FlatCollections.integerList( imgByte ), ( e, a ) -> e.getInteger() == a );
-		assertImageEqualsCollection( imgInt, FlatCollections.integerList( imgInt ), ( e, a ) -> e.get() == a );
-		assertImageEqualsCollection( imgLong, FlatCollections.integerList( imgLong ), ( e, a ) -> e.getInteger() == a ); // lossy
-		assertImageEqualsCollection( imgShort, FlatCollections.integerList( imgShort ), ( e, a ) -> e.getInteger() == a );
-		assertImageEqualsCollection( imgBig, FlatCollections.integerList( imgBig ), ( e, a ) -> e.getInteger() == a ); // lossy
+		assertImageEqualsList( imgByte, FlatCollections.integerList( imgByte ), ( e, a ) -> e.getInteger() == a );
+		assertImageEqualsList( imgInt, FlatCollections.integerList( imgInt ), ( e, a ) -> e.get() == a );
+		assertImageEqualsList( imgLong, FlatCollections.integerList( imgLong ), ( e, a ) -> e.getInteger() == a ); // lossy
+		assertImageEqualsList( imgShort, FlatCollections.integerList( imgShort ), ( e, a ) -> e.getInteger() == a );
+		assertImageEqualsList( imgUnsignedLong, FlatCollections.integerList( imgUnsignedLong ), ( e, a ) -> e.getInteger() == a ); // lossy
 	}
 
 	@Test
 	public void testLongList()
 	{
-		assertImageEqualsCollection( imgByte, FlatCollections.longList( imgByte ), ( e, a ) -> e.getIntegerLong() == a );
-		assertImageEqualsCollection( imgLong, FlatCollections.longList( imgLong ), ( e, a ) -> e.get() == a );
-		assertImageEqualsCollection( imgShort, FlatCollections.longList( imgShort ), ( e, a ) -> e.getIntegerLong() == a );
-		assertImageEqualsCollection( imgBig, FlatCollections.longList( imgBig ), ( e, a ) -> e.getIntegerLong() == a ); // lossy
+		assertImageEqualsList( imgByte, FlatCollections.longList( imgByte ), ( e, a ) -> e.getIntegerLong() == a );
+		assertImageEqualsList( imgLong, FlatCollections.longList( imgLong ), ( e, a ) -> e.get() == a );
+		assertImageEqualsList( imgShort, FlatCollections.longList( imgShort ), ( e, a ) -> e.getIntegerLong() == a );
+		assertImageEqualsList( imgUnsignedLong, FlatCollections.longList( imgUnsignedLong ), ( e, a ) -> e.getIntegerLong() == a ); // lossy
 	}
 
 	@Test
 	public void testBigIntegerList()
 	{
-		assertImageEqualsCollection( imgBig, FlatCollections.bigIntegerList( imgBig ), ( e, a ) -> Objects.equals( e.getBigInteger(), a ) );
+		assertImageEqualsCollection( imgUnsignedLong, FlatCollections.bigIntegerList( imgUnsignedLong ), ( e, a ) -> Objects.equals( e.getBigInteger(), a ) );
 	}
 
 	private < T, E > void assertImageEqualsCollection( final Img< T > image, final Collection< E > collection, final BiPredicate< T, E > equality )
 	{
-		assertIterationsEqual( image, collection, equality );
 		assertEquals( Intervals.numElements( image ), collection.size() );
-		if ( collection instanceof List )
-			assertRandomAccessEqual( image, ( List< E > ) collection, equality );
+		assertIterationEquals( image, collection, equality );
 	}
 
-	private < E, A > void assertIterationsEqual( final Iterable< E > expected, final Iterable< A > actual, final BiPredicate< E, A > equality )
+	private < T, E > void assertImageEqualsList( final Img< T > image, final List< E > list, final BiPredicate< T, E > equality )
+	{
+		assertImageEqualsCollection( image, list, equality );
+		assertRandomAccessibleIntervalEqualsList( image, list, equality );
+	}
+
+	private < E, A > void assertIterationEquals( final Iterable< E > expected, final Iterable< A > actual, final BiPredicate< E, A > equality )
 	{
 		final Iterator< E > e = expected.iterator();
 		final Iterator< A > a = actual.iterator();
@@ -215,16 +217,12 @@ public final class FlatCollectionsTest
 		assertFalse( "More elements than expected", a.hasNext() );
 	}
 
-	private < T, E > void assertRandomAccessEqual( final Img< T > image, final List< E > list, final BiPredicate< T, E > equality )
+	private < T, E > void assertRandomAccessibleIntervalEqualsList( final RandomAccessibleInterval< T > image, final List< E > list, final BiPredicate< T, E > equality )
 	{
-		final List< Integer > range = IntStream.range( 0, list.size() ).boxed().collect( Collectors.toList() );
-		Collections.shuffle( range, new Random( 0xdeadbeef ) );
-		final RandomAccess< T > access = image.randomAccess();
-		for ( int i = 0; i < list.size(); i++ )
+		final Cursor< T > cursor = Views.flatIterable(image).cursor();
+		for ( int index = 0; index < list.size(); index++ )
 		{
-			final int index = range.get( i );
-			IntervalIndexer.indexToPosition( index, image, access );
-			final T iv = access.get();
+			final T iv = cursor.next();
 			final E lv = list.get( index );
 			assertTrue( "Unequal elements: index=" + index + ", image=" + iv + ", list=" + lv, equality.test( iv, lv ) );
 		}
