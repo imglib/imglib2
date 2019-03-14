@@ -135,9 +135,10 @@ class RealTypeConverterInternals
 		}
 	}
 
-	// DoubleConverter is public, in order that it can be used with ClassCopyProvider.
+	/** Converts via {@link RealType#getRealDouble()}. */
 	public static class DoubleConverter implements Converter< RealType< ? >, RealType< ? > >
 	{
+		// This class is public, in order that it can be used with ClassCopyProvider.
 		@Override
 		public void convert( RealType< ? > input, RealType< ? > output )
 		{
@@ -145,9 +146,10 @@ class RealTypeConverterInternals
 		}
 	}
 
-	// FloatConverter is public, in order that it can be used with ClassCopyProvider.
+	/** Converts via {@link RealType#getRealFloat()}. */
 	public static class FloatConverter implements Converter< RealType< ? >, RealType< ? > >
 	{
+		// This class is public, in order that it can be used with ClassCopyProvider.
 		@Override
 		public void convert( RealType< ? > input, RealType< ? > output )
 		{
@@ -155,9 +157,10 @@ class RealTypeConverterInternals
 		}
 	}
 
-	// IntegerConverter is public, in order that it can be used with ClassCopyProvider.
+	/** Converts via {@link IntegerType#getInteger()}. */
 	public static class IntegerConverter implements Converter< IntegerType< ? >, IntegerType< ? > >
 	{
+		// This class is public, in order that it can be used with ClassCopyProvider.
 		@Override
 		public void convert( IntegerType< ? > input, IntegerType< ? > output )
 		{
@@ -165,9 +168,10 @@ class RealTypeConverterInternals
 		}
 	}
 
-	// LongConverter is public, in order that it can be used with ClassCopyProvider.
+	/** Converts via {@link IntegerType#getInteger()}. */
 	public static class LongConverter implements Converter< IntegerType< ? >, IntegerType< ? > >
 	{
+		// This class is public, in order that it can be used with ClassCopyProvider.
 		@Override
 		public void convert( IntegerType< ? > input, IntegerType< ? > output )
 		{
@@ -175,9 +179,10 @@ class RealTypeConverterInternals
 		}
 	}
 
-	// ByteConverter is public, in order that it can be used with ClassCopyProvider.
+	/** Converts via {@link GenericByteType#getByte()}. */
 	public static class ByteConverter implements Converter< GenericByteType< ? >, GenericByteType< ? > >
 	{
+		// This class is public, in order that it can be used with ClassCopyProvider.
 		@Override
 		public void convert( GenericByteType< ? > input, GenericByteType< ? > output )
 		{
@@ -185,9 +190,10 @@ class RealTypeConverterInternals
 		}
 	}
 
-	// ShortConverter is public, in order that it can be used with ClassCopyProvider.
+	/** Converts void {@link GenericShortType#getShort()}. */
 	public static class ShortConverter implements Converter< GenericShortType< ? >, GenericShortType< ? > >
 	{
+		// This class is public, in order that it can be used with ClassCopyProvider.
 		@Override
 		public void convert( GenericShortType< ? > input, GenericShortType< ? > output )
 		{
@@ -195,9 +201,10 @@ class RealTypeConverterInternals
 		}
 	}
 
-	// BooleanConverter is public, in order that it can be used with ClassCopyProvider.
+	/** Converts via {@link BooleanType#get()}. */
 	public static class BooleanConverter implements Converter< BooleanType< ? >, BooleanType< ? > >
 	{
+		// This class is public, in order that it can be used with ClassCopyProvider.
 		@Override
 		public void convert( BooleanType< ? > input, BooleanType< ? > output )
 		{
