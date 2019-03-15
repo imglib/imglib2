@@ -109,6 +109,22 @@ public class LinAlgHelpers
 	}
 
 	/**
+	 * set c = ( 1 - t ) * a + t * b, where a, b are vectors and t is scalar.
+	 * Dimensions of a, b, and c must match. In place interpolation (c==a or
+	 * c==b) is allowed.
+	 */
+	public static void lerp( final double[] a, final double[] b, final double t, final double[] c )
+	{
+		assert rows( a ) == rows( b );
+		assert rows( a ) == rows( c );
+
+		final int rows = rows( a );
+
+		for ( int i = 0; i < rows; ++i )
+			c[ i ] = ( 1.0 - t ) * a[ i ] + t * b[ i ];
+	}
+
+	/**
 	 * set c = a * b, where a is a vector and b is scalar. Dimensions of a and c
 	 * must match. In place scaling (c==a) is permitted.
 	 *
