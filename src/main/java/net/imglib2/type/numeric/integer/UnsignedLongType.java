@@ -55,6 +55,8 @@ public class UnsignedLongType extends GenericLongType< UnsignedLongType >
 
 	private static final double MAX_VALUE_PLUS_ONE = Math.pow( 2, 64 ); // not precise, because double is not sufficient
 
+	private static final double MAX_LONG_PLUS_ONE = Math.pow( 2, 63 ); // not precise, because double is not sufficient
+
 	// this is the constructor if you want it to read from an array
 	public UnsignedLongType( final NativeImg< ?, ? extends LongAccess > img )
 	{
@@ -207,7 +209,7 @@ public class UnsignedLongType extends GenericLongType< UnsignedLongType >
 	@Override
 	public String toString()
 	{
-		return "" + get();
+		return getBigInteger().toString();
 	}
 
 	/**
@@ -263,6 +265,26 @@ public class UnsignedLongType extends GenericLongType< UnsignedLongType >
 	public void setBigInteger( final BigInteger b )
 	{
 		set( b.longValue() );
+	}
+
+	@Override
+	public void setReal( double real )
+	{
+		set( doubleToUnsignedLong( real ) );
+	}
+
+	static long doubleToUnsignedLong( double real )
+	{
+		double value = real < MAX_LONG_PLUS_ONE ?
+				Math.max(0, real) :
+				Math.min(-1, real - MAX_VALUE_PLUS_ONE);
+		return Util.round( value );
+	}
+
+	@Override
+	public void setReal( float real )
+	{
+		setReal( (double) real );
 	}
 
 	public void set( final BigInteger bi )
@@ -336,7 +358,11 @@ public class UnsignedLongType extends GenericLongType< UnsignedLongType >
 	@Override
 	public double getRealDouble()
 	{
-		long l = get();
+		return unsignedLongToDouble( get() );
+	}
+
+	static double unsignedLongToDouble( long l )
+	{
 		return l >= 0 ? l : (MAX_VALUE_PLUS_ONE + l);
 	}
 
@@ -345,4 +371,5 @@ public class UnsignedLongType extends GenericLongType< UnsignedLongType >
 	{
 		return Long.compareUnsigned( get(), other.get() );
 	}
+
 }

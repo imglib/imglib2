@@ -79,7 +79,7 @@ public class ClassCopyProvider< T >
 		if ( constructors.length == 1 )
 			return constructors[ 0 ].getParameterTypes();
 		if ( constructors.length == 0 )
-			throw new IllegalArgumentException( "ClassCopyProvider: Public constructor in class (" + clazz.getName() + ") needed." );
+			throw new IllegalArgumentException( "ClassCopyProvider: Class and it's constructor need to be public (" + clazz.getName() + ")." );
 		throw new IllegalArgumentException( "ClassCopyProvider: Please specify constructor signature." );
 	}
 

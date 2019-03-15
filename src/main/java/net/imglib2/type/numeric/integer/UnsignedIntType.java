@@ -222,6 +222,12 @@ public class UnsignedIntType extends GenericIntType< UnsignedIntType >
 	}
 
 	@Override
+	public void setReal( float real )
+	{
+		set( Util.roundToLong( real ) );
+	}
+
+	@Override
 	public double getMaxValue()
 	{
 		return 0xffffffffL;

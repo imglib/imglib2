@@ -11,13 +11,13 @@
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice,
  *    this list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  *    this list of conditions and the following disclaimer in the documentation
  *    and/or other materials provided with the distribution.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -31,73 +31,59 @@
  * POSSIBILITY OF SUCH DAMAGE.
  * #L%
  */
-package net.imglib2.type.numeric.integer;
+
+package net.imglib2.converter;
+
+import net.imglib2.RandomAccessibleInterval;
+import net.imglib2.img.Img;
+import net.imglib2.img.array.ArrayImgs;
+import net.imglib2.test.ImgLib2Assert;
+import net.imglib2.type.numeric.integer.UnsignedByteType;
+import net.imglib2.type.numeric.real.DoubleType;
+import net.imglib2.type.numeric.real.FloatType;
+import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 
-import java.math.BigInteger;
+/**
+ * Tests {@link RealTypeConverters}.
+ *
+ * @author Matthias Arzt
+ */
+public class RealTypeConvertersTest
+{
 
-import org.junit.Test;
-
-
-public class LongTypeTest {
-
-	/**
-	 * Test which verifies {@link LongType#getBigInteger()} returns the
-	 * {@code BigInteger} representation of an LongType.
-	 */
 	@Test
-	public void testGetBigInteger() {
-
-		final LongType l = new LongType( 901374907l );
-		assertEquals( BigInteger.valueOf( 901374907l ), l.getBigInteger() );
-
-		final LongType l2 = new LongType( -98174938174l );
-		assertEquals( BigInteger.valueOf( -98174938174l ) , l2.getBigInteger() );
-	}
-
-	/**
-	 * Test which verifies {@link LongType#setBigInteger(BigInteger)} can set
-	 * LongTypes with a {@code BigInteger} and still return a {@code long} value.
-	 */
-	@Test
-	public void testSetBigInteger() {
-
-		final LongType l = new LongType( 72l );
-
-		assertEquals( l.get(), 72l );
-
-		final BigInteger bi = BigInteger.valueOf( 1093840120l );
-		l.setBigInteger( bi );
-		assertEquals( l.get(), 1093840120l );
+	public void testGetConverter() {
+		UnsignedByteType input = new UnsignedByteType( 42 );
+		DoubleType output = new DoubleType();
+		Converter<UnsignedByteType, DoubleType> converter = RealTypeConverters.getConverter( input, output );
+		converter.convert( input, output );
+		assertEquals( 42, output.getRealDouble(), 0 );
 	}
 
 	@Test
-	public void testSetRealFloat() {
-		testSetRealFloat( 0.4f, 0 );
-		testSetRealFloat( 0.6f, 1 );
-		testSetRealFloat( -0.6f, -1 );
-		testSetRealFloat( ( float ) Long.MAX_VALUE, Long.MAX_VALUE );
-		testSetRealFloat( ( float ) Long.MIN_VALUE, Long.MIN_VALUE );
+	public void testConvert() {
+		Img<UnsignedByteType> input = ArrayImgs.unsignedBytes( new byte[] { 42 }, 1 );
+		RandomAccessibleInterval< FloatType > result = RealTypeConverters.convert( input, new FloatType() );
+		ImgLib2Assert.assertImageEqualsRealType( input, result, 0 );
 	}
 
-	private void testSetRealFloat( float floatValue, long longValue )
+	@Test
+	public void testCopy()
 	{
-		LongType type = new LongType();
-		type.setReal( floatValue );
-		assertEquals( longValue, type.getLong() );
+		Img< UnsignedByteType > source = ArrayImgs.unsignedBytes( new byte[] { 42 }, 1, 1 );
+		Img< UnsignedByteType > destination = ArrayImgs.unsignedBytes( 1, 1 );
+		RealTypeConverters.copyFromTo( source, destination );
+		ImgLib2Assert.assertImageEquals( source, destination );
 	}
 
 	@Test
-	public void testSetMinMaxValue() {
-		testSetRealDouble( new LongType().getMaxValue(), Long.MAX_VALUE );
-		testSetRealDouble( new LongType().getMinValue(), Long.MIN_VALUE );
-	}
-
-	private void testSetRealDouble( double doubleValue, long longValue )
+	public void testCopyWithTypeConversion()
 	{
-		LongType type = new LongType();
-		type.setReal( doubleValue );
-		assertEquals( longValue, type.getLong() );
+		RandomAccessibleInterval< UnsignedByteType > source = ArrayImgs.unsignedBytes( new byte[] { 1, 2, 3, 4 }, 2, 2 );
+		RandomAccessibleInterval< DoubleType > destination = ArrayImgs.doubles( 2, 2 );
+		RealTypeConverters.copyFromTo( source, destination );
+		ImgLib2Assert.assertImageEqualsRealType( source, destination, 0 );
 	}
 }

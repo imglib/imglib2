@@ -39,6 +39,7 @@ import java.math.BigInteger;
 import net.imglib2.img.NativeImg;
 import net.imglib2.img.basictypeaccess.LongAccess;
 import net.imglib2.type.NativeTypeFactory;
+import net.imglib2.util.Util;
 
 /**
  * TODO
@@ -134,10 +135,16 @@ public class LongType extends GenericLongType< LongType >
 	}
 
 	@Override
+	public void setReal( float real )
+	{
+		set( Util.roundToLong( real ) );
+	}
+
+	@Override
 	public double getMaxValue()
 	{
 		return Long.MAX_VALUE;
-	}
+	} // imprecise
 
 	@Override
 	public double getMinValue()

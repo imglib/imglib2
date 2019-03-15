@@ -206,6 +206,22 @@ public class Unsigned128BitType extends AbstractIntegerType< Unsigned128BitType 
 	}
 
 	@Override
+	public float getRealFloat()
+	{
+		return (float) getRealDouble();
+	}
+
+	@Override
+	public double getRealDouble()
+	{
+		final int k = i * 2;
+		final long lower = dataAccess.getValue( k );
+		final long upper = dataAccess.getValue( k + 1 );
+		return UnsignedLongType.unsignedLongToDouble( lower ) +
+				UnsignedLongType.unsignedLongToDouble( upper ) * Math.pow( 2, 64 );
+	}
+
+	@Override
 	public void setInteger( final int value )
 	{
 		final int k = i * 2;
@@ -225,6 +241,23 @@ public class Unsigned128BitType extends AbstractIntegerType< Unsigned128BitType 
 	public void setBigInteger( final BigInteger b )
 	{
 		set( b );
+	}
+
+	@Override
+	public void setReal( float real )
+	{
+		setReal( (double) real );
+	}
+
+	@Override
+	public void setReal( double real )
+	{
+		real = Math.floor( real + 0.5 );
+		final double base = Math.pow( 2, 64 );
+		double upper = Math.floor(real / base );
+		double lower = real - base * upper;
+		set( UnsignedLongType.doubleToUnsignedLong( lower ),
+				UnsignedLongType.doubleToUnsignedLong( upper ));
 	}
 
 	/**
@@ -462,5 +495,11 @@ public class Unsigned128BitType extends AbstractIntegerType< Unsigned128BitType 
 		final int hash1 = Long.hashCode( dataAccess.getValue( k + 1 ) );
 		final int hash2 = Long.hashCode( dataAccess.getValue( k ) );
 		return Util.combineHash( hash1, hash2 );
+	}
+
+	@Override
+	public String toString()
+	{
+		return getBigInteger().toString();
 	}
 }
