@@ -459,6 +459,15 @@ public class Intervals
 	}
 
 	/**
+	 * Returns an {@link Interval} with the same dimensions as the given interval,
+	 * but min is all zero.
+	 */
+	public static FinalInterval zeroMin( Interval interval )
+	{
+		return new FinalInterval( dimensionsAsLongArray( interval ) );
+	}
+
+	/**
 	 * Compute the intersection of two intervals.
 	 * 
 	 * Create a {@link FinalInterval} , which is the intersection of the input
