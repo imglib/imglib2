@@ -88,6 +88,8 @@ public class LoopBuilder< T >
 
 	private MultiThreadSetting multiThreaded = MultiThreadSettings.single();
 
+	private boolean useFlatIterationOrder = false;
+
 	private LoopBuilder( final RandomAccessibleInterval< ? >... images )
 	{
 		this.images = images;
@@ -176,7 +178,9 @@ public class LoopBuilder< T >
 
 	void runUsingCursors( T action )
 	{
-		final List< IterableInterval< ? > > iterableIntervals = equalIterationOrderIterableIntervals();
+		final List< IterableInterval< ? > > iterableIntervals = useFlatIterationOrder ?
+				flatIterableIntervals() :
+				equalIterationOrderIterableIntervals();
 		int nTasks = multiThreaded.suggestNumberOfTasks();
 		final FinalInterval indices = new FinalInterval( Intervals.numElements( images[ 0 ] ) );
 		List< Interval > chunks = IntervalChunks.chunkInterval( indices, nTasks );
@@ -227,6 +231,17 @@ public class LoopBuilder< T >
 	public LoopBuilder< T > multiThreaded( MultiThreadSetting multiThreadSetting )
 	{
 		this.multiThreaded = Objects.requireNonNull( multiThreadSetting );
+		return this;
+	}
+
+	public LoopBuilder< T > flatIterationOrder()
+	{
+		return this.flatIterationOrder( true );
+	}
+
+	public LoopBuilder< T > flatIterationOrder( boolean value )
+	{
+		this.useFlatIterationOrder = value;
 		return this;
 	}
 

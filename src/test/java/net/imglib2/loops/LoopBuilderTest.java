@@ -47,7 +47,6 @@ import net.imglib2.test.RandomImgs;
 import net.imglib2.type.numeric.integer.IntType;
 import net.imglib2.util.Intervals;
 import net.imglib2.view.Views;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.Arrays;
@@ -236,13 +235,12 @@ public class LoopBuilderTest
 		ImgLib2Assert.assertImageEquals( input, output );
 	}
 
-	@Ignore( "not working yet" )
 	@Test
 	public void testFlatIterationOrder()
 	{
 		AtomicInteger ai = new AtomicInteger();
 		Img< IntType > image = new CellImgFactory<>( new IntType(), 1, 2 ).create( 2, 2 );
-		LoopBuilder.setImages( image ).forEachPixel( pixel -> pixel.set( ai.incrementAndGet() ) );
+		LoopBuilder.setImages( image ).flatIterationOrder().forEachPixel( pixel -> pixel.set( ai.incrementAndGet() ) );
 		Img< IntType > expected = ArrayImgs.ints( new int[] { 1, 2, 3, 4 }, 2, 2 );
 		ImgLib2Assert.assertImageEquals( expected, image );
 	}
