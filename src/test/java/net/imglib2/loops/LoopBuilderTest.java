@@ -247,4 +247,11 @@ public class LoopBuilderTest
 		Img< IntType > expected = ArrayImgs.ints( new int[] { 1, 2, 3, 4 }, 2, 2 );
 		ImgLib2Assert.assertImageEquals( expected, image );
 	}
+
+	@Test( expected = IllegalArgumentException.class )
+	public void testCheckDimensions() {
+		RandomAccessibleInterval<IntType> imageA = ArrayImgs.ints( 10, 10 );
+		RandomAccessibleInterval<IntType> imageB = ArrayImgs.ints( 10, 10, 2 );
+		LoopBuilder.setImages( imageA, imageB ).forEachPixel( (a, b) -> {} );
+	}
 }

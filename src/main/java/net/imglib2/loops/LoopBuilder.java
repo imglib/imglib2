@@ -36,6 +36,7 @@ package net.imglib2.loops;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
+import java.util.StringJoiner;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.LongConsumer;
@@ -238,15 +239,20 @@ public class LoopBuilder< T >
 	{
 		this.images = images;
 		this.dimensions = new FinalInterval( images[ 0 ] );
-		Arrays.asList( images ).forEach( this::checkDimensions );
+		checkDimensions();
 	}
 
-	private void checkDimensions( final Interval interval )
+	private void checkDimensions()
 	{
-		final long[] a = Intervals.dimensionsAsLongArray( dimensions );
-		final long[] b = Intervals.dimensionsAsLongArray( interval );
-		if ( !Arrays.equals( a, b ) )
-			throw new IllegalArgumentException( "Dimensions do not fit." );
+		final long[] dims = Intervals.dimensionsAsLongArray( dimensions );
+		final boolean equal = Stream.of( images ).allMatch( image -> Arrays.equals( dims, Intervals.dimensionsAsLongArray( image ) ) );
+		if ( !equal )
+		{
+			StringJoiner joiner = new StringJoiner( ", " );
+			for ( Interval interval : images )
+				joiner.add( Arrays.toString( Intervals.dimensionsAsLongArray( interval ) ) );
+			throw new IllegalArgumentException( "LoopBuilder, image dimensions do not match: " + joiner + "." );
+		}
 	}
 
 	private boolean allAreNativeImages()
