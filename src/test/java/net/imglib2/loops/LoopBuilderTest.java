@@ -33,56 +33,62 @@
  */
 package net.imglib2.loops;
 
-import static org.junit.Assert.assertEquals;
+import net.imglib2.Cursor;
+import net.imglib2.Interval;
+import net.imglib2.RandomAccessibleInterval;
+import net.imglib2.img.Img;
+import net.imglib2.img.ImgFactory;
+import net.imglib2.img.array.ArrayImgFactory;
+import net.imglib2.img.array.ArrayImgs;
+import net.imglib2.img.cell.CellImgFactory;
+import net.imglib2.img.planar.PlanarImgFactory;
+import net.imglib2.test.ImgLib2Assert;
+import net.imglib2.test.RandomImgs;
+import net.imglib2.type.numeric.integer.IntType;
+import net.imglib2.util.Intervals;
+import net.imglib2.view.Views;
+import org.junit.Ignore;
+import org.junit.Test;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.BiConsumer;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-import net.imglib2.Interval;
-import net.imglib2.test.ImgLib2Assert;
-import org.junit.Test;
-
-import net.imglib2.Cursor;
-import net.imglib2.RandomAccessibleInterval;
-import net.imglib2.img.Img;
-import net.imglib2.img.array.ArrayImgs;
-import net.imglib2.type.numeric.integer.IntType;
-import net.imglib2.util.Intervals;
-import net.imglib2.view.Views;
+import static org.junit.Assert.assertEquals;
 
 public class LoopBuilderTest
 {
 
-	private final RandomAccessibleInterval< IntType > imageA = randomImage( 1 );
-
-	private final RandomAccessibleInterval< IntType > imageB = randomImage( 42 );
-
 	@Test
 	public void testLoopBuilderRun()
 	{
+		final RandomAccessibleInterval< IntType > imageA = randomImage( 1 );
+		final RandomAccessibleInterval< IntType > imageB = randomImage( 42 );
+
 		final RandomAccessibleInterval< IntType > sum = ArrayImgs.ints(
 				Intervals.dimensionsAsLongArray( imageA ) );
 		LoopBuilder.setImages( imageA, imageB, sum ).forEachPixel(
 				( a, b, s ) -> {
 					s.set( a.get() + b.get() );
 				} );
-		assertSum( sum );
+		assertSum( imageA, imageB, sum );
 	}
 
 	private RandomAccessibleInterval< IntType > randomImage( final int randomSeed )
 	{
-		final Img< IntType > result = ArrayImgs.ints( 3, 2, 5 );
 		final Random random = new Random( randomSeed );
-		result.forEach( x -> x.set( random.nextInt() ) );
+		final Img< IntType > result = RandomImgs.seed( random.nextInt() )
+				.nextImage( new IntType(), 4, 2, 5 );
 		return Views.translate( result, random.nextInt(), random.nextInt(), random.nextInt() );
 	}
 
-	private void assertSum( final RandomAccessibleInterval< IntType > sum )
+	private void assertSum( RandomAccessibleInterval< IntType > imageA, RandomAccessibleInterval< IntType > imageB, final RandomAccessibleInterval< IntType > sum )
 	{
 		final Cursor< IntType > a = Views.iterable( imageA ).cursor();
 		final Cursor< IntType > b = Views.iterable( imageB ).cursor();
@@ -92,33 +98,36 @@ public class LoopBuilderTest
 	}
 
 	@Test
-	public void testFourConsumer() {
+	public void testFourConsumer()
+	{
 		List< Img< IntType > > images = createNImages( 4 );
 		LoopBuilder.setImages( images.get( 0 ), images.get( 1 ), images.get( 2 ), images.get( 3 ) )
-				.forEachPixel( ( a, b, c, d ) -> setIncreasing(a, b, c, d) );
+				.forEachPixel( ( a, b, c, d ) -> setIncreasing( a, b, c, d ) );
 		assertIncreasing( images );
 	}
 
 	@Test
-	public void testFiveConsumer() {
+	public void testFiveConsumer()
+	{
 		List< Img< IntType > > images = createNImages( 5 );
 		LoopBuilder.setImages( images.get( 0 ), images.get( 1 ), images.get( 2 ), images.get( 3 ), images.get( 4 ) )
-				.forEachPixel( ( a, b, c, d, e ) -> setIncreasing(a, b, c, d, e) );
+				.forEachPixel( ( a, b, c, d, e ) -> setIncreasing( a, b, c, d, e ) );
 		assertIncreasing( images );
 	}
 
 	@Test
-	public void testSixConsumer() {
+	public void testSixConsumer()
+	{
 		List< Img< IntType > > images = createNImages( 6 );
 		LoopBuilder.setImages( images.get( 0 ), images.get( 1 ), images.get( 2 ), images.get( 3 ), images.get( 4 ), images.get( 5 ) )
-				.forEachPixel( ( a, b, c, d, e, f ) -> setIncreasing(a, b, c, d, e, f) );
+				.forEachPixel( ( a, b, c, d, e, f ) -> setIncreasing( a, b, c, d, e, f ) );
 		assertIncreasing( images );
 	}
 
-	private List< Img< IntType > > createNImages(int n)
+	private List< Img< IntType > > createNImages( int n )
 	{
 		return IntStream.range( 0, n )
-					.mapToObj( ignore -> ArrayImgs.ints( 1 ) ).collect( Collectors.toList());
+				.mapToObj( ignore -> ArrayImgs.ints( 1 ) ).collect( Collectors.toList() );
 	}
 
 	private void assertIncreasing( List< Img< IntType > > images )
@@ -133,40 +142,108 @@ public class LoopBuilderTest
 	private void setIncreasing( IntType... types )
 	{
 		for ( int i = 0; i < types.length; i++ )
-			types[i].setInteger( i );
+			types[ i ].setInteger( i );
 	}
-
-	private final BiConsumer< IntType, IntType > COPY_ACTION = (i, o) -> o.set(i);
 
 	@Test
 	public void testMultiThreaded()
 	{
-		final ExecutorService executor = Executors.newFixedThreadPool( 8 );
-		testCopy( MultiThreadSettings.single() );
-		testCopy( MultiThreadSettings.multi( 8, executor ) );
-		testCopy( MultiThreadSettings.multi( 2, executor ) );
+		Img< IntType > image = ArrayImgs.ints( 10, 10 );
+		LoopBuilder.setImages( image ).multiThreaded().forEachPixel( IntType::inc );
+		image.forEach( pixel -> assertEquals( 1, pixel.get() ) );
 	}
 
-	private void testCopy( MultiThreadSetting multiThreadSetting )
+	private final BiConsumer< IntType, IntType > COPY_ACTION = ( i, o ) -> o.set( i );
+
+	interface CopyMethod
+	{
+		void copy( Img< IntType > source, Img< IntType > destination );
+	}
+
+	@Test
+	public void testCopyWithDifferentMultiThreadSettings()
+	{
+		final ExecutorService executor = Executors.newFixedThreadPool( 8 );
+		for ( MultiThreadSetting setting : Arrays.asList(
+				MultiThreadSettings.single(),
+				MultiThreadSettings.multi( 8, executor ),
+				MultiThreadSettings.multi( 2, executor )
+		) )
+		{
+			testCopy( ( i, o ) -> LoopBuilder.setImages( i, o ).multiThreaded( setting ).forEachPixel( COPY_ACTION ) );
+			testCopy( ( i, o ) -> LoopBuilder.setImages( i, o ).multiThreaded( setting ).runUsingCursors( COPY_ACTION ) );
+			testCopy( ( i, o ) -> LoopBuilder.setImages( i, o ).multiThreaded( setting ).runUsingRandomAccesses( COPY_ACTION ) );
+		}
+	}
+
+	private void testCopy( CopyMethod forEachPixelMethod )
 	{
 		final long[] dimensions = { 3, 2 };
 		Img< IntType > input = ArrayImgs.ints( new int[] { 1, 2, 3, 4, 5, 6 }, dimensions );
 		Img< IntType > output = ArrayImgs.ints( dimensions );
-		LoopBuilder.setImages( input, output ).multiThreaded( multiThreadSetting ).forEachPixel( COPY_ACTION );
+		forEachPixelMethod.copy( input, output );
 		ImgLib2Assert.assertImageEquals( input, output );
 	}
 
 	@Test
-	public void testRunOnChunkUsingRandomAccesses() {
+	public void testRunUsingRandomAccessesOnSubInterval()
+	{
 		// setup
 		final long[] dimensions = { 3, 2 };
 		Img< IntType > input = ArrayImgs.ints( new int[] { 1, 2, 3, 4, 5, 6 }, dimensions );
 		Img< IntType > expected = ArrayImgs.ints( new int[] { 0, 2, 0, 0, 5, 0 }, dimensions );
 		Img< IntType > output = ArrayImgs.ints( dimensions );
 		// process
-		Interval interval = Intervals.createMinSize( 1, 0, 1, 2);
+		Interval interval = Intervals.createMinSize( 1, 0, 1, 2 );
 		// test
 		LoopBuilder.runOnChunkUsingRandomAccesses( new RandomAccessibleInterval[] { input, output }, COPY_ACTION, interval );
 		ImgLib2Assert.assertImageEquals( expected, output );
+	}
+
+	@Test
+	public void testRunOnChunkUsingCursors()
+	{
+		// setup
+		final long[] dimensions = { 3, 2 };
+		Img< IntType > input = ArrayImgs.ints( new int[] { 1, 2, 3, 4, 5, 6 }, dimensions );
+		Img< IntType > output = ArrayImgs.ints( dimensions );
+		Img< IntType > expected = ArrayImgs.ints( new int[] { 0, 2, 3, 4, 5, 0 }, dimensions );
+		// process
+		LoopBuilder.runOnChunkUsingCursors( Arrays.asList( input, output ), COPY_ACTION, 1, 4 );
+		// test
+		ImgLib2Assert.assertImageEquals( expected, output );
+	}
+
+	@Test
+	public void testRunUsingCursorWithImagesOfDifferentIterationOrder()
+	{
+		final ImgFactory< IntType > array = new ArrayImgFactory<>( new IntType() );
+		final ImgFactory< IntType > planar = new PlanarImgFactory<>( new IntType() );
+		final ImgFactory< IntType > cellA = new CellImgFactory<>( new IntType(), 2, 1 );
+		final ImgFactory< IntType > cellB = new CellImgFactory<>( new IntType(), 1, 2 );
+		testRunUsingCursors( array, planar );
+		testRunUsingCursors( array, cellB );
+		testRunUsingCursors( cellA, cellB );
+	}
+
+	private void testRunUsingCursors( ImgFactory< IntType > inputImgFactory, ImgFactory< IntType > outputImgFactory )
+	{
+		final long[] dimensions = { 3, 2 };
+		Img< IntType > input = inputImgFactory.create( dimensions );
+		Img< IntType > output = outputImgFactory.create( dimensions );
+		RandomImgs.seed( 42 ).randomize( input );
+		LoopBuilder.setImages( input, output ).forEachPixel( COPY_ACTION );
+		ImgLib2Assert.assertImageEquals( input, output );
+	}
+
+	@Ignore( "not working yet" )
+	@Test
+	public void testFlatIterationOrder()
+	{
+		AtomicInteger ai = new AtomicInteger();
+		Img< IntType > image = new CellImgFactory<>( new IntType(), 1, 2 ).create( 2, 2 );
+		LoopBuilder.setImages( image ).forEachPixel( pixel -> pixel.set( ai.incrementAndGet() ) );
+		Img< IntType > expected = ArrayImgs.ints( new int[] { 1, 2, 3, 4 }, 2, 2 );
+		ImgLib2Assert.assertImageEquals( expected, image );
 	}
 }

@@ -38,15 +38,19 @@ import java.util.List;
 import java.util.Objects;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
+import java.util.function.LongConsumer;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import net.imglib2.Cursor;
 import net.imglib2.Dimensions;
 import net.imglib2.FinalInterval;
 import net.imglib2.Interval;
+import net.imglib2.IterableInterval;
 import net.imglib2.Positionable;
 import net.imglib2.RandomAccess;
 import net.imglib2.RandomAccessibleInterval;
+import net.imglib2.img.NativeImg;
 import net.imglib2.util.Intervals;
 import net.imglib2.view.Views;
 
@@ -132,8 +136,21 @@ public class LoopBuilder< T >
 	public void forEachPixel( final T action )
 	{
 		Objects.requireNonNull( action );
-		if ( Intervals.numElements( images[ 0 ] ) == 0 )
+		if ( Intervals.numElements( dimensions ) == 0 )
 			return;
+		if ( allAreNativeImages() )
+			runUsingCursors( action );
+		else
+			runUsingRandomAccesses( action );
+	}
+
+	private boolean allAreNativeImages()
+	{
+		return Stream.of( images ).allMatch( image -> image instanceof NativeImg );
+	}
+
+	void runUsingRandomAccesses( T action )
+	{
 		final int nTasks = multiThreaded.suggestNumberOfTasks();
 		final Interval interval = new FinalInterval( dimensions );
 		final List< Interval > chunks = IntervalChunks.chunkInterval( interval, nTasks );
@@ -155,6 +172,51 @@ public class LoopBuilder< T >
 		final RandomAccess< ? > ra = image.randomAccess();
 		ra.setPosition( Intervals.minAsLongArray( image ) );
 		return ra;
+	}
+
+	void runUsingCursors( T action )
+	{
+		final List< IterableInterval< ? > > iterableIntervals = equalIterationOrderIterableIntervals();
+		int nTasks = multiThreaded.suggestNumberOfTasks();
+		final FinalInterval indices = new FinalInterval( Intervals.numElements( images[ 0 ] ) );
+		List< Interval > chunks = IntervalChunks.chunkInterval( indices, nTasks );
+		multiThreaded.forEach( chunks, chunk ->
+				runOnChunkUsingCursors( iterableIntervals, action, chunk.min( 0 ), chunk.dimension( 0 ) ) );
+	}
+
+	static void runOnChunkUsingCursors( List< IterableInterval< ? > > iterableIntervals, Object action, long offset, long numElements )
+	{
+		final List< Cursor< ? > > cursors = iterableIntervals.stream().map( IterableInterval::cursor ).collect( Collectors.toList() );
+		if ( offset != 0 )
+			jumpFwd( cursors, offset );
+		LongConsumer cursorLoop = FastCursorLoops.createLoop( action, cursors );
+		cursorLoop.accept( numElements );
+	}
+
+	private static void jumpFwd( List< Cursor< ? > > cursors, long offset )
+	{
+		for ( Cursor< ? > cursor : cursors )
+			cursor.jumpFwd( offset );
+	}
+
+	private List< IterableInterval< ? > > equalIterationOrderIterableIntervals()
+	{
+		List< IterableInterval< ? > > iterableIntervals = Stream.of( images ).map( Views::iterable ).collect( Collectors.toList() );
+		List< Object > iterationOrders = iterableIntervals.stream().map( IterableInterval::iterationOrder ).collect( Collectors.toList() );
+		if ( allEqual( iterationOrders ) )
+			return iterableIntervals;
+		return flatIterableIntervals();
+	}
+
+	private List< IterableInterval< ? > > flatIterableIntervals()
+	{
+		return Stream.of( images ).map( Views::flatIterable ).collect( Collectors.toList() );
+	}
+
+	private static boolean allEqual( List< Object > values )
+	{
+		Object first = values.get( 0 );
+		return values.stream().allMatch( first::equals );
 	}
 
 	public LoopBuilder< T > multiThreaded()
