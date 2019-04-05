@@ -82,6 +82,8 @@ import net.imglib2.view.Views;
 public class LoopBuilder< T >
 {
 
+	// fields
+
 	private final Dimensions dimensions;
 
 	private final RandomAccessibleInterval< ? >[] images;
@@ -90,20 +92,7 @@ public class LoopBuilder< T >
 
 	private boolean useFlatIterationOrder = false;
 
-	private LoopBuilder( final RandomAccessibleInterval< ? >... images )
-	{
-		this.images = images;
-		this.dimensions = new FinalInterval( images[ 0 ] );
-		Arrays.asList( images ).forEach( this::checkDimensions );
-	}
-
-	private void checkDimensions( final Interval interval )
-	{
-		final long[] a = Intervals.dimensionsAsLongArray( dimensions );
-		final long[] b = Intervals.dimensionsAsLongArray( interval );
-		if ( !Arrays.equals( a, b ) )
-			throw new IllegalArgumentException( "Dimensions do not fit." );
-	}
+	// public methods
 
 	public static < A > LoopBuilder< Consumer< A > > setImages( final RandomAccessibleInterval< A > a )
 	{
@@ -144,6 +133,65 @@ public class LoopBuilder< T >
 			runUsingCursors( action );
 		else
 			runUsingRandomAccesses( action );
+	}
+
+	public LoopBuilder< T > multiThreaded()
+	{
+		return multiThreaded( MultiThreadSettings.multi() );
+	}
+
+	public LoopBuilder< T > multiThreaded( MultiThreadSetting multiThreadSetting )
+	{
+		this.multiThreaded = Objects.requireNonNull( multiThreadSetting );
+		return this;
+	}
+
+	public LoopBuilder< T > flatIterationOrder()
+	{
+		return this.flatIterationOrder( true );
+	}
+
+	public LoopBuilder< T > flatIterationOrder( boolean value )
+	{
+		this.useFlatIterationOrder = value;
+		return this;
+	}
+
+	public interface TriConsumer< A, B, C >
+	{
+		void accept( A a, B b, C c );
+	}
+
+	public interface FourConsumer< A, B, C, D >
+	{
+		void accept( A a, B b, C c, D d );
+	}
+
+	public interface FiveConsumer< A, B, C, D, E >
+	{
+		void accept( A a, B b, C c, D d, E e );
+	}
+
+	public interface SixConsumer< A, B, C, D, E, F >
+	{
+		void accept( A a, B b, C c, D d, E e, F f );
+	}
+
+	// Helper methods
+
+	private LoopBuilder( final RandomAccessibleInterval< ? >... images )
+	{
+		this.images = images;
+		this.dimensions = new FinalInterval( images[ 0 ] );
+		Arrays.asList( images ).forEach( this::checkDimensions );
+	}
+
+	private void checkDimensions( final Interval interval )
+	{
+		final long[] a = Intervals.dimensionsAsLongArray( dimensions );
+		final long[] b = Intervals.dimensionsAsLongArray( interval );
+		if ( !Arrays.equals( a, b ) )
+			throw new IllegalArgumentException( "Dimensions do not fit." );
 	}
 
 	private boolean allAreNativeImages()
@@ -221,47 +269,5 @@ public class LoopBuilder< T >
 	{
 		Object first = values.get( 0 );
 		return values.stream().allMatch( first::equals );
-	}
-
-	public LoopBuilder< T > multiThreaded()
-	{
-		return multiThreaded( MultiThreadSettings.multi() );
-	}
-
-	public LoopBuilder< T > multiThreaded( MultiThreadSetting multiThreadSetting )
-	{
-		this.multiThreaded = Objects.requireNonNull( multiThreadSetting );
-		return this;
-	}
-
-	public LoopBuilder< T > flatIterationOrder()
-	{
-		return this.flatIterationOrder( true );
-	}
-
-	public LoopBuilder< T > flatIterationOrder( boolean value )
-	{
-		this.useFlatIterationOrder = value;
-		return this;
-	}
-
-	public interface TriConsumer< A, B, C >
-	{
-		void accept( A a, B b, C c );
-	}
-
-	public interface FourConsumer< A, B, C, D >
-	{
-		void accept( A a, B b, C c, D d );
-	}
-
-	public interface FiveConsumer< A, B, C, D, E >
-	{
-		void accept( A a, B b, C c, D d, E e );
-	}
-
-	public interface SixConsumer< A, B, C, D, E, F >
-	{
-		void accept( A a, B b, C c, D d, E e, F f );
 	}
 }
