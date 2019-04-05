@@ -33,6 +33,7 @@
  */
 package net.imglib2.loops;
 
+import net.imglib2.IterableInterval;
 import org.openjdk.jmh.annotations.Benchmark;
 import org.openjdk.jmh.annotations.Scope;
 import org.openjdk.jmh.annotations.State;
@@ -122,6 +123,14 @@ public class LoopPerformanceBenchmark
 	public void copy_loopBuilder()
 	{
 		LoopBuilder.setImages( Views.interval( in, out ), out ).forEachPixel( ( in, out ) -> out.set( in ) );
+	}
+
+	@Benchmark
+	public void copy_flatIterable() {
+		Cursor< DoubleType > i = Views.flatIterable( in ).cursor();
+		Cursor< DoubleType > o = Views.flatIterable( out ).cursor();
+		while( o.hasNext() )
+			o.next().set( i.next() );
 	}
 
 	public static void main( final String... args ) throws RunnerException
