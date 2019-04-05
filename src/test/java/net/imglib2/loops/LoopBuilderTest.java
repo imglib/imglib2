@@ -61,6 +61,9 @@ import java.util.stream.IntStream;
 
 import static org.junit.Assert.assertEquals;
 
+/**
+ * Tests {@link LoopBuilder}.
+ */
 public class LoopBuilderTest
 {
 

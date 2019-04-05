@@ -65,7 +65,7 @@ import net.imglib2.view.Views;
  * RandomAccessibleInterval<DoubleType> imageB = ...
  * RandomAccessibleInterval<DoubleType> sum = ...
  *
- * LoopBuilder.setImages(imageA, imageB, sum).run(
+ * LoopBuilder.setImages(imageA, imageB, sum).forEachPixel(
  *     (a, b, s) -> {
  *          s.setReal(a.getRealDouble() + b.getRealDouble());
  *     }
@@ -94,36 +94,57 @@ public class LoopBuilder< T >
 
 	// public methods
 
+	/**
+	 * @see LoopBuilder
+	 */
 	public static < A > LoopBuilder< Consumer< A > > setImages( final RandomAccessibleInterval< A > a )
 	{
 		return new LoopBuilder<>( a );
 	}
 
+	/**
+	 * @see LoopBuilder
+	 */
 	public static < A, B > LoopBuilder< BiConsumer< A, B > > setImages( final RandomAccessibleInterval< A > a, final RandomAccessibleInterval< B > b )
 	{
 		return new LoopBuilder<>( a, b );
 	}
 
+	/**
+	 * @see LoopBuilder
+	 */
 	public static < A, B, C > LoopBuilder< TriConsumer< A, B, C > > setImages( final RandomAccessibleInterval< A > a, final RandomAccessibleInterval< B > b, final RandomAccessibleInterval< C > c )
 	{
 		return new LoopBuilder<>( a, b, c );
 	}
 
+	/**
+	 * @see LoopBuilder
+	 */
 	public static < A, B, C, D > LoopBuilder< FourConsumer< A, B, C, D > > setImages( final RandomAccessibleInterval< A > a, final RandomAccessibleInterval< B > b, final RandomAccessibleInterval< C > c, final RandomAccessibleInterval< D > d )
 	{
 		return new LoopBuilder<>( a, b, c, d );
 	}
 
+	/**
+	 * @see LoopBuilder
+	 */
 	public static < A, B, C, D, E > LoopBuilder< FiveConsumer< A, B, C, D, E > > setImages( final RandomAccessibleInterval< A > a, final RandomAccessibleInterval< B > b, final RandomAccessibleInterval< C > c, final RandomAccessibleInterval< D > d, final RandomAccessibleInterval< E > e )
 	{
 		return new LoopBuilder<>( a, b, c, d, e );
 	}
 
+	/**
+	 * @see LoopBuilder
+	 */
 	public static < A, B, C, D, E, F > LoopBuilder< SixConsumer< A, B, C, D, E, F > > setImages( final RandomAccessibleInterval< A > a, final RandomAccessibleInterval< B > b, final RandomAccessibleInterval< C > c, final RandomAccessibleInterval< D > d, final RandomAccessibleInterval< E > e, final RandomAccessibleInterval< F > f )
 	{
 		return new LoopBuilder<>( a, b, c, d, e, f );
 	}
 
+	/**
+	 * @see LoopBuilder
+	 */
 	public void forEachPixel( final T action )
 	{
 		Objects.requireNonNull( action );
@@ -135,22 +156,56 @@ public class LoopBuilder< T >
 			runUsingRandomAccesses( action );
 	}
 
+	/**
+	 * By default {@link LoopBuilder} runs the loop without multi-threading.
+	 * Calling this method causes LoopBuilder to use multi-threading to speed up the operation.
+	 * <p>
+	 * WARNING: You need to make sure that your operation is thread safe.
+	 */
 	public LoopBuilder< T > multiThreaded()
 	{
 		return multiThreaded( MultiThreadSettings.multi() );
 	}
 
+	/**
+	 * Sets the {@link MultiThreadSetting} that is used to run the loop.
+	 * <p>
+	 * WARNING: You need to make sure that your operation is thread safe.
+	 *
+	 * @see LoopBuilder
+	 * @see MultiThreadSetting
+	 */
 	public LoopBuilder< T > multiThreaded( MultiThreadSetting multiThreadSetting )
 	{
 		this.multiThreaded = Objects.requireNonNull( multiThreadSetting );
 		return this;
 	}
 
+	/**
+	 * {@link LoopBuilder} might use any iteration order to execute
+	 * the loop. Calling this method will cause {@link LoopBuilder}
+	 * to use flat iteration order, when executing the loop.
+	 * <p>
+	 * WARNING: Don't use multi-threading if you want to have flat
+	 * iteration order.
+	 */
 	public LoopBuilder< T > flatIterationOrder()
 	{
 		return this.flatIterationOrder( true );
 	}
 
+	/**
+	 * If false, {@link LoopBuilder} might use any iteration order
+	 * to execute the loop.
+	 * <p>
+	 * If true, {@link LoopBuilder} will use
+	 * flat iteration order, and multi threading is disabled.
+	 * <p>
+	 * WARNING: Don't use multi-threading if you want to have flat
+	 * iteration order.
+	 *
+	 * @see net.imglib2.FlatIterationOrder
+	 */
 	public LoopBuilder< T > flatIterationOrder( boolean value )
 	{
 		this.useFlatIterationOrder = value;
