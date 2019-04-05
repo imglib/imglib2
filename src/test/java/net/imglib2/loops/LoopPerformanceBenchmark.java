@@ -35,8 +35,11 @@ package net.imglib2.loops;
 
 import net.imglib2.IterableInterval;
 import org.openjdk.jmh.annotations.Benchmark;
+import org.openjdk.jmh.annotations.Fork;
+import org.openjdk.jmh.annotations.Measurement;
 import org.openjdk.jmh.annotations.Scope;
 import org.openjdk.jmh.annotations.State;
+import org.openjdk.jmh.annotations.Warmup;
 import org.openjdk.jmh.runner.Runner;
 import org.openjdk.jmh.runner.RunnerException;
 import org.openjdk.jmh.runner.options.Options;
@@ -51,12 +54,17 @@ import net.imglib2.type.numeric.real.DoubleType;
 import net.imglib2.util.Intervals;
 import net.imglib2.view.Views;
 
+import java.util.concurrent.TimeUnit;
+
 /**
  * Performance benchmark to demonstrate {@link LoopBuilder} performance.
  *
  * @author Matthias Arzt
  */
 @State( Scope.Benchmark )
+@Fork( 1 )
+@Warmup( iterations = 4, time = 100, timeUnit = TimeUnit.MILLISECONDS )
+@Measurement( iterations = 8, time = 100, timeUnit = TimeUnit.MILLISECONDS )
 public class LoopPerformanceBenchmark
 {
 
@@ -100,12 +108,26 @@ public class LoopPerformanceBenchmark
 	}
 
 	@Benchmark
-	public void gradient_niceAndFast()
+	public void gradient_LoopBuilder()
 	{
 		final RandomAccessibleInterval< DoubleType > backSource = Views.interval( in, Intervals.translate( out, -1, 0 ) );
 		final RandomAccessibleInterval< DoubleType > frontSource = Views.interval( in, Intervals.translate( out, 1, 0 ) );
 
 		LoopBuilder.setImages( out, backSource, frontSource ).forEachPixel(
+				( result, back, front ) -> {
+					result.set( front );
+					result.sub( back );
+					result.mul( 0.5 );
+				} );
+	}
+
+	@Benchmark
+	public void gradient_LoopBuilder_MultiThreaded()
+	{
+		final RandomAccessibleInterval< DoubleType > backSource = Views.interval( in, Intervals.translate( out, -1, 0 ) );
+		final RandomAccessibleInterval< DoubleType > frontSource = Views.interval( in, Intervals.translate( out, 1, 0 ) );
+
+		LoopBuilder.setImages( out, backSource, frontSource ).multiThreaded().forEachPixel(
 				( result, back, front ) -> {
 					result.set( front );
 					result.sub( back );
@@ -137,11 +159,6 @@ public class LoopPerformanceBenchmark
 	{
 		final Options opt = new OptionsBuilder()
 				.include( LoopPerformanceBenchmark.class.getSimpleName() )
-				.forks( 0 )
-				.warmupIterations( 4 )
-				.measurementIterations( 8 )
-				.warmupTime( TimeValue.milliseconds( 100 ) )
-				.measurementTime( TimeValue.milliseconds( 100 ) )
 				.build();
 		new Runner( opt ).run();
 	}

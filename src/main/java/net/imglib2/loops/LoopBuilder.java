@@ -48,12 +48,13 @@ import net.imglib2.Positionable;
 import net.imglib2.RandomAccess;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.util.Intervals;
+import net.imglib2.view.Views;
 
 /**
  * {@link LoopBuilder} provides an easy way to write fast loops on
  * {@link RandomAccessibleInterval}s. For example, this is a loop that
  * calculates the sum of two images:
- *
+ * <p>
  * <pre>
  * {@code
  * RandomAccessibleInterval<DoubleType> imageA = ...
@@ -67,7 +68,7 @@ import net.imglib2.util.Intervals;
  * );
  * }
  * </pre>
- *
+ * <p>
  * The {@link RandomAccessibleInterval}s {@code imageA}, {@code imageB} and
  * {@code sum} must have equal dimensions, but the bounds of there
  * {@link Intervals} can differ.
@@ -80,6 +81,8 @@ public class LoopBuilder< T >
 	private final Dimensions dimensions;
 
 	private final RandomAccessibleInterval< ? >[] images;
+
+	private MultiThreadSetting multiThreaded = MultiThreadSettings.single();
 
 	private LoopBuilder( final RandomAccessibleInterval< ? >... images )
 	{
@@ -129,9 +132,22 @@ public class LoopBuilder< T >
 	public void forEachPixel( final T action )
 	{
 		Objects.requireNonNull( action );
+		if ( Intervals.numElements( images[ 0 ] ) == 0 )
+			return;
+		final int nTasks = multiThreaded.suggestNumberOfTasks();
+		final Interval interval = new FinalInterval( dimensions );
+		final List< Interval > chunks = IntervalChunks.chunkInterval( interval, nTasks );
+		multiThreaded.forEach( chunks, chunk -> runOnChunkUsingRandomAccesses( images, action, chunk ) );
+	}
+
+	static void runOnChunkUsingRandomAccesses( RandomAccessibleInterval[] images, Object action, Interval subInterval )
+	{
 		final List< RandomAccess< ? > > samplers = Stream.of( images ).map( LoopBuilder::initRandomAccess ).collect( Collectors.toList() );
 		final Positionable synced = SyncedPositionables.create( samplers );
-		LoopUtils.createIntervalLoop( synced, dimensions, BindActionToSamplers.bindActionToSamplers( action, samplers ) ).run();
+		if ( !Views.isZeroMin( subInterval ) )
+			synced.move( Intervals.minAsLongArray( subInterval ) );
+		final Runnable runnable = BindActionToSamplers.bindActionToSamplers( action, samplers );
+		LoopUtils.createIntervalLoop( synced, subInterval, runnable ).run();
 	}
 
 	private static RandomAccess< ? > initRandomAccess( final RandomAccessibleInterval< ? > image )
@@ -139,6 +155,17 @@ public class LoopBuilder< T >
 		final RandomAccess< ? > ra = image.randomAccess();
 		ra.setPosition( Intervals.minAsLongArray( image ) );
 		return ra;
+	}
+
+	public LoopBuilder< T > multiThreaded()
+	{
+		return multiThreaded( MultiThreadSettings.multi() );
+	}
+
+	public LoopBuilder< T > multiThreaded( MultiThreadSetting multiThreadSetting )
+	{
+		this.multiThreaded = Objects.requireNonNull( multiThreadSetting );
+		return this;
 	}
 
 	public interface TriConsumer< A, B, C >

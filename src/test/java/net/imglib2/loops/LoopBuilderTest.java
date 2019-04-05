@@ -33,14 +33,18 @@
  */
 package net.imglib2.loops;
 
-import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 
 import java.util.List;
 import java.util.Random;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.function.BiConsumer;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
+import net.imglib2.Interval;
+import net.imglib2.test.ImgLib2Assert;
 import org.junit.Test;
 
 import net.imglib2.Cursor;
@@ -130,5 +134,39 @@ public class LoopBuilderTest
 	{
 		for ( int i = 0; i < types.length; i++ )
 			types[i].setInteger( i );
+	}
+
+	private final BiConsumer< IntType, IntType > COPY_ACTION = (i, o) -> o.set(i);
+
+	@Test
+	public void testMultiThreaded()
+	{
+		final ExecutorService executor = Executors.newFixedThreadPool( 8 );
+		testCopy( MultiThreadSettings.single() );
+		testCopy( MultiThreadSettings.multi( 8, executor ) );
+		testCopy( MultiThreadSettings.multi( 2, executor ) );
+	}
+
+	private void testCopy( MultiThreadSetting multiThreadSetting )
+	{
+		final long[] dimensions = { 3, 2 };
+		Img< IntType > input = ArrayImgs.ints( new int[] { 1, 2, 3, 4, 5, 6 }, dimensions );
+		Img< IntType > output = ArrayImgs.ints( dimensions );
+		LoopBuilder.setImages( input, output ).multiThreaded( multiThreadSetting ).forEachPixel( COPY_ACTION );
+		ImgLib2Assert.assertImageEquals( input, output );
+	}
+
+	@Test
+	public void testRunOnChunkUsingRandomAccesses() {
+		// setup
+		final long[] dimensions = { 3, 2 };
+		Img< IntType > input = ArrayImgs.ints( new int[] { 1, 2, 3, 4, 5, 6 }, dimensions );
+		Img< IntType > expected = ArrayImgs.ints( new int[] { 0, 2, 0, 0, 5, 0 }, dimensions );
+		Img< IntType > output = ArrayImgs.ints( dimensions );
+		// process
+		Interval interval = Intervals.createMinSize( 1, 0, 1, 2);
+		// test
+		LoopBuilder.runOnChunkUsingRandomAccesses( new RandomAccessibleInterval[] { input, output }, COPY_ACTION, interval );
+		ImgLib2Assert.assertImageEquals( expected, output );
 	}
 }
