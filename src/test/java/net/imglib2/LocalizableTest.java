@@ -11,13 +11,13 @@
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice,
  *    this list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  *    this list of conditions and the following disclaimer in the documentation
  *    and/or other materials provided with the distribution.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -34,74 +34,71 @@
 
 package net.imglib2;
 
+import org.junit.Test;
+
+import static org.junit.Assert.assertArrayEquals;
+import static org.junit.Assert.assertEquals;
+
 /**
- * The {@link Localizable} interface can localize itself in an n-dimensional
- * discrete space. Not only {@link Cursor}s can use this interface, it might be
- * used by much more classes as {@link RandomAccess}s can take any
- * {@link Localizable} as input for where they should move to.
- * 
- * 
- * @author Stephan Preibisch
- * @author Stephan Saalfeld
+ * Tests {@link Localizable}.
+ *
+ * @author Matthias Arzt
  */
-public interface Localizable extends RealLocalizable
+public class LocalizableTest
 {
-	/**
-	 * Write the current position into the passed array.
-	 *
-	 * @param position
-	 *            receives current position
-	 */
-	default void localize( final int[] position )
+
+	private final Localizable localizable = new Localizable()
 	{
-		final int n = numDimensions();
-		for ( int d = 0; d < n; d++ )
-			position[ d ] = getIntPosition( d );
+		@Override
+		public long getLongPosition( int d )
+		{
+			return 42 + d;
+		}
+
+		@Override
+		public int numDimensions()
+		{
+			return 3;
+		}
+	};
+
+	@Test
+	public void testGetIntPosition()
+	{
+		assertEquals( 44, localizable.getIntPosition( 2 ) );
+	}
+
+	@Test
+	public void testGetDoublePosition()
+	{
+		assertEquals( 44.0, localizable.getDoublePosition( 2 ), 0.0 );
+	}
+
+	@Test
+	public void testGetFloatPosition()
+	{
+		assertEquals( 44.0f, localizable.getFloatPosition( 2 ), 0.0f );
 	}
 
 	/**
-	 * Write the current position into the passed array.
-	 * 
-	 * @param position
-	 *            receives current position
+	 * Tests {@link Localizable#localize(long[])}.
 	 */
-	default void localize( final long[] position )
+	@Test
+	public void testLocalizeWithLongs()
 	{
-		final int n = numDimensions();
-		for ( int d = 0; d < n; d++ )
-			position[ d ] = getIntPosition( d );
+		long[] result = new long[ localizable.numDimensions() ];
+		localizable.localize( result );
+		assertArrayEquals( new long[] { 42, 43, 44 }, result );
 	}
 
 	/**
-	 * Return the current position in a given dimension.
-	 *
-	 * @param d
-	 *            dimension
-	 * @return dimension of current position
+	 * Tests {@link Localizable#localize(int[])}.
 	 */
-	default int getIntPosition( final int d )
+	@Test
+	public void testLocalizeWithInts()
 	{
-		return (int) getLongPosition( d );
-	}
-
-	/**
-	 * Return the current position in a given dimension.
-	 * 
-	 * @param d
-	 *            dimension
-	 * @return dimension of current position
-	 */
-	public long getLongPosition( int d );
-
-	@Override
-	default float getFloatPosition( final int d )
-	{
-		return getLongPosition( d );
-	}
-
-	@Override
-	default double getDoublePosition( final int d )
-	{
-		return getLongPosition( d );
+		int[] result = new int[ localizable.numDimensions() ];
+		localizable.localize( result );
+		assertArrayEquals( new int[] { 42, 43, 44 }, result );
 	}
 }

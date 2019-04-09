@@ -67,14 +67,24 @@ public interface RealInterval extends EuclideanSpace
 	 * 
 	 * @param min
 	 */
-	public void realMin( double[] min );
+	default void realMin( final double[] min )
+	{
+		final int n = numDimensions();
+		for ( int d = 0; d < n; d++ )
+			min[ d ] = realMin( d );
+	}
 
 	/**
 	 * Sets a {@link RealPositionable} to the minimum of this {@link Interval}
 	 * 
 	 * @param min
 	 */
-	public void realMin( RealPositionable min );
+	default void realMin( final RealPositionable min )
+	{
+		final int n = numDimensions();
+		for ( int d = 0; d < n; d++ )
+			min.setPosition( realMin( d ), d );
+	}
 
 	/**
 	 * Get the maximum in dimension d.
@@ -90,12 +100,22 @@ public interface RealInterval extends EuclideanSpace
 	 * 
 	 * @param max
 	 */
-	public void realMax( double[] max );
+	default void realMax( final double[] max )
+	{
+		final int n = numDimensions();
+		for ( int d = 0; d < n; d++ )
+			max[ d ] = realMax( d );
+	}
 
 	/**
 	 * Sets a {@link RealPositionable} to the maximum of this {@link Interval}
 	 * 
 	 * @param max
 	 */
-	public void realMax( RealPositionable max );
+	default void realMax( final RealPositionable max )
+	{
+		final int n = numDimensions();
+		for ( int d = 0; d < n; d++ )
+			max.setPosition( realMax( d ), d );
+	}
 }

@@ -11,13 +11,13 @@
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice,
  *    this list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  *    this list of conditions and the following disclaimer in the documentation
  *    and/or other materials provided with the distribution.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -34,74 +34,109 @@
 
 package net.imglib2;
 
+import org.junit.Test;
+
+import static org.junit.Assert.assertArrayEquals;
+import static org.junit.Assert.assertEquals;
+
 /**
- * The {@link Localizable} interface can localize itself in an n-dimensional
- * discrete space. Not only {@link Cursor}s can use this interface, it might be
- * used by much more classes as {@link RandomAccess}s can take any
- * {@link Localizable} as input for where they should move to.
- * 
- * 
- * @author Stephan Preibisch
- * @author Stephan Saalfeld
+ * Tests default methods of the interface {@link Interval}.
+ *
+ * @author Matthias Arzt
  */
-public interface Localizable extends RealLocalizable
+public class IntervalTest
 {
-	/**
-	 * Write the current position into the passed array.
-	 *
-	 * @param position
-	 *            receives current position
-	 */
-	default void localize( final int[] position )
+
+	private final Interval interval = new Interval()
 	{
-		final int n = numDimensions();
-		for ( int d = 0; d < n; d++ )
-			position[ d ] = getIntPosition( d );
+
+		@Override
+		public long min( int d )
+		{
+			return 3;
+		}
+
+		@Override
+		public long max( int d )
+		{
+			return 7;
+		}
+
+		@Override
+		public int numDimensions()
+		{
+			return 1;
+		}
+	};
+
+	/**
+	 * Tests {@link Interval#min(long[])}.
+	 */
+	@Test
+	public void testMinWithLongs()
+	{
+		long[] result = new long[ 1 ];
+		interval.min( result );
+		assertArrayEquals( new long[] { 3 }, result );
 	}
 
 	/**
-	 * Write the current position into the passed array.
-	 * 
-	 * @param position
-	 *            receives current position
+	 * Tests {@link Interval#min(Positionable)}.
 	 */
-	default void localize( final long[] position )
+	@Test
+	public void testMinWithPositionable()
 	{
-		final int n = numDimensions();
-		for ( int d = 0; d < n; d++ )
-			position[ d ] = getIntPosition( d );
+		Point result = new Point( 1 );
+		interval.min( result );
+		assertEquals( 3, result.getLongPosition( 0 ) );
 	}
 
 	/**
-	 * Return the current position in a given dimension.
-	 *
-	 * @param d
-	 *            dimension
-	 * @return dimension of current position
+	 * Tests {@link Interval#max(long[])}.
 	 */
-	default int getIntPosition( final int d )
+	@Test
+	public void testMaxWithLongs()
 	{
-		return (int) getLongPosition( d );
+		long[] result = new long[ 1 ];
+		interval.max( result );
+		assertArrayEquals( new long[] { 7 }, result );
 	}
 
 	/**
-	 * Return the current position in a given dimension.
-	 * 
-	 * @param d
-	 *            dimension
-	 * @return dimension of current position
+	 * Tests {@link Interval#max(Positionable)}.
 	 */
-	public long getLongPosition( int d );
-
-	@Override
-	default float getFloatPosition( final int d )
+	@Test
+	public void testMaxWithPositionable()
 	{
-		return getLongPosition( d );
+		Point result = new Point( 1 );
+		interval.max( result );
+		assertEquals( 7, result.getLongPosition( 0 ) );
 	}
 
-	@Override
-	default double getDoublePosition( final int d )
+	/**
+	 * Tests {@link Interval#realMin(int)}.
+	 */
+	@Test
+	public void testRealMin()
 	{
-		return getLongPosition( d );
+		assertEquals( 3.0, interval.realMin( 0 ), 0.0 );
+	}
+
+	/**
+	 * Tests {@link Interval#realMax(int)}.
+	 */
+	@Test
+	public void testRealMax()
+	{
+		assertEquals( 7.0, interval.realMax( 0 ), 0.0 );
+	}
+
+	/**
+	 * Tests {@link Interval#dimension(int)}.
+	 */
+	@Test
+	public void testDimension()
+	{
+		assertEquals( 5, interval.dimension( 0 ) );
 	}
 }

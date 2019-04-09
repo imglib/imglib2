@@ -11,13 +11,13 @@
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice,
  *    this list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  *    this list of conditions and the following disclaimer in the documentation
  *    and/or other materials provided with the distribution.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -34,74 +34,81 @@
 
 package net.imglib2;
 
+import org.junit.Test;
+
+import static org.junit.Assert.assertArrayEquals;
+
 /**
- * The {@link Localizable} interface can localize itself in an n-dimensional
- * discrete space. Not only {@link Cursor}s can use this interface, it might be
- * used by much more classes as {@link RandomAccess}s can take any
- * {@link Localizable} as input for where they should move to.
- * 
- * 
- * @author Stephan Preibisch
- * @author Stephan Saalfeld
+ * Tests {@link RealInterval}.
+ *
+ * @author Matthias Arzt
  */
-public interface Localizable extends RealLocalizable
+public class RealIntervalTest
 {
-	/**
-	 * Write the current position into the passed array.
-	 *
-	 * @param position
-	 *            receives current position
-	 */
-	default void localize( final int[] position )
+
+	private final RealInterval interval = new RealInterval()
 	{
-		final int n = numDimensions();
-		for ( int d = 0; d < n; d++ )
-			position[ d ] = getIntPosition( d );
+
+		@Override
+		public double realMin( int d )
+		{
+			return 1.5 + d;
+		}
+
+		@Override
+		public double realMax( int d )
+		{
+			return 7.3 + d;
+		}
+
+		@Override
+		public int numDimensions()
+		{
+			return 2;
+		}
+	};
+
+	/**
+	 * Tests {@link Interval#realMin(double[])}.
+	 */
+	@Test
+	public void testRealMinWithDoubles()
+	{
+		double[] result = new double[ 2 ];
+		interval.realMin( result );
+		assertArrayEquals( new double[] { 1.5, 2.5 }, result, 0.0 );
 	}
 
 	/**
-	 * Write the current position into the passed array.
-	 * 
-	 * @param position
-	 *            receives current position
+	 * Tests {@link Interval#realMax(double[])}.
 	 */
-	default void localize( final long[] position )
+	@Test
+	public void testRealMaxWithDoubles()
 	{
-		final int n = numDimensions();
-		for ( int d = 0; d < n; d++ )
-			position[ d ] = getIntPosition( d );
+		double[] result = new double[ 2 ];
+		interval.realMax( result );
+		assertArrayEquals( new double[] { 7.3, 8.3 }, result, 0.0 );
 	}
 
 	/**
-	 * Return the current position in a given dimension.
-	 *
-	 * @param d
-	 *            dimension
-	 * @return dimension of current position
+	 * Tests {@link Interval#realMin(RealPositionable)}.
 	 */
-	default int getIntPosition( final int d )
+	@Test
+	public void testRealMinWithPositionable()
 	{
-		return (int) getLongPosition( d );
+		double[] result = new double[ 2 ];
+		interval.realMin( RealPoint.wrap( result ) );
+		assertArrayEquals( new double[] { 1.5, 2.5 }, result, 0.0 );
 	}
 
 	/**
-	 * Return the current position in a given dimension.
-	 * 
-	 * @param d
-	 *            dimension
-	 * @return dimension of current position
+	 * Tests {@link Interval#realMax(double[])}.
 	 */
-	public long getLongPosition( int d );
-
-	@Override
-	default float getFloatPosition( final int d )
+	@Test
+	public void testRealMaxWithPositionable()
 	{
-		return getLongPosition( d );
-	}
-
-	@Override
-	default double getDoublePosition( final int d )
-	{
-		return getLongPosition( d );
+		double[] result = new double[ 2 ];
+		interval.realMax( RealPoint.wrap( result ) );
+		assertArrayEquals( new double[] { 7.3, 8.3 }, result, 0.0 );
 	}
 }
