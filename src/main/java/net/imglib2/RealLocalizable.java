@@ -50,9 +50,9 @@ public interface RealLocalizable extends EuclideanSpace
 	 * @param position
 	 *            receives current position
 	 */
-	default void localize( float[] position )
+	default void localize( final float[] position )
 	{
-		int n = numDimensions();
+		final int n = numDimensions();
 		for ( int d = 0; d < n; d++ )
 			position[ d ] = getFloatPosition( d );
 	}
@@ -63,9 +63,9 @@ public interface RealLocalizable extends EuclideanSpace
 	 * @param position
 	 *            receives current position
 	 */
-	default void localize( double[] position )
+	default void localize( final double[] position )
 	{
-		int n = numDimensions();
+		final int n = numDimensions();
 		for ( int d = 0; d < n; d++ )
 			position[ d ] = getDoublePosition( d );
 	}
@@ -77,7 +77,7 @@ public interface RealLocalizable extends EuclideanSpace
 	 *            dimension
 	 * @return dimension of current position
 	 */
-	default float getFloatPosition( int d )
+	default float getFloatPosition( final int d )
 	{
 		return ( float ) getDoublePosition( d );
 	}

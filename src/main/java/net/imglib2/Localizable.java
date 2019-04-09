@@ -52,9 +52,9 @@ public interface Localizable extends RealLocalizable
 	 * @param position
 	 *            receives current position
 	 */
-	default void localize( int[] position )
+	default void localize( final int[] position )
 	{
-		int n = numDimensions();
+		final int n = numDimensions();
 		for ( int d = 0; d < n; d++ )
 			position[ d ] = getIntPosition( d );
 	}
@@ -65,9 +65,9 @@ public interface Localizable extends RealLocalizable
 	 * @param position
 	 *            receives current position
 	 */
-	default void localize( long[] position )
+	default void localize( final long[] position )
 	{
-		int n = numDimensions();
+		final int n = numDimensions();
 		for ( int d = 0; d < n; d++ )
 			position[ d ] = getIntPosition( d );
 	}
@@ -79,7 +79,7 @@ public interface Localizable extends RealLocalizable
 	 *            dimension
 	 * @return dimension of current position
 	 */
-	default int getIntPosition( int d )
+	default int getIntPosition( final int d )
 	{
 		return (int) getLongPosition( d );
 	}
@@ -94,13 +94,13 @@ public interface Localizable extends RealLocalizable
 	public long getLongPosition( int d );
 
 	@Override
-	default float getFloatPosition( int d )
+	default float getFloatPosition( final int d )
 	{
 		return getLongPosition( d );
 	}
 
 	@Override
-	default double getDoublePosition( int d )
+	default double getDoublePosition( final int d )
 	{
 		return getLongPosition( d );
 	}

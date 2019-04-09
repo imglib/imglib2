@@ -138,7 +138,7 @@ public interface Interval extends RealInterval, Dimensions
 
 	/** Default implementation of {@link Dimensions#dimension(int)}. */
 	@Override
-	default long dimension( int d )
+	default long dimension( final int d )
 	{
 		return max( d ) - min( d ) + 1;
 	}
