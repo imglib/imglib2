@@ -36,6 +36,7 @@ package net.imglib2.img.cell;
 
 import java.io.Serializable;
 
+import net.imglib2.Interval;
 import net.imglib2.util.IntervalIndexer;
 import net.imglib2.util.Intervals;
 
@@ -44,7 +45,7 @@ import net.imglib2.util.Intervals;
  *
  * @author Tobias Pietzsch
  */
-public class Cell< A > implements Serializable
+public class Cell< A > implements Interval, Serializable
 {
 	private static final long serialVersionUID = 1L;
 
@@ -119,26 +120,36 @@ public class Cell< A > implements Serializable
 		return IntervalIndexer.positionWithOffsetToIndex( position, dimensions, min );
 	}
 
+	@Override
+	public int numDimensions()
+	{
+		return n;
+	}
+
 	/**
+	 * Get the minimum in dimension d.
 	 *
 	 * @param d
 	 *            dimension
-	 * @return minimum
+	 * @return minimum in dimension d.
 	 */
+	@Override
 	public long min( final int d )
 	{
 		return min[ d ];
 	}
 
 	/**
-	 * Write the minimum of each dimension into long[].
+	 * Get the maximum in dimension d.
 	 *
-	 * @param minimum
+	 * @param d
+	 *            dimension
+	 * @return maximum in dimension d.
 	 */
-	public void min( final long[] minimum )
+	@Override
+	public long max( final int d )
 	{
-		for ( int d = 0; d < n; ++d )
-			minimum[ d ] = min[ d ];
+		return max[ d ];
 	}
 
 	/**
@@ -146,13 +157,13 @@ public class Cell< A > implements Serializable
 	 *
 	 * @param d
 	 */
-	public int dimension( final int d )
+	public long dimension( final int d )
 	{
 		return dimensions[ d ];
 	}
 
 	/**
-	 * Write the number of pixels in each dimension into long[].
+	 * Write the number of pixels in each dimension into int[].
 	 *
 	 * @param dim
 	 */
