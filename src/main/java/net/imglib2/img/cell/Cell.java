@@ -157,6 +157,7 @@ public class Cell< A > implements Interval, Serializable
 	 *
 	 * @param d
 	 */
+	@Override
 	public long dimension( final int d )
 	{
 		return dimensions[ d ];
