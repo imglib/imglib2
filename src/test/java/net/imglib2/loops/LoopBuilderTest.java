@@ -157,36 +157,6 @@ public class LoopBuilderTest
 
 	private final BiConsumer< IntType, IntType > COPY_ACTION = ( i, o ) -> o.set( i );
 
-	interface CopyMethod
-	{
-		void copy( Img< IntType > source, Img< IntType > destination );
-	}
-
-	@Test
-	public void testCopyWithDifferentMultiThreadSettings()
-	{
-		final ExecutorService executor = Executors.newFixedThreadPool( 8 );
-		for ( MultiThreadSetting setting : Arrays.asList(
-				MultiThreadSettings.single(),
-				MultiThreadSettings.multi( 8, executor ),
-				MultiThreadSettings.multi( 2, executor )
-		) )
-		{
-			testCopy( ( i, o ) -> LoopBuilder.setImages( i, o ).multiThreaded( setting ).forEachPixel( COPY_ACTION ) );
-			testCopy( ( i, o ) -> LoopBuilder.setImages( i, o ).multiThreaded( setting ).runUsingCursors( COPY_ACTION ) );
-			testCopy( ( i, o ) -> LoopBuilder.setImages( i, o ).multiThreaded( setting ).runUsingRandomAccesses( COPY_ACTION ) );
-		}
-	}
-
-	private void testCopy( CopyMethod forEachPixelMethod )
-	{
-		final long[] dimensions = { 3, 2 };
-		Img< IntType > input = ArrayImgs.ints( new int[] { 1, 2, 3, 4, 5, 6 }, dimensions );
-		Img< IntType > output = ArrayImgs.ints( dimensions );
-		forEachPixelMethod.copy( input, output );
-		ImgLib2Assert.assertImageEquals( input, output );
-	}
-
 	@Test
 	public void testRunUsingRandomAccessesOnSubInterval()
 	{

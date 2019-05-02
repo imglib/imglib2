@@ -35,10 +35,13 @@ package net.imglib2.loops;
 
 import java.util.Collection;
 import java.util.concurrent.ExecutorService;
+import java.util.concurrent.ForkJoinPool;
+import java.util.concurrent.ForkJoinTask;
 import java.util.function.Consumer;
-import java.util.stream.Collectors;
 
 /**
+ * NOTE: Currently only to be used in LoopBuilder, and therefor package-private.
+ * <p>
  * This class might be used as input parameter to an algorithm
  * to specify how the multi-threading is performed.
  * <p>
@@ -51,13 +54,54 @@ import java.util.stream.Collectors;
  * The algorithm, should use the methods of this interface
  * to implement the multi-threading.
  */
-public interface MultiThreadSetting
+interface MultiThreadSetting
 {
+
 	/**
-	 * Returns true if the algorithm, should run multi-threaded.
-	 * Returns false if the algorithm, should run in a single thread.
+	 * Setting for single-threaded execution. No Multi-Threading
+	 * is used.
 	 */
-	boolean useMultiThreading();
+	MultiThreadSetting SINGLE = new MultiThreadSetting()
+	{
+		@Override
+		public int suggestNumberOfTasks()
+		{
+			return 1;
+		}
+
+		@Override
+		public < T > void forEach( Collection< T > values, Consumer< T > action )
+		{
+			values.forEach( action );
+		}
+	};
+
+	/**
+	 * Setting for multi-threaded execution. {@link ForkJoinPool}
+	 * is used for execution.
+	 */
+	MultiThreadSetting MULTI = new MultiThreadSetting()
+	{
+		@Override
+		public int suggestNumberOfTasks()
+		{
+			int parallelism = getParallelism();
+			return ( parallelism == 1 ) ? 1 : parallelism * 4;
+		}
+
+		private int getParallelism()
+		{
+			if ( ForkJoinTask.inForkJoinPool() )
+				return ForkJoinTask.getPool().getParallelism();
+			return ForkJoinPool.commonPool().getParallelism();
+		}
+
+		@Override
+		public < T > void forEach( Collection< T > values, Consumer< T > action )
+		{
+			values.parallelStream().forEach( action );
+		}
+	};
 
 	/**
 	 * An algorithm that can be multi-threaded will usually split
@@ -89,5 +133,6 @@ public interface MultiThreadSetting
 	 * }
 	 * </pre>
 	 */
-	<T> void forEach( Collection< T > values, Consumer< T > action );
+	< T > void forEach( Collection< T > values, Consumer< T > action );
+
 }

@@ -33,12 +33,9 @@
  */
 package net.imglib2.loops;
 
-import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.List;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -47,74 +44,37 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-public class MultiThreadSettingsTest
+public class MultiThreadSettingTest
 {
 
 	@Test
 	public void testSingleThread()
 	{
-		MultiThreadSetting setting = MultiThreadSettings.single();
-		assertFalse( setting.useMultiThreading() );
+		MultiThreadSetting setting = MultiThreadSetting.SINGLE;
 		assertEquals( 1, setting.suggestNumberOfTasks() );
 	}
 
 	@Test
 	public void testSingeThreadExecuteAndWait()
 	{
-		MultiThreadSetting setting = MultiThreadSettings.single();
+		MultiThreadSetting setting = MultiThreadSetting.SINGLE;
 		assertEquals( 5050, sum( 1, 100, setting ) );
 	}
 
 	@Test
 	public void testDefaultMultiThread()
 	{
-		MultiThreadSetting setting = MultiThreadSettings.multi();
-		assertTrue( setting.useMultiThreading() );
+		MultiThreadSetting setting = MultiThreadSetting.MULTI;
 		assertEquals( 5050, sum( 1, 100, setting ) );
-	}
-
-	@Test
-	public void testCustomMultiThread()
-	{
-		final ExecutorService executor = Executors.newFixedThreadPool( 2 );
-		MultiThreadSetting setting = MultiThreadSettings.multi( 10, executor );
-		assertEquals( true, setting.useMultiThreading() );
-		assertEquals( 10, setting.suggestNumberOfTasks() );
-		assertEquals( 5050, sum( 1, 100, setting ) );
-		executor.shutdown();
 	}
 
 	@Test
 	public void testNestedMultiThreading()
 	{
-		final MultiThreadSetting single = MultiThreadSettings.single();
-		final MultiThreadSetting multi = MultiThreadSettings.multi();
-		testNestedMultiThreading( single, single );
-		testNestedMultiThreading( multi, single );
-		testNestedMultiThreading( single, multi );
-		testNestedMultiThreading( multi, multi );
-	}
-
-	@Test
-	public void testCustomNestedMultiThreading()
-	{
-		final ExecutorService executor = Executors.newFixedThreadPool( 2 );
-		MultiThreadSetting custom = MultiThreadSettings.multi( 10, executor );
-		final ExecutorService executor2 = Executors.newFixedThreadPool( 2 );
-		MultiThreadSetting custom2 = MultiThreadSettings.multi( 10, executor2 );
-		testNestedMultiThreading( custom, custom2 );
-		executor.shutdown();
-		executor2.shutdown();
-	}
-
-	@Ignore( "TODO" )
-	@Test
-	public void todoBlockingBecauseOfNestedMultiThreading()
-	{
-		final ExecutorService executor = Executors.newFixedThreadPool( 2 );
-		MultiThreadSetting settings = MultiThreadSettings.multi( 2, executor );
-		testNestedMultiThreading( settings, settings );
-		executor.shutdown();
+		testNestedMultiThreading( MultiThreadSetting.SINGLE, MultiThreadSetting.SINGLE );
+		testNestedMultiThreading( MultiThreadSetting.MULTI, MultiThreadSetting.SINGLE );
+		testNestedMultiThreading( MultiThreadSetting.SINGLE, MultiThreadSetting.MULTI );
+		testNestedMultiThreading( MultiThreadSetting.MULTI, MultiThreadSetting.MULTI );
 	}
 
 	private void testNestedMultiThreading( MultiThreadSetting setting, MultiThreadSetting subSetting )

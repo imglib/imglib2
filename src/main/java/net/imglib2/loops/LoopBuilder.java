@@ -89,7 +89,7 @@ public class LoopBuilder< T >
 
 	private final RandomAccessibleInterval< ? >[] images;
 
-	private MultiThreadSetting multiThreaded = MultiThreadSettings.single();
+	private MultiThreadSetting multiThreaded = MultiThreadSetting.SINGLE;
 
 	private boolean useFlatIterationOrder = false;
 
@@ -165,20 +165,7 @@ public class LoopBuilder< T >
 	 */
 	public LoopBuilder< T > multiThreaded()
 	{
-		return multiThreaded( MultiThreadSettings.multi() );
-	}
-
-	/**
-	 * Sets the {@link MultiThreadSetting} that is used to run the loop.
-	 * <p>
-	 * WARNING: You need to make sure that your operation is thread safe.
-	 *
-	 * @see LoopBuilder
-	 * @see MultiThreadSetting
-	 */
-	public LoopBuilder< T > multiThreaded( MultiThreadSetting multiThreadSetting )
-	{
-		this.multiThreaded = Objects.requireNonNull( multiThreadSetting );
+		this.multiThreaded = Objects.requireNonNull( MultiThreadSetting.MULTI );
 		return this;
 	}
 
