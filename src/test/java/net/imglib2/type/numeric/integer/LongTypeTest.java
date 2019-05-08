@@ -72,4 +72,32 @@ public class LongTypeTest {
 		assertEquals( l.get(), 1093840120l );
 	}
 
+	@Test
+	public void testSetRealFloat() {
+		testSetRealFloat( 0.4f, 0 );
+		testSetRealFloat( 0.6f, 1 );
+		testSetRealFloat( -0.6f, -1 );
+		testSetRealFloat( ( float ) Long.MAX_VALUE, Long.MAX_VALUE );
+		testSetRealFloat( ( float ) Long.MIN_VALUE, Long.MIN_VALUE );
+	}
+
+	private void testSetRealFloat( float floatValue, long longValue )
+	{
+		LongType type = new LongType();
+		type.setReal( floatValue );
+		assertEquals( longValue, type.getLong() );
+	}
+
+	@Test
+	public void testSetMinMaxValue() {
+		testSetRealDouble( new LongType().getMaxValue(), Long.MAX_VALUE );
+		testSetRealDouble( new LongType().getMinValue(), Long.MIN_VALUE );
+	}
+
+	private void testSetRealDouble( double doubleValue, long longValue )
+	{
+		LongType type = new LongType();
+		type.setReal( doubleValue );
+		assertEquals( longValue, type.getLong() );
+	}
 }

@@ -36,6 +36,7 @@ package net.imglib2.type;
 import java.util.function.Function;
 
 import net.imglib2.img.NativeImg;
+import net.imglib2.img.basictypeaccess.BooleanAccess;
 import net.imglib2.img.basictypeaccess.ByteAccess;
 import net.imglib2.img.basictypeaccess.CharAccess;
 import net.imglib2.img.basictypeaccess.DoubleAccess;
@@ -109,6 +110,11 @@ public final class NativeTypeFactory< T extends NativeType< T >, A >
 	public T createLinkedType( final NativeImg< T, ? extends A > img )
 	{
 		return createLinkedType.apply( img );
+	}
+
+	public static < T extends NativeType< T >, A extends BooleanAccess > NativeTypeFactory< T, A > BOOLEAN( final Function< NativeImg< T, ? extends A >, T > createLinkedType )
+	{
+		return new NativeTypeFactory<>( PrimitiveType.BOOLEAN, createLinkedType );
 	}
 
 	public static < T extends NativeType< T >, A extends ByteAccess > NativeTypeFactory< T, A > BYTE( final Function< NativeImg< T, ? extends A >, T > createLinkedType )

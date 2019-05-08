@@ -129,7 +129,7 @@ public class VolatileUnsignedLongType extends AbstractVolatileNativeRealType< Un
 		return v;
 	}
 
-	private static final NativeTypeFactory< VolatileUnsignedLongType, VolatileLongAccess > typeFactory = NativeTypeFactory.LONG( img -> new VolatileUnsignedLongType( img ) );
+	private static final NativeTypeFactory< VolatileUnsignedLongType, VolatileLongAccess > typeFactory = NativeTypeFactory.LONG( VolatileUnsignedLongType::new );
 
 	@Override
 	public NativeTypeFactory< VolatileUnsignedLongType, ? > getNativeTypeFactory()

@@ -84,9 +84,18 @@ public final class SyncedPositionables
 			return new Forwarder2( positionables );
 		case 3:
 			return new Forwarder3( positionables );
+		case 4:
+			return new Forwarder4( positionables );
+		case 5:
+			return new Forwarder5( positionables );
 		default:
 			return new GeneralForwarder( positionables );
 		}
+	}
+
+	public static Positionable createSlow( final List< ? extends Positionable > positionables )
+	{
+		return new GeneralForwarder( positionables );
 	}
 
 	public static Positionable create( final Positionable... positionables )
@@ -245,7 +254,74 @@ public final class SyncedPositionables
 		}
 	}
 
-	private static class GeneralForwarder implements Forwarder
+	private static class Forwarder4 implements Forwarder
+	{
+
+		private final Positionable a, b, c, d;
+
+		public Forwarder4( final List< ? extends Positionable > values )
+		{
+			this.a = values.get( 0 );
+			this.b = values.get( 1 );
+			this.c = values.get( 2 );
+			this.d = values.get( 3 );
+		}
+
+		@Override
+		public void fwd( final int d )
+		{
+			this.a.fwd( d );
+			this.b.fwd( d );
+			this.c.fwd( d );
+			this.d.fwd( d );
+		}
+
+		@Override
+		public void move( final long offset, final int d )
+		{
+			this.a.move( offset, d );
+			this.b.move( offset, d );
+			this.c.move( offset, d );
+			this.d.move( offset, d );
+		}
+	}
+
+	private static class Forwarder5 implements Forwarder
+	{
+
+		private final Positionable a, b, c, d, e;
+
+		public Forwarder5( final List< ? extends Positionable > values )
+		{
+			this.a = values.get( 0 );
+			this.b = values.get( 1 );
+			this.c = values.get( 2 );
+			this.d = values.get( 3 );
+			this.e = values.get( 4 );
+		}
+
+		@Override
+		public void fwd( final int d )
+		{
+			this.a.fwd( d );
+			this.b.fwd( d );
+			this.c.fwd( d );
+			this.d.fwd( d );
+			this.e.fwd( d );
+		}
+
+		@Override
+		public void move( final long offset, final int d )
+		{
+			this.a.move( offset, d );
+			this.b.move( offset, d );
+			this.c.move( offset, d );
+			this.d.move( offset, d );
+			this.e.move( offset, d );
+		}
+	}
+
+	static class GeneralForwarder implements Forwarder
 	{
 
 		private final Positionable[] values;

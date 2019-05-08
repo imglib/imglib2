@@ -80,7 +80,6 @@ public class IntervalIndexerTest
 			}
 			final RandomAccessibleInterval< DoubleType > interval = ConstantUtils.constantRandomAccessibleInterval(
 					new DoubleType(),
-					dim.length,
 					new FinalInterval( min, max ) );
 			testIndexToPosition( interval );
 			testPositionToIndex( interval );

@@ -130,7 +130,7 @@ public class VolatileUnsignedShortType extends AbstractVolatileNativeRealType< U
 		return v;
 	}
 
-	private static final NativeTypeFactory< VolatileUnsignedShortType, VolatileShortAccess > typeFactory = NativeTypeFactory.SHORT( img -> new VolatileUnsignedShortType( img ) );
+	private static final NativeTypeFactory< VolatileUnsignedShortType, VolatileShortAccess > typeFactory = NativeTypeFactory.SHORT( VolatileUnsignedShortType::new );
 
 	@Override
 	public NativeTypeFactory< VolatileUnsignedShortType, ? > getNativeTypeFactory()

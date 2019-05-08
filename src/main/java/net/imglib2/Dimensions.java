@@ -48,7 +48,12 @@ public interface Dimensions extends EuclideanSpace
 	 * 
 	 * @param dimensions
 	 */
-	public void dimensions( long[] dimensions );
+	default void dimensions( final long[] dimensions )
+	{
+		final int n = numDimensions();
+		for ( int d = 0; d < n; d++ )
+			dimensions[ d ] = dimension( d );
+	}
 
 	/**
 	 * Get the number of pixels in a given dimension <em>d</em>.

@@ -85,7 +85,7 @@ public class Unsigned2BitType extends AbstractIntegerBitType< Unsigned2BitType >
 		return new Unsigned2BitType( img );
 	}
 
-	private static final NativeTypeFactory< Unsigned2BitType, LongAccess > typeFactory = NativeTypeFactory.LONG( img -> new Unsigned2BitType( img ) );
+	private static final NativeTypeFactory< Unsigned2BitType, LongAccess > typeFactory = NativeTypeFactory.LONG( Unsigned2BitType::new );
 
 	@Override
 	public NativeTypeFactory< Unsigned2BitType, LongAccess > getNativeTypeFactory()

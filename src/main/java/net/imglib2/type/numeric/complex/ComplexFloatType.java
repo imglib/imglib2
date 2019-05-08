@@ -39,7 +39,9 @@ import net.imglib2.img.basictypeaccess.FloatAccess;
 import net.imglib2.img.basictypeaccess.array.FloatArray;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.NativeTypeFactory;
+import net.imglib2.type.numeric.real.FloatType;
 import net.imglib2.util.Fraction;
+import net.imglib2.util.Util;
 
 /**
  * TODO
@@ -98,7 +100,7 @@ public class ComplexFloatType extends AbstractComplexType< ComplexFloatType > im
 		return new ComplexFloatType( img );
 	}
 
-	private static final NativeTypeFactory< ComplexFloatType, FloatAccess > typeFactory = NativeTypeFactory.FLOAT( img -> new ComplexFloatType( img ) );
+	private static final NativeTypeFactory< ComplexFloatType, FloatAccess > typeFactory = NativeTypeFactory.FLOAT( ComplexFloatType::new );
 
 	@Override
 	public NativeTypeFactory< ComplexFloatType, FloatAccess > getNativeTypeFactory()
@@ -291,7 +293,21 @@ public class ComplexFloatType extends AbstractComplexType< ComplexFloatType > im
 	@Override
 	public boolean valueEquals( final ComplexFloatType t )
 	{
-		return ( getRealFloat() == t.getRealFloat() ) &&
-				( getImaginaryFloat() == t.getImaginaryFloat() );
+		return FloatType.equals( getRealFloat(), t.getRealFloat() ) &&
+				FloatType.equals( getImaginaryFloat(), t.getImaginaryFloat() );
+	}
+
+	@Override
+	public boolean equals( final Object obj )
+	{
+		return Util.valueEqualsObject( this, obj );
+	}
+
+	@Override
+	public int hashCode()
+	{
+		final int rHash = Float.hashCode( getRealFloat() );
+		final int iHash = Float.hashCode( getImaginaryFloat() );
+		return Util.combineHash( rHash, iHash );
 	}
 }

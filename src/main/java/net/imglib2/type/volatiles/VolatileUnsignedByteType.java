@@ -131,7 +131,7 @@ public class VolatileUnsignedByteType extends AbstractVolatileNativeRealType< Un
 		return v;
 	}
 
-	private static final NativeTypeFactory< VolatileUnsignedByteType, VolatileByteAccess > typeFactory = NativeTypeFactory.BYTE( img -> new VolatileUnsignedByteType( img ) );
+	private static final NativeTypeFactory< VolatileUnsignedByteType, VolatileByteAccess > typeFactory = NativeTypeFactory.BYTE( VolatileUnsignedByteType::new );
 
 	@Override
 	public NativeTypeFactory< VolatileUnsignedByteType, ? > getNativeTypeFactory()

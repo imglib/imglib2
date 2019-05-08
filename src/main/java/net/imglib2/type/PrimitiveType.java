@@ -46,15 +46,31 @@ import net.imglib2.img.basictypeaccess.volatiles.array.DirtyVolatileByteArray;
  * </p>
  *
  * @author Tobias Pietzsch
+ * @author Curtis Rueden
  */
 public enum PrimitiveType
 {
-	BYTE,
-	CHAR,
-	SHORT,
-	INT,
-	LONG,
-	FLOAT,
-	DOUBLE,
-	UNDEFINED;
+	// NB: In theory, the number of bytes for boolean is implementation
+	// dependent; in practice, it is 1 for popular JVM implementations.
+	BOOLEAN( 1 ),
+	BYTE( Byte.BYTES ),
+	CHAR( Character.BYTES ),
+	SHORT( Short.BYTES ),
+	INT( Integer.BYTES ),
+	LONG( Long.BYTES ),
+	FLOAT( Float.BYTES ),
+	DOUBLE( Double.BYTES ),
+	UNDEFINED( -1 );
+
+	private final int byteCount;
+
+	private PrimitiveType( final int byteCount )
+	{
+		this.byteCount = byteCount;
+	}
+
+	int getByteCount()
+	{
+		return byteCount;
+	}
 }

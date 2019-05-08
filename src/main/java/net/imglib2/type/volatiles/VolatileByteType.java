@@ -130,7 +130,7 @@ public class VolatileByteType extends AbstractVolatileNativeRealType< ByteType, 
 		return v;
 	}
 
-	private static final NativeTypeFactory< VolatileByteType, VolatileByteAccess > typeFactory = NativeTypeFactory.BYTE( img -> new VolatileByteType( img ) );
+	private static final NativeTypeFactory< VolatileByteType, VolatileByteAccess > typeFactory = NativeTypeFactory.BYTE( VolatileByteType::new );
 
 	@Override
 	public NativeTypeFactory< VolatileByteType, ? > getNativeTypeFactory()

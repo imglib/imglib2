@@ -34,12 +34,14 @@
 
 package net.imglib2.img.array;
 
+import net.imglib2.img.basictypeaccess.BooleanAccess;
 import net.imglib2.img.basictypeaccess.ByteAccess;
 import net.imglib2.img.basictypeaccess.DoubleAccess;
 import net.imglib2.img.basictypeaccess.FloatAccess;
 import net.imglib2.img.basictypeaccess.IntAccess;
 import net.imglib2.img.basictypeaccess.LongAccess;
 import net.imglib2.img.basictypeaccess.ShortAccess;
+import net.imglib2.img.basictypeaccess.array.BooleanArray;
 import net.imglib2.img.basictypeaccess.array.ByteArray;
 import net.imglib2.img.basictypeaccess.array.DoubleArray;
 import net.imglib2.img.basictypeaccess.array.FloatArray;
@@ -48,6 +50,7 @@ import net.imglib2.img.basictypeaccess.array.LongArray;
 import net.imglib2.img.basictypeaccess.array.ShortArray;
 import net.imglib2.type.Type;
 import net.imglib2.type.logic.BitType;
+import net.imglib2.type.logic.NativeBoolType;
 import net.imglib2.type.numeric.ARGBType;
 import net.imglib2.type.numeric.complex.ComplexDoubleType;
 import net.imglib2.type.numeric.complex.ComplexFloatType;
@@ -349,12 +352,54 @@ final public class ArrayImgs
 	}
 
 	/**
+	 * Create an {@link ArrayImg}&lt;{@link NativeBoolType}, {@link BooleanArray}&gt;.
+	 */
+	@SuppressWarnings( "unchecked" )
+	final static public ArrayImg< NativeBoolType, BooleanArray > booleans( final long... dim )
+	{
+		return ( ArrayImg< NativeBoolType, BooleanArray > ) new ArrayImgFactory<>( new NativeBoolType() ).create( dim );
+	}
+
+	/**
+	 * Creates an {@link ArrayImg}&lt;{@link NativeBoolType}, {@link BooleanArray}&gt;
+	 * reusing a passed byte[] array.
+	 */
+	final public static ArrayImg< NativeBoolType, BooleanArray > booleans( final boolean[] array, final long... dim )
+	{
+		return booleans( new BooleanArray( array ), dim );
+	}
+
+	/**
+	 * Creates an {@link ArrayImg}&lt;{@link NativeBoolType},
+	 * {@link BooleanAccess}&gt; using a {@link BooleanAccess} passed as argument.
+	 */
+	final public static < A extends BooleanAccess > ArrayImg< NativeBoolType, A > booleans( final A access, final long... dim )
+	{
+		final ArrayImg< NativeBoolType, A > img = new ArrayImg<>( access, dim, new Fraction() );
+		final NativeBoolType t = new NativeBoolType( img );
+		img.setLinkedType( t );
+		return img;
+	}
+
+	/**
 	 * Create an {@link ArrayImg}&lt;{@link BitType}, {@link LongArray}&gt;.
 	 */
 	@SuppressWarnings( "unchecked" )
 	final static public ArrayImg< BitType, LongArray > bits( final long... dim )
 	{
 		return ( ArrayImg< BitType, LongArray > ) new ArrayImgFactory<>( new BitType() ).create( dim );
+	}
+
+	/**
+	 * Creates an {@link ArrayImg}&lt;{@link NativeBoolType}, {@link LongAccess}&gt;
+	 * using a {@link LongAccess} passed as argument.
+	 */
+	final static public < A extends BooleanAccess > ArrayImg< NativeBoolType, A > bits( final A access, final long... dim )
+	{
+		final ArrayImg< NativeBoolType, A > img = new ArrayImg<>( access, dim, new Fraction( 1, 64 ) );
+		final NativeBoolType t = new NativeBoolType( img );
+		img.setLinkedType( t );
+		return img;
 	}
 
 	/**

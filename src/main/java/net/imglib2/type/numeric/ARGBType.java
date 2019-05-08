@@ -99,7 +99,7 @@ public class ARGBType extends AbstractNativeType< ARGBType > implements NumericT
 		return new ARGBType( img );
 	}
 
-	private static final NativeTypeFactory< ARGBType, IntAccess > typeFactory = NativeTypeFactory.INT( img -> new ARGBType( img ) );
+	private static final NativeTypeFactory< ARGBType, IntAccess > typeFactory = NativeTypeFactory.INT( ARGBType::new );
 
 	@Override
 	public NativeTypeFactory< ARGBType, IntAccess > getNativeTypeFactory()
@@ -249,5 +249,17 @@ public class ARGBType extends AbstractNativeType< ARGBType > implements NumericT
 	public boolean valueEquals( final ARGBType t )
 	{
 		return get() == t.get();
+	}
+
+	@Override
+	public boolean equals( final Object obj )
+	{
+		return Util.valueEqualsObject( this, obj );
+	}
+
+	@Override
+	public int hashCode()
+	{
+		return Integer.hashCode( get() );
 	}
 }

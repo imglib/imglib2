@@ -34,11 +34,10 @@
 
 package net.imglib2.util;
 
-import java.util.List;
-
 import net.imglib2.Dimensions;
 import net.imglib2.Interval;
 import net.imglib2.IterableInterval;
+import net.imglib2.Localizable;
 import net.imglib2.RandomAccess;
 import net.imglib2.RandomAccessible;
 import net.imglib2.RandomAccessibleInterval;
@@ -46,6 +45,7 @@ import net.imglib2.RealInterval;
 import net.imglib2.RealLocalizable;
 import net.imglib2.RealRandomAccess;
 import net.imglib2.RealRandomAccessible;
+import net.imglib2.img.Img;
 import net.imglib2.img.ImgFactory;
 import net.imglib2.img.array.ArrayImg;
 import net.imglib2.img.array.ArrayImgFactory;
@@ -53,12 +53,21 @@ import net.imglib2.img.cell.CellImgFactory;
 import net.imglib2.img.list.ListImgFactory;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.Type;
+import net.imglib2.type.numeric.RealType;
+import net.imglib2.type.operators.ValueEquals;
+import net.imglib2.view.Views;
+
+import java.util.List;
+import java.util.function.BiPredicate;
+import java.util.stream.StreamSupport;
 
 /**
- * TODO
+ * A collection of general-purpose utility methods for working with ImgLib2 data
+ * structures.
  * 
  * @author Stephan Preibisch
  * @author Stephan Saalfeld
+ * @author Curtis Rueden
  */
 public class Util
 {
@@ -491,13 +500,34 @@ public class Util
 
 	public static int round( final float value )
 	{
-		return ( int ) ( value + ( 0.5f * Math.signum( value ) ) );
+		return roundToInt( value );
 	}
 
 	public static long round( final double value )
 	{
+		return roundToLong( value );
+	}
+
+	public static int roundToInt( final float value )
+	{
+		return ( int ) ( value + ( 0.5f * Math.signum( value ) ) );
+	}
+
+	public static int roundToInt( final double value )
+	{
+		return ( int ) ( value + ( 0.5d * Math.signum( value ) ) );
+	}
+
+	public static long roundToLong( final float value )
+	{
+		return ( long ) ( value + ( 0.5f * Math.signum( value ) ) );
+	}
+
+	public static long roundToLong( final double value )
+	{
 		return ( long ) ( value + ( 0.5d * Math.signum( value ) ) );
 	}
+
 
 	/**
 	 * This method creates a gaussian kernel
@@ -894,6 +924,85 @@ public class Util
 	}
 
 	/**
+	 * Determines whether the two {@link Localizable} objects have the same
+	 * position, with {@code long} precision.
+	 * <p>
+	 * At first glance, this method may appear to be unnecessary, since there is
+	 * also {@link #locationsEqual(RealLocalizable, RealLocalizable)}, which is
+	 * more general. The difference is that this method compares the positions
+	 * using {@link Localizable#getLongPosition(int)}, which has higher
+	 * precision in integer space than
+	 * {@link RealLocalizable#getDoublePosition(int)} does, which is what the
+	 * {@link #locationsEqual(RealLocalizable, RealLocalizable)} method uses.
+	 * </p>
+	 * 
+	 * @param l1
+	 *            The first {@link Localizable}.
+	 * @param l2
+	 *            The second {@link Localizable}.
+	 * @return True iff the positions are the same, including dimensionality.
+	 * @see Localizable#getLongPosition(int)
+	 */
+	public static boolean locationsEqual( final Localizable l1, final Localizable l2 )
+	{
+		final int numDims = l1.numDimensions();
+		if ( l2.numDimensions() != numDims )
+			return false;
+		for ( int d = 0; d < numDims; d++ )
+		{
+			if ( l1.getLongPosition( d ) != l2.getLongPosition( d ) )
+				return false;
+		}
+		return true;
+	}
+
+	/**
+	 * Determines whether the two {@link RealLocalizable} objects have the same
+	 * position, with {@code double} precision.
+	 * 
+	 * @param l1
+	 *            The first {@link RealLocalizable}.
+	 * @param l2
+	 *            The second {@link RealLocalizable}.
+	 * @return True iff the positions are the same, including dimensionality.
+	 * @see RealLocalizable#getDoublePosition(int)
+	 */
+	public static boolean locationsEqual( final RealLocalizable l1, final RealLocalizable l2 )
+	{
+		final int numDims = l1.numDimensions();
+		if ( l2.numDimensions() != numDims )
+			return false;
+		for ( int d = 0; d < numDims; d++ )
+		{
+			if ( l1.getDoublePosition( d ) != l2.getDoublePosition( d ) )
+				return false;
+		}
+		return true;
+	}
+
+	/**
+	 * Checks if both images have equal intervals and content.
+	 */
+	public static < T extends ValueEquals< U >, U > boolean imagesEqual( final RandomAccessibleInterval< ? extends T > a, final RandomAccessibleInterval< ? extends U > b )
+	{
+		return imagesEqual( a, b, ValueEquals::valueEquals );
+	}
+
+	/**
+	 * Checks if both images have equal intervals and content.
+	 * A predicate must be given to check if two pixels are equal.
+	 */
+	public static < T, U > boolean imagesEqual( final RandomAccessibleInterval< ? extends T > a, final RandomAccessibleInterval< ? extends U > b, final BiPredicate< T, U > pixelEquals )
+	{
+		if ( !Intervals.equals( a, b ) )
+			return false;
+		for ( final Pair< ? extends T, ? extends U > pair : Views.interval( Views.pair( a, b ), b ) )
+			if ( !pixelEquals.test( pair.getA(), pair.getB() ) )
+				return false;
+		return true;
+	}
+
+	/**
 	 * Writes min(a,b) into a
 	 * 
 	 * @param a
@@ -917,5 +1026,51 @@ public class Util
 		for ( int i = 0; i < a.length; ++i )
 			if ( b[ i ] > a[ i ] )
 				a[ i ] = b[ i ];
+	}
+
+	/**
+	 * Returns the content of {@code Iterable<RealType>} as array of doubles.
+	 */
+	public static double[] asDoubleArray( final Iterable< ? extends RealType< ? > > iterable )
+	{
+		return StreamSupport.stream( iterable.spliterator(), false ).mapToDouble( RealType::getRealDouble ).toArray();
+	}
+
+	/**
+	 * Returns the pixels of an RandomAccessibleInterval of RealType as array of doubles.
+	 * The pixels are sorted in flat iteration order.
+	 */
+	public static double[] asDoubleArray( final RandomAccessibleInterval< ? extends RealType< ? > > rai )
+	{
+		return asDoubleArray( Views.flatIterable( rai ) );
+	}
+
+	/**
+	 * Returns the pixels of an image of RealType as array of doubles.
+	 * The pixels are sorted in flat iteration order.
+	 */
+	public static double[] asDoubleArray( final Img< ? extends RealType< ? > > image )
+	{
+		return asDoubleArray( ( RandomAccessibleInterval< ? extends RealType< ? > > ) image );
+	}
+
+	/**
+	 * This method should be used in implementations of {@link ValueEquals}, to
+	 * override {@link Object#equals(Object)}.
+	 *
+	 * @see net.imglib2.type.AbstractNativeType#equals(Object)
+	 */
+	public static < T extends ValueEquals< T > > boolean valueEqualsObject( final T a, final Object b )
+	{
+		if ( !a.getClass().isInstance( b ) )
+			return false;
+		@SuppressWarnings( "unchecked" )
+		final T t = ( T ) b;
+		return a.valueEquals( t );
+	}
+
+	public static int combineHash( final int hash1, final int hash2 )
+	{
+		return 31 * hash1 + hash2;
 	}
 }

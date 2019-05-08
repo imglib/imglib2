@@ -95,7 +95,7 @@ public class DoubleType extends AbstractRealType< DoubleType > implements Native
 		return new DoubleType( img );
 	}
 
-	private static final NativeTypeFactory< DoubleType, DoubleAccess > typeFactory = NativeTypeFactory.DOUBLE( img -> new DoubleType( img ) );
+	private static final NativeTypeFactory< DoubleType, DoubleAccess > typeFactory = NativeTypeFactory.DOUBLE( DoubleType::new );
 
 	@Override
 	public NativeTypeFactory< DoubleType, DoubleAccess > getNativeTypeFactory()
@@ -215,9 +215,7 @@ public class DoubleType extends AbstractRealType< DoubleType > implements Native
 		return 64;
 	}
 
-	@Override
-	public boolean valueEquals( final DoubleType t )
-	{
-		return get() == t.get();
+	public static boolean equals(double a, double b) {
+		return Double.doubleToLongBits( a ) == Double.doubleToLongBits( b );
 	}
 }

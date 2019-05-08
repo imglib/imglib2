@@ -39,6 +39,7 @@ import java.math.BigInteger;
 import net.imglib2.img.NativeImg;
 import net.imglib2.img.basictypeaccess.LongAccess;
 import net.imglib2.type.NativeTypeFactory;
+import net.imglib2.util.Util;
 
 /**
  * TODO
@@ -79,7 +80,7 @@ public class LongType extends GenericLongType< LongType >
 		return new LongType( img );
 	}
 
-	private static final NativeTypeFactory< LongType, LongAccess > typeFactory = NativeTypeFactory.LONG( img -> new LongType( img ) );
+	private static final NativeTypeFactory< LongType, LongAccess > typeFactory = NativeTypeFactory.LONG( LongType::new );
 
 	@Override
 	public NativeTypeFactory< LongType, LongAccess > getNativeTypeFactory()
@@ -89,7 +90,7 @@ public class LongType extends GenericLongType< LongType >
 
 	public long get()
 	{
-		return dataAccess.getValue( i );
+		return getLong();
 	}
 
 	public void set( final long f )
@@ -134,36 +135,21 @@ public class LongType extends GenericLongType< LongType >
 	}
 
 	@Override
+	public void setReal( float real )
+	{
+		set( Util.roundToLong( real ) );
+	}
+
+	@Override
 	public double getMaxValue()
 	{
 		return Long.MAX_VALUE;
-	}
+	} // imprecise
 
 	@Override
 	public double getMinValue()
 	{
 		return Long.MIN_VALUE;
-	}
-
-	@Override
-	public int hashCode()
-	{
-		// NB: Use the same hash code as java.lang.Long#hashCode().
-		final long value = get();
-		return ( int ) ( value ^ ( value >>> 32 ) );
-	}
-
-	@Override
-	public int compareTo( final LongType c )
-	{
-		final long a = get();
-		final long b = c.get();
-		if ( a > b )
-			return 1;
-		else if ( a < b )
-			return -1;
-		else
-			return 0;
 	}
 
 	@Override

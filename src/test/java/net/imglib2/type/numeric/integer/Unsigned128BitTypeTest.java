@@ -163,4 +163,16 @@ public class Unsigned128BitTypeTest
 		assertEquals( l.get(), bi );
 	}
 
+	@Test
+	public void testGetRealDouble() {
+		assertEquals( 0.0, new Unsigned128BitType( 0, 0 ).getRealDouble(), 0.0 );
+		assertEquals( Math.pow( 2, 128 ), new Unsigned128BitType( -1, -1 ).getRealDouble(), 0.0 );
+	}
+
+	@Test
+	public void testGetRealFloat() {
+		assertEquals( 0.0, new Unsigned128BitType( 0, 0 ).getRealFloat(), 0.0 );
+		assertEquals( Math.pow( 2, 127 ), (float) Math.pow( 2, 127 ), 0.0 );
+		assertEquals( Math.pow( 2, 127 ), new Unsigned128BitType(0, 1l << 63 ).getRealFloat(), 0.0 );
+	}
 }

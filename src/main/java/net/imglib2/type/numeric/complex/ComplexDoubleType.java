@@ -98,7 +98,7 @@ public class ComplexDoubleType extends AbstractComplexType< ComplexDoubleType > 
 		return new ComplexDoubleType( img );
 	}
 
-	private static final NativeTypeFactory< ComplexDoubleType, DoubleAccess > typeFactory = NativeTypeFactory.DOUBLE( img -> new ComplexDoubleType( img ) );
+	private static final NativeTypeFactory< ComplexDoubleType, DoubleAccess > typeFactory = NativeTypeFactory.DOUBLE( ComplexDoubleType::new );
 
 	@Override
 	public NativeTypeFactory< ComplexDoubleType, DoubleAccess > getNativeTypeFactory()
@@ -232,12 +232,5 @@ public class ComplexDoubleType extends AbstractComplexType< ComplexDoubleType > 
 	public int getIndex()
 	{
 		return i;
-	}
-
-	@Override
-	public boolean valueEquals( final ComplexDoubleType t )
-	{
-		return ( getRealDouble() == t.getRealDouble() ) &&
-				( getImaginaryDouble() == t.getImaginaryDouble() );
 	}
 }

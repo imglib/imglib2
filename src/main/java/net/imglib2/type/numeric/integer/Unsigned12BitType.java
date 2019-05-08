@@ -86,7 +86,7 @@ public class Unsigned12BitType extends AbstractIntegerBitType< Unsigned12BitType
 		return new Unsigned12BitType( img );
 	}
 
-	private static final NativeTypeFactory< Unsigned12BitType, LongAccess > typeFactory = NativeTypeFactory.LONG( img -> new Unsigned12BitType( img ) );
+	private static final NativeTypeFactory< Unsigned12BitType, LongAccess > typeFactory = NativeTypeFactory.LONG( Unsigned12BitType::new );
 
 	@Override
 	public NativeTypeFactory< Unsigned12BitType, LongAccess > getNativeTypeFactory()

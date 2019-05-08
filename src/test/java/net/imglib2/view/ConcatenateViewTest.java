@@ -34,8 +34,12 @@
 
 package net.imglib2.view;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Random;
 
+import net.imglib2.img.Img;
+import net.imglib2.util.ValuePair;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -47,7 +51,10 @@ import net.imglib2.type.numeric.integer.ByteType;
 import net.imglib2.util.Intervals;
 import net.imglib2.util.Pair;
 
+import static org.junit.Assert.assertArrayEquals;
+
 /**
+ * Tests {@link Views#concatenate(int, RandomAccessibleInterval[])}
  *
  * @author Philipp Hanslovsky
  *
@@ -55,21 +62,55 @@ import net.imglib2.util.Pair;
 public class ConcatenateViewTest
 {
 
-	private final long[] dim = new long[] { 3, 4, 5, 6 };
-
-	private final long divider = 3;
-
-	private final int axis = 3;
+	@Test
+	public void testConcatenateSimple() {
+		// setup
+		Img<ByteType> a = ArrayImgs.bytes( new byte[]{ 1, 2, 3, 4 }, 2, 2 );
+		Img<ByteType> b = ArrayImgs.bytes( new byte[]{ 7, 8 }, 1, 2 );
+		Img<ByteType> expected = ArrayImgs.bytes( new byte[]{ 1, 2, 7, 3, 4, 8 }, 3, 2 );
+		// process
+		RandomAccessibleInterval< ByteType > result = Views.concatenate( 0, a, b );
+		// test
+		assertImageEquals( expected, result );
+	}
 
 	@Test
 	public void testConcatenate()
+	{
+		testConcatenateImpl( new long[] { 3, 4, 5, 6 }, 3, 3 );
+	}
+
+	@Test
+	public void testConcatenateFirstAxis()
+	{
+		testConcatenateImpl( new long[] { 6, 5, 4, 3 }, 0, 3 );
+	}
+
+	private static void testConcatenateImpl( long[] dim, int axis, long divider )
+	{
+		// setup
+		final Img< ByteType > img = createRandomImage( dim );
+		final List< RandomAccessibleInterval< ByteType > > parts = splitImage( img, axis, divider );
+		// process
+		final RandomAccessibleInterval< ByteType > concatenated = Views.concatenate( axis, parts );
+		// test
+		assertImageEquals( img, concatenated );
+	}
+
+	private static ArrayImg< ByteType, ByteArray > createRandomImage( long[] dim )
 	{
 		final long numElements = Intervals.numElements( dim );
 		final Random rng = new Random();
 		final byte[] data = new byte[ ( int ) numElements ];
 		rng.nextBytes( data );
-		final ArrayImg< ByteType, ByteArray > img = ArrayImgs.bytes( data, dim );
+		return ArrayImgs.bytes( data, dim );
+	}
 
+	private static List< RandomAccessibleInterval< ByteType > > splitImage(
+			RandomAccessibleInterval< ByteType > img,
+			int axis,
+			long divider )
+	{
 		final long[] min = Intervals.minAsLongArray( img );
 		final long[] max = Intervals.maxAsLongArray( img );
 		final long[] min1 = min.clone();
@@ -83,10 +124,14 @@ public class ConcatenateViewTest
 		final IntervalView< ByteType > interval1 = Views.interval( img, min1, max1 );
 		final IntervalView< ByteType > interval2 = Views.interval( img, min2, max2 );
 
-		final RandomAccessibleInterval< ByteType > concatenated = Views.concatenate( axis, interval1, interval2 );
-
-		for ( final Pair< ByteType, ByteType > p : Views.flatIterable( Views.interval( Views.pair( img, concatenated ), img ) ) )
-			Assert.assertEquals( p.getA().getInteger(), p.getB().getInteger() );
+		return Arrays.asList( interval1, interval2 );
 	}
 
+	private static void assertImageEquals(
+			RandomAccessibleInterval< ByteType > expected,
+			RandomAccessibleInterval< ByteType > actual )
+	{
+		for ( final Pair< ByteType, ByteType > p : Views.interval( Views.pair( expected, actual ), expected ) )
+			Assert.assertEquals( p.getA().getInteger(), p.getB().getInteger() );
+	}
 }

@@ -45,6 +45,7 @@ import net.imglib2.type.NativeTypeFactory;
 import net.imglib2.type.Type;
 import net.imglib2.type.numeric.NumericType;
 import net.imglib2.util.Fraction;
+import net.imglib2.util.Util;
 
 /**
  * A {@link Type} with a bit depth of 128. Each value is stored in two adjacent
@@ -115,7 +116,7 @@ public class Unsigned128BitType extends AbstractIntegerType< Unsigned128BitType 
 		return new Unsigned128BitType( img );
 	}
 
-	private static final NativeTypeFactory< Unsigned128BitType, LongAccess > typeFactory = NativeTypeFactory.LONG( img -> new Unsigned128BitType( img ) );
+	private static final NativeTypeFactory< Unsigned128BitType, LongAccess > typeFactory = NativeTypeFactory.LONG( Unsigned128BitType::new );
 
 	@Override
 	public NativeTypeFactory< Unsigned128BitType, LongAccess > getNativeTypeFactory()
@@ -205,6 +206,22 @@ public class Unsigned128BitType extends AbstractIntegerType< Unsigned128BitType 
 	}
 
 	@Override
+	public float getRealFloat()
+	{
+		return (float) getRealDouble();
+	}
+
+	@Override
+	public double getRealDouble()
+	{
+		final int k = i * 2;
+		final long lower = dataAccess.getValue( k );
+		final long upper = dataAccess.getValue( k + 1 );
+		return UnsignedLongType.unsignedLongToDouble( lower ) +
+				UnsignedLongType.unsignedLongToDouble( upper ) * Math.pow( 2, 64 );
+	}
+
+	@Override
 	public void setInteger( final int value )
 	{
 		final int k = i * 2;
@@ -224,6 +241,23 @@ public class Unsigned128BitType extends AbstractIntegerType< Unsigned128BitType 
 	public void setBigInteger( final BigInteger b )
 	{
 		set( b );
+	}
+
+	@Override
+	public void setReal( float real )
+	{
+		setReal( (double) real );
+	}
+
+	@Override
+	public void setReal( double real )
+	{
+		real = Math.floor( real + 0.5 );
+		final double base = Math.pow( 2, 64 );
+		double upper = Math.floor(real / base );
+		double lower = real - base * upper;
+		set( UnsignedLongType.doubleToUnsignedLong( lower ),
+				UnsignedLongType.doubleToUnsignedLong( upper ));
 	}
 
 	/**
@@ -427,19 +461,15 @@ public class Unsigned128BitType extends AbstractIntegerType< Unsigned128BitType 
 	@Override
 	public int compareTo( final Unsigned128BitType t )
 	{
-		final long upper1 = dataAccess.getValue( i * 2 + 1 ),
-				upper2 = t.dataAccess.getValue( t.i * 2 + 1 );
-		if ( -1 == UnsignedLongType.compare( upper1, upper2 ) )
-		{
-			return -1;
-		}
-		else if ( upper1 == upper2 )
-		{
-			final long lower1 = dataAccess.getValue( i * 2 ),
-					lower2 = t.dataAccess.getValue( t.i * 2 );
-			return UnsignedLongType.compare( lower1, lower2 );
-		}
-		return 1;
+		final long upper1 = dataAccess.getValue( i * 2 + 1 );
+		final long upper2 = t.dataAccess.getValue( t.i * 2 + 1 );
+		final int compareUpper = Long.compareUnsigned( upper1, upper2 );
+		if ( compareUpper != 0 )
+			return compareUpper;
+
+		final long lower1 = dataAccess.getValue( i * 2 );
+		final long lower2 = t.dataAccess.getValue( t.i * 2 );
+		return Long.compareUnsigned( lower1, lower2 );
 	}
 
 	@Override
@@ -450,5 +480,26 @@ public class Unsigned128BitType extends AbstractIntegerType< Unsigned128BitType 
 
 		return ( dataAccess.getValue( k ) == t.dataAccess.getValue( kt ) ) &&
 				( dataAccess.getValue( k + 1 ) == t.dataAccess.getValue( kt + 1 ) );
+	}
+
+	@Override
+	public boolean equals( final Object obj )
+	{
+		return Util.valueEqualsObject( this, obj );
+	}
+
+	@Override
+	public int hashCode()
+	{
+		final int k = i * 2;
+		final int hash1 = Long.hashCode( dataAccess.getValue( k + 1 ) );
+		final int hash2 = Long.hashCode( dataAccess.getValue( k ) );
+		return Util.combineHash( hash1, hash2 );
+	}
+
+	@Override
+	public String toString()
+	{
+		return getBigInteger().toString();
 	}
 }

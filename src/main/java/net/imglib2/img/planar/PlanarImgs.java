@@ -34,6 +34,7 @@
 
 package net.imglib2.img.planar;
 
+import net.imglib2.img.basictypeaccess.array.BooleanArray;
 import net.imglib2.img.basictypeaccess.array.ByteArray;
 import net.imglib2.img.basictypeaccess.array.DoubleArray;
 import net.imglib2.img.basictypeaccess.array.FloatArray;
@@ -42,6 +43,7 @@ import net.imglib2.img.basictypeaccess.array.LongArray;
 import net.imglib2.img.basictypeaccess.array.ShortArray;
 import net.imglib2.type.Type;
 import net.imglib2.type.logic.BitType;
+import net.imglib2.type.logic.NativeBoolType;
 import net.imglib2.type.numeric.ARGBType;
 import net.imglib2.type.numeric.complex.ComplexDoubleType;
 import net.imglib2.type.numeric.complex.ComplexFloatType;
@@ -137,6 +139,15 @@ final public class PlanarImgs
 	final static public PlanarImg< LongType, LongArray > longs( final long... dim )
 	{
 		return ( PlanarImg< LongType, LongArray > ) new PlanarImgFactory<>( new LongType() ).create( dim );
+	}
+
+	/**
+	 * Create an {@link PlanarImg}&lt;{@link NativeBoolType}, {@link BooleanArray}&gt;.
+	 */
+	@SuppressWarnings( "unchecked" )
+	final static public PlanarImg< NativeBoolType, BooleanArray > booleans( final long... dim )
+	{
+		return ( PlanarImg< NativeBoolType, BooleanArray > ) new PlanarImgFactory<>( new NativeBoolType() ).create( dim );
 	}
 
 	/**

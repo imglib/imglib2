@@ -78,7 +78,7 @@ public class IntType extends GenericIntType< IntType >
 		return new IntType( img );
 	}
 
-	private static final NativeTypeFactory< IntType, IntAccess > typeFactory = NativeTypeFactory.INT( img -> new IntType( img ) );
+	private static final NativeTypeFactory< IntType, IntAccess > typeFactory = NativeTypeFactory.INT( IntType::new );
 
 	@Override
 	public NativeTypeFactory< IntType, IntAccess > getNativeTypeFactory()

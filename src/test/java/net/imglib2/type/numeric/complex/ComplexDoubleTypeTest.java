@@ -76,13 +76,4 @@ public class ComplexDoubleTypeTest
 		assertTrue( i4.equals( b ) );
 	}
 
-
-	/** Tests {@link ComplexDoubleType#hashCode()}. */
-	@Test
-	public void testHashCode()
-	{
-		final ComplexDoubleType b = new ComplexDoubleType( 1.234, 5.678 );
-		assertEquals( 379318760, b.hashCode() );
-	}
-
 }

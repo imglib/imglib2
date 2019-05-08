@@ -177,4 +177,77 @@ public class UnsignedLongTypeTest {
 
 		assertEquals( ul.get(), bi.longValue() );
 	}
+
+	@Test
+	public void testGetMaxValue() {
+		assertEquals( (double) Long.MAX_VALUE - (double) Long.MIN_VALUE, new UnsignedLongType().getMaxValue(), 0.0 );
+	}
+
+	@Test
+	public void testGetRealDouble() {
+
+		final UnsignedLongType ul = new UnsignedLongType( -1 );
+		assertEquals( ul.getMaxValue(), ul.getRealDouble(), 0.0 );
+	}
+
+	@Test
+	public void testGetRealFloat() {
+
+		final UnsignedLongType ul = new UnsignedLongType( -1 );
+		assertEquals( (float) ul.getMaxValue(), ul.getRealFloat(), 0.0f );
+	}
+
+	@Test
+	public void testSetRealDouble() {
+		// simple values
+		testSetRealDouble( 0, 0 );
+		testSetRealDouble( 42, 42 );
+		// negative
+		testSetRealDouble( -1, 0 );
+		// max unsigned long
+		testSetRealDouble( Math.pow( 2, 64 ) - 1, ( long ) -1 );
+		// max long + 1
+		testSetRealDouble( Math.pow( 2, 63 ), 1l << 63 );
+		// value smaller than "max long + 1", that can be represented by double
+		testSetRealDouble( Math.pow( 2, 63 ) - Math.pow( 2, 10 ), (1l << 63) - (1l << 10) );
+		// max unsigned long + 1
+		testSetRealDouble( Math.pow( 2, 64 ) + 1, ( long ) -1 );
+	}
+
+	private void testSetRealDouble( double doubleValue, long longValue )
+	{
+		final UnsignedLongType type = new UnsignedLongType();
+		type.setReal( doubleValue );
+		assertEquals( longValue, type.getLong() );
+	}
+
+	@Test
+	public void testSetMinMax() {
+		testSetRealDouble( new UnsignedLongType().getMaxValue(), -1l );
+		testSetRealDouble( new UnsignedLongType().getMinValue(), 0 );
+	}
+
+	@Test
+	public void testSetRealFloat() {
+		// simple values
+		testSetRealFloat( 0, 0 );
+		testSetRealFloat( 42, 42 );
+		// negative
+		testSetRealFloat( -1, 0 );
+		// max unsigned long
+		testSetRealFloat( Math.pow( 2, 64 ) - 1, ( long ) -1 );
+		// max long + 1
+		testSetRealFloat( Math.pow( 2, 63 ), 1l << 63 );
+		// value smaller than "max long + 1", that can be represented by float
+		testSetRealFloat( Math.pow( 2, 63 ) - Math.pow( 2, 39 ), (1l << 63) - (1l << 39) );
+		// max unsigned long + 1
+		testSetRealFloat( Math.pow( 2, 64 ) + 1, ( long ) -1 );
+	}
+
+	private void testSetRealFloat( double realValue, long longValue )
+	{
+		UnsignedLongType type = new UnsignedLongType();
+		type.setReal((float) realValue );
+		assertEquals( longValue, type.getLong() );
+	}
 }
