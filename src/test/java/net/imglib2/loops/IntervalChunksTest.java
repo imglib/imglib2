@@ -59,13 +59,13 @@ public class IntervalChunksTest
 	@Test
 	public void testSuggestCellSize()
 	{
-		assertArrayEquals( array ( 20 ), IntervalChunks.suggestCellSize( array ( 40 ), 2 ) );
-		assertArrayEquals( array ( 5 ), IntervalChunks.suggestCellSize( array ( 100 ), 19 ) );
-		assertArrayEquals( array ( 1 ), IntervalChunks.suggestCellSize( array ( 10 ), 1000 ) );
-		assertArrayEquals( array ( 10, 10 ), IntervalChunks.suggestCellSize( array ( 10, 10 ), 1 ) );
-		assertArrayEquals( array ( 10, 5 ), IntervalChunks.suggestCellSize( array ( 10, 10 ), 2 ) );
-		assertArrayEquals( array ( 5, 1 ), IntervalChunks.suggestCellSize( array ( 10, 10 ), 20 ) );
-		assertArrayEquals( array ( 5, 1 ), IntervalChunks.suggestCellSize( array ( 10, 10 ), 17 ) );
+		assertArrayEquals( array ( 20 ), IntervalChunks.suggestChunkSize( array ( 40 ), 2 ) );
+		assertArrayEquals( array ( 5 ), IntervalChunks.suggestChunkSize( array ( 100 ), 19 ) );
+		assertArrayEquals( array ( 1 ), IntervalChunks.suggestChunkSize( array ( 10 ), 1000 ) );
+		assertArrayEquals( array ( 10, 10 ), IntervalChunks.suggestChunkSize( array ( 10, 10 ), 1 ) );
+		assertArrayEquals( array ( 10, 5 ), IntervalChunks.suggestChunkSize( array ( 10, 10 ), 2 ) );
+		assertArrayEquals( array ( 5, 1 ), IntervalChunks.suggestChunkSize( array ( 10, 10 ), 20 ) );
+		assertArrayEquals( array ( 5, 1 ), IntervalChunks.suggestChunkSize( array ( 10, 10 ), 17 ) );
 	}
 
 	@Test

@@ -52,26 +52,26 @@ public class IntervalChunks
 	 * return the correct number of intervals, in that case this method
 	 * returns a larger number of intervals.
 	 */
-	public static List< Interval > chunkInterval( Interval interval, int numChunks )
+	public static List< Interval > chunkInterval( Interval interval, int numberOfChunks )
 	{
-		long[] chunkDimensions = suggestCellSize( Intervals.dimensionsAsLongArray( interval ), numChunks );
+		long[] chunkDimensions = suggestChunkSize( Intervals.dimensionsAsLongArray( interval ), numberOfChunks );
 		return generateGrid( interval, chunkDimensions );
 	}
 
 	/**
-	 * Suggest a cell size that can be used, to divide an interval of the
+	 * Suggest a chunk size that can be used, to divide an interval of the
 	 * given dimensions, into the given number of chunks.
 	 */
-	static long[] suggestCellSize( long[] dimensions, long numberOfCells )
+	static long[] suggestChunkSize( long[] dimensions, long numberOfChunks )
 	{
-		long[] cellSizes = new long[ dimensions.length ];
+		long[] chunkSize = new long[ dimensions.length ];
 		for ( int i = dimensions.length - 1; i >= 0; i-- )
 		{
-			cellSizes[ i ] = Math.max( 1, dimensions[ i ] / numberOfCells );
-			final long divisions = divideAndRoundUp( dimensions[ i ], cellSizes[ i ] );
-			numberOfCells = divideAndRoundUp( numberOfCells, divisions );
+			chunkSize[ i ] = Math.max( 1, dimensions[ i ] / numberOfChunks );
+			final long divisions = divideAndRoundUp( dimensions[ i ], chunkSize[ i ] );
+			numberOfChunks = divideAndRoundUp( numberOfChunks, divisions );
 		}
-		return cellSizes;
+		return chunkSize;
 	}
 
 	/**
