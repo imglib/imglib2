@@ -33,7 +33,6 @@
  */
 package net.imglib2.loops;
 
-import net.imglib2.IterableInterval;
 import org.openjdk.jmh.annotations.Benchmark;
 import org.openjdk.jmh.annotations.Fork;
 import org.openjdk.jmh.annotations.Measurement;
@@ -44,7 +43,6 @@ import org.openjdk.jmh.runner.Runner;
 import org.openjdk.jmh.runner.RunnerException;
 import org.openjdk.jmh.runner.options.Options;
 import org.openjdk.jmh.runner.options.OptionsBuilder;
-import org.openjdk.jmh.runner.options.TimeValue;
 
 import net.imglib2.Cursor;
 import net.imglib2.RandomAccess;
@@ -67,18 +65,21 @@ import java.util.concurrent.TimeUnit;
 @Measurement( iterations = 8, time = 100, timeUnit = TimeUnit.MILLISECONDS )
 public class LoopPerformanceBenchmark
 {
+	private final long[] dim = { 1000, 1000 };
 
-	RandomAccessibleInterval< DoubleType > in = ArrayImgs.doubles( 300, 300 );
+	private final RandomAccessibleInterval< DoubleType > in = ArrayImgs.doubles( dim );
 
-	RandomAccessibleInterval< DoubleType > allOut = ArrayImgs.doubles( 300, 300 );
+	private final RandomAccessibleInterval< DoubleType > out = ArrayImgs.doubles( dim );
 
-	RandomAccessibleInterval< DoubleType > out = Views.interval( allOut, Intervals.expand( allOut, -1 ) );
+	private final RandomAccessibleInterval< DoubleType > backIn = Views.interval( Views.extendBorder( in ), Intervals.translate( out, 1, 0 ) );
+
+	private final RandomAccessibleInterval< DoubleType > frontIn = Views.interval( Views.extendBorder( in ), Intervals.translate( out, -1, 0 ) );
 
 	@Benchmark
 	public void gradient_niceAndSlow()
 	{
-		final Cursor< DoubleType > front = Views.flatIterable( Views.interval( in, Intervals.translate( out, 1, 0 ) ) ).cursor();
-		final Cursor< DoubleType > back = Views.flatIterable( Views.interval( in, Intervals.translate( out, -1, 0 ) ) ).cursor();
+		final Cursor< DoubleType > front = Views.flatIterable( backIn ).cursor();
+		final Cursor< DoubleType > back = Views.flatIterable( frontIn ).cursor();
 
 		for ( final DoubleType t : Views.flatIterable( out ) )
 		{
@@ -92,8 +93,8 @@ public class LoopPerformanceBenchmark
 	public void gradient_better()
 	{
 		final RandomAccess< DoubleType > result = out.randomAccess();
-		final RandomAccess< DoubleType > back = in.randomAccess();
-		final RandomAccess< DoubleType > front = in.randomAccess();
+		final RandomAccess< DoubleType > back = Views.extendBorder( in ).randomAccess();
+		final RandomAccess< DoubleType > front = Views.extendBorder( in ).randomAccess();
 
 		back.setPosition( Intervals.minAsLongArray( out ) );
 		front.setPosition( Intervals.minAsLongArray( out ) );
@@ -110,29 +111,22 @@ public class LoopPerformanceBenchmark
 	@Benchmark
 	public void gradient_LoopBuilder()
 	{
-		final RandomAccessibleInterval< DoubleType > backSource = Views.interval( in, Intervals.translate( out, -1, 0 ) );
-		final RandomAccessibleInterval< DoubleType > frontSource = Views.interval( in, Intervals.translate( out, 1, 0 ) );
 
-		LoopBuilder.setImages( out, backSource, frontSource ).forEachPixel(
-				( result, back, front ) -> {
-					result.set( front );
-					result.sub( back );
-					result.mul( 0.5 );
-				} );
+		LoopBuilder.setImages( out, frontIn, backIn ).forEachPixel( ( result, back, front ) -> {
+			result.set( front );
+			result.sub( back );
+			result.mul( 0.5 );
+		} );
 	}
 
 	@Benchmark
 	public void gradient_LoopBuilder_MultiThreaded()
 	{
-		final RandomAccessibleInterval< DoubleType > backSource = Views.interval( in, Intervals.translate( out, -1, 0 ) );
-		final RandomAccessibleInterval< DoubleType > frontSource = Views.interval( in, Intervals.translate( out, 1, 0 ) );
-
-		LoopBuilder.setImages( out, backSource, frontSource ).multiThreaded().forEachPixel(
-				( result, back, front ) -> {
-					result.set( front );
-					result.sub( back );
-					result.mul( 0.5 );
-				} );
+		LoopBuilder.setImages( out, frontIn, backIn ).multiThreaded().forEachPixel( ( result, back, front ) -> {
+			result.set( front );
+			result.sub( back );
+			result.mul( 0.5 );
+		} );
 	}
 
 	@Benchmark
@@ -144,14 +138,15 @@ public class LoopPerformanceBenchmark
 	@Benchmark
 	public void copy_loopBuilder()
 	{
-		LoopBuilder.setImages( Views.interval( in, out ), out ).forEachPixel( ( in, out ) -> out.set( in ) );
+		LoopBuilder.setImages( in, out ).forEachPixel( ( in, out ) -> out.set( in ) );
 	}
 
 	@Benchmark
-	public void copy_flatIterable() {
+	public void copy_flatIterable()
+	{
 		Cursor< DoubleType > i = Views.flatIterable( in ).cursor();
 		Cursor< DoubleType > o = Views.flatIterable( out ).cursor();
-		while( o.hasNext() )
+		while ( o.hasNext() )
 			o.next().set( i.next() );
 	}
 
