@@ -51,9 +51,12 @@ import net.imglib2.IterableInterval;
 import net.imglib2.Positionable;
 import net.imglib2.RandomAccess;
 import net.imglib2.RandomAccessibleInterval;
-import net.imglib2.img.NativeImg;
+import net.imglib2.img.array.AbstractArrayCursor;
+import net.imglib2.img.cell.CellCursor;
+import net.imglib2.img.planar.PlanarCursor;
 import net.imglib2.util.Intervals;
 import net.imglib2.view.Views;
+import net.imglib2.view.iteration.SlicingCursor;
 
 /**
  * {@link LoopBuilder} provides an easy way to write fast loops on
@@ -151,10 +154,25 @@ public class LoopBuilder< T >
 		Objects.requireNonNull( action );
 		if ( Intervals.numElements( dimensions ) == 0 )
 			return;
-		if ( allAreNativeImages() )
-			runUsingCursors( action );
+		List< IterableInterval< ? > > iterableIntervals = imagesAsIterableIntervals();
+		if ( allCursorsAreFast( iterableIntervals ) )
+			runUsingCursors( iterableIntervals, action );
 		else
 			runUsingRandomAccesses( action );
+	}
+
+	private boolean allCursorsAreFast( List<IterableInterval<?>> iterableIntervals )
+	{
+		return iterableIntervals.stream().allMatch( this::cursorIsFast );
+	}
+
+	private boolean cursorIsFast( IterableInterval<?> image )
+	{
+		Cursor< ? > cursor = image.cursor();
+		return cursor instanceof AbstractArrayCursor ||
+				cursor instanceof SlicingCursor ||
+				cursor instanceof PlanarCursor ||
+				cursor instanceof CellCursor;
 	}
 
 	/**
@@ -242,11 +260,6 @@ public class LoopBuilder< T >
 		}
 	}
 
-	private boolean allAreNativeImages()
-	{
-		return Stream.of( images ).allMatch( image -> image instanceof NativeImg );
-	}
-
 	void runUsingRandomAccesses( T action )
 	{
 		final int nTasks = multiThreaded.suggestNumberOfTasks();
@@ -274,9 +287,18 @@ public class LoopBuilder< T >
 
 	void runUsingCursors( T action )
 	{
-		final List< IterableInterval< ? > > iterableIntervals = useFlatIterationOrder ?
+		runUsingCursors( imagesAsIterableIntervals(), action );
+	}
+
+	private List< IterableInterval< ? > > imagesAsIterableIntervals()
+	{
+		return useFlatIterationOrder ?
 				flatIterableIntervals() :
 				equalIterationOrderIterableIntervals();
+	}
+
+	private void runUsingCursors( List< IterableInterval< ? > > iterableIntervals, T action )
+	{
 		int nTasks = multiThreaded.suggestNumberOfTasks();
 		final FinalInterval indices = new FinalInterval( Intervals.numElements( images[ 0 ] ) );
 		List< Interval > chunks = IntervalChunks.chunkInterval( indices, nTasks );
