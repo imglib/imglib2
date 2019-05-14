@@ -47,8 +47,11 @@ import net.imglib2.type.numeric.real.DoubleType;
 import net.imglib2.util.Intervals;
 import net.imglib2.view.Views;
 import org.openjdk.jmh.annotations.Benchmark;
+import org.openjdk.jmh.annotations.BenchmarkMode;
 import org.openjdk.jmh.annotations.Fork;
 import org.openjdk.jmh.annotations.Measurement;
+import org.openjdk.jmh.annotations.Mode;
+import org.openjdk.jmh.annotations.OutputTimeUnit;
 import org.openjdk.jmh.annotations.Param;
 import org.openjdk.jmh.annotations.Scope;
 import org.openjdk.jmh.annotations.Setup;
@@ -65,7 +68,6 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
-import java.util.function.BiConsumer;
 import java.util.function.Supplier;
 import java.util.stream.LongStream;
 
@@ -75,9 +77,11 @@ import java.util.stream.LongStream;
  * when performing a pixel copy operation.
  */
 @Warmup( iterations = 4, time = 100, timeUnit = TimeUnit.MILLISECONDS )
-@Fork( value = 1 )
+@Fork( 1 )
 @Measurement( iterations = 8, time = 100, timeUnit = TimeUnit.MILLISECONDS )
-@State( value = Scope.Benchmark )
+@BenchmarkMode( { Mode.AverageTime } )
+@State( Scope.Benchmark )
+@OutputTimeUnit( TimeUnit.MILLISECONDS )
 public class LoopBuilderVsCursorsBenchmark
 {
 
@@ -94,11 +98,19 @@ public class LoopBuilderVsCursorsBenchmark
 		final long[] DIMS = { 200, 200, 100 };
 		final HashMap< String, Supplier< RandomAccessibleInterval< DoubleType > > > map = new HashMap<>();
 		map.put( "ArrayImg", () -> ArrayImgs.doubles( DIMS ) );
+		map.put( "ArrayImg_Continuous_Subset", () -> Views.interval( ArrayImgs.doubles( 200, 200, 300 ), Intervals.createMinSize( 0, 0, 99, 200, 200, 100 ) ) );
+		map.put( "ArrayImg_Subset", () -> Views.interval( ArrayImgs.doubles( 300, 300, 100 ), Intervals.createMinSize( 50, 50, 0, 200, 200, 100 ) ) );
+		map.put( "ArrayImg_HyperSlice", () -> Views.hyperSlice( ArrayImgs.doubles( 200, 200, 100, 10 ), 3, 0 ) );
+		map.put( "ArrayImg_Translated_Zero", () -> Views.translate( Views.translate( ArrayImgs.doubles( DIMS ), 10, 10, 10 ), -10, -10, -10 ) );
 		map.put( "PlanarImg", () -> PlanarImgs.doubles( DIMS ) );
+		map.put( "PlanarImg_Continuous_Subset", () -> Views.interval( PlanarImgs.doubles( 200, 200, 300 ), Intervals.createMinSize( 0, 0, 99, 200, 200, 100 ) ) );
+		map.put( "PlanarImg_Subset", () -> Views.interval( PlanarImgs.doubles( 300, 300, 100 ), Intervals.createMinSize( 50, 50, 0, 200, 200, 100 ) ) );
+		map.put( "PlanarImg_HyperSlice", () -> Views.hyperSlice( PlanarImgs.doubles( 200, 200, 100, 10 ), 3, 0 ) );
+		map.put( "PlanarImg_Translated_Zero", () -> Views.hyperSlice( PlanarImgs.doubles( 200, 200, 100, 10 ), 3, 0 ) );
 		map.put( "CellImg", () -> new CellImgFactory<>( new DoubleType(), 64, 64, 64 ).create( DIMS ) );
 		map.put( "Translated", () -> Views.translate( ArrayImgs.doubles( DIMS ), 10, 10, 10 ) );
 		map.put( "Cropped", () -> {
-			final long[] largerDims = LongStream.of(DIMS).map( x -> x + 20 ).toArray();
+			final long[] largerDims = LongStream.of( DIMS ).map( x -> x + 20 ).toArray();
 			final Img< DoubleType > largerImage = ArrayImgs.doubles( largerDims );
 			return Views.interval( largerImage, new FinalInterval( DIMS ) );
 		} );
@@ -117,30 +129,62 @@ public class LoopBuilderVsCursorsBenchmark
 
 	private RandomAccessibleInterval< DoubleType > out;
 
+	/**
+	 * If true, this will run the LoopBuilder and flat iterable copy,
+	 * for many different images, before each benchmark. Which will
+	 * result in slower probably more realistic execution time during
+	 * measurements.
+	 */
+	private boolean slowDown = false;
+
 	@Setup
 	public void setup()
 	{
+		if(slowDown)
+			slowDown();
 		in = IMG_FACTORIES.get( inputImage ).get();
 		out = IMG_FACTORIES.get( outputImage ).get();
 		RandomImgs.seed( 0 ).randomize( in );
 	}
 
+	public static void slowDown()
+	{
+		System.out.print( "\nslow down..." );
+		IMG_FACTORIES.forEach( ( title, factory ) -> {
+			RandomAccessibleInterval< DoubleType > a = factory.get();
+			RandomAccessibleInterval< DoubleType > b = factory.get();
+			loopBuilder( a, b );
+			flatCopy( a, b );
+		} );
+		System.out.println( "done" );
+	}
+
 	@Benchmark
-	public RandomAccessibleInterval< DoubleType > flatCopy()
+	public Object flatCopy()
+	{
+		flatCopy( in, out );
+		return out;
+	}
+
+	private static void flatCopy( RandomAccessibleInterval< DoubleType > in, RandomAccessibleInterval< DoubleType > out )
 	{
 		Cursor< DoubleType > inCursor = Views.flatIterable( in ).cursor();
 		Cursor< DoubleType > outCursor = Views.flatIterable( out ).cursor();
 		long i = Intervals.numElements( in );
 		while ( --i >= 0 )
 			outCursor.next().set( inCursor.next() );
-		return out;
 	}
 
 	@Benchmark
-	public RandomAccessibleInterval< DoubleType > loopBuilder()
+	public Object loopBuilder()
+	{
+		loopBuilder( in, out );
+		return out;
+	}
+
+	static void loopBuilder( RandomAccessibleInterval< DoubleType > in, RandomAccessibleInterval< DoubleType > out )
 	{
 		LoopBuilder.setImages( in, out ).forEachPixel( ( i1, o ) -> o.set( i1 ) );
-		return out;
 	}
 
 	public static void main( final String... args ) throws RunnerException
@@ -156,7 +200,11 @@ public class LoopBuilderVsCursorsBenchmark
 
 	private static void printTable( Collection< RunResult > map )
 	{
-		System.out.println("The table shows: Performence of LoopBuilder divided by Performance of Views.flatIterable");
+		System.out.println( "The table shows:" );
+		System.out.println( " * Zero: LoopBuilder and flat iterable copy have the same performance." );
+		System.out.println( " * Positive value: LoopBuilder is faster." );
+		System.out.println( " * Negative value: Flat iterable copy is faster." );
+		System.out.println( " * 17.0 means: LoopBuilder is 18 times as fast as flat copy." );
 		DecimalFormat formatter = new DecimalFormat( "#0.00" );
 		StringBuilder out = new StringBuilder();
 		for ( String outputImg : IMG_FACTORIES.keySet() )
@@ -171,7 +219,7 @@ public class LoopBuilderVsCursorsBenchmark
 			{
 				final double loopBuilderScore = getValue( map, "loopBuilder", inputImg, outputImg );
 				final double flatCopyScore = getValue( map, "flatCopy", inputImg, outputImg );
-				double speedUp = loopBuilderScore / flatCopyScore;
+				double speedUp = ( flatCopyScore - loopBuilderScore ) / Math.min( loopBuilderScore, flatCopyScore );
 				out.append( "\t" ).append( formatter.format( speedUp ) );
 			}
 			out.append( "\n" );
@@ -179,10 +227,10 @@ public class LoopBuilderVsCursorsBenchmark
 		System.out.println( out );
 	}
 
-	private static double getValue( Collection<RunResult> map, String label, String inputImg, String outputImg )
+	private static double getValue( Collection< RunResult > map, String label, String inputImg, String outputImg )
 	{
 		return map.stream()
-				.filter(r -> r.getPrimaryResult().getLabel().equals( label ) )
+				.filter( r -> r.getPrimaryResult().getLabel().equals( label ) )
 				.filter( r -> r.getParams().getParam( "inputImage" ).equals( inputImg ) )
 				.filter( r -> r.getParams().getParam( "outputImage" ).equals( outputImg ) )
 				.map( r -> r.getPrimaryResult().getScore() )
