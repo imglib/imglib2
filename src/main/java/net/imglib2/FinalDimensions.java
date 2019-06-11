@@ -34,6 +34,8 @@
 
 package net.imglib2;
 
+import net.imglib2.util.Intervals;
+
 /**
  * An implementation of dimensionality that can wrap a long[] array. The same
  * principle for wrapping as in Point is used.
@@ -83,6 +85,17 @@ public final class FinalDimensions implements Dimensions
 
 		for ( int d = 0; d < dimensions.length; ++d )
 			this.dimensions[ d ] = dimensions[ d ];
+	}
+
+	/**
+	 * Create a FinalDimensions with a defined size
+	 *
+	 * @param dimensions
+	 *            the size
+	 */
+	public FinalDimensions( final Dimensions dimensions )
+	{
+		this( Intervals.dimensionsAsLongArray( dimensions ), false );
 	}
 
 	@Override

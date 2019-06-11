@@ -36,39 +36,47 @@ package net.imglib2.loops;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
+import java.util.StringJoiner;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
+import java.util.function.LongConsumer;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import net.imglib2.Cursor;
 import net.imglib2.Dimensions;
 import net.imglib2.FinalInterval;
 import net.imglib2.Interval;
+import net.imglib2.IterableInterval;
 import net.imglib2.Positionable;
 import net.imglib2.RandomAccess;
 import net.imglib2.RandomAccessibleInterval;
-import net.imglib2.Sampler;
+import net.imglib2.img.array.AbstractArrayCursor;
+import net.imglib2.img.cell.CellCursor;
+import net.imglib2.img.planar.PlanarCursor;
 import net.imglib2.util.Intervals;
+import net.imglib2.view.Views;
+import net.imglib2.view.iteration.SlicingCursor;
 
 /**
  * {@link LoopBuilder} provides an easy way to write fast loops on
  * {@link RandomAccessibleInterval}s. For example, this is a loop that
  * calculates the sum of two images:
- *
+ * <p>
  * <pre>
  * {@code
  * RandomAccessibleInterval<DoubleType> imageA = ...
  * RandomAccessibleInterval<DoubleType> imageB = ...
  * RandomAccessibleInterval<DoubleType> sum = ...
  *
- * LoopBuilder.setImages(imageA, imageB, sum).run(
+ * LoopBuilder.setImages(imageA, imageB, sum).forEachPixel(
  *     (a, b, s) -> {
  *          s.setReal(a.getRealDouble() + b.getRealDouble());
  *     }
  * );
  * }
  * </pre>
- *
+ * <p>
  * The {@link RandomAccessibleInterval}s {@code imageA}, {@code imageB} and
  * {@code sum} must have equal dimensions, but the bounds of there
  * {@link Intervals} can differ.
@@ -78,68 +86,136 @@ import net.imglib2.util.Intervals;
 public class LoopBuilder< T >
 {
 
+	// fields
+
 	private final Dimensions dimensions;
 
 	private final RandomAccessibleInterval< ? >[] images;
 
-	private LoopBuilder( final RandomAccessibleInterval< ? >... images )
-	{
-		this.images = images;
-		this.dimensions = new FinalInterval( images[ 0 ] );
-		Arrays.asList( images ).forEach( this::checkDimensions );
-	}
+	private MultiThreadSetting multiThreaded = MultiThreadSetting.SINGLE;
 
-	private void checkDimensions( final Interval interval )
-	{
-		final long[] a = Intervals.dimensionsAsLongArray( dimensions );
-		final long[] b = Intervals.dimensionsAsLongArray( interval );
-		if ( !Arrays.equals( a, b ) )
-			throw new IllegalArgumentException( "Dimensions do not fit." );
-	}
+	private boolean useFlatIterationOrder = false;
 
+	// public methods
+
+	/**
+	 * @see LoopBuilder
+	 */
 	public static < A > LoopBuilder< Consumer< A > > setImages( final RandomAccessibleInterval< A > a )
 	{
 		return new LoopBuilder<>( a );
 	}
 
+	/**
+	 * @see LoopBuilder
+	 */
 	public static < A, B > LoopBuilder< BiConsumer< A, B > > setImages( final RandomAccessibleInterval< A > a, final RandomAccessibleInterval< B > b )
 	{
 		return new LoopBuilder<>( a, b );
 	}
 
+	/**
+	 * @see LoopBuilder
+	 */
 	public static < A, B, C > LoopBuilder< TriConsumer< A, B, C > > setImages( final RandomAccessibleInterval< A > a, final RandomAccessibleInterval< B > b, final RandomAccessibleInterval< C > c )
 	{
 		return new LoopBuilder<>( a, b, c );
 	}
 
+	/**
+	 * @see LoopBuilder
+	 */
 	public static < A, B, C, D > LoopBuilder< FourConsumer< A, B, C, D > > setImages( final RandomAccessibleInterval< A > a, final RandomAccessibleInterval< B > b, final RandomAccessibleInterval< C > c, final RandomAccessibleInterval< D > d )
 	{
 		return new LoopBuilder<>( a, b, c, d );
 	}
 
+	/**
+	 * @see LoopBuilder
+	 */
 	public static < A, B, C, D, E > LoopBuilder< FiveConsumer< A, B, C, D, E > > setImages( final RandomAccessibleInterval< A > a, final RandomAccessibleInterval< B > b, final RandomAccessibleInterval< C > c, final RandomAccessibleInterval< D > d, final RandomAccessibleInterval< E > e )
 	{
 		return new LoopBuilder<>( a, b, c, d, e );
 	}
 
+	/**
+	 * @see LoopBuilder
+	 */
 	public static < A, B, C, D, E, F > LoopBuilder< SixConsumer< A, B, C, D, E, F > > setImages( final RandomAccessibleInterval< A > a, final RandomAccessibleInterval< B > b, final RandomAccessibleInterval< C > c, final RandomAccessibleInterval< D > d, final RandomAccessibleInterval< E > e, final RandomAccessibleInterval< F > f )
 	{
 		return new LoopBuilder<>( a, b, c, d, e, f );
 	}
 
+	/**
+	 * @see LoopBuilder
+	 */
 	public void forEachPixel( final T action )
 	{
 		Objects.requireNonNull( action );
-		final List< RandomAccess< ? > > samplers = Stream.of( images ).map( this::initRandomAccess ).collect( Collectors.toList() );
-		final Positionable synced = SyncedPositionables.create( samplers );
-		LoopUtils.createIntervalLoop( synced, dimensions, RunnableFactory.bindActionToSamplers( action, samplers ) ).run();
+		if ( Intervals.numElements( dimensions ) == 0 )
+			return;
+		List< IterableInterval< ? > > iterableIntervals = imagesAsIterableIntervals();
+		if ( allCursorsAreFast( iterableIntervals ) )
+			runUsingCursors( iterableIntervals, action );
+		else
+			runUsingRandomAccesses( action );
 	}
 
-	private RandomAccess< ? > initRandomAccess( final RandomAccessibleInterval< ? > image )
+	private boolean allCursorsAreFast( List<IterableInterval<?>> iterableIntervals )
 	{
-		final RandomAccess< ? > ra = image.randomAccess();
-		ra.setPosition( Intervals.minAsLongArray( image ) );
-		return ra;
+		return iterableIntervals.stream().allMatch( this::cursorIsFast );
+	}
+
+	private boolean cursorIsFast( IterableInterval<?> image )
+	{
+		Cursor< ? > cursor = image.cursor();
+		return cursor instanceof AbstractArrayCursor ||
+				cursor instanceof SlicingCursor ||
+				cursor instanceof PlanarCursor ||
+				cursor instanceof CellCursor;
+	}
+
+	/**
+	 * By default {@link LoopBuilder} runs the loop without multi-threading.
+	 * Calling this method causes LoopBuilder to use multi-threading to speed up the operation.
+	 * <p>
+	 * WARNING: You need to make sure that your operation is thread safe.
+	 */
+	public LoopBuilder< T > multiThreaded()
+	{
+		this.multiThreaded = Objects.requireNonNull( MultiThreadSetting.MULTI );
+		return this;
+	}
+
+	/**
+	 * {@link LoopBuilder} might use any iteration order to execute
+	 * the loop. Calling this method will cause {@link LoopBuilder}
+	 * to use flat iteration order, when executing the loop.
+	 * <p>
+	 * WARNING: Don't use multi-threading if you want to have flat
+	 * iteration order.
+	 */
+	public LoopBuilder< T > flatIterationOrder()
+	{
+		return this.flatIterationOrder( true );
+	}
+
+	/**
+	 * If false, {@link LoopBuilder} might use any iteration order
+	 * to execute the loop.
+	 * <p>
+	 * If true, {@link LoopBuilder} will use
+	 * flat iteration order, and multi threading is disabled.
+	 * <p>
+	 * WARNING: Don't use multi-threading if you want to have flat
+	 * iteration order.
+	 *
+	 * @see net.imglib2.FlatIterationOrder
+	 */
+	public LoopBuilder< T > flatIterationOrder( boolean value )
+	{
+		this.useFlatIterationOrder = value;
+		return this;
 	}
 
 	public interface TriConsumer< A, B, C >
@@ -162,228 +238,106 @@ public class LoopBuilder< T >
 		void accept( A a, B b, C c, D d, E e, F f );
 	}
 
-	private static class RunnableFactory
+	// Helper methods
+
+	private LoopBuilder( final RandomAccessibleInterval< ? >... images )
 	{
+		this.images = images;
+		this.dimensions = new FinalInterval( images[ 0 ] );
+		checkDimensions();
+	}
 
-		private static final List< ClassCopyProvider< Runnable > > factories = Arrays.asList(
-				new ClassCopyProvider<>( ConsumerRunnable.class, Runnable.class ),
-				new ClassCopyProvider<>( BiConsumerRunnable.class, Runnable.class ),
-				new ClassCopyProvider<>( TriConsumerRunnable.class, Runnable.class ),
-				new ClassCopyProvider<>( FourConsumerRunnable.class, Runnable.class ),
-				new ClassCopyProvider<>( FiveConsumerRunnable.class, Runnable.class ),
-				new ClassCopyProvider<>( SixConsumerRunnable.class, Runnable.class ));
-
-		/**
-		 * For example.: Given a BiConsumer and two Samplers:
-		 *
-		 * <pre>
-		 * {@code
-		 * BiConsumer<A, B> biConsumer = ... ;
-		 * Sampler<A> samplerA = ... ;
-		 * Sampler<B> samplerB = ... ;
-		 * }
-		 * </pre>
-		 *
-		 * This method
-		 * {@code bindConsumerToSamplers(biConsumer, Arrays.asList(samplerA, samplerB))}
-		 * will return a Runnable that is functionally equivalent to:
-		 *
-		 * <pre>
-		 * {
-		 * 	&#64;code
-		 * 	Runnable result = () -> {
-		 * 		biConsumer.accept( sampleA.get(), samplerB.get() );
-		 * 	};
-		 * }
-		 * </pre>
-		 *
-		 * It does it in such manner, that the returned {@link Runnable} can be
-		 * gracefully optimised by the Java just-in-time compiler.
-		 *
-		 * @param action
-		 *            This must be an instance of {@link Consumer},
-		 *            {@link BiConsumer} of {@link TriConsumer}.
-		 * @param samplers
-		 *            A list of {@link Sampler}, the size of the list must fit
-		 *            the consumer given by {@param operation}.
-		 * @throws IllegalArgumentException
-		 *             if the number of sampler does not fit the given consumer.
-		 */
-		public static Runnable bindActionToSamplers( final Object action, final List< ? extends Sampler< ? > > samplers )
+	private void checkDimensions()
+	{
+		final long[] dims = Intervals.dimensionsAsLongArray( dimensions );
+		final boolean equal = Stream.of( images ).allMatch( image -> Arrays.equals( dims, Intervals.dimensionsAsLongArray( image ) ) );
+		if ( !equal )
 		{
-			final Object[] arguments = Stream.concat( Stream.of( action ), samplers.stream() ).toArray();
-			for ( final ClassCopyProvider< Runnable > factory : factories )
-				if ( factory.matches( arguments ) )
-				{
-					final List< Class< ? extends Object > > key = Stream.of( arguments ).map( Object::getClass ).collect( Collectors.toList() );
-					return factory.newInstanceForKey( key, arguments );
-				}
-			throw new IllegalArgumentException();
+			StringJoiner joiner = new StringJoiner( ", " );
+			for ( Interval interval : images )
+				joiner.add( Arrays.toString( Intervals.dimensionsAsLongArray( interval ) ) );
+			throw new IllegalArgumentException( "LoopBuilder, image dimensions do not match: " + joiner + "." );
 		}
+	}
 
-		public static class ConsumerRunnable< A > implements Runnable
-		{
+	void runUsingRandomAccesses( T action )
+	{
+		final int nTasks = multiThreaded.suggestNumberOfTasks();
+		final Interval interval = new FinalInterval( dimensions );
+		final List< Interval > chunks = IntervalChunks.chunkInterval( interval, nTasks );
+		multiThreaded.forEach( chunks, chunk -> runOnChunkUsingRandomAccesses( images, action, chunk ) );
+	}
 
-			private final Consumer< A > action;
+	static void runOnChunkUsingRandomAccesses( RandomAccessibleInterval[] images, Object action, Interval subInterval )
+	{
+		final List< RandomAccess< ? > > samplers = Stream.of( images ).map( LoopBuilder::initRandomAccess ).collect( Collectors.toList() );
+		final Positionable synced = SyncedPositionables.create( samplers );
+		if ( !Views.isZeroMin( subInterval ) )
+			synced.move( Intervals.minAsLongArray( subInterval ) );
+		final Runnable runnable = BindActionToSamplers.bindActionToSamplers( action, samplers );
+		LoopUtils.createIntervalLoop( synced, subInterval, runnable ).run();
+	}
 
-			private final Sampler< A > samplerA;
+	private static RandomAccess< ? > initRandomAccess( final RandomAccessibleInterval< ? > image )
+	{
+		final RandomAccess< ? > ra = image.randomAccess();
+		ra.setPosition( Intervals.minAsLongArray( image ) );
+		return ra;
+	}
 
-			public ConsumerRunnable( final Consumer< A > action, final Sampler< A > samplerA )
-			{
-				this.action = action;
-				this.samplerA = samplerA;
-			}
+	void runUsingCursors( T action )
+	{
+		runUsingCursors( imagesAsIterableIntervals(), action );
+	}
 
-			@Override
-			public void run()
-			{
-				action.accept( samplerA.get() );
-			}
-		}
+	private List< IterableInterval< ? > > imagesAsIterableIntervals()
+	{
+		return useFlatIterationOrder ?
+				flatIterableIntervals() :
+				equalIterationOrderIterableIntervals();
+	}
 
-		public static class BiConsumerRunnable< A, B > implements Runnable
-		{
+	private void runUsingCursors( List< IterableInterval< ? > > iterableIntervals, T action )
+	{
+		int nTasks = multiThreaded.suggestNumberOfTasks();
+		final FinalInterval indices = new FinalInterval( Intervals.numElements( images[ 0 ] ) );
+		List< Interval > chunks = IntervalChunks.chunkInterval( indices, nTasks );
+		multiThreaded.forEach( chunks, chunk ->
+				runOnChunkUsingCursors( iterableIntervals, action, chunk.min( 0 ), chunk.dimension( 0 ) ) );
+	}
 
-			private final BiConsumer< A, B > action;
+	static void runOnChunkUsingCursors( List< IterableInterval< ? > > iterableIntervals, Object action, long offset, long numElements )
+	{
+		final List< Cursor< ? > > cursors = iterableIntervals.stream().map( IterableInterval::cursor ).collect( Collectors.toList() );
+		if ( offset != 0 )
+			jumpFwd( cursors, offset );
+		LongConsumer cursorLoop = FastCursorLoops.createLoop( action, cursors );
+		cursorLoop.accept( numElements );
+	}
 
-			private final Sampler< A > samplerA;
+	private static void jumpFwd( List< Cursor< ? > > cursors, long offset )
+	{
+		for ( Cursor< ? > cursor : cursors )
+			cursor.jumpFwd( offset );
+	}
 
-			private final Sampler< B > samplerB;
+	private List< IterableInterval< ? > > equalIterationOrderIterableIntervals()
+	{
+		List< IterableInterval< ? > > iterableIntervals = Stream.of( images ).map( Views::iterable ).collect( Collectors.toList() );
+		List< Object > iterationOrders = iterableIntervals.stream().map( IterableInterval::iterationOrder ).collect( Collectors.toList() );
+		if ( allEqual( iterationOrders ) )
+			return iterableIntervals;
+		return flatIterableIntervals();
+	}
 
-			public BiConsumerRunnable( final BiConsumer< A, B > action, final Sampler< A > samplerA, final Sampler< B > samplerB )
-			{
-				this.action = action;
-				this.samplerA = samplerA;
-				this.samplerB = samplerB;
-			}
+	private List< IterableInterval< ? > > flatIterableIntervals()
+	{
+		return Stream.of( images ).map( Views::flatIterable ).collect( Collectors.toList() );
+	}
 
-			@Override
-			public void run()
-			{
-				action.accept( samplerA.get(), samplerB.get() );
-			}
-		}
-
-		public static class TriConsumerRunnable< A, B, C > implements Runnable
-		{
-
-			private final TriConsumer< A, B, C > action;
-
-			private final Sampler< A > samplerA;
-
-			private final Sampler< B > samplerB;
-
-			private final Sampler< C > samplerC;
-
-			public TriConsumerRunnable( final TriConsumer< A, B, C > action, final Sampler< A > samplerA, final Sampler< B > samplerB, final Sampler< C > samplerC )
-			{
-				this.action = action;
-				this.samplerA = samplerA;
-				this.samplerB = samplerB;
-				this.samplerC = samplerC;
-			}
-
-			@Override
-			public void run()
-			{
-				action.accept( samplerA.get(), samplerB.get(), samplerC.get() );
-			}
-		}
-
-		public static class FourConsumerRunnable< A, B, C, D > implements Runnable
-		{
-
-			private final FourConsumer< A, B, C, D > action;
-
-			private final Sampler< A > samplerA;
-
-			private final Sampler< B > samplerB;
-
-			private final Sampler< C > samplerC;
-
-			private final Sampler< D > samplerD;
-
-			public FourConsumerRunnable( final FourConsumer< A, B, C, D > action, final Sampler< A > samplerA, final Sampler< B > samplerB, final Sampler< C > samplerC, final Sampler< D > samplerD )
-			{
-				this.action = action;
-				this.samplerA = samplerA;
-				this.samplerB = samplerB;
-				this.samplerC = samplerC;
-				this.samplerD = samplerD;
-			}
-
-			@Override
-			public void run()
-			{
-				action.accept( samplerA.get(), samplerB.get(), samplerC.get(), samplerD.get() );
-			}
-		}
-
-		public static class FiveConsumerRunnable< A, B, C, D, E > implements Runnable
-		{
-
-			private final FiveConsumer< A, B, C, D, E > action;
-
-			private final Sampler< A > samplerA;
-
-			private final Sampler< B > samplerB;
-
-			private final Sampler< C > samplerC;
-
-			private final Sampler< D > samplerD;
-
-			private final Sampler< E > samplerE;
-
-			public FiveConsumerRunnable( final FiveConsumer< A, B, C, D, E > action, final Sampler< A > samplerA, final Sampler< B > samplerB, final Sampler< C > samplerC, final Sampler< D > samplerD, Sampler< E > samplerE )
-			{
-				this.action = action;
-				this.samplerA = samplerA;
-				this.samplerB = samplerB;
-				this.samplerC = samplerC;
-				this.samplerD = samplerD;
-				this.samplerE = samplerE;
-			}
-
-			@Override
-			public void run()
-			{
-				action.accept( samplerA.get(), samplerB.get(), samplerC.get(), samplerD.get(), samplerE.get() );
-			}
-		}
-
-		public static class SixConsumerRunnable< A, B, C, D, E, F > implements Runnable
-		{
-
-			private final SixConsumer< A, B, C, D, E, F > action;
-
-			private final Sampler< A > samplerA;
-
-			private final Sampler< B > samplerB;
-
-			private final Sampler< C > samplerC;
-
-			private final Sampler< D > samplerD;
-
-			private final Sampler< E > samplerE;
-
-			private final Sampler< F > samplerF;
-
-			public SixConsumerRunnable( final SixConsumer< A, B, C, D, E, F > action, final Sampler< A > samplerA, final Sampler< B > samplerB, final Sampler< C > samplerC, final Sampler< D > samplerD, final Sampler< E > samplerE, final Sampler< F > samplerF )
-			{
-				this.action = action;
-				this.samplerA = samplerA;
-				this.samplerB = samplerB;
-				this.samplerC = samplerC;
-				this.samplerD = samplerD;
-				this.samplerE = samplerE;
-				this.samplerF = samplerF;
-			}
-
-			@Override
-			public void run()
-			{
-				action.accept( samplerA.get(), samplerB.get(), samplerC.get(), samplerD.get(), samplerE.get(), samplerF.get() );
-			}
-		}
+	private static boolean allEqual( List< Object > values )
+	{
+		Object first = values.get( 0 );
+		return values.stream().allMatch( first::equals );
 	}
 }

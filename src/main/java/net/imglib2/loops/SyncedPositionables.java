@@ -35,6 +35,7 @@ package net.imglib2.loops;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import net.imglib2.Localizable;
 import net.imglib2.Positionable;
@@ -72,30 +73,20 @@ public final class SyncedPositionables
 		// prevent class from instantiation
 	}
 
+	private static final List< ClassCopyProvider< Positionable > > forwarderFactories = Arrays.asList(
+			new ClassCopyProvider<>( Private.GeneralForwarder.class, Positionable.class ),
+			new ClassCopyProvider<>( Private.Forwarder1.class, Positionable.class ),
+			new ClassCopyProvider<>( Private.Forwarder2.class, Positionable.class ),
+			new ClassCopyProvider<>( Private.Forwarder3.class, Positionable.class ),
+			new ClassCopyProvider<>( Private.Forwarder4.class, Positionable.class ),
+			new ClassCopyProvider<>( Private.Forwarder5.class, Positionable.class )
+	);
+
 	public static Positionable create( final List< ? extends Positionable > positionables )
 	{
-		switch ( positionables.size() )
-		{
-		case 0:
-			throw new AssertionError();
-		case 1:
-			return new Forwarder1( positionables );
-		case 2:
-			return new Forwarder2( positionables );
-		case 3:
-			return new Forwarder3( positionables );
-		case 4:
-			return new Forwarder4( positionables );
-		case 5:
-			return new Forwarder5( positionables );
-		default:
-			return new GeneralForwarder( positionables );
-		}
-	}
-
-	public static Positionable createSlow( final List< ? extends Positionable > positionables )
-	{
-		return new GeneralForwarder( positionables );
+		List< Class< ? > > key = positionables.stream().map( Object::getClass ).collect( Collectors.toList() );
+		int i = positionables.size();
+		return forwarderFactories.get( i >= forwarderFactories.size() ? 0 : i ).newInstanceForKey( key, positionables );
 	}
 
 	public static Positionable create( final Positionable... positionables )
@@ -103,246 +94,250 @@ public final class SyncedPositionables
 		return create( Arrays.asList( positionables ) );
 	}
 
-	private interface Forwarder extends Positionable
-	{
+	static class Private {
 
-		@Override
-		default void bck( final int d )
+		public interface Forwarder extends Positionable
 		{
-			move( -1, d );
+
+			@Override
+			default void bck( final int d )
+			{
+				move( -1, d );
+			}
+
+			@Override
+			default void move( final int distance, final int d )
+			{
+				move( ( long ) distance, d );
+			}
+
+			@Override
+			default void move( final Localizable localizable )
+			{
+				for ( int i = 0; i < localizable.numDimensions(); i++ )
+					move( localizable.getLongPosition( i ), i );
+			}
+
+			@Override
+			default void move( final int[] distance )
+			{
+				for ( int i = 0; i < distance.length; i++ )
+					move( ( long ) distance[ i ], i );
+			}
+
+			@Override
+			default void move( final long[] distance )
+			{
+				for ( int i = 0; i < distance.length; i++ )
+					move( distance[ i ], i );
+			}
+
+			@Override
+			default void setPosition( final Localizable localizable )
+			{
+				throw new UnsupportedOperationException();
+			}
+
+			@Override
+			default void setPosition( final int[] position )
+			{
+				throw new UnsupportedOperationException();
+			}
+
+			@Override
+			default void setPosition( final long[] position )
+			{
+				throw new UnsupportedOperationException();
+			}
+
+			@Override
+			default void setPosition( final int position, final int d )
+			{
+				throw new UnsupportedOperationException();
+			}
+
+			@Override
+			default void setPosition( final long position, final int d )
+			{
+				throw new UnsupportedOperationException();
+			}
+
+			@Override
+			default int numDimensions()
+			{
+				throw new UnsupportedOperationException();
+			}
 		}
 
-		@Override
-		default void move( final int distance, final int d )
+		public static class Forwarder1 implements Forwarder
 		{
-			move( ( long ) distance, d );
+
+			private final Positionable a;
+
+			public Forwarder1( final List< ? extends Positionable > values )
+			{
+				this.a = values.get( 0 );
+			}
+
+			@Override
+			public void fwd( final int d )
+			{
+				a.fwd( d );
+			}
+
+			@Override
+			public void move( final long offset, final int d )
+			{
+				a.move( offset, d );
+			}
 		}
 
-		@Override
-		default void move( final Localizable localizable )
+		public static class Forwarder2 implements Forwarder
 		{
-			for ( int i = 0; i < localizable.numDimensions(); i++ )
-				move( localizable.getLongPosition( i ), i );
+
+			private final Positionable a, b;
+
+			public Forwarder2( final List< ? extends Positionable > values )
+			{
+				this.a = values.get( 0 );
+				this.b = values.get( 1 );
+			}
+
+			@Override
+			public void fwd( final int d )
+			{
+				a.fwd( d );
+				b.fwd( d );
+			}
+
+			@Override
+			public void move( final long offset, final int d )
+			{
+				a.move( offset, d );
+				b.move( offset, d );
+			}
 		}
 
-		@Override
-		default void move( final int[] distance )
+		public static class Forwarder3 implements Forwarder
 		{
-			for ( int i = 0; i < distance.length; i++ )
-				move( ( long ) distance[ i ], i );
+
+			private final Positionable a, b, c;
+
+			public Forwarder3( final List< ? extends Positionable > values )
+			{
+				this.a = values.get( 0 );
+				this.b = values.get( 1 );
+				this.c = values.get( 2 );
+			}
+
+			@Override
+			public void fwd( final int d )
+			{
+				a.fwd( d );
+				b.fwd( d );
+				c.fwd( d );
+			}
+
+			@Override
+			public void move( final long offset, final int d )
+			{
+				a.move( offset, d );
+				b.move( offset, d );
+				c.move( offset, d );
+			}
 		}
 
-		@Override
-		default void move( final long[] distance )
+		public static class Forwarder4 implements Forwarder
 		{
-			for ( int i = 0; i < distance.length; i++ )
-				move( distance[ i ], i );
+
+			private final Positionable a, b, c, d;
+
+			public Forwarder4( final List< ? extends Positionable > values )
+			{
+				this.a = values.get( 0 );
+				this.b = values.get( 1 );
+				this.c = values.get( 2 );
+				this.d = values.get( 3 );
+			}
+
+			@Override
+			public void fwd( final int d )
+			{
+				this.a.fwd( d );
+				this.b.fwd( d );
+				this.c.fwd( d );
+				this.d.fwd( d );
+			}
+
+			@Override
+			public void move( final long offset, final int d )
+			{
+				this.a.move( offset, d );
+				this.b.move( offset, d );
+				this.c.move( offset, d );
+				this.d.move( offset, d );
+			}
 		}
 
-		@Override
-		default void setPosition( final Localizable localizable )
+		public static class Forwarder5 implements Forwarder
 		{
-			throw new UnsupportedOperationException();
+
+			private final Positionable a, b, c, d, e;
+
+			public Forwarder5( final List< ? extends Positionable > values )
+			{
+				this.a = values.get( 0 );
+				this.b = values.get( 1 );
+				this.c = values.get( 2 );
+				this.d = values.get( 3 );
+				this.e = values.get( 4 );
+			}
+
+			@Override
+			public void fwd( final int d )
+			{
+				this.a.fwd( d );
+				this.b.fwd( d );
+				this.c.fwd( d );
+				this.d.fwd( d );
+				this.e.fwd( d );
+			}
+
+			@Override
+			public void move( final long offset, final int d )
+			{
+				this.a.move( offset, d );
+				this.b.move( offset, d );
+				this.c.move( offset, d );
+				this.d.move( offset, d );
+				this.e.move( offset, d );
+			}
 		}
 
-		@Override
-		default void setPosition( final int[] position )
+		public static class GeneralForwarder implements Forwarder
 		{
-			throw new UnsupportedOperationException();
-		}
 
-		@Override
-		default void setPosition( final long[] position )
-		{
-			throw new UnsupportedOperationException();
-		}
+			private final Positionable[] values;
 
-		@Override
-		default void setPosition( final int position, final int d )
-		{
-			throw new UnsupportedOperationException();
-		}
+			public GeneralForwarder( final List< ? extends Positionable > values )
+			{
+				this.values = values.toArray( new Positionable[ values.size() ] );
+			}
 
-		@Override
-		default void setPosition( final long position, final int d )
-		{
-			throw new UnsupportedOperationException();
-		}
+			@Override
+			public void fwd( final int d )
+			{
+				for ( final Positionable positionable : values )
+					positionable.fwd( d );
+			}
 
-		@Override
-		default int numDimensions()
-		{
-			throw new UnsupportedOperationException();
+			@Override
+			public void move( final long offset, final int d )
+			{
+				for ( final Positionable positionable : values )
+					positionable.move( offset, d );
+			}
 		}
 	}
 
-	private static class Forwarder1 implements Forwarder
-	{
-
-		private final Positionable a;
-
-		public Forwarder1( final List< ? extends Positionable > values )
-		{
-			this.a = values.get( 0 );
-		}
-
-		@Override
-		public void fwd( final int d )
-		{
-			a.fwd( d );
-		}
-
-		@Override
-		public void move( final long offset, final int d )
-		{
-			a.move( offset, d );
-		}
-	}
-
-	private static class Forwarder2 implements Forwarder
-	{
-
-		private final Positionable a, b;
-
-		public Forwarder2( final List< ? extends Positionable > values )
-		{
-			this.a = values.get( 0 );
-			this.b = values.get( 1 );
-		}
-
-		@Override
-		public void fwd( final int d )
-		{
-			a.fwd( d );
-			b.fwd( d );
-		}
-
-		@Override
-		public void move( final long offset, final int d )
-		{
-			a.move( offset, d );
-			b.move( offset, d );
-		}
-	}
-
-	private static class Forwarder3 implements Forwarder
-	{
-
-		private final Positionable a, b, c;
-
-		public Forwarder3( final List< ? extends Positionable > values )
-		{
-			this.a = values.get( 0 );
-			this.b = values.get( 1 );
-			this.c = values.get( 2 );
-		}
-
-		@Override
-		public void fwd( final int d )
-		{
-			a.fwd( d );
-			b.fwd( d );
-			c.fwd( d );
-		}
-
-		@Override
-		public void move( final long offset, final int d )
-		{
-			a.move( offset, d );
-			b.move( offset, d );
-			c.move( offset, d );
-		}
-	}
-
-	private static class Forwarder4 implements Forwarder
-	{
-
-		private final Positionable a, b, c, d;
-
-		public Forwarder4( final List< ? extends Positionable > values )
-		{
-			this.a = values.get( 0 );
-			this.b = values.get( 1 );
-			this.c = values.get( 2 );
-			this.d = values.get( 3 );
-		}
-
-		@Override
-		public void fwd( final int d )
-		{
-			this.a.fwd( d );
-			this.b.fwd( d );
-			this.c.fwd( d );
-			this.d.fwd( d );
-		}
-
-		@Override
-		public void move( final long offset, final int d )
-		{
-			this.a.move( offset, d );
-			this.b.move( offset, d );
-			this.c.move( offset, d );
-			this.d.move( offset, d );
-		}
-	}
-
-	private static class Forwarder5 implements Forwarder
-	{
-
-		private final Positionable a, b, c, d, e;
-
-		public Forwarder5( final List< ? extends Positionable > values )
-		{
-			this.a = values.get( 0 );
-			this.b = values.get( 1 );
-			this.c = values.get( 2 );
-			this.d = values.get( 3 );
-			this.e = values.get( 4 );
-		}
-
-		@Override
-		public void fwd( final int d )
-		{
-			this.a.fwd( d );
-			this.b.fwd( d );
-			this.c.fwd( d );
-			this.d.fwd( d );
-			this.e.fwd( d );
-		}
-
-		@Override
-		public void move( final long offset, final int d )
-		{
-			this.a.move( offset, d );
-			this.b.move( offset, d );
-			this.c.move( offset, d );
-			this.d.move( offset, d );
-			this.e.move( offset, d );
-		}
-	}
-
-	static class GeneralForwarder implements Forwarder
-	{
-
-		private final Positionable[] values;
-
-		public GeneralForwarder( final List< ? extends Positionable > values )
-		{
-			this.values = values.toArray( new Positionable[ values.size() ] );
-		}
-
-		@Override
-		public void fwd( final int d )
-		{
-			for ( final Positionable positionable : values )
-				positionable.fwd( d );
-		}
-
-		@Override
-		public void move( final long offset, final int d )
-		{
-			for ( final Positionable positionable : values )
-				positionable.move( offset, d );
-		}
-	}
 }

@@ -595,10 +595,7 @@ public class Views
 	public static < T > IntervalView< T > zeroMin( final RandomAccessibleInterval< T > interval )
 	{
 		final Mixed t = ViewTransforms.zeroMin( interval );
-		final long[] offset = new long[ interval.numDimensions() ];
-		interval.min( offset );
-		final long[] translation = Arrays.stream( offset ).map( o -> -o ).toArray();
-		final Interval newInterval = Intervals.translate( interval, translation );
+		final Interval newInterval = Intervals.zeroMin( interval );
 		return Views.interval( new MixedTransformView<>( interval, t ), newInterval );
 	}
 
