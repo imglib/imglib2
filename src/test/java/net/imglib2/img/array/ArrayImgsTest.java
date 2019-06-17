@@ -42,6 +42,7 @@ import java.util.Random;
 import org.junit.Assert;
 import org.junit.Test;
 
+import net.imglib2.img.basictypeaccess.array.BooleanArray;
 import net.imglib2.img.basictypeaccess.array.ByteArray;
 import net.imglib2.img.basictypeaccess.array.DoubleArray;
 import net.imglib2.img.basictypeaccess.array.FloatArray;
@@ -50,6 +51,7 @@ import net.imglib2.img.basictypeaccess.array.LongArray;
 import net.imglib2.img.basictypeaccess.array.ShortArray;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.logic.BitType;
+import net.imglib2.type.logic.NativeBoolType;
 import net.imglib2.type.numeric.ARGBType;
 import net.imglib2.type.numeric.IntegerType;
 import net.imglib2.type.numeric.RealType;
@@ -451,6 +453,22 @@ public class ArrayImgsTest
 			final ArrayCursor< BitType > c = a.cursor();
 			for ( int i = 0; c.hasNext(); ++i )
 				Assert.assertEquals( i % 3 == 0, c.next().get() );
+		}
+
+		// booleans
+		{
+			final boolean[] data = new boolean[] { true, false, false, false, true, true, false, true };
+			final ArrayImg< NativeBoolType, BooleanArray > b = ArrayImgs.booleans( new BooleanArray( data ), 4, 2 );
+			final ArrayCursor< NativeBoolType > c = b.cursor();
+			Assert.assertEquals(true, c.next().get());
+			Assert.assertEquals(false, c.next().get());
+			Assert.assertEquals(false, c.next().get());
+			Assert.assertEquals(false, c.next().get());
+			Assert.assertEquals(true, c.next().get());
+			Assert.assertEquals(true, c.next().get());
+			Assert.assertEquals(false, c.next().get());
+			Assert.assertEquals(true, c.next().get());
+			Assert.assertFalse(c.hasNext());
 		}
 
 	}
