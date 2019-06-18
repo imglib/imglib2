@@ -53,7 +53,7 @@ public class FunctionRealRandomAccessible< T > extends AbstractFunctionEuclidean
 {
 	public FunctionRealRandomAccessible(
 			final int n,
-			final BiConsumer< RealLocalizable, T > function,
+			final BiConsumer< RealLocalizable, ? super T > function,
 			final Supplier< T > typeSupplier )
 	{
 		super( n, function, typeSupplier );
@@ -61,7 +61,7 @@ public class FunctionRealRandomAccessible< T > extends AbstractFunctionEuclidean
 
 	public FunctionRealRandomAccessible(
 			final int n,
-			final Supplier< BiConsumer< RealLocalizable, T > > function,
+			final Supplier< BiConsumer< RealLocalizable, ? super T > > function,
 			final Supplier< T > typeSupplier )
 	{
 		super( n, function, typeSupplier );
@@ -70,7 +70,7 @@ public class FunctionRealRandomAccessible< T > extends AbstractFunctionEuclidean
 	public class RealFunctionRealRandomAccess extends RealPoint implements RealRandomAccess< T >
 	{
 		private final T t = typeSupplier.get();
-		private final BiConsumer< RealLocalizable, T > function = functionSupplier.get();
+		private final BiConsumer< RealLocalizable, ? super T > function = functionSupplier.get();
 
 		public RealFunctionRealRandomAccess()
 		{

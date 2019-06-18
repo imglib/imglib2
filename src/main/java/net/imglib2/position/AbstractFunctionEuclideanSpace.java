@@ -48,7 +48,7 @@ import net.imglib2.EuclideanSpace;
 public abstract class AbstractFunctionEuclideanSpace< P, T > implements EuclideanSpace
 {
 	protected final int n;
-	protected final Supplier< BiConsumer< P, T > > functionSupplier;
+	protected final Supplier< BiConsumer< P, ? super T > > functionSupplier;
 	protected final Supplier< T > typeSupplier;
 
 	/**
@@ -60,7 +60,7 @@ public abstract class AbstractFunctionEuclideanSpace< P, T > implements Euclidea
 	 */
 	public AbstractFunctionEuclideanSpace(
 			final int n,
-			final Supplier< BiConsumer< P, T > > functionSupplier,
+			final Supplier< BiConsumer< P, ? super T > > functionSupplier,
 			final Supplier< T > typeSupplier )
 	{
 		this.n = n;
@@ -78,7 +78,7 @@ public abstract class AbstractFunctionEuclideanSpace< P, T > implements Euclidea
 	 */
 	public AbstractFunctionEuclideanSpace(
 			final int n,
-			final BiConsumer< P, T > function,
+			final BiConsumer< P, ? super T > function,
 			final Supplier< T > typeSupplier )
 	{
 		this(n, () -> function, typeSupplier);

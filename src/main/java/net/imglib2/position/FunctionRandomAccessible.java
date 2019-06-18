@@ -54,7 +54,7 @@ public class FunctionRandomAccessible< T > extends AbstractFunctionEuclideanSpac
 {
 	public FunctionRandomAccessible(
 			final int n,
-			final BiConsumer< Localizable, T > function,
+			final BiConsumer< Localizable, ? super T > function,
 			final Supplier< T > typeSupplier )
 	{
 		super(n, function, typeSupplier);
@@ -62,7 +62,7 @@ public class FunctionRandomAccessible< T > extends AbstractFunctionEuclideanSpac
 
 	public FunctionRandomAccessible(
 			final int n,
-			final Supplier< BiConsumer< Localizable, T > > functionSupplier,
+			final Supplier< BiConsumer< Localizable, ? super T > > functionSupplier,
 			final Supplier< T > typeSupplier )
 	{
 		super(n, functionSupplier, typeSupplier);
@@ -71,7 +71,7 @@ public class FunctionRandomAccessible< T > extends AbstractFunctionEuclideanSpac
 	public class FunctionRandomAccess extends Point implements RandomAccess< T >
 	{
 		private final T t = typeSupplier.get();
-		private final BiConsumer< Localizable, T > function = functionSupplier.get();
+		private final BiConsumer< Localizable, ? super T > function = functionSupplier.get();
 
 		public FunctionRandomAccess()
 		{
