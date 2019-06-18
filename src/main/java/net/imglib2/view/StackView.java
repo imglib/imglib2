@@ -33,6 +33,7 @@
  */
 package net.imglib2.view;
 
+import java.lang.reflect.Array;
 import java.util.Arrays;
 import java.util.List;
 
@@ -43,7 +44,7 @@ import net.imglib2.Localizable;
 import net.imglib2.RandomAccess;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.View;
-import net.imglib2.util.Util;
+import net.imglib2.util.Cast;
 
 /**
  * A stack of <em>n</em>-dimensional {@link RandomAccessibleInterval}s, forming
@@ -234,7 +235,7 @@ public class StackView< T > extends AbstractInterval implements RandomAccessible
 
 		private DefaultRA( final DefaultRA< T > a )
 		{
-			sliceAccesses = Util.genericArray( a.sliceAccesses.length );
+			sliceAccesses = Cast.unchecked( Array.newInstance( RandomAccess.class, a.sliceAccesses.length ) );
 			for ( int i = 0; i < sliceAccesses.length; ++i )
 				sliceAccesses[ i ] = a.sliceAccesses[ i ].copyRandomAccess();
 			slice = a.slice;
@@ -522,7 +523,7 @@ public class StackView< T > extends AbstractInterval implements RandomAccessible
 
 		private MoveAllSlicesRA( final MoveAllSlicesRA< T > a )
 		{
-			sliceAccesses = Util.genericArray( a.sliceAccesses.length );
+			sliceAccesses = Cast.unchecked( Array.newInstance( RandomAccess.class, a.sliceAccesses.length ) );
 			for ( int i = 0; i < sliceAccesses.length; ++i )
 				sliceAccesses[ i ] = a.sliceAccesses[ i ].copyRandomAccess();
 			slice = a.slice;
