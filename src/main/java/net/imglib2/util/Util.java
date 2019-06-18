@@ -73,7 +73,7 @@ public class Util
 {
 	/**
 	 * This does only work when T is erased to Object at call site.
-	 * <pr>
+	 * <p>
 	 * See https://github.com/imglib/imglib2/issues/253
 	 */
 	@Deprecated
