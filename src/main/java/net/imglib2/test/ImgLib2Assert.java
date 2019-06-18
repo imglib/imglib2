@@ -62,9 +62,9 @@ public class ImgLib2Assert
 	 * Comparision is done pixel wise using {@link ValueEquals#valueEquals(Object)}.
 	 */
 	public static < A extends ValueEquals< B >, B >
-	void assertImageEquals( final RandomAccessibleInterval< ? extends A > actual, final RandomAccessibleInterval< ? extends B > expected )
+	void assertImageEquals( final RandomAccessibleInterval< ? extends A > expected, final RandomAccessibleInterval< ? extends B > actual )
 	{
-		assertImageEquals( actual, expected, ValueEquals::valueEquals );
+		assertImageEquals( expected, actual, ValueEquals::valueEquals );
 	}
 
 	/**
@@ -72,9 +72,9 @@ public class ImgLib2Assert
 	 * Comparision is done pixel wise. Two pixels are considered equal, if the values
 	 * returned by {@link RealType#getRealDouble()} differ by less than "tolerance".
 	 */
-	public static void assertImageEqualsRealType( final RandomAccessibleInterval< ? extends RealType< ? > > actual, final RandomAccessibleInterval< ? extends RealType< ? > > expected, double tolerance )
+	public static void assertImageEqualsRealType( final RandomAccessibleInterval< ? extends RealType< ? > > expected, final RandomAccessibleInterval< ? extends RealType< ? > > actual, final double tolerance )
 	{
-		assertImageEquals( actual, expected, ( a, e ) -> Math.abs( a.getRealDouble() - e.getRealDouble() ) <= tolerance );
+		assertImageEquals( expected, actual, ( a, e ) -> Math.abs( a.getRealDouble() - e.getRealDouble() ) <= tolerance );
 	}
 
 	/**
@@ -82,9 +82,9 @@ public class ImgLib2Assert
 	 * Comparision is done pixel wise. Two pixels are considered equal, if the values
 	 * returned by {@link IntegerType#getIntegerLong()} are equal.
 	 */
-	public static void assertImageEqualsIntegerType( final RandomAccessibleInterval< ? extends IntegerType< ? > > actual, final RandomAccessibleInterval< ? extends IntegerType< ? > > expected )
+	public static void assertImageEqualsIntegerType( final RandomAccessibleInterval< ? extends IntegerType< ? > > expected, final RandomAccessibleInterval< ? extends IntegerType< ? > > actual )
 	{
-		assertImageEquals( actual, expected, ( a, e ) -> a.getIntegerLong() == e.getIntegerLong() );
+		assertImageEquals( expected, actual, ( a, e ) -> a.getIntegerLong() == e.getIntegerLong() );
 	}
 
 	/**
@@ -93,10 +93,10 @@ public class ImgLib2Assert
 	 * predicate returns true.
 	 */
 	public static < A, B >
-	void assertImageEquals( final RandomAccessibleInterval< ? extends A > a, final RandomAccessibleInterval< ? extends B > b, BiPredicate< A, B > equals )
+	void assertImageEquals( final RandomAccessibleInterval< ? extends A > expected, final RandomAccessibleInterval< ? extends B > actual, final BiPredicate< A, B > equals )
 	{
-		assertIntervalEquals( a, b );
-		IntervalView< ? extends Pair< ? extends A, ? extends B > > pairs = Views.interval( Views.pair( a, b ), b );
+		assertIntervalEquals( expected, actual );
+		IntervalView< ? extends Pair< ? extends A, ? extends B > > pairs = Views.interval( Views.pair( expected, actual ), actual );
 		Cursor< ? extends Pair< ? extends A, ? extends B > > cursor = pairs.cursor();
 		while ( cursor.hasNext() )
 		{
@@ -111,10 +111,10 @@ public class ImgLib2Assert
 	/**
 	 * Throws an AssertionError, if the two Intervals differ.
 	 */
-	public static void assertIntervalEquals( Interval a, Interval b )
+	public static void assertIntervalEquals( final Interval expected, final Interval actual )
 	{
-		if ( !Intervals.equals( a, b ) )
-			fail( "Intervals are different, expected: " + intervalToString( a ) + ", actual: " + intervalToString( b ) );
+		if ( !Intervals.equals( expected, actual ) )
+			fail( "Intervals are different, expected: " + intervalToString( expected ) + ", actual: " + intervalToString( actual ) );
 	}
 
 	// -- Helper methods --
