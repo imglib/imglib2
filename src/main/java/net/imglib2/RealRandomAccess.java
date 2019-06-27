@@ -53,4 +53,83 @@ public interface RealRandomAccess< T > extends RealLocalizable, RealPositionable
 	RealRandomAccess< T > copyRealRandomAccess();
 //	@Override
 //	public RealRandomAccess< T > copy();
+
+	/**
+	 *
+	 * Convenience method to query a {@code RealRandomAccess} for the value at a
+	 * position and is shortcut for
+	 *
+	 * <pre>
+	 * {@code
+	 * setPosition( position );
+	 * get();
+	 * }
+	 * </pre>
+	 *
+	 * This is designed for convenience only. Avoid use in tight loops or other
+	 * scenarios where efficiency is crucial.
+	 *
+	 * @param position
+	 * @return value of the the {@code RandomAccess} at {@code position}.
+	 */
+	default T setPositionAndGet(double... position )
+	{
+		assert position.length == numDimensions();
+
+		setPosition( position );
+		return get();
+	}
+
+	/**
+	 *
+	 * Convenience method to query a {@code RealRandomAccess} for the value at a
+	 * position and is shortcut for
+	 *
+	 * <pre>
+	 * {@code
+	 * setPosition( position );
+	 * get();
+	 * }
+	 * </pre>
+	 *
+	 * This is designed for convenience only. Avoid use in tight loops or other
+	 * scenarios where efficiency is crucial.
+	 *
+	 * @param position
+	 * @return value of the the {@code RandomAccess} at {@code position}.
+	 */
+	default T setPositionAndGet(float... position )
+	{
+		assert position.length == numDimensions();
+
+		setPosition( position );
+		return get();
+	}
+
+	/**
+	 *
+	 * Convenience method to query a {@code RealRandomAccess} for the value at a
+	 * position and is shortcut for
+	 *
+	 * <pre>
+	 * {@code
+	 * setPosition( position );
+	 * get();
+	 * }
+	 * </pre>
+	 *
+	 * This is designed for convenience only. Avoid use in tight loops or other
+	 * scenarios where efficiency is crucial.
+	 *
+	 * @param position
+	 * @return value of the the {@code RandomAccess} at {@code position}.
+	 */
+	default T setPositionAndGet(RealLocalizable position )
+	{
+		assert position.numDimensions() == numDimensions();
+
+		setPosition( position );
+		return get();
+	}
+
 }
