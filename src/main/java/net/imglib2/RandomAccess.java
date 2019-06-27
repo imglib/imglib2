@@ -73,7 +73,7 @@ public interface RandomAccess< T > extends Localizable, Positionable, Sampler< T
 	 * @param position
 	 * @return value of the the {@code RandomAccess} at {@code position}.
 	 */
-	default T getAt( long... position )
+	default T setPositionAndGet(long... position )
 	{
 		assert position.length == numDimensions();
 
@@ -99,7 +99,7 @@ public interface RandomAccess< T > extends Localizable, Positionable, Sampler< T
 	 * @param position
 	 * @return value of the the {@code RandomAccess} at {@code position}.
 	 */
-	default T getAt( int... position )
+	default T setPositionAndGet(int... position )
 	{
 		assert position.length == numDimensions();
 
@@ -125,7 +125,7 @@ public interface RandomAccess< T > extends Localizable, Positionable, Sampler< T
 	 * @param position
 	 * @return value of the the {@code RandomAccess} at {@code position}.
 	 */
-	default T getAt( Localizable position )
+	default T setPositionAndGet(Localizable position )
 	{
 		assert position.numDimensions() == numDimensions();
 

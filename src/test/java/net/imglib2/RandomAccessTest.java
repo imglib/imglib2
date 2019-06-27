@@ -16,7 +16,7 @@ public class RandomAccessTest
 {
 
 	@Test
-	public void testGetAtPosition()
+	public void testSetPositionAndGet()
 	{
 		final ArrayImg< ByteType, ByteArray > img = ArrayImgs.bytes( 2, 3, 4 );
 		new Random( 100 ).nextBytes( img.update( null ).getCurrentStorageArray() );
@@ -31,9 +31,9 @@ public class RandomAccessTest
 			cursor.localize( longPosition );
 			cursor.localize( intPosition );
 
-			Assert.assertEquals( reference, access.getAt( cursor ) );
-			Assert.assertEquals( reference, access.getAt( longPosition ) );
-			Assert.assertEquals( reference, access.getAt( intPosition ) );
+			Assert.assertEquals( reference, access.setPositionAndGet( cursor ) );
+			Assert.assertEquals( reference, access.setPositionAndGet( longPosition ) );
+			Assert.assertEquals( reference, access.setPositionAndGet( intPosition ) );
 		}
 
 	}
