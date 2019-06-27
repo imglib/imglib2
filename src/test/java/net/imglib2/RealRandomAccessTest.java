@@ -17,45 +17,49 @@ public class RealRandomAccessTest
 	{
 
 		final int numRandomLocations = 20;
-		final Random rng = new Random(10);
+		final Random rng = new Random( 10 );
 
-		final RealRandomAccessible<DoubleType> accessible = new FunctionRealRandomAccessible<>(
+		final RealRandomAccessible< DoubleType > accessible = new FunctionRealRandomAccessible<>(
 				3,
-				() -> (s, t) -> t.setReal(s.getDoublePosition(0) + s.getDoublePosition(1) + s.getDoublePosition(2)),
-				DoubleType::new);
+				() -> (s, t) -> t.setReal( s.getDoublePosition( 0 ) + s.getDoublePosition( 1 ) + s.getDoublePosition( 2 ) ),
+				DoubleType::new );
 
-		compareAt(accessible, 0.0, 0.0, 0.0);
-		compareAt(accessible, 0.0f, 0.0f, 0.0f);
-		compareAtRealLocalizable(accessible, 0.0, 0.0, 0.0);
+		compareAt( accessible, 0.0, 0.0, 0.0 );
+		compareAt( accessible, 0.0f, 0.0f, 0.0f );
+		compareAtRealLocalizable( accessible, 0.0, 0.0, 0.0 );
 
-		for (int i = 0; i < numRandomLocations; ++i) {
-			compareAt(accessible, rng.nextDouble(), rng.nextDouble(), rng.nextDouble());
-			compareAt(accessible, rng.nextFloat(), rng.nextFloat(), rng.nextFloat());
-			compareAtRealLocalizable(accessible, rng.nextDouble(), rng.nextDouble(), rng.nextDouble());
+		for ( int i = 0; i < numRandomLocations; ++i ) {
+			compareAt( accessible, rng.nextDouble(), rng.nextDouble(), rng.nextDouble() );
+			compareAt( accessible, rng.nextFloat(), rng.nextFloat(), rng.nextFloat() );
+			compareAtRealLocalizable( accessible, rng.nextDouble(), rng.nextDouble(), rng.nextDouble() );
 		}
 
 
 	}
 
-	private static void compareAt(final RealRandomAccessible<DoubleType> accessible, final double... position) {
+	private static void compareAt( final RealRandomAccessible<DoubleType> accessible, final double... position ) {
 		Assert.assertEquals(
-				DoubleStream.of(position).sum(),
-				accessible.realRandomAccess().setPositionAndGet(position).getRealDouble(),
-				1e-10);
+				DoubleStream.of( position ).sum(),
+				accessible.realRandomAccess().setPositionAndGet( position ).getRealDouble(),
+				1e-10 );
+		Assert.assertTrue( accessible.realRandomAccess().setPositionAndGet( position ).valueEquals( accessible.getAt( position ) ) );
 	}
 
-	private static void compareAt(final RealRandomAccessible<DoubleType> accessible, final float... position) {
+	private static void compareAt( final RealRandomAccessible<DoubleType> accessible, final float... position ) {
 		Assert.assertEquals(
-				IntStream.range(0, position.length).mapToDouble(d -> position[d]).sum(),
-				accessible.realRandomAccess().setPositionAndGet(position).getRealDouble(),
-				1e-10);
+				IntStream.range( 0, position.length ).mapToDouble( d -> position[d] ).sum(),
+				accessible.realRandomAccess().setPositionAndGet( position ).getRealDouble(),
+				1e-10 );
+		Assert.assertTrue( accessible.realRandomAccess().setPositionAndGet( position ).valueEquals( accessible.getAt( position ) ) );
 	}
 
-	private static void compareAtRealLocalizable(final RealRandomAccessible<DoubleType> accessible, double... position) {
+	private static void compareAtRealLocalizable( final RealRandomAccessible<DoubleType> accessible, double... position ) {
+		final RealLocalizable p = new RealPoint( position );
 		Assert.assertEquals(
-				DoubleStream.of(position).sum(),
-				accessible.realRandomAccess().setPositionAndGet(new RealPoint(position)).getRealDouble(),
-				1e-10);
+				DoubleStream.of( position ).sum(),
+				accessible.realRandomAccess().setPositionAndGet( p ).getRealDouble(),
+				1e-10 );
+		Assert.assertTrue( accessible.realRandomAccess().setPositionAndGet( p ).valueEquals( accessible.getAt( p ) ) );
 	}
 
 }

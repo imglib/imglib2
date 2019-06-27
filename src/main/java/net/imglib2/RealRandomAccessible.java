@@ -65,4 +65,73 @@ public interface RealRandomAccessible< T > extends EuclideanSpace
 	public RealRandomAccess< T > realRandomAccess();
 
 	public RealRandomAccess< T > realRandomAccess( RealInterval interval );
+
+	/**
+	 *
+	 * Convenience method to query a {@code RealRandomAccessible} for the value at a
+	 * position through {@link RealRandomAccess#setPositionAndGet(double...)} and is
+	 * shortcut for
+	 *
+	 * <pre>
+	 * {@code
+	 * realRandomAccess().setPositionAndGet( position );
+	 * }
+	 * </pre>
+	 *
+	 * This is designed for convenience only. Avoid use in tight loops or other
+	 * scenarios where efficiency is crucial.
+	 *
+	 * @param position
+	 * @return value of the the {@code RandomAccess} at {@code position}.
+	 */
+	default T getAt( float... position )
+	{
+		return realRandomAccess().setPositionAndGet( position );
+	}
+
+	/**
+	 *
+	 * Convenience method to query a {@code RealRandomAccessible} for the value at a
+	 * position through {@link RealRandomAccess#setPositionAndGet(float...)} and is
+	 * shortcut for
+	 *
+	 * <pre>
+	 * {@code
+	 * realRandomAccess().setPositionAndGet( position );
+	 * }
+	 * </pre>
+	 *
+	 * This is designed for convenience only. Avoid use in tight loops or other
+	 * scenarios where efficiency is crucial.
+	 *
+	 * @param position
+	 * @return value of the the {@code RandomAccess} at {@code position}.
+	 */
+	default T getAt( double... position )
+	{
+		return realRandomAccess().setPositionAndGet( position );
+	}
+
+	/**
+	 *
+	 * Convenience method to query a {@code RealRandomAccessible} for the value at a
+	 * position through {@link RealRandomAccess#setPositionAndGet(RealLocalizable)} and is
+	 * shortcut for
+	 *
+	 * <pre>
+	 * {@code
+	 * realRandomAccess().setPositionAndGet( position );
+	 * }
+	 * </pre>
+	 *
+	 * This is designed for convenience only. Avoid use in tight loops or other
+	 * scenarios where efficiency is crucial.
+	 *
+	 * @param position
+	 * @return value of the the {@code RandomAccess} at {@code position}.
+	 */
+	default T getAt( RealLocalizable position )
+	{
+		return realRandomAccess().setPositionAndGet( position );
+	}
 }

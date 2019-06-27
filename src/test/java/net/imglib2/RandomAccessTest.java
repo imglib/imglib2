@@ -34,6 +34,9 @@ public class RandomAccessTest
 			Assert.assertEquals( reference, access.setPositionAndGet( cursor ) );
 			Assert.assertEquals( reference, access.setPositionAndGet( longPosition ) );
 			Assert.assertEquals( reference, access.setPositionAndGet( intPosition ) );
+			Assert.assertEquals( reference, img.getAt( cursor ) );
+			Assert.assertEquals( reference, img.getAt( longPosition ) );
+			Assert.assertEquals( reference, img.getAt( intPosition ) );
 		}
 
 	}
