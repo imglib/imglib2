@@ -37,6 +37,7 @@ package net.imglib2.util;
 import java.util.Comparator;
 import java.util.List;
 import java.util.ListIterator;
+import java.util.NoSuchElementException;
 
 /**
  * TODO
@@ -685,6 +686,10 @@ public class Partition
 	 */
 	public static < T > void partitionSubList( final ListIterator< T > i, final ListIterator< T > j, final Comparator< ? super T > compare )
 	{
+		if ( !i.hasNext() || !j.hasPrevious() )
+		{
+			throw new NoSuchElementException( "Invalid iterators for partitioning a sublist." );
+		}
 		final int pivotIndex = j.previousIndex();
 		final T pivot = j.previous();
 
@@ -693,6 +698,10 @@ public class Partition
 			// move i forward while < pivot (and not at j)
 			while ( i.nextIndex() - 1 <= j.previousIndex() )
 			{
+				if( !i.hasNext() )
+				{ 
+					throw new NoSuchElementException( "Invalid iterator for partitioning a sublist. ");
+				}
 				final T ti = i.next();
 				if ( compare.compare( ti, pivot ) >= 0 )
 				{
@@ -760,6 +769,10 @@ public class Partition
 	 */
 	public static < T extends Comparable< T > > void partitionSubList( final ListIterator< T > i, final ListIterator< T > j )
 	{
+		if ( !i.hasNext() || !j.hasPrevious() )
+		{
+			throw new NoSuchElementException( "Invalid iterators for partitioning a sublist." );
+		}
 		final int pivotIndex = j.previousIndex();
 		final T pivot = j.previous();
 
@@ -768,6 +781,10 @@ public class Partition
 			// move i forward while < pivot (and not at j)
 			while ( i.nextIndex() - 1 <= j.previousIndex() )
 			{
+				if( !i.hasNext() )
+				{ 
+					throw new NoSuchElementException( "Invalid iterator for partitioning a sublist. ");
+				}
 				final T ti = i.next();
 				if ( ti.compareTo( pivot ) >= 0 )
 				{
@@ -1028,6 +1045,10 @@ public class Partition
 	 */
 	public static < T > void partitionSubList( final ListIterator< T > i, final ListIterator< T > j, final int[] permutation, final Comparator< ? super T > compare )
 	{
+		if ( !i.hasNext() || !j.hasPrevious() )
+		{
+			throw new NoSuchElementException( "Invalid iterators for partitioning a sublist." );
+		}
 		final int pivotIndex = j.previousIndex();
 		final int permutationPivot = permutation[ pivotIndex ];
 		final T pivot = j.previous();
@@ -1037,6 +1058,10 @@ public class Partition
 			// move i forward while < pivot (and not at j)
 			while ( i.nextIndex() - 1 <= j.previousIndex() )
 			{
+				if( !i.hasNext() )
+				{ 
+					throw new NoSuchElementException( "Invalid iterator for partitioning a sublist. ");
+				}
 				final T ti = i.next();
 				if ( compare.compare( ti, pivot ) >= 0 )
 				{
@@ -1124,6 +1149,10 @@ public class Partition
 			// move i forward while < pivot (and not at j)
 			while ( i.nextIndex() - 1 <= j.previousIndex() )
 			{
+				if( !i.hasNext() )
+				{ 
+					throw new NoSuchElementException( "Invalid iterator for partitioning a sublist. ");
+				}
 				final T ti = i.next();
 				if ( ti.compareTo( pivot ) >= 0 )
 				{
