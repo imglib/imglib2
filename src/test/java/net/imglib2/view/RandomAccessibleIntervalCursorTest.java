@@ -107,7 +107,7 @@ public class RandomAccessibleIntervalCursorTest
 		{
 			if ( !dst.hasNext() )
 			{
-				throw new NoSuchElementException("Cursor dst does not have next element");
+				throw new NoSuchElementException( "Cursor dst does not have next element" );
 			}
 			
 			dst.next().set( src.next().get() );
