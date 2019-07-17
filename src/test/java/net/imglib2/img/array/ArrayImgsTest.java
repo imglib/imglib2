@@ -479,6 +479,10 @@ public class ArrayImgsTest
 		final ArrayCursor< T > r = ref.cursor();
 		for ( int s = start; s < stop; ++s )
 		{
+			if ( !c.hasNext() || !r.hasNext() )
+			{
+				Assert.fail( "Invalid iterators for test range" );
+			}
 			Assert.assertEquals( c.next().getInteger(), s );
 			Assert.assertEquals( r.next().getInteger(), s );
 		}

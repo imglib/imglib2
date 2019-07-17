@@ -37,6 +37,7 @@ package net.imglib2.view;
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 
+import java.util.NoSuchElementException;
 import java.util.Random;
 
 import org.junit.Before;
@@ -103,7 +104,14 @@ public class RandomAccessibleIntervalCursorTest
 	public void copy( final Cursor< IntType > src, final Cursor< IntType > dst )
 	{
 		while ( src.hasNext() )
+		{
+			if ( !dst.hasNext() )
+			{
+				throw new NoSuchElementException("Cursor dst does not have next element");
+			}
+			
 			dst.next().set( src.next().get() );
+		}
 	}
 
 	int[] getImgAsInts( final Img< IntType > img )

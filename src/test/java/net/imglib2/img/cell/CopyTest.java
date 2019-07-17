@@ -36,6 +36,7 @@ package net.imglib2.img.cell;
 
 import static org.junit.Assert.assertArrayEquals;
 
+import java.util.NoSuchElementException;
 import java.util.Random;
 
 import org.junit.Before;
@@ -130,6 +131,10 @@ public class CopyTest
 		final Cursor< IntType > dst = dstImg.cursor();
 		while ( src.hasNext() )
 		{
+			if ( !dst.hasNext() )
+			{
+				throw new NoSuchElementException("Cursor does not have next element");
+			}
 			dst.next().set( src.next().get() );
 		}
 	}
