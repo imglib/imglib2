@@ -5,12 +5,12 @@
 	<parent>
 		<groupId>net.imglib2</groupId>
 		<artifactId>pom-imglib2</artifactId>
-		<version>12.0.0</version>
+		<version>13.0.0</version>
 		<relativePath />
 	</parent>
 
 	<artifactId>imglib2</artifactId>
-	<version>5.7.1-SNAPSHOT</version>
+	<version>5.8.1-SNAPSHOT</version>
 
 	<name>ImgLib2 Core Library</name>
 	<description>A multidimensional, type-agnostic image processing library.</description>

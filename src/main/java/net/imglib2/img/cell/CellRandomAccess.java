@@ -100,7 +100,8 @@ public class CellRandomAccess< T extends NativeType< T >, C extends Cell< ? > >
 		oobCellMax = randomAccess.oobCellMax;
 
 		index = randomAccess.index;
-		type.updateContainer( this );
+		if ( !isOutOfBounds )
+			type.updateContainer( this );
 		type.updateIndex( index );
 	}
 

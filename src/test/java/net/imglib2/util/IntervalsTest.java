@@ -142,4 +142,12 @@ public class IntervalsTest
 		final Interval expected = Intervals.createMinMax( 1, 2, 5, 7 );
 		ImgLib2Assert.assertIntervalEquals( expected, result );
 	}
+
+	@Test
+	public void testZeroMin() {
+		final Interval input = Intervals.createMinSize( 1, 2, 3, 5, 6, 7 );
+		final Interval result = Intervals.zeroMin( input );
+		final Interval expected = Intervals.createMinSize( 0, 0, 0, 5, 6, 7 );
+		ImgLib2Assert.assertIntervalEquals( expected, result );
+	}
 }

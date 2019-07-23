@@ -71,6 +71,12 @@ import java.util.stream.StreamSupport;
  */
 public class Util
 {
+	/**
+	 * This does only work when T is erased to Object at call site.
+	 * <p>
+	 * See https://github.com/imglib/imglib2/issues/253
+	 */
+	@Deprecated
 	@SuppressWarnings( "unchecked" )
 	public static < T > T[] genericArray( final int length )
 	{
