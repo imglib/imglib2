@@ -36,36 +36,52 @@ package net.imglib2.position;
 
 import static org.junit.Assert.assertTrue;
 
+import org.junit.After;
+import org.junit.AfterClass;
+import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import net.imglib2.type.logic.BoolType;
 
 
-public class FunctionTest {
+public class FunctionRealRandomAccessibleTest {
+
+	@BeforeClass
+	public static void setUpBeforeClass() throws Exception {}
+
+	@AfterClass
+	public static void tearDownAfterClass() throws Exception {}
+
+	@Before
+	public void setUp() throws Exception {}
+
+	@After
+	public void tearDown() throws Exception {}
 
 	@Test
-	public void test() {
+	public void test()
+	{
 
-		final Function< BoolType > function = new Function< BoolType >(
+		final FunctionRealRandomAccessible< BoolType > function = new FunctionRealRandomAccessible< BoolType >(
 				4,
-				(pos, val) -> val.set(
-						pos.getDoublePosition(0) > 0 &&
-						pos.getDoublePosition(1) > 1 &&
-						pos.getDoublePosition(2) > 2 &&
-						pos.getDoublePosition(3) > 3 ),
+				( pos, val ) -> val.set(
+						pos.getDoublePosition( 0 ) > 0 &&
+								pos.getDoublePosition( 1 ) > 1 &&
+								pos.getDoublePosition( 2 ) > 2 &&
+								pos.getDoublePosition( 3 ) > 3 ),
 				BoolType::new );
 
-		Function<BoolType>.FunctionRandomAccess access = function.randomAccess();
-		access.setPosition( new long[] {1, 2, 3, 4} );
+		final FunctionRealRandomAccessible< BoolType >.RealFunctionRealRandomAccess access = function.realRandomAccess();
+		access.setPosition( new double[] { 1, 2, 3, 4 } );
 		assertTrue( access.get().get() );
-		access.setPosition( new long[] {0, 2, 3, 4} );
+		access.setPosition( new double[] { 0, 2, 3, 4 } );
 		assertTrue( !access.get().get() );
-		access.setPosition( new long[] {1, 0, 3, 4} );
+		access.setPosition( new double[] { 1, 0, 3, 4 } );
 		assertTrue( !access.get().get() );
-		access.setPosition( new long[] {1, 2, -10, 4} );
+		access.setPosition( new double[] { 1, 2, -10, 4 } );
 		assertTrue( !access.get().get() );
-		access.setPosition( new long[] {10, 50, 5, 5} );
+		access.setPosition( new double[] { 10, 50, 5, 5 } );
 		assertTrue( access.get().get() );
 	}
-
 }
