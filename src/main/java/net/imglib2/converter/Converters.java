@@ -41,6 +41,7 @@ import java.util.function.Supplier;
 import net.imglib2.Cursor;
 import net.imglib2.Interval;
 import net.imglib2.IterableInterval;
+import net.imglib2.IterableRealInterval;
 import net.imglib2.RandomAccess;
 import net.imglib2.RandomAccessible;
 import net.imglib2.RandomAccessibleInterval;
@@ -49,6 +50,7 @@ import net.imglib2.RealRandomAccessible;
 import net.imglib2.RealRandomAccessibleRealInterval;
 import net.imglib2.Sampler;
 import net.imglib2.converter.read.ConvertedIterableInterval;
+import net.imglib2.converter.read.ConvertedIterableRealInterval;
 import net.imglib2.converter.read.ConvertedRandomAccessible;
 import net.imglib2.converter.read.ConvertedRandomAccessibleInterval;
 import net.imglib2.converter.read.ConvertedRealRandomAccessible;
@@ -211,6 +213,29 @@ public class Converters
 			final SamplerConverter< ? super A, B > converter )
 	{
 		return Converters.convert( source, converter );
+	}
+
+	/**
+	 * Create a {@link IterableRealInterval} whose {@link RealCursor RealCursors}
+	 * {@link RealCursor#get()} you a converted sample. Conversion is done
+	 * on-the-fly when reading values. Writing to the converted
+	 * {@link IterableRealInterval} has no effect.
+	 *
+	 * @param source
+	 * @param converter
+	 * @param b
+	 * @return a converted {@link IterableRealInterval} whose {@link RealCursor RealCursors}
+	 *         perform on-the-fly value conversion using the provided converter.
+	 */
+	@SuppressWarnings( "unchecked" )
+	final static public < A, B extends Type< B > > IterableRealInterval< B > convert(
+			final IterableRealInterval< A > source,
+			final Converter< ? super A, ? super B > converter,
+			final B b )
+	{
+		if ( TypeIdentity.class.isInstance( converter ) )
+			return ( IterableRealInterval< B > ) source;
+		return new ConvertedIterableRealInterval<>( source, converter, b );
 	}
 
 	/**
