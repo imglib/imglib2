@@ -812,7 +812,7 @@ public class Intervals
 	/**
 	 * Tests whether two intervals have equal dimensions (same size).
 	 */
-	public static boolean equalDimensions( final Interval a, final Interval b )
+	public static boolean equalDimensions( final Dimensions a, final Dimensions b )
 	{
 		if ( a.numDimensions() != b.numDimensions() )
 			return false;

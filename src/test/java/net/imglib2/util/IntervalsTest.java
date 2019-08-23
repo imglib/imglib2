@@ -34,6 +34,8 @@
 
 package net.imglib2.util;
 
+import net.imglib2.Dimensions;
+import net.imglib2.FinalDimensions;
 import net.imglib2.FinalRealInterval;
 import net.imglib2.Interval;
 import net.imglib2.RealInterval;
@@ -173,5 +175,14 @@ public class IntervalsTest
 		assertTrue( Intervals.equals( interval, similarInterval, 0.2 ) );
 		assertFalse( Intervals.equals( interval, differentInterval, 0.2 ) );
 		assertFalse( Intervals.equals( interval, similarInterval, 0.0 ) );
+	}
+
+	@Test
+	public void testEqualDimensions() {
+		final Dimensions dimensions = new FinalDimensions( 1, 2 );
+		final Dimensions sameDimensions = new FinalDimensions( 1, 2 );
+		final Dimensions differentDimensions = new FinalDimensions( 1, 3 );
+		assertTrue( Intervals.equalDimensions( dimensions, sameDimensions ) );
+		assertFalse( Intervals.equalDimensions( dimensions, differentDimensions ) );
 	}
 }
