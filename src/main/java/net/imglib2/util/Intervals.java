@@ -468,6 +468,21 @@ public class Intervals
 	}
 
 	/**
+	 * Return an {@link RealInterval} that is scaled by the given factor.
+	 */
+	public static RealInterval scale( final RealInterval interval, final double scale )
+	{
+		final int n = interval.numDimensions();
+		final double[] min = minAsDoubleArray( interval );
+		final double[] max = maxAsDoubleArray( interval );
+		for (int i = 0; i < n; i++) {
+			min[ i ] *= scale;
+			max[ i ] *= scale;
+		}
+		return new FinalRealInterval( min, max );
+	}
+
+	/**
 	 * Compute the intersection of two intervals.
 	 * 
 	 * Create a {@link FinalInterval} , which is the intersection of the input

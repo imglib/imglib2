@@ -159,6 +159,14 @@ public class IntervalsTest
 	}
 
 	@Test
+	public void testScale() {
+		final RealInterval input = FinalRealInterval.createMinMax( 1, 2, 6.5, 7 );
+		final RealInterval result = Intervals.scale( input, 3.0 );
+		final RealInterval expected = FinalRealInterval.createMinMax( 3, 6, 19.5, 21 );
+		ImgLib2Assert.assertIntervalEquals( expected, result, 0.0 );
+	}
+
+	@Test
 	public void testEquals() {
 		final Interval interval = Intervals.createMinMax( 1, 2, 3, 4 );
 		final Interval sameInterval = Intervals.createMinMax( 1, 2, 3, 4 );
