@@ -775,7 +775,7 @@ public class Intervals
 	}
 
 	/**
-	 * Tests weather two intervals are equal in their min / max
+	 * Tests whether two intervals are equal in their min / max.
 	 */
 	public static boolean equals( final Interval a, final Interval b )
 	{
@@ -791,7 +791,26 @@ public class Intervals
 	}
 
 	/**
-	 * Tests weather two intervals have equal dimensions (same size)
+	 * Tests whether two {@link RealInterval}s are equal in their min / max.
+	 */
+	public static boolean equals( final RealInterval a, final RealInterval b,
+			double tolerance)
+	{
+		if ( a.numDimensions() != b.numDimensions() )
+			return false;
+
+		for ( int d = 0; d < a.numDimensions(); ++d ) {
+			double differenceMin = Math.abs(a.realMin(d) - b.realMin(d));
+			double differenceMax = Math.abs(a.realMax(d) - b.realMax(d));
+			if ( differenceMin > tolerance || differenceMax > tolerance )
+				return false;
+		}
+
+		return true;
+	}
+
+	/**
+	 * Tests whether two intervals have equal dimensions (same size).
 	 */
 	public static boolean equalDimensions( final Interval a, final Interval b )
 	{

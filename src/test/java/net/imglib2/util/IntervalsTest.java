@@ -34,10 +34,15 @@
 
 package net.imglib2.util;
 
+import net.imglib2.FinalRealInterval;
 import net.imglib2.Interval;
+import net.imglib2.RealInterval;
 import net.imglib2.test.ImgLib2Assert;
 
 import org.junit.Test;
+
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 public class IntervalsTest
 {
@@ -149,5 +154,24 @@ public class IntervalsTest
 		final Interval result = Intervals.zeroMin( input );
 		final Interval expected = Intervals.createMinSize( 0, 0, 0, 5, 6, 7 );
 		ImgLib2Assert.assertIntervalEquals( expected, result );
+	}
+
+	@Test
+	public void testEquals() {
+		final Interval interval = Intervals.createMinMax( 1, 2, 3, 4 );
+		final Interval sameInterval = Intervals.createMinMax( 1, 2, 3, 4 );
+		final Interval differentInterval = Intervals.createMinMax( 1, 2, 3, 0 );
+		assertTrue( Intervals.equals( interval, sameInterval ) );
+		assertFalse( Intervals.equals( interval, differentInterval ) );
+	}
+
+	@Test
+	public void testEqualsForRealIntervals() {
+		final RealInterval interval = FinalRealInterval.createMinMax( 1, 2, 3, 4 );
+		final RealInterval similarInterval = FinalRealInterval.createMinMax( 1.1, 1.9, 3.0, 4.1 );
+		final RealInterval differentInterval = FinalRealInterval.createMinMax( 1, 2, 3, 5 );
+		assertTrue( Intervals.equals( interval, similarInterval, 0.2 ) );
+		assertFalse( Intervals.equals( interval, differentInterval, 0.2 ) );
+		assertFalse( Intervals.equals( interval, similarInterval, 0.0 ) );
 	}
 }
