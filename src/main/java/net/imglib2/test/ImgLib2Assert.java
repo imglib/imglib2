@@ -38,6 +38,7 @@ import net.imglib2.Cursor;
 import net.imglib2.Interval;
 import net.imglib2.Localizable;
 import net.imglib2.RandomAccessibleInterval;
+import net.imglib2.RealInterval;
 import net.imglib2.type.numeric.IntegerType;
 import net.imglib2.type.numeric.RealType;
 import net.imglib2.type.operators.ValueEquals;
@@ -113,7 +114,13 @@ public class ImgLib2Assert
 	 */
 	public static void assertIntervalEquals( final Interval expected, final Interval actual )
 	{
-		if ( !Intervals.equals( expected, actual ) )
+		if ( ! Intervals.equals( expected, actual ) )
+			fail( "Intervals are different, expected: " + intervalToString( expected ) + ", actual: " + intervalToString( actual ) );
+	}
+
+	public static void assertIntervalEquals( final RealInterval expected,
+			final RealInterval actual, double tolerance ) {
+		if ( ! Intervals.equals( expected, actual, tolerance ) )
 			fail( "Intervals are different, expected: " + intervalToString( expected ) + ", actual: " + intervalToString( actual ) );
 	}
 
@@ -127,10 +134,16 @@ public class ImgLib2Assert
 		return "(" + joiner + ")";
 	}
 
-	static String intervalToString( Interval a )
+	static String intervalToString( Interval interval )
 	{
-		return "{min=" + Arrays.toString( Intervals.minAsLongArray( a ) ) +
-				", max=" + Arrays.toString( Intervals.maxAsLongArray( a ) ) + "}";
+		return "{min=" + Arrays.toString( Intervals.minAsLongArray( interval ) ) +
+				", max=" + Arrays.toString( Intervals.maxAsLongArray( interval ) ) + "}";
+	}
+
+	private static String intervalToString( RealInterval interval )
+	{
+		return "{min=" + Arrays.toString( Intervals.minAsDoubleArray( interval ) ) +
+				", max=" + Arrays.toString( Intervals.maxAsDoubleArray( interval ) ) + "}";
 	}
 
 	private static void fail( String message )
