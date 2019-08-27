@@ -1,65 +1,67 @@
+/*
+ * #%L
+ * ImgLib2: a general-purpose, multidimensional image processing library.
+ * %%
+ * Copyright (C) 2009 - 2019 Tobias Pietzsch, Stephan Preibisch, Stephan Saalfeld,
+ * John Bogovic, Albert Cardona, Barry DeZonia, Christian Dietz, Jan Funke,
+ * Aivar Grislis, Jonathan Hale, Grant Harris, Stefan Helfrich, Mark Hiner,
+ * Martin Horn, Steffen Jaensch, Lee Kamentsky, Larry Lindsey, Melissa Linkert,
+ * Mark Longair, Brian Northan, Nick Perry, Curtis Rueden, Johannes Schindelin,
+ * Jean-Yves Tinevez and Michael Zinsmaier.
+ * %%
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ *
+ * 1. Redistributions of source code must retain the above copyright notice,
+ *    this list of conditions and the following disclaimer.
+ * 2. Redistributions in binary form must reproduce the above copyright notice,
+ *    this list of conditions and the following disclaimer in the documentation
+ *    and/or other materials provided with the distribution.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDERS OR CONTRIBUTORS BE
+ * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+ * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+ * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+ * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+ * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ * POSSIBILITY OF SUCH DAMAGE.
+ * #L%
+ */
+
 package net.imglib2;
 
 import net.imglib2.position.FunctionRealRandomAccessible;
 import net.imglib2.type.numeric.real.DoubleType;
-import org.junit.Assert;
 import org.junit.Test;
 
-import java.util.Random;
-import java.util.stream.DoubleStream;
-import java.util.stream.IntStream;
+import static org.junit.Assert.assertEquals;
 
+/**
+ * Tests {@link RealRandomAccessTest}.
+ *
+ * @author Matthias Arzt
+ * @author Philipp Hanslovsky
+ */
 public class RealRandomAccessTest
 {
 
 	@Test
 	public void testSetPositionAndGet()
 	{
-
-		final int numRandomLocations = 20;
-		final Random rng = new Random( 10 );
-
-		final RealRandomAccessible< DoubleType > accessible = new FunctionRealRandomAccessible<>(
-				3,
-				() -> (s, t) -> t.setReal( s.getDoublePosition( 0 ) + s.getDoublePosition( 1 ) + s.getDoublePosition( 2 ) ),
-				DoubleType::new );
-
-		compareAt( accessible, 0.0, 0.0, 0.0 );
-		compareAt( accessible, 0.0f, 0.0f, 0.0f );
-		compareAtRealLocalizable( accessible, 0.0, 0.0, 0.0 );
-
-		for ( int i = 0; i < numRandomLocations; ++i ) {
-			compareAt( accessible, rng.nextDouble(), rng.nextDouble(), rng.nextDouble() );
-			compareAt( accessible, rng.nextFloat(), rng.nextFloat(), rng.nextFloat() );
-			compareAtRealLocalizable( accessible, rng.nextDouble(), rng.nextDouble(), rng.nextDouble() );
-		}
-
-
+		final RealRandomAccessible< DoubleType > image = new FunctionRealRandomAccessible<>(
+				3, () -> this::sumCoordinates, DoubleType::new );
+		RealRandomAccess< DoubleType > realRandomAccess = image.realRandomAccess();
+		assertEquals( new DoubleType( 14 ), realRandomAccess.setPositionAndGet( new RealPoint( 10.0, 8.0, -4.0 ) ) );
+		assertEquals( new DoubleType( 12 ), realRandomAccess.setPositionAndGet( 0.0, 2.0, 10.0 ) );
+		assertEquals( new DoubleType( 10 ), realRandomAccess.setPositionAndGet( 3.0f, 4.0f, 3.0f ) );
 	}
 
-	private static void compareAt( final RealRandomAccessible<DoubleType> accessible, final double... position ) {
-		Assert.assertEquals(
-				DoubleStream.of( position ).sum(),
-				accessible.realRandomAccess().setPositionAndGet( position ).getRealDouble(),
-				1e-10 );
-		Assert.assertTrue( accessible.realRandomAccess().setPositionAndGet( position ).valueEquals( accessible.getAt( position ) ) );
+	private void sumCoordinates( RealLocalizable s, DoubleType t )
+	{
+		t.setReal( s.getDoublePosition( 0 ) + s.getDoublePosition( 1 ) + s.getDoublePosition( 2 ) );
 	}
-
-	private static void compareAt( final RealRandomAccessible<DoubleType> accessible, final float... position ) {
-		Assert.assertEquals(
-				IntStream.range( 0, position.length ).mapToDouble( d -> position[d] ).sum(),
-				accessible.realRandomAccess().setPositionAndGet( position ).getRealDouble(),
-				1e-10 );
-		Assert.assertTrue( accessible.realRandomAccess().setPositionAndGet( position ).valueEquals( accessible.getAt( position ) ) );
-	}
-
-	private static void compareAtRealLocalizable( final RealRandomAccessible<DoubleType> accessible, double... position ) {
-		final RealLocalizable p = new RealPoint( position );
-		Assert.assertEquals(
-				DoubleStream.of( position ).sum(),
-				accessible.realRandomAccess().setPositionAndGet( p ).getRealDouble(),
-				1e-10 );
-		Assert.assertTrue( accessible.realRandomAccess().setPositionAndGet( p ).valueEquals( accessible.getAt( p ) ) );
-	}
-
 }

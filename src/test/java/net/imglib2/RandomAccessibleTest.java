@@ -42,23 +42,22 @@ import org.junit.Test;
 import static org.junit.Assert.assertEquals;
 
 /**
- * Tests {@link RandomAccess}.
+ * Tests {@link RandomAccessible}.
  *
  * @author Matthias Arzt
  * @author Philipp Hanslovsky
  */
-public class RandomAccessTest
+public class RandomAccessibleTest
 {
 
 	@Test
-	public void testSetPositionAndGet()
+	public void testGetAt()
 	{
 		// setup
 		final Img< IntType > image = ArrayImgs.ints( new int[]{ 1, 2, 3, 4, 5, 6 }, 3, 2 );
-		RandomAccess< IntType > randomAccess = image.randomAccess();
 		// process & test
-		assertEquals( new IntType( 4 ), randomAccess.setPositionAndGet( new Point( 0L, 1L ) ) );
-		assertEquals( new IntType( 5 ), randomAccess.setPositionAndGet( 1L, 1L ) );
-		assertEquals( new IntType( 3 ), randomAccess.setPositionAndGet( 2, 0 ) );
+		assertEquals( new IntType( 4 ), image.getAt( new Point( 0L, 1L ) ) );
+		assertEquals( new IntType( 5 ), image.getAt( 1L, 1L ) );
+		assertEquals( new IntType( 3 ), image.getAt( 2, 0 ) );
 	}
 }

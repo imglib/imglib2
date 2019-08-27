@@ -34,31 +34,33 @@
 
 package net.imglib2;
 
-import net.imglib2.img.Img;
-import net.imglib2.img.array.ArrayImgs;
-import net.imglib2.type.numeric.integer.IntType;
+import net.imglib2.position.FunctionRealRandomAccessible;
+import net.imglib2.type.numeric.real.DoubleType;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 
 /**
- * Tests {@link RandomAccess}.
+ * Tests {@link RealRandomAccessibleTest}.
  *
  * @author Matthias Arzt
  * @author Philipp Hanslovsky
  */
-public class RandomAccessTest
+public class RealRandomAccessibleTest
 {
 
 	@Test
-	public void testSetPositionAndGet()
+	public void testGetAt()
 	{
-		// setup
-		final Img< IntType > image = ArrayImgs.ints( new int[]{ 1, 2, 3, 4, 5, 6 }, 3, 2 );
-		RandomAccess< IntType > randomAccess = image.randomAccess();
-		// process & test
-		assertEquals( new IntType( 4 ), randomAccess.setPositionAndGet( new Point( 0L, 1L ) ) );
-		assertEquals( new IntType( 5 ), randomAccess.setPositionAndGet( 1L, 1L ) );
-		assertEquals( new IntType( 3 ), randomAccess.setPositionAndGet( 2, 0 ) );
+		final RealRandomAccessible< DoubleType > image = new FunctionRealRandomAccessible<>(
+				3, () -> this::sumCoordinates, DoubleType::new );
+		assertEquals( new DoubleType( 14 ), image.getAt( new RealPoint( 10.0, 8.0, -4.0 ) ) );
+		assertEquals( new DoubleType( 12 ), image.getAt( 0.0, 2.0, 10.0 ) );
+		assertEquals( new DoubleType( 10 ), image.getAt( 3.0f, 4.0f, 3.0f ) );
+	}
+
+	private void sumCoordinates( RealLocalizable s, DoubleType t )
+	{
+		t.setReal( s.getDoublePosition( 0 ) + s.getDoublePosition( 1 ) + s.getDoublePosition( 2 ) );
 	}
 }
