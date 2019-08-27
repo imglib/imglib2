@@ -35,8 +35,6 @@
 package net.imglib2;
 
 /**
- * 
- * 
  * @author Tobias Pietzsch
  * @author Stephan Preibisch
  * @author Stephan Saalfeld
@@ -55,22 +53,33 @@ public interface RealRandomAccess< T > extends RealLocalizable, RealPositionable
 //	public RealRandomAccess< T > copy();
 
 	/**
-	 *
-	 * Convenience method to query a {@code RealRandomAccess} for the value at a
-	 * position and is shortcut for
-	 *
+	 * Convenience method that moves the {@link RealRandomAccess} to the given
+	 * position and gets the value at that position. It's a shortcut for:
+	 * <p>
 	 * <pre>
 	 * {@code
 	 * setPosition( position );
 	 * get();
 	 * }
 	 * </pre>
+	 * <p>
+	 * WARNING: The return value is invalidated by next call to
+	 * {@link #setPositionAndGet}  or {@link #setPosition}.
+	 * <p>
+	 * <pre>
+	 * {@code
+	 * // This is wrong!!!
+	 * a = randomAccess.setPositionAndGet( positionA );
+	 * b = randomAccess.setPositionAndGet( positionB ); // this invalidates "a" !!!
+	 * wrongDifference = a.getRealDouble() - b.getRealDouble();
 	 *
-	 * This is designed for convenience only. Avoid use in tight loops or other
-	 * scenarios where efficiency is crucial.
-	 *
-	 * @param position
-	 * @return value of the the {@code RandomAccess} at {@code position}.
+	 * // Correct:
+	 * // Use individual RandomAccesses to query a and b
+	 * a = randomAccess_A.setPositionAndGet( positionA );
+	 * b = randomAccess_B.setPositionAndGet( positionB ); // this is fine because a different RandomAccess is used
+	 * difference = a.getRealDouble() - b.getRealDouble();
+	 * }
+	 * </pre>
 	 */
 	default T setPositionAndGet( double... position )
 	{
@@ -81,22 +90,33 @@ public interface RealRandomAccess< T > extends RealLocalizable, RealPositionable
 	}
 
 	/**
-	 *
-	 * Convenience method to query a {@code RealRandomAccess} for the value at a
-	 * position and is shortcut for
-	 *
+	 * Convenience method that moves the {@link RealRandomAccess} to the given
+	 * position and gets the value at that position. It's a shortcut for:
+	 * <p>
 	 * <pre>
 	 * {@code
 	 * setPosition( position );
 	 * get();
 	 * }
 	 * </pre>
+	 * <p>
+	 * WARNING: The return value is invalidated by next call to
+	 * {@link #setPositionAndGet}  or {@link #setPosition}.
+	 * <p>
+	 * <pre>
+	 * {@code
+	 * // This is wrong!!!
+	 * a = randomAccess.setPositionAndGet( positionA );
+	 * b = randomAccess.setPositionAndGet( positionB ); // this invalidates "a" !!!
+	 * wrongDifference = a.getRealDouble() - b.getRealDouble();
 	 *
-	 * This is designed for convenience only. Avoid use in tight loops or other
-	 * scenarios where efficiency is crucial.
-	 *
-	 * @param position
-	 * @return value of the the {@code RandomAccess} at {@code position}.
+	 * // Correct:
+	 * // Use individual RandomAccesses to query a and b
+	 * a = randomAccess_A.setPositionAndGet( positionA );
+	 * b = randomAccess_B.setPositionAndGet( positionB ); // this is fine because a different RandomAccess is used
+	 * difference = a.getRealDouble() - b.getRealDouble();
+	 * }
+	 * </pre>
 	 */
 	default T setPositionAndGet( float... position )
 	{
@@ -107,22 +127,33 @@ public interface RealRandomAccess< T > extends RealLocalizable, RealPositionable
 	}
 
 	/**
-	 *
-	 * Convenience method to query a {@code RealRandomAccess} for the value at a
-	 * position and is shortcut for
-	 *
+	 * Convenience method that moves the {@link RealRandomAccess} to the given
+	 * position and gets the value at that position. It's a shortcut for:
+	 * <p>
 	 * <pre>
 	 * {@code
 	 * setPosition( position );
 	 * get();
 	 * }
 	 * </pre>
+	 * <p>
+	 * WARNING: The return value is invalidated by next call to
+	 * {@link #setPositionAndGet}  or {@link #setPosition}.
+	 * <p>
+	 * <pre>
+	 * {@code
+	 * // This is wrong!!!
+	 * a = randomAccess.setPositionAndGet( positionA );
+	 * b = randomAccess.setPositionAndGet( positionB ); // this invalidates "a" !!!
+	 * wrongDifference = a.getRealDouble() - b.getRealDouble();
 	 *
-	 * This is designed for convenience only. Avoid use in tight loops or other
-	 * scenarios where efficiency is crucial.
-	 *
-	 * @param position
-	 * @return value of the the {@code RandomAccess} at {@code position}.
+	 * // Correct:
+	 * // Use individual RandomAccesses to query a and b
+	 * a = randomAccess_A.setPositionAndGet( positionA );
+	 * b = randomAccess_B.setPositionAndGet( positionB ); // this is fine because a different RandomAccess is used
+	 * difference = a.getRealDouble() - b.getRealDouble();
+	 * }
+	 * </pre>
 	 */
 	default T setPositionAndGet( RealLocalizable position )
 	{

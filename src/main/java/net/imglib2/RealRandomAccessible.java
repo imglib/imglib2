@@ -38,11 +38,11 @@ package net.imglib2;
  * <p>
  * <em>f:R<sup>n</sup>&rarr;T</em>
  * </p>
- * 
+ * <p>
  * <p>
  * A function over real space that can create a random access {@link Sampler}.
  * </p>
- * 
+ * <p>
  * <p>
  * If your algorithm takes a RealRandomAccessible, this usually means that you
  * expect that the domain is infinite. (In contrast to this,
@@ -52,14 +52,14 @@ package net.imglib2;
  * Similarly to a {@link RandomAccessible}, a {@code RealRandomAccessible} might
  * be defined only partially within the space.
  * </p>
- * 
+ *
  * @author Stephan Saalfeld
  */
 public interface RealRandomAccessible< T > extends EuclideanSpace
 {
 	/**
 	 * Create a random access sampler for real coordinates.
-	 * 
+	 *
 	 * @return random access sampler
 	 */
 	public RealRandomAccess< T > realRandomAccess();
@@ -67,22 +67,17 @@ public interface RealRandomAccessible< T > extends EuclideanSpace
 	public RealRandomAccess< T > realRandomAccess( RealInterval interval );
 
 	/**
-	 *
-	 * Convenience method to query a {@code RealRandomAccessible} for the value at a
-	 * position through {@link RealRandomAccess#setPositionAndGet(double...)} and is
-	 * shortcut for
-	 *
-	 * <pre>
-	 * {@code
-	 * realRandomAccess().setPositionAndGet( position );
-	 * }
-	 * </pre>
-	 *
-	 * This is designed for convenience only. Avoid use in tight loops or other
-	 * scenarios where efficiency is crucial.
+	 * Convenience method to query a {@link RealRandomAccessible} for the value at a
+	 * position.
+	 * <p>
+	 * WARNING: This method is VERY SLOW, and memory inefficient when used in tight
+	 * loops, or called many times!!! Use {@link #realRandomAccess()} when efficiency
+	 * is important.
+	 * <p>
+	 * This method is a short cut for {@code realRandomAccess().setPositionAndGet( position );}
 	 *
 	 * @param position
-	 * @return value of the the {@code RandomAccess} at {@code position}.
+	 * @return value of the the {@link RandomAccessible} at {@code position}.
 	 */
 	default T getAt( float... position )
 	{
@@ -90,22 +85,17 @@ public interface RealRandomAccessible< T > extends EuclideanSpace
 	}
 
 	/**
-	 *
-	 * Convenience method to query a {@code RealRandomAccessible} for the value at a
-	 * position through {@link RealRandomAccess#setPositionAndGet(float...)} and is
-	 * shortcut for
-	 *
-	 * <pre>
-	 * {@code
-	 * realRandomAccess().setPositionAndGet( position );
-	 * }
-	 * </pre>
-	 *
-	 * This is designed for convenience only. Avoid use in tight loops or other
-	 * scenarios where efficiency is crucial.
+	 * Convenience method to query a {@link RealRandomAccessible} for the value at a
+	 * position.
+	 * <p>
+	 * WARNING: This method is VERY SLOW, and memory inefficient when used in tight
+	 * loops, or called many times!!! Use {@link #realRandomAccess()} when efficiency
+	 * is important.
+	 * <p>
+	 * This method is a short cut for {@code realRandomAccess().setPositionAndGet( position );}
 	 *
 	 * @param position
-	 * @return value of the the {@code RandomAccess} at {@code position}.
+	 * @return value of the the {@link RandomAccessible} at {@code position}.
 	 */
 	default T getAt( double... position )
 	{
@@ -113,22 +103,17 @@ public interface RealRandomAccessible< T > extends EuclideanSpace
 	}
 
 	/**
-	 *
-	 * Convenience method to query a {@code RealRandomAccessible} for the value at a
-	 * position through {@link RealRandomAccess#setPositionAndGet(RealLocalizable)} and is
-	 * shortcut for
-	 *
-	 * <pre>
-	 * {@code
-	 * realRandomAccess().setPositionAndGet( position );
-	 * }
-	 * </pre>
-	 *
-	 * This is designed for convenience only. Avoid use in tight loops or other
-	 * scenarios where efficiency is crucial.
+	 * Convenience method to query a {@link RealRandomAccessible} for the value at a
+	 * position.
+	 * <p>
+	 * WARNING: This method is VERY SLOW, and memory inefficient when used in tight
+	 * loops, or called many times!!! Use {@link #realRandomAccess()} when efficiency
+	 * is important.
+	 * <p>
+	 * This method is a short cut for {@code realRandomAccess().setPositionAndGet( position );}
 	 *
 	 * @param position
-	 * @return value of the the {@code RandomAccess} at {@code position}.
+	 * @return value of the the {@link RandomAccessible} at {@code position}.
 	 */
 	default T getAt( RealLocalizable position )
 	{

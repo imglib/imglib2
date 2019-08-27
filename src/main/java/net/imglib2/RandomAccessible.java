@@ -128,22 +128,17 @@ public interface RandomAccessible< T > extends EuclideanSpace
 	public RandomAccess< T > randomAccess( Interval interval );
 
 	/**
-	 *
-	 * Convenience method to query a {@code RandomAccessible} for the value at a
-	 * position through {@link RandomAccess#setPositionAndGet(long...)} and is
-	 * shortcut for
-	 *
-	 * <pre>
-	 * {@code
-	 * randomAccess().setPositionAndGet( position );
-	 * }
-	 * </pre>
-	 *
-	 * This is designed for convenience only. Avoid use in tight loops or other
-	 * scenarios where efficiency is crucial.
+	 * Convenience method to query a {@link RandomAccessible} for the value at a
+	 * position.
+	 * <p>
+	 * WARNING: This method is VERY SLOW, and memory inefficient when used in tight
+	 * loops, or called many times!!! Use {@link #randomAccess()} when efficiency
+	 * is important.
+	 * <p>
+	 * This method is a short cut for {@code randomAccess().setPositionAndGet( position );}
 	 *
 	 * @param position
-	 * @return value of the the {@code RandomAccess} at {@code position}.
+	 * @return value of the the {@link RandomAccessible} at {@code position}.
 	 */
 	default T getAt( long... position )
 	{
@@ -151,22 +146,17 @@ public interface RandomAccessible< T > extends EuclideanSpace
 	}
 
 	/**
-	 *
-	 * Convenience method to query a {@code RandomAccessible} for the value at a
-	 * position through {@link RandomAccess#setPositionAndGet(int...)} and is
-	 * shortcut for
-	 *
-	 * <pre>
-	 * {@code
-	 * randomAccess().setPositionAndGet( position );
-	 * }
-	 * </pre>
-	 *
-	 * This is designed for convenience only. Avoid use in tight loops or other
-	 * scenarios where efficiency is crucial.
+	 * Convenience method to query a {@link RandomAccessible} for the value at a
+	 * position.
+	 * <p>
+	 * WARNING: This method is VERY SLOW, and memory inefficient when used in tight
+	 * loops, or called many times!!! Use {@link #randomAccess()} when efficiency
+	 * is important.
+	 * <p>
+	 * This method is a short cut for {@code randomAccess().setPositionAndGet( position );}
 	 *
 	 * @param position
-	 * @return value of the the {@code RandomAccess} at {@code position}.
+	 * @return value of the the {@link RandomAccessible} at {@code position}.
 	 */
 	default T getAt( int... position )
 	{
@@ -174,22 +164,17 @@ public interface RandomAccessible< T > extends EuclideanSpace
 	}
 
 	/**
-	 *
-	 * Convenience method to query a {@code RandomAccessible} for the value at a
-	 * position through {@link RandomAccess#setPositionAndGet(Localizable)} and is
-	 * shortcut for
-	 *
-	 * <pre>
-	 * {@code
-	 * randomAccess().setPositionAndGet( position );
-	 * }
-	 * </pre>
-	 *
-	 * This is designed for convenience only. Avoid use in tight loops or other
-	 * scenarios where efficiency is crucial.
+	 * Convenience method to query a {@link RandomAccessible} for the value at a
+	 * position.
+	 * <p>
+	 * WARNING: This method is VERY SLOW, and memory inefficient when used in tight
+	 * loops, or called many times!!! Use {@link #randomAccess()} when efficiency
+	 * is important.
+	 * <p>
+	 * This method is a short cut for {@code randomAccess().setPositionAndGet( position );}
 	 *
 	 * @param position
-	 * @return value of the the {@code RandomAccess} at {@code position}.
+	 * @return value of the the {@link RandomAccessible} at {@code position}.
 	 */
 	default T getAt( Localizable position )
 	{
