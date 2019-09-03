@@ -151,7 +151,8 @@ public class IntervalsTest
 	}
 
 	@Test
-	public void testZeroMin() {
+	public void testZeroMin()
+	{
 		final Interval input = Intervals.createMinSize( 1, 2, 3, 5, 6, 7 );
 		final Interval result = Intervals.zeroMin( input );
 		final Interval expected = Intervals.createMinSize( 0, 0, 0, 5, 6, 7 );
@@ -159,7 +160,8 @@ public class IntervalsTest
 	}
 
 	@Test
-	public void testScale() {
+	public void testScale()
+	{
 		final RealInterval input = FinalRealInterval.createMinMax( 1, 2, 6.5, 7 );
 		final RealInterval result = Intervals.scale( input, 3.0 );
 		final RealInterval expected = FinalRealInterval.createMinMax( 3, 6, 19.5, 21 );
@@ -167,7 +169,8 @@ public class IntervalsTest
 	}
 
 	@Test
-	public void testEquals() {
+	public void testEquals()
+	{
 		final Interval interval = Intervals.createMinMax( 1, 2, 3, 4 );
 		final Interval sameInterval = Intervals.createMinMax( 1, 2, 3, 4 );
 		final Interval differentInterval = Intervals.createMinMax( 1, 2, 3, 0 );
@@ -176,7 +179,8 @@ public class IntervalsTest
 	}
 
 	@Test
-	public void testEqualsForRealIntervals() {
+	public void testEqualsForRealIntervals()
+	{
 		final RealInterval interval = FinalRealInterval.createMinMax( 1, 2, 3, 4 );
 		final RealInterval similarInterval = FinalRealInterval.createMinMax( 1.1, 1.9, 3.0, 4.1 );
 		final RealInterval differentInterval = FinalRealInterval.createMinMax( 1, 2, 3, 5 );
@@ -186,7 +190,8 @@ public class IntervalsTest
 	}
 
 	@Test
-	public void testEqualDimensions() {
+	public void testEqualDimensions()
+	{
 		final Dimensions dimensions = new FinalDimensions( 1, 2 );
 		final Dimensions sameDimensions = new FinalDimensions( 1, 2 );
 		final Dimensions differentDimensions = new FinalDimensions( 1, 3 );

@@ -459,10 +459,10 @@ public class Intervals
 	}
 
 	/**
-	 * Returns an {@link Interval} with the same dimensions as the given interval,
-	 * but min is all zero.
+	 * Returns an {@link Interval} with the same dimensions as the given
+	 * interval, but min is all zero.
 	 */
-	public static FinalInterval zeroMin( Interval interval )
+	public static FinalInterval zeroMin( final Interval interval )
 	{
 		return new FinalInterval( dimensionsAsLongArray( interval ) );
 	}
@@ -475,7 +475,8 @@ public class Intervals
 		final int n = interval.numDimensions();
 		final double[] min = minAsDoubleArray( interval );
 		final double[] max = maxAsDoubleArray( interval );
-		for (int i = 0; i < n; i++) {
+		for ( int i = 0; i < n; i++ )
+		{
 			min[ i ] *= scale;
 			max[ i ] *= scale;
 		}
@@ -808,15 +809,15 @@ public class Intervals
 	/**
 	 * Tests whether two {@link RealInterval}s are equal in their min / max.
 	 */
-	public static boolean equals( final RealInterval a, final RealInterval b,
-			double tolerance)
+	public static boolean equals( final RealInterval a, final RealInterval b, final double tolerance )
 	{
 		if ( a.numDimensions() != b.numDimensions() )
 			return false;
 
-		for ( int d = 0; d < a.numDimensions(); ++d ) {
-			double differenceMin = Math.abs(a.realMin(d) - b.realMin(d));
-			double differenceMax = Math.abs(a.realMax(d) - b.realMax(d));
+		for ( int d = 0; d < a.numDimensions(); ++d )
+		{
+			final double differenceMin = Math.abs( a.realMin( d ) - b.realMin( d ) );
+			final double differenceMax = Math.abs( a.realMax( d ) - b.realMax( d ) );
 			if ( differenceMin > tolerance || differenceMax > tolerance )
 				return false;
 		}
