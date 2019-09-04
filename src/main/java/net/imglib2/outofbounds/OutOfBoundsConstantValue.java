@@ -34,6 +34,8 @@
 
 package net.imglib2.outofbounds;
 
+import java.util.function.Supplier;
+
 import net.imglib2.Interval;
 import net.imglib2.RandomAccessible;
 import net.imglib2.type.Type;
@@ -44,21 +46,31 @@ import net.imglib2.type.Type;
  * 
  * @author Stephan Preibisch
  * @author Stephan Saalfeld
+ * @author Philipp Hanslovsky
  */
-public class OutOfBoundsConstantValue< T extends Type< T > > extends AbstractOutOfBoundsValue< T >
+public class OutOfBoundsConstantValue< T > extends AbstractOutOfBoundsValue< T >
 {
+	private final Supplier< T > valueSupplier;
+
 	final protected T value;
 
 	protected OutOfBoundsConstantValue( final OutOfBoundsConstantValue< T > outOfBounds )
 	{
 		super( outOfBounds );
-		this.value = outOfBounds.value.copy();
+		this.valueSupplier = outOfBounds.valueSupplier;
+		this.value = this.valueSupplier.get();
+	}
+
+	public < F extends Interval & RandomAccessible< T > > OutOfBoundsConstantValue( final F f, final Supplier< T > valueSupplier )
+	{
+		super( f );
+		this.valueSupplier = valueSupplier;
+		this.value = this.valueSupplier.get();
 	}
 
 	public < F extends Interval & RandomAccessible< T > > OutOfBoundsConstantValue( final F f, final T value )
 	{
-		super( f );
-		this.value = value;
+		this( f, makeSupplierFrom( value ) );
 	}
 
 	/* Sampler */
@@ -75,7 +87,7 @@ public class OutOfBoundsConstantValue< T extends Type< T > > extends AbstractOut
 	@Override
 	final public OutOfBoundsConstantValue< T > copy()
 	{
-		return new OutOfBoundsConstantValue< T >( this );
+		return new OutOfBoundsConstantValue<>( this );
 	}
 
 	/* RandomAccess */
@@ -84,5 +96,13 @@ public class OutOfBoundsConstantValue< T extends Type< T > > extends AbstractOut
 	final public OutOfBoundsConstantValue< T > copyRandomAccess()
 	{
 		return copy();
+	}
+
+	private static < T > Supplier< T > makeSupplierFrom( final T t ) {
+		if ( t instanceof Type< ? > ) {
+			final Type< ? > type = ( Type< ? > ) t;
+			return () -> ( T ) type.copy();
+		}
+		return () -> t;
 	}
 }

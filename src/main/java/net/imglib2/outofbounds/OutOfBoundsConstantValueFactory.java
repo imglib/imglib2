@@ -34,6 +34,8 @@
 
 package net.imglib2.outofbounds;
 
+import java.util.function.Supplier;
+
 import net.imglib2.Interval;
 import net.imglib2.RandomAccessible;
 import net.imglib2.type.Type;
@@ -44,30 +46,49 @@ import net.imglib2.type.Type;
  * 
  * @author Stephan Preibisch
  * @author Stephan Saalfeld
+ * @author Philipp Hanslovsky
  */
-public class OutOfBoundsConstantValueFactory< T extends Type< T >, F extends Interval & RandomAccessible< T > >
+public class OutOfBoundsConstantValueFactory< T, F extends Interval & RandomAccessible< T > >
 		implements OutOfBoundsFactory< T, F >
 {
-	protected T value;
+	protected Supplier< T > valueSupplier;
+
+	public OutOfBoundsConstantValueFactory( final Supplier< T > valueSupplier )
+	{
+		this.valueSupplier = valueSupplier;
+	}
 
 	public OutOfBoundsConstantValueFactory( final T value )
 	{
-		this.value = value;
+		this( makeSupplierFrom( value ) );
+	}
+
+	public void setValueSupplier( final Supplier< T > valueSupplier )
+	{
+		this.valueSupplier = valueSupplier;
 	}
 
 	public void setValue( final T value )
 	{
-		this.value = value;
+		setValueSupplier( makeSupplierFrom( value ) );
 	}
 
 	public T getValue()
 	{
-		return value;
+		return valueSupplier.get();
 	}
 
 	@Override
 	public OutOfBoundsConstantValue< T > create( final F f )
 	{
-		return new OutOfBoundsConstantValue< T >( f, value.copy() );
+		return new OutOfBoundsConstantValue<>( f, valueSupplier );
+	}
+
+	private static < T > Supplier< T > makeSupplierFrom( final T t ) {
+		if ( t instanceof Type< ? > ) {
+			final Type< ? > type = ( Type< ? > ) t;
+			return () -> ( T ) type.copy();
+		}
+		return () -> t;
 	}
 }
