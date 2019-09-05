@@ -65,7 +65,6 @@ import net.imglib2.transform.integer.permutation.SingleDimensionPermutationTrans
 import net.imglib2.transform.integer.shear.InverseShearTransform;
 import net.imglib2.transform.integer.shear.ShearTransform;
 import net.imglib2.type.BooleanType;
-import net.imglib2.type.Type;
 import net.imglib2.type.numeric.IntegerType;
 import net.imglib2.type.numeric.NumericType;
 import net.imglib2.type.numeric.RealType;
@@ -182,7 +181,7 @@ public class Views
 	 *         infinity.
 	 * @see net.imglib2.outofbounds.OutOfBoundsConstantValue
 	 */
-	public static < T extends Type< T >, F extends RandomAccessibleInterval< T > > ExtendedRandomAccessibleInterval< T, F > extendValue( final F source, final T value )
+	public static < T, F extends RandomAccessibleInterval< T > > ExtendedRandomAccessibleInterval< T, F > extendValue( final F source, final T value )
 	{
 		return new ExtendedRandomAccessibleInterval<>( source, new OutOfBoundsConstantValueFactory<>( value ) );
 	}
@@ -1352,7 +1351,7 @@ public class Views
 	 * @return Expansion of the {@link RandomAccessibleInterval} source as
 	 *         specified by t and border.
 	 */
-	public static < T extends Type< T > > IntervalView< T > expandValue( final RandomAccessibleInterval< T > source, final T t, final long... border )
+	public static < T > IntervalView< T > expandValue( final RandomAccessibleInterval< T > source, final T t, final long... border )
 	{
 		return interval( extendValue( source, t ), Intervals.expand( source, border ) );
 	}
