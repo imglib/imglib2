@@ -84,8 +84,10 @@ public class OutOfBoundsConstantValueFactory< T, F extends Interval & RandomAcce
 		return new OutOfBoundsConstantValue<>( f, valueSupplier );
 	}
 
-	private static < T > Supplier< T > makeSupplierFrom( final T t ) {
-		if ( t instanceof Type< ? > ) {
+	private static < T > Supplier< T > makeSupplierFrom( final T t )
+	{
+		if ( t instanceof Type< ? > )
+		{
 			final Type< ? > type = ( Type< ? > ) t;
 			return () -> ( T ) type.copy();
 		}

@@ -98,8 +98,10 @@ public class OutOfBoundsConstantValue< T > extends AbstractOutOfBoundsValue< T >
 		return copy();
 	}
 
-	private static < T > Supplier< T > makeSupplierFrom( final T t ) {
-		if ( t instanceof Type< ? > ) {
+	private static < T > Supplier< T > makeSupplierFrom( final T t )
+	{
+		if ( t instanceof Type< ? > )
+		{
 			final Type< ? > type = ( Type< ? > ) t;
 			return () -> ( T ) type.copy();
 		}
