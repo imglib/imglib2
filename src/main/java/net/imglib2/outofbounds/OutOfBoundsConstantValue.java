@@ -52,9 +52,9 @@ public class OutOfBoundsConstantValue< T > extends AbstractOutOfBoundsValue< T >
 {
 	private final Supplier< T > valueSupplier;
 
-	final protected T value;
+	private final T value;
 
-	protected OutOfBoundsConstantValue( final OutOfBoundsConstantValue< T > outOfBounds )
+	private OutOfBoundsConstantValue( final OutOfBoundsConstantValue< T > outOfBounds )
 	{
 		super( outOfBounds );
 		this.valueSupplier = outOfBounds.valueSupplier;

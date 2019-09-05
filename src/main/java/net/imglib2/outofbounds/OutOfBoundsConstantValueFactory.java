@@ -51,7 +51,7 @@ import net.imglib2.type.Type;
 public class OutOfBoundsConstantValueFactory< T, F extends Interval & RandomAccessible< T > >
 		implements OutOfBoundsFactory< T, F >
 {
-	protected Supplier< T > valueSupplier;
+	private Supplier< T > valueSupplier;
 
 	public OutOfBoundsConstantValueFactory( final Supplier< T > valueSupplier )
 	{
