@@ -49,16 +49,16 @@ import net.imglib2.type.Type;
 public class OutOfBoundsConstantValueFactory< T, F extends Interval & RandomAccessible< T > >
 		implements OutOfBoundsFactory< T, F >
 {
-	private T value;
+	protected T value;
 
 	public OutOfBoundsConstantValueFactory( final T value )
 	{
-		this.value = copyIfType( value );
+		this.value = value;
 	}
 
 	public void setValue( final T value )
 	{
-		this.value = copyIfType( value );
+		this.value = value;
 	}
 
 	public T getValue()
@@ -69,7 +69,7 @@ public class OutOfBoundsConstantValueFactory< T, F extends Interval & RandomAcce
 	@Override
 	public OutOfBoundsConstantValue< T > create( final F f )
 	{
-		return new OutOfBoundsConstantValue<>( f, value );
+		return new OutOfBoundsConstantValue<>( f, copyIfType( value ) );
 	}
 
 	private static < T > T copyIfType( final T t )

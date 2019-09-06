@@ -60,7 +60,7 @@ public class OutOfBoundsConstantValue< T > extends AbstractOutOfBoundsValue< T >
 	public < F extends Interval & RandomAccessible< T > > OutOfBoundsConstantValue( final F f, final T value )
 	{
 		super( f );
-		this.value = copyIfType( value );
+		this.value = value;
 	}
 
 	/* Sampler */
