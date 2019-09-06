@@ -34,8 +34,6 @@
 
 package net.imglib2.outofbounds;
 
-import java.util.function.Supplier;
-
 import net.imglib2.Interval;
 import net.imglib2.RandomAccessible;
 import net.imglib2.type.Type;
@@ -50,27 +48,19 @@ import net.imglib2.type.Type;
  */
 public class OutOfBoundsConstantValue< T > extends AbstractOutOfBoundsValue< T >
 {
-	private final Supplier< T > valueSupplier;
 
-	private final T value;
+	final protected T value;
 
-	private OutOfBoundsConstantValue( final OutOfBoundsConstantValue< T > outOfBounds )
+	protected OutOfBoundsConstantValue( final OutOfBoundsConstantValue< T > outOfBounds )
 	{
 		super( outOfBounds );
-		this.valueSupplier = outOfBounds.valueSupplier;
-		this.value = this.valueSupplier.get();
-	}
-
-	public < F extends Interval & RandomAccessible< T > > OutOfBoundsConstantValue( final F f, final Supplier< T > valueSupplier )
-	{
-		super( f );
-		this.valueSupplier = valueSupplier;
-		this.value = this.valueSupplier.get();
+		this.value = copyIfType( outOfBounds.value );
 	}
 
 	public < F extends Interval & RandomAccessible< T > > OutOfBoundsConstantValue( final F f, final T value )
 	{
-		this( f, makeSupplierFrom( value ) );
+		super( f );
+		this.value = copyIfType( value );
 	}
 
 	/* Sampler */
@@ -98,13 +88,13 @@ public class OutOfBoundsConstantValue< T > extends AbstractOutOfBoundsValue< T >
 		return copy();
 	}
 
-	private static < T > Supplier< T > makeSupplierFrom( final T t )
+	private static < T > T copyIfType( final T t )
 	{
 		if ( t instanceof Type< ? > )
 		{
 			final Type< ? > type = ( Type< ? > ) t;
-			return () -> ( T ) type.copy();
+			return ( T ) type.copy();
 		}
-		return () -> t;
+		return t;
 	}
 }
