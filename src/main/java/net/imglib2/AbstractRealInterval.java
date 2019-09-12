@@ -34,6 +34,8 @@
 
 package net.imglib2;
 
+import net.imglib2.util.Intervals;
+
 /**
  * Implementation of the {@link RealInterval} interface.
  * 
@@ -125,4 +127,11 @@ public class AbstractRealInterval extends AbstractEuclideanSpace implements Real
 		for ( int d = 0; d < n; ++d )
 			realMax.setPosition( this.max[ d ], d );
 	}
+
+	@Override
+	public String toString()
+	{
+		return getClass().getSimpleName() + " " + Intervals.toString( this );
+	}
+
 }

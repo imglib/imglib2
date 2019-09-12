@@ -34,6 +34,8 @@
 
 package net.imglib2;
 
+import net.imglib2.util.Intervals;
+
 /**
  * Implementation of the {@link Interval} interface.
  * 
@@ -246,34 +248,6 @@ public abstract class AbstractInterval extends AbstractEuclideanSpace implements
 	@Override
 	public String toString()
 	{
-		final StringBuilder sb = new StringBuilder();
-
-		final String className = this.getClass().getSimpleName();
-		sb.append( className );
-
-		sb.append( " [(" );
-		for ( int d = 0; d < n; d++ )
-		{
-			sb.append( min[ d ] );
-			if ( d < n - 1 )
-				sb.append( ", " );
-		}
-		sb.append( ") -- (" );
-		for ( int d = 0; d < n; d++ )
-		{
-			sb.append( max[ d ] );
-			if ( d < n - 1 )
-				sb.append( ", " );
-		}
-		sb.append( ") = " );
-		for ( int d = 0; d < n; d++ )
-		{
-			sb.append( dimension( d ) );
-			if ( d < n - 1 )
-				sb.append( "x" );
-		}
-		sb.append( "]" );
-
-		return sb.toString();
+		return this.getClass().getSimpleName() + " " + Intervals.toString( this );
 	}
 }

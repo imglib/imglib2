@@ -35,6 +35,9 @@
 package net.imglib2;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
@@ -133,5 +136,33 @@ public class FinalIntervalTest
 		assertEquals( dim0, interval.dimension( 0 ) );
 		assertEquals( dim1, interval.dimension( 1 ) );
 		assertEquals( dim2, interval.dimension( 2 ) );
+	}
+
+	@Test
+	public void testEquals()
+	{
+		final FinalInterval interval = FinalInterval.createMinMax( 1, 2, 3, 4 );
+		final FinalInterval sameInterval = FinalInterval.createMinMax( 1, 2, 3, 4 );
+		final FinalInterval differentInterval = FinalInterval.createMinMax( 1, 2, 3, 0 );
+		assertTrue( interval.equals( interval ) );
+		assertTrue( interval.equals( sameInterval ) );
+		assertFalse( interval.equals( differentInterval ) );
+		assertFalse( interval.equals( null ) );
+	}
+
+	@Test
+	public void testHashCode()
+	{
+		final FinalInterval interval = FinalInterval.createMinMax( 1, 2, 3, 4 );
+		final FinalInterval sameInterval = FinalInterval.createMinMax( 1, 2, 3, 4 );
+		assertEquals( interval.hashCode(), interval.hashCode() );
+		assertEquals( interval.hashCode(), sameInterval.hashCode() );
+	}
+
+	@Test
+	public void testToString()
+	{
+		final FinalInterval interval = FinalInterval.createMinMax( 1, 2, 3, 4 );
+		assertEquals( "FinalInterval [(1, 2) -- (3, 4) = 3x3]", interval.toString() );
 	}
 }

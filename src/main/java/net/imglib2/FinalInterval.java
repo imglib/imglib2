@@ -34,6 +34,11 @@
 
 package net.imglib2;
 
+import net.imglib2.util.Intervals;
+import net.imglib2.util.Util;
+
+import java.util.Arrays;
+
 /**
  * Implementation of the {@link Interval} interface.
  * 
@@ -87,6 +92,18 @@ public final class FinalInterval extends AbstractInterval
 	public FinalInterval( final long... dimensions )
 	{
 		super( dimensions );
+	}
+
+	@Override
+	public boolean equals( final Object obj )
+	{
+		return obj instanceof FinalInterval && Intervals.equals( this, ( FinalInterval ) obj );
+	}
+
+	@Override
+	public int hashCode()
+	{
+		return Util.combineHash( Arrays.hashCode( min ), Arrays.hashCode( max ) );
 	}
 
 	/**
