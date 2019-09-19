@@ -57,7 +57,7 @@ public class Localizables
 		return new LocationRandomAccessible( n );
 	}
 
-	public RandomAccessibleInterval< Localizable > randomAccessibleInterval( Interval interval ) {
+	public static RandomAccessibleInterval< Localizable > randomAccessibleInterval( Interval interval ) {
 		return Views.interval( randomAccessible( interval.numDimensions() ), interval );
 	}
 
