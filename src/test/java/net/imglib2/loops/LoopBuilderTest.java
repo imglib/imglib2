@@ -52,10 +52,9 @@ import org.junit.Test;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.BiConsumer;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -156,6 +155,10 @@ public class LoopBuilderTest
 	}
 
 	private final BiConsumer< IntType, IntType > COPY_ACTION = ( i, o ) -> o.set( i );
+	private final Function< LoopBuilder.Chunk< BiConsumer< IntType, IntType > >, Object > CHUNK_COPY_ACTION = chunk -> {
+		chunk.forEachPixel( COPY_ACTION );
+		return null;
+	};
 
 	@Test
 	public void testRunUsingRandomAccessesOnSubInterval()
@@ -168,7 +171,7 @@ public class LoopBuilderTest
 		// process
 		Interval interval = Intervals.createMinSize( 1, 0, 1, 2 );
 		// test
-		LoopBuilder.runOnChunkUsingRandomAccesses( new RandomAccessibleInterval[] { input, output }, COPY_ACTION, interval );
+		LoopBuilder.runOnChunkUsingRandomAccesses( new RandomAccessibleInterval[] { input, output }, CHUNK_COPY_ACTION, interval );
 		ImgLib2Assert.assertImageEquals( expected, output );
 	}
 
@@ -181,7 +184,7 @@ public class LoopBuilderTest
 		Img< IntType > output = ArrayImgs.ints( dimensions );
 		Img< IntType > expected = ArrayImgs.ints( new int[] { 0, 2, 3, 4, 5, 0 }, dimensions );
 		// process
-		LoopBuilder.runOnChunkUsingCursors( Arrays.asList( input, output ), COPY_ACTION, 1, 4 );
+		LoopBuilder.runOnChunkUsingCursors( Arrays.asList( input, output ), CHUNK_COPY_ACTION, 1, 4 );
 		// test
 		ImgLib2Assert.assertImageEquals( expected, output );
 	}

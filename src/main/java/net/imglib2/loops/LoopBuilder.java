@@ -34,11 +34,13 @@
 package net.imglib2.loops;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.StringJoiner;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
+import java.util.function.Function;
 import java.util.function.LongConsumer;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -54,6 +56,9 @@ import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.img.array.AbstractArrayCursor;
 import net.imglib2.img.cell.CellCursor;
 import net.imglib2.img.planar.PlanarCursor;
+import net.imglib2.parallel.TaskExecutor;
+import net.imglib2.parallel.Parallelization;
+import net.imglib2.parallel.TaskExecutors;
 import net.imglib2.util.Intervals;
 import net.imglib2.view.Views;
 import net.imglib2.view.iteration.SlicingCursor;
@@ -92,7 +97,7 @@ public class LoopBuilder< T >
 
 	private final RandomAccessibleInterval< ? >[] images;
 
-	private MultiThreadSetting multiThreaded = MultiThreadSetting.SINGLE;
+	private TaskExecutor taskExecutor = TaskExecutors.singleThreaded();
 
 	private boolean useFlatIterationOrder = false;
 
@@ -152,21 +157,57 @@ public class LoopBuilder< T >
 	public void forEachPixel( final T action )
 	{
 		Objects.requireNonNull( action );
-		if ( Intervals.numElements( dimensions ) == 0 )
-			return;
-		List< IterableInterval< ? > > iterableIntervals = imagesAsIterableIntervals();
-		if ( allCursorsAreFast( iterableIntervals ) )
-			runUsingCursors( iterableIntervals, action );
-		else
-			runUsingRandomAccesses( action );
+		forEachChunk( chunk -> {
+			chunk.forEachPixel( action );
+			return null;
+		} );
 	}
 
-	private boolean allCursorsAreFast( List<IterableInterval<?>> iterableIntervals )
+	/**
+	 * This method is similar to  {@link #forEachPixel} but more flexible when multi threading is used.
+	 * <p>
+	 * The following example calculates the sum of the pixel values of an image.
+	 * Multi threading is used for greater performance. The image is split into chunks.
+	 * The chunks are processed in parallel by multiple threads. A variable
+	 * of {@code IntType} is used to calculate the sum, but {@code IntType} is not thread safe.
+	 * It's therefor necessary one have one sum variable per chunk. This can be realized as follows:
+	 *
+	 * {@code IntType} is not thread safe. So we use one inte{@code IntType} per chunk, to store the .
+	 * <pre>
+	 * {@code
+	 *
+	 * List<IntType> listOfSums = LoopBuilder.setImages( image ).multithreaded().forEachChunk(
+	 *     chunk -> {
+	 *         IntType sum = new IntType();
+	 *         chunk.forEach( pixel -> sum.add( pixel ) ):
+	 *         return sum;
+	 *     }
+	 * );
+	 *
+	 * IntType totalSum = new IntType();
+	 * listOfSums.forEach( sum -> totalSum.add( sum );
+	 * return totalSum;
+	 * }
+	 * </pre>
+	 */
+	public < R > List< R > forEachChunk( final Function< Chunk< T >, R > action )
+	{
+		Objects.requireNonNull( action );
+		if ( Intervals.numElements( dimensions ) == 0 )
+			return Collections.emptyList();
+		List< IterableInterval< ? > > iterableIntervals = imagesAsIterableIntervals();
+		if ( allCursorsAreFast( iterableIntervals ) )
+			return runUsingCursors( iterableIntervals, action );
+		else
+			return runUsingRandomAccesses( action );
+	}
+
+	private boolean allCursorsAreFast( List< IterableInterval< ? > > iterableIntervals )
 	{
 		return iterableIntervals.stream().allMatch( this::cursorIsFast );
 	}
 
-	private boolean cursorIsFast( IterableInterval<?> image )
+	private boolean cursorIsFast( IterableInterval< ? > image )
 	{
 		Cursor< ? > cursor = image.cursor();
 		return cursor instanceof AbstractArrayCursor ||
@@ -183,7 +224,18 @@ public class LoopBuilder< T >
 	 */
 	public LoopBuilder< T > multiThreaded()
 	{
-		this.multiThreaded = Objects.requireNonNull( MultiThreadSetting.MULTI );
+		return multiThreaded( Parallelization.getTaskExecutor() );
+	}
+
+	/**
+	 * By default {@link LoopBuilder} runs the loop without multi-threading.
+	 * Calling this method causes LoopBuilder to use the given {@link TaskExecutor} for multi-threading.
+	 * <p>
+	 * WARNING: You need to make sure that your operation is thread safe.
+	 */
+	public LoopBuilder< T > multiThreaded( TaskExecutor taskExecutor )
+	{
+		this.taskExecutor = Objects.requireNonNull( taskExecutor );
 		return this;
 	}
 
@@ -238,6 +290,11 @@ public class LoopBuilder< T >
 		void accept( A a, B b, C c, D d, E e, F f );
 	}
 
+	public interface Chunk< T >
+	{
+		void forEachPixel( T action );
+	}
+
 	// Helper methods
 
 	private LoopBuilder( final RandomAccessibleInterval< ? >... images )
@@ -260,22 +317,24 @@ public class LoopBuilder< T >
 		}
 	}
 
-	void runUsingRandomAccesses( T action )
+	private < R > List< R > runUsingRandomAccesses( Function< Chunk< T >, R > chunkAction )
 	{
-		final int nTasks = multiThreaded.suggestNumberOfTasks();
+		final int nTasks = taskExecutor.suggestNumberOfTasks();
 		final Interval interval = new FinalInterval( dimensions );
 		final List< Interval > chunks = IntervalChunks.chunkInterval( interval, nTasks );
-		multiThreaded.forEach( chunks, chunk -> runOnChunkUsingRandomAccesses( images, action, chunk ) );
+		return taskExecutor.forEachApply( chunks, chunk -> runOnChunkUsingRandomAccesses( images, chunkAction, chunk ) );
 	}
 
-	static void runOnChunkUsingRandomAccesses( RandomAccessibleInterval[] images, Object action, Interval subInterval )
+	static < T, R > R runOnChunkUsingRandomAccesses( RandomAccessibleInterval[] images, Function< Chunk< T >, R > chunkAction, Interval subInterval )
 	{
 		final List< RandomAccess< ? > > samplers = Stream.of( images ).map( LoopBuilder::initRandomAccess ).collect( Collectors.toList() );
 		final Positionable synced = SyncedPositionables.create( samplers );
 		if ( !Views.isZeroMin( subInterval ) )
 			synced.move( Intervals.minAsLongArray( subInterval ) );
-		final Runnable runnable = BindActionToSamplers.bindActionToSamplers( action, samplers );
-		LoopUtils.createIntervalLoop( synced, subInterval, runnable ).run();
+		return chunkAction.apply( pixelAction -> {
+			final Runnable runnable = BindActionToSamplers.bindActionToSamplers( pixelAction, samplers );
+			LoopUtils.createIntervalLoop( synced, subInterval, runnable ).run();
+		} );
 	}
 
 	private static RandomAccess< ? > initRandomAccess( final RandomAccessibleInterval< ? > image )
@@ -285,11 +344,6 @@ public class LoopBuilder< T >
 		return ra;
 	}
 
-	void runUsingCursors( T action )
-	{
-		runUsingCursors( imagesAsIterableIntervals(), action );
-	}
-
 	private List< IterableInterval< ? > > imagesAsIterableIntervals()
 	{
 		return useFlatIterationOrder ?
@@ -297,22 +351,24 @@ public class LoopBuilder< T >
 				equalIterationOrderIterableIntervals();
 	}
 
-	private void runUsingCursors( List< IterableInterval< ? > > iterableIntervals, T action )
+	private < R > List< R > runUsingCursors( List< IterableInterval< ? > > iterableIntervals, Function< Chunk< T >, R > chunkAction )
 	{
-		int nTasks = multiThreaded.suggestNumberOfTasks();
+		int nTasks = taskExecutor.suggestNumberOfTasks();
 		final FinalInterval indices = new FinalInterval( Intervals.numElements( images[ 0 ] ) );
 		List< Interval > chunks = IntervalChunks.chunkInterval( indices, nTasks );
-		multiThreaded.forEach( chunks, chunk ->
-				runOnChunkUsingCursors( iterableIntervals, action, chunk.min( 0 ), chunk.dimension( 0 ) ) );
+		return taskExecutor.forEachApply( chunks, chunk ->
+				LoopBuilder.runOnChunkUsingCursors( iterableIntervals, chunkAction, chunk.min( 0 ), chunk.dimension( 0 ) ) );
 	}
 
-	static void runOnChunkUsingCursors( List< IterableInterval< ? > > iterableIntervals, Object action, long offset, long numElements )
+	static < T, R > R runOnChunkUsingCursors( List< IterableInterval< ? > > iterableIntervals, Function< Chunk< T >, R > chunkAction, long offset, long numElements )
 	{
 		final List< Cursor< ? > > cursors = iterableIntervals.stream().map( IterableInterval::cursor ).collect( Collectors.toList() );
 		if ( offset != 0 )
 			jumpFwd( cursors, offset );
-		LongConsumer cursorLoop = FastCursorLoops.createLoop( action, cursors );
-		cursorLoop.accept( numElements );
+		return chunkAction.apply( pixelAction -> {
+			LongConsumer cursorLoop = FastCursorLoops.createLoop( pixelAction, cursors );
+			cursorLoop.accept( numElements );
+		} );
 	}
 
 	private static void jumpFwd( List< Cursor< ? > > cursors, long offset )
