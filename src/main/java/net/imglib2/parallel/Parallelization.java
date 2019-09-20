@@ -220,7 +220,7 @@ public final class Parallelization
 	 * This can be used to execute a certain part of your code with the given
 	 * {@link TaskExecutor}. It's mandatory to call the {@code close()} of the
 	 * return {@link Frame frame} afterwards. This could be done using an
-	 * try-with-resources statement, that was introduced with Java 7.
+	 * try-with-resources statement.
 	 * <pre>
 	 * {@code
 	 *

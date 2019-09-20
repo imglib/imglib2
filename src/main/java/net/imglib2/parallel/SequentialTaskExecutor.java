@@ -48,11 +48,13 @@ class SequentialTaskExecutor implements TaskExecutor
 
 	private final ExecutorService executorService = new SequentialExecutorService();
 
-	private SequentialTaskExecutor() {
+	private SequentialTaskExecutor()
+	{
 		// Only one instance of the sequential task executor is needed.
 	}
 
-	public static TaskExecutor getInstance() {
+	public static TaskExecutor getInstance()
+	{
 		return INSTANCE;
 	}
 
@@ -92,7 +94,7 @@ class SequentialTaskExecutor implements TaskExecutor
 	public < T, R > List< R > forEachApply( List< ? extends T > parameters, Function< ? super T, ? extends R > task )
 	{
 		final List< R > results = new ArrayList<>( parameters.size() );
-		for( T value : parameters )
+		for ( final T value : parameters )
 		{
 			R result = task.apply( value );
 			results.add( result );

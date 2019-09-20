@@ -75,39 +75,39 @@ public interface TaskExecutor extends AutoCloseable
 	int getParallelism();
 
 	/**
-	 * If there is a big task, that could be split into sub tasks
-	 * for parallelization. This method gives you a reasonable number
+	 * If there is a big task that could be split into sub tasks
+	 * for parallelization, this method gives you a reasonable number
 	 * of sub tasks.
 	 * <p>
-	 * A single threaded {@link TaskExecutor} it would return 1.
-	 * A multi threaded {@link TaskExecutor} usually return 4 times the
-	 * number of threads.
+	 * A single threaded {@link TaskExecutor} will return 1.
+	 * A multi threaded {@link TaskExecutor} will usually return 4 times
+	 * the number of threads.
 	 */
 	int suggestNumberOfTasks();
 
 	/**
 	 * This method will execute the given list of tasks. A single
-	 * threaded {@link TaskExecutor} will execute the task one after an
+	 * threaded {@link TaskExecutor} will execute the tasks one after the
 	 * other. A multi threaded {@link TaskExecutor} will distribute the
-	 * task to the threads. And wait until every task completed.
+	 * tasks to the threads. The method blocks until all tasks are completed.
 	 */
 	void runAll( List< Runnable > tasks );
 
 	/**
 	 * Like {@link #runAll(List)} but - instead of a list of tasks - it takes
-	 * a list of parameters an a function that is called for each of
+	 * a list of parameters and a function that is called for each of
 	 * the parameters.
 	 */
 	< T > void forEach( List< ? extends T > parameters, Consumer< ? super T > task );
 
 	/**
-	 * List {@link #forEach(List, Consumer)} but collects the results.
+	 * Like {@link #forEach(List, Consumer)} but collects the results.
 	 */
 	< T, R > List< R > forEachApply( List< ? extends T > parameters, Function< ? super T, ? extends R > task );
 
 	/**
-	 * Get the underlying {@link ExecutorService}, this is not always a
-	 * fully functional {@link ExecutorService}. Especially the methods
+	 * Get the underlying {@link ExecutorService}. This is not always a
+	 * fully functional {@link ExecutorService}: Especially the methods
 	 * {@link ExecutorService#shutdown()} and
 	 * {@link ExecutorService#awaitTermination(long, TimeUnit)} must not be
 	 * used.

@@ -134,7 +134,7 @@ public final class TaskExecutors
 	 * Returns a {@link TaskExecutor} that uses a fixed thread pool with the
 	 * given number of threads. But that's not the end of the story.
 	 * <p>
-	 * Each of the threads, uses itself a fixed thread pool with the given
+	 * Each of the threads uses itself a fixed thread pool with the given
 	 * number of sub threads.
 	 * <p>
 	 * This {@link TaskExecutor} is useful for nested parallelization,

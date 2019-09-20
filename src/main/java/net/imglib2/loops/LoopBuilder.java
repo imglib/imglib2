@@ -170,9 +170,8 @@ public class LoopBuilder< T >
 	 * Multi threading is used for greater performance. The image is split into chunks.
 	 * The chunks are processed in parallel by multiple threads. A variable
 	 * of {@code IntType} is used to calculate the sum, but {@code IntType} is not thread safe.
-	 * It's therefor necessary one have one sum variable per chunk. This can be realized as follows:
+	 * It's therefore necessary to have one sum variable per chunk. This can be realized as follows:
 	 *
-	 * {@code IntType} is not thread safe. So we use one inte{@code IntType} per chunk, to store the .
 	 * <pre>
 	 * {@code
 	 *

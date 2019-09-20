@@ -46,18 +46,20 @@ import net.imglib2.view.Views;
 
 public class Localizables
 {
-
-	public static long[] asLongArray( Localizable localizable ) {
-		long[] result = new long[ localizable.numDimensions() ];
+	public static long[] asLongArray( final Localizable localizable )
+	{
+		final long[] result = new long[ localizable.numDimensions() ];
 		localizable.localize( result );
 		return result;
 	}
 
-	public static RandomAccessible< Localizable > randomAccessible( int n ) {
+	public static RandomAccessible< Localizable > randomAccessible( final int n )
+	{
 		return new LocationRandomAccessible( n );
 	}
 
-	public static RandomAccessibleInterval< Localizable > randomAccessibleInterval( Interval interval ) {
+	public static RandomAccessibleInterval< Localizable > randomAccessibleInterval( final Interval interval )
+	{
 		return Views.interval( randomAccessible( interval.numDimensions() ), interval );
 	}
 
@@ -65,17 +67,19 @@ public class Localizables
 
 	private static class LocationRandomAccessible extends AbstractEuclideanSpace implements RandomAccessible< Localizable >
 	{
-		public LocationRandomAccessible( int n )
+		public LocationRandomAccessible( final int n )
 		{
 			super( n );
 		}
 
-		@Override public RandomAccess< Localizable > randomAccess()
+		@Override
+		public RandomAccess< Localizable > randomAccess()
 		{
 			return new LocationRandomAccess( n );
 		}
 
-		@Override public RandomAccess< Localizable > randomAccess( Interval interval )
+		@Override
+		public RandomAccess< Localizable > randomAccess( final Interval interval )
 		{
 			return randomAccess();
 		}
@@ -86,27 +90,30 @@ public class Localizables
 	 */
 	private static class LocationRandomAccess extends Point implements RandomAccess< Localizable >
 	{
-		public LocationRandomAccess( int n )
+		public LocationRandomAccess( final int n )
 		{
 			super( n );
 		}
 
-		public LocationRandomAccess( Localizable initialPosition )
+		public LocationRandomAccess( final Localizable initialPosition )
 		{
 			super( initialPosition );
 		}
 
-		@Override public RandomAccess< Localizable > copyRandomAccess()
+		@Override
+		public RandomAccess< Localizable > copyRandomAccess()
 		{
 			return new LocationRandomAccess( this );
 		}
 
-		@Override public Localizable get()
+		@Override
+		public Localizable get()
 		{
 			return this;
 		}
 
-		@Override public Sampler< Localizable > copy()
+		@Override
+		public Sampler< Localizable > copy()
 		{
 			return copyRandomAccess();
 		}

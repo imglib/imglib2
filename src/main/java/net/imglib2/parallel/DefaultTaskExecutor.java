@@ -152,19 +152,19 @@ public class DefaultTaskExecutor implements TaskExecutor
 	 */
 	private RuntimeException unwrapExecutionException( Throwable e )
 	{
-		if( e instanceof ExecutionException )
+		if ( e instanceof ExecutionException )
 		{
-			Throwable cause = e.getCause();
+			final Throwable cause = e.getCause();
 			cause.setStackTrace( concatenate( cause.getStackTrace(), e.getStackTrace() ) );
 			e = cause;
 		}
-		if( e instanceof RuntimeException )
-			throw (RuntimeException) e;
+		if ( e instanceof RuntimeException )
+			throw ( RuntimeException ) e;
 		else
 			return new RuntimeException( e );
 	}
 
-	private  < T > T[] concatenate( T[] a, T[] b )
+	private < T > T[] concatenate( final T[] a, final T[] b )
 	{
 		int aLen = a.length;
 		int bLen = b.length;
