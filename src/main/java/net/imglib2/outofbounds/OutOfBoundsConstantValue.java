@@ -88,12 +88,14 @@ public class OutOfBoundsConstantValue< T > extends AbstractOutOfBoundsValue< T >
 		return copy();
 	}
 
-	private static < T > T copyIfType( final T t )
+	static < T > T copyIfType( final T t )
 	{
 		if ( t instanceof Type< ? > )
 		{
 			final Type< ? > type = ( Type< ? > ) t;
-			return ( T ) type.copy();
+			@SuppressWarnings( "unchecked" )
+			final T copy = ( T ) type.copy();
+			return copy;
 		}
 		return t;
 	}
