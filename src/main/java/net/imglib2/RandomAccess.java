@@ -40,6 +40,7 @@ package net.imglib2;
  * @author Tobias Pietzsch
  * @author Stephan Preibisch
  * @author Stephan Saalfeld
+ * @author Philipp Hanslovsky
  */
 public interface RandomAccess< T > extends Localizable, Positionable, Sampler< T >
 {
@@ -53,4 +54,116 @@ public interface RandomAccess< T > extends Localizable, Positionable, Sampler< T
 	RandomAccess< T > copyRandomAccess();
 //	@Override
 //	RandomAccess< T > copy();
+
+	/**
+	 * Convenience method that moves the {@link RealRandomAccess} to the given
+	 * position and gets the value at that position. It's a shortcut for:
+	 * <p>
+	 * <pre>
+	 * {@code
+	 * setPosition( position );
+	 * get();
+	 * }
+	 * </pre>
+	 * <p>
+	 * WARNING: The return value is invalidated by next call to
+	 * {@link #setPositionAndGet}  or {@link #setPosition}.
+	 * <p>
+	 * <pre>
+	 * {@code
+	 * // This is wrong!!!
+	 * a = randomAccess.setPositionAndGet( positionA );
+	 * b = randomAccess.setPositionAndGet( positionB ); // this invalidates "a" !!!
+	 * wrongDifference = a.getRealDouble() - b.getRealDouble();
+	 *
+	 * // Correct:
+	 * // Use individual RandomAccesses to query a and b
+	 * a = randomAccess_A.setPositionAndGet( positionA );
+	 * b = randomAccess_B.setPositionAndGet( positionB ); // this is fine because a different RandomAccess is used
+	 * difference = a.getRealDouble() - b.getRealDouble();
+	 * }
+	 * </pre>
+	 */
+	default T setPositionAndGet( long... position )
+	{
+		assert position.length == numDimensions();
+
+		setPosition( position );
+		return get();
+	}
+
+	/**
+	 * Convenience method that moves the {@link RealRandomAccess} to the given
+	 * position and gets the value at that position. It's a shortcut for:
+	 * <p>
+	 * <pre>
+	 * {@code
+	 * setPosition( position );
+	 * get();
+	 * }
+	 * </pre>
+	 * <p>
+	 * WARNING: The return value is invalidated by next call to
+	 * {@link #setPositionAndGet}  or {@link #setPosition}.
+	 * <p>
+	 * <pre>
+	 * {@code
+	 * // This is wrong!!!
+	 * a = randomAccess.setPositionAndGet( positionA );
+	 * b = randomAccess.setPositionAndGet( positionB ); // this invalidates "a" !!!
+	 * wrongDifference = a.getRealDouble() - b.getRealDouble();
+	 *
+	 * // Correct:
+	 * // Use individual RandomAccesses to query a and b
+	 * a = randomAccess_A.setPositionAndGet( positionA );
+	 * b = randomAccess_B.setPositionAndGet( positionB ); // this is fine because a different RandomAccess is used
+	 * difference = a.getRealDouble() - b.getRealDouble();
+	 * }
+	 * </pre>
+	 */
+	default T setPositionAndGet( int... position )
+	{
+		assert position.length == numDimensions();
+
+		setPosition( position );
+		return get();
+	}
+
+	/**
+	 * Convenience method that moves the {@link RealRandomAccess} to the given
+	 * position and gets the value at that position. It's a shortcut for:
+	 * <p>
+	 * <pre>
+	 * {@code
+	 * setPosition( position );
+	 * get();
+	 * }
+	 * </pre>
+	 * <p>
+	 * WARNING: The return value is invalidated by next call to
+	 * {@link #setPositionAndGet}  or {@link #setPosition}.
+	 * <p>
+	 * <pre>
+	 * {@code
+	 * // This is wrong!!!
+	 * a = randomAccess.setPositionAndGet( positionA );
+	 * b = randomAccess.setPositionAndGet( positionB ); // this invalidates "a" !!!
+	 * wrongDifference = a.getRealDouble() - b.getRealDouble();
+	 *
+	 * // Correct:
+	 * // Use individual RandomAccesses to query a and b
+	 * a = randomAccess_A.setPositionAndGet( positionA );
+	 * b = randomAccess_B.setPositionAndGet( positionB ); // this is fine because a different RandomAccess is used
+	 * difference = a.getRealDouble() - b.getRealDouble();
+	 * }
+	 * </pre>
+	 */
+	default T setPositionAndGet( Localizable position )
+	{
+		assert position.numDimensions() == numDimensions();
+
+		setPosition( position );
+		return get();
+	}
+
 }
