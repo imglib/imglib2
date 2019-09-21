@@ -36,7 +36,6 @@ package net.imglib2.outofbounds;
 
 import net.imglib2.Interval;
 import net.imglib2.RandomAccessible;
-import net.imglib2.type.Type;
 
 /**
  * 
@@ -44,8 +43,9 @@ import net.imglib2.type.Type;
  * 
  * @author Stephan Preibisch
  * @author Stephan Saalfeld
+ * @author Philipp Hanslovsky
  */
-public class OutOfBoundsConstantValueFactory< T extends Type< T >, F extends Interval & RandomAccessible< T > >
+public class OutOfBoundsConstantValueFactory< T, F extends Interval & RandomAccessible< T > >
 		implements OutOfBoundsFactory< T, F >
 {
 	protected T value;
@@ -68,6 +68,6 @@ public class OutOfBoundsConstantValueFactory< T extends Type< T >, F extends Int
 	@Override
 	public OutOfBoundsConstantValue< T > create( final F f )
 	{
-		return new OutOfBoundsConstantValue< T >( f, value.copy() );
+		return new OutOfBoundsConstantValue<>( f, OutOfBoundsConstantValue.copyIfType( value ) );
 	}
 }

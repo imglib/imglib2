@@ -44,15 +44,17 @@ import net.imglib2.type.Type;
  * 
  * @author Stephan Preibisch
  * @author Stephan Saalfeld
+ * @author Philipp Hanslovsky
  */
-public class OutOfBoundsConstantValue< T extends Type< T > > extends AbstractOutOfBoundsValue< T >
+public class OutOfBoundsConstantValue< T > extends AbstractOutOfBoundsValue< T >
 {
+
 	final protected T value;
 
 	protected OutOfBoundsConstantValue( final OutOfBoundsConstantValue< T > outOfBounds )
 	{
 		super( outOfBounds );
-		this.value = outOfBounds.value.copy();
+		this.value = copyIfType( outOfBounds.value );
 	}
 
 	public < F extends Interval & RandomAccessible< T > > OutOfBoundsConstantValue( final F f, final T value )
@@ -75,7 +77,7 @@ public class OutOfBoundsConstantValue< T extends Type< T > > extends AbstractOut
 	@Override
 	final public OutOfBoundsConstantValue< T > copy()
 	{
-		return new OutOfBoundsConstantValue< T >( this );
+		return new OutOfBoundsConstantValue<>( this );
 	}
 
 	/* RandomAccess */
@@ -84,5 +86,17 @@ public class OutOfBoundsConstantValue< T extends Type< T > > extends AbstractOut
 	final public OutOfBoundsConstantValue< T > copyRandomAccess()
 	{
 		return copy();
+	}
+
+	static < T > T copyIfType( final T t )
+	{
+		if ( t instanceof Type< ? > )
+		{
+			final Type< ? > type = ( Type< ? > ) t;
+			@SuppressWarnings( "unchecked" )
+			final T copy = ( T ) type.copy();
+			return copy;
+		}
+		return t;
 	}
 }
