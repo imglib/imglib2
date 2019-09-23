@@ -167,7 +167,7 @@ public class LoopBuilder< T >
 	 * This method is similar to  {@link #forEachPixel} but more flexible when multi threading is used.
 	 * <p>
 	 * The following example calculates the sum of the pixel values of an image.
-	 * Multi threading is used for greater performance. The image is split into chunks.
+	 * Multi threading is used to improve performance. The image is split into chunks.
 	 * The chunks are processed in parallel by multiple threads. A variable
 	 * of {@code IntType} is used to calculate the sum, but {@code IntType} is not thread safe.
 	 * It's therefore necessary to have one sum variable per chunk. This can be realized as follows:
@@ -217,9 +217,38 @@ public class LoopBuilder< T >
 
 	/**
 	 * By default {@link LoopBuilder} runs the loop without multi-threading.
-	 * Calling this method causes LoopBuilder to use multi-threading to speed up the operation.
+	 * Calling this method allows {@link LoopBuilder} to use multi-threading for optimal performance.
 	 * <p>
-	 * WARNING: You need to make sure that your operation is thread safe.
+	 * Usually, if this method is used, {@link LoopBuilder} will indeed
+	 * use multi-threading. But that's not always the case.
+	 * The {@link Parallelization} class can still be used to explicitly run the
+	 * code single-threaded.
+	 * <p>
+	 * Here is a small example for a copy method with enabled multi-threading.
+	 * <pre>
+	 * {@code
+	 *
+	 * public void copy( RandomAccessibleInterval<T> source, RandomAccessibleInterval<T> target)
+	 * {
+	 *     LoopBuilder.setImages( source, target ).multiThreaded().forEachPixel( ( s, t ) -> t.set( s ) );
+	 * }
+	 * }
+	 * </pre>
+	 * This method usually runs multi-threaded. Which means good performance.
+	 * But sometimes, a user might want to run the code single-threaded.
+	 * There's no need to write a second single-threaded version of our copy method.
+	 * The {@link Parallelization} class allows the user to run the code single-threaded:
+	 * <pre>
+	 * {@code
+	 *
+	 * Parallelization.runSingleThreaded( () -> {
+	 *     copy( source, target );
+	 * } );
+	 * }
+	 * </pre>
+	 * WARNING: You need to make sure that the action passed to {@link #forEachPixel} is thread safe.
+	 *
+	 * @see Parallelization
 	 */
 	public LoopBuilder< T > multiThreaded()
 	{
