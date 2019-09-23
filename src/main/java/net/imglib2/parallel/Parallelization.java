@@ -48,25 +48,31 @@ import java.util.concurrent.ExecutorService;
  * using a specified {@link ExecutorService} or {@link TaskExecutor}:
  * <pre>
  *     {@code
- *     // Single Threaded call
- *     Parallelization.singleThreaded().run( () -> myAlgorithm( image ) );
  *
- *     // Multi Threaded call
- *     Parallelization.multiThreaded().run( () -> myAlgorithm( image ) );
+ *     // Single-threaded call
+ *     Parallelization.runSingleThreaded( () -> myAlgorithm( image ) );
+ *
+ *     // Multi-threaded call
+ *     Parallelization.runMultiThreaded( () -> myAlgorithm( image ) );
  *
  *     // ExecutorService
- *     Parallelization.withExecutor( executorService ).run( () -> myAlgorithm( image ) );
+ *     Parallelization.withExecutor( executorService, () -> myAlgorithm( image ) );
+ *
+ *     // Multi-threaded is the default.
+ *     //     A normal function call, that's not somehow wrapped by
+ *     //     Parallelization.runSingleThreaded( ... ) runs multi-threaded.
+ *     myAlgorithm( image );
  *
  *     // Example Algorithm, that fills an image with ones.
  *     public void myAlgorithm( RandomAccessibleInterval< IntType > image )
  *     {
  *         TaskExecutor taskExecutor = Parallelization.getTaskExecutor();
  *         int numTasks = taskExecutor.suggestNumberOfTasks();
- *         List< RandomAccessibleInterval< IntType > > chunks = splitImageIntoChunks( image, numTasks );
+ *         List< Interval > chunks = IntervalChunks.chunkInterval( image, numTasks );
  *
- *         // The TaskExecutor executes the forEach method in multi threads, if requested.
+ *         // The TaskExecutor executes the forEach method in multiple threads, if requested.
  *         taskExecutor.forEach( chunks, chunk -> {
- *             for ( IntType pixel : Views.iterable( chunk ) )
+ *             for ( IntType pixel : Views.interval( image, chunk ) )
  *                 pixel.setOne();
  *         } );
  *     }
