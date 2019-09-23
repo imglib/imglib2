@@ -877,9 +877,10 @@ public class Util
 
 	/**
 	 * Create an appropriate {@link ImgFactory} for the requested
-	 * {@code targetSize} and {@code type}. If the type is a {@link NativeType},
-	 * then {@link #getArrayOrCellImgFactory(Dimensions, NativeType)} is used;
-	 * if not, a {@link ListImgFactory} is returned.
+	 * {@code targetSize} and {@code type}. If the target size is a {@link Img},
+	 * return its {@link ImgFactory}. If the type is a {@link NativeType}, then
+	 * {@link #getArrayOrCellImgFactory(Dimensions, NativeType)} is used; if
+	 * not, a {@link ListImgFactory} is returned.
 	 * 
 	 * @param targetSize
 	 *            size of image that the factory should be able to create.
@@ -890,6 +891,11 @@ public class Util
 	 */
 	public static < T > ImgFactory< T > getSuitableImgFactory( final Dimensions targetSize, final T type )
 	{
+		if ( targetSize instanceof Img )
+		{
+			Img< ? > targetImg = ( Img< ? > ) targetSize;
+			return targetImg.factory().imgFactory( type );
+		}
 		if ( type instanceof NativeType )
 		{
 			// NB: Eclipse does not demand the cast to ImgFactory< T >, but javac does.
