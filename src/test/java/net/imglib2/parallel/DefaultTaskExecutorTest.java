@@ -91,7 +91,7 @@ public class DefaultTaskExecutorTest
 	}
 
 	@Test
-	public void testForEachCollectResults()
+	public void testForEachApply()
 	{
 		List< Integer > parameters = Arrays.asList( 1, 2, 3 );
 		List< Integer > squared = twoThreads.forEachApply( parameters, i -> i * i );

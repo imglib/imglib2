@@ -256,11 +256,6 @@ public final class Parallelization
 	public interface Frame extends AutoCloseable
 	{
 		@Override
-		default void close()
-		{
-			reset();
-		}
-
-		void reset();
+		void close(); // NB: Throws no exceptions
 	}
 }

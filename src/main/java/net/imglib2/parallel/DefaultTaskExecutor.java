@@ -54,7 +54,7 @@ public class DefaultTaskExecutor implements TaskExecutor
 
 	private final ExecutorService executorService;
 
-	public DefaultTaskExecutor( ExecutorService executorService )
+	public DefaultTaskExecutor( final ExecutorService executorService )
 	{
 		this.executorService = executorService;
 	}
@@ -80,9 +80,9 @@ public class DefaultTaskExecutor implements TaskExecutor
 	}
 
 	@Override
-	public void runAll( List< Runnable > tasks )
+	public void runAll( final List< Runnable > tasks )
 	{
-		List< Callable< Object > > callables = new ArrayList<>( tasks.size() );
+		final List< Callable< Object > > callables = new ArrayList<>( tasks.size() );
 		// use for-loop because stream with collect(Collectors.toList) is slow.
 		for ( Runnable task : tasks )
 			callables.add( Executors.callable( task ) );
@@ -97,9 +97,9 @@ public class DefaultTaskExecutor implements TaskExecutor
 	}
 
 	@Override
-	public < T > void forEach( List< ? extends T > parameters, Consumer< ? super T > task )
+	public < T > void forEach( final List< ? extends T > parameters, final Consumer< ? super T > task )
 	{
-		List< Callable< Object > > callables = new ArrayList<>( parameters.size() );
+		final List< Callable< Object > > callables = new ArrayList<>( parameters.size() );
 		// use for-loop because stream with collect(Collectors.toList) is slow.
 		for ( T parameter : parameters )
 			callables.add( () -> {
@@ -112,14 +112,14 @@ public class DefaultTaskExecutor implements TaskExecutor
 	@Override
 	public < T, R > List< R > forEachApply( List< ? extends T > parameters, Function< ? super T, ? extends R > task )
 	{
-		List< Callable< R > > callables = new ArrayList<>( parameters.size() );
+		final List< Callable< R > > callables = new ArrayList<>( parameters.size() );
 		// use for-loop because stream with collect(Collectors.toList) is slow.
 		for ( T parameter : parameters )
 			callables.add( () -> task.apply( parameter ) );
 		try
 		{
-			List< Future< R > > futures = executorService.invokeAll( callables );
-			List< R > results = new ArrayList<>( futures.size() );
+			final List< Future< R > > futures = executorService.invokeAll( callables );
+			final List< R > results = new ArrayList<>( futures.size() );
 			for ( Future< R > future : futures )
 				results.add( future.get() );
 			return results;
@@ -130,11 +130,11 @@ public class DefaultTaskExecutor implements TaskExecutor
 		}
 	}
 
-	private void invokeAllIgnoreResults( List< Callable< Object > > callables )
+	private void invokeAllIgnoreResults( final List< Callable< Object > > callables )
 	{
 		try
 		{
-			List< Future< Object > > futures = executorService.invokeAll( callables );
+			final List< Future< Object > > futures = executorService.invokeAll( callables );
 			for ( Future< Object > future : futures )
 				future.get();
 		}
