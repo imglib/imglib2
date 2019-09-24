@@ -252,14 +252,16 @@ public final class Parallelization
 	 * }
 	 * </pre>
 	 */
-	public static Frame setExecutorRequiresReset( TaskExecutor taskExecutor )
+	// NB: package-private to allow testing
+	static Frame setExecutorRequiresReset( TaskExecutor taskExecutor )
 	{
 		final TaskExecutor old = executor.get();
 		executor.set( taskExecutor );
 		return () -> executor.set( old );
 	}
 
-	public interface Frame extends AutoCloseable
+	// NB: package-private to allow testing
+	interface Frame extends AutoCloseable
 	{
 		@Override
 		void close(); // NB: Throws no exceptions
