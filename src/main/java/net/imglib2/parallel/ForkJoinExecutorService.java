@@ -33,25 +33,38 @@
  */
 package net.imglib2.parallel;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.AbstractExecutorService;
 import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.ForkJoinPool;
 import java.util.concurrent.ForkJoinTask;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
 
 /**
- * An ExecutorService that uses a ForkJoinPool to execute tasks,
- * and therefor supports nested calls.
+ * The {@link ForkJoinExecutorService} is an {@link ExecutorService},
+ * for efficient nested parallelization.
  * <p>
- * If used inside a {@link ForkJoinPool} that pool is used,
- * in all other cases the common pool ({@link ForkJoinPool#commonPool()}) is used.
+ * The {@link ForkJoinPool} is an ExecutorService that provides
+ * an entry point to a technique called work-steeling.
+ * Work-steeling allows good performance for nested parallelization.
+ * But calling {@link ForkJoinPool#submit} or {@link ForkJoinPool#invokeAll}
+ * alone, won't result in any work-steeling and performance boost.
+ * It's necessary to use {@link ForkJoinTask}s and their methods
+ * {@link ForkJoinTask#fork fork} or {@link ForkJoinTask#invokeAll
+ * invokeAll} to benefit from work-steeling.
  * <p>
- * Shutdown and awaitTermination is not supported.
+ * ForkJoinExecutorService is an ExecutorService that internally
+ * calls ForkJoinTask.fork() and ForkJoinTask.invokeAll(...) and
+ * therefore directly achieves good performance by work-steeling.
+ * <p>
+ * ForkJoinExecutorService is not a fully functional ExecutorService.
+ * Methods like {@link #shutdownNow()}, {@link #awaitTermination(long, TimeUnit)}
+ * and {@link #invokeAll(Collection, long, TimeUnit)} are not implemented.
  */
 public class ForkJoinExecutorService extends AbstractExecutorService
 {
@@ -100,9 +113,9 @@ public class ForkJoinExecutorService extends AbstractExecutorService
 	public < T > List< Future< T > > invokeAll( Collection< ? extends Callable< T > > collection ) throws
 			InterruptedException
 	{
-		List< ForkJoinTask< T > >
-				futures = collection.stream().map( ForkJoinTask::adapt ).collect( Collectors
-				.toList() );
+		List< ForkJoinTask< T > > futures = new ArrayList<>( collection.size() );
+		for ( Callable< T > callable : collection )
+			futures.add( ForkJoinTask.adapt( callable ) );
 		ForkJoinTask.invokeAll( futures );
 		return Collections.unmodifiableList( futures );
 	}
