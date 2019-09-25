@@ -36,6 +36,8 @@ package net.imglib2;
 
 import net.imglib2.util.Intervals;
 
+import java.util.Arrays;
+
 /**
  * An implementation of dimensionality that can wrap a long[] array. The same
  * principle for wrapping as in Point is used.
@@ -115,6 +117,25 @@ public final class FinalDimensions implements Dimensions
 	public long dimension( final int d )
 	{
 		return dimensions[ d ];
+	}
+
+	@Override
+	public String toString()
+	{
+		return Intervals.toString( this );
+	}
+
+	@Override
+	public boolean equals( final Object obj )
+	{
+		return obj instanceof FinalDimensions &&
+				Intervals.equalDimensions( this, (FinalDimensions) obj );
+	}
+
+	@Override
+	public int hashCode()
+	{
+		return Arrays.hashCode( dimensions );
 	}
 
 	/**

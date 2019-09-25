@@ -35,6 +35,9 @@
 package net.imglib2;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
@@ -394,4 +397,28 @@ public class PointTest
 		assertEquals( p.getLongPosition( 1 ), initial[ 1 ] );
 	}
 
+	@Test
+	public void testEquals()
+	{
+		final Point point = new Point( 1, 2, 3 );
+		final Point same = new Point( 1, 2, 3 );
+		final Point different = new Point( 1, 2, 3, 4 );
+		assertTrue( point.equals( same ) );
+		assertFalse( point.equals( different ) );
+	}
+
+	@Test
+	public void testHashCode()
+	{
+		final Point point = new Point( 1, 2, 3 );
+		final Point same = new Point( 1, 2, 3 );
+		assertEquals( point.hashCode(), same.hashCode() );
+	}
+
+	@Test
+	public void testToString()
+	{
+		final Point point = new Point( 1, 2 );
+		assertEquals( "(1,2)", point.toString() );
+	}
 }

@@ -35,6 +35,9 @@
 package net.imglib2;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
@@ -568,4 +571,34 @@ public class RealPointTest
 		}
 	}
 
+	/**
+	 * Test method for {@link RealPoint#equals(Object)}
+	 */
+	@Test
+	public void testEquals()
+	{
+		final RealPoint point = new RealPoint( 1.0, 2.5 );
+		final RealPoint same = new RealPoint( 1.0, 2.5 );
+		final RealPoint different = new RealPoint( 1.0, 2.501 );
+		assertTrue( point.equals( same ) );
+		assertFalse( point.equals( different ) );
+	}
+
+	/**
+	 * Test method for {@link RealPoint#hashCode()}
+	 */
+	@Test
+	public void testHashCode()
+	{
+		final RealPoint point = new RealPoint( 1.0, 2.5 );
+		final RealPoint same = new RealPoint( 1.0, 2.5 );
+		assertEquals( point.hashCode(), same.hashCode() );
+	}
+
+	@Test
+	public void testToString()
+	{
+		final RealPoint point = new RealPoint( 1.0, 2.0 );
+		assertEquals( "(1.0,2.0)", point.toString() );
+	}
 }

@@ -34,6 +34,10 @@
 
 package net.imglib2;
 
+import net.imglib2.util.Localizables;
+
+import java.util.Arrays;
+
 /**
  * A Point is a position in Euclidean space specified in integer coordinates.
  *
@@ -188,34 +192,20 @@ public class Point extends AbstractLocalizable implements Positionable
 	@Override
 	public String toString()
 	{
-		final StringBuilder sb = new StringBuilder();
-		char c = '(';
-		for ( int i = 0; i < numDimensions(); i++ )
-		{
-			sb.append( c );
-			sb.append( position[ i ] );
-			c = ',';
-		}
-		sb.append( ")" );
-		return sb.toString();
+		return Localizables.toString( this );
 	}
 
 	@Override
 	public boolean equals( final Object obj )
 	{
-		if ( obj instanceof RealLocalizable && ( ( RealLocalizable ) obj ).numDimensions() == numDimensions() )
-		{
-			final RealLocalizable asLocalizable = ( ( RealLocalizable ) obj );
+		return obj != null && obj.getClass() == getClass() &&
+				Localizables.equals( this, ( Point ) obj );
+	}
 
-			for ( int d = 0; d < numDimensions(); d++ )
-			{
-				if ( asLocalizable.getDoublePosition( d ) != getDoublePosition( d ) )
-					return false;
-			}
-			return true;
-		}
-
-		return false;
+	@Override
+	public int hashCode()
+	{
+		return Arrays.hashCode( position );
 	}
 
 	/**

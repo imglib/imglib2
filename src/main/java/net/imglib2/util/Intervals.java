@@ -45,6 +45,8 @@ import net.imglib2.RealLocalizable;
 import net.imglib2.transform.integer.Mixed;
 import net.imglib2.view.ViewTransforms;
 
+import java.util.StringJoiner;
+
 /**
  * Convenience methods for manipulating {@link Interval Intervals}.
  * 
@@ -809,7 +811,24 @@ public class Intervals
 	/**
 	 * Tests whether two {@link RealInterval}s are equal in their min / max.
 	 */
-	public static boolean equals( final RealInterval a, final RealInterval b, final double tolerance )
+	public static boolean equals( final RealInterval a, final RealInterval b )
+	{
+		if ( a.numDimensions() != b.numDimensions() )
+			return false;
+
+		for ( int d = 0; d < a.numDimensions(); ++d )
+			if ( a.realMin( d ) != b.realMin( d ) || a.realMax( d ) != b.realMax( d ) )
+				return false;
+
+		return true;
+	}
+
+	/**
+	 * Tests whether two {@link RealInterval}s are equal in their min / max.
+	 * With respect to the given tolerance.
+	 */
+	public static boolean equals( final RealInterval a, final RealInterval b,
+			final double tolerance)
 	{
 		if ( a.numDimensions() != b.numDimensions() )
 			return false;
@@ -1009,5 +1028,78 @@ public class Intervals
 		final double[] min = new double[ interval.numDimensions() ];
 		interval.realMin( min );
 		return min;
+	}
+
+	/**
+	 * Returns a string that contains min, max and the dimensions of the
+	 * {@link Interval}.
+	 */
+	public static String toString( final Interval value )
+	{
+		final StringBuilder sb = new StringBuilder();
+
+		sb.append( "[(" );
+		final int n = value.numDimensions();
+		for ( int d = 0; d < n; d++ )
+		{
+			sb.append( value.min( d ) );
+			if ( d < n - 1 )
+				sb.append( ", " );
+		}
+		sb.append( ") -- (" );
+		for ( int d = 0; d < n; d++ )
+		{
+			sb.append( value.max( d ) );
+			if ( d < n - 1 )
+				sb.append( ", " );
+		}
+		sb.append( ") = " );
+		for ( int d = 0; d < n; d++ )
+		{
+			sb.append( value.dimension( d ) );
+			if ( d < n - 1 )
+				sb.append( "x" );
+		}
+		sb.append( "]" );
+
+		return sb.toString();
+	}
+
+	/**
+	 * Returns a string that contains min and max of the {@link RealInterval}.
+	 */
+	public static String toString( final RealInterval value )
+	{
+		final StringBuilder sb = new StringBuilder();
+
+		sb.append( "[(" );
+		final int n = value.numDimensions();
+		for ( int d = 0; d < n; d++ )
+		{
+			sb.append( value.realMin( d ) );
+			if ( d < n - 1 )
+				sb.append( ", " );
+		}
+		sb.append( ") -- (" );
+		for ( int d = 0; d < n; d++ )
+		{
+			sb.append( value.realMax( d ) );
+			if ( d < n - 1 )
+				sb.append( ", " );
+		}
+		sb.append( ")]" );
+
+		return sb.toString();
+	}
+
+	/**
+	 * Converts the {@link Dimensions} into a string.
+	 */
+	public static String toString( final Dimensions value )
+	{
+		final StringJoiner joiner = new StringJoiner( "x" );
+		for ( int d = 0; d < value.numDimensions(); d++ )
+			joiner.add( Long.toString( value.dimension( d ) ) );
+		return joiner.toString();
 	}
 }

@@ -182,6 +182,16 @@ public class IntervalsTest
 	public void testEqualsForRealIntervals()
 	{
 		final RealInterval interval = FinalRealInterval.createMinMax( 1, 2, 3, 4 );
+		final RealInterval sameInterval = FinalRealInterval.createMinMax( 1, 2, 3, 4 );
+		final RealInterval differentInterval = FinalRealInterval.createMinMax( 1, 2, 3, 5 );
+		assertTrue( Intervals.equals( interval, sameInterval ) );
+		assertFalse( Intervals.equals( interval, differentInterval ) );
+	}
+
+	@Test
+	public void testEqualsForRealIntervalsWithTolerance()
+	{
+		final RealInterval interval = FinalRealInterval.createMinMax( 1, 2, 3, 4 );
 		final RealInterval similarInterval = FinalRealInterval.createMinMax( 1.1, 1.9, 3.0, 4.1 );
 		final RealInterval differentInterval = FinalRealInterval.createMinMax( 1, 2, 3, 5 );
 		assertTrue( Intervals.equals( interval, similarInterval, 0.2 ) );
