@@ -58,6 +58,21 @@ import org.junit.Test;
 public class ImgViewTest
 {
 	/**
+	 * Tests {@link ImgView#wrap(RandomAccessibleInterval)}.
+	 */
+	@Test
+	public void testDefaultWrapping()
+	{
+		final ArrayImg< UnsignedByteType, ByteArray > img = ArrayImgs.unsignedBytes( 7, 11, 5 );
+		final RandomAccessible< UnsignedByteType > ra = Views.extendBorder( img );
+		final RandomAccessibleInterval< UnsignedByteType > rai = Views.interval( ra, FinalInterval.createMinSize( -3, 4, -2, 29, 37, 31 ) );
+		final Img< UnsignedByteType > result = ImgView.wrap( rai );
+		assertSame( ImgView.class, result.getClass() );
+		assertTrue( Intervals.equals( rai, result ) );
+		assertSame( img.factory().getClass(), result.factory().getClass() );
+	}
+
+	/**
 	 * Tests {@link ImgView#wrap(RandomAccessibleInterval, ImgFactory)}.
 	 */
 	@Test
@@ -78,6 +93,7 @@ public class ImgViewTest
 	public void testAvoidUnnecessaryWrapping()
 	{
 		final ArrayImg< UnsignedByteType, ByteArray > img = ArrayImgs.unsignedBytes( 5, 7, 11 );
+		assertSame( img, ImgView.wrap( img ) );
 		final Img< UnsignedByteType > result = ImgView.wrap( img, new PlanarImgFactory<>( img.firstElement() ) );
 		assertSame( img, result );
 		assertNotSame( PlanarImgFactory.class, img.factory().getClass() );

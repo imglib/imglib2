@@ -41,6 +41,7 @@ import net.imglib2.IterableInterval;
 import net.imglib2.RandomAccess;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.type.Type;
+import net.imglib2.util.Util;
 import net.imglib2.view.IterableRandomAccessibleInterval;
 import net.imglib2.view.Views;
 import net.imglib2.view.iteration.SubIntervalIterable;
@@ -50,6 +51,7 @@ import net.imglib2.view.iteration.SubIntervalIterable;
  *
  * @author Tobias Pietzsch
  * @author Christian Dietz
+ * @author Curtis Rueden
  */
 public class ImgView< T extends Type< T > > extends IterableRandomAccessibleInterval< T > implements Img< T >, SubIntervalIterable< T >
 {
@@ -155,6 +157,29 @@ public class ImgView< T extends Type< T > > extends IterableRandomAccessibleInte
 			return ( ( SubIntervalIterable< T > ) this.sourceInterval ).localizingCursor( interval );
 		else
 			return Views.interval( this.sourceInterval, interval ).localizingCursor();
+	}
+
+	/**
+	 * Represent an arbitrary {@link RandomAccessibleInterval} as an
+	 * {@link Img}, with a suitable {@link ImgFactory} for its size and type,
+	 * created by
+	 * {@link Util#getSuitableImgFactory(net.imglib2.Dimensions, Object)}.
+	 *
+	 * @param accessible
+	 *            RandomAccessibleInterval which will be wrapped with an ImgView
+	 * @return RandomAccessibleInterval represented as an Img
+	 * @see Util#getSuitableImgFactory(net.imglib2.Dimensions, Object)
+	 */
+	public static < T extends Type< T > > Img< T > wrap( final RandomAccessibleInterval< T > accessible )
+	{
+		if ( accessible instanceof Img )
+			return ( Img< T > ) accessible;
+		else
+		{
+			final T type = Util.getTypeFromInterval( accessible );
+			final ImgFactory< T > factory = Util.getSuitableImgFactory( accessible, type );
+			return wrap( accessible, factory );
+		}
 	}
 
 	/**
