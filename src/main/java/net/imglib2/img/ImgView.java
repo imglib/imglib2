@@ -158,7 +158,8 @@ public class ImgView< T extends Type< T > > extends IterableRandomAccessibleInte
 	}
 
 	/**
-	 * Represent an arbitrary RandomAccessibleInterval as an Img
+	 * Represent an arbitrary {@link RandomAccessibleInterval} as an
+	 * {@link Img}.
 	 *
 	 * @param accessible
 	 *            RandomAccessibleInterval which will be wrapped with an ImgView
