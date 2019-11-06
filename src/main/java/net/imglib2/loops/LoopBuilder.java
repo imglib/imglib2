@@ -82,8 +82,10 @@ import net.imglib2.view.iteration.SlicingCursor;
  * {@link Intervals} can differ.
  *
  * @author Matthias Arzt
+ * @param <T> Action type of pixelwise operation, {@link #forEachPixel without localization}.
+ * @param <LT> Action type of pixelwise operation, {@link #forEachPixelLocalizing with localization}.
  */
-public class LoopBuilder< T >
+public class LoopBuilder< T, LT >
 {
 
 	// fields
@@ -101,7 +103,7 @@ public class LoopBuilder< T >
 	/**
 	 * @see LoopBuilder
 	 */
-	public static < A > LoopBuilder< Consumer< A > > setImages( final RandomAccessibleInterval< A > a )
+	public static < A > LoopBuilder< Consumer< A >, Consumer< RandomAccess< A > > > setImages( final RandomAccessibleInterval< A > a )
 	{
 		return new LoopBuilder<>( a );
 	}
@@ -109,7 +111,7 @@ public class LoopBuilder< T >
 	/**
 	 * @see LoopBuilder
 	 */
-	public static < A, B > LoopBuilder< BiConsumer< A, B > > setImages( final RandomAccessibleInterval< A > a, final RandomAccessibleInterval< B > b )
+	public static < A, B > LoopBuilder< BiConsumer< A, B >, BiConsumer< RandomAccess< A >, RandomAccess< B > > > setImages( final RandomAccessibleInterval< A > a, final RandomAccessibleInterval< B > b )
 	{
 		return new LoopBuilder<>( a, b );
 	}
@@ -117,7 +119,7 @@ public class LoopBuilder< T >
 	/**
 	 * @see LoopBuilder
 	 */
-	public static < A, B, C > LoopBuilder< TriConsumer< A, B, C > > setImages( final RandomAccessibleInterval< A > a, final RandomAccessibleInterval< B > b, final RandomAccessibleInterval< C > c )
+	public static < A, B, C > LoopBuilder< TriConsumer< A, B, C >, TriConsumer< RandomAccess< A >, RandomAccess< B >, RandomAccess< C > > > setImages( final RandomAccessibleInterval< A > a, final RandomAccessibleInterval< B > b, final RandomAccessibleInterval< C > c )
 	{
 		return new LoopBuilder<>( a, b, c );
 	}
@@ -125,7 +127,7 @@ public class LoopBuilder< T >
 	/**
 	 * @see LoopBuilder
 	 */
-	public static < A, B, C, D > LoopBuilder< FourConsumer< A, B, C, D > > setImages( final RandomAccessibleInterval< A > a, final RandomAccessibleInterval< B > b, final RandomAccessibleInterval< C > c, final RandomAccessibleInterval< D > d )
+	public static < A, B, C, D > LoopBuilder< FourConsumer< A, B, C, D >, FourConsumer< RandomAccess< A >, RandomAccess< B >, RandomAccess< C >, RandomAccess< D > > > setImages( final RandomAccessibleInterval< A > a, final RandomAccessibleInterval< B > b, final RandomAccessibleInterval< C > c, final RandomAccessibleInterval< D > d )
 	{
 		return new LoopBuilder<>( a, b, c, d );
 	}
@@ -133,7 +135,7 @@ public class LoopBuilder< T >
 	/**
 	 * @see LoopBuilder
 	 */
-	public static < A, B, C, D, E > LoopBuilder< FiveConsumer< A, B, C, D, E > > setImages( final RandomAccessibleInterval< A > a, final RandomAccessibleInterval< B > b, final RandomAccessibleInterval< C > c, final RandomAccessibleInterval< D > d, final RandomAccessibleInterval< E > e )
+	public static < A, B, C, D, E > LoopBuilder< FiveConsumer< A, B, C, D, E >, FiveConsumer< RandomAccess< A >, RandomAccess< B >, RandomAccess< C >, RandomAccess< D >, RandomAccess< E > > > setImages( final RandomAccessibleInterval< A > a, final RandomAccessibleInterval< B > b, final RandomAccessibleInterval< C > c, final RandomAccessibleInterval< D > d, final RandomAccessibleInterval< E > e )
 	{
 		return new LoopBuilder<>( a, b, c, d, e );
 	}
@@ -141,7 +143,7 @@ public class LoopBuilder< T >
 	/**
 	 * @see LoopBuilder
 	 */
-	public static < A, B, C, D, E, F > LoopBuilder< SixConsumer< A, B, C, D, E, F > > setImages( final RandomAccessibleInterval< A > a, final RandomAccessibleInterval< B > b, final RandomAccessibleInterval< C > c, final RandomAccessibleInterval< D > d, final RandomAccessibleInterval< E > e, final RandomAccessibleInterval< F > f )
+	public static < A, B, C, D, E, F > LoopBuilder< SixConsumer< A, B, C, D, E, F >, SixConsumer< RandomAccess< A >, RandomAccess< B >, RandomAccess< C >, RandomAccess< D >, RandomAccess< E >, RandomAccess< F > > > setImages( final RandomAccessibleInterval< A > a, final RandomAccessibleInterval< B > b, final RandomAccessibleInterval< C > c, final RandomAccessibleInterval< D > d, final RandomAccessibleInterval< E > e, final RandomAccessibleInterval< F > f )
 	{
 		return new LoopBuilder<>( a, b, c, d, e, f );
 	}
@@ -158,7 +160,15 @@ public class LoopBuilder< T >
 		if ( allCursorsAreFast( iterableIntervals ) )
 			runUsingCursors( iterableIntervals, action );
 		else
-			runUsingRandomAccesses( action );
+			runUsingRandomAccesses( action, false );
+	}
+
+	public void forEachPixelLocalizing( final LT action )
+	{
+		Objects.requireNonNull( action );
+		if ( Intervals.numElements( dimensions ) == 0 )
+			return;
+		runUsingRandomAccesses( action, true );
 	}
 
 	private boolean allCursorsAreFast( List<IterableInterval<?>> iterableIntervals )
@@ -181,7 +191,7 @@ public class LoopBuilder< T >
 	 * <p>
 	 * WARNING: You need to make sure that your operation is thread safe.
 	 */
-	public LoopBuilder< T > multiThreaded()
+	public LoopBuilder< T, LT > multiThreaded()
 	{
 		this.multiThreaded = Objects.requireNonNull( MultiThreadSetting.MULTI );
 		return this;
@@ -195,7 +205,7 @@ public class LoopBuilder< T >
 	 * WARNING: Don't use multi-threading if you want to have flat
 	 * iteration order.
 	 */
-	public LoopBuilder< T > flatIterationOrder()
+	public LoopBuilder< T, LT > flatIterationOrder()
 	{
 		return this.flatIterationOrder( true );
 	}
@@ -212,7 +222,7 @@ public class LoopBuilder< T >
 	 *
 	 * @see net.imglib2.FlatIterationOrder
 	 */
-	public LoopBuilder< T > flatIterationOrder( boolean value )
+	public LoopBuilder< T, LT > flatIterationOrder( boolean value )
 	{
 		this.useFlatIterationOrder = value;
 		return this;
@@ -260,21 +270,21 @@ public class LoopBuilder< T >
 		}
 	}
 
-	void runUsingRandomAccesses( T action )
+	void runUsingRandomAccesses( Object action, boolean localizing )
 	{
 		final int nTasks = multiThreaded.suggestNumberOfTasks();
 		final Interval interval = new FinalInterval( dimensions );
 		final List< Interval > chunks = IntervalChunks.chunkInterval( interval, nTasks );
-		multiThreaded.forEach( chunks, chunk -> runOnChunkUsingRandomAccesses( images, action, chunk ) );
+		multiThreaded.forEach( chunks, chunk -> runOnChunkUsingRandomAccesses( images, action, chunk, localizing ) );
 	}
 
-	static void runOnChunkUsingRandomAccesses( RandomAccessibleInterval[] images, Object action, Interval subInterval )
+	static void runOnChunkUsingRandomAccesses( RandomAccessibleInterval<?>[] images, Object action, Interval subInterval, boolean localizing )
 	{
 		final List< RandomAccess< ? > > samplers = Stream.of( images ).map( LoopBuilder::initRandomAccess ).collect( Collectors.toList() );
 		final Positionable synced = SyncedPositionables.create( samplers );
 		if ( !Views.isZeroMin( subInterval ) )
 			synced.move( Intervals.minAsLongArray( subInterval ) );
-		final Runnable runnable = BindActionToSamplers.bindActionToSamplers( action, samplers );
+		final Runnable runnable = BindActionToSamplers.bindActionToSamplers( action, samplers, localizing );
 		LoopUtils.createIntervalLoop( synced, subInterval, runnable ).run();
 	}
 

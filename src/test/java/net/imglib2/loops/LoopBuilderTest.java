@@ -33,6 +33,17 @@
  */
 package net.imglib2.loops;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.Random;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.BiConsumer;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+
 import net.imglib2.Cursor;
 import net.imglib2.Interval;
 import net.imglib2.RandomAccessibleInterval;
@@ -45,21 +56,11 @@ import net.imglib2.img.planar.PlanarImgFactory;
 import net.imglib2.test.ImgLib2Assert;
 import net.imglib2.test.RandomImgs;
 import net.imglib2.type.numeric.integer.IntType;
+import net.imglib2.util.IntervalIndexer;
 import net.imglib2.util.Intervals;
 import net.imglib2.view.Views;
+
 import org.junit.Test;
-
-import java.util.Arrays;
-import java.util.List;
-import java.util.Random;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.function.BiConsumer;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
-
-import static org.junit.Assert.assertEquals;
 
 /**
  * Tests {@link LoopBuilder}.
@@ -167,8 +168,8 @@ public class LoopBuilderTest
 		Img< IntType > output = ArrayImgs.ints( dimensions );
 		// process
 		Interval interval = Intervals.createMinSize( 1, 0, 1, 2 );
+		LoopBuilder.runOnChunkUsingRandomAccesses( new RandomAccessibleInterval[] { input, output }, COPY_ACTION, interval, false );
 		// test
-		LoopBuilder.runOnChunkUsingRandomAccesses( new RandomAccessibleInterval[] { input, output }, COPY_ACTION, interval );
 		ImgLib2Assert.assertImageEquals( expected, output );
 	}
 
@@ -223,5 +224,37 @@ public class LoopBuilderTest
 		RandomAccessibleInterval<IntType> imageA = ArrayImgs.ints( 10, 10 );
 		RandomAccessibleInterval<IntType> imageB = ArrayImgs.ints( 10, 10, 2 );
 		LoopBuilder.setImages( imageA, imageB ).forEachPixel( (a, b) -> {} );
+	}
+
+	@Test
+	public void testLocalizing()
+	{
+		final RandomAccessibleInterval< IntType > imageA = ArrayImgs.ints( 7, 11 );
+		final RandomAccessibleInterval< IntType > imageB = ArrayImgs.ints( 7, 11 );
+		final long[] expected = new long[ 2 ];
+		LoopBuilder.setImages( imageA, imageB ).forEachPixelLocalizing( ( a, b ) -> {
+			final long x = a.getLongPosition( 0 ), y = a.getLongPosition( 1 );
+			assertEquals( expected[ 0 ], x );
+			assertEquals( expected[ 1 ], y );
+			expected[ 0 ]++;
+			if ( expected[ 0 ] == imageA.dimension( 0 ) )
+			{
+				expected[ 0 ] = 0;
+				expected[ 1 ]++;
+			}
+		} );
+	}
+
+	@Test
+	public void testLocalizingMultiThreaded()
+	{
+		final RandomAccessibleInterval< IntType > imageA = ArrayImgs.ints( 671, 1152 );
+		final RandomAccessibleInterval< IntType > imageB = ArrayImgs.ints( 671, 1152 );
+		final int[] visited = new int[ ( int ) Intervals.numElements( imageA ) ];
+		LoopBuilder.setImages( imageA, imageB ).multiThreaded().forEachPixelLocalizing( ( a, b ) -> {
+			final int index = ( int ) IntervalIndexer.positionToIndex( a, imageA );
+			visited[ index ]++;
+		} );
+		assertTrue( IntStream.of( visited ).allMatch( v -> v == 1 ) );
 	}
 }

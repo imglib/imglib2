@@ -34,8 +34,6 @@
 
 package net.imglib2.loops;
 
-import net.imglib2.Sampler;
-
 import java.util.Arrays;
 import java.util.List;
 import java.util.function.BiConsumer;
@@ -43,13 +41,24 @@ import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import net.imglib2.RandomAccess;
+import net.imglib2.Sampler;
+
 /**
  * Package-private utility class that's used by {@link LoopBuilder}.
  */
 final class BindActionToSamplers
 {
 
-	private static final List< ClassCopyProvider< Runnable > > factories = Arrays.asList(
+	private static final List< ClassCopyProvider< Runnable > > LOCALIZING_FACTORIES = Arrays.asList(
+			new ClassCopyProvider<>( ConsumerLocalizingRunnable.class, Runnable.class ),
+			new ClassCopyProvider<>( BiConsumerLocalizingRunnable.class, Runnable.class ),
+			new ClassCopyProvider<>( TriConsumerLocalizingRunnable.class, Runnable.class ),
+			new ClassCopyProvider<>( FourConsumerLocalizingRunnable.class, Runnable.class ),
+			new ClassCopyProvider<>( FiveConsumerLocalizingRunnable.class, Runnable.class ),
+			new ClassCopyProvider<>( SixConsumerLocalizingRunnable.class, Runnable.class ));
+
+	private static final List< ClassCopyProvider< Runnable > > FACTORIES = Arrays.asList(
 			new ClassCopyProvider<>( ConsumerRunnable.class, Runnable.class ),
 			new ClassCopyProvider<>( BiConsumerRunnable.class, Runnable.class ),
 			new ClassCopyProvider<>( TriConsumerRunnable.class, Runnable.class ),
@@ -88,17 +97,32 @@ final class BindActionToSamplers
 	 * @param action
 	 *            This must be an instance of {@link Consumer},
 	 *            {@link BiConsumer} of {@link LoopBuilder.TriConsumer}.
-	 *            {@link LoopBuilder.FourConsumer}, {@link LoopBuilder.FourConsumer},
+	 *            {@link LoopBuilder.FourConsumer}, {@link LoopBuilder.FiveConsumer},
 	 *            or {@link LoopBuilder.SixConsumer}.
 	 * @param samplers
 	 *            A list of {@link Sampler}, the size of the list must fit
-	 *            the consumer given by {@param operation}.
+	 *            the consumer given by {@code action}.
+	 * @param localizing
+	 *            If true, action operates on {@link RandomAccess} objects typed
+	 *            the same as type {@link Sampler}s; if false, action operates
+	 *            on {@link Sampler} elements directly.
 	 * @throws IllegalArgumentException
 	 *             if the number of sampler does not fit the given consumer.
 	 */
-	public static Runnable bindActionToSamplers( final Object action, final List< ? extends Sampler< ? > > samplers )
+	public static Runnable bindActionToSamplers( final Object action, final List< ? extends Sampler< ? > > samplers, final boolean localizing )
 	{
-		final Object[] arguments = Stream.concat( Stream.of( action ), samplers.stream() ).toArray();
+		final Object[] arguments;
+		final List< ClassCopyProvider< Runnable > > factories;
+		if ( localizing )
+		{
+			arguments = Stream.concat( Stream.of( action ), samplers.stream() ).toArray();
+			factories = LOCALIZING_FACTORIES;
+		}
+		else
+		{
+			arguments = Stream.concat( Stream.of( action ), samplers.stream() ).toArray();
+			factories = FACTORIES;
+		}
 		for ( final ClassCopyProvider< Runnable > factory : factories )
 			if ( factory.matches( arguments ) )
 			{
@@ -270,6 +294,171 @@ final class BindActionToSamplers
 		public void run()
 		{
 			action.accept( samplerA.get(), samplerB.get(), samplerC.get(), samplerD.get(), samplerE.get(), samplerF.get() );
+		}
+	}
+
+	public static class ConsumerLocalizingRunnable< A > implements Runnable
+	{
+
+		private final Consumer< RandomAccess< A > > action;
+
+		private final RandomAccess< A > accessA;
+
+		public ConsumerLocalizingRunnable( final Consumer< RandomAccess< A > > action, final RandomAccess< A > accessA )
+		{
+			this.action = action;
+			this.accessA = accessA;
+		}
+
+		@Override
+		public void run()
+		{
+			action.accept( accessA );
+		}
+	}
+
+	public static class BiConsumerLocalizingRunnable< A, B > implements Runnable
+	{
+
+		private final BiConsumer< RandomAccess< A >, RandomAccess< B > > action;
+
+		private final RandomAccess< A > accessA;
+
+		private final RandomAccess< B > accessB;
+
+		public BiConsumerLocalizingRunnable( final BiConsumer< RandomAccess< A >, RandomAccess< B > > action, final RandomAccess< A > accessA, final RandomAccess< B > accessB )
+		{
+			this.action = action;
+			this.accessA = accessA;
+			this.accessB = accessB;
+		}
+
+		@Override
+		public void run()
+		{
+			action.accept( accessA, accessB );
+		}
+	}
+
+	public static class TriConsumerLocalizingRunnable< A, B, C > implements Runnable
+	{
+
+		private final LoopBuilder.TriConsumer< RandomAccess< A >, RandomAccess< B >, RandomAccess< C > > action;
+
+		private final RandomAccess< A > accessA;
+
+		private final RandomAccess< B > accessB;
+
+		private final RandomAccess< C > accessC;
+
+		public TriConsumerLocalizingRunnable( final LoopBuilder.TriConsumer< RandomAccess< A >, RandomAccess< B >, RandomAccess < C > > action, final RandomAccess< A > accessA, final RandomAccess< B > accessB, final RandomAccess< C > accessC )
+		{
+			this.action = action;
+			this.accessA = accessA;
+			this.accessB = accessB;
+			this.accessC = accessC;
+		}
+
+		@Override
+		public void run()
+		{
+			action.accept( accessA, accessB, accessC );
+		}
+	}
+
+	public static class FourConsumerLocalizingRunnable< A, B, C, D > implements Runnable
+	{
+
+		private final LoopBuilder.FourConsumer< RandomAccess< A >, RandomAccess< B >, RandomAccess< C >, RandomAccess< D > > action;
+
+		private final RandomAccess< A > accessA;
+
+		private final RandomAccess< B > accessB;
+
+		private final RandomAccess< C > accessC;
+
+		private final RandomAccess< D > accessD;
+
+		public FourConsumerLocalizingRunnable( final LoopBuilder.FourConsumer< RandomAccess< A >, RandomAccess< B >, RandomAccess < C >, RandomAccess< D > > action, final RandomAccess< A > accessA, final RandomAccess< B > accessB, final RandomAccess< C > accessC, final RandomAccess< D > accessD )
+		{
+			this.action = action;
+			this.accessA = accessA;
+			this.accessB = accessB;
+			this.accessC = accessC;
+			this.accessD = accessD;
+		}
+
+		@Override
+		public void run()
+		{
+			action.accept( accessA, accessB, accessC, accessD );
+		}
+	}
+
+	public static class FiveConsumerLocalizingRunnable< A, B, C, D, E > implements Runnable
+	{
+
+		private final LoopBuilder.FiveConsumer< RandomAccess< A >, RandomAccess< B >, RandomAccess< C >, RandomAccess< D >, RandomAccess< E > > action;
+
+		private final RandomAccess< A > accessA;
+
+		private final RandomAccess< B > accessB;
+
+		private final RandomAccess< C > accessC;
+
+		private final RandomAccess< D > accessD;
+
+		private final RandomAccess< E > accessE;
+
+		public FiveConsumerLocalizingRunnable( final LoopBuilder.FiveConsumer< RandomAccess< A >, RandomAccess< B >, RandomAccess < C >, RandomAccess< D >, RandomAccess< E > > action, final RandomAccess< A > accessA, final RandomAccess< B > accessB, final RandomAccess< C > accessC, final RandomAccess< D > accessD, final RandomAccess< E > accessE )
+		{
+			this.action = action;
+			this.accessA = accessA;
+			this.accessB = accessB;
+			this.accessC = accessC;
+			this.accessD = accessD;
+			this.accessE = accessE;
+		}
+
+		@Override
+		public void run()
+		{
+			action.accept( accessA, accessB, accessC, accessD, accessE );
+		}
+	}
+
+	public static class SixConsumerLocalizingRunnable< A, B, C, D, E, F > implements Runnable
+	{
+
+		private final LoopBuilder.SixConsumer< RandomAccess< A >, RandomAccess< B >, RandomAccess< C >, RandomAccess< D >, RandomAccess< E >, RandomAccess< F > > action;
+
+		private final RandomAccess< A > accessA;
+
+		private final RandomAccess< B > accessB;
+
+		private final RandomAccess< C > accessC;
+
+		private final RandomAccess< D > accessD;
+
+		private final RandomAccess< E > accessE;
+
+		private final RandomAccess< F > accessF;
+
+		public SixConsumerLocalizingRunnable( final LoopBuilder.SixConsumer< RandomAccess< A >, RandomAccess< B >, RandomAccess < C >, RandomAccess< D >, RandomAccess< E >, RandomAccess< F > > action, final RandomAccess< A > accessA, final RandomAccess< B > accessB, final RandomAccess< C > accessC, final RandomAccess< D > accessD, final RandomAccess< E > accessE, final RandomAccess< F > accessF )
+		{
+			this.action = action;
+			this.accessA = accessA;
+			this.accessB = accessB;
+			this.accessC = accessC;
+			this.accessD = accessD;
+			this.accessE = accessE;
+			this.accessF = accessF;
+		}
+
+		@Override
+		public void run()
+		{
+			action.accept( accessA, accessB, accessC, accessD, accessE, accessF );
 		}
 	}
 }
