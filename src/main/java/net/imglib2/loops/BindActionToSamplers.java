@@ -56,7 +56,11 @@ final class BindActionToSamplers
 			new ClassCopyProvider<>( TriConsumerLocalizingRunnable.class, Runnable.class ),
 			new ClassCopyProvider<>( FourConsumerLocalizingRunnable.class, Runnable.class ),
 			new ClassCopyProvider<>( FiveConsumerLocalizingRunnable.class, Runnable.class ),
-			new ClassCopyProvider<>( SixConsumerLocalizingRunnable.class, Runnable.class ));
+			new ClassCopyProvider<>( SixConsumerLocalizingRunnable.class, Runnable.class ),
+			new ClassCopyProvider<>( SevenConsumerLocalizingRunnable.class, Runnable.class ),
+			new ClassCopyProvider<>( EightConsumerLocalizingRunnable.class, Runnable.class ),
+			new ClassCopyProvider<>( NineConsumerLocalizingRunnable.class, Runnable.class ),
+			new ClassCopyProvider<>( TenConsumerLocalizingRunnable.class, Runnable.class ));
 
 	private static final List< ClassCopyProvider< Runnable > > FACTORIES = Arrays.asList(
 			new ClassCopyProvider<>( ConsumerRunnable.class, Runnable.class ),
@@ -64,7 +68,11 @@ final class BindActionToSamplers
 			new ClassCopyProvider<>( TriConsumerRunnable.class, Runnable.class ),
 			new ClassCopyProvider<>( FourConsumerRunnable.class, Runnable.class ),
 			new ClassCopyProvider<>( FiveConsumerRunnable.class, Runnable.class ),
-			new ClassCopyProvider<>( SixConsumerRunnable.class, Runnable.class ));
+			new ClassCopyProvider<>( SixConsumerRunnable.class, Runnable.class ),
+			new ClassCopyProvider<>( SevenConsumerRunnable.class, Runnable.class ),
+			new ClassCopyProvider<>( EightConsumerRunnable.class, Runnable.class ),
+			new ClassCopyProvider<>( NineConsumerRunnable.class, Runnable.class ),
+			new ClassCopyProvider<>( TenConsumerRunnable.class, Runnable.class ));
 
 	/**
 	 * For example.: Given a BiConsumer and two Samplers:
@@ -297,6 +305,176 @@ final class BindActionToSamplers
 		}
 	}
 
+	public static class SevenConsumerRunnable< A, B, C, D, E, F, G > implements Runnable
+	{
+
+		private final LoopBuilder.SevenConsumer< A, B, C, D, E, F, G > action;
+
+		private final Sampler< A > samplerA;
+
+		private final Sampler< B > samplerB;
+
+		private final Sampler< C > samplerC;
+
+		private final Sampler< D > samplerD;
+
+		private final Sampler< E > samplerE;
+
+		private final Sampler< F > samplerF;
+
+		private final Sampler< G > samplerG;
+
+		public SevenConsumerRunnable( final LoopBuilder.SevenConsumer< A, B, C, D, E, F, G > action, final Sampler< A > samplerA, final Sampler< B > samplerB, final Sampler< C > samplerC, final Sampler< D > samplerD, final Sampler< E > samplerE, final Sampler< F > samplerF, final Sampler< G > samplerG )
+		{
+			this.action = action;
+			this.samplerA = samplerA;
+			this.samplerB = samplerB;
+			this.samplerC = samplerC;
+			this.samplerD = samplerD;
+			this.samplerE = samplerE;
+			this.samplerF = samplerF;
+			this.samplerG = samplerG;
+		}
+
+		@Override
+		public void run()
+		{
+			action.accept( samplerA.get(), samplerB.get(), samplerC.get(), samplerD.get(), samplerE.get(), samplerF.get(), samplerG.get() );
+		}
+	}
+
+	public static class EightConsumerRunnable< A, B, C, D, E, F, G, H > implements Runnable
+	{
+
+		private final LoopBuilder.EightConsumer< A, B, C, D, E, F, G, H > action;
+
+		private final Sampler< A > samplerA;
+
+		private final Sampler< B > samplerB;
+
+		private final Sampler< C > samplerC;
+
+		private final Sampler< D > samplerD;
+
+		private final Sampler< E > samplerE;
+
+		private final Sampler< F > samplerF;
+
+		private final Sampler< G > samplerG;
+
+		private final Sampler< H > samplerH;
+
+		public EightConsumerRunnable( final LoopBuilder.EightConsumer< A, B, C, D, E, F, G, H > action, final Sampler< A > samplerA, final Sampler< B > samplerB, final Sampler< C > samplerC, final Sampler< D > samplerD, final Sampler< E > samplerE, final Sampler< F > samplerF, final Sampler< G > samplerG, final Sampler< H > samplerH )
+		{
+			this.action = action;
+			this.samplerA = samplerA;
+			this.samplerB = samplerB;
+			this.samplerC = samplerC;
+			this.samplerD = samplerD;
+			this.samplerE = samplerE;
+			this.samplerF = samplerF;
+			this.samplerG = samplerG;
+			this.samplerH = samplerH;
+		}
+
+		@Override
+		public void run()
+		{
+			action.accept( samplerA.get(), samplerB.get(), samplerC.get(), samplerD.get(), samplerE.get(), samplerF.get(), samplerG.get(), samplerH.get() );
+		}
+	}
+
+	public static class NineConsumerRunnable< A, B, C, D, E, F, G, H, I > implements Runnable
+	{
+
+		private final LoopBuilder.NineConsumer< A, B, C, D, E, F, G, H, I > action;
+
+		private final Sampler< A > samplerA;
+
+		private final Sampler< B > samplerB;
+
+		private final Sampler< C > samplerC;
+
+		private final Sampler< D > samplerD;
+
+		private final Sampler< E > samplerE;
+
+		private final Sampler< F > samplerF;
+
+		private final Sampler< G > samplerG;
+
+		private final Sampler< H > samplerH;
+
+		private final Sampler< I > samplerI;
+
+		public NineConsumerRunnable( final LoopBuilder.NineConsumer< A, B, C, D, E, F, G, H, I > action, final Sampler< A > samplerA, final Sampler< B > samplerB, final Sampler< C > samplerC, final Sampler< D > samplerD, final Sampler< E > samplerE, final Sampler< F > samplerF, final Sampler< G > samplerG, final Sampler< H > samplerH, final Sampler< I > samplerI )
+		{
+			this.action = action;
+			this.samplerA = samplerA;
+			this.samplerB = samplerB;
+			this.samplerC = samplerC;
+			this.samplerD = samplerD;
+			this.samplerE = samplerE;
+			this.samplerF = samplerF;
+			this.samplerG = samplerG;
+			this.samplerH = samplerH;
+			this.samplerI = samplerI;
+		}
+
+		@Override
+		public void run()
+		{
+			action.accept( samplerA.get(), samplerB.get(), samplerC.get(), samplerD.get(), samplerE.get(), samplerF.get(), samplerG.get(), samplerH.get(), samplerI.get() );
+		}
+	}
+
+	public static class TenConsumerRunnable< A, B, C, D, E, F, G, H, I, J > implements Runnable
+	{
+
+		private final LoopBuilder.TenConsumer< A, B, C, D, E, F, G, H, I, J > action;
+
+		private final Sampler< A > samplerA;
+
+		private final Sampler< B > samplerB;
+
+		private final Sampler< C > samplerC;
+
+		private final Sampler< D > samplerD;
+
+		private final Sampler< E > samplerE;
+
+		private final Sampler< F > samplerF;
+
+		private final Sampler< G > samplerG;
+
+		private final Sampler< H > samplerH;
+
+		private final Sampler< I > samplerI;
+
+		private final Sampler< J > samplerJ;
+
+		public TenConsumerRunnable( final LoopBuilder.TenConsumer< A, B, C, D, E, F, G, H, I, J > action, final Sampler< A > samplerA, final Sampler< B > samplerB, final Sampler< C > samplerC, final Sampler< D > samplerD, final Sampler< E > samplerE, final Sampler< F > samplerF, final Sampler< G > samplerG, final Sampler< H > samplerH, final Sampler< I > samplerI, final Sampler< J > samplerJ )
+		{
+			this.action = action;
+			this.samplerA = samplerA;
+			this.samplerB = samplerB;
+			this.samplerC = samplerC;
+			this.samplerD = samplerD;
+			this.samplerE = samplerE;
+			this.samplerF = samplerF;
+			this.samplerG = samplerG;
+			this.samplerH = samplerH;
+			this.samplerI = samplerI;
+			this.samplerJ = samplerJ;
+		}
+
+		@Override
+		public void run()
+		{
+			action.accept( samplerA.get(), samplerB.get(), samplerC.get(), samplerD.get(), samplerE.get(), samplerF.get(), samplerG.get(), samplerH.get(), samplerI.get(), samplerJ.get() );
+		}
+	}
+
 	public static class ConsumerLocalizingRunnable< A > implements Runnable
 	{
 
@@ -459,6 +637,176 @@ final class BindActionToSamplers
 		public void run()
 		{
 			action.accept( accessA, accessB, accessC, accessD, accessE, accessF );
+		}
+	}
+
+	public static class SevenConsumerLocalizingRunnable< A, B, C, D, E, F, G > implements Runnable
+	{
+
+		private final LoopBuilder.SevenConsumer< RandomAccess< A >, RandomAccess< B >, RandomAccess< C >, RandomAccess< D >, RandomAccess< E >, RandomAccess< F >, RandomAccess< G > > action;
+
+		private final RandomAccess< A > accessA;
+
+		private final RandomAccess< B > accessB;
+
+		private final RandomAccess< C > accessC;
+
+		private final RandomAccess< D > accessD;
+
+		private final RandomAccess< E > accessE;
+
+		private final RandomAccess< F > accessF;
+
+		private final RandomAccess< G > accessG;
+
+		public SevenConsumerLocalizingRunnable( final LoopBuilder.SevenConsumer< RandomAccess< A >, RandomAccess< B >, RandomAccess < C >, RandomAccess< D >, RandomAccess< E >, RandomAccess< F >, RandomAccess< G > > action, final RandomAccess< A > accessA, final RandomAccess< B > accessB, final RandomAccess< C > accessC, final RandomAccess< D > accessD, final RandomAccess< E > accessE, final RandomAccess< F > accessF, final RandomAccess< G > accessG )
+		{
+			this.action = action;
+			this.accessA = accessA;
+			this.accessB = accessB;
+			this.accessC = accessC;
+			this.accessD = accessD;
+			this.accessE = accessE;
+			this.accessF = accessF;
+			this.accessG = accessG;
+		}
+
+		@Override
+		public void run()
+		{
+			action.accept( accessA, accessB, accessC, accessD, accessE, accessF, accessG );
+		}
+	}
+
+	public static class EightConsumerLocalizingRunnable< A, B, C, D, E, F, G, H > implements Runnable
+	{
+
+		private final LoopBuilder.EightConsumer< RandomAccess< A >, RandomAccess< B >, RandomAccess< C >, RandomAccess< D >, RandomAccess< E >, RandomAccess< F >, RandomAccess< G >, RandomAccess< H > > action;
+
+		private final RandomAccess< A > accessA;
+
+		private final RandomAccess< B > accessB;
+
+		private final RandomAccess< C > accessC;
+
+		private final RandomAccess< D > accessD;
+
+		private final RandomAccess< E > accessE;
+
+		private final RandomAccess< F > accessF;
+
+		private final RandomAccess< G > accessG;
+
+		private final RandomAccess< H > accessH;
+
+		public EightConsumerLocalizingRunnable( final LoopBuilder.EightConsumer< RandomAccess< A >, RandomAccess< B >, RandomAccess < C >, RandomAccess< D >, RandomAccess< E >, RandomAccess< F >, RandomAccess< G >, RandomAccess< H > > action, final RandomAccess< A > accessA, final RandomAccess< B > accessB, final RandomAccess< C > accessC, final RandomAccess< D > accessD, final RandomAccess< E > accessE, final RandomAccess< F > accessF, final RandomAccess< G > accessG, final RandomAccess< H > accessH )
+		{
+			this.action = action;
+			this.accessA = accessA;
+			this.accessB = accessB;
+			this.accessC = accessC;
+			this.accessD = accessD;
+			this.accessE = accessE;
+			this.accessF = accessF;
+			this.accessG = accessG;
+			this.accessH = accessH;
+		}
+
+		@Override
+		public void run()
+		{
+			action.accept( accessA, accessB, accessC, accessD, accessE, accessF, accessG, accessH );
+		}
+	}
+
+	public static class NineConsumerLocalizingRunnable< A, B, C, D, E, F, G, H, I > implements Runnable
+	{
+
+		private final LoopBuilder.NineConsumer< RandomAccess< A >, RandomAccess< B >, RandomAccess< C >, RandomAccess< D >, RandomAccess< E >, RandomAccess< F >, RandomAccess< G >, RandomAccess< H >, RandomAccess< I > > action;
+
+		private final RandomAccess< A > accessA;
+
+		private final RandomAccess< B > accessB;
+
+		private final RandomAccess< C > accessC;
+
+		private final RandomAccess< D > accessD;
+
+		private final RandomAccess< E > accessE;
+
+		private final RandomAccess< F > accessF;
+
+		private final RandomAccess< G > accessG;
+
+		private final RandomAccess< H > accessH;
+
+		private final RandomAccess< I > accessI;
+
+		public NineConsumerLocalizingRunnable( final LoopBuilder.NineConsumer< RandomAccess< A >, RandomAccess< B >, RandomAccess < C >, RandomAccess< D >, RandomAccess< E >, RandomAccess< F >, RandomAccess< G >, RandomAccess< H >, RandomAccess< I > > action, final RandomAccess< A > accessA, final RandomAccess< B > accessB, final RandomAccess< C > accessC, final RandomAccess< D > accessD, final RandomAccess< E > accessE, final RandomAccess< F > accessF, final RandomAccess< G > accessG, final RandomAccess< H > accessH, final RandomAccess< I > accessI )
+		{
+			this.action = action;
+			this.accessA = accessA;
+			this.accessB = accessB;
+			this.accessC = accessC;
+			this.accessD = accessD;
+			this.accessE = accessE;
+			this.accessF = accessF;
+			this.accessG = accessG;
+			this.accessH = accessH;
+			this.accessI = accessI;
+		}
+
+		@Override
+		public void run()
+		{
+			action.accept( accessA, accessB, accessC, accessD, accessE, accessF, accessG, accessH, accessI );
+		}
+	}
+
+	public static class TenConsumerLocalizingRunnable< A, B, C, D, E, F, G, H, I, J > implements Runnable
+	{
+
+		private final LoopBuilder.TenConsumer< RandomAccess< A >, RandomAccess< B >, RandomAccess< C >, RandomAccess< D >, RandomAccess< E >, RandomAccess< F >, RandomAccess< G >, RandomAccess< H >, RandomAccess< I >, RandomAccess< J > > action;
+
+		private final RandomAccess< A > accessA;
+
+		private final RandomAccess< B > accessB;
+
+		private final RandomAccess< C > accessC;
+
+		private final RandomAccess< D > accessD;
+
+		private final RandomAccess< E > accessE;
+
+		private final RandomAccess< F > accessF;
+
+		private final RandomAccess< G > accessG;
+
+		private final RandomAccess< H > accessH;
+
+		private final RandomAccess< I > accessI;
+
+		private final RandomAccess< J > accessJ;
+
+		public TenConsumerLocalizingRunnable( final LoopBuilder.TenConsumer< RandomAccess< A >, RandomAccess< B >, RandomAccess < C >, RandomAccess< D >, RandomAccess< E >, RandomAccess< F >, RandomAccess< G >, RandomAccess< H >, RandomAccess< I >, RandomAccess< J > > action, final RandomAccess< A > accessA, final RandomAccess< B > accessB, final RandomAccess< C > accessC, final RandomAccess< D > accessD, final RandomAccess< E > accessE, final RandomAccess< F > accessF, final RandomAccess< G > accessG, final RandomAccess< H > accessH, final RandomAccess< I > accessI, final RandomAccess< J > accessJ )
+		{
+			this.action = action;
+			this.accessA = accessA;
+			this.accessB = accessB;
+			this.accessC = accessC;
+			this.accessD = accessD;
+			this.accessE = accessE;
+			this.accessF = accessF;
+			this.accessG = accessG;
+			this.accessH = accessH;
+			this.accessI = accessI;
+			this.accessJ = accessJ;
+		}
+
+		@Override
+		public void run()
+		{
+			action.accept( accessA, accessB, accessC, accessD, accessE, accessF, accessG, accessH, accessI, accessJ );
 		}
 	}
 }

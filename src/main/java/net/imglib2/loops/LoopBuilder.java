@@ -151,6 +151,38 @@ public class LoopBuilder< T, LT >
 	/**
 	 * @see LoopBuilder
 	 */
+	public static < A, B, C, D, E, F, G > LoopBuilder< SevenConsumer< A, B, C, D, E, F, G >, SevenConsumer< RandomAccess< A >, RandomAccess< B >, RandomAccess< C >, RandomAccess< D >, RandomAccess< E >, RandomAccess< F >, RandomAccess< G > > > setImages( final RandomAccessibleInterval< A > a, final RandomAccessibleInterval< B > b, final RandomAccessibleInterval< C > c, final RandomAccessibleInterval< D > d, final RandomAccessibleInterval< E > e, final RandomAccessibleInterval< F > f, final RandomAccessibleInterval< G > g )
+	{
+		return new LoopBuilder<>( a, b, c, d, e, f, g );
+	}
+
+	/**
+	 * @see LoopBuilder
+	 */
+	public static < A, B, C, D, E, F, G, H > LoopBuilder< EightConsumer< A, B, C, D, E, F, G, H >, EightConsumer< RandomAccess< A >, RandomAccess< B >, RandomAccess< C >, RandomAccess< D >, RandomAccess< E >, RandomAccess< F >, RandomAccess< G >, RandomAccess< H > > > setImages( final RandomAccessibleInterval< A > a, final RandomAccessibleInterval< B > b, final RandomAccessibleInterval< C > c, final RandomAccessibleInterval< D > d, final RandomAccessibleInterval< E > e, final RandomAccessibleInterval< F > f, final RandomAccessibleInterval< G > g, final RandomAccessibleInterval< H > h )
+	{
+		return new LoopBuilder<>( a, b, c, d, e, f, g, h );
+	}
+
+	/**
+	 * @see LoopBuilder
+	 */
+	public static < A, B, C, D, E, F, G, H, I > LoopBuilder< NineConsumer< A, B, C, D, E, F, G, H, I >, NineConsumer< RandomAccess< A >, RandomAccess< B >, RandomAccess< C >, RandomAccess< D >, RandomAccess< E >, RandomAccess< F >, RandomAccess< G >, RandomAccess< H >, RandomAccess< I > > > setImages( final RandomAccessibleInterval< A > a, final RandomAccessibleInterval< B > b, final RandomAccessibleInterval< C > c, final RandomAccessibleInterval< D > d, final RandomAccessibleInterval< E > e, final RandomAccessibleInterval< F > f, final RandomAccessibleInterval< G > g, final RandomAccessibleInterval< H > h, final RandomAccessibleInterval< I > i )
+	{
+		return new LoopBuilder<>( a, b, c, d, e, f, g, h, i );
+	}
+
+	/**
+	 * @see LoopBuilder
+	 */
+	public static < A, B, C, D, E, F, G, H, I, J > LoopBuilder< TenConsumer< A, B, C, D, E, F, G, H, I, J >, TenConsumer< RandomAccess< A >, RandomAccess< B >, RandomAccess< C >, RandomAccess< D >, RandomAccess< E >, RandomAccess< F >, RandomAccess< G >, RandomAccess< H >, RandomAccess< I >, RandomAccess< J > > > setImages( final RandomAccessibleInterval< A > a, final RandomAccessibleInterval< B > b, final RandomAccessibleInterval< C > c, final RandomAccessibleInterval< D > d, final RandomAccessibleInterval< E > e, final RandomAccessibleInterval< F > f, final RandomAccessibleInterval< G > g, final RandomAccessibleInterval< H > h, final RandomAccessibleInterval< I > i, final RandomAccessibleInterval< J > j )
+	{
+		return new LoopBuilder<>( a, b, c, d, e, f, g, h, i, j );
+	}
+
+	/**
+	 * @see LoopBuilder
+	 */
 	public void forEachPixel( final T action )
 	{
 		Objects.requireNonNull( action );
@@ -246,6 +278,26 @@ public class LoopBuilder< T, LT >
 	public interface SixConsumer< A, B, C, D, E, F >
 	{
 		void accept( A a, B b, C c, D d, E e, F f );
+	}
+
+	public interface SevenConsumer< A, B, C, D, E, F, G >
+	{
+		void accept( A a, B b, C c, D d, E e, F f, G g );
+	}
+
+	public interface EightConsumer< A, B, C, D, E, F, G, H >
+	{
+		void accept( A a, B b, C c, D d, E e, F f, G g, H h );
+	}
+
+	public interface NineConsumer< A, B, C, D, E, F, G, H, I >
+	{
+		void accept( A a, B b, C c, D d, E e, F f, G g, H h, I i );
+	}
+
+	public interface TenConsumer< A, B, C, D, E, F, G, H, I, J >
+	{
+		void accept( A a, B b, C c, D d, E e, F f, G g, H h, I i, J j );
 	}
 
 	// Helper methods
