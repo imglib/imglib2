@@ -48,9 +48,11 @@ import net.imglib2.Dimensions;
 import net.imglib2.FinalInterval;
 import net.imglib2.Interval;
 import net.imglib2.IterableInterval;
+import net.imglib2.Localizable;
 import net.imglib2.Positionable;
 import net.imglib2.RandomAccess;
 import net.imglib2.RandomAccessibleInterval;
+import net.imglib2.Sampler;
 import net.imglib2.img.array.AbstractArrayCursor;
 import net.imglib2.img.cell.CellCursor;
 import net.imglib2.img.planar.PlanarCursor;
@@ -103,7 +105,7 @@ public class LoopBuilder< T, LT >
 	/**
 	 * @see LoopBuilder
 	 */
-	public static < A > LoopBuilder< Consumer< A >, Consumer< RandomAccess< A > > > setImages( final RandomAccessibleInterval< A > a )
+	public static < A, LA extends Localizable & Sampler< A > > LoopBuilder< Consumer< A >, Consumer< LA > > setImages( final RandomAccessibleInterval< A > a )
 	{
 		return new LoopBuilder<>( a );
 	}
@@ -111,7 +113,7 @@ public class LoopBuilder< T, LT >
 	/**
 	 * @see LoopBuilder
 	 */
-	public static < A, B > LoopBuilder< BiConsumer< A, B >, BiConsumer< RandomAccess< A >, RandomAccess< B > > > setImages( final RandomAccessibleInterval< A > a, final RandomAccessibleInterval< B > b )
+	public static < A, B, LA extends Localizable & Sampler< A >, LB extends Localizable & Sampler< B > > LoopBuilder< BiConsumer< A, B >, BiConsumer< LA, LB > > setImages( final RandomAccessibleInterval< A > a, final RandomAccessibleInterval< B > b )
 	{
 		return new LoopBuilder<>( a, b );
 	}
@@ -119,7 +121,7 @@ public class LoopBuilder< T, LT >
 	/**
 	 * @see LoopBuilder
 	 */
-	public static < A, B, C > LoopBuilder< TriConsumer< A, B, C >, TriConsumer< RandomAccess< A >, RandomAccess< B >, RandomAccess< C > > > setImages( final RandomAccessibleInterval< A > a, final RandomAccessibleInterval< B > b, final RandomAccessibleInterval< C > c )
+	public static < A, B, C, LA extends Localizable & Sampler< A >, LB extends Localizable & Sampler< B >, LC extends Localizable & Sampler< C > > LoopBuilder< TriConsumer< A, B, C >, TriConsumer< LA, LB, LC > > setImages( final RandomAccessibleInterval< A > a, final RandomAccessibleInterval< B > b, final RandomAccessibleInterval< C > c )
 	{
 		return new LoopBuilder<>( a, b, c );
 	}
@@ -127,7 +129,7 @@ public class LoopBuilder< T, LT >
 	/**
 	 * @see LoopBuilder
 	 */
-	public static < A, B, C, D > LoopBuilder< FourConsumer< A, B, C, D >, FourConsumer< RandomAccess< A >, RandomAccess< B >, RandomAccess< C >, RandomAccess< D > > > setImages( final RandomAccessibleInterval< A > a, final RandomAccessibleInterval< B > b, final RandomAccessibleInterval< C > c, final RandomAccessibleInterval< D > d )
+	public static < A, B, C, D, LA extends Localizable & Sampler< A >, LB extends Localizable & Sampler< B >, LC extends Localizable & Sampler< C >, LD extends Localizable & Sampler< D > > LoopBuilder< FourConsumer< A, B, C, D >, FourConsumer< LA, LB, LC, LD > > setImages( final RandomAccessibleInterval< A > a, final RandomAccessibleInterval< B > b, final RandomAccessibleInterval< C > c, final RandomAccessibleInterval< D > d )
 	{
 		return new LoopBuilder<>( a, b, c, d );
 	}
@@ -135,7 +137,7 @@ public class LoopBuilder< T, LT >
 	/**
 	 * @see LoopBuilder
 	 */
-	public static < A, B, C, D, E > LoopBuilder< FiveConsumer< A, B, C, D, E >, FiveConsumer< RandomAccess< A >, RandomAccess< B >, RandomAccess< C >, RandomAccess< D >, RandomAccess< E > > > setImages( final RandomAccessibleInterval< A > a, final RandomAccessibleInterval< B > b, final RandomAccessibleInterval< C > c, final RandomAccessibleInterval< D > d, final RandomAccessibleInterval< E > e )
+	public static < A, B, C, D, E, LA extends Localizable & Sampler< A >, LB extends Localizable & Sampler< B >, LC extends Localizable & Sampler< C >, LD extends Localizable & Sampler< D >, LE extends Localizable & Sampler< E > > LoopBuilder< FiveConsumer< A, B, C, D, E >, FiveConsumer< LA, LB, LC, LD, LE > > setImages( final RandomAccessibleInterval< A > a, final RandomAccessibleInterval< B > b, final RandomAccessibleInterval< C > c, final RandomAccessibleInterval< D > d, final RandomAccessibleInterval< E > e )
 	{
 		return new LoopBuilder<>( a, b, c, d, e );
 	}
@@ -143,7 +145,7 @@ public class LoopBuilder< T, LT >
 	/**
 	 * @see LoopBuilder
 	 */
-	public static < A, B, C, D, E, F > LoopBuilder< SixConsumer< A, B, C, D, E, F >, SixConsumer< RandomAccess< A >, RandomAccess< B >, RandomAccess< C >, RandomAccess< D >, RandomAccess< E >, RandomAccess< F > > > setImages( final RandomAccessibleInterval< A > a, final RandomAccessibleInterval< B > b, final RandomAccessibleInterval< C > c, final RandomAccessibleInterval< D > d, final RandomAccessibleInterval< E > e, final RandomAccessibleInterval< F > f )
+	public static < A, B, C, D, E, F, LA extends Localizable & Sampler< A >, LB extends Localizable & Sampler< B >, LC extends Localizable & Sampler< C >, LD extends Localizable & Sampler< D >, LE extends Localizable & Sampler< E >, LF extends Localizable & Sampler< F > > LoopBuilder< SixConsumer< A, B, C, D, E, F >, SixConsumer< LA, LB, LC, LD, LE, LF > > setImages( final RandomAccessibleInterval< A > a, final RandomAccessibleInterval< B > b, final RandomAccessibleInterval< C > c, final RandomAccessibleInterval< D > d, final RandomAccessibleInterval< E > e, final RandomAccessibleInterval< F > f )
 	{
 		return new LoopBuilder<>( a, b, c, d, e, f );
 	}
@@ -151,7 +153,7 @@ public class LoopBuilder< T, LT >
 	/**
 	 * @see LoopBuilder
 	 */
-	public static < A, B, C, D, E, F, G > LoopBuilder< SevenConsumer< A, B, C, D, E, F, G >, SevenConsumer< RandomAccess< A >, RandomAccess< B >, RandomAccess< C >, RandomAccess< D >, RandomAccess< E >, RandomAccess< F >, RandomAccess< G > > > setImages( final RandomAccessibleInterval< A > a, final RandomAccessibleInterval< B > b, final RandomAccessibleInterval< C > c, final RandomAccessibleInterval< D > d, final RandomAccessibleInterval< E > e, final RandomAccessibleInterval< F > f, final RandomAccessibleInterval< G > g )
+	public static < A, B, C, D, E, F, G, LA extends Localizable & Sampler< A >, LB extends Localizable & Sampler< B >, LC extends Localizable & Sampler< C >, LD extends Localizable & Sampler< D >, LE extends Localizable & Sampler< E >, LF extends Localizable & Sampler< F >, LG extends Localizable & Sampler< G > > LoopBuilder< SevenConsumer< A, B, C, D, E, F, G >, SevenConsumer< LA, LB, LC, LD, LE, LF, LG > > setImages( final RandomAccessibleInterval< A > a, final RandomAccessibleInterval< B > b, final RandomAccessibleInterval< C > c, final RandomAccessibleInterval< D > d, final RandomAccessibleInterval< E > e, final RandomAccessibleInterval< F > f, final RandomAccessibleInterval< G > g )
 	{
 		return new LoopBuilder<>( a, b, c, d, e, f, g );
 	}
@@ -159,7 +161,7 @@ public class LoopBuilder< T, LT >
 	/**
 	 * @see LoopBuilder
 	 */
-	public static < A, B, C, D, E, F, G, H > LoopBuilder< EightConsumer< A, B, C, D, E, F, G, H >, EightConsumer< RandomAccess< A >, RandomAccess< B >, RandomAccess< C >, RandomAccess< D >, RandomAccess< E >, RandomAccess< F >, RandomAccess< G >, RandomAccess< H > > > setImages( final RandomAccessibleInterval< A > a, final RandomAccessibleInterval< B > b, final RandomAccessibleInterval< C > c, final RandomAccessibleInterval< D > d, final RandomAccessibleInterval< E > e, final RandomAccessibleInterval< F > f, final RandomAccessibleInterval< G > g, final RandomAccessibleInterval< H > h )
+	public static < A, B, C, D, E, F, G, H, LA extends Localizable & Sampler< A >, LB extends Localizable & Sampler< B >, LC extends Localizable & Sampler< C >, LD extends Localizable & Sampler< D >, LE extends Localizable & Sampler< E >, LF extends Localizable & Sampler< F >, LG extends Localizable & Sampler< G >, LH extends Localizable & Sampler< H > > LoopBuilder< EightConsumer< A, B, C, D, E, F, G, H >, EightConsumer< LA, LB, LC, LD, LE, LF, LG, LH > > setImages( final RandomAccessibleInterval< A > a, final RandomAccessibleInterval< B > b, final RandomAccessibleInterval< C > c, final RandomAccessibleInterval< D > d, final RandomAccessibleInterval< E > e, final RandomAccessibleInterval< F > f, final RandomAccessibleInterval< G > g, final RandomAccessibleInterval< H > h )
 	{
 		return new LoopBuilder<>( a, b, c, d, e, f, g, h );
 	}
@@ -167,7 +169,7 @@ public class LoopBuilder< T, LT >
 	/**
 	 * @see LoopBuilder
 	 */
-	public static < A, B, C, D, E, F, G, H, I > LoopBuilder< NineConsumer< A, B, C, D, E, F, G, H, I >, NineConsumer< RandomAccess< A >, RandomAccess< B >, RandomAccess< C >, RandomAccess< D >, RandomAccess< E >, RandomAccess< F >, RandomAccess< G >, RandomAccess< H >, RandomAccess< I > > > setImages( final RandomAccessibleInterval< A > a, final RandomAccessibleInterval< B > b, final RandomAccessibleInterval< C > c, final RandomAccessibleInterval< D > d, final RandomAccessibleInterval< E > e, final RandomAccessibleInterval< F > f, final RandomAccessibleInterval< G > g, final RandomAccessibleInterval< H > h, final RandomAccessibleInterval< I > i )
+	public static < A, B, C, D, E, F, G, H, I, LA extends Localizable & Sampler< A >, LB extends Localizable & Sampler< B >, LC extends Localizable & Sampler< C >, LD extends Localizable & Sampler< D >, LE extends Localizable & Sampler< E >, LF extends Localizable & Sampler< F >, LG extends Localizable & Sampler< G >, LH extends Localizable & Sampler< H >, LI extends Localizable & Sampler< I > > LoopBuilder< NineConsumer< A, B, C, D, E, F, G, H, I >, NineConsumer< LA, LB, LC, LD, LE, LF, LG, LH, LI > > setImages( final RandomAccessibleInterval< A > a, final RandomAccessibleInterval< B > b, final RandomAccessibleInterval< C > c, final RandomAccessibleInterval< D > d, final RandomAccessibleInterval< E > e, final RandomAccessibleInterval< F > f, final RandomAccessibleInterval< G > g, final RandomAccessibleInterval< H > h, final RandomAccessibleInterval< I > i )
 	{
 		return new LoopBuilder<>( a, b, c, d, e, f, g, h, i );
 	}
@@ -175,7 +177,7 @@ public class LoopBuilder< T, LT >
 	/**
 	 * @see LoopBuilder
 	 */
-	public static < A, B, C, D, E, F, G, H, I, J > LoopBuilder< TenConsumer< A, B, C, D, E, F, G, H, I, J >, TenConsumer< RandomAccess< A >, RandomAccess< B >, RandomAccess< C >, RandomAccess< D >, RandomAccess< E >, RandomAccess< F >, RandomAccess< G >, RandomAccess< H >, RandomAccess< I >, RandomAccess< J > > > setImages( final RandomAccessibleInterval< A > a, final RandomAccessibleInterval< B > b, final RandomAccessibleInterval< C > c, final RandomAccessibleInterval< D > d, final RandomAccessibleInterval< E > e, final RandomAccessibleInterval< F > f, final RandomAccessibleInterval< G > g, final RandomAccessibleInterval< H > h, final RandomAccessibleInterval< I > i, final RandomAccessibleInterval< J > j )
+	public static < A, B, C, D, E, F, G, H, I, J, LA extends Localizable & Sampler< A >, LB extends Localizable & Sampler< B >, LC extends Localizable & Sampler< C >, LD extends Localizable & Sampler< D >, LE extends Localizable & Sampler< E >, LF extends Localizable & Sampler< F >, LG extends Localizable & Sampler< G >, LH extends Localizable & Sampler< H >, LI extends Localizable & Sampler< I >, LJ extends Localizable & Sampler< J > > LoopBuilder< TenConsumer< A, B, C, D, E, F, G, H, I, J >, TenConsumer< LA, LB, LC, LD, LE, LF, LG, LH, LI, LJ > > setImages( final RandomAccessibleInterval< A > a, final RandomAccessibleInterval< B > b, final RandomAccessibleInterval< C > c, final RandomAccessibleInterval< D > d, final RandomAccessibleInterval< E > e, final RandomAccessibleInterval< F > f, final RandomAccessibleInterval< G > g, final RandomAccessibleInterval< H > h, final RandomAccessibleInterval< I > i, final RandomAccessibleInterval< J > j )
 	{
 		return new LoopBuilder<>( a, b, c, d, e, f, g, h, i, j );
 	}
