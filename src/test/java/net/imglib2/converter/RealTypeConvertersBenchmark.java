@@ -66,7 +66,7 @@ import java.util.stream.Stream;
 public class RealTypeConvertersBenchmark
 {
 
-	private static final Map< String, RealType< ? > > TYPES = Stream.of(
+	private static final Map< String, RealType< ? > > TYPES = Stream.< RealType< ? > >of(
 			new DoubleType(),
 			new FloatType(),
 			new IntType(),

@@ -34,6 +34,11 @@
 
 package net.imglib2;
 
+import net.imglib2.util.Intervals;
+import net.imglib2.util.Util;
+
+import java.util.Arrays;
+
 /**
  * Implementation of the {@link RealInterval} interface.
  * 
@@ -119,5 +124,19 @@ public final class FinalRealInterval extends AbstractRealInterval
 			max[ d ] = minmax[ d + n ];
 		}
 		return new FinalRealInterval( min, max );
+	}
+
+	@Override
+	public boolean equals( final Object obj )
+	{
+		return obj instanceof FinalRealInterval &&
+				Intervals.equals( this, ( RealInterval ) obj, 0.0 );
+
+	}
+
+	@Override
+	public int hashCode()
+	{
+		return Util.combineHash( Arrays.hashCode( min ), Arrays.hashCode( max ) );
 	}
 }

@@ -2,7 +2,7 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2018 Tobias Pietzsch, Stephan Preibisch, Stephan Saalfeld,
+ * Copyright (C) 2009 - 2019 Tobias Pietzsch, Stephan Preibisch, Stephan Saalfeld,
  * John Bogovic, Albert Cardona, Barry DeZonia, Christian Dietz, Jan Funke,
  * Aivar Grislis, Jonathan Hale, Grant Harris, Stefan Helfrich, Mark Hiner,
  * Martin Horn, Steffen Jaensch, Lee Kamentsky, Larry Lindsey, Melissa Linkert,
@@ -11,13 +11,13 @@
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice,
  *    this list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  *    this list of conditions and the following disclaimer in the documentation
  *    and/or other materials provided with the distribution.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -32,71 +32,32 @@
  * #L%
  */
 
-package net.imglib2.outofbounds;
+package net.imglib2;
 
-import net.imglib2.Interval;
-import net.imglib2.RandomAccessible;
-import net.imglib2.type.Type;
+import net.imglib2.img.Img;
+import net.imglib2.img.array.ArrayImgs;
+import net.imglib2.type.numeric.integer.IntType;
+import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
 
 /**
- * 
- * @param <T>
- * 
- * @author Stephan Preibisch
- * @author Stephan Saalfeld
+ * Tests {@link RandomAccessible}.
+ *
+ * @author Matthias Arzt
  * @author Philipp Hanslovsky
  */
-public class OutOfBoundsConstantValue< T > extends AbstractOutOfBoundsValue< T >
+public class RandomAccessibleTest
 {
 
-	final protected T value;
-
-	protected OutOfBoundsConstantValue( final OutOfBoundsConstantValue< T > outOfBounds )
+	@Test
+	public void testGetAt()
 	{
-		super( outOfBounds );
-		this.value = copyIfType( outOfBounds.value );
-	}
-
-	public < F extends Interval & RandomAccessible< T > > OutOfBoundsConstantValue( final F f, final T value )
-	{
-		super( f );
-		this.value = value;
-	}
-
-	/* Sampler */
-
-	@Override
-	final public T get()
-	{
-		// System.out.println( getLocationAsString() + " " + isOutOfBounds );
-		if ( isOutOfBounds )
-			return value;
-		return sampler.get();
-	}
-
-	@Override
-	final public OutOfBoundsConstantValue< T > copy()
-	{
-		return new OutOfBoundsConstantValue<>( this );
-	}
-
-	/* RandomAccess */
-
-	@Override
-	final public OutOfBoundsConstantValue< T > copyRandomAccess()
-	{
-		return copy();
-	}
-
-	static < T > T copyIfType( final T t )
-	{
-		if ( t instanceof Type< ? > )
-		{
-			final Type< ? > type = ( Type< ? > ) t;
-			@SuppressWarnings( "unchecked" )
-			final T copy = ( T ) type.copy();
-			return copy;
-		}
-		return t;
+		// setup
+		final Img< IntType > image = ArrayImgs.ints( new int[]{ 1, 2, 3, 4, 5, 6 }, 3, 2 );
+		// process & test
+		assertEquals( new IntType( 4 ), image.getAt( new Point( 0L, 1L ) ) );
+		assertEquals( new IntType( 5 ), image.getAt( 1L, 1L ) );
+		assertEquals( new IntType( 3 ), image.getAt( 2, 0 ) );
 	}
 }

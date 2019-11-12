@@ -2,7 +2,7 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2017 Tobias Pietzsch, Stephan Preibisch, Stephan Saalfeld,
+ * Copyright (C) 2009 - 2019 Tobias Pietzsch, Stephan Preibisch, Stephan Saalfeld,
  * John Bogovic, Albert Cardona, Barry DeZonia, Christian Dietz, Jan Funke,
  * Aivar Grislis, Jonathan Hale, Grant Harris, Stefan Helfrich, Mark Hiner,
  * Martin Horn, Steffen Jaensch, Lee Kamentsky, Larry Lindsey, Melissa Linkert,
@@ -32,56 +32,33 @@
  * #L%
  */
 
-package net.imglib2.position;
+package net.imglib2;
 
-import static org.junit.Assert.assertTrue;
-
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
+import net.imglib2.img.Img;
+import net.imglib2.img.array.ArrayImgs;
+import net.imglib2.type.numeric.integer.IntType;
 import org.junit.Test;
 
-import net.imglib2.type.logic.BoolType;
+import static org.junit.Assert.assertEquals;
 
-
-public class BiConsumerRealRandomAccessibleTest {
-
-	@BeforeClass
-	public static void setUpBeforeClass() throws Exception {}
-
-	@AfterClass
-	public static void tearDownAfterClass() throws Exception {}
-
-	@Before
-	public void setUp() throws Exception {}
-
-	@After
-	public void tearDown() throws Exception {}
+/**
+ * Tests {@link RandomAccess}.
+ *
+ * @author Matthias Arzt
+ * @author Philipp Hanslovsky
+ */
+public class RandomAccessTest
+{
 
 	@Test
-	public void test() {
-
-		final FunctionRealRandomAccessible< BoolType > function = new FunctionRealRandomAccessible< BoolType >(
-				4,
-				(pos, val) -> val.set(
-						pos.getDoublePosition(0) > 0 &&
-						pos.getDoublePosition(1) > 1 &&
-						pos.getDoublePosition(2) > 2 &&
-						pos.getDoublePosition(3) > 3 ),
-				BoolType::new );
-
-		FunctionRealRandomAccessible<BoolType>.RealFunctionRealRandomAccess access = function.realRandomAccess();
-		access.setPosition( new double[] {1, 2, 3, 4} );
-		assertTrue( access.get().get() );
-		access.setPosition( new double[] {0, 2, 3, 4} );
-		assertTrue( !access.get().get() );
-		access.setPosition( new double[] {1, 0, 3, 4} );
-		assertTrue( !access.get().get() );
-		access.setPosition( new double[] {1, 2, -10, 4} );
-		assertTrue( !access.get().get() );
-		access.setPosition( new double[] {10, 50, 5, 5} );
-		assertTrue( access.get().get() );
+	public void testSetPositionAndGet()
+	{
+		// setup
+		final Img< IntType > image = ArrayImgs.ints( new int[]{ 1, 2, 3, 4, 5, 6 }, 3, 2 );
+		RandomAccess< IntType > randomAccess = image.randomAccess();
+		// process & test
+		assertEquals( new IntType( 4 ), randomAccess.setPositionAndGet( new Point( 0L, 1L ) ) );
+		assertEquals( new IntType( 5 ), randomAccess.setPositionAndGet( 1L, 1L ) );
+		assertEquals( new IntType( 3 ), randomAccess.setPositionAndGet( 2, 0 ) );
 	}
-
 }

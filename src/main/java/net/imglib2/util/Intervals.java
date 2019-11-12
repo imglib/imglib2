@@ -45,6 +45,8 @@ import net.imglib2.RealLocalizable;
 import net.imglib2.transform.integer.Mixed;
 import net.imglib2.view.ViewTransforms;
 
+import java.util.StringJoiner;
+
 /**
  * Convenience methods for manipulating {@link Interval Intervals}.
  * 
@@ -459,12 +461,28 @@ public class Intervals
 	}
 
 	/**
-	 * Returns an {@link Interval} with the same dimensions as the given interval,
-	 * but min is all zero.
+	 * Returns an {@link Interval} with the same dimensions as the given
+	 * interval, but min is all zero.
 	 */
-	public static FinalInterval zeroMin( Interval interval )
+	public static FinalInterval zeroMin( final Interval interval )
 	{
 		return new FinalInterval( dimensionsAsLongArray( interval ) );
+	}
+
+	/**
+	 * Return an {@link RealInterval} that is scaled by the given factor.
+	 */
+	public static RealInterval scale( final RealInterval interval, final double scale )
+	{
+		final int n = interval.numDimensions();
+		final double[] min = minAsDoubleArray( interval );
+		final double[] max = maxAsDoubleArray( interval );
+		for ( int i = 0; i < n; i++ )
+		{
+			min[ i ] *= scale;
+			max[ i ] *= scale;
+		}
+		return new FinalRealInterval( min, max );
 	}
 
 	/**
@@ -775,7 +793,7 @@ public class Intervals
 	}
 
 	/**
-	 * Tests weather two intervals are equal in their min / max
+	 * Tests whether two intervals are equal in their min / max.
 	 */
 	public static boolean equals( final Interval a, final Interval b )
 	{
@@ -791,9 +809,45 @@ public class Intervals
 	}
 
 	/**
-	 * Tests weather two intervals have equal dimensions (same size)
+	 * Tests whether two {@link RealInterval}s are equal in their min / max.
 	 */
-	public static boolean equalDimensions( final Interval a, final Interval b )
+	public static boolean equals( final RealInterval a, final RealInterval b )
+	{
+		if ( a.numDimensions() != b.numDimensions() )
+			return false;
+
+		for ( int d = 0; d < a.numDimensions(); ++d )
+			if ( a.realMin( d ) != b.realMin( d ) || a.realMax( d ) != b.realMax( d ) )
+				return false;
+
+		return true;
+	}
+
+	/**
+	 * Tests whether two {@link RealInterval}s are equal in their min / max.
+	 * With respect to the given tolerance.
+	 */
+	public static boolean equals( final RealInterval a, final RealInterval b,
+			final double tolerance)
+	{
+		if ( a.numDimensions() != b.numDimensions() )
+			return false;
+
+		for ( int d = 0; d < a.numDimensions(); ++d )
+		{
+			final double differenceMin = Math.abs( a.realMin( d ) - b.realMin( d ) );
+			final double differenceMax = Math.abs( a.realMax( d ) - b.realMax( d ) );
+			if ( differenceMin > tolerance || differenceMax > tolerance )
+				return false;
+		}
+
+		return true;
+	}
+
+	/**
+	 * Tests whether two intervals have equal dimensions (same size).
+	 */
+	public static boolean equalDimensions( final Dimensions a, final Dimensions b )
 	{
 		if ( a.numDimensions() != b.numDimensions() )
 			return false;
@@ -974,5 +1028,78 @@ public class Intervals
 		final double[] min = new double[ interval.numDimensions() ];
 		interval.realMin( min );
 		return min;
+	}
+
+	/**
+	 * Returns a string that contains min, max and the dimensions of the
+	 * {@link Interval}.
+	 */
+	public static String toString( final Interval value )
+	{
+		final StringBuilder sb = new StringBuilder();
+
+		sb.append( "[(" );
+		final int n = value.numDimensions();
+		for ( int d = 0; d < n; d++ )
+		{
+			sb.append( value.min( d ) );
+			if ( d < n - 1 )
+				sb.append( ", " );
+		}
+		sb.append( ") -- (" );
+		for ( int d = 0; d < n; d++ )
+		{
+			sb.append( value.max( d ) );
+			if ( d < n - 1 )
+				sb.append( ", " );
+		}
+		sb.append( ") = " );
+		for ( int d = 0; d < n; d++ )
+		{
+			sb.append( value.dimension( d ) );
+			if ( d < n - 1 )
+				sb.append( "x" );
+		}
+		sb.append( "]" );
+
+		return sb.toString();
+	}
+
+	/**
+	 * Returns a string that contains min and max of the {@link RealInterval}.
+	 */
+	public static String toString( final RealInterval value )
+	{
+		final StringBuilder sb = new StringBuilder();
+
+		sb.append( "[(" );
+		final int n = value.numDimensions();
+		for ( int d = 0; d < n; d++ )
+		{
+			sb.append( value.realMin( d ) );
+			if ( d < n - 1 )
+				sb.append( ", " );
+		}
+		sb.append( ") -- (" );
+		for ( int d = 0; d < n; d++ )
+		{
+			sb.append( value.realMax( d ) );
+			if ( d < n - 1 )
+				sb.append( ", " );
+		}
+		sb.append( ")]" );
+
+		return sb.toString();
+	}
+
+	/**
+	 * Converts the {@link Dimensions} into a string.
+	 */
+	public static String toString( final Dimensions value )
+	{
+		final StringJoiner joiner = new StringJoiner( "x" );
+		for ( int d = 0; d < value.numDimensions(); d++ )
+			joiner.add( Long.toString( value.dimension( d ) ) );
+		return joiner.toString();
 	}
 }

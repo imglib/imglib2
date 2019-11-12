@@ -391,15 +391,12 @@ final public class ArrayImgs
 	}
 
 	/**
-	 * Creates an {@link ArrayImg}&lt;{@link NativeBoolType}, {@link LongAccess}&gt;
-	 * using a {@link LongAccess} passed as argument.
+	 * @deprecated use {@link #booleans(BooleanAccess, long...)}
 	 */
+	@Deprecated
 	final static public < A extends BooleanAccess > ArrayImg< NativeBoolType, A > bits( final A access, final long... dim )
 	{
-		final ArrayImg< NativeBoolType, A > img = new ArrayImg<>( access, dim, new Fraction( 1, 64 ) );
-		final NativeBoolType t = new NativeBoolType( img );
-		img.setLinkedType( t );
-		return img;
+		return booleans( access, dim );
 	}
 
 	/**

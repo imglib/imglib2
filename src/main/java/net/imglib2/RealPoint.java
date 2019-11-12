@@ -34,6 +34,10 @@
 
 package net.imglib2;
 
+import net.imglib2.util.Localizables;
+
+import java.util.Arrays;
+
 /**
  * A point is a location in EuclideanSpace.
  *
@@ -255,16 +259,20 @@ public class RealPoint extends AbstractRealLocalizable implements RealPositionab
 	@Override
 	public String toString()
 	{
-		final StringBuilder sb = new StringBuilder();
-		char c = '(';
-		for ( int i = 0; i < numDimensions(); i++ )
-		{
-			sb.append( c );
-			sb.append( position[ i ] );
-			c = ',';
-		}
-		sb.append( ")" );
-		return sb.toString();
+		return Localizables.toString( this );
+	}
+
+	@Override
+	public boolean equals( final Object obj )
+	{
+		return obj != null && obj.getClass() == getClass() &&
+				Localizables.equals( this, ( RealPoint ) obj );
+	}
+
+	@Override
+	public int hashCode()
+	{
+		return Arrays.hashCode( position );
 	}
 
 	/**

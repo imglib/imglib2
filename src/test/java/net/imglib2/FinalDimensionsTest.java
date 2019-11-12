@@ -2,7 +2,7 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2017 Tobias Pietzsch, Stephan Preibisch, Stephan Saalfeld,
+ * Copyright (C) 2009 - 2018 Tobias Pietzsch, Stephan Preibisch, Stephan Saalfeld,
  * John Bogovic, Albert Cardona, Barry DeZonia, Christian Dietz, Jan Funke,
  * Aivar Grislis, Jonathan Hale, Grant Harris, Stefan Helfrich, Mark Hiner,
  * Martin Horn, Steffen Jaensch, Lee Kamentsky, Larry Lindsey, Melissa Linkert,
@@ -32,40 +32,45 @@
  * #L%
  */
 
-package net.imglib2.position;
-
-import static org.junit.Assert.assertTrue;
+package net.imglib2;
 
 import org.junit.Test;
 
-import net.imglib2.type.logic.BoolType;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertTrue;
 
-
-public class BiConsumerRandomAccessibleTest {
+/**
+ * Tests {@link FinalDimensions}
+ *
+ * @author Matthias Arzt
+ */
+public class FinalDimensionsTest
+{
 
 	@Test
-	public void test() {
-
-		final FunctionRandomAccessible< BoolType > function = new FunctionRandomAccessible< BoolType >(
-				4,
-				(pos, val) -> val.set(
-						pos.getDoublePosition(0) > 0 &&
-						pos.getDoublePosition(1) > 1 &&
-						pos.getDoublePosition(2) > 2 &&
-						pos.getDoublePosition(3) > 3 ),
-				BoolType::new );
-
-		FunctionRandomAccessible<BoolType>.FunctionRandomAccess access = function.randomAccess();
-		access.setPosition( new long[] {1, 2, 3, 4} );
-		assertTrue( access.get().get() );
-		access.setPosition( new long[] {0, 2, 3, 4} );
-		assertTrue( !access.get().get() );
-		access.setPosition( new long[] {1, 0, 3, 4} );
-		assertTrue( !access.get().get() );
-		access.setPosition( new long[] {1, 2, -10, 4} );
-		assertTrue( !access.get().get() );
-		access.setPosition( new long[] {10, 50, 5, 5} );
-		assertTrue( access.get().get() );
+	public void testEquals()
+	{
+		final FinalDimensions dimensions = new FinalDimensions( 1, 2 );
+		final FinalDimensions sameDimensions = new FinalDimensions( 1, 2 );
+		final FinalDimensions differentDimensions = new FinalDimensions( 1, 2, 2 );
+		assertTrue( dimensions.equals( sameDimensions ) );
+		assertFalse( dimensions.equals( differentDimensions ) );
 	}
 
+	@Test
+	public void testHashCode()
+	{
+		final FinalDimensions dimensions = new FinalDimensions( 1, 2 );
+		final FinalDimensions sameDimensions = new FinalDimensions( 1, 2 );
+		assertEquals( dimensions.hashCode(), sameDimensions.hashCode() );
+	}
+
+	@Test
+	public void testToString()
+	{
+		final FinalDimensions dimensions = new FinalDimensions( 1, 2 );
+		assertEquals( "1x2", dimensions.toString() );
+	}
 }

@@ -11,13 +11,13 @@
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice,
  *    this list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  *    this list of conditions and the following disclaimer in the documentation
  *    and/or other materials provided with the distribution.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -32,71 +32,45 @@
  * #L%
  */
 
-package net.imglib2.outofbounds;
+package net.imglib2;
 
-import net.imglib2.Interval;
-import net.imglib2.RandomAccessible;
-import net.imglib2.type.Type;
+import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertTrue;
 
 /**
- * 
- * @param <T>
- * 
- * @author Stephan Preibisch
- * @author Stephan Saalfeld
- * @author Philipp Hanslovsky
+ *	Tests {@link FinalRealInterval}.
+ *
+ *  @author Matthias Arzt
  */
-public class OutOfBoundsConstantValue< T > extends AbstractOutOfBoundsValue< T >
+public class FinalRealIntervalTest
 {
 
-	final protected T value;
-
-	protected OutOfBoundsConstantValue( final OutOfBoundsConstantValue< T > outOfBounds )
+	@Test
+	public void testEquals()
 	{
-		super( outOfBounds );
-		this.value = copyIfType( outOfBounds.value );
+		FinalRealInterval interval = FinalRealInterval.createMinMax( 1.0, 2.5, 3.0, 4.0 );
+		FinalRealInterval same = FinalRealInterval.createMinMax( 1.0, 2.5, 3.0, 4.0 );
+		FinalRealInterval different = FinalRealInterval.createMinMax( 1.0, 2.5001, 3.0, 4.0 );
+		assertTrue( interval.equals( same ) );
+		assertFalse( interval.equals( different ) );
 	}
 
-	public < F extends Interval & RandomAccessible< T > > OutOfBoundsConstantValue( final F f, final T value )
+	@Test
+	public void testHashCode()
 	{
-		super( f );
-		this.value = value;
+		FinalRealInterval interval = FinalRealInterval.createMinMax( 1.0, 2.5, 3.0, 4.0 );
+		FinalRealInterval same = FinalRealInterval.createMinMax( 1.0, 2.5, 3.0, 4.0 );
+		assertEquals( interval.hashCode(), same.hashCode() );
 	}
 
-	/* Sampler */
-
-	@Override
-	final public T get()
+	@Test
+	public void testToString()
 	{
-		// System.out.println( getLocationAsString() + " " + isOutOfBounds );
-		if ( isOutOfBounds )
-			return value;
-		return sampler.get();
-	}
-
-	@Override
-	final public OutOfBoundsConstantValue< T > copy()
-	{
-		return new OutOfBoundsConstantValue<>( this );
-	}
-
-	/* RandomAccess */
-
-	@Override
-	final public OutOfBoundsConstantValue< T > copyRandomAccess()
-	{
-		return copy();
-	}
-
-	static < T > T copyIfType( final T t )
-	{
-		if ( t instanceof Type< ? > )
-		{
-			final Type< ? > type = ( Type< ? > ) t;
-			@SuppressWarnings( "unchecked" )
-			final T copy = ( T ) type.copy();
-			return copy;
-		}
-		return t;
+		final FinalRealInterval interval = FinalRealInterval.createMinMax( 1.0, 2.0, 3.0, 4.0 );
+		assertEquals( "FinalRealInterval [(1.0, 2.0) -- (3.0, 4.0)]", interval.toString() );
 	}
 }

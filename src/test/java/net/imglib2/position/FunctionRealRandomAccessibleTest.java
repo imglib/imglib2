@@ -2,7 +2,7 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2018 Tobias Pietzsch, Stephan Preibisch, Stephan Saalfeld,
+ * Copyright (C) 2009 - 2017 Tobias Pietzsch, Stephan Preibisch, Stephan Saalfeld,
  * John Bogovic, Albert Cardona, Barry DeZonia, Christian Dietz, Jan Funke,
  * Aivar Grislis, Jonathan Hale, Grant Harris, Stefan Helfrich, Mark Hiner,
  * Martin Horn, Steffen Jaensch, Lee Kamentsky, Larry Lindsey, Melissa Linkert,
@@ -11,13 +11,13 @@
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice,
  *    this list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  *    this list of conditions and the following disclaimer in the documentation
  *    and/or other materials provided with the distribution.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -32,71 +32,56 @@
  * #L%
  */
 
-package net.imglib2.outofbounds;
+package net.imglib2.position;
 
-import net.imglib2.Interval;
-import net.imglib2.RandomAccessible;
-import net.imglib2.type.Type;
+import static org.junit.Assert.assertTrue;
 
-/**
- * 
- * @param <T>
- * 
- * @author Stephan Preibisch
- * @author Stephan Saalfeld
- * @author Philipp Hanslovsky
- */
-public class OutOfBoundsConstantValue< T > extends AbstractOutOfBoundsValue< T >
-{
+import org.junit.After;
+import org.junit.AfterClass;
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.Test;
 
-	final protected T value;
+import net.imglib2.type.logic.BoolType;
 
-	protected OutOfBoundsConstantValue( final OutOfBoundsConstantValue< T > outOfBounds )
+
+public class FunctionRealRandomAccessibleTest {
+
+	@BeforeClass
+	public static void setUpBeforeClass() throws Exception {}
+
+	@AfterClass
+	public static void tearDownAfterClass() throws Exception {}
+
+	@Before
+	public void setUp() throws Exception {}
+
+	@After
+	public void tearDown() throws Exception {}
+
+	@Test
+	public void test()
 	{
-		super( outOfBounds );
-		this.value = copyIfType( outOfBounds.value );
-	}
 
-	public < F extends Interval & RandomAccessible< T > > OutOfBoundsConstantValue( final F f, final T value )
-	{
-		super( f );
-		this.value = value;
-	}
+		final FunctionRealRandomAccessible< BoolType > function = new FunctionRealRandomAccessible< BoolType >(
+				4,
+				( pos, val ) -> val.set(
+						pos.getDoublePosition( 0 ) > 0 &&
+								pos.getDoublePosition( 1 ) > 1 &&
+								pos.getDoublePosition( 2 ) > 2 &&
+								pos.getDoublePosition( 3 ) > 3 ),
+				BoolType::new );
 
-	/* Sampler */
-
-	@Override
-	final public T get()
-	{
-		// System.out.println( getLocationAsString() + " " + isOutOfBounds );
-		if ( isOutOfBounds )
-			return value;
-		return sampler.get();
-	}
-
-	@Override
-	final public OutOfBoundsConstantValue< T > copy()
-	{
-		return new OutOfBoundsConstantValue<>( this );
-	}
-
-	/* RandomAccess */
-
-	@Override
-	final public OutOfBoundsConstantValue< T > copyRandomAccess()
-	{
-		return copy();
-	}
-
-	static < T > T copyIfType( final T t )
-	{
-		if ( t instanceof Type< ? > )
-		{
-			final Type< ? > type = ( Type< ? > ) t;
-			@SuppressWarnings( "unchecked" )
-			final T copy = ( T ) type.copy();
-			return copy;
-		}
-		return t;
+		final FunctionRealRandomAccessible< BoolType >.RealFunctionRealRandomAccess access = function.realRandomAccess();
+		access.setPosition( new double[] { 1, 2, 3, 4 } );
+		assertTrue( access.get().get() );
+		access.setPosition( new double[] { 0, 2, 3, 4 } );
+		assertTrue( !access.get().get() );
+		access.setPosition( new double[] { 1, 0, 3, 4 } );
+		assertTrue( !access.get().get() );
+		access.setPosition( new double[] { 1, 2, -10, 4 } );
+		assertTrue( !access.get().get() );
+		access.setPosition( new double[] { 10, 50, 5, 5 } );
+		assertTrue( access.get().get() );
 	}
 }
