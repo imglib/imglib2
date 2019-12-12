@@ -109,9 +109,7 @@ public class CellImgFactory< T extends NativeType< T > > extends NativeImgFactor
 		if ( dimensions.length == 0 )
 			throw new IllegalArgumentException( "dimensions.length == 0" );
 
-		for ( int d = 0; d < dimensions.length; d++ )
-			if ( dimensions[ d ] <= 0 )
-				throw new IllegalArgumentException( "dimensions[ " + d + " ] <= 0" );
+		Dimensions.verifyAllPositive( dimensions );
 	}
 
 	/**
@@ -164,7 +162,6 @@ public class CellImgFactory< T extends NativeType< T > > extends NativeImgFactor
 			final T type,
 			final NativeTypeFactory< T, A > typeFactory )
 	{
-		Dimensions.verifyAllPositive( dimensions );
 		verifyDimensions( dimensions );
 
 		final int n = dimensions.length;
@@ -204,7 +201,6 @@ public class CellImgFactory< T extends NativeType< T > > extends NativeImgFactor
 			return new CellImgFactory( ( NativeType ) type, defaultCellDimensions );
 		throw new IncompatibleTypeException( this, type.getClass().getCanonicalName() + " does not implement NativeType." );
 	}
-
 
 	/*
 	 * -----------------------------------------------------------------------
