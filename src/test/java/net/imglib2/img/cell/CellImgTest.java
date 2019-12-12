@@ -36,6 +36,7 @@ package net.imglib2.img.cell;
 
 import static org.junit.Assert.assertTrue;
 import net.imglib2.img.array.ArrayImgFactory;
+import net.imglib2.img.planar.PlanarImgFactory;
 import net.imglib2.type.numeric.real.FloatType;
 import net.imglib2.util.ImgTestHelper;
 import net.imglib2.util.Util;
@@ -48,6 +49,7 @@ import org.junit.Test;
  * @author Stephan Preibisch
  * @author Stephan Saalfeld
  * @author Curtis Rueden
+ * @author Philipp Hanslovsky
  */
 public class CellImgTest
 {
@@ -67,5 +69,10 @@ public class CellImgTest
 						ImgTestHelper.testImg( dim[ i ], new CellImgFactory<>( new FloatType(), 5 ), new CellImgFactory<>( new FloatType() ) ) );
 			}
 		}
+	}
+
+	@Test
+	public void testCellImgInvalidDimensions() {
+		ImgTestHelper.assertInvalidDims( new CellImgFactory<>( new FloatType(), 100 ) );
 	}
 }

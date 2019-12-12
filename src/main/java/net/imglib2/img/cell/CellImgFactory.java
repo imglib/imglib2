@@ -164,6 +164,7 @@ public class CellImgFactory< T extends NativeType< T > > extends NativeImgFactor
 			final T type,
 			final NativeTypeFactory< T, A > typeFactory )
 	{
+		Dimensions.InvalidDimensions.checkAllPositiveOrElseThrow( dimensions );
 		verifyDimensions( dimensions );
 
 		final int n = dimensions.length;

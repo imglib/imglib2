@@ -53,6 +53,7 @@ import net.imglib2.util.Util;
  * @author Tobias Pietzsch
  * @author Stephan Preibisch
  * @author Stephan Saalfeld
+ * @author Philipp Hanslovsky
  */
 public class ArrayImgFactory< T extends NativeType< T > > extends NativeImgFactory< T >
 {
@@ -86,6 +87,7 @@ public class ArrayImgFactory< T extends NativeType< T > > extends NativeImgFacto
 			final T type,
 			final NativeTypeFactory< T, A > typeFactory )
 	{
+		Dimensions.InvalidDimensions.checkAllPositiveOrElseThrow( dimensions );
 		final Fraction entitiesPerPixel = type.getEntitiesPerPixel();
 		final int numEntities = numEntitiesRangeCheck( dimensions, entitiesPerPixel );
 		final A data = ArrayDataAccessFactory.get( typeFactory ).createArray( numEntities );

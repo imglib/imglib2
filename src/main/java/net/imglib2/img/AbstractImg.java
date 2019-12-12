@@ -36,6 +36,7 @@ package net.imglib2.img;
 
 import java.util.Iterator;
 
+import net.imglib2.Dimensions;
 import net.imglib2.Interval;
 import net.imglib2.Positionable;
 import net.imglib2.RandomAccess;
@@ -46,6 +47,7 @@ import net.imglib2.RealPositionable;
  * 
  * @author Stephan Preibisch
  * @author Stephan Saalfeld
+ * @author Philipp Hanslovsky
  */
 public abstract class AbstractImg< T > implements Img< T >
 {
@@ -59,6 +61,9 @@ public abstract class AbstractImg< T > implements Img< T >
 
 	public AbstractImg( final long[] size )
 	{
+
+		Dimensions.InvalidDimensions.checkAllPositiveOrElseThrow( size );
+
 		this.n = size.length;
 
 		this.numPixels = numElements( size );

@@ -72,6 +72,7 @@ import net.imglib2.type.numeric.integer.UnsignedShortType;
 import net.imglib2.type.numeric.integer.UnsignedVariableBitLengthType;
 import net.imglib2.type.numeric.real.DoubleType;
 import net.imglib2.type.numeric.real.FloatType;
+import net.imglib2.util.ImgTestHelper;
 import net.imglib2.util.IntervalIndexer;
 import net.imglib2.util.Intervals;
 
@@ -460,15 +461,15 @@ public class ArrayImgsTest
 			final boolean[] data = new boolean[] { true, false, false, false, true, true, false, true };
 			final ArrayImg< NativeBoolType, BooleanArray > b = ArrayImgs.booleans( new BooleanArray( data ), 4, 2 );
 			final ArrayCursor< NativeBoolType > c = b.cursor();
-			Assert.assertEquals(true, c.next().get());
-			Assert.assertEquals(false, c.next().get());
-			Assert.assertEquals(false, c.next().get());
-			Assert.assertEquals(false, c.next().get());
-			Assert.assertEquals(true, c.next().get());
-			Assert.assertEquals(true, c.next().get());
-			Assert.assertEquals(false, c.next().get());
-			Assert.assertEquals(true, c.next().get());
-			Assert.assertFalse(c.hasNext());
+			Assert.assertEquals( true, c.next().get() );
+			Assert.assertEquals( false, c.next().get() );
+			Assert.assertEquals( false, c.next().get() );
+			Assert.assertEquals( false, c.next().get() );
+			Assert.assertEquals( true, c.next().get() );
+			Assert.assertEquals( true, c.next().get() );
+			Assert.assertEquals( false, c.next().get() );
+			Assert.assertEquals( true, c.next().get() );
+			Assert.assertFalse( c.hasNext() );
 		}
 
 	}
@@ -512,6 +513,31 @@ public class ArrayImgsTest
 			IntervalIndexer.indexToPosition( i, img, access );
 			Assert.assertEquals( array[ i ], access.get().getRealDouble(), 0.0 );
 		}
+	}
+
+	@Test
+	public void testInvalidDimensions()
+	{
+		ImgTestHelper.assertInvalidDims( ArrayImgs::argbs );
+		ImgTestHelper.assertInvalidDims( ArrayImgs::bits );
+		ImgTestHelper.assertInvalidDims( ArrayImgs::booleans );
+		ImgTestHelper.assertInvalidDims( ArrayImgs::bytes );
+		ImgTestHelper.assertInvalidDims( ArrayImgs::complexDoubles );
+		ImgTestHelper.assertInvalidDims( ArrayImgs::complexFloats );
+		ImgTestHelper.assertInvalidDims( ArrayImgs::doubles );
+		ImgTestHelper.assertInvalidDims( ArrayImgs::floats );
+		ImgTestHelper.assertInvalidDims( ArrayImgs::ints );
+		ImgTestHelper.assertInvalidDims( ArrayImgs::longs );
+		ImgTestHelper.assertInvalidDims( ArrayImgs::shorts );
+		ImgTestHelper.assertInvalidDims( ArrayImgs::unsigned2Bits );
+		ImgTestHelper.assertInvalidDims( ArrayImgs::unsigned4Bits );
+		ImgTestHelper.assertInvalidDims( ArrayImgs::unsigned12Bits );
+		ImgTestHelper.assertInvalidDims( ArrayImgs::unsigned128Bits );
+		ImgTestHelper.assertInvalidDims( ArrayImgs::unsignedBytes );
+		ImgTestHelper.assertInvalidDims( ArrayImgs::unsignedInts );
+		ImgTestHelper.assertInvalidDims( ArrayImgs::unsignedLongs );
+		ImgTestHelper.assertInvalidDims( ArrayImgs::unsignedShorts );
+		ImgTestHelper.assertInvalidDims( dim -> ArrayImgs.unsignedVariableBitLengths( 13, dim ) );
 	}
 
 }

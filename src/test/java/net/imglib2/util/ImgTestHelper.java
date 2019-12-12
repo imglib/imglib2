@@ -35,8 +35,11 @@
 package net.imglib2.util;
 
 import java.util.Random;
+import java.util.function.Function;
 
+import org.junit.Assert;
 import net.imglib2.Cursor;
+import net.imglib2.Dimensions;
 import net.imglib2.RandomAccess;
 import net.imglib2.img.Img;
 import net.imglib2.img.ImgFactory;
@@ -50,6 +53,7 @@ import net.imglib2.view.ExtendedRandomAccessibleInterval;
  * @author Stephan Preibisch
  * @author Stephan Saalfeld
  * @author Curtis Rueden
+ * @author Philipp Hanslovsky
  */
 public class ImgTestHelper
 {
@@ -72,6 +76,56 @@ public class ImgTestHelper
 	public static long[][] dims()
 	{
 		return DIM.clone();
+	}
+
+	private static final long[][] INVALID_DIM = {
+			{ -127 },
+			{ 0 },
+			{ -1, 0 },
+			{ -1, 1 },
+			{ -3, -2 },
+			{ 0, 0, 0 },
+			{ -1, 2, 3 },
+			{ 4, -2, 100 },
+			{ 3151, -235, 8341 },
+			{ 34, 5135, 35163, 0 },
+			{ 35135, 3531, -2, 1 },
+	};
+
+	public static void assertInvalidDims( final ImgFactory< ? > factory )
+	{
+		assertInvalidDims( factory::create );
+	}
+
+	public static void assertInvalidDims( final Function< long[], Img< ? > > factory )
+	{
+		for ( final long[] dims : INVALID_DIM )
+			assertInvalidDims( dims, factory );
+	}
+
+	private static void assertInvalidDims( final long[] dims, final Function< long[], Img< ? > > factory )
+	{
+		try
+		{
+			factory.apply( dims );
+		}
+		catch ( final Dimensions.InvalidDimensions exception )
+		{
+			Assert.assertArrayEquals( dims, exception.getDimenionsCopy() );
+			return;
+		}
+		catch ( final Throwable exception )
+		{
+
+			Assert.fail( String.format(
+					"Expected exception of type %s but %s was thrown.",
+					Dimensions.InvalidDimensions.class.getName(),
+					exception.getClass().getName() ) );
+		}
+
+		Assert.fail( String.format(
+				"Expected exception of type %s but no exception was thrown.",
+				Dimensions.InvalidDimensions.class.getName() ) );
 	}
 
 	public static boolean testImg( final long[] size, final ImgFactory< FloatType > factory1, final ImgFactory< FloatType > factory2 )
