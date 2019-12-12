@@ -87,7 +87,7 @@ public class ArrayImgFactory< T extends NativeType< T > > extends NativeImgFacto
 			final T type,
 			final NativeTypeFactory< T, A > typeFactory )
 	{
-		Dimensions.verifyAllPositive( dimensions );
+		Dimensions.verify( dimensions );
 		final Fraction entitiesPerPixel = type.getEntitiesPerPixel();
 		final int numEntities = numEntitiesRangeCheck( dimensions, entitiesPerPixel );
 		final A data = ArrayDataAccessFactory.get( typeFactory ).createArray( numEntities );

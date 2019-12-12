@@ -98,18 +98,16 @@ public class CellImgFactory< T extends NativeType< T > > extends NativeImgFactor
 	 * dimension is less than 1. Throw {@link IllegalArgumentException}
 	 * otherwise.
 	 *
+	 * This method has been deprecated in favor of
+	 * {@link Dimensions#verify(long...)}.
+	 *
 	 * @param dimensions
 	 * @throws IllegalArgumentException
 	 */
+	@Deprecated
 	public static void verifyDimensions( final long dimensions[] ) throws IllegalArgumentException
 	{
-		if ( dimensions == null )
-			throw new IllegalArgumentException( "dimensions == null" );
-
-		if ( dimensions.length == 0 )
-			throw new IllegalArgumentException( "dimensions.length == 0" );
-
-		Dimensions.verifyAllPositive( dimensions );
+		Dimensions.verify( dimensions );
 	}
 
 	/**
