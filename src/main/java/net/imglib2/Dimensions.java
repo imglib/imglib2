@@ -98,6 +98,17 @@ public interface Dimensions extends EuclideanSpace
 		return dimensions;
 	}
 
+	public static long[] verify( final long... dimensions ) throws InvalidDimensions
+	{
+		if ( dimensions == null )
+			throw new InvalidDimensions( dimensions, "Dimensions are null." );
+
+		if ( dimensions.length == 0 )
+			throw new InvalidDimensions( dimensions, "Dimensions are zero length." );
+
+		return verifyAllPositive( dimensions );
+	}
+
 	public static class InvalidDimensions extends IllegalArgumentException
 	{
 
