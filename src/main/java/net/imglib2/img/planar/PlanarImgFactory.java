@@ -54,6 +54,7 @@ import net.imglib2.util.Util;
  * @author Stephan Preibisch
  * @author Stephan Saalfeld
  * @author Johannes Schindelin
+ * @author Philipp Hanslovsky
  */
 public class PlanarImgFactory< T extends NativeType< T > > extends NativeImgFactory< T >
 {
@@ -87,6 +88,7 @@ public class PlanarImgFactory< T extends NativeType< T > > extends NativeImgFact
 			final T type,
 			final NativeTypeFactory< T, A > typeFactory )
 	{
+		Dimensions.InvalidDimensions.checkAllPositiveOrElseThrow( dimensions );
 		final Fraction entitiesPerPixel = type.getEntitiesPerPixel();
 		final PlanarImg< T, A > img = new PlanarImg<>( ArrayDataAccessFactory.get( typeFactory ), dimensions, entitiesPerPixel );
 		img.setLinkedType( typeFactory.createLinkedType( img ) );
@@ -101,7 +103,6 @@ public class PlanarImgFactory< T extends NativeType< T > > extends NativeImgFact
 			return new PlanarImgFactory( ( NativeType ) type );
 		throw new IncompatibleTypeException( this, type.getClass().getCanonicalName() + " does not implement NativeType." );
 	}
-
 
 	/*
 	 * -----------------------------------------------------------------------

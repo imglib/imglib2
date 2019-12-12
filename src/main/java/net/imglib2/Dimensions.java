@@ -34,12 +34,15 @@
 
 package net.imglib2;
 
+import java.util.Arrays;
+
 /**
  * Defines an extent in <em>n</em>-dimensional discrete space.
  * 
  * @author Tobias Pietzsch
  * @author Stephan Preibisch
  * @author Stephan Saalfeld
+ * @author Philipp Hanslovsky
  */
 public interface Dimensions extends EuclideanSpace
 {
@@ -61,4 +64,42 @@ public interface Dimensions extends EuclideanSpace
 	 * @param d
 	 */
 	public long dimension( int d );
+
+	/**
+	 * Check that all entries in dimensions are positive
+	 *
+	 * @param dimensions
+	 * @return true if all entries in dimension are positive, false otherwise
+	 */
+	public static boolean dimensionsCheckAllPositive( final long[] dimensions )
+	{
+		for ( final long d : dimensions )
+			if ( d < 1 )
+				return false;
+		return true;
+	}
+
+	public static class InvalidDimensions extends RuntimeException
+	{
+
+		private final long[] dimensions;
+
+		public InvalidDimensions( final long[] dimensions, final String message )
+		{
+			super( message );
+			this.dimensions = dimensions.clone();
+		}
+
+		public long[] getDimenionsCopy()
+		{
+			return this.dimensions.clone();
+		}
+
+		public static void checkAllPositiveOrElseThrow( final long[] dimensions )
+		{
+			if ( !Dimensions.dimensionsCheckAllPositive( dimensions ) )
+				throw ( new InvalidDimensions( dimensions, "Expected only positive dimensions but got: " + Arrays.toString( dimensions ) ) );
+		}
+
+	}
 }

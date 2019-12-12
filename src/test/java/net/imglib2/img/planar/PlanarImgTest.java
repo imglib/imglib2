@@ -48,6 +48,7 @@ import org.junit.Test;
  * @author Stephan Preibisch
  * @author Stephan Saalfeld
  * @author Curtis Rueden
+ * @author Philipp Hanslovsky
  */
 public class PlanarImgTest
 {
@@ -64,5 +65,10 @@ public class PlanarImgTest
 			assertTrue( "PlanarImg vs PlanarImg failed for dim = " + Util.printCoordinates( dim[ i ] ),
 					ImgTestHelper.testImg( dim[ i ], new PlanarImgFactory<>( new FloatType() ), new PlanarImgFactory<>( new FloatType() ) ) );
 		}
+	}
+
+	@Test
+	public void testPlanarImgInvalidDimensions() {
+		ImgTestHelper.assertInvalidDims( new PlanarImgFactory<>( new FloatType() ) );
 	}
 }
