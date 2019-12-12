@@ -62,7 +62,7 @@ public abstract class AbstractImg< T > implements Img< T >
 	public AbstractImg( final long[] size )
 	{
 
-		Dimensions.InvalidDimensions.checkAllPositiveOrElseThrow( size );
+		Dimensions.verifyAllPositive( size );
 
 		this.n = size.length;
 
