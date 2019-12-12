@@ -88,7 +88,7 @@ public class PlanarImgFactory< T extends NativeType< T > > extends NativeImgFact
 			final T type,
 			final NativeTypeFactory< T, A > typeFactory )
 	{
-		Dimensions.InvalidDimensions.checkAllPositiveOrElseThrow( dimensions );
+		Dimensions.verifyAllPositive( dimensions );
 		final Fraction entitiesPerPixel = type.getEntitiesPerPixel();
 		final PlanarImg< T, A > img = new PlanarImg<>( ArrayDataAccessFactory.get( typeFactory ), dimensions, entitiesPerPixel );
 		img.setLinkedType( typeFactory.createLinkedType( img ) );

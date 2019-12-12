@@ -66,12 +66,13 @@ public interface Dimensions extends EuclideanSpace
 	public long dimension( int d );
 
 	/**
-	 * Check that all entries in dimensions are positive
+	 * Check that all entries in {@code dimensions} are positive
 	 *
 	 * @param dimensions
-	 * @return true if all entries in dimension are positive, false otherwise
+	 * @return true if all entries in {@code dimension} are positive, false
+	 *         otherwise
 	 */
-	public static boolean dimensionsCheckAllPositive( final long[] dimensions )
+	public static boolean allPositive( final long... dimensions )
 	{
 		for ( final long d : dimensions )
 			if ( d < 1 )
@@ -79,7 +80,25 @@ public interface Dimensions extends EuclideanSpace
 		return true;
 	}
 
-	public static class InvalidDimensions extends RuntimeException
+	/**
+	 * Check that all entries in {@code dimensions} are positive
+	 *
+	 * @param dimensions
+	 * @return {@code dimensions}
+	 * @throws InvalidDimensions
+	 *             if any of {@code dimensions} is not positive (zero or
+	 *             negative).
+	 */
+	public static long[] verifyAllPositive( final long... dimensions ) throws InvalidDimensions
+	{
+		if ( !Dimensions.allPositive( dimensions ) )
+			throw new InvalidDimensions(
+					dimensions,
+					"Expected only positive dimensions but got: " + Arrays.toString( dimensions ) );
+		return dimensions;
+	}
+
+	public static class InvalidDimensions extends IllegalArgumentException
 	{
 
 		private final long[] dimensions;
@@ -93,12 +112,6 @@ public interface Dimensions extends EuclideanSpace
 		public long[] getDimenionsCopy()
 		{
 			return this.dimensions.clone();
-		}
-
-		public static void checkAllPositiveOrElseThrow( final long[] dimensions )
-		{
-			if ( !Dimensions.dimensionsCheckAllPositive( dimensions ) )
-				throw ( new InvalidDimensions( dimensions, "Expected only positive dimensions but got: " + Arrays.toString( dimensions ) ) );
 		}
 
 	}
