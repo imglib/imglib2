@@ -20,6 +20,8 @@ public class LongBufferLongAccess implements ArrayDataAccess< LongBufferLongAcce
 
 	private static boolean DEFAULT_IS_VALID = true;
 
+	private static int NUM_BYTES = Long.BYTES;
+
 	private final LongBuffer buffer;
 
 	private final boolean isValid;
@@ -82,7 +84,9 @@ public class LongBufferLongAccess implements ArrayDataAccess< LongBufferLongAcce
 		// i.e. if this.buffer is direct, then the buffer of the new
 		// access should also be direct? Is there a method method in
 		// Buffer that allows to do that?
-		return new LongBufferLongAccess( numEntities, isValid );
+		return buffer.isDirect()
+				? new LongBufferLongAccess( ByteBuffer.allocateDirect( numEntities * NUM_BYTES ), isValid )
+				: new LongBufferLongAccess( numEntities, isValid );
 	}
 
 	@Override
