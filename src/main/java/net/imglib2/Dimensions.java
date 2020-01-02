@@ -98,6 +98,18 @@ public interface Dimensions extends EuclideanSpace
 		return dimensions;
 	}
 
+	/**
+	 * Verify that {@code dimensions} is not null or empty, and that all
+	 * dimensions are positive. Throw {@link InvalidDimensions} otherwise.
+	 *
+	 * @param dimensions
+	 *            to be verified.
+	 * @return {@code dimensions} if successfully verified.
+	 * @throws IllegalArgumentException
+	 *             if {@code dimensions == null} or
+	 *             {@code dimensions.length == 0} or any dimensions is zero or
+	 *             negative.
+	 */
 	public static long[] verify( final long... dimensions ) throws InvalidDimensions
 	{
 		if ( dimensions == null )
