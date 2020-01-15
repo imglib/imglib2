@@ -71,6 +71,14 @@ import java.util.stream.StreamSupport;
  */
 public class Util
 {
+
+	/**
+	 * The possible java array size is JVM dependent an actually
+	 * slightly below Integer.MAX_VALUE. This is the same MAX_ARRAY_SIZE
+	 * as used for example in ArrayList in OpenJDK8.
+	 */
+	private static final int MAX_ARRAY_SIZE = Integer.MAX_VALUE - 8;
+
 	/**
 	 * This does only work when T is erased to Object at call site.
 	 * <p>
@@ -836,10 +844,7 @@ public class Util
 	 */
 	public static < T extends NativeType< T > > ImgFactory< T > getArrayOrCellImgFactory( final Dimensions targetSize, final T type )
 	{
-		if ( Intervals.numElements( targetSize ) <= Integer.MAX_VALUE )
-			return new ArrayImgFactory<>( type );
-		final int cellSize = ( int ) Math.pow( Integer.MAX_VALUE / type.getEntitiesPerPixel().getRatio(), 1.0 / targetSize.numDimensions() );
-		return new CellImgFactory<>( type, cellSize );
+		return getArrayOrCellImgFactory( targetSize, Integer.MAX_VALUE, type );
 	}
 
 	/**
@@ -860,13 +865,13 @@ public class Util
 	 */
 	public static < T extends NativeType< T > > ImgFactory< T > getArrayOrCellImgFactory( final Dimensions targetSize, final int targetCellSize, final T type )
 	{
-		if ( Intervals.numElements( targetSize ) <= Integer.MAX_VALUE )
+		Fraction entitiesPerPixel = type.getEntitiesPerPixel();
+		final long numElements = Intervals.numElements( targetSize );
+		final long numEntities = entitiesPerPixel.mulCeil( numElements );
+		if ( numElements <= Integer.MAX_VALUE && numEntities <= MAX_ARRAY_SIZE )
 			return new ArrayImgFactory<>( type );
-		final int cellSize;
-		if ( Math.pow( targetCellSize, targetSize.numDimensions() ) <= Integer.MAX_VALUE )
-			cellSize = targetCellSize;
-		else
-			cellSize = ( int ) Math.pow( Integer.MAX_VALUE / type.getEntitiesPerPixel().getRatio(), 1.0 / targetSize.numDimensions() );
+		final int maxCellSize = ( int ) Math.pow( Math.min( MAX_ARRAY_SIZE / entitiesPerPixel.getRatio(), Integer.MAX_VALUE ), 1.0 / targetSize.numDimensions() );
+		final int cellSize = Math.min( targetCellSize, maxCellSize );
 		return new CellImgFactory<>( type, cellSize );
 	}
 
