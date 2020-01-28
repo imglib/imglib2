@@ -247,7 +247,7 @@ public class UtilTest
 	}
 
 	@Test
-	public void testGetArrayOrCellImgFacortyWithComplexFloatType()
+	public void testGetArrayOrCellImgFactoryWithComplexFloatType()
 	{
 		// NB: ComplexFloatType uses two float values per pixel.
 		// This test creates an image, where the size is just 66% if Integer.MAX_VALUE.
