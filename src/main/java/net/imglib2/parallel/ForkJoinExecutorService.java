@@ -113,6 +113,13 @@ public class ForkJoinExecutorService extends AbstractExecutorService
 	public < T > List< Future< T > > invokeAll( Collection< ? extends Callable< T > > collection ) throws
 			InterruptedException
 	{
+		// TODO: Revisit if we ever drop support for Java 8.
+		//  For Java 11, the code below could be replaced by
+		//    return getPool().invokeAll( collection );
+		//  For Java 8, this throws
+		//    RejectedExecutionException: Thread limit exceeded replacing blocked worker
+		//  Also revisit the submit/execute methods below.
+		//  See https://github.com/imglib/imglib2/pull/269#discussion_r326855353
 		List< ForkJoinTask< T > > futures = new ArrayList<>( collection.size() );
 		for ( Callable< T > callable : collection )
 			futures.add( ForkJoinTask.adapt( callable ) );
