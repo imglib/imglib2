@@ -48,17 +48,20 @@ import net.imglib2.view.Views;
 public class Localizables
 {
 
-	public static long[] asLongArray( final Localizable localizable ) {
+	public static long[] asLongArray( final Localizable localizable )
+	{
 		final long[] result = new long[ localizable.numDimensions() ];
 		localizable.localize( result );
 		return result;
 	}
 
-	public static RandomAccessible< Localizable > randomAccessible( final int n ) {
+	public static RandomAccessible< Localizable > randomAccessible( final int n )
+	{
 		return new LocationRandomAccessible( n );
 	}
 
-	public static RandomAccessibleInterval< Localizable > randomAccessibleInterval( final Interval interval ) {
+	public static RandomAccessibleInterval< Localizable > randomAccessibleInterval( final Interval interval )
+	{
 		return Views.interval( randomAccessible( interval.numDimensions() ), interval );
 	}
 
@@ -157,12 +160,14 @@ public class Localizables
 			super( n );
 		}
 
-		@Override public RandomAccess< Localizable > randomAccess()
+		@Override
+		public RandomAccess< Localizable > randomAccess()
 		{
 			return new LocationRandomAccess( n );
 		}
 
-		@Override public RandomAccess< Localizable > randomAccess( final Interval interval )
+		@Override
+		public RandomAccess< Localizable > randomAccess( final Interval interval )
 		{
 			return randomAccess();
 		}
@@ -183,17 +188,20 @@ public class Localizables
 			super( initialPosition );
 		}
 
-		@Override public RandomAccess< Localizable > copyRandomAccess()
+		@Override
+		public RandomAccess< Localizable > copyRandomAccess()
 		{
 			return new LocationRandomAccess( this );
 		}
 
-		@Override public Localizable get()
+		@Override
+		public Localizable get()
 		{
 			return this;
 		}
 
-		@Override public Sampler< Localizable > copy()
+		@Override
+		public Sampler< Localizable > copy()
 		{
 			return copyRandomAccess();
 		}
