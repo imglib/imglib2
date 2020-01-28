@@ -846,7 +846,7 @@ public class Intervals
 	}
 
 	/**
-	 * Tests whether two intervals have equal dimensions (same size).
+	 * Tests whether two {@link Dimensions} have the same size.
 	 */
 	public static boolean equalDimensions( final Dimensions a, final Dimensions b )
 	{
@@ -858,6 +858,14 @@ public class Intervals
 				return false;
 
 		return true;
+	}
+
+	/**
+	 * Tests whether two intervals have equal dimensions (same size).
+	 */
+	public static boolean equalDimensions( final Interval a, final Interval b )
+	{
+		return equalDimensions((Dimensions) a, (Dimensions) b);
 	}
 
 	/**
