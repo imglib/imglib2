@@ -865,7 +865,7 @@ public class Intervals
 	 */
 	public static boolean equalDimensions( final Interval a, final Interval b )
 	{
-		return equalDimensions((Dimensions) a, (Dimensions) b);
+		return equalDimensions( ( Dimensions ) a, ( Dimensions ) b );
 	}
 
 	/**
