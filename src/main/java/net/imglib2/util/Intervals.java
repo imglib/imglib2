@@ -863,6 +863,7 @@ public class Intervals
 	/**
 	 * Tests whether two intervals have equal dimensions (same size).
 	 */
+	@Deprecated
 	public static boolean equalDimensions( final Interval a, final Interval b )
 	{
 		return equalDimensions( ( Dimensions ) a, ( Dimensions ) b );
