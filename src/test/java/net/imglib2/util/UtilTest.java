@@ -34,6 +34,8 @@
 
 package net.imglib2.util;
 
+import net.imglib2.Dimensions;
+import net.imglib2.FinalDimensions;
 import net.imglib2.FinalInterval;
 import net.imglib2.RealLocalizable;
 import net.imglib2.RealPoint;
@@ -43,10 +45,14 @@ import net.imglib2.img.array.ArrayImgFactory;
 import net.imglib2.img.array.ArrayImgs;
 import net.imglib2.img.cell.CellImgFactory;
 import net.imglib2.img.list.ListImgFactory;
+import net.imglib2.test.ImgLib2Assert;
 import net.imglib2.type.logic.BitType;
 import net.imglib2.type.logic.BoolType;
 import net.imglib2.type.numeric.RealType;
+import net.imglib2.type.numeric.complex.ComplexFloatType;
 import net.imglib2.type.numeric.integer.IntType;
+import net.imglib2.type.numeric.integer.Unsigned2BitType;
+import net.imglib2.type.numeric.integer.UnsignedByteType;
 import net.imglib2.type.numeric.real.DoubleType;
 import net.imglib2.type.operators.ValueEquals;
 import org.junit.Test;
@@ -57,6 +63,7 @@ import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assume.assumeTrue;
 
 public class UtilTest
 {
@@ -226,5 +233,39 @@ public class UtilTest
 		{
 			return Util.valueEqualsObject( this, obj );
 		}
+	}
+
+	@Test
+	public void testGetArrayOrCellImgFactory()
+	{
+		// NB: This test needs 1 GB of memory. But we better make sure that 2 GB are available.
+		assumeTrue( "Don't run the test, because there is less than 2 GB of memory.",
+				Runtime.getRuntime().maxMemory() > 2L * Integer.MAX_VALUE );
+		Dimensions size = new FinalDimensions( Integer.MAX_VALUE );
+		ImgFactory< UnsignedByteType > imgFactory = Util.getArrayOrCellImgFactory( size, new UnsignedByteType() );
+		ImgLib2Assert.assertIntervalEquals( new FinalInterval( size ), imgFactory.create( size ) );
+	}
+
+	@Test
+	public void testGetArrayOrCellImgFactoryWithComplexFloatType()
+	{
+		// NB: ComplexFloatType uses two float values per pixel.
+		// This test creates an image, where the size is just 66% if Integer.MAX_VALUE.
+		// But the required FloatAccess used in an ArrayImage would be to big,
+		// that's why CellImgFactory must be used.
+		Dimensions size = new FinalDimensions( Integer.MAX_VALUE / 3 * 2 );
+		ImgFactory< ComplexFloatType > imgFactory = Util.getArrayOrCellImgFactory( size, new ComplexFloatType() );
+		assertEquals( CellImgFactory.class, imgFactory.getClass() );
+	}
+
+	@Test
+	public void testGetArrayOrCellImgFactoryWithEntitiesPerPixelLessThanOne() {
+		// NB: An ArrayImg internally uses a LongAccess to store the image content.
+		// The JVM allows to create a LongAccess of a required size. But an ArrayImg
+		// must not be used with a size greater than Integer.MAX_VALUE, as some
+		// methods like ArrayImg.dimension(...) or ArrayImgCursor.jumpFwd(...) might fail.
+		Dimensions size = new FinalDimensions( Integer.MAX_VALUE + 1L );
+		ImgFactory< Unsigned2BitType > imgFactory = Util.getArrayOrCellImgFactory( size, new Unsigned2BitType() );
+		assertEquals( CellImgFactory.class, imgFactory.getClass() );
 	}
 }

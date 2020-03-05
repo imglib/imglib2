@@ -42,8 +42,11 @@ import static org.junit.Assert.assertEquals;
 import java.util.Arrays;
 
 import net.imglib2.RandomAccess;
+import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.img.Img;
 import net.imglib2.img.array.ArrayImgFactory;
+import net.imglib2.img.array.ArrayImgs;
+import net.imglib2.test.ImgLib2Assert;
 import net.imglib2.type.numeric.integer.IntType;
 import net.imglib2.type.numeric.integer.LongType;
 import net.imglib2.type.numeric.real.DoubleType;
@@ -365,6 +368,15 @@ public class ImgUtilTest
 			ImgUtil.copy( img, output, offsets[ i ], strides[ i ] );
 			assertArrayEquals( expected[ i ], output );
 		}
+	}
+	
+	@Test
+	public void testCopyRAItoRAI()
+	{
+		RandomAccessibleInterval<IntType> source = ArrayImgs.ints(new int[]{1, 2, 3, 4, 5, 6}, 2, 3);
+		RandomAccessibleInterval<IntType> destination = ArrayImgs.ints(2, 3);
+		ImgUtil.copy( source, destination );
+		ImgLib2Assert.assertImageEquals( source, destination );
 	}
 
 }

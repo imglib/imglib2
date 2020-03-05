@@ -35,8 +35,9 @@
 package net.imglib2.util;
 
 import net.imglib2.Cursor;
-import net.imglib2.RandomAccess;
+import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.img.Img;
+import net.imglib2.loops.LoopBuilder;
 import net.imglib2.type.BooleanType;
 import net.imglib2.type.Type;
 import net.imglib2.type.numeric.IntegerType;
@@ -312,34 +313,12 @@ public class ImgUtil
 	}
 	
 	/**
-	 * Copy one {@link Img} into another.
-	 * If both have the same iteration order, the copy proceeds with two {@link Cursor}.
-	 * If they differ in iteration order, then they are copied with a {@link RandomAccess} approach.
-	 * 
-	 * @param src
-	 * @param dest
-	 * 
+	 * Copy one image into another, multi-threaded.
 	 */
-	public static < T extends Type< T >> void copy( final Img< T > src, final Img< T > dest )
+	public static < T extends Type< T >> void copy( final RandomAccessibleInterval< T > source, final RandomAccessibleInterval< T > destination )
 	{
-		if ( src.iterationOrder() == dest.iterationOrder() )
-		{
-			final Cursor< T > c1 = src.cursor(),
-							  c2 = dest.cursor();
-			while ( c1.hasNext() )
-				c2.next().set( c1.next() );
-		}
-		else
-		{
-			final Cursor< T > c = src.cursor();
-			final RandomAccess< T > r = dest.randomAccess();
-			
-			while ( c.hasNext() )
-			{
-				c.fwd();
-				r.setPosition( c );
-				r.get().set( c.get() );
-			}
-		}
+		LoopBuilder.setImages(source, destination)
+				.multiThreaded()
+				.forEachPixel( (i,o) -> o.set(i) );
 	}
 }
