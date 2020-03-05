@@ -11,13 +11,13 @@
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice,
  *    this list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  *    this list of conditions and the following disclaimer in the documentation
  *    and/or other materials provided with the distribution.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -51,7 +51,7 @@ public class CardinalBSplineInterpolatorFactory< T extends RealType< T > > imple
 	final boolean clipping;
 
 	/**
-	 * Creates a new {@link CardinalBSplineInterpolatorFactory} using the BSpline 
+	 * Creates a new {@link CardinalBSplineInterpolatorFactory} using the BSpline
 	 * interpolation in a certain window
 	 *
 	 * @param order
@@ -73,7 +73,7 @@ public class CardinalBSplineInterpolatorFactory< T extends RealType< T > > imple
 	 *
 	 * @param order
 	 *            the order of the bspline
-	 *            
+	 *
 	 */
 	public CardinalBSplineInterpolatorFactory( final int order )
 	{
@@ -93,7 +93,7 @@ public class CardinalBSplineInterpolatorFactory< T extends RealType< T > > imple
 	@Override
 	public CardinalBSplineInterpolator< T > create( final RandomAccessible< T > randomAccessible )
 	{
-		return new CardinalBSplineInterpolator< T >( randomAccessible, order, order+1, clipping );
+		return new CardinalBSplineInterpolator< T >( randomAccessible, order, order + 1, clipping );
 	}
 
 	/**

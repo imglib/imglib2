@@ -8,6 +8,14 @@
 		<version>27.0.1</version>
 		<relativePath />
 	</parent>
+	
+	<repositories>
+		<!-- NB: for SciJava dependencies -->
+		<repository>
+			<id>imagej.public</id>
+			<url>http://maven.imagej.net/content/groups/public</url>
+		</repository>
+	</repositories>
 
 	<groupId>net.imglib2</groupId>
 	<artifactId>imglib2</artifactId>
@@ -247,6 +255,11 @@ Jean-Yves Tinevez and Michael Zinsmaier.</license.copyrightOwners>
 		<dependency>
 			<groupId>gov.nist.math</groupId>
 			<artifactId>jama</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>sc.fiji</groupId>
+			<artifactId>bigdataviewer-vistools</artifactId>
 			<scope>test</scope>
 		</dependency>
 	</dependencies>

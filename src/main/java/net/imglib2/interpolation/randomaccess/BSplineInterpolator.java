@@ -11,13 +11,13 @@
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice,
  *    this list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  *    this list of conditions and the following disclaimer in the documentation
  *    and/or other materials provided with the distribution.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -37,25 +37,16 @@ package net.imglib2.interpolation.randomaccess;
 import java.util.Arrays;
 
 import net.imglib2.Cursor;
-import net.imglib2.EuclideanSpace;
-import net.imglib2.FinalInterval;
 import net.imglib2.RandomAccess;
 import net.imglib2.RandomAccessible;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.RealInterval;
 import net.imglib2.RealRandomAccess;
-import net.imglib2.Sampler;
 import net.imglib2.bspline.BSplineDecomposition;
-import net.imglib2.img.array.ArrayCursor;
-import net.imglib2.img.array.ArrayImg;
-import net.imglib2.img.array.ArrayImgs;
-import net.imglib2.img.array.ArrayLocalizingCursor;
 import net.imglib2.interpolation.InterpolatorFactory;
-import net.imglib2.iterator.IntervalIterator;
 import net.imglib2.position.transform.FloorOffset;
 import net.imglib2.type.numeric.RealType;
 import net.imglib2.type.numeric.real.DoubleType;
-import net.imglib2.util.Intervals;
 import net.imglib2.util.Util;
 import net.imglib2.view.Views;
 
@@ -75,13 +66,13 @@ public class BSplineInterpolator< T extends RealType< T > > extends FloorOffset<
 	private static final long serialVersionUID = 7201790873893099953L;
 
 	public static final double SQRT3 = Math.sqrt ( 3.0 );
-	
+
 	// from Unser box 2 page 26
 	public static final double Z1 = SQRT3 - 2;
 
 	public static final double Ci = -Z1 / ( 1 - (Z1*Z1));
 
-	final protected BSplineDecomposition<T,DoubleType> splineDecomposition;
+	final protected BSplineDecomposition<T> splineDecomposition;
 
 	final protected RandomAccessible<DoubleType> coefficientsExpanded;
 
@@ -90,13 +81,13 @@ public class BSplineInterpolator< T extends RealType< T > > extends FloorOffset<
 	final protected DoubleType tmp;
 
 	final protected DoubleType w;
-	
+
 	final protected T value;
-	
+
 	final public double[][] weights; // TODO make protected
-	
+
 	final protected boolean clipping;
-	
+
 	final protected int bsplineOrder;
 
 	final protected int kernelWidth;
@@ -106,11 +97,11 @@ public class BSplineInterpolator< T extends RealType< T > > extends FloorOffset<
 	final protected long[] coefMax;
 
 	final protected RandomAccessibleInterval< T > img;
-	
+
 	final protected int[] ZERO;
-	
+
 	boolean DEBUG = false;
-	
+
 	final static private int kernelWidth( final int order )
 	{
 		return (order + 1);
@@ -138,7 +129,7 @@ public class BSplineInterpolator< T extends RealType< T > > extends FloorOffset<
 		accumulator = new DoubleType();
 		tmp = new DoubleType();
 		w = new DoubleType();
-	
+
 		// TODO should I copy?
 		splineDecomposition = interpolator.getDecomposition();
 		coefficientsExpanded = Views.extendMirrorDouble( splineDecomposition.getCoefficients() );
@@ -171,7 +162,7 @@ public class BSplineInterpolator< T extends RealType< T > > extends FloorOffset<
 		accumulator = new DoubleType();
 		tmp = new DoubleType();
 		w = new DoubleType();
-		
+
 		//this.splineDecomposition = new BSplineDecomposition<T,DoubleType>( order, img, type );
 		this.splineDecomposition = new BSplineDecomposition<T,DoubleType>( order, img, new DoubleType() );
 		splineDecomposition.compute();
@@ -193,18 +184,18 @@ public class BSplineInterpolator< T extends RealType< T > > extends FloorOffset<
 	{
 		return target;
 	}
-	
+
 	public BSplineDecomposition<T,DoubleType> getDecomposition()
 	{
 		return splineDecomposition;
 	}
-	
+
 	public void printPosition()
 	{
 		System.out.println( "interp position : " + Arrays.toString( position ));
 		System.out.println( "target position : " + Util.printCoordinates( target ));
 	}
-	
+
 	@Override
 	public T get()
 	{
@@ -225,8 +216,8 @@ public class BSplineInterpolator< T extends RealType< T > > extends FloorOffset<
 		//Cursor<DoubleType> c = Views.iterable( coefs ).cursor();
 
 //		printPosition();
-		Cursor<DoubleType> c = Views.zeroMin( 
-				Views.interval( 
+		final Cursor<DoubleType> c = Views.zeroMin(
+				Views.interval(
 						coefficientsExpanded,
 						coefMin, coefMax )
 				).cursor();
@@ -254,7 +245,7 @@ public class BSplineInterpolator< T extends RealType< T > > extends FloorOffset<
 	{
 		for( int d = 0; d < numDimensions(); d++ )
 		{
-			coefMin[ d ] = (long)Math.floor( position[ d ] ) + offset[ d ]; 
+			coefMin[ d ] = (long)Math.floor( position[ d ] ) + offset[ d ];
 			coefMax[ d ] = coefMin[ d ] + kernelWidth - 1;
 		}
 	}
@@ -265,9 +256,9 @@ public class BSplineInterpolator< T extends RealType< T > > extends FloorOffset<
 		for( int d = 0; d < numDimensions(); d++ )
 		{
 			// j is a double that will take integer values
-			// starts at the smallest integer value in the support 
+			// starts at the smallest integer value in the support
 			// of the b-spline kernel
-			j = Math.floor( position[ d ] ) + offset[ d ]; 
+			j = Math.floor( position[ d ] ) + offset[ d ];
 			for( int i = 0; i < kernelWidth; i++ )
 			{
 //				double dist = position[ d ] - j;
@@ -277,16 +268,16 @@ public class BSplineInterpolator< T extends RealType< T > > extends FloorOffset<
 				j++;
 			}
 		}
-	} 
+	}
 
-	public <T extends RealType<T>> void printValues( RandomAccessibleInterval<T> vals )
+	public <T extends RealType<T>> void printValues( final RandomAccessibleInterval<T> vals )
 	{
 		System.out.println( "\nvalues: ");
-		Cursor<T> c = Views.flatIterable( vals ).cursor();
+		final Cursor<T> c = Views.flatIterable( vals ).cursor();
 		int yp = -1;
 		while( c.hasNext() )
 		{
-			T v = c.next();
+			final T v = c.next();
 			String prefix = "  ";
 			if( yp != -1 && c.getIntPosition( 1 ) != yp )
 				prefix = "\n  ";
@@ -297,7 +288,7 @@ public class BSplineInterpolator< T extends RealType< T > > extends FloorOffset<
 		}
 		System.out.print( "\n");
 	}
-	
+
 	/*
 	 * Third order spline kernel
 	 */
@@ -325,13 +316,13 @@ public class BSplineInterpolator< T extends RealType< T > > extends FloorOffset<
 	}
 
 	@Override
-	public RealRandomAccess<T> create(RandomAccessibleInterval<T> f) {
+	public RealRandomAccess<T> create(final RandomAccessibleInterval<T> f) {
 		// TODO do something better?
 		return copy();
 	}
 
 	@Override
-	public RealRandomAccess<T> create(RandomAccessibleInterval<T> f, RealInterval interval) {
+	public RealRandomAccess<T> create(final RandomAccessibleInterval<T> f, final RealInterval interval) {
 		// TODO do something better?
 		return copy();
 	}

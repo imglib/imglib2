@@ -11,13 +11,13 @@
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice,
  *    this list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  *    this list of conditions and the following disclaimer in the documentation
  *    and/or other materials provided with the distribution.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -37,21 +37,15 @@ package net.imglib2.interpolation.randomaccess;
 import java.util.Arrays;
 
 import net.imglib2.Cursor;
-import net.imglib2.FinalInterval;
 import net.imglib2.RandomAccess;
 import net.imglib2.RandomAccessible;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.RealRandomAccess;
 import net.imglib2.bspline.BSplineDecomposition;
-import net.imglib2.img.array.ArrayCursor;
-import net.imglib2.img.array.ArrayImg;
-import net.imglib2.img.array.ArrayImgs;
-import net.imglib2.img.array.ArrayLocalizingCursor;
-import net.imglib2.iterator.IntervalIterator;
-import net.imglib2.position.transform.FloorOffset;
+import net.imglib2.neighborhood.CenteredRectangleShape;
+import net.imglib2.neighborhood.Neighborhood;
+import net.imglib2.position.transform.Floor;
 import net.imglib2.type.numeric.RealType;
-import net.imglib2.type.numeric.real.DoubleType;
-import net.imglib2.util.Intervals;
 import net.imglib2.util.Util;
 import net.imglib2.view.Views;
 
@@ -59,7 +53,7 @@ import net.imglib2.view.Views;
  * Performs cubic b-spline interpolation by computing coefficients on the fly.
  * This will be less time efficient, in general, than pre-computing coefficients using
  * a {@link BSplineDecomposition}.  This will be more memory-efficient though.
- * 
+ *
  * See Unser, Aldroubi, and Eden "Fast B-Spline Transforms for Continuous Image Representation
  *   and Interpolation" IEEE PAMI 13(3) 1991.
  *
@@ -70,111 +64,74 @@ import net.imglib2.view.Views;
  * @author Stephan Saalfeld
  * @author Tobias Pietzsch
  */
-public class CardinalBSplineInterpolator< T extends RealType< T > > extends FloorOffset< RandomAccess< T > > implements RealRandomAccess< T >
+public class CardinalBSplineInterpolator< T extends RealType< T > > extends Floor< RandomAccess< Neighborhood< T > > > implements RealRandomAccess< T >
 {
 	private static final long serialVersionUID = 7201790873893099953L;
 
 	public static final double SQRT3 = Math.sqrt ( 3.0 );
-	
+
 	// from Unser 1991 Table 2
 	public static final double ALPHA  = SQRT3 - 2;
 
 	public static final double FACTOR = ( -6 * ALPHA ) / ( 1 - (ALPHA * ALPHA) );
 
-	final protected DoubleType accumulator;
+	protected double w;
 
-	final protected DoubleType tmp;
-
-	final protected DoubleType w;
-	
 	final protected T value;
-	
+
 	final protected double[][] weights;
-	
+
 	final protected boolean clipping;
-	
+
 	final protected int bsplineOrder;
 
-	final protected int kernelWidth;
-	
-	final protected int filterWidth;
+	protected final CenteredRectangleShape shape;
 
-	final protected long[] coefMin;
-
-	final protected long[] coefMax;
-
-	final protected RandomAccessible< T > img;
-
-	final protected int[] ZERO;
-	
 	final static private int kernelWidth( final int order )
 	{
 		return (order + 1);
 	}
 
-	final static private long[] createOffset( final int order, final int n )
-	{
-		final int r = ( kernelWidth( order ) - 1 ) / 2;
-		final long[] offset = new long[ n ];
-		Arrays.fill( offset, -r );
-		return offset;
+	private static final int[] arrayOf( final int i, final int n ) {
+
+		final int[] array = new int[ n ];
+		Arrays.fill( array, i );
+		return array;
+
 	}
 
-	public CardinalBSplineInterpolator( final CardinalBSplineInterpolator< T > interpolator, final int order, final int filterWidth, final boolean clipping )
+	public CardinalBSplineInterpolator( final CardinalBSplineInterpolator< T > interpolator )
 	{
-		super( interpolator.target.copyRandomAccess(), createOffset( order, interpolator.numDimensions() ) );
-		this.img = interpolator.img;
+		super(interpolator.target.copyRandomAccess());
 
-		this.bsplineOrder = order;
-		kernelWidth = kernelWidth( order );
-		
-		this.filterWidth = filterWidth;
+		this.shape = interpolator.shape;
 
-		this.clipping = clipping;
-		value = interpolator.target.get().createVariable();
-		accumulator = new DoubleType();
-		tmp = new DoubleType();
-		w = new DoubleType();
-	
-		for ( int d = 0; d < n; ++d )
-		{
-			position[ d ] = interpolator.position[ d ];
-			discrete[ d ] = interpolator.discrete[ d ];
-		}
-
-		coefMin = new long[ numDimensions() ];
-		coefMax = new long[ numDimensions() ];
-
-		weights = new double[ numDimensions() ][ 2 * filterWidth + 1 ];
-		ZERO = new int[ numDimensions() ];
+		this.bsplineOrder = interpolator.bsplineOrder;
+		this.clipping = interpolator.clipping;
+		value = target.get().firstElement().createVariable();
+		weights = new double[ numDimensions() ][ shape.getSpan()[0] + 1 ];
 	}
 
-	public CardinalBSplineInterpolator( final RandomAccessible< T > img, final int order, final int filterWidth, final boolean clipping )
+	private CardinalBSplineInterpolator( final RandomAccessible< T > source, final int order, final CenteredRectangleShape shape, final boolean clipping )
 	{
-		super( img.randomAccess().copyRandomAccess(), createOffset( order, img.numDimensions() ) );
-		this.img = img;
+		super(shape.neighborhoodsRandomAccessible( source ).randomAccess());
+
+		this.shape = shape;
 
 		this.bsplineOrder = order;
-		kernelWidth = kernelWidth( order );
-
-		this.filterWidth = filterWidth;
-
 		this.clipping = clipping;
-		value = target.get().createVariable();
-		accumulator = new DoubleType();
-		tmp = new DoubleType();
-		w = new DoubleType();
+		value = target.get().firstElement().createVariable();
+		weights = new double[ numDimensions() ][ shape.getSpan()[0] * 2 + 1 ];
+	}
 
-		coefMin = new long[ numDimensions() ];
-		coefMax = new long[ numDimensions() ];
-
-		weights = new double[ numDimensions() ][ 2 * filterWidth + 1 ];
-		ZERO = new int[ numDimensions() ];
+	public CardinalBSplineInterpolator( final RandomAccessible< T > source, final int order, final int radius, final boolean clipping )
+	{
+		this(source, order, new CenteredRectangleShape( arrayOf( radius, source.numDimensions() ), false ), clipping);
 	}
 
 	/**
 	 * Build a default cubic-bspline interpolator.
-	 * 
+	 *
 	 * @param randomAccessible the random accessible
 	 */
 	protected CardinalBSplineInterpolator( final RandomAccessibleInterval< T > randomAccessible )
@@ -182,90 +139,59 @@ public class CardinalBSplineInterpolator< T extends RealType< T > > extends Floo
 		this( randomAccessible, 3, 4, true );
 	}
 
-	public RandomAccess<T> targetRa()
-	{
-		return target;
-	}
-	
 	public void printPosition()
 	{
 		System.out.println( "interp position : " + Arrays.toString( position ));
 		System.out.println( "target position : " + Util.printCoordinates( target ));
 	}
-	
+
 	@Override
 	public T get()
 	{
-
-		fillWindow();
 		fillWeights();
 
-		accumulator.setZero();
+		double accumulator = 0;
 
-		Cursor<T> c = Views.zeroMin( 
-				Views.interval( 
-						img,
-						coefMin, coefMax )
-				).cursor();
+		final Cursor<T> c = target.get().cursor();
+		System.out.println( "start loop" );
 
 		while( c.hasNext() )
 		{
-			tmp.setReal( c.next().getRealDouble() );
+			final double tmp = c.next().getRealDouble();
 			for( int d = 0; d < numDimensions(); d++ )
 			{
-				tmp.mul( weights[ d ][ c.getIntPosition( d ) ]);
+				// TODO check if position is local or global
+				System.out.println( d + ": c -> " + Util.printCoordinates( c ) + "; target -> " + Util.printCoordinates( target ) );
+//				tmp *= weights[ d ][ (int)(c.getLongPosition( d ) - target.getLongPosition( d )) ];
 			}
-			accumulator.add( tmp );
+			accumulator += tmp;
 		}
 
-		value.setReal( accumulator.getRealDouble() );
+		value.setReal( accumulator );  // TODO fix clipping
 		return value;
-	}
-
-	public void fillWindow() // TODO make protected
-	{
-		for( int d = 0; d < numDimensions(); d++ )
-		{
-			coefMin[ d ] = (long)Math.ceil( position[ d ] ) - filterWidth;
-			coefMax[ d ] = (long)Math.floor( position[ d ] ) + filterWidth;
-		}
 	}
 
 	protected void fillWeights()
 	{
-		double j = 0;
+		final Neighborhood< T > rect = target.get();
 		for( int d = 0; d < numDimensions(); d++ )
 		{
-			// j is a double that will take integer values
-			// starts at the smallest integer value in the support 
-			// of the b-spline kernel
-			j = coefMin[ d ];
-			int i = 0;
-			while( j <= coefMax[ d ])
-			{
-				double dist = position[ d ] - j;
-				if( dist > kernelWidth )
-				{
-					weights[ d ][ i ] = 0;
-				}
-				else
-				{
-					weights[ d ][ i ] = cubicCardinalSpline( position[ d ] - j, filterWidth );
-				}
-				i++;
-				j++;
-			}
+			final double pos = position[ d ];
+			final long min = rect.min( d ); // TODO figure out if this is local or global
+			final long max = rect.max( d );
+			for ( long i = min; i <= max; ++i )
+				weights[ d ][ (int)(i - min) ] = cubicCardinalSpline( pos - i, bsplineOrder );
 		}
-	} 
+	}
 
-	public <T extends RealType<T>> void printValues( RandomAccessibleInterval<T> vals )
+	public <T extends RealType<T>> void printValues( final RandomAccessibleInterval<T> vals )
 	{
 		System.out.println( "\nvalues: ");
-		Cursor<T> c = Views.flatIterable( vals ).cursor();
+		final Cursor<T> c = Views.flatIterable( vals ).cursor();
 		int yp = -1;
 		while( c.hasNext() )
 		{
-			T v = c.next();
+			final T v = c.next();
 			String prefix = "  ";
 			if( yp != -1 && c.getIntPosition( 1 ) != yp )
 				prefix = "\n  ";
@@ -280,7 +206,7 @@ public class CardinalBSplineInterpolator< T extends RealType< T > > extends Floo
 	@Override
 	public CardinalBSplineInterpolator< T  > copy()
 	{
-		return new CardinalBSplineInterpolator< T >( this, this.bsplineOrder, this.filterWidth, this.clipping );
+		return new CardinalBSplineInterpolator< T >( this );
 	}
 
 	@Override
@@ -288,7 +214,7 @@ public class CardinalBSplineInterpolator< T extends RealType< T > > extends Floo
 	{
 		return copy();
 	}
-	
+
 	/*
 	 * Third order spline kernel
 	 */
@@ -315,7 +241,7 @@ public class CardinalBSplineInterpolator< T extends RealType< T > > extends Floo
 			result += Math.pow( ALPHA, Math.abs( k )) * evaluate3( x - k ) / 6.0;
 		}
 		result *= FACTOR;
-		
+
 		return result;
 	}
 
