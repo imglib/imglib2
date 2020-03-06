@@ -40,268 +40,229 @@ import net.imglib2.Cursor;
 import net.imglib2.RandomAccess;
 import net.imglib2.RandomAccessible;
 import net.imglib2.RandomAccessibleInterval;
-import net.imglib2.RealInterval;
 import net.imglib2.RealRandomAccess;
 import net.imglib2.bspline.BSplineDecomposition;
-import net.imglib2.interpolation.InterpolatorFactory;
-import net.imglib2.position.transform.FloorOffset;
+import net.imglib2.neighborhood.Neighborhood;
+import net.imglib2.neighborhood.RectangleShape;
+import net.imglib2.position.transform.Floor;
 import net.imglib2.type.numeric.RealType;
-import net.imglib2.type.numeric.real.DoubleType;
 import net.imglib2.util.Util;
 import net.imglib2.view.Views;
 
 /**
- * Performs cubic b-spline interpolation
+ * Performs cubic b-spline interpolation by computing coefficients on the fly.
+ * This will be less time efficient, in general, than pre-computing coefficients
+ * using a {@link BSplineDecomposition}. This will be more memory-efficient
+ * though.
+ *
+ * See Unser, Aldroubi, and Eden "Fast B-Spline Transforms for Continuous Image
+ * Representation and Interpolation" IEEE PAMI 13(3) 1991.
  *
  * @param <T>
+ *            the image type
  *
  * @author John Bogovic
  * @author Stephan Preibisch
  * @author Stephan Saalfeld
  * @author Tobias Pietzsch
  */
-//public class BSplineInterpolator< T extends RealType< T >, S extends RealType<S> > extends FloorOffset< RandomAccess< T > > implements RealRandomAccess< T >
-public class BSplineInterpolator< T extends RealType< T > > extends FloorOffset< RandomAccess< T > > implements RealRandomAccess< T >, InterpolatorFactory< T, RandomAccessibleInterval<T> >
+public class BSplineInterpolator< T extends RealType< T > > extends Floor< RandomAccess< Neighborhood< T > > > implements RealRandomAccess< T >
 {
 	private static final long serialVersionUID = 7201790873893099953L;
 
-	public static final double SQRT3 = Math.sqrt ( 3.0 );
+	public static final double SQRT3 = Math.sqrt( 3.0 );
 
-	// from Unser box 2 page 26
-	public static final double Z1 = SQRT3 - 2;
+	// from Unser 1991 Table 2
+	public static final double ALPHA = SQRT3 - 2.0;
+	public static final double FACTOR = ( -6.0 * ALPHA ) / ( 1.0 - ( ALPHA * ALPHA ) ); // TODO where did that come from?
+	public static final double ONESIXTH = 1.0 / 6.0;
+	public static final double TWOTHIRDS = 2.0 / 3.0;
+	public static final double FOURTHIRDS = 4.0 / 3.0;
 
-	public static final double Ci = -Z1 / ( 1 - (Z1*Z1));
-
-	final protected BSplineDecomposition<T> splineDecomposition;
-
-	final protected RandomAccessible<DoubleType> coefficientsExpanded;
-
-	final protected DoubleType accumulator;
-
-	final protected DoubleType tmp;
-
-	final protected DoubleType w;
+	protected double w;
 
 	final protected T value;
 
-	final public double[][] weights; // TODO make protected
+	final protected double[][] weights;
 
 	final protected boolean clipping;
 
 	final protected int bsplineOrder;
 
-	final protected int kernelWidth;
+	final protected int radius;
 
-	final protected long[] coefMin;
+	protected final RectangleShape shape;
 
-	final protected long[] coefMax;
-
-	final protected RandomAccessibleInterval< T > img;
-
-	final protected int[] ZERO;
-
-	boolean DEBUG = false;
-
-	final static private int kernelWidth( final int order )
+	private static final int[] arrayOf( final int i, final int n )
 	{
-		return (order + 1);
+
+		final int[] array = new int[ n ];
+		Arrays.fill( array, i );
+		return array;
+
 	}
 
-	final static private long[] createOffset( final int order, final int n )
+	public BSplineInterpolator( final BSplineInterpolator< T > interpolator )
 	{
-		final int r = ( kernelWidth( order ) - 1 ) / 2;
-		final long[] offset = new long[ n ];
-		Arrays.fill( offset, -r );
-		return offset;
+		super( interpolator.target.copyRandomAccess() );
+
+		this.shape = interpolator.shape;
+
+		this.bsplineOrder = interpolator.bsplineOrder;
+		this.radius = bsplineOrder + 1;
+		this.clipping = interpolator.clipping;
+		value = target.setPositionAndGet( new int[ numDimensions() ] ).firstElement().createVariable();
+		weights = new double[ numDimensions() ][ shape.getSpan() * 2 + 1 ];
 	}
 
-	//protected BSplineInterpolator( final BSplineInterpolator< T, DoubleType > interpolator, final int order, final boolean clipping )
-	public BSplineInterpolator( final BSplineInterpolator< T > interpolator, final int order, final boolean clipping )
+	private BSplineInterpolator( final RandomAccessible< T > source, final int order, final RectangleShape shape, final boolean clipping )
 	{
-		super( interpolator.target.copyRandomAccess(), createOffset( order, interpolator.numDimensions() ) );
-		this.img = interpolator.img;
+		super( shape.neighborhoodsRandomAccessible( source ).randomAccess() );
+
+		this.shape = shape;
 
 		this.bsplineOrder = order;
-		kernelWidth = kernelWidth( order );
-
+		this.radius = bsplineOrder + 1;
 		this.clipping = clipping;
-		value = interpolator.target.get().createVariable();
-		accumulator = new DoubleType();
-		tmp = new DoubleType();
-		w = new DoubleType();
-
-		// TODO should I copy?
-		splineDecomposition = interpolator.getDecomposition();
-		coefficientsExpanded = Views.extendMirrorDouble( splineDecomposition.getCoefficients() );
-
-		for ( int d = 0; d < n; ++d )
-		{
-			position[ d ] = interpolator.position[ d ];
-			discrete[ d ] = interpolator.discrete[ d ];
-		}
-
-		coefMin = new long[ numDimensions() ];
-		coefMax = new long[ numDimensions() ];
-
-		weights = new double[ numDimensions() ][ kernelWidth ];
-		ZERO = new int[ numDimensions() ];
-
+		value = target.setPositionAndGet( new int[ numDimensions() ] ).firstElement().createVariable();
+		weights = new double[ numDimensions() ][ shape.getSpan() * 2 + 1 ];
 	}
 
-	//protected BSplineInterpolator( final RandomAccessibleInterval< T > img, final int order, final S type, final boolean clipping )
-	public BSplineInterpolator( final RandomAccessibleInterval< T > img, final int order, final boolean clipping )
+	public BSplineInterpolator( final RandomAccessible< T > source, final int order, final int radius, final boolean clipping )
 	{
-		super( img.randomAccess().copyRandomAccess(), createOffset( order, img.numDimensions() ) );
-		this.img = img;
-
-		this.bsplineOrder = order;
-		kernelWidth = kernelWidth( order );
-
-		this.clipping = clipping;
-		value = target.get().createVariable();
-		accumulator = new DoubleType();
-		tmp = new DoubleType();
-		w = new DoubleType();
-
-		//this.splineDecomposition = new BSplineDecomposition<T,DoubleType>( order, img, type );
-		this.splineDecomposition = new BSplineDecomposition<T,DoubleType>( order, img, new DoubleType() );
-		splineDecomposition.compute();
-		coefficientsExpanded = Views.extendZero( splineDecomposition.getCoefficients() );
-
-		coefMin = new long[ numDimensions() ];
-		coefMax = new long[ numDimensions() ];
-
-		weights = new double[ numDimensions() ][ kernelWidth ];
-		ZERO = new int[ numDimensions() ];
+		this( source, order, new RectangleShape( radius, false ), clipping );
 	}
 
-	public BSplineInterpolator( final RandomAccessibleInterval< T > randomAccessible )
+	/**
+	 * Build a default cubic-bspline interpolator.
+	 *
+	 * @param randomAccessible
+	 *            the random accessible
+	 */
+	protected BSplineInterpolator( final RandomAccessibleInterval< T > randomAccessible )
 	{
-		this( randomAccessible, 3, true );
-	}
-
-	public RandomAccess<T> targetRa()
-	{
-		return target;
-	}
-
-	public BSplineDecomposition<T,DoubleType> getDecomposition()
-	{
-		return splineDecomposition;
+		this( randomAccessible, 3, 4, true );
 	}
 
 	public void printPosition()
 	{
-		System.out.println( "interp position : " + Arrays.toString( position ));
-		System.out.println( "target position : " + Util.printCoordinates( target ));
+		System.out.println( "interp position : " + Arrays.toString( position ) );
+		System.out.println( "target position : " + Util.printCoordinates( target ) );
 	}
 
 	@Override
 	public T get()
 	{
-
-////		System.out.println("GET");
-//		if( !Intervals.contains(splineDecomposition.getCoefficients(), this ))
-//		{
-//			value.setZero();
-//			return value;
-//		}
-
 		fillWeights();
-		fillWindow();
-		accumulator.setZero();
 
-		// TODO wrong,
-		// need a subset of the coefs only
-		//Cursor<DoubleType> c = Views.iterable( coefs ).cursor();
+		double accumulator = 0;
 
-//		printPosition();
-		final Cursor<DoubleType> c = Views.zeroMin(
-				Views.interval(
-						coefficientsExpanded,
-						coefMin, coefMax )
-				).cursor();
+		final Cursor< T > c = target.get().cursor();
 
-		while( c.hasNext() )
+		while ( c.hasNext() )
 		{
-			tmp.setReal( c.next().getRealDouble() );
-			for( int d = 0; d < numDimensions(); d++ )
+			double tmp = c.next().getRealDouble();
+			for ( int d = 0; d < numDimensions(); d++ )
 			{
-//				double ww = weights[ d ][ c.getIntPosition( d ) ];
-//				System.out.println( "ci : " + c.getIntPosition( d ) );
-//				System.out.println( "w  : " +  ww );
-
-				tmp.mul( weights[ d ][ c.getIntPosition( d ) ]);
+				final int index = ( int ) ( c.getLongPosition( d ) - target.getLongPosition( d ) + shape.getSpan() );
+				tmp *= weights[ d ][ index ];
 			}
-			//System.out.println( "tmp: " + tmp );
-			accumulator.add( tmp );
+			accumulator += tmp;
 		}
 
-		value.setReal( accumulator.getRealDouble() );
+		if ( clipping )
+			value.setReal( Math.min( value.getMaxValue(), Math.max( value.getMinValue(), accumulator ) ) );
+		else
+			value.setReal( accumulator );
+
 		return value;
 	}
 
-	public void fillWindow() // TODO make protected
+	protected void fillWeights()
 	{
-		for( int d = 0; d < numDimensions(); d++ )
+		final Neighborhood< T > rect = target.get();
+		for ( int d = 0; d < numDimensions(); d++ )
 		{
-			coefMin[ d ] = (long)Math.floor( position[ d ] ) + offset[ d ];
-			coefMax[ d ] = coefMin[ d ] + kernelWidth - 1;
+			final double pos = position[ d ];
+			final long min = rect.min( d );
+			final long max = rect.max( d );
+			for ( long i = min; i <= max; ++i )
+				weights[ d ][ ( int ) ( i - min ) ] = cubicCardinalSpline( pos - i, radius );
 		}
 	}
 
-	public void fillWeights() // TODO make protected
+	public < T extends RealType< T > > void printValues( final RandomAccessibleInterval< T > vals )
 	{
-		double j = 0;
-		for( int d = 0; d < numDimensions(); d++ )
-		{
-			// j is a double that will take integer values
-			// starts at the smallest integer value in the support
-			// of the b-spline kernel
-			j = Math.floor( position[ d ] ) + offset[ d ];
-			for( int i = 0; i < kernelWidth; i++ )
-			{
-//				double dist = position[ d ] - j;
-//				System.out.println( "dist: " + dist );
-//				System.out.println( "j   : " + j );
-				weights[ d ][ i ] = evaluate3( position[ d ] - j );
-				j++;
-			}
-		}
-	}
-
-	public <T extends RealType<T>> void printValues( final RandomAccessibleInterval<T> vals )
-	{
-		System.out.println( "\nvalues: ");
-		final Cursor<T> c = Views.flatIterable( vals ).cursor();
+		System.out.println( "\nvalues: " );
+		final Cursor< T > c = Views.flatIterable( vals ).cursor();
 		int yp = -1;
-		while( c.hasNext() )
+		while ( c.hasNext() )
 		{
 			final T v = c.next();
 			String prefix = "  ";
-			if( yp != -1 && c.getIntPosition( 1 ) != yp )
+			if ( yp != -1 && c.getIntPosition( 1 ) != yp )
 				prefix = "\n  ";
 
 			yp = c.getIntPosition( 1 );
 			System.out.print( prefix + v );
 
 		}
-		System.out.print( "\n");
+		System.out.print( "\n" );
+	}
+
+	@Override
+	public BSplineInterpolator< T > copy()
+	{
+		return new BSplineInterpolator< T >( this );
+	}
+
+	@Override
+	public BSplineInterpolator< T > copyRealRandomAccess()
+	{
+		return copy();
 	}
 
 	/*
 	 * Third order spline kernel
 	 */
-	public static double evaluate3( final double u )
+	public static double evaluate3Normalized( final double u )
 	{
 		final double absValue = Math.abs( u );
 		final double sqrValue = u * u;
-		if ( absValue < 1.0 )
-			return ( 4.0 - 6.0 * sqrValue + 3.0 * sqrValue * absValue );
+		if ( absValue <= 1.0 )
+			return ( TWOTHIRDS - sqrValue + 0.5 * sqrValue * absValue );
 		else if ( absValue < 2.0 )
-			return ( 8.0 - 12.0 * absValue + 6.0 * sqrValue - sqrValue * absValue );
+		{
+			final double twoMinusAbsValue = 2 - absValue;
+			return twoMinusAbsValue * twoMinusAbsValue * twoMinusAbsValue * ONESIXTH;
+		}
 		else
 			return 0.0;
+	}
+
+	private static double powIntPositive( final double base, final int pow )
+	{
+		double result = 1;
+		for ( int i = 0; i < pow; ++i )
+		{
+			result *= base;
+		}
+		return result;
+	}
+
+	/*
+	 * Unser 1991 equations 3.19 and 3.20
+	 */
+	public static double cubicCardinalSpline( final double x, final int width )
+	{
+		double result = 0.0;
+		for ( int k = -width; k <= width; k++ )
+		{
+			result += powIntPositive( ALPHA, Math.abs( k ) ) * evaluate3Normalized( x - k );
+		}
+		result *= FACTOR;
+
+		return result;
 	}
 
 	final private void printWeights()
@@ -309,29 +270,5 @@ public class BSplineInterpolator< T extends RealType< T > > extends FloorOffset<
 		for ( int i = 0; i < weights.length; ++i )
 			System.out.printf( "weights [ %2d ] = %f\n", i, weights[ i ] );
 	}
-
-	@Override
-	public BSplineInterpolator<T> copy() {
-		return new BSplineInterpolator<>( this, this.bsplineOrder, clipping);
-	}
-
-	@Override
-	public RealRandomAccess<T> create(final RandomAccessibleInterval<T> f) {
-		// TODO do something better?
-		return copy();
-	}
-
-	@Override
-	public RealRandomAccess<T> create(final RandomAccessibleInterval<T> f, final RealInterval interval) {
-		// TODO do something better?
-		return copy();
-	}
-
-	@Override
-	public RealRandomAccess<T> copyRealRandomAccess() {
-		// TODO do something better?
-		return copy();
-	}
-
 
 }
