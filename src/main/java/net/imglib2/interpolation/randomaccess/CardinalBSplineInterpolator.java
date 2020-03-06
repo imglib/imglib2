@@ -42,8 +42,8 @@ import net.imglib2.RandomAccessible;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.RealRandomAccess;
 import net.imglib2.bspline.BSplineDecomposition;
-import net.imglib2.neighborhood.CenteredRectangleShape;
 import net.imglib2.neighborhood.Neighborhood;
+import net.imglib2.neighborhood.RectangleShape;
 import net.imglib2.position.transform.Floor;
 import net.imglib2.type.numeric.RealType;
 import net.imglib2.util.Util;
@@ -85,7 +85,7 @@ public class CardinalBSplineInterpolator< T extends RealType< T > > extends Floo
 
 	final protected int bsplineOrder;
 
-	protected final CenteredRectangleShape shape;
+	protected final RectangleShape shape;
 
 	final static private int kernelWidth( final int order )
 	{
@@ -108,11 +108,11 @@ public class CardinalBSplineInterpolator< T extends RealType< T > > extends Floo
 
 		this.bsplineOrder = interpolator.bsplineOrder;
 		this.clipping = interpolator.clipping;
-		value = target.get().firstElement().createVariable();
-		weights = new double[ numDimensions() ][ shape.getSpan()[0] + 1 ];
+		value = target.setPositionAndGet( new int[numDimensions()] ).firstElement().createVariable();
+		weights = new double[ numDimensions() ][ shape.getSpan() * 2 + 1 ];
 	}
 
-	private CardinalBSplineInterpolator( final RandomAccessible< T > source, final int order, final CenteredRectangleShape shape, final boolean clipping )
+	private CardinalBSplineInterpolator( final RandomAccessible< T > source, final int order, final RectangleShape shape, final boolean clipping )
 	{
 		super(shape.neighborhoodsRandomAccessible( source ).randomAccess());
 
@@ -120,13 +120,13 @@ public class CardinalBSplineInterpolator< T extends RealType< T > > extends Floo
 
 		this.bsplineOrder = order;
 		this.clipping = clipping;
-		value = target.get().firstElement().createVariable();
-		weights = new double[ numDimensions() ][ shape.getSpan()[0] * 2 + 1 ];
+		value = target.setPositionAndGet( new int[numDimensions()] ).firstElement().createVariable();
+		weights = new double[ numDimensions() ][ shape.getSpan() * 2 + 1 ];
 	}
 
 	public CardinalBSplineInterpolator( final RandomAccessible< T > source, final int order, final int radius, final boolean clipping )
 	{
-		this(source, order, new CenteredRectangleShape( arrayOf( radius, source.numDimensions() ), false ), clipping);
+		this(source, order, new RectangleShape( radius, false ), clipping);
 	}
 
 	/**
@@ -153,21 +153,23 @@ public class CardinalBSplineInterpolator< T extends RealType< T > > extends Floo
 		double accumulator = 0;
 
 		final Cursor<T> c = target.get().cursor();
-		System.out.println( "start loop" );
 
 		while( c.hasNext() )
 		{
-			final double tmp = c.next().getRealDouble();
+			double tmp = c.next().getRealDouble();
 			for( int d = 0; d < numDimensions(); d++ )
 			{
-				// TODO check if position is local or global
-				System.out.println( d + ": c -> " + Util.printCoordinates( c ) + "; target -> " + Util.printCoordinates( target ) );
-//				tmp *= weights[ d ][ (int)(c.getLongPosition( d ) - target.getLongPosition( d )) ];
+				final int index = (int)(c.getLongPosition( d ) - target.getLongPosition( d ) + shape.getSpan());
+				tmp *= weights[ d ][ index ];
 			}
 			accumulator += tmp;
 		}
 
-		value.setReal( accumulator );  // TODO fix clipping
+		if ( clipping )
+			value.setReal( Math.min( value.getMaxValue(), Math.max( value.getMinValue(), accumulator )));
+		else
+			value.setReal( accumulator );
+
 		return value;
 	}
 

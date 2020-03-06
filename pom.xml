@@ -262,5 +262,10 @@ Jean-Yves Tinevez and Michael Zinsmaier.</license.copyrightOwners>
 			<artifactId>bigdataviewer-vistools</artifactId>
 			<scope>test</scope>
 		</dependency>
+		<dependency>
+			<groupId>net.imglib2</groupId>
+			<artifactId>imglib2-ij</artifactId>
+			<scope>test</scope>
+		</dependency>
 	</dependencies>
 </project>

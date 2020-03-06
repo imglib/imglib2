@@ -21,8 +21,10 @@ import org.junit.Test;
 import bdv.util.BdvFunctions;
 import bdv.util.BdvOptions;
 import bdv.util.BdvStackSource;
+import ij.ImageJ;
 import net.imglib2.FinalInterval;
 import net.imglib2.RealRandomAccessible;
+import net.imglib2.img.display.imagej.ImageJFunctions;
 import net.imglib2.position.FunctionRandomAccessible;
 import net.imglib2.type.numeric.integer.UnsignedByteType;
 import net.imglib2.view.Views;
@@ -40,7 +42,11 @@ public class CardinalBSplineInterpolatorTest
 		final FunctionRandomAccessible<UnsignedByteType> img = new FunctionRandomAccessible<>(
 				2,
 				( a, b ) -> {
-					b.setReal(1);
+					final long x = a.getLongPosition( 0 );
+					final long y = a.getLongPosition( 1 );
+					final boolean xOn = x / 2 * 2 == x;
+					final boolean yOn = y / 2 * 2 == y;
+					b.setReal(xOn ^ yOn ? 255 : 0);
 				},
 				UnsignedByteType::new);
 
@@ -49,12 +55,17 @@ public class CardinalBSplineInterpolatorTest
 
 		final FinalInterval interval = new FinalInterval( 200, 100 );
 
+		final RealRandomAccessible< UnsignedByteType > imgInterp = Views.interpolate( img, factory );
+
+		new ImageJ();
+
+		ImageJFunctions.show( Views.interval( Views.raster( imgInterp ), interval ) );
+
 		// show original image
-		final BdvOptions opts = BdvOptions.options();
+		final BdvOptions opts = BdvOptions.options().is2D();
 		final BdvStackSource< UnsignedByteType > bdv = BdvFunctions.show(img, interval, "img", opts);
 
 		// show interpolated image
-		final RealRandomAccessible< UnsignedByteType > imgInterp = Views.interpolate( img, factory );
 		BdvFunctions.show( imgInterp, interval, "img interp", opts.addTo( bdv ));
 	}
 
