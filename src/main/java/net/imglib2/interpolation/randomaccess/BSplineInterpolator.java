@@ -41,7 +41,6 @@ import net.imglib2.RandomAccess;
 import net.imglib2.RandomAccessible;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.RealRandomAccess;
-import net.imglib2.bspline.BSplineDecomposition;
 import net.imglib2.neighborhood.Neighborhood;
 import net.imglib2.neighborhood.RectangleShape;
 import net.imglib2.position.transform.Floor;
