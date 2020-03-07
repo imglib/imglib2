@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>org.scijava</groupId>
 		<artifactId>pom-scijava</artifactId>
-		<version>27.0.1</version>
+		<version>28.0.0</version>
 		<relativePath />
 	</parent>
 	
@@ -238,13 +238,11 @@ Jean-Yves Tinevez and Michael Zinsmaier.</license.copyrightOwners>
 		<dependency>
 			<groupId>org.openjdk.jmh</groupId>
 			<artifactId>jmh-core</artifactId>
-			<version>1.19</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.openjdk.jmh</groupId>
 			<artifactId>jmh-generator-annprocess</artifactId>
-			<version>1.19</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
@@ -255,16 +253,6 @@ Jean-Yves Tinevez and Michael Zinsmaier.</license.copyrightOwners>
 		<dependency>
 			<groupId>gov.nist.math</groupId>
 			<artifactId>jama</artifactId>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>sc.fiji</groupId>
-			<artifactId>bigdataviewer-vistools</artifactId>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>net.imglib2</groupId>
-			<artifactId>imglib2-ij</artifactId>
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
