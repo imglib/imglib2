@@ -66,6 +66,14 @@ public interface Dimensions extends EuclideanSpace
 	 */
 	public long dimension( int d );
 
+	/*
+	 * -----------------------------------------------------------------------
+	 *
+	 * Static methods
+	 *
+	 * -----------------------------------------------------------------------
+	 */
+
 	/**
 	 * Check whether all entries in {@code dimensions} are positive
 	 *
@@ -73,9 +81,24 @@ public interface Dimensions extends EuclideanSpace
 	 * @return true if all entries in {@code dimension} are positive, false
 	 *         otherwise
 	 */
-	public static boolean allPositive( final long... dimensions )
+	static boolean allPositive( final long... dimensions )
 	{
 		for ( final long d : dimensions )
+			if ( d < 1 )
+				return false;
+		return true;
+	}
+
+	/**
+	 * Check whether all entries in {@code dimensions} are positive
+	 *
+	 * @param dimensions
+	 * @return true if all entries in {@code dimension} are positive, false
+	 *         otherwise
+	 */
+	static boolean allPositive( final int... dimensions )
+	{
+		for ( final int d : dimensions )
 			if ( d < 1 )
 				return false;
 		return true;
@@ -90,7 +113,25 @@ public interface Dimensions extends EuclideanSpace
 	 *             if any of {@code dimensions} is not positive (zero or
 	 *             negative).
 	 */
-	public static long[] verifyAllPositive( final long... dimensions ) throws InvalidDimensionsException
+	static long[] verifyAllPositive( final long... dimensions ) throws InvalidDimensionsException
+	{
+		if ( !Dimensions.allPositive( dimensions ) )
+			throw new InvalidDimensionsException(
+					dimensions,
+					"Expected only positive dimensions but got: " + Arrays.toString( dimensions ) );
+		return dimensions;
+	}
+
+	/**
+	 * Check that all entries in {@code dimensions} are positive
+	 *
+	 * @param dimensions
+	 * @return {@code dimensions}
+	 * @throws InvalidDimensionsException
+	 *             if any of {@code dimensions} is not positive (zero or
+	 *             negative).
+	 */
+	static int[] verifyAllPositive( final int... dimensions ) throws InvalidDimensionsException
 	{
 		if ( !Dimensions.allPositive( dimensions ) )
 			throw new InvalidDimensionsException(
@@ -111,7 +152,30 @@ public interface Dimensions extends EuclideanSpace
 	 *             {@code dimensions.length == 0} or any dimensions is zero or
 	 *             negative.
 	 */
-	public static long[] verify( final long... dimensions ) throws InvalidDimensionsException
+	static long[] verify( final long... dimensions ) throws InvalidDimensionsException
+	{
+		if ( dimensions == null )
+			throw new InvalidDimensionsException( dimensions, "Dimensions are null." );
+
+		if ( dimensions.length == 0 )
+			throw new InvalidDimensionsException( dimensions, "Dimensions are zero length." );
+
+		return verifyAllPositive( dimensions );
+	}
+
+	/**
+	 * Verify that {@code dimensions} is not null or empty, and that all
+	 * dimensions are positive. Throw {@link InvalidDimensionsException} otherwise.
+	 *
+	 * @param dimensions
+	 *            to be verified.
+	 * @return {@code dimensions} if successfully verified.
+	 * @throws IllegalArgumentException
+	 *             if {@code dimensions == null} or
+	 *             {@code dimensions.length == 0} or any dimensions is zero or
+	 *             negative.
+	 */
+	static int[] verify( final int... dimensions ) throws InvalidDimensionsException
 	{
 		if ( dimensions == null )
 			throw new InvalidDimensionsException( dimensions, "Dimensions are null." );
