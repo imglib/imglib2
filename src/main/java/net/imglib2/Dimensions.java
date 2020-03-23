@@ -35,6 +35,7 @@
 package net.imglib2;
 
 import java.util.Arrays;
+import net.imglib2.exception.InvalidDimensionsException;
 
 /**
  * Defines an extent in <em>n</em>-dimensional discrete space.
@@ -119,23 +120,5 @@ public interface Dimensions extends EuclideanSpace
 			throw new InvalidDimensionsException( dimensions, "Dimensions are zero length." );
 
 		return verifyAllPositive( dimensions );
-	}
-
-	public static class InvalidDimensionsException extends IllegalArgumentException
-	{
-
-		private final long[] dimensions;
-
-		public InvalidDimensionsException( final long[] dimensions, final String message )
-		{
-			super( message );
-			this.dimensions = dimensions.clone();
-		}
-
-		public long[] getDimenionsCopy()
-		{
-			return this.dimensions.clone();
-		}
-
 	}
 }
