@@ -109,7 +109,7 @@ public class ImgTestHelper
 		{
 			factory.apply( dims );
 		}
-		catch ( final Dimensions.InvalidDimensions exception )
+		catch ( final Dimensions.InvalidDimensionsException exception )
 		{
 			Assert.assertArrayEquals( dims, exception.getDimenionsCopy() );
 			return;
@@ -119,13 +119,13 @@ public class ImgTestHelper
 
 			Assert.fail( String.format(
 					"Expected exception of type %s but %s was thrown.",
-					Dimensions.InvalidDimensions.class.getName(),
+					Dimensions.InvalidDimensionsException.class.getName(),
 					exception.getClass().getName() ) );
 		}
 
 		Assert.fail( String.format(
 				"Expected exception of type %s but no exception was thrown.",
-				Dimensions.InvalidDimensions.class.getName() ) );
+				Dimensions.InvalidDimensionsException.class.getName() ) );
 	}
 
 	public static boolean testImg( final long[] size, final ImgFactory< FloatType > factory1, final ImgFactory< FloatType > factory2 )
