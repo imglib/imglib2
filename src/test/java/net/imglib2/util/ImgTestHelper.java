@@ -37,9 +37,9 @@ package net.imglib2.util;
 import java.util.Random;
 import java.util.function.Function;
 
+import net.imglib2.exception.InvalidDimensionsException;
 import org.junit.Assert;
 import net.imglib2.Cursor;
-import net.imglib2.Dimensions;
 import net.imglib2.RandomAccess;
 import net.imglib2.img.Img;
 import net.imglib2.img.ImgFactory;
@@ -109,7 +109,7 @@ public class ImgTestHelper
 		{
 			factory.apply( dims );
 		}
-		catch ( final Dimensions.InvalidDimensionsException exception )
+		catch ( final InvalidDimensionsException exception )
 		{
 			Assert.assertArrayEquals( dims, exception.getDimenionsCopy() );
 			return;
@@ -119,13 +119,13 @@ public class ImgTestHelper
 
 			Assert.fail( String.format(
 					"Expected exception of type %s but %s was thrown.",
-					Dimensions.InvalidDimensionsException.class.getName(),
+					InvalidDimensionsException.class.getName(),
 					exception.getClass().getName() ) );
 		}
 
 		Assert.fail( String.format(
 				"Expected exception of type %s but no exception was thrown.",
-				Dimensions.InvalidDimensionsException.class.getName() ) );
+				InvalidDimensionsException.class.getName() ) );
 	}
 
 	public static boolean testImg( final long[] size, final ImgFactory< FloatType > factory1, final ImgFactory< FloatType > factory2 )
