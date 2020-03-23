@@ -45,6 +45,7 @@ import net.imglib2.RealInterval;
 import net.imglib2.RealLocalizable;
 import net.imglib2.RealRandomAccess;
 import net.imglib2.RealRandomAccessible;
+import net.imglib2.exception.IncompatibleTypeException;
 import net.imglib2.img.Img;
 import net.imglib2.img.ImgFactory;
 import net.imglib2.img.array.ArrayImg;
@@ -893,8 +894,18 @@ public class Util
 	{
 		if ( targetSize instanceof Img )
 		{
-			Img< ? > targetImg = ( Img< ? > ) targetSize;
-			return targetImg.factory().imgFactory( type );
+			final Img< ? > targetImg = ( Img< ? > ) targetSize;
+			final ImgFactory< ? > factory = targetImg.factory();
+			if ( factory != null )
+			{
+				try
+				{
+					return factory.imgFactory( type );
+				}
+				catch ( IncompatibleTypeException e )
+				{
+				}
+			}
 		}
 		if ( type instanceof NativeType )
 		{
