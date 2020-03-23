@@ -75,6 +75,8 @@ public class NtreeImgFactory< T extends NativeType< T > > extends NativeImgFacto
 
 	private < A > NtreeImg< T, ? > create( final long[] dimensions, final T type, final NativeTypeFactory< T, A > typeFactory )
 	{
+		Dimensions.verify( dimensions );
+
 		final Fraction entitiesPerPixel = type.getEntitiesPerPixel();
 		if ( entitiesPerPixel.getNumerator() != entitiesPerPixel.getDenominator() )
 			throw new RuntimeException( "not implemented" );
