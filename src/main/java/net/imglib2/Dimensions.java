@@ -66,7 +66,7 @@ public interface Dimensions extends EuclideanSpace
 	public long dimension( int d );
 
 	/**
-	 * Check that all entries in {@code dimensions} are positive
+	 * Check whether all entries in {@code dimensions} are positive
 	 *
 	 * @param dimensions
 	 * @return true if all entries in {@code dimension} are positive, false
@@ -85,14 +85,14 @@ public interface Dimensions extends EuclideanSpace
 	 *
 	 * @param dimensions
 	 * @return {@code dimensions}
-	 * @throws InvalidDimensions
+	 * @throws InvalidDimensionsException
 	 *             if any of {@code dimensions} is not positive (zero or
 	 *             negative).
 	 */
-	public static long[] verifyAllPositive( final long... dimensions ) throws InvalidDimensions
+	public static long[] verifyAllPositive( final long... dimensions ) throws InvalidDimensionsException
 	{
 		if ( !Dimensions.allPositive( dimensions ) )
-			throw new InvalidDimensions(
+			throw new InvalidDimensionsException(
 					dimensions,
 					"Expected only positive dimensions but got: " + Arrays.toString( dimensions ) );
 		return dimensions;
@@ -100,7 +100,7 @@ public interface Dimensions extends EuclideanSpace
 
 	/**
 	 * Verify that {@code dimensions} is not null or empty, and that all
-	 * dimensions are positive. Throw {@link InvalidDimensions} otherwise.
+	 * dimensions are positive. Throw {@link InvalidDimensionsException} otherwise.
 	 *
 	 * @param dimensions
 	 *            to be verified.
@@ -110,23 +110,23 @@ public interface Dimensions extends EuclideanSpace
 	 *             {@code dimensions.length == 0} or any dimensions is zero or
 	 *             negative.
 	 */
-	public static long[] verify( final long... dimensions ) throws InvalidDimensions
+	public static long[] verify( final long... dimensions ) throws InvalidDimensionsException
 	{
 		if ( dimensions == null )
-			throw new InvalidDimensions( dimensions, "Dimensions are null." );
+			throw new InvalidDimensionsException( dimensions, "Dimensions are null." );
 
 		if ( dimensions.length == 0 )
-			throw new InvalidDimensions( dimensions, "Dimensions are zero length." );
+			throw new InvalidDimensionsException( dimensions, "Dimensions are zero length." );
 
 		return verifyAllPositive( dimensions );
 	}
 
-	public static class InvalidDimensions extends IllegalArgumentException
+	public static class InvalidDimensionsException extends IllegalArgumentException
 	{
 
 		private final long[] dimensions;
 
-		public InvalidDimensions( final long[] dimensions, final String message )
+		public InvalidDimensionsException( final long[] dimensions, final String message )
 		{
 			super( message );
 			this.dimensions = dimensions.clone();
