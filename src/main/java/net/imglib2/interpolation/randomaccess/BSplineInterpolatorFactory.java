@@ -50,6 +50,8 @@ public class BSplineInterpolatorFactory< T extends RealType< T > > implements In
 
 	final boolean clipping;
 
+	final int radius;
+
 	/**
 	 * Creates a new {@link BSplineInterpolatorFactory} using the BSpline
 	 * interpolation in a certain window
@@ -60,11 +62,31 @@ public class BSplineInterpolatorFactory< T extends RealType< T > > implements In
 	 *            the bspline-interpolation can create values that are bigger or
 	 *            smaller than the original values, so they can be clipped to
 	 *            the range of the {@link Type} if wanted
+	 * @param radius
+	 * 			  the radius of the interpolating kernel.
 	 */
-	public BSplineInterpolatorFactory( final int order, final boolean clipping )
+	public BSplineInterpolatorFactory( final int order, final boolean clipping, final int radius )
 	{
 		this.order = order;
 		this.clipping = clipping;
+		this.radius = radius;
+	}
+
+	/**
+	 * Creates a new {@link BSplineInterpolatorFactory} using the BSpline
+	 * interpolation in a certain window
+	 *
+	 * @param order
+	 *            the order of the bspline
+	 * @param clipping
+	 *            the bspline-interpolation can create values that are bigger or
+	 *            smaller than the original values, so they can be clipped to
+	 *            the range of the {@link Type} if wanted
+	 *
+	 */
+	public BSplineInterpolatorFactory( final int order, final boolean clipping )
+	{
+		this( order, clipping, order + 1 );
 	}
 
 	/**
@@ -77,13 +99,12 @@ public class BSplineInterpolatorFactory< T extends RealType< T > > implements In
 	 */
 	public BSplineInterpolatorFactory( final int order )
 	{
-		this.order = order;
-		this.clipping = true;
+		this( order, true, order + 1 );
 	}
 
 	/**
 	 * Creates a new {@link BSplineInterpolatorFactory} with standard parameters
-	 * (do clipping, alpha=3)
+	 * (third-order, with clipping)
 	 */
 	public BSplineInterpolatorFactory()
 	{
@@ -93,7 +114,7 @@ public class BSplineInterpolatorFactory< T extends RealType< T > > implements In
 	@Override
 	public BSplineInterpolator< T > create( final RandomAccessible< T > randomAccessible )
 	{
-		return new BSplineInterpolator< T >( randomAccessible, order, order + 1, clipping );
+		return new BSplineInterpolator< T >( randomAccessible, order, radius, clipping );
 	}
 
 	/**
