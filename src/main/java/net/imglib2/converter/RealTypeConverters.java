@@ -76,7 +76,7 @@ public final class RealTypeConverters
 		RealType< ? > s = Util.getTypeFromInterval( sourceInterval );
 		RealType< ? > d = Util.getTypeFromInterval( destination );
 		Converter< RealType< ? >, RealType< ? > > copy = getConverter( s, d );
-		LoopBuilder.setImages( sourceInterval, destination ).forEachPixel( copy::convert );
+		LoopBuilder.setImages( sourceInterval, destination ).multiThreaded().forEachPixel( copy::convert );
 	}
 
 	/**
