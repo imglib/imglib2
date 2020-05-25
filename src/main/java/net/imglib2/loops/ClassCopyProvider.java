@@ -36,7 +36,6 @@ package net.imglib2.loops;
 import java.lang.reflect.Constructor;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.stream.Stream;
 
 /**
  * Helper to create multiple copies of a class.
@@ -85,8 +84,7 @@ public class ClassCopyProvider< T >
 
 	private static boolean hasDefaultConstructor( final Class< ? > clazz )
 	{
-		return Stream.of( clazz.getConstructors() )
-				.anyMatch( constructor -> constructor.getParameterCount() == 0 );
+		return ListUtils.anyMatch( constructor -> constructor.getParameterCount() == 0, clazz.getConstructors() );
 	}
 
 	private Class< ? extends T > classForKey( final Object key )

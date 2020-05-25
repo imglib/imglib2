@@ -45,15 +45,13 @@ import java.util.List;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.LongConsumer;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /**
  * A package-private utility class that's used by {@link LoopBuilder}.
  *
  * @see FastCursorLoops#createLoop(Object, List)
  */
-final class FastCursorLoops
+public final class FastCursorLoops
 {
 	private FastCursorLoops()
 	{
@@ -102,14 +100,10 @@ final class FastCursorLoops
 	 */
 	public static LongConsumer createLoop( final Object action, final List< ? extends Cursor< ? > > cursors )
 	{
-		final Object[] arguments = Stream.concat( Stream.of( action ), cursors.stream() ).toArray();
-		for ( final ClassCopyProvider< LongConsumer > factory : factories )
-			if ( factory.matches( arguments ) )
-			{
-				final List< Class< ? > > key = Stream.of( arguments ).map( Object::getClass ).collect( Collectors.toList() );
-				return factory.newInstanceForKey( key, arguments );
-			}
-		throw new IllegalArgumentException();
+		final Object[] arguments = ListUtils.concatAsArray( action, cursors );
+		ClassCopyProvider< LongConsumer > factory = factories.get( cursors.size() - 1 );
+		final List< Class< ? > > key = ListUtils.map( Object::getClass, arguments );
+		return factory.newInstanceForKey( key, arguments );
 	}
 
 	public static class OneCursorLoop< A > implements LongConsumer

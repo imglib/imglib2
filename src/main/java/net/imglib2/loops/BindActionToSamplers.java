@@ -40,8 +40,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /**
  * Package-private utility class that's used by {@link LoopBuilder}.
@@ -98,14 +96,10 @@ final class BindActionToSamplers
 	 */
 	public static Runnable bindActionToSamplers( final Object action, final List< ? extends Sampler< ? > > samplers )
 	{
-		final Object[] arguments = Stream.concat( Stream.of( action ), samplers.stream() ).toArray();
-		for ( final ClassCopyProvider< Runnable > factory : factories )
-			if ( factory.matches( arguments ) )
-			{
-				final List< Class< ? extends Object > > key = Stream.of( arguments ).map( Object::getClass ).collect( Collectors.toList() );
-				return factory.newInstanceForKey( key, arguments );
-			}
-		throw new IllegalArgumentException();
+		final Object[] arguments = ListUtils.concatAsArray( action, samplers );
+		final ClassCopyProvider< Runnable > factory = factories.get( samplers.size() - 1 );
+		final List< Class< ? extends Object > > key = ListUtils.map( Object::getClass, arguments );
+		return factory.newInstanceForKey( key, arguments );
 	}
 
 	public static class ConsumerRunnable< A > implements Runnable
