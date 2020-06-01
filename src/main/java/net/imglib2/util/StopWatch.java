@@ -44,8 +44,8 @@ import java.text.DecimalFormat;
  *
  * @author Tobias Pietzsch
  */
-public class StopWatch {
-
+public class StopWatch
+{
 	private long time;
 
 	private long total;
@@ -59,7 +59,8 @@ public class StopWatch {
 	 * This constructor will also create a StopWatch, just like {@link #createStopped()},
 	 * but the more expressively named factory methods are preferred.
 	 */
-	private StopWatch() {
+	private StopWatch()
+	{
 		time = System.nanoTime();
 		total = 0;
 		started = 0;
@@ -70,22 +71,25 @@ public class StopWatch {
 	 * Construct new {@link StopWatch}. It is not running initially. Call
 	 * {@link #start()} to start timing.
 	 */
-	public static StopWatch createStopped() {
+	public static StopWatch createStopped()
+	{
 		return new StopWatch();
 	}
 
 	/**
 	 * Construct and start a new {@link StopWatch}.
 	 */
-	public static StopWatch createAndStart() {
+	public static StopWatch createAndStart()
+	{
 		StopWatch sw = new StopWatch();
 		sw.start();
 		return sw;
 	}
 
-	private long safeNanos() {
+	private long safeNanos()
+	{
 		final long t = System.nanoTime();
-		if (t > time)
+		if ( t > time )
 			time = t;
 		return time;
 	}
@@ -93,8 +97,9 @@ public class StopWatch {
 	/**
 	 * Start the clock.
 	 */
-	public synchronized void start() {
-		if (running)
+	public synchronized void start()
+	{
+		if ( running )
 			stop();
 		started = safeNanos();
 		running = true;
@@ -103,8 +108,9 @@ public class StopWatch {
 	/**
 	 * Stop the clock.
 	 */
-	public synchronized void stop() {
-		if (running)
+	public synchronized void stop()
+	{
+		if ( running )
 			total += safeNanos() - started;
 		running = false;
 	}
@@ -116,8 +122,9 @@ public class StopWatch {
 	 *
 	 * @return the total time the clock was running, in nano-seconds.
 	 */
-	public synchronized long nanoTime() {
-		if (running)
+	public synchronized long nanoTime()
+	{
+		if ( running )
 			return total + safeNanos() - started;
 		else
 			return total;
@@ -128,7 +135,8 @@ public class StopWatch {
 	 * clock can be started and stopped multiple times, accumulating the time
 	 * intervals it was running in between.
 	 */
-	public double seconds() {
+	public double seconds()
+	{
 		return nanoTime() * 1e-9;
 	}
 
@@ -143,7 +151,7 @@ public class StopWatch {
 		return secondsToString( seconds() );
 	}
 
-	private static DecimalFormat format = new DecimalFormat("#0.000");
+	private static DecimalFormat format = new DecimalFormat( "#0.000" );
 
 	public static String secondsToString( double seconds )
 	{
@@ -153,7 +161,7 @@ public class StopWatch {
 		if ( abs < 1e-3 )
 			return format.format( seconds * 1e6 ) + " \u00b5s";
 		if ( abs < 1 )
-			return format.format( seconds * 1e3 )+ " ms";
+			return format.format( seconds * 1e3 ) + " ms";
 		return format.format( seconds ) + " s";
 	}
 }

@@ -45,6 +45,7 @@ import net.imglib2.RealInterval;
 import net.imglib2.RealLocalizable;
 import net.imglib2.RealRandomAccess;
 import net.imglib2.RealRandomAccessible;
+import net.imglib2.exception.IncompatibleTypeException;
 import net.imglib2.img.Img;
 import net.imglib2.img.ImgFactory;
 import net.imglib2.img.array.ArrayImg;
@@ -71,6 +72,14 @@ import java.util.stream.StreamSupport;
  */
 public class Util
 {
+
+	/**
+	 * The possible java array size is JVM dependent an actually
+	 * slightly below Integer.MAX_VALUE. This is the same MAX_ARRAY_SIZE
+	 * as used for example in ArrayList in OpenJDK8.
+	 */
+	private static final int MAX_ARRAY_SIZE = Integer.MAX_VALUE - 8;
+
 	/**
 	 * This does only work when T is erased to Object at call site.
 	 * <p>
@@ -836,10 +845,7 @@ public class Util
 	 */
 	public static < T extends NativeType< T > > ImgFactory< T > getArrayOrCellImgFactory( final Dimensions targetSize, final T type )
 	{
-		if ( Intervals.numElements( targetSize ) <= Integer.MAX_VALUE )
-			return new ArrayImgFactory<>( type );
-		final int cellSize = ( int ) Math.pow( Integer.MAX_VALUE / type.getEntitiesPerPixel().getRatio(), 1.0 / targetSize.numDimensions() );
-		return new CellImgFactory<>( type, cellSize );
+		return getArrayOrCellImgFactory( targetSize, Integer.MAX_VALUE, type );
 	}
 
 	/**
@@ -860,21 +866,22 @@ public class Util
 	 */
 	public static < T extends NativeType< T > > ImgFactory< T > getArrayOrCellImgFactory( final Dimensions targetSize, final int targetCellSize, final T type )
 	{
-		if ( Intervals.numElements( targetSize ) <= Integer.MAX_VALUE )
+		Fraction entitiesPerPixel = type.getEntitiesPerPixel();
+		final long numElements = Intervals.numElements( targetSize );
+		final long numEntities = entitiesPerPixel.mulCeil( numElements );
+		if ( numElements <= Integer.MAX_VALUE && numEntities <= MAX_ARRAY_SIZE )
 			return new ArrayImgFactory<>( type );
-		final int cellSize;
-		if ( Math.pow( targetCellSize, targetSize.numDimensions() ) <= Integer.MAX_VALUE )
-			cellSize = targetCellSize;
-		else
-			cellSize = ( int ) Math.pow( Integer.MAX_VALUE / type.getEntitiesPerPixel().getRatio(), 1.0 / targetSize.numDimensions() );
+		final int maxCellSize = ( int ) Math.pow( Math.min( MAX_ARRAY_SIZE / entitiesPerPixel.getRatio(), Integer.MAX_VALUE ), 1.0 / targetSize.numDimensions() );
+		final int cellSize = Math.min( targetCellSize, maxCellSize );
 		return new CellImgFactory<>( type, cellSize );
 	}
 
 	/**
 	 * Create an appropriate {@link ImgFactory} for the requested
-	 * {@code targetSize} and {@code type}. If the type is a {@link NativeType},
-	 * then {@link #getArrayOrCellImgFactory(Dimensions, NativeType)} is used;
-	 * if not, a {@link ListImgFactory} is returned.
+	 * {@code targetSize} and {@code type}. If the target size is a {@link Img},
+	 * return its {@link ImgFactory}. If the type is a {@link NativeType}, then
+	 * {@link #getArrayOrCellImgFactory(Dimensions, NativeType)} is used; if
+	 * not, a {@link ListImgFactory} is returned.
 	 * 
 	 * @param targetSize
 	 *            size of image that the factory should be able to create.
@@ -885,6 +892,21 @@ public class Util
 	 */
 	public static < T > ImgFactory< T > getSuitableImgFactory( final Dimensions targetSize, final T type )
 	{
+		if ( targetSize instanceof Img )
+		{
+			final Img< ? > targetImg = ( Img< ? > ) targetSize;
+			final ImgFactory< ? > factory = targetImg.factory();
+			if ( factory != null )
+			{
+				try
+				{
+					return factory.imgFactory( type );
+				}
+				catch ( IncompatibleTypeException e )
+				{
+				}
+			}
+		}
 		if ( type instanceof NativeType )
 		{
 			// NB: Eclipse does not demand the cast to ImgFactory< T >, but javac does.

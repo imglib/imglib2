@@ -68,50 +68,7 @@ public class CellImgFactory< T extends NativeType< T > > extends NativeImgFactor
 	public CellImgFactory( final T type, final int... cellDimensions )
 	{
 		super( type );
-		defaultCellDimensions = cellDimensions.clone();
-		verifyDimensions( defaultCellDimensions );
-	}
-
-	/**
-	 * Verify that {@code dimensions} is not null or empty, and that no
-	 * dimension is less than 1. Throw {@link IllegalArgumentException}
-	 * otherwise.
-	 *
-	 * @param dimensions
-	 * @throws IllegalArgumentException
-	 */
-	public static void verifyDimensions( final int[] dimensions ) throws IllegalArgumentException
-	{
-		if ( dimensions == null )
-			throw new IllegalArgumentException( "dimensions == null" );
-
-		if ( dimensions.length == 0 )
-			throw new IllegalArgumentException( "dimensions.length == 0" );
-
-		for ( int d = 0; d < dimensions.length; d++ )
-			if ( dimensions[ d ] <= 0 )
-				throw new IllegalArgumentException( "dimensions[ " + d + " ] <= 0" );
-	}
-
-	/**
-	 * Verify that {@code dimensions} is not null or empty, and that no
-	 * dimension is less than 1. Throw {@link IllegalArgumentException}
-	 * otherwise.
-	 *
-	 * @param dimensions
-	 * @throws IllegalArgumentException
-	 */
-	public static void verifyDimensions( final long dimensions[] ) throws IllegalArgumentException
-	{
-		if ( dimensions == null )
-			throw new IllegalArgumentException( "dimensions == null" );
-
-		if ( dimensions.length == 0 )
-			throw new IllegalArgumentException( "dimensions.length == 0" );
-
-		for ( int d = 0; d < dimensions.length; d++ )
-			if ( dimensions[ d ] <= 0 )
-				throw new IllegalArgumentException( "dimensions[ " + d + " ] <= 0" );
+		defaultCellDimensions = Dimensions.verify( cellDimensions ).clone();
 	}
 
 	/**
@@ -164,7 +121,7 @@ public class CellImgFactory< T extends NativeType< T > > extends NativeImgFactor
 			final T type,
 			final NativeTypeFactory< T, A > typeFactory )
 	{
-		verifyDimensions( dimensions );
+		Dimensions.verify( dimensions );
 
 		final int n = dimensions.length;
 		final Fraction entitiesPerPixel = type.getEntitiesPerPixel();
@@ -204,7 +161,6 @@ public class CellImgFactory< T extends NativeType< T > > extends NativeImgFactor
 		throw new IncompatibleTypeException( this, type.getClass().getCanonicalName() + " does not implement NativeType." );
 	}
 
-
 	/*
 	 * -----------------------------------------------------------------------
 	 *
@@ -225,8 +181,7 @@ public class CellImgFactory< T extends NativeType< T > > extends NativeImgFactor
 	@Deprecated
 	public CellImgFactory( final int... cellDimensions )
 	{
-		defaultCellDimensions = cellDimensions.clone();
-		verifyDimensions( defaultCellDimensions );
+		defaultCellDimensions = Dimensions.verify( cellDimensions ).clone();
 	}
 
 	@Deprecated
@@ -237,5 +192,33 @@ public class CellImgFactory< T extends NativeType< T > > extends NativeImgFactor
 		@SuppressWarnings( { "unchecked", "rawtypes" } )
 		final CellImg< T, ? > img = create( dimensions, type, ( NativeTypeFactory ) type.getNativeTypeFactory() );
 		return img;
+	}
+
+	/*
+	 * -----------------------------------------------------------------------
+	 *
+	 * Deprecated API.
+	 *
+	 * -----------------------------------------------------------------------
+	 */
+
+	/**
+	 * @deprecated This method has been deprecated in favor of
+	 * {@link Dimensions#verify(int...)}.
+	 */
+	@Deprecated
+	public static void verifyDimensions( final int[] dimensions ) throws IllegalArgumentException
+	{
+		Dimensions.verify( dimensions );
+	}
+
+	/**
+	 * @deprecated This method has been deprecated in favor of
+	 * {@link Dimensions#verify(long...)}.
+	 */
+	@Deprecated
+	public static void verifyDimensions( final long dimensions[] ) throws IllegalArgumentException
+	{
+		Dimensions.verify( dimensions );
 	}
 }

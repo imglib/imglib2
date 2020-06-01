@@ -68,7 +68,7 @@ public class ListImgFactory< T > extends ImgFactory< T >
 	@Override
 	public ListImg< T > create( final long... dimensions )
 	{
-		return new ListImg<>( dimensions, type() );
+		return new ListImg<>( Dimensions.verify( dimensions ), type() );
 	}
 
 	@Override

@@ -40,6 +40,7 @@ import net.imglib2.FinalInterval;
 import net.imglib2.FinalRealInterval;
 import net.imglib2.Interval;
 import net.imglib2.Localizable;
+import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.RealInterval;
 import net.imglib2.RealLocalizable;
 import net.imglib2.transform.integer.Mixed;
@@ -845,7 +846,7 @@ public class Intervals
 	}
 
 	/**
-	 * Tests whether two intervals have equal dimensions (same size).
+	 * Tests whether two {@link Dimensions} have the same size.
 	 */
 	public static boolean equalDimensions( final Dimensions a, final Dimensions b )
 	{
@@ -857,6 +858,15 @@ public class Intervals
 				return false;
 
 		return true;
+	}
+
+	/**
+	 * Tests whether two intervals have equal dimensions (same size).
+	 */
+	@Deprecated
+	public static boolean equalDimensions( final Interval a, final Interval b )
+	{
+		return equalDimensions( ( Dimensions ) a, ( Dimensions ) b );
 	}
 
 	/**
@@ -1028,6 +1038,17 @@ public class Intervals
 		final double[] min = new double[ interval.numDimensions() ];
 		interval.realMin( min );
 		return min;
+	}
+
+	/**
+	 * Returns an image, where each pixel value is the position of the pixel
+	 * represented as {@link Localizable}.
+	 *
+	 * @param interval
+	 *            Interval of the returned image.
+	 */
+	public static RandomAccessibleInterval< Localizable > positions( final Interval interval ) {
+		return Localizables.randomAccessibleInterval( interval);
 	}
 
 	/**
