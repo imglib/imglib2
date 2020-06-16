@@ -34,6 +34,7 @@
 
 package net.imglib2.img.basictypeaccess.array;
 
+import java.util.concurrent.atomic.AtomicBoolean;
 import net.imglib2.Dirty;
 
 /**
@@ -42,7 +43,7 @@ import net.imglib2.Dirty;
  */
 public class DirtyByteArray extends AbstractByteArray< DirtyByteArray > implements Dirty
 {
-	protected boolean dirty = false;
+	private final AtomicBoolean dirty = new AtomicBoolean();
 
 	public DirtyByteArray( final int numEntities )
 	{
@@ -57,7 +58,8 @@ public class DirtyByteArray extends AbstractByteArray< DirtyByteArray > implemen
 	@Override
 	public void setValue( final int index, final byte value )
 	{
-		dirty = true;
+		if ( !dirty.getPlain() )
+			dirty.setRelease( true );
 		data[ index ] = value;
 	}
 
@@ -70,12 +72,13 @@ public class DirtyByteArray extends AbstractByteArray< DirtyByteArray > implemen
 	@Override
 	public boolean isDirty()
 	{
-		return dirty;
+		return dirty.getAcquire();
 	}
 
 	@Override
 	public void setDirty()
 	{
-		dirty = true;
+		if ( !dirty.getPlain() )
+			dirty.setRelease( true );
 	}
 }
