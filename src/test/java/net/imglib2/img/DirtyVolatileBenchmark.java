@@ -53,6 +53,28 @@ public class DirtyVolatileBenchmark
 		}
 	}
 
+	public static class ByteArray implements Dirty
+	{
+		private final byte[] data;
+
+		public ByteArray( final byte[] data )
+		{
+			this.data = data;
+		}
+
+		@Override
+		public boolean isDirty()
+		{
+			return true;
+		}
+
+		@Override
+		public void setValue( final int index, final byte value )
+		{
+			data[ index ] = value;
+		}
+	}
+
 	public static class DirtyByteArrayVolatile implements Dirty
 	{
 		private final byte[] data;
@@ -209,6 +231,8 @@ public class DirtyVolatileBenchmark
 
 	private static final int numEntities = 67108864; // 268435456;
 
+	public Dirty bytes;
+
 	public Dirty bytesUnsafe;
 
 	public Dirty bytesVolatile;
@@ -227,6 +251,7 @@ public class DirtyVolatileBenchmark
 	public void allocate()
 	{
 		final byte[] data = new byte[ numEntities ];
+		bytes = new ByteArray( data );
 		bytesUnsafe = new DirtyByteArrayUnsafe( data );
 		bytesVolatile = new DirtyByteArrayVolatile( data );
 		bytesVolatileRead = new DirtyByteArrayVolatileRead( data );
@@ -234,6 +259,15 @@ public class DirtyVolatileBenchmark
 		bytesAtomicPlain = new DirtyByteArrayAtomicPlain( data );
 		bytesAtomicAcquire = new DirtyByteArrayAtomicAcquire( data );
 		bytesCounDownLatch = new DirtyByteArrayCountDownLatch( data );
+	}
+
+	@Benchmark
+	@BenchmarkMode( Mode.AverageTime )
+	@OutputTimeUnit( TimeUnit.MILLISECONDS )
+	public void touchAll()
+	{
+		for ( int i = 0; i < numEntities; i++ )
+			bytes.setValue( i, ( byte ) 2 );
 	}
 
 	@Benchmark
