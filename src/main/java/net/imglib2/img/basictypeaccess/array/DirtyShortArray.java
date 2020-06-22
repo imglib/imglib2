@@ -78,4 +78,10 @@ public class DirtyShortArray extends AbstractShortArray< DirtyShortArray > imple
 	{
 		dirty = true;
 	}
+
+	@Override
+	public void setDirty( final boolean dirty )
+	{
+		this.dirty = dirty;
+	}
 }

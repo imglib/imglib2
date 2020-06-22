@@ -78,4 +78,10 @@ public class DirtyLongArray extends AbstractLongArray< DirtyLongArray > implemen
 	{
 		dirty = true;
 	}
+
+	@Override
+	public void setDirty( final boolean dirty )
+	{
+		this.dirty = dirty;
+	}
 }

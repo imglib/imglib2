@@ -82,4 +82,10 @@ public class DirtyVolatileCharArray extends AbstractVolatileCharArray< DirtyVola
 	{
 		dirty = true;
 	}
+
+	@Override
+	public void setDirty( final boolean dirty )
+	{
+		this.dirty = dirty;
+	}
 }

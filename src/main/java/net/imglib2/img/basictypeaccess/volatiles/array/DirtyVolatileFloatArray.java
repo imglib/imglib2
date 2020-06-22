@@ -82,4 +82,10 @@ public class DirtyVolatileFloatArray extends AbstractVolatileFloatArray< DirtyVo
 	{
 		dirty = true;
 	}
+
+	@Override
+	public void setDirty( final boolean dirty )
+	{
+		this.dirty = dirty;
+	}
 }

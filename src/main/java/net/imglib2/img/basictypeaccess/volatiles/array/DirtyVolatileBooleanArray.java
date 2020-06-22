@@ -81,4 +81,10 @@ public class DirtyVolatileBooleanArray extends AbstractVolatileBooleanArray< Dir
 	{
 		dirty = true;
 	}
+
+	@Override
+	public void setDirty( final boolean dirty )
+	{
+		this.dirty = dirty;
+	}
 }

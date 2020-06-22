@@ -78,4 +78,10 @@ public class DirtyBooleanArray extends AbstractBooleanArray< DirtyBooleanArray >
 	{
 		dirty = true;
 	}
+
+	@Override
+	public void setDirty( final boolean dirty )
+	{
+		this.dirty = dirty;
+	}
 }

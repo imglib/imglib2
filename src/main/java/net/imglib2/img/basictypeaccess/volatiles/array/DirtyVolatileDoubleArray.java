@@ -82,4 +82,10 @@ public class DirtyVolatileDoubleArray extends AbstractVolatileDoubleArray< Dirty
 	{
 		dirty = true;
 	}
+
+	@Override
+	public void setDirty( final boolean dirty )
+	{
+		this.dirty = dirty;
+	}
 }

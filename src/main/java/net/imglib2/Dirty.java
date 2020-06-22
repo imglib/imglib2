@@ -41,7 +41,9 @@ package net.imglib2;
  */
 public interface Dirty
 {
-	public boolean isDirty();
+	boolean isDirty();
 
-	public void setDirty();
+	void setDirty();
+
+	void setDirty( boolean dirty );
 }

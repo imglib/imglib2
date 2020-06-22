@@ -78,4 +78,10 @@ public class DirtyFloatArray extends AbstractFloatArray< DirtyFloatArray > imple
 	{
 		dirty = true;
 	}
+
+	@Override
+	public void setDirty( final boolean dirty )
+	{
+		this.dirty = dirty;
+	}
 }
