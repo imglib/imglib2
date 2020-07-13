@@ -40,8 +40,8 @@ import net.imglib2.util.IntervalIndexer;
 import net.imglib2.util.Intervals;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
-import java.util.stream.IntStream;
 
 public class IntervalChunks
 {
@@ -86,9 +86,8 @@ public class IntervalChunks
 		long[] totalMin = Intervals.minAsLongArray( interval );
 		long[] totalMax = Intervals.maxAsLongArray( interval );
 		long[] dimensions = Intervals.dimensionsAsLongArray( interval );
-		long[] cellNumbers = IntStream.range( 0, dimensions.length )
-				.mapToLong( d -> divideAndRoundUp( dimensions[ d ], cellDimensions[ d ] ) )
-				.toArray();
+		long[] cellNumbers = new long[ dimensions.length ];
+		Arrays.setAll(cellNumbers, d -> divideAndRoundUp( dimensions[ d ], cellDimensions[ d ] ) );
 		long elements = Intervals.numElements( cellNumbers );
 		long[] cellIndicies = new long[ n ];
 		long[] min = new long[ n ];
