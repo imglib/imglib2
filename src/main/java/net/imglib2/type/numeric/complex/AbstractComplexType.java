@@ -107,6 +107,20 @@ public abstract class AbstractComplexType< T extends AbstractComplexType< T >> i
 	}
 
 	@Override
+	public void pow( final T c )
+	{
+		setReal( Math.pow( getRealDouble(), c.getRealDouble() ) );
+		setImaginary( Math.pow( getImaginaryDouble(), c.getImaginaryDouble() ) );
+	}
+	
+	@Override
+	public void pow( final double power )
+	{
+		setReal( Math.pow( getRealDouble(), power ) );
+		setImaginary( Math.pow( getImaginaryDouble(), power ) );
+	}
+
+	@Override
 	public void complexConjugate()
 	{
 		setImaginary( -getImaginaryDouble() );
