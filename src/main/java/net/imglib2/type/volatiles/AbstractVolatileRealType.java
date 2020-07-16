@@ -219,6 +219,19 @@ public abstract class AbstractVolatileRealType< R extends RealType< R >, T exten
 	}
 
 	@Override
+	public void pow( final T c )
+	{
+		t.pow( c.t );
+		valid &= c.valid;
+	}
+
+	@Override
+	public void pow( final double power )
+	{
+		t.pow( power );
+	}
+
+	@Override
 	public void setZero()
 	{
 		t.setZero();

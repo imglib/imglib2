@@ -99,6 +99,19 @@ abstract public class AbstractVolatileNumericType< N extends NumericType< N >, T
 	}
 
 	@Override
+	public void pow( final T c )
+	{
+		t.pow( c.t );
+		valid &= c.valid;
+	}
+
+	@Override
+	public void pow( final double power )
+	{
+		t.pow( power );
+	}
+
+	@Override
 	public void setZero()
 	{
 		t.setZero();
