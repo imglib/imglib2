@@ -144,6 +144,30 @@ abstract public class AbstractNumericComposite< T extends NumericType< T >, C ex
 	}
 
 	@Override
+	public void pow( final C c )
+	{
+		sourceAccess.setPosition( 0, d );
+		c.sourceAccess.setPosition( 0, d );
+		while ( sourceAccess.getLongPosition( d ) < length )
+		{
+			sourceAccess.get().pow( c.sourceAccess.get() );
+			sourceAccess.fwd( d );
+			c.sourceAccess.fwd( d );
+		}
+	}
+
+	@Override
+	public void pow( final double power )
+	{
+		sourceAccess.setPosition( 0, d );
+		while ( sourceAccess.getLongPosition( d ) < length )
+		{
+			sourceAccess.get().pow( power );
+			sourceAccess.fwd( d );
+		}
+	}
+
+	@Override
 	public void setZero()
 	{
 		sourceAccess.setPosition( 0, d );

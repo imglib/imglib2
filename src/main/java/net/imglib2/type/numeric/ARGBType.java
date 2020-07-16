@@ -224,7 +224,7 @@ public class ARGBType extends AbstractNativeType< ARGBType > implements NumericT
 						Math.pow( red( value1 ), power ),
 						Math.pow( green( value1 ), power ),
 						Math.pow( blue( value1 ), power ),
-						Math.pow( alpha( value1 ), power ) ) );	
+						Math.pow( alpha( value1 ), power ) ) );
 	}
 
 	@Override
