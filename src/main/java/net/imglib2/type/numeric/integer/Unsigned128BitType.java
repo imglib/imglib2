@@ -457,6 +457,18 @@ public class Unsigned128BitType extends AbstractIntegerType< Unsigned128BitType 
 	{
 		set( get().divide( t.get() ).toByteArray() );
 	}
+	
+	@Override
+	public void pow( final Unsigned128BitType t )
+	{
+		throw new UnsupportedOperationException( "pow is not yet supported for Unsigned128BitType" );
+	}
+	
+	@Override
+	public void pow( final double power )
+	{
+		throw new UnsupportedOperationException( "pow is not yet supported for Unsigned128BitType" );
+	}
 
 	@Override
 	public int compareTo( final Unsigned128BitType t )
