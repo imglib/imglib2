@@ -2,7 +2,7 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2018 Tobias Pietzsch, Stephan Preibisch, Stephan Saalfeld,
+ * Copyright (C) 2009 - 2020 Tobias Pietzsch, Stephan Preibisch, Stephan Saalfeld,
  * John Bogovic, Albert Cardona, Barry DeZonia, Christian Dietz, Jan Funke,
  * Aivar Grislis, Jonathan Hale, Grant Harris, Stefan Helfrich, Mark Hiner,
  * Martin Horn, Steffen Jaensch, Lee Kamentsky, Larry Lindsey, Melissa Linkert,
@@ -35,7 +35,6 @@ package net.imglib2.loops;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import net.imglib2.Localizable;
 import net.imglib2.Positionable;
@@ -84,7 +83,7 @@ public final class SyncedPositionables
 
 	public static Positionable create( final List< ? extends Positionable > positionables )
 	{
-		List< Class< ? > > key = positionables.stream().map( Object::getClass ).collect( Collectors.toList() );
+		List< Class< ? > > key = ListUtils.map( Object::getClass, positionables );
 		int i = positionables.size();
 		return forwarderFactories.get( i >= forwarderFactories.size() ? 0 : i ).newInstanceForKey( key, positionables );
 	}

@@ -2,7 +2,7 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2018 Tobias Pietzsch, Stephan Preibisch, Stephan Saalfeld,
+ * Copyright (C) 2009 - 2020 Tobias Pietzsch, Stephan Preibisch, Stephan Saalfeld,
  * John Bogovic, Albert Cardona, Barry DeZonia, Christian Dietz, Jan Funke,
  * Aivar Grislis, Jonathan Hale, Grant Harris, Stefan Helfrich, Mark Hiner,
  * Martin Horn, Steffen Jaensch, Lee Kamentsky, Larry Lindsey, Melissa Linkert,
@@ -11,13 +11,13 @@
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- *
+ * 
  * 1. Redistributions of source code must retain the above copyright notice,
  *    this list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  *    this list of conditions and the following disclaimer in the documentation
  *    and/or other materials provided with the distribution.
- *
+ * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -45,15 +45,13 @@ import java.util.List;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.LongConsumer;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /**
  * A package-private utility class that's used by {@link LoopBuilder}.
  *
  * @see FastCursorLoops#createLoop(Object, List)
  */
-final class FastCursorLoops
+public final class FastCursorLoops
 {
 	private FastCursorLoops()
 	{
@@ -102,14 +100,10 @@ final class FastCursorLoops
 	 */
 	public static LongConsumer createLoop( final Object action, final List< ? extends Cursor< ? > > cursors )
 	{
-		final Object[] arguments = Stream.concat( Stream.of( action ), cursors.stream() ).toArray();
-		for ( final ClassCopyProvider< LongConsumer > factory : factories )
-			if ( factory.matches( arguments ) )
-			{
-				final List< Class< ? > > key = Stream.of( arguments ).map( Object::getClass ).collect( Collectors.toList() );
-				return factory.newInstanceForKey( key, arguments );
-			}
-		throw new IllegalArgumentException();
+		final Object[] arguments = ListUtils.concatAsArray( action, cursors );
+		ClassCopyProvider< LongConsumer > factory = factories.get( cursors.size() - 1 );
+		final List< Class< ? > > key = ListUtils.map( Object::getClass, arguments );
+		return factory.newInstanceForKey( key, arguments );
 	}
 
 	public static class OneCursorLoop< A > implements LongConsumer
