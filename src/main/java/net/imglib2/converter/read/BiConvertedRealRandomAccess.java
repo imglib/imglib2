@@ -34,6 +34,8 @@
 
 package net.imglib2.converter.read;
 
+import java.util.function.Supplier;
+
 import net.imglib2.Localizable;
 import net.imglib2.RealLocalizable;
 import net.imglib2.RealRandomAccess;
@@ -49,6 +51,8 @@ final public class BiConvertedRealRandomAccess< A, B, C extends Type< C > > exte
 {
 	protected final RealRandomAccess< B > sourceB;
 
+	protected final Supplier< BiConverter< ? super A, ? super B, ? super C > > converterSupplier;
+
 	protected final BiConverter< ? super A, ? super B, ? super C > converter;
 
 	protected final C converted;
@@ -56,13 +60,23 @@ final public class BiConvertedRealRandomAccess< A, B, C extends Type< C > > exte
 	public BiConvertedRealRandomAccess(
 			final RealRandomAccess< A > sourceA,
 			final RealRandomAccess< B > sourceB,
-			final BiConverter< ? super A, ? super B, ? super C > converter,
+			final Supplier< BiConverter< ? super A, ? super B, ? super C > > converterSupplier,
 			final C c )
 	{
 		super( sourceA );
 		this.sourceB = sourceB;
-		this.converter = converter;
+		this.converterSupplier = converterSupplier;
+		this.converter = converterSupplier.get();
 		this.converted = c.copy();
+	}
+
+	public BiConvertedRealRandomAccess(
+			final RealRandomAccess< A > sourceA,
+			final RealRandomAccess< B > sourceB,
+			final BiConverter< ? super A, ? super B, ? super C > converter,
+			final C c )
+	{
+		this( sourceA, sourceB, () -> converter, c );
 	}
 
 	@Override
@@ -232,7 +246,7 @@ final public class BiConvertedRealRandomAccess< A, B, C extends Type< C > > exte
 		return new BiConvertedRealRandomAccess<>(
 				source.copyRealRandomAccess(),
 				sourceB.copyRealRandomAccess(),
-				converter,
+				converterSupplier,
 				converted );
 	}
 }

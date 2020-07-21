@@ -11,13 +11,13 @@
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice,
  *    this list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  *    this list of conditions and the following disclaimer in the documentation
  *    and/or other materials provided with the distribution.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -34,24 +34,38 @@
 
 package net.imglib2.converter.readwrite;
 
+import java.util.function.Supplier;
+
 import net.imglib2.RandomAccess;
 import net.imglib2.converter.AbstractConvertedRandomAccess;
 
 /**
  * TODO
- * 
+ *
  */
 public final class WriteConvertedRandomAccess< A, B > extends AbstractConvertedRandomAccess< A, B >
 {
+	private final Supplier< SamplerConverter< ? super A, B > > converterSupplier;
+
 	private final SamplerConverter< ? super A, B > converter;
 
 	private final B converted;
 
-	public WriteConvertedRandomAccess( final RandomAccess< A > source, final SamplerConverter< ? super A, B > converter )
+	public WriteConvertedRandomAccess(
+			final RandomAccess< A > source,
+			final Supplier< SamplerConverter< ? super A, B > > converterSupplier )
 	{
 		super( source );
-		this.converter = converter;
+		this.converterSupplier = converterSupplier;
+		this.converter = converterSupplier.get();
 		this.converted = converter.convert( source );
+	}
+
+	public WriteConvertedRandomAccess(
+			final RandomAccess< A > source,
+			final SamplerConverter< ? super A, B > converter )
+	{
+		this( source, () -> converter );
 	}
 
 	@Override
@@ -63,6 +77,6 @@ public final class WriteConvertedRandomAccess< A, B > extends AbstractConvertedR
 	@Override
 	public WriteConvertedRandomAccess< A, B > copy()
 	{
-		return new WriteConvertedRandomAccess< A, B >( ( RandomAccess< A > ) source.copy(), converter );
+		return new WriteConvertedRandomAccess< A, B >( ( RandomAccess< A > ) source.copy(), converterSupplier );
 	}
 }

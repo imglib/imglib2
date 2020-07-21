@@ -34,6 +34,8 @@
 
 package net.imglib2.converter.read;
 
+import java.util.function.Supplier;
+
 import net.imglib2.Cursor;
 import net.imglib2.IterableInterval;
 import net.imglib2.converter.AbstractConvertedCursor;
@@ -46,11 +48,35 @@ import net.imglib2.type.Type;
  */
 public class BiConvertedCursor< A, B, C extends Type< C > > extends AbstractConvertedCursor< A, C >
 {
+	protected final Supplier< BiConverter< ? super A, ? super B, ? super C > > converterSupplier;
+
 	protected final BiConverter< ? super A, ? super B, ? super C > converter;
 
-	final protected Cursor< B > sourceB;
+	protected final Cursor< B > sourceB;
 
 	protected final C converted;
+
+	/**
+	 * Creates a copy of c for conversion that can be accessed through
+	 * {@link #get()}.
+	 *
+	 * @param sourceA
+	 * @param sourceB
+	 * @param converter
+	 * @param c
+	 */
+	public BiConvertedCursor(
+			final Cursor< A > sourceA,
+			final Cursor< B > sourceB,
+			final Supplier< BiConverter< ? super A, ? super B, ? super C > > converterSupplier,
+			final C c )
+	{
+		super( sourceA );
+		this.sourceB = sourceB;
+		this.converterSupplier = converterSupplier;
+		this.converter = converterSupplier.get();
+		this.converted = c.copy();
+	}
 
 	/**
 	 * Creates a copy of c for conversion that can be accessed through
@@ -67,10 +93,7 @@ public class BiConvertedCursor< A, B, C extends Type< C > > extends AbstractConv
 			final BiConverter< ? super A, ? super B, ? super C > converter,
 			final C c )
 	{
-		super( sourceA );
-		this.sourceB = sourceB;
-		this.converter = converter;
-		this.converted = c.copy();
+		this( sourceA, sourceB, () -> converter, c );
 	}
 
 	@Override
@@ -125,7 +148,7 @@ public class BiConvertedCursor< A, B, C extends Type< C > > extends AbstractConv
 		return new BiConvertedCursor< A, B, C >(
 				( Cursor< A > ) source.copy(),
 				( Cursor< B > ) sourceB.copy(),
-				converter,
+				converterSupplier,
 				converted );
 	}
 }

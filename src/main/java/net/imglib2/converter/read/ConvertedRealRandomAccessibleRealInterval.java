@@ -11,13 +11,13 @@
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice,
  *    this list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  *    this list of conditions and the following disclaimer in the documentation
  *    and/or other materials provided with the distribution.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -34,6 +34,8 @@
 
 package net.imglib2.converter.read;
 
+import java.util.function.Supplier;
+
 import net.imglib2.AbstractWrappedRealInterval;
 import net.imglib2.RealInterval;
 import net.imglib2.RealRandomAccessibleRealInterval;
@@ -43,31 +45,42 @@ import net.imglib2.type.Type;
 
 /**
  * TODO
- * 
+ *
  */
 public class ConvertedRealRandomAccessibleRealInterval< A, B extends Type< B > > extends AbstractWrappedRealInterval< RealRandomAccessibleRealInterval< A > > implements RealRandomAccessibleRealInterval< B >, View
 {
-	final protected Converter< ? super A, ? super B > converter;
+	final protected Supplier< Converter< ? super A, ? super B > > converterSupplier;
 
 	final protected B converted;
 
-	public ConvertedRealRandomAccessibleRealInterval( final RealRandomAccessibleRealInterval< A > source, final Converter< ? super A, ? super B > converter, final B b )
+	public ConvertedRealRandomAccessibleRealInterval(
+			final RealRandomAccessibleRealInterval< A > source,
+			final Supplier< Converter< ? super A, ? super B > > converterSupplier,
+			final B b )
 	{
 		super( source );
-		this.converter = converter;
+		this.converterSupplier = converterSupplier;
 		this.converted = b.copy();
+	}
+
+	public ConvertedRealRandomAccessibleRealInterval(
+			final RealRandomAccessibleRealInterval< A > source,
+			final Converter< ? super A, ? super B > converter,
+			final B b )
+	{
+		this( source, () -> converter, b );
 	}
 
 	@Override
 	public ConvertedRealRandomAccess< A, B > realRandomAccess()
 	{
-		return new ConvertedRealRandomAccess< A, B >( sourceInterval.realRandomAccess(), converter, converted );
+		return new ConvertedRealRandomAccess< A, B >( sourceInterval.realRandomAccess(), converterSupplier, converted );
 	}
 
 	@Override
 	public ConvertedRealRandomAccess< A, B > realRandomAccess( final RealInterval interval )
 	{
-		return new ConvertedRealRandomAccess< A, B >( sourceInterval.realRandomAccess( interval ), converter, converted );
+		return new ConvertedRealRandomAccess< A, B >( sourceInterval.realRandomAccess( interval ), converterSupplier, converted );
 	}
 
 	/**
@@ -78,8 +91,16 @@ public class ConvertedRealRandomAccessibleRealInterval< A, B extends Type< B > >
 		return converted.copy();
 	}
 
+	/**
+	 * Returns an instance of the {@link Converter}.  If the
+	 * {@link ConvertedIterableInterval} was created with a {@link Converter}
+	 * instead of a {@link Supplier}, then the returned converter will be this
+	 * instance.
+	 *
+	 * @return
+	 */
 	public Converter< ? super A, ? super B > getConverter()
 	{
-		return converter;
+		return converterSupplier.get();
 	}
 }

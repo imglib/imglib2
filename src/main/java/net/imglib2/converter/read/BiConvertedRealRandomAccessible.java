@@ -34,6 +34,8 @@
 
 package net.imglib2.converter.read;
 
+import java.util.function.Supplier;
+
 import net.imglib2.RealInterval;
 import net.imglib2.RealRandomAccessible;
 import net.imglib2.converter.AbstractConvertedRealRandomAccessible;
@@ -48,9 +50,21 @@ public class BiConvertedRealRandomAccessible< A, B, C extends Type< C > > extend
 {
 	protected final RealRandomAccessible< B > sourceB;
 
-	protected final BiConverter< ? super A, ? super B, ? super C > converter;
+	protected final Supplier< BiConverter< ? super A, ? super B, ? super C > > converterSupplier;
 
 	final protected C converted;
+
+	public BiConvertedRealRandomAccessible(
+			final RealRandomAccessible< A > sourceA,
+			final RealRandomAccessible< B > sourceB,
+			final Supplier< BiConverter< ? super A, ? super B, ? super C > > converterSupplier,
+			final C c )
+	{
+		super( sourceA );
+		this.sourceB = sourceB;
+		this.converterSupplier = converterSupplier;
+		this.converted = c.copy();
+	}
 
 	public BiConvertedRealRandomAccessible(
 			final RealRandomAccessible< A > sourceA,
@@ -58,10 +72,7 @@ public class BiConvertedRealRandomAccessible< A, B, C extends Type< C > > extend
 			final BiConverter< ? super A, ? super B, ? super C > converter,
 			final C c )
 	{
-		super( sourceA );
-		this.sourceB = sourceB;
-		this.converter = converter;
-		this.converted = c.copy();
+		this( sourceA, sourceB, () -> converter, c );
 	}
 
 	@Override
@@ -70,7 +81,7 @@ public class BiConvertedRealRandomAccessible< A, B, C extends Type< C > > extend
 		return new BiConvertedRealRandomAccess<>(
 				source.realRandomAccess(),
 				sourceB.realRandomAccess(),
-				converter,
+				converterSupplier,
 				converted );
 	}
 
@@ -80,7 +91,7 @@ public class BiConvertedRealRandomAccessible< A, B, C extends Type< C > > extend
 		return new BiConvertedRealRandomAccess<>(
 				source.realRandomAccess( interval ),
 				sourceB.realRandomAccess( interval ),
-				converter,
+				converterSupplier,
 				converted );
 	}
 
@@ -92,8 +103,16 @@ public class BiConvertedRealRandomAccessible< A, B, C extends Type< C > > extend
 		return converted.copy();
 	}
 
+	/**
+	 * Returns an instance of the {@link BiConverter}.  If the
+	 * {@link BiConvertedIterableInterval} was created with a
+	 * {@link BiConverter} instead of a {@link Supplier}, then the returned
+	 * {@link BiConverter} will be this instance.
+	 *
+	 * @return
+	 */
 	public BiConverter< ? super A, ? super B, ? super C > getConverter()
 	{
-		return converter;
+		return converterSupplier.get();
 	}
 }

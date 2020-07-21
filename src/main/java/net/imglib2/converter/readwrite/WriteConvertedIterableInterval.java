@@ -11,13 +11,13 @@
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice,
  *    this list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  *    this list of conditions and the following disclaimer in the documentation
  *    and/or other materials provided with the distribution.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -34,32 +34,41 @@
 
 package net.imglib2.converter.readwrite;
 
+import java.util.function.Supplier;
+
 import net.imglib2.IterableInterval;
 import net.imglib2.converter.AbstractConvertedIterableInterval;
 
 /**
  * TODO
- * 
+ *
  */
 public class WriteConvertedIterableInterval< A, B > extends AbstractConvertedIterableInterval< A, B >
 {
-	private final SamplerConverter< ? super A, B > converter;
+	private final Supplier< SamplerConverter< ? super A, B > > converterSupplier;
+
+	public WriteConvertedIterableInterval(
+			final IterableInterval< A > source,
+			final Supplier< SamplerConverter< ? super A, B > > converterSupplier )
+	{
+		super( source );
+		this.converterSupplier = converterSupplier;
+	}
 
 	public WriteConvertedIterableInterval( final IterableInterval< A > source, final SamplerConverter< ? super A, B > converter )
 	{
-		super( source );
-		this.converter = converter;
+		this( source, () -> converter );
 	}
 
 	@Override
 	public WriteConvertedCursor< A, B > cursor()
 	{
-		return new WriteConvertedCursor< A, B >( sourceInterval.cursor(), converter );
+		return new WriteConvertedCursor< A, B >( sourceInterval.cursor(), converterSupplier );
 	}
 
 	@Override
 	public WriteConvertedCursor< A, B > localizingCursor()
 	{
-		return new WriteConvertedCursor< A, B >( sourceInterval.localizingCursor(), converter );
+		return new WriteConvertedCursor< A, B >( sourceInterval.localizingCursor(), converterSupplier );
 	}
 }
