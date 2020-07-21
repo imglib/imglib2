@@ -11,13 +11,13 @@
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice,
  *    this list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  *    this list of conditions and the following disclaimer in the documentation
  *    and/or other materials provided with the distribution.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -34,6 +34,8 @@
 
 package net.imglib2.converter.read;
 
+import java.util.function.Supplier;
+
 import net.imglib2.RealRandomAccess;
 import net.imglib2.converter.AbstractConvertedRealRandomAccess;
 import net.imglib2.converter.Converter;
@@ -41,19 +43,41 @@ import net.imglib2.type.Type;
 
 /**
  * TODO
- * 
+ *
  */
 final public class ConvertedRealRandomAccess< A, B extends Type< B > > extends AbstractConvertedRealRandomAccess< A, B >
 {
+	final protected Supplier< Converter< ? super A, ? super B > > converterSupplier;
+
 	final protected Converter< ? super A, ? super B > converter;
 
 	final protected B converted;
 
-	public ConvertedRealRandomAccess( final RealRandomAccess< A > source, final Converter< ? super A, ? super B > converter, final B b )
+	/**
+	 * Creates a copy of b for conversion that can be accessed through
+	 * {@link #get()}.
+	 *
+	 * @param source
+	 * @param converterSupplier
+	 * @param b
+	 */
+	public ConvertedRealRandomAccess(
+			final RealRandomAccess< A > source,
+			final Supplier< Converter< ? super A, ? super B > > converterSupplier,
+			final B b )
 	{
 		super( source );
-		this.converter = converter;
+		this.converterSupplier = converterSupplier;
+		this.converter = converterSupplier.get();
 		this.converted = b.copy();
+	}
+
+	public ConvertedRealRandomAccess(
+			final RealRandomAccess< A > source,
+			final Converter< ? super A, ? super B > converter,
+			final B b )
+	{
+		this( source, () -> converter, b );
 	}
 
 	@Override
@@ -66,6 +90,6 @@ final public class ConvertedRealRandomAccess< A, B extends Type< B > > extends A
 	@Override
 	public ConvertedRealRandomAccess< A, B > copy()
 	{
-		return new ConvertedRealRandomAccess< A, B >( source.copyRealRandomAccess(), converter, converted );
+		return new ConvertedRealRandomAccess< A, B >( source.copyRealRandomAccess(), converterSupplier, converted );
 	}
 }

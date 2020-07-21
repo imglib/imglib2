@@ -34,6 +34,8 @@
 
 package net.imglib2.converter.read;
 
+import java.util.function.Supplier;
+
 import net.imglib2.Interval;
 import net.imglib2.IterableInterval;
 import net.imglib2.converter.AbstractConvertedIterableInterval;
@@ -48,9 +50,33 @@ public class BiConvertedIterableInterval< A, B, C extends Type< C > > extends Ab
 {
 	protected final IterableInterval< B > sourceIntervalB;
 
-	protected final BiConverter< ? super A, ? super B, ? super C > converter;
+	protected final Supplier< BiConverter< ? super A, ? super B, ? super C > > converterSupplier;
 
 	protected final C converted;
+
+	/**
+	 * Creates a copy of c for conversion.
+	 *
+	 * @param sourceA this {@link IterableInterval} is used for all
+	 * 			{@link Interval} related requests.  When using
+	 * 			{@link Interval Intervals} with different sizes, make sure
+	 * 			that this is the smaller {@link Interval}.
+	 * @param sourceB
+	 * @param converter
+	 * @param c
+	 */
+	public BiConvertedIterableInterval(
+			final IterableInterval< A > sourceA,
+			final IterableInterval< B > sourceB,
+			final Supplier< BiConverter< ? super A, ? super B, ? super C > > converterSupplier,
+			final C c )
+	{
+		super( sourceA );
+
+		this.sourceIntervalB = sourceB;
+		this.converterSupplier = converterSupplier;
+		this.converted = c.copy();
+	}
 
 	/**
 	 * Creates a copy of c for conversion.
@@ -69,17 +95,13 @@ public class BiConvertedIterableInterval< A, B, C extends Type< C > > extends Ab
 			final BiConverter< ? super A, ? super B, ? super C > converter,
 			final C c )
 	{
-		super( sourceA );
-
-		this.sourceIntervalB = sourceB;
-		this.converter = converter;
-		this.converted = c.copy();
+		this( sourceA, sourceB, () -> converter, c );
 	}
 
 	@Override
 	public BiConvertedCursor< A, B, C > cursor()
 	{
-		return new BiConvertedCursor<>( sourceInterval.cursor(), sourceIntervalB.cursor(), converter, converted );
+		return new BiConvertedCursor<>( sourceInterval.cursor(), sourceIntervalB.cursor(), converterSupplier, converted );
 	}
 
 	/**
@@ -91,7 +113,7 @@ public class BiConvertedIterableInterval< A, B, C extends Type< C > > extends Ab
 	@Override
 	public BiConvertedCursor< A, B, C > localizingCursor()
 	{
-		return new BiConvertedCursor<>( sourceInterval.localizingCursor(), sourceIntervalB.cursor(), converter, converted );
+		return new BiConvertedCursor<>( sourceInterval.localizingCursor(), sourceIntervalB.cursor(), converterSupplier, converted );
 	}
 
 	/**
@@ -102,8 +124,16 @@ public class BiConvertedIterableInterval< A, B, C extends Type< C > > extends Ab
 		return converted.copy();
 	}
 
+	/**
+	 * Returns an instance of the {@link BiConverter}.  If the
+	 * {@link BiConvertedIterableInterval} was created with a
+	 * {@link BiConverter} instead of a {@link Supplier}, then the returned
+	 * {@link BiConverter} will be this instance.
+	 *
+	 * @return
+	 */
 	public BiConverter< ? super A, ? super B, ? super C > getConverter()
 	{
-		return converter;
+		return converterSupplier.get();
 	}
 }

@@ -34,6 +34,8 @@
 
 package net.imglib2.converter.read;
 
+import java.util.function.Supplier;
+
 import net.imglib2.Localizable;
 import net.imglib2.RandomAccess;
 import net.imglib2.converter.AbstractConvertedRandomAccess;
@@ -46,6 +48,8 @@ import net.imglib2.type.Type;
  */
 final public class BiConvertedRandomAccess< A, B, C extends Type< C > > extends AbstractConvertedRandomAccess< A, C >
 {
+	protected final Supplier< BiConverter< ? super A, ? super B, ? super C > > converterSupplier;
+
 	protected final BiConverter< ? super A, ? super B, ? super C > converter;
 
 	protected final RandomAccess< B > sourceB;
@@ -55,13 +59,23 @@ final public class BiConvertedRandomAccess< A, B, C extends Type< C > > extends 
 	public BiConvertedRandomAccess(
 			final RandomAccess< A > sourceA,
 			final RandomAccess< B > sourceB,
-			final BiConverter< ? super A, ? super B, ? super C > converter,
+			final Supplier< BiConverter< ? super A, ? super B, ? super C > > converterSupplier,
 			final C c )
 	{
 		super( sourceA );
 		this.sourceB = sourceB;
-		this.converter = converter;
+		this.converterSupplier = converterSupplier;
+		this.converter = converterSupplier.get();
 		this.converted = c.copy();
+	}
+
+	public BiConvertedRandomAccess(
+			final RandomAccess< A > sourceA,
+			final RandomAccess< B > sourceB,
+			final BiConverter< ? super A, ? super B, ? super C > converter,
+			final C c )
+	{
+		this( sourceA, sourceB, () -> converter, c );
 	}
 
 	@Override
@@ -158,6 +172,10 @@ final public class BiConvertedRandomAccess< A, B, C extends Type< C > > extends 
 	@Override
 	public BiConvertedRandomAccess< A, B, C > copy()
 	{
-		return new BiConvertedRandomAccess<>( source.copyRandomAccess(), sourceB.copyRandomAccess(), converter, converted );
+		return new BiConvertedRandomAccess<>(
+				source.copyRandomAccess(),
+				sourceB.copyRandomAccess(),
+				converterSupplier,
+				converted );
 	}
 }

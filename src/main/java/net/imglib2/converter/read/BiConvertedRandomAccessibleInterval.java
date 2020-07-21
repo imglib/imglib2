@@ -34,6 +34,8 @@
 
 package net.imglib2.converter.read;
 
+import java.util.function.Supplier;
+
 import net.imglib2.AbstractWrappedInterval;
 import net.imglib2.Interval;
 import net.imglib2.RandomAccessibleInterval;
@@ -49,9 +51,21 @@ public class BiConvertedRandomAccessibleInterval< A, B, C extends Type< C > > ex
 {
 	protected final RandomAccessibleInterval< B > sourceIntervalB;
 
-	protected final BiConverter< ? super A, ? super B, ? super C > converter;
+	protected final Supplier< BiConverter< ? super A, ? super B, ? super C > > converterSupplier;
 
 	protected final C converted;
+
+	public BiConvertedRandomAccessibleInterval(
+			final RandomAccessibleInterval< A > sourceA,
+			final RandomAccessibleInterval< B > sourceB,
+			final Supplier< BiConverter< ? super A, ? super B, ? super C > > converterSupplier,
+			final C c )
+	{
+		super( sourceA );
+		this.sourceIntervalB = sourceB;
+		this.converterSupplier = converterSupplier;
+		this.converted = c.copy();
+	}
 
 	public BiConvertedRandomAccessibleInterval(
 			final RandomAccessibleInterval< A > sourceA,
@@ -59,10 +73,7 @@ public class BiConvertedRandomAccessibleInterval< A, B, C extends Type< C > > ex
 			final BiConverter< ? super A, ? super B, ? super C > converter,
 			final C c )
 	{
-		super( sourceA );
-		this.sourceIntervalB = sourceB;
-		this.converter = converter;
-		this.converted = c.copy();
+		this( sourceA, sourceB, () -> converter, c );
 	}
 
 	@Override
@@ -71,7 +82,7 @@ public class BiConvertedRandomAccessibleInterval< A, B, C extends Type< C > > ex
 		return new BiConvertedRandomAccess<>(
 				sourceInterval.randomAccess(),
 				sourceIntervalB.randomAccess(),
-				converter,
+				converterSupplier,
 				converted );
 	}
 
@@ -81,7 +92,7 @@ public class BiConvertedRandomAccessibleInterval< A, B, C extends Type< C > > ex
 		return new BiConvertedRandomAccess<>(
 				sourceInterval.randomAccess( interval ),
 				sourceIntervalB.randomAccess( interval ),
-				converter,
+				converterSupplier,
 				converted );
 	}
 
@@ -93,8 +104,16 @@ public class BiConvertedRandomAccessibleInterval< A, B, C extends Type< C > > ex
 		return converted.copy();
 	}
 
+	/**
+	 * Returns an instance of the {@link BiConverter}.  If the
+	 * {@link BiConvertedIterableInterval} was created with a
+	 * {@link BiConverter} instead of a {@link Supplier}, then the returned
+	 * {@link BiConverter} will be this instance.
+	 *
+	 * @return
+	 */
 	public BiConverter< ? super A, ? super B, ? super C > getConverter()
 	{
-		return converter;
+		return converterSupplier.get();
 	}
 }
