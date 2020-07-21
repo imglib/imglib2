@@ -40,9 +40,11 @@ import net.imglib2.FinalInterval;
 import net.imglib2.FinalRealInterval;
 import net.imglib2.Interval;
 import net.imglib2.Localizable;
+import net.imglib2.Point;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.RealInterval;
 import net.imglib2.RealLocalizable;
+import net.imglib2.RealPoint;
 import net.imglib2.transform.integer.Mixed;
 import net.imglib2.view.ViewTransforms;
 
@@ -955,6 +957,26 @@ public class Intervals
 	}
 
 	/**
+	 * Create a {@link Point} with the minimum of an {@link Interval}.
+	 * 
+	 * <p>
+	 * Keep in mind that creating arrays wildly is not good practice and
+	 * consider using the interval directly.
+	 * </p>
+	 * 
+	 * @param interval
+	 *            something with interval boundaries
+	 * 
+	 * @return minimum as a new Point
+	 */
+	public static Point minAsPoint( final Interval interval )
+	{
+		final Point min = new Point( interval.numDimensions() );
+		interval.min( min );
+		return min;
+	}
+
+	/**
 	 * Create a <code>long[]</code> with the maximum of an {@link Interval}.
 	 * 
 	 * <p>
@@ -997,6 +1019,26 @@ public class Intervals
 	}
 
 	/**
+	 * Create a {@link Point} with the maximum of an {@link Interval}.
+	 * 
+	 * <p>
+	 * Keep in mind that creating arrays wildly is not good practice and
+	 * consider using the interval directly.
+	 * </p>
+	 * 
+	 * @param interval
+	 *            something with interval boundaries
+	 * 
+	 * @return maximum as a new Point
+	 */
+	public static Point maxAsPoint( final Interval interval )
+	{
+		final Point max = new Point( interval.numDimensions() );
+		interval.max( max );
+		return max;
+	}
+
+	/**
 	 * Create a <code>double[]</code> with the maximum of a {@link RealInterval}
 	 * .
 	 * 
@@ -1019,6 +1061,28 @@ public class Intervals
 	}
 
 	/**
+	 * Create a {@link RealPoint} with the maxiumum of a {@link RealInterval}
+	 * .
+	 * 
+	 * <p>
+	 * Keep in mind that creating arrays wildly is not good practice and
+	 * consider using the interval directly. See
+	 * {@link RealInterval#realMin(double[])}.
+	 * </p>
+	 * 
+	 * @param interval
+	 *            something with interval boundaries
+	 * 
+	 * @return maximum as a new RealPoint 
+	 */
+	public static RealPoint maxAsRealPoint( final RealInterval interval )
+	{
+		final RealPoint max = new RealPoint( interval.numDimensions() );
+		interval.realMax( max );
+		return max;
+	}
+
+	/**
 	 * Create a <code>double[]</code> with the minimum of a {@link RealInterval}
 	 * .
 	 * 
@@ -1036,6 +1100,28 @@ public class Intervals
 	public static double[] minAsDoubleArray( final RealInterval interval )
 	{
 		final double[] min = new double[ interval.numDimensions() ];
+		interval.realMin( min );
+		return min;
+	}
+
+	/**
+	 * Create a {@link RealPoint} with the minimum of a {@link RealInterval}
+	 * .
+	 * 
+	 * <p>
+	 * Keep in mind that creating arrays wildly is not good practice and
+	 * consider using the interval directly. See
+	 * {@link RealInterval#realMin(double[])}.
+	 * </p>
+	 * 
+	 * @param interval
+	 *            something with interval boundaries
+	 * 
+	 * @return minimum as a new RealPoint 
+	 */
+	public static RealPoint minAsRealPoint( final RealInterval interval )
+	{
+		final RealPoint min = new RealPoint( interval.numDimensions() );
 		interval.realMin( min );
 		return min;
 	}

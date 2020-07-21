@@ -104,4 +104,17 @@ public interface Localizable extends RealLocalizable
 	{
 		return getLongPosition( d );
 	}
+
+	/**
+	 * Allocate and return a long array containing the localizable's position.
+	 * 
+	 * @param localizable the localizable
+	 * @return the array
+	 */
+	public static long[] asLongArray( final Localizable localizable )
+	{
+		final long[] out = new long[ localizable.numDimensions() ];
+		localizable.localize( out );
+		return out;
+	}
 }

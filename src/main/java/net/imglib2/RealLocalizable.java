@@ -90,4 +90,18 @@ public interface RealLocalizable extends EuclideanSpace
 	 * @return dimension of current position
 	 */
 	public double getDoublePosition( int d );
+
+	/**
+	 * Allocate and return a double array containing the localizable's position.
+	 * 
+	 * @param realLocalizable
+	 *            the real localizable
+	 * @return the array
+	 */
+	public static double[] asDoubleArray( final RealLocalizable realLocalizable )
+	{
+		final double[] out = new double[ realLocalizable.numDimensions() ];
+		realLocalizable.localize( out );
+		return out;
+	}
 }
