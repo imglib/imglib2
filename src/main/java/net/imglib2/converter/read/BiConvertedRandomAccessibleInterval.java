@@ -2,7 +2,7 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2020 Tobias Pietzsch, Stephan Preibisch, Stephan Saalfeld,
+ * Copyright (C) 2009 - 2018 Tobias Pietzsch, Stephan Preibisch, Stephan Saalfeld,
  * John Bogovic, Albert Cardona, Barry DeZonia, Christian Dietz, Jan Funke,
  * Aivar Grislis, Jonathan Hale, Grant Harris, Stefan Helfrich, Mark Hiner,
  * Martin Horn, Steffen Jaensch, Lee Kamentsky, Larry Lindsey, Melissa Linkert,
@@ -32,19 +32,69 @@
  * #L%
  */
 
-package net.imglib2.converter;
+package net.imglib2.converter.read;
 
-import java.util.function.BiConsumer;
+import net.imglib2.AbstractWrappedInterval;
+import net.imglib2.Interval;
+import net.imglib2.RandomAccessibleInterval;
+import net.imglib2.View;
+import net.imglib2.converter.BiConverter;
+import net.imglib2.type.Type;
 
 /**
- * This interface is equivalent to the {@link BiConsumer} interface and exists
- * for historical reasons only.  Its main use is for functions with one input
- * variable and one pre-allocated output on individual pixels.
+ * TODO
  *
- * @author Stephan Preibisch
- * @author Stephan Saalfeld
  */
-public interface Converter< A, B >
+public class BiConvertedRandomAccessibleInterval< A, B, C extends Type< C > > extends AbstractWrappedInterval< RandomAccessibleInterval< A > > implements RandomAccessibleInterval< C >, View
 {
-	public void convert( A input, B output );
+	protected final RandomAccessibleInterval< B > sourceIntervalB;
+
+	protected final BiConverter< ? super A, ? super B, ? super C > converter;
+
+	protected final C converted;
+
+	public BiConvertedRandomAccessibleInterval(
+			final RandomAccessibleInterval< A > sourceA,
+			final RandomAccessibleInterval< B > sourceB,
+			final BiConverter< ? super A, ? super B, ? super C > converter,
+			final C c )
+	{
+		super( sourceA );
+		this.sourceIntervalB = sourceB;
+		this.converter = converter;
+		this.converted = c.copy();
+	}
+
+	@Override
+	public BiConvertedRandomAccess< A, B, C > randomAccess()
+	{
+		return new BiConvertedRandomAccess<>(
+				sourceInterval.randomAccess(),
+				sourceIntervalB.randomAccess(),
+				converter,
+				converted );
+	}
+
+	@Override
+	public BiConvertedRandomAccess< A, B, C > randomAccess( final Interval interval )
+	{
+		return new BiConvertedRandomAccess<>(
+				sourceInterval.randomAccess( interval ),
+				sourceIntervalB.randomAccess( interval ),
+				converter,
+				converted );
+	}
+
+	/**
+	 * @return an instance of the destination {@link Type}.
+	 */
+	public C getDestinationType()
+	{
+		return converted.copy();
+	}
+
+	public BiConverter< ? super A, ? super B, ? super C > getConverter()
+	{
+		return converter;
+	}
 }
