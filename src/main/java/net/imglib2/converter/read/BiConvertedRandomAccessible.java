@@ -32,19 +32,60 @@
  * #L%
  */
 
-package net.imglib2.converter;
+package net.imglib2.converter.read;
 
-import java.util.function.BiConsumer;
+import net.imglib2.Interval;
+import net.imglib2.RandomAccessible;
+import net.imglib2.converter.AbstractConvertedRandomAccessible;
+import net.imglib2.converter.BiConverter;
+import net.imglib2.type.Type;
 
 /**
- * This interface is equivalent to the {@link BiConsumer} interface and exists
- * for historical reasons only.  Its main use is for functions with one input
- * variable and one pre-allocated output on individual pixels.
+ * TODO
  *
- * @author Stephan Preibisch
- * @author Stephan Saalfeld
  */
-public interface Converter< A, B >
+public class BiConvertedRandomAccessible< A, B, C extends Type< C > > extends AbstractConvertedRandomAccessible< A, C >
 {
-	public void convert( A input, B output );
+	protected final RandomAccessible< B > sourceB;
+
+	protected final BiConverter< ? super A, ? super B, ? super C > converter;
+
+	protected final C converted;
+
+	public BiConvertedRandomAccessible(
+			final RandomAccessible< A > sourceA,
+			final RandomAccessible< B > sourceB,
+			final BiConverter< ? super A, ? super B, ? super C > converter,
+			final C c )
+	{
+		super( sourceA );
+		this.sourceB = sourceB;
+		this.converter = converter;
+		this.converted = c.copy();
+	}
+
+	@Override
+	public BiConvertedRandomAccess< A, B, C > randomAccess()
+	{
+		return new BiConvertedRandomAccess<>( source.randomAccess(), sourceB.randomAccess(), converter, converted );
+	}
+
+	@Override
+	public BiConvertedRandomAccess< A, B, C > randomAccess( final Interval interval )
+	{
+		return new BiConvertedRandomAccess<>( source.randomAccess( interval ), sourceB.randomAccess( interval ), converter, converted );
+	}
+
+	/**
+	 * @return an instance of the destination {@link Type}.
+	 */
+	public C getDestinationType()
+	{
+		return converted.copy();
+	}
+
+	public BiConverter< ? super A, ? super B, ? super C > getConverter()
+	{
+		return converter;
+	}
 }

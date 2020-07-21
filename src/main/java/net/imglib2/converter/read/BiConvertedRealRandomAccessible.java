@@ -32,19 +32,68 @@
  * #L%
  */
 
-package net.imglib2.converter;
+package net.imglib2.converter.read;
 
-import java.util.function.BiConsumer;
+import net.imglib2.RealInterval;
+import net.imglib2.RealRandomAccessible;
+import net.imglib2.converter.AbstractConvertedRealRandomAccessible;
+import net.imglib2.converter.BiConverter;
+import net.imglib2.type.Type;
 
 /**
- * This interface is equivalent to the {@link BiConsumer} interface and exists
- * for historical reasons only.  Its main use is for functions with one input
- * variable and one pre-allocated output on individual pixels.
+ * TODO
  *
- * @author Stephan Preibisch
- * @author Stephan Saalfeld
  */
-public interface Converter< A, B >
+public class BiConvertedRealRandomAccessible< A, B, C extends Type< C > > extends AbstractConvertedRealRandomAccessible< A, C >
 {
-	public void convert( A input, B output );
+	protected final RealRandomAccessible< B > sourceB;
+
+	protected final BiConverter< ? super A, ? super B, ? super C > converter;
+
+	final protected C converted;
+
+	public BiConvertedRealRandomAccessible(
+			final RealRandomAccessible< A > sourceA,
+			final RealRandomAccessible< B > sourceB,
+			final BiConverter< ? super A, ? super B, ? super C > converter,
+			final C c )
+	{
+		super( sourceA );
+		this.sourceB = sourceB;
+		this.converter = converter;
+		this.converted = c.copy();
+	}
+
+	@Override
+	public BiConvertedRealRandomAccess< A, B, C > realRandomAccess()
+	{
+		return new BiConvertedRealRandomAccess<>(
+				source.realRandomAccess(),
+				sourceB.realRandomAccess(),
+				converter,
+				converted );
+	}
+
+	@Override
+	public BiConvertedRealRandomAccess< A, B, C > realRandomAccess( final RealInterval interval )
+	{
+		return new BiConvertedRealRandomAccess<>(
+				source.realRandomAccess( interval ),
+				sourceB.realRandomAccess( interval ),
+				converter,
+				converted );
+	}
+
+	/**
+	 * @return an instance of the destination {@link Type}.
+	 */
+	public C getDestinationType()
+	{
+		return converted.copy();
+	}
+
+	public BiConverter< ? super A, ? super B, ? super C > getConverter()
+	{
+		return converter;
+	}
 }

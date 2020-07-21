@@ -34,17 +34,14 @@
 
 package net.imglib2.converter;
 
-import java.util.function.BiConsumer;
-
 /**
- * This interface is equivalent to the {@link BiConsumer} interface and exists
- * for historical reasons only.  Its main use is for functions with one input
- * variable and one pre-allocated output on individual pixels.
+ * This interface would be a TriConsumer if such an interface existed in the
+ * JDK.  Its main use is for functions with two input variables and one
+ * pre-allocated output on individual pixels.
  *
- * @author Stephan Preibisch
  * @author Stephan Saalfeld
  */
-public interface Converter< A, B >
+public interface BiConverter< A, B, C >
 {
-	public void convert( A input, B output );
+	public void convert( A inputA, B outputB, C output );
 }

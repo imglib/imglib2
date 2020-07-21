@@ -32,19 +32,69 @@
  * #L%
  */
 
-package net.imglib2.converter;
+package net.imglib2.converter.read;
 
-import java.util.function.BiConsumer;
+import net.imglib2.AbstractWrappedRealInterval;
+import net.imglib2.RealInterval;
+import net.imglib2.RealRandomAccessibleRealInterval;
+import net.imglib2.View;
+import net.imglib2.converter.BiConverter;
+import net.imglib2.type.Type;
 
 /**
- * This interface is equivalent to the {@link BiConsumer} interface and exists
- * for historical reasons only.  Its main use is for functions with one input
- * variable and one pre-allocated output on individual pixels.
+ * TODO
  *
- * @author Stephan Preibisch
- * @author Stephan Saalfeld
  */
-public interface Converter< A, B >
+public class BiConvertedRealRandomAccessibleRealInterval< A, B, C extends Type< C > > extends AbstractWrappedRealInterval< RealRandomAccessibleRealInterval< A > > implements RealRandomAccessibleRealInterval< C >, View
 {
-	public void convert( A input, B output );
+	protected final RealRandomAccessibleRealInterval< B > sourceIntervalB;
+
+	protected final BiConverter< ? super A, ? super B, ? super C > converter;
+
+	protected final C converted;
+
+	public BiConvertedRealRandomAccessibleRealInterval(
+			final RealRandomAccessibleRealInterval< A > sourceA,
+			final RealRandomAccessibleRealInterval< B > sourceB,
+			final BiConverter< ? super A, ? super B, ? super C > converter,
+			final C c )
+	{
+		super( sourceA );
+		this.sourceIntervalB = sourceB;
+		this.converter = converter;
+		this.converted = c.copy();
+	}
+
+	@Override
+	public BiConvertedRealRandomAccess< A, B, C > realRandomAccess()
+	{
+		return new BiConvertedRealRandomAccess<>(
+				sourceInterval.realRandomAccess(),
+				sourceIntervalB.realRandomAccess(),
+				converter,
+				converted );
+	}
+
+	@Override
+	public BiConvertedRealRandomAccess< A, B, C > realRandomAccess( final RealInterval interval )
+	{
+		return new BiConvertedRealRandomAccess<>(
+				sourceInterval.realRandomAccess( interval ),
+				sourceIntervalB.realRandomAccess( interval ),
+				converter,
+				converted );
+	}
+
+	/**
+	 * @return an instance of the destination {@link Type}.
+	 */
+	public C getDestinationType()
+	{
+		return converted.copy();
+	}
+
+	public BiConverter< ? super A, ? super B, ? super C > getConverter()
+	{
+		return converter;
+	}
 }
