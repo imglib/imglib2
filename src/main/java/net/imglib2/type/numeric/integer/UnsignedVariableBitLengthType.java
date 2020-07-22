@@ -282,12 +282,12 @@ public class UnsignedVariableBitLengthType extends AbstractBit64Type< UnsignedVa
 
 	@Override
 	public void pow( final UnsignedVariableBitLengthType c) {
-		set( ( long )Math.pow( get(), c.get() ) );
+		setReal( Math.pow( get(), c.get() ) );
 	}
 
 	@Override
-	public void pow( final double d ) {
-		set( ( long )Math.pow( get(), d) );
+	public void pow( final double power ) {
+		setReal( Math.pow( get(), power) );
 	}
 
 	@Override
