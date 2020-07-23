@@ -36,68 +36,119 @@ package net.imglib2.converter.read;
 
 import java.util.function.Supplier;
 
+import net.imglib2.IterableInterval;
 import net.imglib2.RealCursor;
 import net.imglib2.converter.AbstractConvertedRealCursor;
-import net.imglib2.converter.Converter;
+import net.imglib2.converter.BiConverter;
 import net.imglib2.type.Type;
 
 /**
  * TODO
  *
  */
-public class ConvertedRealCursor< A, B extends Type< B > > extends AbstractConvertedRealCursor< A, B >
+public class BiConvertedRealCursor< A, B, C extends Type< C > > extends AbstractConvertedRealCursor< A, C >
 {
-	final protected Converter< ? super A, ? super B > converter;
+	final protected BiConverter< ? super A, ? super B, ? super C > converter;
 
-	final protected Supplier< Converter< ? super A, ? super B > > converterSupplier;
+	final protected Supplier< BiConverter< ? super A, ? super B, ? super C > > converterSupplier;
 
-	final protected B converted;
+	protected final RealCursor< B > sourceB;
+
+	final protected C converted;
 
 	/**
-	 * Creates a copy of b for conversion that can be accessed through
+	 * Creates a copy of c for conversion that can be accessed through
 	 * {@link #get()}.
 	 *
-	 * @param source
+	 * @param sourceA
+	 * @param sourceB
 	 * @param converterSupplier
-	 * @param b
+	 * @param c
 	 */
-	public ConvertedRealCursor(
-			final RealCursor< A > source,
-			final Supplier< Converter< ? super A, ? super B > > converterSupplier,
-			final B b )
+	public BiConvertedRealCursor(
+			final RealCursor< A > sourceA,
+			final RealCursor< B > sourceB,
+			final Supplier< BiConverter< ? super A, ? super B, ? super C > > converterSupplier,
+			final C c )
 	{
-		super( source );
+		super( sourceA );
+		this.sourceB = sourceB;
 		this.converterSupplier = converterSupplier;
 		this.converter = converterSupplier.get();
-		this.converted = b.copy();
+		this.converted = c.copy();
 	}
 
 	/**
-	 * Creates a copy of b for conversion that can be accessed through
+	 * Creates a copy of c for conversion that can be accessed through
 	 * {@link #get()}.
 	 *
-	 * @param source
+	 * @param sourceA
+	 * @param sourceB
 	 * @param converter
-	 * @param b
+	 * @param c
 	 */
-	public ConvertedRealCursor(
-			final RealCursor< A > source,
-			final Converter< ? super A, ? super B > converter,
-			final B b )
+	public BiConvertedRealCursor(
+			final RealCursor< A > sourceA,
+			final RealCursor< B > sourceB,
+			final BiConverter< ? super A, ? super B, ? super C > converter,
+			final C c )
 	{
-		this( source, () -> converter, b );
+		this( sourceA, sourceB, () -> converter, c );
 	}
 
 	@Override
-	public B get()
+	public C get()
 	{
-		converter.convert( source.get(), converted );
+		converter.convert( source.get(), sourceB.get(), converted );
 		return converted;
 	}
 
 	@Override
-	public ConvertedRealCursor< A, B > copy()
+	public void jumpFwd( final long steps )
 	{
-		return new ConvertedRealCursor< A, B >( ( RealCursor< A > ) source.copy(), converterSupplier, converted );
+		source.jumpFwd( steps );
+		sourceB.jumpFwd( steps );
+	}
+
+	@Override
+	public void fwd()
+	{
+		source.fwd();
+		sourceB.fwd();
+	}
+
+	@Override
+	public void reset()
+	{
+		source.reset();
+		sourceB.reset();
+	}
+
+	/**
+	 * The correct logic would be to return sourceA.hasNext() && sourceB.hasNext()
+	 * but we test only sourceA for efficiency.  Make sure that sourceA is the
+	 * smaller {@link IterableInterval}.
+	 */
+	@Override
+	public boolean hasNext()
+	{
+		return source.hasNext();
+	}
+
+	@Override
+	public void remove()
+	{
+		source.remove();
+		sourceB.remove();
+	}
+
+	@Override
+	public BiConvertedRealCursor< A, B, C > copy()
+	{
+		return new BiConvertedRealCursor<>(
+				( RealCursor< A > ) source.copy(),
+				( RealCursor< B > ) sourceB.copy(),
+				converterSupplier,
+				converted );
 	}
 }

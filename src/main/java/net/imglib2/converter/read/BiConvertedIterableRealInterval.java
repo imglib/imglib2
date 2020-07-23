@@ -38,6 +38,7 @@ import java.util.function.Supplier;
 
 import net.imglib2.IterableRealInterval;
 import net.imglib2.converter.AbstractConvertedIterableRealInterval;
+import net.imglib2.converter.BiConverter;
 import net.imglib2.converter.Converter;
 import net.imglib2.type.Type;
 
@@ -45,60 +46,74 @@ import net.imglib2.type.Type;
  * TODO
  *
  */
-public class ConvertedIterableRealInterval< A, B extends Type< B > > extends AbstractConvertedIterableRealInterval< A, B >
+public class BiConvertedIterableRealInterval< A, B, C extends Type< C > > extends AbstractConvertedIterableRealInterval< A, C >
 {
-	final protected Supplier< Converter< ? super A, ? super B > > converterSupplier;
+	protected final IterableRealInterval< B > sourceIntervalB;
 
-	final protected B converted;
+	final protected Supplier< BiConverter< ? super A, ? super B, ? super C > > converterSupplier;
+
+	final protected C converted;
 
 	/**
-	 * Creates a copy of b for conversion.
+	 * Creates a copy of c for conversion.
 	 *
-	 * @param source
+	 * @param sourceA
+	 * @param sourceB
 	 * @param converter
-	 * @param b
+	 * @param c
 	 */
-	public ConvertedIterableRealInterval(
-			final IterableRealInterval< A > source,
-			final Supplier< Converter< ? super A, ? super B > > converterSupplier,
-			final B b )
+	public BiConvertedIterableRealInterval(
+			final IterableRealInterval< A > sourceA,
+			final IterableRealInterval< B > sourceB,
+			final Supplier< BiConverter< ? super A, ? super B, ? super C > > converterSupplier,
+			final C c )
 	{
-		super( source );
+		super( sourceA );
+		this.sourceIntervalB = sourceB;
 		this.converterSupplier = converterSupplier;
-		this.converted = b.copy();
+		this.converted = c.copy();
 	}
 
 	/**
-	 * Creates a copy of b for conversion.
+	 * Creates a copy of c for conversion.
 	 *
 	 * @param source
 	 * @param converter
 	 * @param b
 	 */
-	public ConvertedIterableRealInterval(
-			final IterableRealInterval< A > source,
-			final Converter< ? super A, ? super B > converter,
-			final B b )
+	public BiConvertedIterableRealInterval(
+			final IterableRealInterval< A > sourceA,
+			final IterableRealInterval< B > sourceB,
+			final BiConverter< ? super A, ? super B, ? super C > converter,
+			final C c )
 	{
-		this( source, () -> converter, b );
+		this( sourceA, sourceB, () -> converter, c );
 	}
 
 	@Override
-	public ConvertedRealCursor< A, B > cursor()
+	public BiConvertedRealCursor< A, B, C > cursor()
 	{
-		return new ConvertedRealCursor< A, B >( sourceInterval.cursor(), converterSupplier, converted );
+		return new BiConvertedRealCursor<>(
+				sourceInterval.cursor(),
+				sourceIntervalB.cursor(),
+				converterSupplier,
+				converted );
 	}
 
 	@Override
-	public ConvertedRealCursor< A, B > localizingCursor()
+	public BiConvertedRealCursor< A, B, C > localizingCursor()
 	{
-		return new ConvertedRealCursor< A, B >( sourceInterval.localizingCursor(), converterSupplier, converted );
+		return new BiConvertedRealCursor<>(
+				sourceInterval.localizingCursor(),
+				sourceIntervalB.localizingCursor(),
+				converterSupplier,
+				converted );
 	}
 
 	/**
 	 * @return an instance of the destination {@link Type}.
 	 */
-	public B getDestinationType()
+	public C getDestinationType()
 	{
 		return converted.copy();
 	}
@@ -111,7 +126,7 @@ public class ConvertedIterableRealInterval< A, B extends Type< B > > extends Abs
 	 *
 	 * @return
 	 */
-	public Converter< ? super A, ? super B > getConverter()
+	public BiConverter< ? super A, ? super B, ? super C > getConverter()
 	{
 		return converterSupplier.get();
 	}

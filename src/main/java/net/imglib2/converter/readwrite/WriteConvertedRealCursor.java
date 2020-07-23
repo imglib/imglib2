@@ -2,7 +2,7 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2018 Tobias Pietzsch, Stephan Preibisch, Stephan Saalfeld,
+ * Copyright (C) 2009 - 2020 Tobias Pietzsch, Stephan Preibisch, Stephan Saalfeld,
  * John Bogovic, Albert Cardona, Barry DeZonia, Christian Dietz, Jan Funke,
  * Aivar Grislis, Jonathan Hale, Grant Harris, Stefan Helfrich, Mark Hiner,
  * Martin Horn, Steffen Jaensch, Lee Kamentsky, Larry Lindsey, Melissa Linkert,
@@ -32,87 +32,51 @@
  * #L%
  */
 
-package net.imglib2.converter.read;
+package net.imglib2.converter.readwrite;
 
 import java.util.function.Supplier;
 
-import net.imglib2.IterableRealInterval;
-import net.imglib2.converter.AbstractConvertedIterableRealInterval;
-import net.imglib2.converter.Converter;
-import net.imglib2.type.Type;
+import net.imglib2.RealCursor;
+import net.imglib2.converter.AbstractConvertedRealCursor;
 
 /**
  * TODO
  *
  */
-public class ConvertedIterableRealInterval< A, B extends Type< B > > extends AbstractConvertedIterableRealInterval< A, B >
+public class WriteConvertedRealCursor< A, B > extends AbstractConvertedRealCursor< A, B >
 {
-	final protected Supplier< Converter< ? super A, ? super B > > converterSupplier;
+	private final Supplier< SamplerConverter< ? super A, B > > converterSupplier;
 
-	final protected B converted;
+	private final SamplerConverter< ? super A, B > converter;
 
-	/**
-	 * Creates a copy of b for conversion.
-	 *
-	 * @param source
-	 * @param converter
-	 * @param b
-	 */
-	public ConvertedIterableRealInterval(
-			final IterableRealInterval< A > source,
-			final Supplier< Converter< ? super A, ? super B > > converterSupplier,
-			final B b )
+	private final B converted;
+
+	public WriteConvertedRealCursor(
+			final RealCursor< A > source,
+			final Supplier< SamplerConverter< ? super A, B > > converterSupplier )
 	{
 		super( source );
 		this.converterSupplier = converterSupplier;
-		this.converted = b.copy();
+		this.converter = converterSupplier.get();
+		this.converted = converter.convert( source );
 	}
 
-	/**
-	 * Creates a copy of b for conversion.
-	 *
-	 * @param source
-	 * @param converter
-	 * @param b
-	 */
-	public ConvertedIterableRealInterval(
-			final IterableRealInterval< A > source,
-			final Converter< ? super A, ? super B > converter,
-			final B b )
+	public WriteConvertedRealCursor(
+			final RealCursor< A > source,
+			final SamplerConverter< ? super A, B > converter )
 	{
-		this( source, () -> converter, b );
+		this( source, () -> converter );
 	}
 
 	@Override
-	public ConvertedRealCursor< A, B > cursor()
+	public B get()
 	{
-		return new ConvertedRealCursor< A, B >( sourceInterval.cursor(), converterSupplier, converted );
+		return converted;
 	}
 
 	@Override
-	public ConvertedRealCursor< A, B > localizingCursor()
+	public WriteConvertedRealCursor< A, B > copy()
 	{
-		return new ConvertedRealCursor< A, B >( sourceInterval.localizingCursor(), converterSupplier, converted );
-	}
-
-	/**
-	 * @return an instance of the destination {@link Type}.
-	 */
-	public B getDestinationType()
-	{
-		return converted.copy();
-	}
-
-	/**
-	 * Returns an instance of the {@link Converter}.  If the
-	 * {@link ConvertedIterableInterval} was created with a {@link Converter}
-	 * instead of a {@link Supplier}, then the returned converter will be this
-	 * instance.
-	 *
-	 * @return
-	 */
-	public Converter< ? super A, ? super B > getConverter()
-	{
-		return converterSupplier.get();
+		return new WriteConvertedRealCursor< A, B >( ( RealCursor< A > ) source.copy(), converterSupplier );
 	}
 }
