@@ -2,7 +2,7 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2018 Tobias Pietzsch, Stephan Preibisch, Stephan Saalfeld,
+ * Copyright (C) 2009 - 2020 Tobias Pietzsch, Stephan Preibisch, Stephan Saalfeld,
  * John Bogovic, Albert Cardona, Barry DeZonia, Christian Dietz, Jan Funke,
  * Aivar Grislis, Jonathan Hale, Grant Harris, Stefan Helfrich, Mark Hiner,
  * Martin Horn, Steffen Jaensch, Lee Kamentsky, Larry Lindsey, Melissa Linkert,
@@ -11,13 +11,13 @@
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- *
+ * 
  * 1. Redistributions of source code must retain the above copyright notice,
  *    this list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  *    this list of conditions and the following disclaimer in the documentation
  *    and/or other materials provided with the distribution.
- *
+ * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -40,8 +40,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /**
  * Package-private utility class that's used by {@link LoopBuilder}.
@@ -98,14 +96,10 @@ final class BindActionToSamplers
 	 */
 	public static Runnable bindActionToSamplers( final Object action, final List< ? extends Sampler< ? > > samplers )
 	{
-		final Object[] arguments = Stream.concat( Stream.of( action ), samplers.stream() ).toArray();
-		for ( final ClassCopyProvider< Runnable > factory : factories )
-			if ( factory.matches( arguments ) )
-			{
-				final List< Class< ? extends Object > > key = Stream.of( arguments ).map( Object::getClass ).collect( Collectors.toList() );
-				return factory.newInstanceForKey( key, arguments );
-			}
-		throw new IllegalArgumentException();
+		final Object[] arguments = ListUtils.concatAsArray( action, samplers );
+		final ClassCopyProvider< Runnable > factory = factories.get( samplers.size() - 1 );
+		final List< Class< ? extends Object > > key = ListUtils.map( Object::getClass, arguments );
+		return factory.newInstanceForKey( key, arguments );
 	}
 
 	public static class ConsumerRunnable< A > implements Runnable

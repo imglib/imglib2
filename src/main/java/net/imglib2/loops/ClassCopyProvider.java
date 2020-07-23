@@ -2,7 +2,7 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2018 Tobias Pietzsch, Stephan Preibisch, Stephan Saalfeld,
+ * Copyright (C) 2009 - 2020 Tobias Pietzsch, Stephan Preibisch, Stephan Saalfeld,
  * John Bogovic, Albert Cardona, Barry DeZonia, Christian Dietz, Jan Funke,
  * Aivar Grislis, Jonathan Hale, Grant Harris, Stefan Helfrich, Mark Hiner,
  * Martin Horn, Steffen Jaensch, Lee Kamentsky, Larry Lindsey, Melissa Linkert,
@@ -36,7 +36,6 @@ package net.imglib2.loops;
 import java.lang.reflect.Constructor;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.stream.Stream;
 
 /**
  * Helper to create multiple copies of a class.
@@ -85,8 +84,7 @@ public class ClassCopyProvider< T >
 
 	private static boolean hasDefaultConstructor( final Class< ? > clazz )
 	{
-		return Stream.of( clazz.getConstructors() )
-				.anyMatch( constructor -> constructor.getParameterCount() == 0 );
+		return ListUtils.anyMatch( constructor -> constructor.getParameterCount() == 0, clazz.getConstructors() );
 	}
 
 	private Class< ? extends T > classForKey( final Object key )

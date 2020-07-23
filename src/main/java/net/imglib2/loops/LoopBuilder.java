@@ -2,7 +2,7 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2018 Tobias Pietzsch, Stephan Preibisch, Stephan Saalfeld,
+ * Copyright (C) 2009 - 2020 Tobias Pietzsch, Stephan Preibisch, Stephan Saalfeld,
  * John Bogovic, Albert Cardona, Barry DeZonia, Christian Dietz, Jan Funke,
  * Aivar Grislis, Jonathan Hale, Grant Harris, Stefan Helfrich, Mark Hiner,
  * Martin Horn, Steffen Jaensch, Lee Kamentsky, Larry Lindsey, Melissa Linkert,
@@ -42,8 +42,6 @@ import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.LongConsumer;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import net.imglib2.Cursor;
 import net.imglib2.Dimensions;
@@ -203,7 +201,7 @@ public class LoopBuilder< T >
 
 	private boolean allCursorsAreFast( List< IterableInterval< ? > > iterableIntervals )
 	{
-		return iterableIntervals.stream().allMatch( this::cursorIsFast );
+		return ListUtils.allMatch( this::cursorIsFast, iterableIntervals );
 	}
 
 	private boolean cursorIsFast( IterableInterval< ? > image )
@@ -253,6 +251,11 @@ public class LoopBuilder< T >
 	public LoopBuilder< T > multiThreaded()
 	{
 		return multiThreaded( Parallelization.getTaskExecutor() );
+	}
+
+	public LoopBuilder< T > multiThreaded( boolean multiThreaded )
+	{
+		return multiThreaded( multiThreaded ? Parallelization.getTaskExecutor() : TaskExecutors.singleThreaded() );
 	}
 
 	/**
@@ -335,7 +338,7 @@ public class LoopBuilder< T >
 	private void checkDimensions()
 	{
 		final long[] dims = Intervals.dimensionsAsLongArray( dimensions );
-		final boolean equal = Stream.of( images ).allMatch( image -> Arrays.equals( dims, Intervals.dimensionsAsLongArray( image ) ) );
+		final boolean equal = ListUtils.allMatch( image -> Arrays.equals( dims, Intervals.dimensionsAsLongArray( image ) ), images );
 		if ( !equal )
 		{
 			StringJoiner joiner = new StringJoiner( ", " );
@@ -355,7 +358,7 @@ public class LoopBuilder< T >
 
 	static < T, R > R runOnChunkUsingRandomAccesses( RandomAccessibleInterval[] images, Function< Chunk< T >, R > chunkAction, Interval subInterval )
 	{
-		final List< RandomAccess< ? > > samplers = Stream.of( images ).map( LoopBuilder::initRandomAccess ).collect( Collectors.toList() );
+		final List< RandomAccess< ? > > samplers = ListUtils.map( LoopBuilder::initRandomAccess, images );
 		final Positionable synced = SyncedPositionables.create( samplers );
 		if ( !Views.isZeroMin( subInterval ) )
 			synced.move( Intervals.minAsLongArray( subInterval ) );
@@ -390,7 +393,7 @@ public class LoopBuilder< T >
 
 	static < T, R > R runOnChunkUsingCursors( List< IterableInterval< ? > > iterableIntervals, Function< Chunk< T >, R > chunkAction, long offset, long numElements )
 	{
-		final List< Cursor< ? > > cursors = iterableIntervals.stream().map( IterableInterval::cursor ).collect( Collectors.toList() );
+		final List< Cursor< ? > > cursors = ListUtils.map( IterableInterval::cursor, iterableIntervals );
 		if ( offset != 0 )
 			jumpFwd( cursors, offset );
 		return chunkAction.apply( pixelAction -> {
@@ -407,8 +410,8 @@ public class LoopBuilder< T >
 
 	private List< IterableInterval< ? > > equalIterationOrderIterableIntervals()
 	{
-		List< IterableInterval< ? > > iterableIntervals = Stream.of( images ).map( Views::iterable ).collect( Collectors.toList() );
-		List< Object > iterationOrders = iterableIntervals.stream().map( IterableInterval::iterationOrder ).collect( Collectors.toList() );
+		List< IterableInterval< ? > > iterableIntervals = ListUtils.map( Views::iterable, images );
+		List< Object > iterationOrders = ListUtils.map( IterableInterval::iterationOrder, iterableIntervals );
 		if ( allEqual( iterationOrders ) )
 			return iterableIntervals;
 		return flatIterableIntervals();
@@ -416,12 +419,12 @@ public class LoopBuilder< T >
 
 	private List< IterableInterval< ? > > flatIterableIntervals()
 	{
-		return Stream.of( images ).map( Views::flatIterable ).collect( Collectors.toList() );
+		return ListUtils.map( Views::flatIterable, images );
 	}
 
 	private static boolean allEqual( List< Object > values )
 	{
 		Object first = values.get( 0 );
-		return values.stream().allMatch( first::equals );
+		return ListUtils.allMatch( first::equals, values );
 	}
 }
