@@ -85,6 +85,29 @@ public interface Localizable extends RealLocalizable
 	}
 
 	/**
+	 * Allocate and return a long array containing the localizable's position.
+	 * 
+	 * @return the position
+	 */
+	default long[] locationToLongArray()
+	{
+		final long[] out = new long[ numDimensions() ];
+		localize( out );
+		return out;
+	}
+
+	/**
+	 * Allocate and return a {@link Point} containing the localizable's
+	 * position.
+	 * 
+	 * @return the position
+	 */
+	default Point locationToPoint()
+	{
+		return new Point( this );
+	}
+
+	/**
 	 * Return the current position in a given dimension.
 	 * 
 	 * @param d
@@ -108,7 +131,8 @@ public interface Localizable extends RealLocalizable
 	/**
 	 * Allocate and return a long array containing the localizable's position.
 	 * 
-	 * @param localizable the localizable
+	 * @param localizable
+	 *            the localizable
 	 * @return the array
 	 */
 	public static long[] asLongArray( final Localizable localizable )

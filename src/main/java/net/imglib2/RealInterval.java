@@ -118,4 +118,53 @@ public interface RealInterval extends EuclideanSpace
 		for ( int d = 0; d < n; d++ )
 			max.setPosition( realMax( d ), d );
 	}
+
+	/**
+	 * Allocates a new double array with the minimum of this RealInterval.
+	 * 
+	 * @return the min
+	 */
+	default double[] minAsDoubleArray()
+	{
+		double[] min = new double[ numDimensions() ];
+		realMin( min );
+		return min;
+	}
+
+	/**
+	 * Allocates a new {@link RealPoint} with the maximum of this RealInterval.
+	 * 
+	 * @return the min
+	 */
+	default RealPoint minAsRealPoint()
+	{
+		RealPoint min = new RealPoint( numDimensions() );
+		realMin( min );
+		return min;
+	}
+
+	/**
+	 * Allocates a new double array with the maximum of this RealInterval.
+	 * 
+	 * @return the max
+	 */
+	default double[] maxAsDoubleArray()
+	{
+		double[] max = new double[ numDimensions() ];
+		realMax( max );
+		return max;
+	}
+
+	/**
+	 * Allocates a new {@link RealPoint} with the maximum of this RealInterval.
+	 * 
+	 * @return the max
+	 */
+	default RealPoint maxAsRealPoint()
+	{
+		RealPoint max = new RealPoint( numDimensions() );
+		realMin( max );
+		return max;
+	}
+
 }

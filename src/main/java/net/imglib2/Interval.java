@@ -142,4 +142,75 @@ public interface Interval extends RealInterval, Dimensions
 	{
 		return max( d ) - min( d ) + 1;
 	}
+
+	/**
+	 * Allocates a new long array with the minimum of this Interval.
+	 * 
+	 * @return the min
+	 */
+	default long[] minAsLongArray()
+	{
+		long[] min = new long[ numDimensions() ];
+		min( min );
+		return min;
+	}
+
+	/**
+	 * Allocates a new {@link Point} with the maximum of this Interval.
+	 * 
+	 * @return the min
+	 */
+	default Point minAsPoint()
+	{
+		Point min = new Point( numDimensions() );
+		min( min );
+		return min;
+	}
+
+	/**
+	 * Allocates a new long array with the maximum of this Interval.
+	 * 
+	 * @return the max
+	 */
+	default long[] maxAsLongArray()
+	{
+		long[] max = new long[ numDimensions() ];
+		max( max );
+		return max;
+	}
+
+	/**
+	 * Allocates a new {@link Point} with the maximum of this Interval.
+	 * 
+	 * @return the max
+	 */
+	default Point maxAsPoint()
+	{
+		Point max = new Point( numDimensions() );
+		max( max );
+		return max;
+	}
+
+	/**
+	 * Allocates a new long array with the dimensions of this Interval.
+	 * 
+	 * @return the dimensions
+	 */
+	default long[] dimensionsAsLongArray()
+	{
+		long[] dims = new long[ numDimensions() ];
+		dimensions( dims );
+		return dims;
+	}
+
+	/**
+	 * Allocates a new {@link Point} with the dimensions of this Interval.
+	 * 
+	 * @return the dimensions
+	 */
+	default Point dimensionsAsPoint()
+	{
+		return new Point( dimensionsAsLongArray() );
+	}
+
 }

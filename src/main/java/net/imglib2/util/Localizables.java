@@ -49,12 +49,12 @@ public class Localizables
 {
 	public static long[] asLongArray( final Localizable localizable )
 	{
-		return Localizable.asLongArray( localizable );
+		return localizable.locationToLongArray();
 	}
 
 	public static double[] asDoubleArray( final RealLocalizable realLocalizable )
 	{
-		return RealLocalizable.asDoubleArray( realLocalizable );
+		return realLocalizable.locationToDoubleArray();
 	}
 
 	public static RandomAccessible< Localizable > randomAccessible( final int n )

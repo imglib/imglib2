@@ -71,6 +71,28 @@ public interface RealLocalizable extends EuclideanSpace
 	}
 
 	/**
+	 * Allocate and return a double array with the position.
+	 * 
+	 * @return the position
+	 */
+	default double[] locationToDoubleArray()
+	{
+		final double[] out = new double[ numDimensions() ];
+		localize( out );
+		return out;	
+	}
+
+	/**
+	 * Allocate and return a {@link RealPoint} with the current position.
+	 * 
+	 * @return the position
+	 */
+	default RealPoint locationToRealPoint()
+	{
+		return new RealPoint( this );
+	}
+
+	/**
 	 * Return the current position in a given dimension.
 	 * 
 	 * @param d
@@ -91,17 +113,4 @@ public interface RealLocalizable extends EuclideanSpace
 	 */
 	public double getDoublePosition( int d );
 
-	/**
-	 * Allocate and return a double array containing the localizable's position.
-	 * 
-	 * @param realLocalizable
-	 *            the real localizable
-	 * @return the array
-	 */
-	public static double[] asDoubleArray( final RealLocalizable realLocalizable )
-	{
-		final double[] out = new double[ realLocalizable.numDimensions() ];
-		realLocalizable.localize( out );
-		return out;
-	}
 }
