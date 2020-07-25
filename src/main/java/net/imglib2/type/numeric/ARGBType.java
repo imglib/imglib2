@@ -201,6 +201,31 @@ public class ARGBType extends AbstractNativeType< ARGBType > implements NumericT
 
 		set( rgba( red( value1 ) - red( value2 ), green( value1 ) - green( value2 ), blue( value1 ) - blue( value2 ), alpha( value1 ) - alpha( value2 ) ) );
 	}
+	
+	@Override
+	public void pow( final ARGBType c )
+	{
+		final int value1 = get();
+		final int value2 = c.get();
+		set(
+				rgba(
+						Math.pow( red( value1 ), red( value2 ) ),
+						Math.pow( green( value1 ), green( value2 ) ),
+						Math.pow( blue( value1 ), blue( value2 ) ),
+						Math.pow( alpha( value1 ), alpha( value2 ) ) ) );		
+	}
+	
+	@Override
+	public void pow( final double power )
+	{
+		final int value1 = get();
+		set(
+				rgba(
+						Math.pow( red( value1 ), power ),
+						Math.pow( green( value1 ), power ),
+						Math.pow( blue( value1 ), power ),
+						Math.pow( alpha( value1 ), power ) ) );
+	}
 
 	@Override
 	public void set( final ARGBType c )

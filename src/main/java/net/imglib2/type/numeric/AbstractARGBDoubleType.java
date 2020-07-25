@@ -113,6 +113,26 @@ abstract public class AbstractARGBDoubleType< T extends AbstractARGBDoubleType< 
 	}
 
 	@Override
+	public void pow( final T c )
+	{
+		set(
+				Math.pow( getA(), c.getA() ),
+				Math.pow( getR(), c.getR() ),
+				Math.pow( getG(), c.getG() ),
+				Math.pow( getB(), c.getB() ) );
+	}
+
+	@Override
+	public void pow( final double power )
+	{
+		set(
+				Math.pow( getA(), power ),
+				Math.pow( getR(), power ),
+				Math.pow( getG(), power ),
+				Math.pow( getB(), power ) );
+	}
+
+	@Override
 	public void setZero()
 	{
 		set( 0, 0, 0, 0 );

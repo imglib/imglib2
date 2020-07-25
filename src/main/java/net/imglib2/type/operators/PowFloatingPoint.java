@@ -15,7 +15,7 @@
  * 1. Redistributions of source code must retain the above copyright notice,
  *    this list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright notice,
- *    this list of conditions and the following disclaimer in the documentation
+ *    this list of conditions and the following disclaimer in the documentationw
  *    and/or other materials provided with the distribution.
  * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
@@ -31,24 +31,12 @@
  * POSSIBILITY OF SUCH DAMAGE.
  * #L%
  */
-
-package net.imglib2.type.numeric;
-
-import net.imglib2.type.Type;
-import net.imglib2.type.operators.Add;
-import net.imglib2.type.operators.Div;
-import net.imglib2.type.operators.Mul;
-import net.imglib2.type.operators.MulFloatingPoint;
-import net.imglib2.type.operators.Pow;
-import net.imglib2.type.operators.PowFloatingPoint;
-import net.imglib2.type.operators.SetOne;
-import net.imglib2.type.operators.SetZero;
-import net.imglib2.type.operators.Sub;
+package net.imglib2.type.operators;
 
 /**
- * TODO
- * 
+ * @author Albert Cardona
  */
-public interface NumericType< T extends NumericType< T >> extends Type< T >, Add< T >, Mul< T >, Sub< T >, Div< T >, Pow< T >, SetOne, SetZero, MulFloatingPoint, PowFloatingPoint
+public interface PowFloatingPoint
 {
+	public void pow( double d );
 }

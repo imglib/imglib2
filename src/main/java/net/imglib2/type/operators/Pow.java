@@ -31,24 +31,14 @@
  * POSSIBILITY OF SUCH DAMAGE.
  * #L%
  */
-
-package net.imglib2.type.numeric;
-
-import net.imglib2.type.Type;
-import net.imglib2.type.operators.Add;
-import net.imglib2.type.operators.Div;
-import net.imglib2.type.operators.Mul;
-import net.imglib2.type.operators.MulFloatingPoint;
-import net.imglib2.type.operators.Pow;
-import net.imglib2.type.operators.PowFloatingPoint;
-import net.imglib2.type.operators.SetOne;
-import net.imglib2.type.operators.SetZero;
-import net.imglib2.type.operators.Sub;
+package net.imglib2.type.operators;
 
 /**
- * TODO
- * 
+ * @author Albert Cardona
+ *
+ * @param <T>
  */
-public interface NumericType< T extends NumericType< T >> extends Type< T >, Add< T >, Mul< T >, Sub< T >, Div< T >, Pow< T >, SetOne, SetZero, MulFloatingPoint, PowFloatingPoint
+public interface Pow< T >
 {
+	public void pow( T c );
 }
