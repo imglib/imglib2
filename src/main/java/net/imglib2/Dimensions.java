@@ -66,6 +66,28 @@ public interface Dimensions extends EuclideanSpace
 	 */
 	public long dimension( int d );
 
+	/**
+	 * Allocates a new long array with the dimensions of this object.
+	 * 
+	 * @return the dimensions
+	 */
+	default long[] dimensionsAsLongArray()
+	{
+		long[] dims = new long[ numDimensions() ];
+		dimensions( dims );
+		return dims;
+	}
+
+	/**
+	 * Allocates a new {@link Point} with the dimensions of this object.
+	 * 
+	 * @return the dimensions
+	 */
+	default Point dimensionsAsPoint()
+	{
+		return new Point( dimensionsAsLongArray() );
+	}
+
 	/*
 	 * -----------------------------------------------------------------------
 	 *

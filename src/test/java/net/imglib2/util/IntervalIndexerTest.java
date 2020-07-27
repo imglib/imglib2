@@ -90,7 +90,7 @@ public class IntervalIndexerTest
 	{
 		final long numElements = Intervals.numElements( interval );
 		final long[] pos = new long[ dim.length ];
-		final long[] min = Intervals.minAsLongArray( interval );
+		final long[] min = interval.minAsLongArray();
 		final long[] store = new long[ dim.length ];
 		final Point positionable = Point.wrap( store );
 		for ( long index = 0; index < numElements; ++index )
@@ -104,7 +104,7 @@ public class IntervalIndexerTest
 	public void testPositionToIndex( final RandomAccessibleInterval< ? > interval )
 	{
 		final long[] pos = new long[ dim.length ];
-		final long[] min = Intervals.minAsLongArray( interval );
+		final long[] min = interval.minAsLongArray();
 		for ( final Cursor< ? > cursor = Views.flatIterable( interval ).localizingCursor(); cursor.hasNext(); )
 		{
 			cursor.fwd();

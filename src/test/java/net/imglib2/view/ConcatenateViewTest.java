@@ -111,8 +111,8 @@ public class ConcatenateViewTest
 			int axis,
 			long divider )
 	{
-		final long[] min = Intervals.minAsLongArray( img );
-		final long[] max = Intervals.maxAsLongArray( img );
+		final long[] min = img.minAsLongArray();
+		final long[] max = img.maxAsLongArray();
 		final long[] min1 = min.clone();
 		final long[] min2 = min.clone();
 		final long[] max1 = max.clone();

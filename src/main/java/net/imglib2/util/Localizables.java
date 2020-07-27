@@ -47,14 +47,16 @@ import net.imglib2.view.Views;
 
 public class Localizables
 {
+	/**
+	 * @deprecated
+	 * Use {@link Localizable#positionAsLongArray}. 
+	 */
+	@Deprecated
 	public static long[] asLongArray( final Localizable localizable )
 	{
-		return localizable.locationToLongArray();
-	}
-
-	public static double[] asDoubleArray( final RealLocalizable realLocalizable )
-	{
-		return realLocalizable.locationToDoubleArray();
+		final long[] result = new long[ localizable.numDimensions() ];
+		localizable.localize( result );
+		return result;
 	}
 
 	public static RandomAccessible< Localizable > randomAccessible( final int n )

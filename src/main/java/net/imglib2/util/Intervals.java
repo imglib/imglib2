@@ -879,6 +879,10 @@ public class Intervals
 	 * consider using the interval directly. See
 	 * {@link Dimensions#dimensions(long[])}.
 	 * </p>
+	 * <p>
+	 * Consider using the more convenient {@link Dimensions#dimensionsAsLongArray}. 
+	 * This method may be deprecated in a future release. 
+	 * </p>
 	 * 
 	 * @param dimensions
 	 *            something which has dimensions
@@ -920,6 +924,10 @@ public class Intervals
 	 * <p>
 	 * Keep in mind that creating arrays wildly is not good practice and
 	 * consider using the interval directly. See {@link Interval#min(long[])}.
+	 * </p>
+	 * <p>
+	 * Consider using the more convenient {@link Interval#minAsLongArray}. 
+	 * This method may be deprecated in a future release. 
 	 * </p>
 	 * 
 	 * @param interval
@@ -963,6 +971,10 @@ public class Intervals
 	 * Keep in mind that creating arrays wildly is not good practice and
 	 * consider using the interval directly.
 	 * </p>
+	 * <p>
+	 * Consider using the more convenient {@link Interval#minAsPoint}. 
+	 * This method may be deprecated in a future release. 
+	 * </p>
 	 * 
 	 * @param interval
 	 *            something with interval boundaries
@@ -982,6 +994,11 @@ public class Intervals
 	 * <p>
 	 * Keep in mind that creating arrays wildly is not good practice and
 	 * consider using the interval directly. See {@link Interval#max(long[])}.
+	 * </p>
+	 * 
+	 * <p>
+	 * Consider using the more convenient {@link Interval#maxAsLongArray}. 
+	 * This method may be deprecated in a future release. 
 	 * </p>
 	 * 
 	 * @param interval
@@ -1026,6 +1043,11 @@ public class Intervals
 	 * consider using the interval directly.
 	 * </p>
 	 * 
+	 * <p>
+	 * Consider using the more convenient {@link Interval#maxAsPoint}. 
+	 * This method may be deprecated in a future release. 
+	 * </p>
+	 * 
 	 * @param interval
 	 *            something with interval boundaries
 	 * 
@@ -1046,6 +1068,10 @@ public class Intervals
 	 * Keep in mind that creating arrays wildly is not good practice and
 	 * consider using the interval directly. See
 	 * {@link RealInterval#realMax(double[])}.
+	 * </p>
+	 * <p>
+	 * Consider using the more convenient {@link RealInterval#maxAsDoubleArray}. 
+	 * This method may be deprecated in a future release. 
 	 * </p>
 	 * 
 	 * @param interval
@@ -1069,6 +1095,10 @@ public class Intervals
 	 * consider using the interval directly. See
 	 * {@link RealInterval#realMin(double[])}.
 	 * </p>
+	 * <p>
+	 * Consider using the more convenient {@link RealInterval#maxAsRealPoint} 
+	 * This method may be deprecated in a future release. 
+	 * </p>
 	 * 
 	 * @param interval
 	 *            something with interval boundaries
@@ -1091,6 +1121,10 @@ public class Intervals
 	 * consider using the interval directly. See
 	 * {@link RealInterval#realMin(double[])}.
 	 * </p>
+	 * <p>
+	 * Consider using the more convenient {@link RealInterval#minAsDoubleArray} 
+	 * This method may be deprecated in a future release. 
+	 * </p>
 	 * 
 	 * @param interval
 	 *            something with interval boundaries
@@ -1112,6 +1146,10 @@ public class Intervals
 	 * Keep in mind that creating arrays wildly is not good practice and
 	 * consider using the interval directly. See
 	 * {@link RealInterval#realMin(double[])}.
+	 * </p>
+	 * <p>
+	 * Consider using the more convenient {@link RealInterval#minAsRealPoint} 
+	 * This method may be deprecated in a future release. 
 	 * </p>
 	 * 
 	 * @param interval

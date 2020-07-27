@@ -89,7 +89,7 @@ public interface Localizable extends RealLocalizable
 	 * 
 	 * @return the position
 	 */
-	default long[] locationToLongArray()
+	default long[] positionAsLongArray()
 	{
 		final long[] out = new long[ numDimensions() ];
 		localize( out );
@@ -102,7 +102,7 @@ public interface Localizable extends RealLocalizable
 	 * 
 	 * @return the position
 	 */
-	default Point locationToPoint()
+	default Point positionAsPoint()
 	{
 		return new Point( this );
 	}

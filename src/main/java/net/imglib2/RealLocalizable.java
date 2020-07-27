@@ -75,7 +75,7 @@ public interface RealLocalizable extends EuclideanSpace
 	 * 
 	 * @return the position
 	 */
-	default double[] locationToDoubleArray()
+	default double[] positionAsDoubleArray()
 	{
 		final double[] out = new double[ numDimensions() ];
 		localize( out );
@@ -87,7 +87,7 @@ public interface RealLocalizable extends EuclideanSpace
 	 * 
 	 * @return the position
 	 */
-	default RealPoint locationToRealPoint()
+	default RealPoint positionAsRealPoint()
 	{
 		return new RealPoint( this );
 	}
