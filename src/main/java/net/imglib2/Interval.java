@@ -165,8 +165,8 @@ public interface Interval extends RealInterval, Dimensions
 	 *
 	 * Please note that his method allocates a new {@link Point} each time
 	 * which introduces notable overhead in both compute and memory.
-	 * If you query it frequently, you should allocate a dedicated array
-	 * first and reuse it with {@link #min(long[])}.
+	 * If you query it frequently, you should allocate a dedicated
+	 * {@link Point} first and reuse it with {@link #min(Positionable)}.
 	 *
 	 * @return the min
 	 */
@@ -199,8 +199,8 @@ public interface Interval extends RealInterval, Dimensions
 	 *
 	 * Please note that his method allocates a new {@link Point} each time
 	 * which introduces notable overhead in both compute and memory.
-	 * If you query it frequently, you should allocate a dedicated array
-	 * first and reuse it with {@link #max(long[])}.
+	 * If you query it frequently, you should allocate a dedicated
+	 * {@link Point} first and reuse it with {@link #max(Positionable)}.
 	 *
 	 * @return the max
 	 */

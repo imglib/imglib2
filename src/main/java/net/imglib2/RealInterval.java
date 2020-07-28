@@ -141,8 +141,9 @@ public interface RealInterval extends EuclideanSpace
 	 *
 	 * Please note that his method allocates a new {@link RealPoint} each time
 	 * which introduces notable overhead in both compute and memory.
-	 * If you query it frequently, you should allocate a dedicated array
-	 * first and reuse it with {@link #realMin(double[])}.
+	 * If you query it frequently, you should allocate a dedicated
+	 * {@link RealPoint} first and reuse it with
+	 * {@link #realMin(RealPositionable)}.
 	 *
 	 * @return the min
 	 */
@@ -175,8 +176,9 @@ public interface RealInterval extends EuclideanSpace
 	 *
 	 * Please note that his method allocates a new {@link RealPoint} each time
 	 * which introduces notable overhead in both compute and memory.
-	 * If you query it frequently, you should allocate a dedicated array
-	 * first and reuse it with {@link #realMax(double[])}.
+	 * If you query it frequently, you should allocate a dedicated
+	 * {@link RealPoint} first and reuse it with
+	 * {@link #realMax(RealPositionable)}.
 	 *
 	 * @return the max
 	 */

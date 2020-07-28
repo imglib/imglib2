@@ -61,6 +61,18 @@ public interface Dimensions extends EuclideanSpace
 	}
 
 	/**
+	 * Write the number of pixels in each dimension into {@link Positionable}.
+	 *
+	 * @param dimensions
+	 */
+	default void dimensions( final Positionable dimensions )
+	{
+		final int n = numDimensions();
+		for ( int d = 0; d < n; d++ )
+			dimensions.setPosition( dimension( d ), d );
+	}
+
+	/**
 	 * Get the number of pixels in a given dimension <em>d</em>.
 	 *
 	 * @param d
@@ -89,8 +101,8 @@ public interface Dimensions extends EuclideanSpace
 	 *
 	 * Please note that his method allocates a new {@link Point} each time
 	 * which introduces notable overhead in both compute and memory.
-	 * If you query it frequently, you should allocate a dedicated array
-	 * first and reuse it with {@link #dimensions(long[])}.
+	 * If you query it frequently, you should allocate a dedicated
+	 * {@link Point} first and reuse it with {@link #dimensions(Positionable)}.
 	 *
 	 * @return the dimensions
 	 */

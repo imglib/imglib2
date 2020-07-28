@@ -71,6 +71,21 @@ public interface RealLocalizable extends EuclideanSpace
 	}
 
 	/**
+	 * Write the current position into the passed {@link RealPositionable}.
+	 *
+	 * Note for developers: This default implementation forwards to
+	 * {@link RealPositionable#setPosition(RealLocalizable)}, so don't do the
+	 * same there.
+	 *
+	 * @param position
+	 *            receives current position
+	 */
+	default void localize( final RealPositionable position )
+	{
+		position.setPosition( this );
+	}
+
+	/**
 	 * Allocate and return a double array with the position.
 	 *
 	 * Please note that his method allocates a new array each time which
@@ -92,8 +107,9 @@ public interface RealLocalizable extends EuclideanSpace
 	 *
 	 * Please note that his method allocates a new {@link RealPoint} each time
 	 * which introduces notable overhead in both compute and memory.
-	 * If you query it frequently, you should allocate a dedicated array
-	 * first and reuse it with {@link #localize(double[])}.
+	 * If you query it frequently, you should allocate a dedicated
+	 * {@link RealPoint} first and reuse it with
+	 * {@link #localize(RealPositionable)}.
 	 *
 	 * @return the position
 	 */
