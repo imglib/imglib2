@@ -69,7 +69,7 @@ public interface Localizable extends RealLocalizable
 	{
 		final int n = numDimensions();
 		for ( int d = 0; d < n; d++ )
-			position[ d ] = getIntPosition( d );
+			position[ d ] = getLongPosition( d );
 	}
 
 	/**
