@@ -11,13 +11,13 @@
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice,
  *    this list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  *    this list of conditions and the following disclaimer in the documentation
  *    and/or other materials provided with the distribution.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -35,11 +35,12 @@
 package net.imglib2;
 
 import java.util.Arrays;
+
 import net.imglib2.exception.InvalidDimensionsException;
 
 /**
  * Defines an extent in <em>n</em>-dimensional discrete space.
- * 
+ *
  * @author Tobias Pietzsch
  * @author Stephan Preibisch
  * @author Stephan Saalfeld
@@ -49,7 +50,7 @@ public interface Dimensions extends EuclideanSpace
 {
 	/**
 	 * Write the number of pixels in each dimension into long[].
-	 * 
+	 *
 	 * @param dimensions
 	 */
 	default void dimensions( final long[] dimensions )
@@ -60,11 +61,55 @@ public interface Dimensions extends EuclideanSpace
 	}
 
 	/**
+	 * Write the number of pixels in each dimension into {@link Positionable}.
+	 *
+	 * @param dimensions
+	 */
+	default void dimensions( final Positionable dimensions )
+	{
+		final int n = numDimensions();
+		for ( int d = 0; d < n; d++ )
+			dimensions.setPosition( dimension( d ), d );
+	}
+
+	/**
 	 * Get the number of pixels in a given dimension <em>d</em>.
-	 * 
+	 *
 	 * @param d
 	 */
 	public long dimension( int d );
+
+	/**
+	 * Allocates a new long array with the dimensions of this object.
+	 *
+	 * Please note that his method allocates a new array each time which
+	 * introduces notable overhead in both compute and memory.
+	 * If you query it frequently, you should allocate a dedicated array
+	 * first and reuse it with {@link #dimensions(long[])}.
+	 *
+	 * @return the dimensions
+	 */
+	default long[] dimensionsAsLongArray()
+	{
+		final long[] dims = new long[ numDimensions() ];
+		dimensions( dims );
+		return dims;
+	}
+
+	/**
+	 * Allocates a new {@link Point} with the dimensions of this object.
+	 *
+	 * Please note that his method allocates a new {@link Point} each time
+	 * which introduces notable overhead in both compute and memory.
+	 * If you query it frequently, you should allocate a dedicated
+	 * {@link Point} first and reuse it with {@link #dimensions(Positionable)}.
+	 *
+	 * @return the dimensions
+	 */
+	default Point dimensionsAsPoint()
+	{
+		return new Point( dimensionsAsLongArray() );
+	}
 
 	/*
 	 * -----------------------------------------------------------------------

@@ -61,7 +61,7 @@ public class ViewsTest
 		RandomAccessible< Localizable > view = Views.moveAxis( input, 1, 3 );
 		RandomAccess< Localizable > ra = view.randomAccess();
 		ra.setPosition( new long[] {1, 3, 4, 2} );
-		assertArrayEquals( new long[] {1, 2, 3, 4}, Localizables.asLongArray( ra.get() ) );
+		assertArrayEquals( new long[] {1, 2, 3, 4}, ra.get().positionAsLongArray() );
 	}
 
 	@Test
@@ -70,7 +70,7 @@ public class ViewsTest
 		RandomAccessible< Localizable > view = Views.moveAxis( input, 3, 1 );
 		RandomAccess< Localizable > ra = view.randomAccess();
 		ra.setPosition( new long[] {1, 4, 2, 3} );
-		assertArrayEquals( new long[] {1, 2, 3, 4}, Localizables.asLongArray( ra.get() ) );
+		assertArrayEquals( new long[] {1, 2, 3, 4}, ra.get().positionAsLongArray() );
 	}
 
 	@Test

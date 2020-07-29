@@ -11,13 +11,13 @@
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice,
  *    this list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  *    this list of conditions and the following disclaimer in the documentation
  *    and/or other materials provided with the distribution.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -40,7 +40,7 @@ package net.imglib2;
  * <em>x<sub>d</sub></em>&le;<em>max<sub>d</sub></em>;<em>d</em>&isin;{0&hellip;
  * <em>n</em>-1}}
  * </p>
- * 
+ *
  * An {@link RealInterval} over the real source domain. <em>Note</em> that this
  * does <em>not</em> imply that for <em>all</em> coordinates in the
  * {@link RealInterval} function values exist or can be generated. It only
@@ -48,14 +48,14 @@ package net.imglib2;
  * {@link IterableRealInterval} has a limited number of values and a source
  * coordinate for each. By that, minimum and maximum are defined but the
  * {@link RealInterval} does not define a value for all coordinates in between.
- * 
+ *
  * @author Stephan Saalfeld
  */
 public interface RealInterval extends EuclideanSpace
 {
 	/**
 	 * Get the minimum in dimension d.
-	 * 
+	 *
 	 * @param d
 	 *            dimension
 	 * @return minimum in dimension d.
@@ -64,7 +64,7 @@ public interface RealInterval extends EuclideanSpace
 
 	/**
 	 * Write the minimum of each dimension into double[].
-	 * 
+	 *
 	 * @param min
 	 */
 	default void realMin( final double[] min )
@@ -76,7 +76,7 @@ public interface RealInterval extends EuclideanSpace
 
 	/**
 	 * Sets a {@link RealPositionable} to the minimum of this {@link Interval}
-	 * 
+	 *
 	 * @param min
 	 */
 	default void realMin( final RealPositionable min )
@@ -88,7 +88,7 @@ public interface RealInterval extends EuclideanSpace
 
 	/**
 	 * Get the maximum in dimension d.
-	 * 
+	 *
 	 * @param d
 	 *            dimension
 	 * @return maximum in dimension d.
@@ -97,7 +97,7 @@ public interface RealInterval extends EuclideanSpace
 
 	/**
 	 * Write the maximum of each dimension into double[].
-	 * 
+	 *
 	 * @param max
 	 */
 	default void realMax( final double[] max )
@@ -109,7 +109,7 @@ public interface RealInterval extends EuclideanSpace
 
 	/**
 	 * Sets a {@link RealPositionable} to the maximum of this {@link Interval}
-	 * 
+	 *
 	 * @param max
 	 */
 	default void realMax( final RealPositionable max )
@@ -117,5 +117,75 @@ public interface RealInterval extends EuclideanSpace
 		final int n = numDimensions();
 		for ( int d = 0; d < n; d++ )
 			max.setPosition( realMax( d ), d );
+	}
+
+	/**
+	 * Allocates a new double array with the minimum of this RealInterval.
+	 *
+	 * Please note that his method allocates a new array each time which
+	 * introduces notable overhead in both compute and memory.
+	 * If you query it frequently, you should allocate a dedicated array
+	 * first and reuse it with {@link #realMin(double[])}.
+	 *
+	 * @return the min
+	 */
+	default double[] minAsDoubleArray()
+	{
+		final double[] min = new double[ numDimensions() ];
+		realMin( min );
+		return min;
+	}
+
+	/**
+	 * Allocates a new {@link RealPoint} with the minimum of this RealInterval.
+	 *
+	 * Please note that his method allocates a new {@link RealPoint} each time
+	 * which introduces notable overhead in both compute and memory.
+	 * If you query it frequently, you should allocate a dedicated
+	 * {@link RealPoint} first and reuse it with
+	 * {@link #realMin(RealPositionable)}.
+	 *
+	 * @return the min
+	 */
+	default RealPoint minAsRealPoint()
+	{
+		final RealPoint min = new RealPoint( numDimensions() );
+		realMin( min );
+		return min;
+	}
+
+	/**
+	 * Allocates a new double array with the maximum of this RealInterval.
+	 *
+	 * Please note that his method allocates a new array each time which
+	 * introduces notable overhead in both compute and memory.
+	 * If you query it frequently, you should allocate a dedicated array
+	 * first and reuse it with {@link #realMax(double[])}.
+	 *
+	 * @return the max
+	 */
+	default double[] maxAsDoubleArray()
+	{
+		final double[] max = new double[ numDimensions() ];
+		realMax( max );
+		return max;
+	}
+
+	/**
+	 * Allocates a new {@link RealPoint} with the maximum of this RealInterval.
+	 *
+	 * Please note that his method allocates a new {@link RealPoint} each time
+	 * which introduces notable overhead in both compute and memory.
+	 * If you query it frequently, you should allocate a dedicated
+	 * {@link RealPoint} first and reuse it with
+	 * {@link #realMax(RealPositionable)}.
+	 *
+	 * @return the max
+	 */
+	default RealPoint maxAsRealPoint()
+	{
+		final RealPoint max = new RealPoint( numDimensions() );
+		realMin( max );
+		return max;
 	}
 }
