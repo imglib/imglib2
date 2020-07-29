@@ -36,6 +36,7 @@ package net.imglib2.converter.read;
 
 import java.util.function.Supplier;
 
+import net.imglib2.Cursor;
 import net.imglib2.Interval;
 import net.imglib2.IterableInterval;
 import net.imglib2.converter.AbstractConvertedIterableInterval;
@@ -62,7 +63,7 @@ public class BiConvertedIterableInterval< A, B, C extends Type< C > > extends Ab
 	 * 			{@link Interval Intervals} with different sizes, make sure
 	 * 			that this is the smaller {@link Interval}.
 	 * @param sourceB
-	 * @param converter
+	 * @param converterSupplier
 	 * @param c
 	 */
 	public BiConvertedIterableInterval(
@@ -105,7 +106,7 @@ public class BiConvertedIterableInterval< A, B, C extends Type< C > > extends Ab
 	}
 
 	/**
-	 * Creates a localizing {@link Cursor) for sourceA only because this will
+	 * Creates a localizing {@link Cursor} for sourceA only because this will
 	 * be used for localization.  Make sure that sourceA is the
 	 * {@link IterableInterval} that creates the {@link Cursor} that localizes
 	 * more efficiently.

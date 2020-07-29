@@ -59,11 +59,6 @@ public class BiConvertedCursor< A, B, C extends Type< C > > extends AbstractConv
 	/**
 	 * Creates a copy of c for conversion that can be accessed through
 	 * {@link #get()}.
-	 *
-	 * @param sourceA
-	 * @param sourceB
-	 * @param converter
-	 * @param c
 	 */
 	public BiConvertedCursor(
 			final Cursor< A > sourceA,
@@ -81,11 +76,6 @@ public class BiConvertedCursor< A, B, C extends Type< C > > extends AbstractConv
 	/**
 	 * Creates a copy of c for conversion that can be accessed through
 	 * {@link #get()}.
-	 *
-	 * @param sourceA
-	 * @param sourceB
-	 * @param converter
-	 * @param c
 	 */
 	public BiConvertedCursor(
 			final Cursor< A > sourceA,
@@ -125,7 +115,8 @@ public class BiConvertedCursor< A, B, C extends Type< C > > extends AbstractConv
 	}
 
 	/**
-	 * The correct logic would be to return sourceA.hasNext() && sourceB.hasNext()
+	 * The correct logic would be to
+	 * {@code return sourceA.hasNext() && sourceB.hasNext()}
 	 * but we test only sourceA for efficiency.  Make sure that sourceA is the
 	 * smaller {@link IterableInterval}.
 	 */
