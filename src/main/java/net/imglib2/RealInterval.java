@@ -185,7 +185,7 @@ public interface RealInterval extends EuclideanSpace
 	default RealPoint maxAsRealPoint()
 	{
 		final RealPoint max = new RealPoint( numDimensions() );
-		realMin( max );
+		realMax( max );
 		return max;
 	}
 }
