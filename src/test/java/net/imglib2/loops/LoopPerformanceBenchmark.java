@@ -96,8 +96,8 @@ public class LoopPerformanceBenchmark
 		final RandomAccess< DoubleType > back = Views.extendBorder( in ).randomAccess();
 		final RandomAccess< DoubleType > front = Views.extendBorder( in ).randomAccess();
 
-		back.setPosition( Intervals.minAsLongArray( out ) );
-		front.setPosition( Intervals.minAsLongArray( out ) );
+		back.setPosition( out.minAsLongArray() );
+		front.setPosition( out.minAsLongArray() );
 		back.bck( 0 );
 		front.fwd( 0 );
 

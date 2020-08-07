@@ -31,73 +31,14 @@
  * POSSIBILITY OF SUCH DAMAGE.
  * #L%
  */
-
-package net.imglib2.converter.read;
-
-import java.util.function.Supplier;
-
-import net.imglib2.Cursor;
-import net.imglib2.converter.AbstractConvertedCursor;
-import net.imglib2.converter.Converter;
-import net.imglib2.type.Type;
+package net.imglib2.type.operators;
 
 /**
- * TODO
+ * @author Albert Cardona
  *
+ * @param <T>
  */
-public class ConvertedCursor< A, B extends Type< B > > extends AbstractConvertedCursor< A, B >
+public interface Pow< T >
 {
-	final protected Converter< ? super A, ? super B > converter;
-
-	final protected Supplier< Converter< ? super A, ? super B > > converterSupplier;
-
-	final protected B converted;
-
-	/**
-	 * Creates a copy of b for conversion that can be accessed through
-	 * {@link #get()}.
-	 *
-	 * @param source
-	 * @param converterSupplier
-	 * @param b
-	 */
-	public ConvertedCursor(
-			final Cursor< A > source,
-			final Supplier< Converter< ? super A, ? super B > > converterSupplier,
-			final B b )
-	{
-		super( source );
-		this.converterSupplier = converterSupplier;
-		this.converter = converterSupplier.get();
-		this.converted = b.copy();
-	}
-
-	/**
-	 * Creates a copy of b for conversion that can be accessed through
-	 * {@link #get()}.
-	 *
-	 * @param source
-	 * @param converter
-	 * @param b
-	 */
-	public ConvertedCursor(
-			final Cursor< A > source,
-			final Converter< ? super A, ? super B > converter,
-			final B b )
-	{
-		this( source, () -> converter, b );
-	}
-
-	@Override
-	public B get()
-	{
-		converter.convert( source.get(), converted );
-		return converted;
-	}
-
-	@Override
-	public ConvertedCursor< A, B > copy()
-	{
-		return new ConvertedCursor< A, B >( ( Cursor< A > ) source.copy(), converterSupplier, converted );
-	}
+	public void pow( T c );
 }

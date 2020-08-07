@@ -48,7 +48,7 @@ public class LocalizablesTest
 	@Test
 	public void testAsLongArray() {
 		Localizable input = new Point( 5,7 );
-		long[] result = Localizables.asLongArray( input );
+		long[] result = input.positionAsLongArray();
 		assertArrayEquals( new long[] { 5, 7 }, result );
 	}
 
@@ -61,6 +61,6 @@ public class LocalizablesTest
 		assertEquals( n, randomAccessible.numDimensions() );
 		assertEquals( n, randomAccess.numDimensions() );
 		randomAccess.setPosition( position );
-		assertArrayEquals( position, Localizables.asLongArray( randomAccess.get() ) );
+		assertArrayEquals( position, randomAccess.get().positionAsLongArray() );
 	}
 }

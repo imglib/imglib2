@@ -80,7 +80,7 @@ public class ConstantUtilsTest
 		final RandomAccessibleInterval< IntType > randomAccessibleInterval = ConstantUtils.constantRandomAccessibleInterval( constVal, new FinalInterval( dims ) );
 
 		Assert.assertArrayEquals( dims, Intervals.dimensionsAsLongArray( randomAccessibleInterval ) );
-		Assert.assertArrayEquals( new long[ nDim ], Intervals.minAsLongArray( randomAccessibleInterval ) );
+		Assert.assertArrayEquals( new long[ nDim ], randomAccessibleInterval.minAsLongArray() );
 
 		Views.iterable( randomAccessibleInterval ).forEach( p -> Assert.assertTrue( constVal.valueEquals( constVal ) ) );
 	}

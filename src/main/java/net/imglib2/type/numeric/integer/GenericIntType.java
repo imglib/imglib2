@@ -176,6 +176,20 @@ public abstract class GenericIntType< T extends GenericIntType< T > > extends Ab
 		final int a = getInt();
 		setInt( a - c.getInt() );
 	}
+	
+	@Override
+	public void pow( final T c )
+	{
+		final int a = getInt();
+		setReal( Math.pow( a, c.getInt() ) );
+	}
+	
+	@Override
+	public void pow( final double power )
+	{
+		final int a = getInt();
+		setReal( Math.pow( a, power ) );
+	}
 
 	@Override
 	public void set( final T c )

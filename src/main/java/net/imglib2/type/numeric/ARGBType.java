@@ -11,13 +11,13 @@
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- *
+ * 
  * 1. Redistributions of source code must retain the above copyright notice,
  *    this list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  *    this list of conditions and the following disclaimer in the documentation
  *    and/or other materials provided with the distribution.
- *
+ * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -200,6 +200,31 @@ public class ARGBType extends AbstractNativeType< ARGBType > implements NumericT
 		final int value2 = c.get();
 
 		set( rgba( red( value1 ) - red( value2 ), green( value1 ) - green( value2 ), blue( value1 ) - blue( value2 ), alpha( value1 ) - alpha( value2 ) ) );
+	}
+	
+	@Override
+	public void pow( final ARGBType c )
+	{
+		final int value1 = get();
+		final int value2 = c.get();
+		set(
+				rgba(
+						Math.pow( red( value1 ), red( value2 ) ),
+						Math.pow( green( value1 ), green( value2 ) ),
+						Math.pow( blue( value1 ), blue( value2 ) ),
+						Math.pow( alpha( value1 ), alpha( value2 ) ) ) );		
+	}
+	
+	@Override
+	public void pow( final double power )
+	{
+		final int value1 = get();
+		set(
+				rgba(
+						Math.pow( red( value1 ), power ),
+						Math.pow( green( value1 ), power ),
+						Math.pow( blue( value1 ), power ),
+						Math.pow( alpha( value1 ), power ) ) );
 	}
 
 	@Override
