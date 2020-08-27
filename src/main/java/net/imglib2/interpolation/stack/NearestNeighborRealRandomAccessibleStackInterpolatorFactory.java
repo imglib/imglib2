@@ -35,7 +35,6 @@ package net.imglib2.interpolation.stack;
 
 import java.util.List;
 
-import net.imglib2.EuclideanSpace;
 import net.imglib2.RealInterval;
 import net.imglib2.RealRandomAccessible;
 import net.imglib2.interpolation.InterpolatorFactory;
@@ -43,7 +42,7 @@ import net.imglib2.interpolation.InterpolatorFactory;
 /**
  *
  */
-public class NearestNeighborRealRandomAccessibleStackInterpolatorFactory< T, F extends List< RealRandomAccessible< T > > & EuclideanSpace > implements InterpolatorFactory< T, F >
+public class NearestNeighborRealRandomAccessibleStackInterpolatorFactory< T, F extends List< RealRandomAccessible< T > > > implements InterpolatorFactory< T, F >
 {
 	@Override
 	public NearestNeighborRealRandomAccessibleStackInterpolator< T > create( final F stack )

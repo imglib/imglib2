@@ -33,12 +33,15 @@
  */
 package net.imglib2.interpolation.stack;
 
+import java.util.ArrayList;
+
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
 import net.imglib2.FinalInterval;
 import net.imglib2.RealRandomAccessible;
+import net.imglib2.interpolation.Interpolant;
 import net.imglib2.interpolation.randomaccess.NearestNeighborInterpolatorFactory;
 import net.imglib2.position.FunctionRandomAccessible;
 import net.imglib2.type.numeric.integer.LongType;
@@ -65,7 +68,7 @@ public class NearestNeighborRealRandomAccessibleStackInterpolatorTest
 		final FinalInterval interval = new FinalInterval( 6, 33 );
 		final FinalInterval cropInterval = new FinalInterval( interval.dimension( 0 ), interval.dimension( 1 ), 10 );
 
-		final RealRandomAccessibleStack< LongType > stack = new RealRandomAccessibleStack<>( 3 );
+		final ArrayList< RealRandomAccessible< LongType > > stack = new ArrayList<>();
 		for ( int i = 0; i < cropInterval.dimension( 2 ); ++i )
 		{
 			final int slice = i;
@@ -79,7 +82,7 @@ public class NearestNeighborRealRandomAccessibleStackInterpolatorTest
 			stack.add( Views.interpolate( indices, new NearestNeighborInterpolatorFactory<>() ) );
 		}
 
-		final RealRandomAccessible< LongType > interpolatedStack = Views.interpolate( stack, new NearestNeighborRealRandomAccessibleStackInterpolatorFactory<>() );
+		final RealRandomAccessible< LongType > interpolatedStack = new Interpolant<>( stack, new NearestNeighborRealRandomAccessibleStackInterpolatorFactory<>(), 3 );
 
 		int i = 0;
 		for ( final LongType t : Views.flatIterable( Views.interval( Views.raster( interpolatedStack ), cropInterval ) ) )

@@ -43,6 +43,7 @@ import net.imglib2.FinalInterval;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.RealRandomAccess;
 import net.imglib2.RealRandomAccessible;
+import net.imglib2.interpolation.Interpolant;
 import net.imglib2.interpolation.randomaccess.NLinearInterpolatorFactory;
 import net.imglib2.position.FunctionRandomAccessible;
 import net.imglib2.type.numeric.real.DoubleType;
@@ -70,7 +71,7 @@ public class LinearRealRandomAccessibleStackInterpolatorTest
 		final FinalInterval cropInterval = new FinalInterval( interval.dimension( 0 ), interval.dimension( 1 ), 10 );
 
 		final ArrayList< RandomAccessibleInterval< DoubleType > > raStack = new ArrayList<>();
-		final RealRandomAccessibleStack< DoubleType > stack = new RealRandomAccessibleStack<>( 3 );
+		final ArrayList< RealRandomAccessible< DoubleType > > stack = new ArrayList<>();
 		for ( int i = 0; i < cropInterval.dimension( 2 ); ++i )
 		{
 			final int slice = i;
@@ -85,7 +86,7 @@ public class LinearRealRandomAccessibleStackInterpolatorTest
 			stack.add( Views.interpolate( indices, new NLinearInterpolatorFactory<>() ) );
 		}
 
-		final RealRandomAccessible< DoubleType > interpolatedStack = Views.interpolate( stack, new LinearRealRandomAccessibleStackInterpolatorFactory<>() );
+		final RealRandomAccessible< DoubleType > interpolatedStack = new Interpolant<>( stack, new LinearRealRandomAccessibleStackInterpolatorFactory<>(), 3 );
 		final RealRandomAccessible< DoubleType > interpolatedRAStack = Views.interpolate( Views.stack( raStack ), new NLinearInterpolatorFactory<>() );
 
 		int i = 0;
