@@ -31,89 +31,61 @@
  * POSSIBILITY OF SUCH DAMAGE.
  * #L%
  */
+package net.imglib2.interpolation.stack;
 
-package net.imglib2.interpolation;
+import java.util.ArrayList;
 
-import net.imglib2.EuclideanSpace;
-import net.imglib2.RealInterval;
-import net.imglib2.RealRandomAccess;
+import org.junit.Assert;
+import org.junit.BeforeClass;
+import org.junit.Test;
+
+import net.imglib2.FinalInterval;
 import net.imglib2.RealRandomAccessible;
-import net.imglib2.View;
-import net.imglib2.util.Cast;
+import net.imglib2.interpolation.Interpolant;
+import net.imglib2.interpolation.randomaccess.NearestNeighborInterpolatorFactory;
+import net.imglib2.position.FunctionRandomAccessible;
+import net.imglib2.type.numeric.integer.LongType;
+import net.imglib2.util.IntervalIndexer;
+import net.imglib2.view.Views;
 
 /**
- * A {@link RealRandomAccessible} that is generated through interpolation.
- *
  * @author Stephan Saalfeld
- * @author Tobias Pietzsch
+ *
  */
-final public class Interpolant< T, F > implements RealRandomAccessible< T >, View
+public class NearestNeighborRealRandomAccessibleStackInterpolatorTest
 {
-	protected final F source;
-
-	protected final int n;
-
-	final InterpolatorFactory< T, F > factory;
 
 	/**
-	 *
-	 * @param source
-	 * @param factory
-	 *
-	 * @deprecated use the compile time safe constructor
-	 * 		{@link #Interpolant(Object, InterpolatorFactory, int)} instead
+	 * @throws java.lang.Exception
 	 */
-	@Deprecated
-	public Interpolant( final EuclideanSpace source, final InterpolatorFactory< T, F > factory )
-	{
-		this.source = Cast.unchecked( source );
-		this.factory = factory;
-		this.n = source.numDimensions();
-	}
+	@BeforeClass
+	public static void setUpBeforeClass() throws Exception
+	{}
 
-	/**
-	 * Create an {@link Interpolant} for a source, a compatible intepolator
-	 * factory and a specified number of dimensions.
-	 *
-	 * @param source
-	 * @param factory
-	 * @param n
-	 */
-	public Interpolant( final F source, final InterpolatorFactory< T, F > factory, final int n )
+	@Test
+	public void test()
 	{
-		this.source = source;
-		this.factory = factory;
-		this.n = n;
-	}
+		final FinalInterval interval = new FinalInterval( 6, 33 );
+		final FinalInterval cropInterval = new FinalInterval( interval.dimension( 0 ), interval.dimension( 1 ), 10 );
 
-	@Override
-	public int numDimensions()
-	{
-		return n;
-	}
+		final ArrayList< RealRandomAccessible< LongType > > stack = new ArrayList<>();
+		for ( int i = 0; i < cropInterval.dimension( 2 ); ++i )
+		{
+			final int slice = i;
+			final FunctionRandomAccessible< LongType > indices = new FunctionRandomAccessible<>(
+					2,
+					( x, y ) -> {
+						y.set( slice * interval.dimension( 0 ) * interval.dimension( 1 ) + IntervalIndexer.positionToIndex( x, interval ) );
+					},
+					LongType::new );
 
-	@Override
-	public RealRandomAccess< T > realRandomAccess()
-	{
-		return factory.create( source );
-	}
+			stack.add( Views.interpolate( indices, new NearestNeighborInterpolatorFactory<>() ) );
+		}
 
-	@Override
-	public RealRandomAccess< T > realRandomAccess( final RealInterval interval )
-	{
-		return factory.create( source, interval );
-	}
+		final RealRandomAccessible< LongType > interpolatedStack = new Interpolant<>( stack, new NearestNeighborRealRandomAccessibleStackInterpolatorFactory<>(), 3 );
 
-	public F getSource()
-	{
-		return source;
-	}
-
-	/**
-	 * @return {@link InterpolatorFactory} used for interpolation
-	 */
-	public InterpolatorFactory< T, F > getInterpolatorFactory()
-	{
-		return factory;
+		int i = 0;
+		for ( final LongType t : Views.flatIterable( Views.interval( Views.raster( interpolatedStack ), cropInterval ) ) )
+			Assert.assertTrue( t.get() == i++ );
 	}
 }

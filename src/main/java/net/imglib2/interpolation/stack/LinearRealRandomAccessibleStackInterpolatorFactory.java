@@ -31,89 +31,30 @@
  * POSSIBILITY OF SUCH DAMAGE.
  * #L%
  */
+package net.imglib2.interpolation.stack;
 
-package net.imglib2.interpolation;
+import java.util.List;
 
-import net.imglib2.EuclideanSpace;
 import net.imglib2.RealInterval;
-import net.imglib2.RealRandomAccess;
 import net.imglib2.RealRandomAccessible;
-import net.imglib2.View;
-import net.imglib2.util.Cast;
+import net.imglib2.interpolation.InterpolatorFactory;
+import net.imglib2.type.numeric.NumericType;
 
 /**
- * A {@link RealRandomAccessible} that is generated through interpolation.
  *
- * @author Stephan Saalfeld
- * @author Tobias Pietzsch
  */
-final public class Interpolant< T, F > implements RealRandomAccessible< T >, View
+public class LinearRealRandomAccessibleStackInterpolatorFactory< T extends NumericType< T >, F extends List< RealRandomAccessible< T > > > implements InterpolatorFactory< T, F >
 {
-	protected final F source;
-
-	protected final int n;
-
-	final InterpolatorFactory< T, F > factory;
-
-	/**
-	 *
-	 * @param source
-	 * @param factory
-	 *
-	 * @deprecated use the compile time safe constructor
-	 * 		{@link #Interpolant(Object, InterpolatorFactory, int)} instead
-	 */
-	@Deprecated
-	public Interpolant( final EuclideanSpace source, final InterpolatorFactory< T, F > factory )
+	@Override
+	public LinearRealRandomAccessibleStackInterpolator< T > create( final F stack )
 	{
-		this.source = Cast.unchecked( source );
-		this.factory = factory;
-		this.n = source.numDimensions();
-	}
-
-	/**
-	 * Create an {@link Interpolant} for a source, a compatible intepolator
-	 * factory and a specified number of dimensions.
-	 *
-	 * @param source
-	 * @param factory
-	 * @param n
-	 */
-	public Interpolant( final F source, final InterpolatorFactory< T, F > factory, final int n )
-	{
-		this.source = source;
-		this.factory = factory;
-		this.n = n;
+		return new LinearRealRandomAccessibleStackInterpolator<>( stack );
 	}
 
 	@Override
-	public int numDimensions()
+	public LinearRealRandomAccessibleStackInterpolator< T > create( final F stack, final RealInterval interval )
 	{
-		return n;
+		return create( stack );
 	}
 
-	@Override
-	public RealRandomAccess< T > realRandomAccess()
-	{
-		return factory.create( source );
-	}
-
-	@Override
-	public RealRandomAccess< T > realRandomAccess( final RealInterval interval )
-	{
-		return factory.create( source, interval );
-	}
-
-	public F getSource()
-	{
-		return source;
-	}
-
-	/**
-	 * @return {@link InterpolatorFactory} used for interpolation
-	 */
-	public InterpolatorFactory< T, F > getInterpolatorFactory()
-	{
-		return factory;
-	}
 }
