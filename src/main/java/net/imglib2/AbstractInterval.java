@@ -11,13 +11,13 @@
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice,
  *    this list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  *    this list of conditions and the following disclaimer in the documentation
  *    and/or other materials provided with the distribution.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -38,8 +38,8 @@ import net.imglib2.util.Intervals;
 
 /**
  * Implementation of the {@link Interval} interface.
- * 
- * 
+ *
+ *
  * @author Tobias Pietzsch
  * @author Stephan Preibisch
  */
@@ -52,7 +52,7 @@ public abstract class AbstractInterval extends AbstractEuclideanSpace implements
 	/**
 	 * Creates an <em>n</em>-dimensional {@link AbstractInterval} with min and
 	 * max = 0<sup>n</sup>.
-	 * 
+	 *
 	 * @param n
 	 *            number of dimensions
 	 */
@@ -65,9 +65,9 @@ public abstract class AbstractInterval extends AbstractEuclideanSpace implements
 
 	/**
 	 * Creates a {@link AbstractInterval} from another {@link Interval}
-	 * 
+	 *
 	 * @param interval
-	 *            - another {@link Interval}
+	 *            another {@link Interval}
 	 */
 	public AbstractInterval( final Interval interval )
 	{
@@ -79,9 +79,9 @@ public abstract class AbstractInterval extends AbstractEuclideanSpace implements
 
 	/**
 	 * Creates an Interval with the boundaries [0, dimensions-1]
-	 * 
+	 *
 	 * @param dimensions
-	 *            - the size of the interval
+	 *            the size of the interval
 	 */
 	public AbstractInterval( final Dimensions dimensions )
 	{
@@ -92,49 +92,53 @@ public abstract class AbstractInterval extends AbstractEuclideanSpace implements
 
 	/**
 	 * Creates an Interval with the boundaries [min, max] (both including)
-	 * 
+	 *
 	 * @param min
-	 *            - the position of the first elements in each dimension
+	 *            the position of the first elements in each dimension
 	 * @param max
-	 *            - the position of the last elements in each dimension
+	 *            the position of the last elements in each dimension
+	 * @param copy
+	 *            flag indicating whether min and max arrays should be duplicated.
 	 */
-	public AbstractInterval( final long[] min, final long[] max )
+	public AbstractInterval( final long[] min, final long[] max, final boolean copy )
 	{
-		this( min.length );
+		super( min.length );
 		assert min.length == max.length;
-
-		for ( int d = 0; d < n; ++d )
-		{
-			this.min[ d ] = min[ d ];
-			this.max[ d ] = max[ d ];
-		}
+		this.min = copy ? min.clone() : min;
+		this.max = copy ? max.clone() : max;
 	}
 
 	/**
 	 * Creates an Interval with the boundaries [min, max] (both including)
-	 * 
+	 *
 	 * @param min
-	 *            - the position of the first elements in each dimension
+	 *            the position of the first elements in each dimension
 	 * @param max
-	 *            - the position of the last elements in each dimension
+	 *            the position of the last elements in each dimension
+	 */
+	public AbstractInterval( final long[] min, final long[] max )
+	{
+		this( min, max, true );
+	}
+
+	/**
+	 * Creates an Interval with the boundaries [min, max] (both including)
+	 *
+	 * @param min
+	 *            the position of the first elements in each dimension
+	 * @param max
+	 *            the position of the last elements in each dimension
 	 */
 	public AbstractInterval( final Localizable min, final Localizable max )
 	{
-		this( min.numDimensions() );
-		assert min.numDimensions() == max.numDimensions();
-
-		for ( int d = 0; d < n; ++d )
-		{
-			this.min[ d ] = min.getLongPosition( d );
-			this.max[ d ] = max.getLongPosition( d );
-		}
+		this( min.positionAsLongArray(), max.positionAsLongArray(), false );
 	}
 
 	/**
 	 * Creates an Interval with the boundaries [0, dimensions-1]
-	 * 
+	 *
 	 * @param dimensions
-	 *            - the size of the interval
+	 *            the size of the interval
 	 */
 	public AbstractInterval( final long[] dimensions )
 	{
