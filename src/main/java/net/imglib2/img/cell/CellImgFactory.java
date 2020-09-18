@@ -44,6 +44,7 @@ import net.imglib2.img.list.ListImg;
 import net.imglib2.img.list.ListLocalizingCursor;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.NativeTypeFactory;
+import net.imglib2.type.numeric.integer.UnsignedByteType;
 import net.imglib2.util.Fraction;
 import net.imglib2.util.Intervals;
 import net.imglib2.util.Util;
@@ -115,7 +116,113 @@ public class CellImgFactory< T extends NativeType< T > > extends NativeImgFactor
 	{
 		return create( Util.int2long( dimensions ) );
 	}
+	
+	/**
+	 * Create a CellImg from an existing ListImg of Cells
+	 * 
+	 * @param <A>
+	 * @param imgOfCells
+	 * @param dimensions
+	 * @return
+	 */
+	public < A  extends ArrayDataAccess< A > > CellImg< T, A > create( final ListImg< Cell< A > > imgOfCells, final long... dimensions )
+	{
+		@SuppressWarnings("unchecked") // NativeType interface does not specify Access interface
+		final CellImg< T, A > img = create( imgOfCells, dimensions, type(), ( NativeTypeFactory< T, A > ) type().getNativeTypeFactory() );
+		return img;
+	}
 
+	/**
+	 * Create a CellImg from an existing ListImg of Cells
+	 * 
+	 * @param <A>
+	 * @param imgOfCells
+	 * @param dimensions
+	 * @return
+	 */
+	public < A  extends ArrayDataAccess< A > > CellImg< T, A > create( final ListImg< Cell< A > > imgOfCells, final Dimensions dimensions )
+	{
+		return create( imgOfCells, Intervals.dimensionsAsLongArray( dimensions ) );
+	}
+
+	/**
+	 * Create a CellImg from an existing ListImg of Cells
+	 * 
+	 * @param <A>
+	 * @param imgOfCells
+	 * @param dimensions
+	 * @return
+	 */
+	public < A  extends ArrayDataAccess< A > > CellImg< T, A > create( final ListImg< Cell< A > > imgOfCells, final int[] dimensions )
+	{
+		return create( imgOfCells, Util.int2long( dimensions ) );
+	}
+	
+	/**
+	 * Core private create method called by other private create methods.
+	 * 
+	 * This method does not verify dimensions.
+	 * 
+	 * @param cells
+	 * @param grid
+	 * @return A CellImg with a linked type
+	 * 
+	 * See below for other parameters 
+	 */
+	private < A extends ArrayDataAccess< A > > CellImg< T, A > create(
+			final ListImg< Cell< A > > cells,
+			final CellGrid grid,
+			final long[] dimensions,
+			final T type,
+			final NativeTypeFactory< T, A > typeFactory )
+	{
+		//Dimensions should be verified by other private methods
+		//Dimensions.verify( dimensions );
+
+		final CellImg< T, A > img = new CellImg<>( this, grid, cells, type.getEntitiesPerPixel() );
+		img.setLinkedType( typeFactory.createLinkedType( img ) );
+		return img;
+	}
+	
+	/**
+	 * Private create method that infers the CellGrid from the first cell
+	 * 
+	 * This method verifies dimensions.
+	 * 
+	 * @param <A>
+	 * @param cells
+	 * @param dimensions
+	 * @param type
+	 * @param typeFactory
+	 * @return A CellImg with a linked type
+	 */
+	private < A extends ArrayDataAccess< A > > CellImg< T, A > create(
+			final ListImg< Cell< A > > cells,
+			final long[] dimensions,
+			final T type,
+			final NativeTypeFactory< T, A > typeFactory )
+	{
+		Dimensions.verify( dimensions );
+
+		final int[] cellDimensions = new int[ dimensions.length ];
+		cells.firstElement().dimensions( cellDimensions );
+
+		final CellGrid grid = new CellGrid( dimensions, cellDimensions );
+		
+		return create( cells, grid, dimensions, type, typeFactory );
+	}
+
+	/**
+	 * Private create method that creates a default ListImg of Cells
+	 * 
+	 * This method verifies dimensions.
+	 * 
+	 * @param <A>
+	 * @param dimensions
+	 * @param type
+	 * @param typeFactory
+	 * @return A CellImg with a linked type
+	 */
 	private < A extends ArrayDataAccess< A > > CellImg< T, A > create(
 			final long[] dimensions,
 			final T type,
@@ -147,9 +254,7 @@ public class CellImgFactory< T extends NativeType< T > > extends NativeImgFactor
 			cellCursor.set( new Cell<>( cellDims, cellMin, data ) );
 		}
 
-		final CellImg< T, A > img = new CellImg<>( this, grid, cells, entitiesPerPixel );
-		img.setLinkedType( typeFactory.createLinkedType( img ) );
-		return img;
+		return create( cells, grid, dimensions, type, typeFactory );
 	}
 
 	@SuppressWarnings( { "unchecked", "rawtypes" } )
@@ -221,4 +326,5 @@ public class CellImgFactory< T extends NativeType< T > > extends NativeImgFactor
 	{
 		Dimensions.verify( dimensions );
 	}
+	
 }
