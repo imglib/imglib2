@@ -140,6 +140,12 @@ public abstract class AbstractIntegerBitType< T extends AbstractIntegerBitType< 
 
 	@Override
 	public void div(final T t) { set(get() / t.get()); }
+	
+	@Override
+	public void pow(final T t) { setReal( Math.pow( get(), t.get() ) ); }
+	
+	@Override
+	public void pow(final double power) { setReal( Math.pow( get(), power) ); }
 
 	@Override
 	public void set( final T c ) { set( c.get() ); }

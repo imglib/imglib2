@@ -40,7 +40,7 @@ package net.imglib2;
  * <em>x<sub>d</sub></em>&le;<em>max<sub>d</sub></em>;<em>d</em>&isin;{0&hellip;
  * <em>n</em>-1}}
  * </p>
- * 
+ *
  * <p>
  * An {@link Interval} over the discrete source domain. <em>Note</em> that this
  * does <em>not</em> imply that for <em>all</em> coordinates in the
@@ -50,7 +50,7 @@ package net.imglib2;
  * coordinate for each. By that, minimum and maximum are defined but the
  * {@link Interval} does not define a value for all coordinates in between.
  * </p>
- * 
+ *
  * @author Stephan Saalfeld
  * @author Stephan Preibisch
  */
@@ -142,4 +142,73 @@ public interface Interval extends RealInterval, Dimensions
 	{
 		return max( d ) - min( d ) + 1;
 	}
+
+	/**
+	 * Allocates a new long array with the minimum of this Interval.
+	 *
+	 * Please note that his method allocates a new array each time which
+	 * introduces notable overhead in both compute and memory.
+	 * If you query it frequently, you should allocate a dedicated array
+	 * first and reuse it with {@link #min(long[])}.
+	 *
+	 * @return the min
+	 */
+	default long[] minAsLongArray()
+	{
+		final long[] min = new long[ numDimensions() ];
+		min( min );
+		return min;
+	}
+
+	/**
+	 * Allocates a new {@link Point} with the maximum of this Interval.
+	 *
+	 * Please note that his method allocates a new {@link Point} each time
+	 * which introduces notable overhead in both compute and memory.
+	 * If you query it frequently, you should allocate a dedicated
+	 * {@link Point} first and reuse it with {@link #min(Positionable)}.
+	 *
+	 * @return the min
+	 */
+	default Point minAsPoint()
+	{
+		final Point min = new Point( numDimensions() );
+		min( min );
+		return min;
+	}
+
+	/**
+	 * Allocates a new long array with the maximum of this Interval.
+	 *
+	 * Please note that his method allocates a new array each time which
+	 * introduces notable overhead in both compute and memory.
+	 * If you query it frequently, you should allocate a dedicated array
+	 * first and reuse it with {@link #max(long[])}.
+	 *
+	 * @return the max
+	 */
+	default long[] maxAsLongArray()
+	{
+		final long[] max = new long[ numDimensions() ];
+		max( max );
+		return max;
+	}
+
+	/**
+	 * Allocates a new {@link Point} with the maximum of this Interval.
+	 *
+	 * Please note that his method allocates a new {@link Point} each time
+	 * which introduces notable overhead in both compute and memory.
+	 * If you query it frequently, you should allocate a dedicated
+	 * {@link Point} first and reuse it with {@link #max(Positionable)}.
+	 *
+	 * @return the max
+	 */
+	default Point maxAsPoint()
+	{
+		final Point max = new Point( numDimensions() );
+		max( max );
+		return max;
+	}
+
 }

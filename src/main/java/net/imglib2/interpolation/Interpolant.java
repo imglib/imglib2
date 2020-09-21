@@ -11,13 +11,13 @@
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice,
  *    this list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  *    this list of conditions and the following disclaimer in the documentation
  *    and/or other materials provided with the distribution.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -39,29 +39,57 @@ import net.imglib2.RealInterval;
 import net.imglib2.RealRandomAccess;
 import net.imglib2.RealRandomAccessible;
 import net.imglib2.View;
+import net.imglib2.util.Cast;
 
 /**
  * A {@link RealRandomAccessible} that is generated through interpolation.
- * 
+ *
  * @author Stephan Saalfeld
  * @author Tobias Pietzsch
  */
-final public class Interpolant< T, F extends EuclideanSpace > implements RealRandomAccessible< T >, View
+final public class Interpolant< T, F > implements RealRandomAccessible< T >, View
 {
-	final protected F source;
+	protected final F source;
+
+	protected final int n;
 
 	final InterpolatorFactory< T, F > factory;
 
-	public Interpolant( final F source, final InterpolatorFactory< T, F > factory )
+	/**
+	 *
+	 * @param source
+	 * @param factory
+	 *
+	 * @deprecated use the compile time safe constructor
+	 * 		{@link #Interpolant(Object, InterpolatorFactory, int)} instead
+	 */
+	@Deprecated
+	public Interpolant( final EuclideanSpace source, final InterpolatorFactory< T, F > factory )
+	{
+		this.source = Cast.unchecked( source );
+		this.factory = factory;
+		this.n = source.numDimensions();
+	}
+
+	/**
+	 * Create an {@link Interpolant} for a source, a compatible intepolator
+	 * factory and a specified number of dimensions.
+	 *
+	 * @param source
+	 * @param factory
+	 * @param n
+	 */
+	public Interpolant( final F source, final InterpolatorFactory< T, F > factory, final int n )
 	{
 		this.source = source;
 		this.factory = factory;
+		this.n = n;
 	}
 
 	@Override
 	public int numDimensions()
 	{
-		return source.numDimensions();
+		return n;
 	}
 
 	@Override
@@ -75,12 +103,12 @@ final public class Interpolant< T, F extends EuclideanSpace > implements RealRan
 	{
 		return factory.create( source, interval );
 	}
-	
+
 	public F getSource()
 	{
 		return source;
 	}
-	
+
 	/**
 	 * @return {@link InterpolatorFactory} used for interpolation
 	 */

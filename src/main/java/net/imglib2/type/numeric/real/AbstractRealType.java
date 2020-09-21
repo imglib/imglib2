@@ -116,6 +116,18 @@ public abstract class AbstractRealType< T extends AbstractRealType< T >> extends
 	{
 		setReal( getRealDouble() - c.getRealDouble() );
 	}
+	
+	@Override
+	public void pow( final T c )
+	{
+		setReal( Math.pow( getRealDouble(), c.getRealDouble() ) );
+	}
+	
+	@Override
+	public void pow( final double power )
+	{
+		setReal( Math.pow( getRealDouble(), power ) );
+	}
 
 	@Override
 	public void setZero()

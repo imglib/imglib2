@@ -88,6 +88,24 @@ public class AbstractRealInterval extends AbstractEuclideanSpace implements Real
 		this.max = max.clone();
 	}
 
+	/**
+	 * Creates a new {@link AbstractRealInterval} from min and max coordinates
+	 * 
+	 * @param min
+	 * @param max
+	 */
+	public AbstractRealInterval( final RealLocalizable min, final RealLocalizable max )
+	{
+		this( min.numDimensions() );
+		assert min.numDimensions() == max.numDimensions();
+
+		for ( int d = 0; d < n; ++d )
+		{
+			this.min[ d ] = min.getDoublePosition( d );
+			this.max[ d ] = max.getDoublePosition( d );
+		}
+	}
+
 	@Override
 	public double realMin( final int d )
 	{

@@ -37,8 +37,8 @@ package net.imglib2;
 /**
  * The {@link RealLocalizable} interface can localize itself in an n-dimensional
  * real space.
- * 
- * 
+ *
+ *
  * @author Stephan Preibisch
  * @author Stephan Saalfeld
  */
@@ -46,7 +46,7 @@ public interface RealLocalizable extends EuclideanSpace
 {
 	/**
 	 * Write the current position into the passed array.
-	 * 
+	 *
 	 * @param position
 	 *            receives current position
 	 */
@@ -71,8 +71,56 @@ public interface RealLocalizable extends EuclideanSpace
 	}
 
 	/**
+	 * Write the current position into the passed {@link RealPositionable}.
+	 *
+	 * Note for developers: This default implementation forwards to
+	 * {@link RealPositionable#setPosition(RealLocalizable)}, so don't do the
+	 * same there.
+	 *
+	 * @param position
+	 *            receives current position
+	 */
+	default void localize( final RealPositionable position )
+	{
+		position.setPosition( this );
+	}
+
+	/**
+	 * Allocate and return a double array with the position.
+	 *
+	 * Please note that his method allocates a new array each time which
+	 * introduces notable overhead in both compute and memory.
+	 * If you query it frequently, you should allocate a dedicated array
+	 * first and reuse it with {@link #localize(double[])}.
+	 *
+	 * @return the position
+	 */
+	default double[] positionAsDoubleArray()
+	{
+		final double[] out = new double[ numDimensions() ];
+		localize( out );
+		return out;
+	}
+
+	/**
+	 * Allocate and return a {@link RealPoint} with the current position.
+	 *
+	 * Please note that his method allocates a new {@link RealPoint} each time
+	 * which introduces notable overhead in both compute and memory.
+	 * If you query it frequently, you should allocate a dedicated
+	 * {@link RealPoint} first and reuse it with
+	 * {@link #localize(RealPositionable)}.
+	 *
+	 * @return the position
+	 */
+	default RealPoint positionAsRealPoint()
+	{
+		return new RealPoint( this );
+	}
+
+	/**
 	 * Return the current position in a given dimension.
-	 * 
+	 *
 	 * @param d
 	 *            dimension
 	 * @return dimension of current position
@@ -84,7 +132,7 @@ public interface RealLocalizable extends EuclideanSpace
 
 	/**
 	 * Return the current position in a given dimension.
-	 * 
+	 *
 	 * @param d
 	 *            dimension
 	 * @return dimension of current position

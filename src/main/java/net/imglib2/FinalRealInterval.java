@@ -70,6 +70,17 @@ public final class FinalRealInterval extends AbstractRealInterval
 	}
 
 	/**
+	 * Creates a new {@link AbstractRealInterval} from min and max coordinates
+	 * 
+	 * @param min
+	 * @param max
+	 */
+	public FinalRealInterval( final RealLocalizable min, final RealLocalizable max )
+	{
+		super( min, max );
+	}
+
+	/**
 	 * THIS METHOD WILL BE REMOVED IN A FUTURE RELEASE. It was mistakenly
 	 * introduced, analogous to {@link FinalInterval#createMinSize(long...)} for
 	 * integer intervals. Dimension is not defined for {@link RealInterval} and

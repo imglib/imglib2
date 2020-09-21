@@ -11,13 +11,13 @@
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- *
+ * 
  * 1. Redistributions of source code must retain the above copyright notice,
  *    this list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  *    this list of conditions and the following disclaimer in the documentation
  *    and/or other materials provided with the distribution.
- *
+ * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -41,19 +41,23 @@ import java.util.function.Supplier;
 import net.imglib2.Cursor;
 import net.imglib2.Interval;
 import net.imglib2.IterableInterval;
+import net.imglib2.IterableRealInterval;
 import net.imglib2.RandomAccess;
 import net.imglib2.RandomAccessible;
 import net.imglib2.RandomAccessibleInterval;
+import net.imglib2.RealCursor;
 import net.imglib2.RealRandomAccess;
 import net.imglib2.RealRandomAccessible;
 import net.imglib2.RealRandomAccessibleRealInterval;
 import net.imglib2.Sampler;
 import net.imglib2.converter.read.BiConvertedIterableInterval;
+import net.imglib2.converter.read.BiConvertedIterableRealInterval;
 import net.imglib2.converter.read.BiConvertedRandomAccessible;
 import net.imglib2.converter.read.BiConvertedRandomAccessibleInterval;
 import net.imglib2.converter.read.BiConvertedRealRandomAccessible;
 import net.imglib2.converter.read.BiConvertedRealRandomAccessibleRealInterval;
 import net.imglib2.converter.read.ConvertedIterableInterval;
+import net.imglib2.converter.read.ConvertedIterableRealInterval;
 import net.imglib2.converter.read.ConvertedRandomAccessible;
 import net.imglib2.converter.read.ConvertedRandomAccessibleInterval;
 import net.imglib2.converter.read.ConvertedRealRandomAccessible;
@@ -63,6 +67,7 @@ import net.imglib2.converter.readwrite.CompositeARGBSamplerConverter;
 import net.imglib2.converter.readwrite.SamplerConverter;
 import net.imglib2.converter.readwrite.WriteConvertedIterableInterval;
 import net.imglib2.converter.readwrite.WriteConvertedIterableRandomAccessibleInterval;
+import net.imglib2.converter.readwrite.WriteConvertedIterableRealInterval;
 import net.imglib2.converter.readwrite.WriteConvertedRandomAccessible;
 import net.imglib2.converter.readwrite.WriteConvertedRandomAccessibleInterval;
 import net.imglib2.type.Type;
@@ -326,6 +331,50 @@ public class Converters
 	}
 
 	/**
+	 * Create a {@link IterableRealInterval} whose {@link RealCursor RealCursors}
+	 * {@link RealCursor#get()} you a converted sample. Conversion is done
+	 * on-the-fly when reading values. Writing to the converted
+	 * {@link IterableRealInterval} has no effect.
+	 *
+	 * @param source
+	 * @param converter
+	 * @param b
+	 * @return a converted {@link IterableRealInterval} whose {@link RealCursor RealCursors}
+	 *         perform on-the-fly value conversion using the provided converter.
+	 */
+	@SuppressWarnings( "unchecked" )
+	final static public < A, B extends Type< B > > IterableRealInterval< B > convert(
+			final IterableRealInterval< A > source,
+			final Converter< ? super A, ? super B > converter,
+			final B b )
+	{
+		if ( TypeIdentity.class.isInstance( converter ) )
+			return ( IterableRealInterval< B > ) source;
+		return new ConvertedIterableRealInterval<>( source, converter, b );
+	}
+
+	/**
+	 * Create a {@link IterableRealInterval} whose {@link RealCursor RealCursors}
+	 * {@link RealCursor#get()} you a converted sample. Conversion is done
+	 * on-the-fly when reading values. Writing to the converted
+	 * {@link IterableRealInterval} has no effect.
+	 *
+	 * @param source
+	 * @param converterSupplier
+	 * @param b
+	 * @return a converted {@link IterableRealInterval} whose {@link RealCursor RealCursors}
+	 *         perform on-the-fly value conversion using the provided converter.
+	 */
+	@SuppressWarnings( "unchecked" )
+	final static public < A, B extends Type< B > > IterableRealInterval< B > convert(
+			final IterableRealInterval< A > source,
+			final Supplier< Converter< ? super A, ? super B > > converterSupplier,
+			final B b )
+	{
+		return new ConvertedIterableRealInterval<>( source, converterSupplier, b );
+	}
+
+	/**
 	 * Create a {@link RandomAccessibleInterval} whose {@link RandomAccess
 	 * RandomAccesses} {@link RandomAccess#get()} you a converted sample.
 	 * Conversion is done on-the-fly both when reading and writing values.
@@ -408,6 +457,23 @@ public class Converters
 			final SamplerConverter< ? super A, B > converter )
 	{
 		return new WriteConvertedIterableInterval<>( source, converter );
+	}
+
+	/**
+	 * Create an {@link IterableRealInterval} whose {@link RealCursor RealCursors}
+	 * {@link RealCursor#get()} you a converted sample. Conversion is done
+	 * on-the-fly both when reading and writing values.
+	 *
+	 * @param source
+	 * @param converter
+	 * @return a converted {@link IterableRealInterval} whose {@link RealCursor RealCursors}
+	 *         perform on-the-fly value conversion using the provided converter.
+	 */
+	final static public < A, B extends Type< B > > WriteConvertedIterableRealInterval< A, B > convert(
+			final IterableRealInterval< A > source,
+			final SamplerConverter< ? super A, B > converter )
+	{
+		return new WriteConvertedIterableRealInterval<>( source, converter );
 	}
 
 	/**
@@ -810,7 +876,7 @@ public class Converters
 	 * @param sourceA
 	 * @param sourceB
 	 * @param converter a two variable function into a preallocated output, e.g.
-	 *     <code>(a, b, c) -> c.set(a.get() + b.get())</code>
+	 *     {@code (a, b, c) -> c.set(a.get() + b.get())}
 	 * @param c
 	 * @return a converted {@link RandomAccessible} whose {@link RandomAccess
 	 *         RandomAccesses} perform on-the-fly value conversion using the
@@ -835,7 +901,7 @@ public class Converters
 	 * @param sourceB
 	 * @param converterSupplier a supplier of a two variable function into a
 	 * 		preallocated output, e.g.
-	 * 		<code>() -> (a, b, c) -> c.set(a.get() + b.get())</code>
+	 * 		{@code () -> (a, b, c) -> c.set(a.get() + b.get())}
 	 * @param c
 	 * @return a converted {@link RandomAccessible} whose {@link RandomAccess
 	 *         RandomAccesses} perform on-the-fly value conversion using the
@@ -859,7 +925,7 @@ public class Converters
 	 * @param sourceA
 	 * @param sourceB
 	 * @param converter a two variable function into a preallocated output, e.g.
-	 *     <code>(a, b, c) -> c.set(a.get() + b.get())</code>
+	 *     {@code (a, b, c) -> c.set(a.get() + b.get())}
 	 * @param c
 	 * @return a converted {@link RandomAccessibleInterval} whose
 	 *         {@link RandomAccess RandomAccesses} perform on-the-fly value
@@ -884,7 +950,7 @@ public class Converters
 	 * @param sourceB
 	 * @param converterSupplier a supplier of a two variable function into a
 	 * 		preallocated output, e.g.
-	 * 		<code>() -> (a, b, c) -> c.set(a.get() + b.get())</code>
+	 * 		{@code () -> (a, b, c) -> c.set(a.get() + b.get())}
 	 * @param c
 	 * @return a converted {@link RandomAccessibleInterval} whose
 	 *         {@link RandomAccess RandomAccesses} perform on-the-fly value
@@ -914,7 +980,7 @@ public class Converters
 	 * @param sourceA
 	 * @param sourceB
 	 * @param converter a two variable function into a preallocated output, e.g.
-	 *     <code>(a, b, c) -> c.set(a.get() + b.get())</code>
+	 *     {@code (a, b, c) -> c.set(a.get() + b.get())}
 	 * @param c
 	 * @return a converted {@link RandomAccessibleInterval} whose
 	 *         {@link RandomAccess RandomAccesses} perform on-the-fly value
@@ -945,7 +1011,7 @@ public class Converters
 	 * @param sourceB
 	 * @param converterSupplier s aupplier of a two variable function into a
 	 * 		preallocated output, e.g.
-	 * 		<code>() -> (a, b, c) -> c.set(a.get() + b.get())</code>
+	 * 		{@code () -> (a, b, c) -> c.set(a.get() + b.get())}
 	 * @param c
 	 * @return a converted {@link RandomAccessibleInterval} whose
 	 *         {@link RandomAccess RandomAccesses} perform on-the-fly value
@@ -969,7 +1035,7 @@ public class Converters
 	 * @param sourceA
 	 * @param sourceB
 	 * @param converter a two variable function into a preallocated output, e.g.
-	 *     <code>(a, b, c) -> c.set(a.get() + b.get())</code>
+	 *     {@code (a, b, c) -> c.set(a.get() + b.get())}
 	 * @param c
 	 * @return a converted {@link IterableInterval} whose {@link Cursor Cursors}
 	 *         perform on-the-fly value conversion using the provided converter.
@@ -993,7 +1059,7 @@ public class Converters
 	 * @param sourceB
 	 * @param converterSupplier supplies a two variable function into a
 	 * 		preallocated output, e.g.
-	 * 		<code>() -> (a, b, c) -> c.set(a.get() + b.get())</code>
+	 * 		{@code () -> (a, b, c) -> c.set(a.get() + b.get())}
 	 * @param c
 	 * @return a converted {@link IterableInterval} whose {@link Cursor Cursors}
 	 *         perform on-the-fly value conversion using the provided converter.
@@ -1008,6 +1074,53 @@ public class Converters
 	}
 
 	/**
+	 * Create an {@link IterableRealInterval} whose {@link RealCursor RealCursors}
+	 * {@link RealCursor#get()} you a converted sample. Conversion is done
+	 * on-the-fly when reading values. Writing to the converted
+	 * {@link IterableRealInterval} has no effect.
+	 *
+	 * @param sourceA
+	 * @param sourceB
+	 * @param converter a two variable function into a preallocated output, e.g.
+	 *     <code>(a, b, c) -> c.set(a.get() + b.get())</code>
+	 * @param c
+	 * @return a converted {@link IterableRealInterval} whose {@link RealCursor RealCursors}
+	 *         perform on-the-fly value conversion using the provided converter.
+	 */
+	final static public < A, B, C extends Type< C > > IterableRealInterval< C > convert(
+			final IterableRealInterval< A > sourceA,
+			final IterableRealInterval< B > sourceB,
+			final BiConverter< ? super A, ? super B, ? super C > converter,
+			final C c )
+	{
+		return new BiConvertedIterableRealInterval<>( sourceA, sourceB, converter, c );
+	}
+
+	/**
+	 * Create a {@link IterableRealInterval} whose {@link RealCursor RealCursors}
+	 * {@link RealCursor#get()} you a converted sample. Conversion is done
+	 * on-the-fly when reading values. Writing to the converted
+	 * {@link IterableInterval} has no effect.
+	 *
+	 * @param sourceA
+	 * @param sourceB
+	 * @param converterSupplier supplies a two variable function into a
+	 * 		preallocated output, e.g.
+	 * 		<code>() -> (a, b, c) -> c.set(a.get() + b.get())</code>
+	 * @param c
+	 * @return a converted {@link IterableRealInterval} whose {@link RealCursor RealCursors}
+	 *         perform on-the-fly value conversion using the provided converter.
+	 */
+	final static public < A, B, C extends Type< C > > IterableRealInterval< C > convert(
+			final IterableRealInterval< A > sourceA,
+			final IterableRealInterval< B > sourceB,
+			final Supplier< BiConverter< ? super A, ? super B, ? super C > > converterSupplier,
+			final C c )
+	{
+		return new BiConvertedIterableRealInterval<>( sourceA, sourceB, converterSupplier, c );
+	}
+
+	/**
 	 * Create a {@link RealRandomAccessibleRealInterval} whose {@link RealRandomAccess
 	 * RealRandomAccesses} {@link RealRandomAccess#get()} you a converted sample.
 	 * Conversion is done on-the-fly when reading values. Writing to the
@@ -1016,7 +1129,7 @@ public class Converters
 	 * @param sourceA
 	 * @param sourceB
 	 * @param converter a two variable function into a preallocated output, e.g.
-	 *     <code>(a, b, c) -> c.set(a.get() + b.get())</code>
+	 *     {@code (a, b, c) -> c.set(a.get() + b.get())}
 	 * @param c
 	 * @return a converted {@link RealRandomAccessibleRealInterval} whose
 	 *         {@link RealRandomAccess RealRandomAccesses} perform on-the-fly value
@@ -1041,7 +1154,7 @@ public class Converters
 	 * @param sourceB
 	 * @param converterSupplier a supplier of a two variable function into a
 	 * 		preallocated output, e.g.
-	 * 		<code>() -> (a, b, c) -> c.set(a.get() + b.get())</code>
+	 * 		{@code () -> (a, b, c) -> c.set(a.get() + b.get())}
 	 * @param c
 	 * @return a converted {@link RealRandomAccessibleRealInterval} whose
 	 *         {@link RealRandomAccess RealRandomAccesses} perform on-the-fly value
@@ -1065,7 +1178,7 @@ public class Converters
 	 * @param sourceA
 	 * @param sourceB
 	 * @param converter a two variable function into a preallocated output, e.g.
-	 *     <code>(a, b, c) -> c.set(a.get() + b.get())</code>
+	 *     {@code (a, b, c) -> c.set(a.get() + b.get())}
 	 * @param c
 	 * @return a converted {@link RealRandomAccessible} whose {@link RealRandomAccess
 	 *         RealRandomAccesses} perform on-the-fly value conversion using the
@@ -1090,7 +1203,7 @@ public class Converters
 	 * @param sourceB
 	 * @param converterSupplier a supplier of a two variable function into a
 	 * 		preallocated output, e.g.
-	 * 		<code>() -> (a, b, c) -> c.set(a.get() + b.get())</code>
+	 * 		{@code () -> (a, b, c) -> c.set(a.get() + b.get())}
 	 * @param c
 	 * @return a converted {@link RealRandomAccessible} whose {@link RealRandomAccess
 	 *         RealRandomAccesses} perform on-the-fly value conversion using the

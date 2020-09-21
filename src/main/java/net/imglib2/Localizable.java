@@ -39,8 +39,8 @@ package net.imglib2;
  * discrete space. Not only {@link Cursor}s can use this interface, it might be
  * used by much more classes as {@link RandomAccess}s can take any
  * {@link Localizable} as input for where they should move to.
- * 
- * 
+ *
+ *
  * @author Stephan Preibisch
  * @author Stephan Saalfeld
  */
@@ -61,7 +61,7 @@ public interface Localizable extends RealLocalizable
 
 	/**
 	 * Write the current position into the passed array.
-	 * 
+	 *
 	 * @param position
 	 *            receives current position
 	 */
@@ -69,7 +69,22 @@ public interface Localizable extends RealLocalizable
 	{
 		final int n = numDimensions();
 		for ( int d = 0; d < n; d++ )
-			position[ d ] = getIntPosition( d );
+			position[ d ] = getLongPosition( d );
+	}
+
+	/**
+	 * Write the current position into the passed {@link Positionable}.
+	 *
+	 * Note for developers: This default implementation forwards to
+	 * {@link Positionable#setPosition(Localizable)}, so don't do the
+	 * same there.
+	 *
+	 * @param position
+	 *            receives current position
+	 */
+	default void localize( final Positionable position )
+	{
+		position.setPosition( this );
 	}
 
 	/**
@@ -85,8 +100,41 @@ public interface Localizable extends RealLocalizable
 	}
 
 	/**
+	 * Allocate and return a long array containing the localizable's position.
+	 *
+	 * Please note that his method allocates a new array each time which
+	 * introduces notable overhead in both compute and memory.
+	 * If you query it frequently, you should allocate a dedicated array
+	 * first and reuse it with {@link #localize(long[])}.
+	 *
+	 * @return the position
+	 */
+	default long[] positionAsLongArray()
+	{
+		final long[] out = new long[ numDimensions() ];
+		localize( out );
+		return out;
+	}
+
+	/**
+	 * Allocate and return a {@link Point} containing the localizable's
+	 * position.
+	 *
+	 * Please note that his method allocates a new {@link Point} each time
+	 * which introduces notable overhead in both compute and memory.
+	 * If you query it frequently, you should allocate a dedicated
+	 * {@link Point} first and reuse it with {@link #localize(Positionable)}.
+	 *
+	 * @return the position
+	 */
+	default Point positionAsPoint()
+	{
+		return new Point( this );
+	}
+
+	/**
 	 * Return the current position in a given dimension.
-	 * 
+	 *
 	 * @param d
 	 *            dimension
 	 * @return dimension of current position

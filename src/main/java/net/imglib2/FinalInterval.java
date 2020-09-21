@@ -84,6 +84,19 @@ public final class FinalInterval extends AbstractInterval
 	}
 
 	/**
+	 * Creates an Interval with the boundaries [min, max] (both including)
+	 * 
+	 * @param min
+	 *            the position of the first elements in each dimension
+	 * @param max
+	 *            the position of the last elements in each dimension
+	 */
+	public FinalInterval( final Localizable min, final Localizable max )
+	{
+		super( min, max );
+	}
+
+	/**
 	 * Creates an Interval with the boundaries [0, dimensions-1]
 	 * 
 	 * @param dimensions

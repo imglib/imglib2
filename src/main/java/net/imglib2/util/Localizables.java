@@ -47,7 +47,11 @@ import net.imglib2.view.Views;
 
 public class Localizables
 {
-
+	/**
+	 * @deprecated
+	 * Use {@link Localizable#positionAsLongArray}. 
+	 */
+	@Deprecated
 	public static long[] asLongArray( final Localizable localizable )
 	{
 		final long[] result = new long[ localizable.numDimensions() ];
