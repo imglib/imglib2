@@ -34,8 +34,10 @@
 
 package net.imglib2.img.cell;
 
+import java.util.Arrays;
 import java.util.Collections;
 
+import net.imglib2.Cursor;
 import net.imglib2.img.basictypeaccess.array.AbstractBooleanArray;
 import net.imglib2.img.basictypeaccess.array.AbstractByteArray;
 import net.imglib2.img.basictypeaccess.array.AbstractDoubleArray;
@@ -1254,7 +1256,51 @@ final public class CellImgs
 	final private static < T extends NativeType<T>, A extends ArrayDataAccess<A> > CellImg< T, A > create( final T type, final ListImg< Cell< A > > imgOfCells, final long... dim )
 	{
 		final CellImgFactory< T > factory = new CellImgFactory< T >( type );
-		return ( CellImg< T, A > ) factory.create( imgOfCells, dim );
+		if( ! verifyCellDimensionsAreIdenticalAndDivisible( imgOfCells , dim ) ) {
+			//Alternatively, should we throw an exception?
+			return null;
+		}
+		return factory.create( imgOfCells, dim );
 	}
-
+	
+	/**
+	 * Verify that all cells in ListImg have the same dimensions that evenly divide the entire image
+	 *   
+	 * @param <A>
+	 * @param imgOfCells
+	 * @return
+	 */
+	final private static <A extends ArrayDataAccess<A>> boolean verifyCellDimensionsAreIdenticalAndDivisible(final ListImg< Cell< A >> imgOfCells, final long[] dim) {
+		Cursor< Cell<A> > c = imgOfCells.cursor();
+		
+		long[] firstCellDim = new long[ c.numDimensions() ];
+		long[] cellDim = new long[ c.numDimensions() ];
+		
+		// Empty cursor
+		if ( ! c.hasNext() )
+			return false;
+		
+		// Get first cell
+		c.fwd();
+		c.get().dimensions( firstCellDim );
+		
+		// Make sure the cell dimensions evenly divide the image dimensions
+		for(int d = 0; d < dim.length; d++) {
+			System.out.println("d: " + d + ", dim:" + dim[d] + ", cellDim: " + cellDim[d]);
+			if( dim[d] % firstCellDim[d] != 0 ) {
+				return false;
+			}
+		}
+		
+		// Check that the cell dimensions are all the same
+		while ( c.hasNext() ) {
+			c.fwd();
+			c.get().dimensions( cellDim );
+			if( !Arrays.equals( firstCellDim, cellDim ) ) {
+				return false;
+			}
+		}
+		
+		return true;
+	}
 }
