@@ -39,7 +39,6 @@ import net.imglib2.exception.IncompatibleTypeException;
 import net.imglib2.img.ImgFactory;
 import net.imglib2.img.NativeImgFactory;
 import net.imglib2.img.basictypeaccess.ArrayDataAccessFactory;
-import net.imglib2.img.basictypeaccess.array.ArrayDataAccess;
 import net.imglib2.img.list.ListImg;
 import net.imglib2.img.list.ListLocalizingCursor;
 import net.imglib2.type.NativeType;
@@ -124,7 +123,7 @@ public class CellImgFactory< T extends NativeType< T > > extends NativeImgFactor
 	 * @param dimensions
 	 * @return
 	 */
-	public < A  extends ArrayDataAccess< A > > CellImg< T, A > create( final ListImg< Cell< A > > imgOfCells, final long... dimensions )
+	public < A > CellImg< T, A > create( final ListImg< Cell< A > > imgOfCells, final long... dimensions )
 	{
 		@SuppressWarnings("unchecked") // NativeType interface does not specify Access interface
 		final CellImg< T, A > img = create( imgOfCells, dimensions, type(), ( NativeTypeFactory< T, A > ) type().getNativeTypeFactory() );
@@ -139,7 +138,7 @@ public class CellImgFactory< T extends NativeType< T > > extends NativeImgFactor
 	 * @param dimensions
 	 * @return
 	 */
-	public < A  extends ArrayDataAccess< A > > CellImg< T, A > create( final ListImg< Cell< A > > imgOfCells, final Dimensions dimensions )
+	public < A > CellImg< T, A > create( final ListImg< Cell< A > > imgOfCells, final Dimensions dimensions )
 	{
 		return create( imgOfCells, Intervals.dimensionsAsLongArray( dimensions ) );
 	}
@@ -152,7 +151,7 @@ public class CellImgFactory< T extends NativeType< T > > extends NativeImgFactor
 	 * @param dimensions
 	 * @return
 	 */
-	public < A  extends ArrayDataAccess< A > > CellImg< T, A > create( final ListImg< Cell< A > > imgOfCells, final int[] dimensions )
+	public < A > CellImg< T, A > create( final ListImg< Cell< A > > imgOfCells, final int[] dimensions )
 	{
 		return create( imgOfCells, Util.int2long( dimensions ) );
 	}
@@ -168,7 +167,7 @@ public class CellImgFactory< T extends NativeType< T > > extends NativeImgFactor
 	 * 
 	 * See below for other parameters 
 	 */
-	private < A extends ArrayDataAccess< A > > CellImg< T, A > create(
+	private < A > CellImg< T, A > create(
 			final ListImg< Cell< A > > cells,
 			final CellGrid grid,
 			final long[] dimensions,
@@ -195,7 +194,7 @@ public class CellImgFactory< T extends NativeType< T > > extends NativeImgFactor
 	 * @param typeFactory
 	 * @return A CellImg with a linked type
 	 */
-	private < A extends ArrayDataAccess< A > > CellImg< T, A > create(
+	private < A > CellImg< T, A > create(
 			final ListImg< Cell< A > > cells,
 			final long[] dimensions,
 			final T type,
@@ -222,7 +221,7 @@ public class CellImgFactory< T extends NativeType< T > > extends NativeImgFactor
 	 * @param typeFactory
 	 * @return A CellImg with a linked type
 	 */
-	private < A extends ArrayDataAccess< A > > CellImg< T, A > create(
+	private < A > CellImg< T, A > create(
 			final long[] dimensions,
 			final T type,
 			final NativeTypeFactory< T, A > typeFactory )
