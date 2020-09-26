@@ -116,7 +116,7 @@ final public class CellImgs
 	/**
 	 * Create an {@link CellImg}&lt;{@link UnsignedByteType}, {@link ByteArray}&gt;.
 	 */
-	final static public CellImg< UnsignedByteType, ByteArray > unsignedBytes( final long... dim )
+	final static public CellImg< UnsignedByteType, ? > unsignedBytes( final long... dim )
 	{
 		return create( new UnsignedByteType() , dim );
 	}
@@ -170,7 +170,7 @@ final public class CellImgs
 	/**
 	 * Create an {@link CellImg}&lt;{@link ByteType}, {@link ByteArray}&gt;.
 	 */
-	final static public CellImg< ByteType, ByteArray > bytes( final long... dim )
+	final static public CellImg< ByteType, ? > bytes( final long... dim )
 	{
 		return create( new ByteType() , dim );
 	}
@@ -224,7 +224,7 @@ final public class CellImgs
 	/**
 	 * Create an {@link CellImg}&lt;{@link UnsignedShortType}, {@link ShortArray}&gt;.
 	 */
-	final static public CellImg< UnsignedShortType, ShortArray > unsignedShorts( final long... dim )
+	final static public CellImg< UnsignedShortType, ? > unsignedShorts( final long... dim )
 	{
 		return create( new UnsignedShortType() , dim );
 	}
@@ -278,7 +278,7 @@ final public class CellImgs
 	/**
 	 * Create an {@link CellImg}&lt;{@link ShortType}, {@link ShortArray}&gt;.
 	 */
-	final static public CellImg< ShortType, ShortArray > shorts( final long... dim )
+	final static public CellImg< ShortType, ? > shorts( final long... dim )
 	{
 		return create( new ShortType() , dim );
 	}
@@ -333,7 +333,7 @@ final public class CellImgs
 	/**
 	 * Create an {@link CellImg}&lt;{@link UnsignedIntType}, {@link IntArray}&gt;.
 	 */
-	final static public CellImg< UnsignedIntType, IntArray > unsignedInts( final long... dim )
+	final static public CellImg< UnsignedIntType, ? > unsignedInts( final long... dim )
 	{
 		return create( new UnsignedIntType() , dim );
 	}
@@ -388,7 +388,7 @@ final public class CellImgs
 	/**
 	 * Create an {@link CellImg}&lt;{@link IntType}, {@link IntArray}&gt;.
 	 */
-	final static public CellImg< IntType, IntArray > ints( final long... dim )
+	final static public CellImg< IntType, ? > ints( final long... dim )
 	{
 		return create( new IntType() , dim );
 	}
@@ -442,7 +442,7 @@ final public class CellImgs
 	/**
 	 * Create an {@link CellImg}&lt;{@link UnsignedLongType}, {@link LongArray}&gt;.
 	 */
-	final static public CellImg< UnsignedLongType, LongArray > unsignedLongs( final long... dim )
+	final static public CellImg< UnsignedLongType, ? > unsignedLongs( final long... dim )
 	{
 		return create( new UnsignedLongType() , dim );
 	}
@@ -496,7 +496,7 @@ final public class CellImgs
 	/**
 	 * Create an {@link CellImg}&lt;{@link LongType}, {@link LongArray}&gt;.
 	 */
-	final static public CellImg< LongType, LongArray > longs( final long... dim )
+	final static public CellImg< LongType, ? > longs( final long... dim )
 	{
 		return create( new LongType() , dim );
 	}
@@ -550,7 +550,7 @@ final public class CellImgs
 	/**
 	 * Create an {@link CellImg}&lt;{@link NativeBoolType}, {@link BooleanArray}&gt;.
 	 */
-	final static public CellImg< NativeBoolType, BooleanArray > booleans( final long... dim )
+	final static public CellImg< NativeBoolType, ? > booleans( final long... dim )
 	{
 		return create( new NativeBoolType() , dim );
 	}
@@ -604,7 +604,7 @@ final public class CellImgs
 	/**
 	 * Create an {@link CellImg}&lt;{@link BitType}, {@link LongArray}&gt;.
 	 */
-	final static public CellImg< BitType, LongArray > bits( final long... dim )
+	final static public CellImg< BitType, ? > bits( final long... dim )
 	{
 		return create( new BitType() , dim );
 	}
@@ -658,7 +658,7 @@ final public class CellImgs
 	/**
 	 * Create an {@link CellImg}&lt;{@link Unsigned2BitType}, {@link LongArray}&gt;.
 	 */
-	final static public CellImg< Unsigned2BitType, LongArray > unsigned2Bits( final long... dim )
+	final static public CellImg< Unsigned2BitType, ? > unsigned2Bits( final long... dim )
 	{
 		return create( new Unsigned2BitType() , dim );
 	}
@@ -712,7 +712,7 @@ final public class CellImgs
 	/**
 	 * Create an {@link CellImg}&lt;{@link Unsigned4BitType}, {@link LongArray}&gt;.
 	 */
-	final static public CellImg< Unsigned4BitType, LongArray > unsigned4Bits( final long... dim )
+	final static public CellImg< Unsigned4BitType, ? > unsigned4Bits( final long... dim )
 	{
 		return create( new Unsigned4BitType() , dim );
 	}
@@ -766,7 +766,7 @@ final public class CellImgs
 	/**
 	 * Create an {@link CellImg}&lt;{@link Unsigned12BitType}, {@link LongArray}&gt;.
 	 */
-	final static public CellImg< Unsigned12BitType, LongArray > unsigned12Bits( final long... dim )
+	final static public CellImg< Unsigned12BitType, ? > unsigned12Bits( final long... dim )
 	{
 		return create( new Unsigned12BitType() , dim );
 	}
@@ -822,7 +822,7 @@ final public class CellImgs
 	/**
 	 * Create an {@link CellImg}&lt;{@link Unsigned128BitType}, {@link LongArray}&gt;.
 	 */
-	final static public CellImg< Unsigned128BitType, LongArray > unsigned128Bits( final long... dim )
+	final static public CellImg< Unsigned128BitType, ? > unsigned128Bits( final long... dim )
 	{
 		return create( new Unsigned128BitType() , dim );
 	}
@@ -878,7 +878,7 @@ final public class CellImgs
 	/**
 	 * Create an {@link CellImg}&lt;{@link UnsignedVariableBitLengthType}, {@link LongArray}&gt;.
 	 */
-	final static public CellImg< UnsignedVariableBitLengthType, LongArray > unsignedVariableBitLengthType( final int nbits, final long... dim )
+	final static public CellImg< UnsignedVariableBitLengthType, ? > unsignedVariableBitLengthType( final int nbits, final long... dim )
 	{
 		return create( new UnsignedVariableBitLengthType( nbits ) , dim );
 	}
@@ -934,7 +934,7 @@ final public class CellImgs
 	/**
 	 * Create an {@link CellImg}&lt;{@link FloatType}, {@link FloatArray}&gt;.
 	 */
-	final static public CellImg< FloatType, FloatArray > floats( final long... dim )
+	final static public CellImg< FloatType, ? > floats( final long... dim )
 	{
 		return create( new FloatType() , dim );
 	}
@@ -988,7 +988,7 @@ final public class CellImgs
 	/**
 	 * Create an {@link CellImg}&lt;{@link DoubleType}, {@link DoubleArray}&gt;.
 	 */
-	final static public CellImg< DoubleType, DoubleArray > doubles( final long... dim )
+	final static public CellImg< DoubleType, ? > doubles( final long... dim )
 	{
 		return create( new DoubleType() , dim );
 	}
@@ -1044,7 +1044,7 @@ final public class CellImgs
 	/**
 	 * Create an {@link CellImg}&lt;{@link ARGBType}, {@link IntArray}&gt;.
 	 */
-	final static public CellImg< ARGBType, IntArray > argbs( final long... dim )
+	final static public CellImg< ARGBType, ? > argbs( final long... dim )
 	{
 		return create( new ARGBType() , dim );
 	}
@@ -1098,7 +1098,7 @@ final public class CellImgs
 	/**
 	 * Create an {@link CellImg}&lt;{@link ComplexFloatType}, {@link FloatArray}&gt;.
 	 */
-	final static public CellImg< ComplexFloatType, FloatArray > complexFloats( final long... dim )
+	final static public CellImg< ComplexFloatType, ? > complexFloats( final long... dim )
 	{
 		return create( new ComplexFloatType() , dim );
 	}
@@ -1152,7 +1152,7 @@ final public class CellImgs
 	/**
 	 * Create an {@link CellImg}&lt;{@link ComplexDoubleType}, {@link DoubleArray}&gt;.
 	 */
-	final static public CellImg< ComplexDoubleType, DoubleArray > complexDoubles( final long... dim )
+	final static public CellImg< ComplexDoubleType, ? > complexDoubles( final long... dim )
 	{
 		return create( new ComplexDoubleType() , dim );
 	}
@@ -1209,12 +1209,11 @@ final public class CellImgs
 	 */
 	
 	/**
-	 * Create an {@link CellImg}&lt; T, A &gt;.
+	 * Create an {@link CellImg}&lt; T, ? &gt;.
 	 */
-	@SuppressWarnings( "unchecked" ) //CellImgFactory.create does not specify the Access interface A
-	final static private < T extends NativeType<T>, A extends ArrayDataAccess<A> > CellImg< T, A > create( T type, final long... dim )
+	final static private < T extends NativeType<T> > CellImg< T, ? > create( T type, final long... dim )
 	{
-		return ( CellImg< T, A > ) new CellImgFactory<>( type ).create( dim );
+		return new CellImgFactory<>( type ).create( dim );
 	}
 	
 	/**
