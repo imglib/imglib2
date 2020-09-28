@@ -55,7 +55,6 @@ public class ConvertedIterableRealInterval< A, B extends Type< B > > extends Abs
 	 * Creates a copy of b for conversion.
 	 *
 	 * @param source
-	 * @param converter
 	 * @param b
 	 */
 	public ConvertedIterableRealInterval(

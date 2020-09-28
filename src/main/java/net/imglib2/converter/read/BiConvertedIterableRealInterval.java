@@ -59,7 +59,6 @@ public class BiConvertedIterableRealInterval< A, B, C extends Type< C > > extend
 	 *
 	 * @param sourceA
 	 * @param sourceB
-	 * @param converter
 	 * @param c
 	 */
 	public BiConvertedIterableRealInterval(
@@ -77,9 +76,7 @@ public class BiConvertedIterableRealInterval< A, B, C extends Type< C > > extend
 	/**
 	 * Creates a copy of c for conversion.
 	 *
-	 * @param source
 	 * @param converter
-	 * @param b
 	 */
 	public BiConvertedIterableRealInterval(
 			final IterableRealInterval< A > sourceA,

@@ -125,7 +125,7 @@ public class BiConvertedRealCursor< A, B, C extends Type< C > > extends Abstract
 	}
 
 	/**
-	 * The correct logic would be to return sourceA.hasNext() && sourceB.hasNext()
+	 * The correct logic would be to return {@code sourceA.hasNext() && sourceB.hasNext()}
 	 * but we test only sourceA for efficiency.  Make sure that sourceA is the
 	 * smaller {@link IterableInterval}.
 	 */

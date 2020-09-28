@@ -1082,7 +1082,7 @@ public class Converters
 	 * @param sourceA
 	 * @param sourceB
 	 * @param converter a two variable function into a preallocated output, e.g.
-	 *     <code>(a, b, c) -> c.set(a.get() + b.get())</code>
+	 *     {@code (a, b, c) -> c.set(a.get() + b.get())}
 	 * @param c
 	 * @return a converted {@link IterableRealInterval} whose {@link RealCursor RealCursors}
 	 *         perform on-the-fly value conversion using the provided converter.
@@ -1106,7 +1106,7 @@ public class Converters
 	 * @param sourceB
 	 * @param converterSupplier supplies a two variable function into a
 	 * 		preallocated output, e.g.
-	 * 		<code>() -> (a, b, c) -> c.set(a.get() + b.get())</code>
+	 * 		{@code () -> (a, b, c) -> c.set(a.get() + b.get())}
 	 * @param c
 	 * @return a converted {@link IterableRealInterval} whose {@link RealCursor RealCursors}
 	 *         perform on-the-fly value conversion using the provided converter.
