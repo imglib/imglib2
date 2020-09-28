@@ -193,6 +193,24 @@ public class Views
 	 *
 	 * @param source
 	 *            the interval to extend.
+	 * @return (unbounded) RandomAccessible which extends the input interval to
+	 *         infinity.
+	 * @see net.imglib2.outofbounds.OutOfBoundsConstantValue
+	 * @deprecated use {@code extendValue} with unbounded type parameter T
+	 */
+	@SuppressWarnings({ "unchecked", "rawtypes", "cast" })
+	@Deprecated
+	public static < T extends Type< T >, F extends RandomAccessibleInterval< T > > ExtendedRandomAccessibleInterval< T, F > extendValue( final F source, final T value )
+	{
+		return ( ExtendedRandomAccessibleInterval< T, F > ) Views.extendValue( ( RandomAccessibleInterval ) source, ( Object ) value );
+	}
+
+	/**
+	 * Extend a RandomAccessibleInterval with a constant-value out-of-bounds
+	 * strategy.
+	 *
+	 * @param source
+	 *            the interval to extend.
 	 * @param value
 	 *            the extension value
 	 * @return (unbounded) RandomAccessible which extends the input interval to
