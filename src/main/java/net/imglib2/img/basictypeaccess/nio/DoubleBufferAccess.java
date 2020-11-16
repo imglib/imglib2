@@ -36,7 +36,7 @@ package net.imglib2.img.basictypeaccess.nio;
 import java.nio.ByteBuffer;
 import java.nio.DoubleBuffer;
 
-import net.imglib2.img.basictypeaccess.array.DoubleArray;
+import net.imglib2.img.basictypeaccess.array.AbstractDoubleArray;
 import net.imglib2.img.basictypeaccess.volatiles.VolatileDoubleAccess;
 
 /**
@@ -137,18 +137,18 @@ public class DoubleBufferAccess extends AbstractBufferAccess< DoubleBufferAccess
 	 */
 	
 	/**
-	 * Copy values into a {@link DoubleArray}.
+	 * Copy values into a {@link AbstractDoubleArray}.
 	 * 
 	 * @param array
 	 * @return
 	 * @see DoubleBuffer#get(double[])
 	 */
-	public DoubleBuffer getValues(final DoubleArray array) {
+	public DoubleBuffer getValues(final AbstractDoubleArray< ? > array) {
 		return buffer.duplicate().get( array.getCurrentStorageArray() );
 	}
 	
 	/**
-	 * Copy values into a {@link DoubleArray}.
+	 * Copy values into a {@link AbstractDoubleArray}.
 	 * 
 	 * @param array
 	 * @param offset
@@ -156,23 +156,23 @@ public class DoubleBufferAccess extends AbstractBufferAccess< DoubleBufferAccess
 	 * @return
 	 * @see DoubleBuffer#get(double[], int, int)
 	 */
-	public DoubleBuffer getValues(final DoubleArray array, int offset, int length) {
+	public DoubleBuffer getValues(final AbstractDoubleArray< ? > array, int offset, int length) {
 		return buffer.duplicate().get( array.getCurrentStorageArray(), offset, length );
 	}
 	
 	/**
-	 * Copy values from a {@link DoubleArray}.
+	 * Copy values from a {@link AbstractDoubleArray}.
 	 * 
 	 * @param array
 	 * @return
-	 * @see DoubleBuffer#put(DoubleArray, int, int)
+	 * @see DoubleBuffer#put(double[])
 	 */
-	public DoubleBuffer setValues(final DoubleArray array) {
+	public DoubleBuffer setValues(final AbstractDoubleArray< ? > array) {
 		return buffer.duplicate().put( array.getCurrentStorageArray() );
 	}
 	
 	/**
-	 * Copy values from a {@link DoubleArray}.
+	 * Copy values from a {@link AbstractDoubleArray}.
 	 * 
 	 * @param array
 	 * @param offset
@@ -180,7 +180,7 @@ public class DoubleBufferAccess extends AbstractBufferAccess< DoubleBufferAccess
 	 * @return
 	 * @see DoubleBuffer#put(double[], int, int)
 	 */
-	public DoubleBuffer setValues(final DoubleArray array, int offset, int length) {
+	public DoubleBuffer setValues(final AbstractDoubleArray< ? > array, int offset, int length) {
 		return buffer.duplicate().put( array.getCurrentStorageArray(), offset, length );
 	}
 	

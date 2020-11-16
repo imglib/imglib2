@@ -36,7 +36,7 @@ package net.imglib2.img.basictypeaccess.nio;
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
 
-import net.imglib2.img.basictypeaccess.array.IntArray;
+import net.imglib2.img.basictypeaccess.array.AbstractIntArray;
 import net.imglib2.img.basictypeaccess.volatiles.VolatileIntAccess;
 
 /**
@@ -137,18 +137,18 @@ public class IntBufferAccess extends AbstractBufferAccess< IntBufferAccess, IntB
 	 */
 	
 	/**
-	 * Copy values into a {@link IntArray}.
+	 * Copy values into a {@link AbstractIntArray}.
 	 * 
 	 * @param array
 	 * @return
 	 * @see IntBuffer#get(int[])
 	 */
-	public IntBuffer getValues(final IntArray array) {
+	public IntBuffer getValues(final AbstractIntArray< ? > array) {
 		return buffer.duplicate().get( array.getCurrentStorageArray() );
 	}
 	
 	/**
-	 * Copy values into a {@link IntArray}.
+	 * Copy values into a {@link AbstractIntArray}.
 	 * 
 	 * @param array
 	 * @param offset
@@ -156,23 +156,23 @@ public class IntBufferAccess extends AbstractBufferAccess< IntBufferAccess, IntB
 	 * @return
 	 * @see IntBuffer#get(int[], int, int)
 	 */
-	public IntBuffer getValues(final IntArray array, int offset, int length) {
+	public IntBuffer getValues(final AbstractIntArray< ? > array, int offset, int length) {
 		return buffer.duplicate().get( array.getCurrentStorageArray(), offset, length );
 	}
 	
 	/**
-	 * Copy values from a {@link IntArray}.
+	 * Copy values from a {@link AbstractIntArray}.
 	 * 
 	 * @param array
 	 * @return
-	 * @see IntBuffer#put(IntArray, int, int)
+	 * @see IntBuffer#put(int[])
 	 */
-	public IntBuffer setValues(final IntArray array) {
+	public IntBuffer setValues(final AbstractIntArray< ? > array) {
 		return buffer.duplicate().put( array.getCurrentStorageArray() );
 	}
 	
 	/**
-	 * Copy values from a {@link IntArray}.
+	 * Copy values from a {@link AbstractIntArray}.
 	 * 
 	 * @param array
 	 * @param offset
@@ -180,7 +180,7 @@ public class IntBufferAccess extends AbstractBufferAccess< IntBufferAccess, IntB
 	 * @return
 	 * @see IntBuffer#put(int[], int, int)
 	 */
-	public IntBuffer setValues(final IntArray array, int offset, int length) {
+	public IntBuffer setValues(final AbstractIntArray< ? > array, int offset, int length) {
 		return buffer.duplicate().put( array.getCurrentStorageArray(), offset, length );
 	}
 	

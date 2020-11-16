@@ -36,8 +36,7 @@ package net.imglib2.img.basictypeaccess.nio;
 import java.nio.ByteBuffer;
 import java.nio.LongBuffer;
 
-import net.imglib2.img.basictypeaccess.LongAccess;
-import net.imglib2.img.basictypeaccess.array.LongArray;
+import net.imglib2.img.basictypeaccess.array.AbstractLongArray;
 import net.imglib2.img.basictypeaccess.volatiles.VolatileLongAccess;
 
 /**
@@ -138,18 +137,18 @@ public class LongBufferAccess extends AbstractBufferAccess< LongBufferAccess, Lo
 	 */
 	
 	/**
-	 * Copy values into a {@link LongArray}.
+	 * Copy values into a {@link AbstractLongArray}.
 	 * 
 	 * @param array
 	 * @return
 	 * @see LongBuffer#get(long[])
 	 */
-	public LongBuffer getValues(final LongArray array) {
+	public LongBuffer getValues(final AbstractLongArray< ? > array) {
 		return buffer.duplicate().get( array.getCurrentStorageArray() );
 	}
 	
 	/**
-	 * Copy values into a {@link LongArray}.
+	 * Copy values into a {@link AbstractLongArray}.
 	 * 
 	 * @param array
 	 * @param offset
@@ -157,23 +156,23 @@ public class LongBufferAccess extends AbstractBufferAccess< LongBufferAccess, Lo
 	 * @return
 	 * @see LongBuffer#get(long[], int, int)
 	 */
-	public LongBuffer getValues(final LongArray array, int offset, int length) {
+	public LongBuffer getValues(final AbstractLongArray< ? > array, int offset, int length) {
 		return buffer.duplicate().get( array.getCurrentStorageArray(), offset, length );
 	}
 	
 	/**
-	 * Copy values from a {@link LongArray}.
+	 * Copy values from a {@link AbstractLongArray}.
 	 * 
 	 * @param array
 	 * @return
-	 * @see LongBuffer#put(LongArray, int, int)
+	 * @see LongBuffer#put(long[])
 	 */
-	public LongBuffer setValues(final LongArray array) {
+	public LongBuffer setValues(final AbstractLongArray< ? > array) {
 		return buffer.duplicate().put( array.getCurrentStorageArray() );
 	}
 	
 	/**
-	 * Copy values from a {@link LongArray}.
+	 * Copy values from a {@link AbstractLongArray}.
 	 * 
 	 * @param array
 	 * @param offset
@@ -181,7 +180,7 @@ public class LongBufferAccess extends AbstractBufferAccess< LongBufferAccess, Lo
 	 * @return
 	 * @see LongBuffer#put(long[], int, int)
 	 */
-	public LongBuffer setValues(final LongArray array, int offset, int length) {
+	public LongBuffer setValues(final AbstractLongArray< ? > array, int offset, int length) {
 		return buffer.duplicate().put( array.getCurrentStorageArray(), offset, length );
 	}
 	

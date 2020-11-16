@@ -36,8 +36,7 @@ package net.imglib2.img.basictypeaccess.nio;
 import java.nio.ByteBuffer;
 import java.nio.ShortBuffer;
 
-import net.imglib2.img.basictypeaccess.ShortAccess;
-import net.imglib2.img.basictypeaccess.array.ShortArray;
+import net.imglib2.img.basictypeaccess.array.AbstractShortArray;
 import net.imglib2.img.basictypeaccess.volatiles.VolatileShortAccess;
 
 /**
@@ -138,18 +137,18 @@ public class ShortBufferAccess extends AbstractBufferAccess< ShortBufferAccess, 
 	 */
 	
 	/**
-	 * Copy values into a {@link ShortArray}.
+	 * Copy values into a {@link AbstractShortArray}.
 	 * 
 	 * @param array
 	 * @return
 	 * @see ShortBuffer#get(short[])
 	 */
-	public ShortBuffer getValues(final ShortArray array) {
+	public ShortBuffer getValues(final AbstractShortArray< ? > array) {
 		return buffer.duplicate().get( array.getCurrentStorageArray() );
 	}
 	
 	/**
-	 * Copy values into a {@link ShortArray}.
+	 * Copy values into a {@link AbstractShortArray}.
 	 * 
 	 * @param array
 	 * @param offset
@@ -157,23 +156,23 @@ public class ShortBufferAccess extends AbstractBufferAccess< ShortBufferAccess, 
 	 * @return
 	 * @see ShortBuffer#get(short[], int, int)
 	 */
-	public ShortBuffer getValues(final ShortArray array, int offset, int length) {
+	public ShortBuffer getValues(final AbstractShortArray< ? > array, int offset, int length) {
 		return buffer.duplicate().get( array.getCurrentStorageArray(), offset, length );
 	}
 	
 	/**
-	 * Copy values from a {@link ShortArray}.
+	 * Copy values from a {@link AbstractShortArray}.
 	 * 
 	 * @param array
 	 * @return
-	 * @see ShortBuffer#put(ShortArray, int, int)
+	 * @see ShortBuffer#put(short[])
 	 */
-	public ShortBuffer setValues(final ShortArray array) {
+	public ShortBuffer setValues(final AbstractShortArray< ? > array) {
 		return buffer.duplicate().put( array.getCurrentStorageArray() );
 	}
 	
 	/**
-	 * Copy values from a {@link ShortArray}.
+	 * Copy values from a {@link AbstractShortArray}.
 	 * 
 	 * @param array
 	 * @param offset
@@ -181,7 +180,7 @@ public class ShortBufferAccess extends AbstractBufferAccess< ShortBufferAccess, 
 	 * @return
 	 * @see ShortBuffer#put(short[], int, int)
 	 */
-	public ShortBuffer setValues(final ShortArray array, int offset, int length) {
+	public ShortBuffer setValues(final AbstractShortArray< ? > array, int offset, int length) {
 		return buffer.duplicate().put( array.getCurrentStorageArray(), offset, length );
 	}
 	

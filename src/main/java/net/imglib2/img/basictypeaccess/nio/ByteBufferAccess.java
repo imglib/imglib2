@@ -35,7 +35,7 @@ package net.imglib2.img.basictypeaccess.nio;
 
 import java.nio.ByteBuffer;
 
-import net.imglib2.img.basictypeaccess.array.ByteArray;
+import net.imglib2.img.basictypeaccess.array.AbstractByteArray;
 import net.imglib2.img.basictypeaccess.volatiles.VolatileByteAccess;
 
 /**
@@ -125,18 +125,18 @@ public class ByteBufferAccess extends AbstractBufferAccess< ByteBufferAccess, By
 	 */
 	
 	/**
-	 * Copy values into a {@link ByteArray}.
+	 * Copy values into a {@link AbstractByteArray}.
 	 * 
 	 * @param array
 	 * @return
 	 * @see ByteBuffer#get(byte[])
 	 */
-	public ByteBuffer getValues(final ByteArray array) {
+	public ByteBuffer getValues(final AbstractByteArray< ? > array) {
 		return buffer.duplicate().get( array.getCurrentStorageArray() );
 	}
 	
 	/**
-	 * Copy values into a {@link ByteArray}.
+	 * Copy values into a {@link AbstractByteArray}.
 	 * 
 	 * @param array
 	 * @param offset
@@ -144,23 +144,23 @@ public class ByteBufferAccess extends AbstractBufferAccess< ByteBufferAccess, By
 	 * @return
 	 * @see ByteBuffer#get(byte[], int, int)
 	 */
-	public ByteBuffer getValues(final ByteArray array, int offset, int length) {
+	public ByteBuffer getValues(final AbstractByteArray< ? > array, int offset, int length) {
 		return buffer.duplicate().get( array.getCurrentStorageArray(), offset, length );
 	}
 	
 	/**
-	 * Copy values from a {@link ByteArray}.
+	 * Copy values from a {@link AbstractByteArray}.
 	 * 
 	 * @param array
 	 * @return
-	 * @see ByteBuffer#put(ByteArray, int, int)
+	 * @see ByteBuffer#put(byte[])
 	 */
-	public ByteBuffer setValues(final ByteArray array) {
+	public ByteBuffer setValues(final AbstractByteArray< ? > array) {
 		return buffer.duplicate().put( array.getCurrentStorageArray() );
 	}
 	
 	/**
-	 * Copy values from a {@link ByteArray}.
+	 * Copy values from a {@link AbstractByteArray}.
 	 * 
 	 * @param array
 	 * @param offset
@@ -168,7 +168,7 @@ public class ByteBufferAccess extends AbstractBufferAccess< ByteBufferAccess, By
 	 * @return
 	 * @see ByteBuffer#put(byte[], int, int)
 	 */
-	public ByteBuffer setValues(final ByteArray array, int offset, int length) {
+	public ByteBuffer setValues(final AbstractByteArray< ? > array, int offset, int length) {
 		return buffer.duplicate().put( array.getCurrentStorageArray(), offset, length );
 	}
 	

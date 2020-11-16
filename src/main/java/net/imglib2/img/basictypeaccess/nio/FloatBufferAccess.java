@@ -36,7 +36,7 @@ package net.imglib2.img.basictypeaccess.nio;
 import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
 
-import net.imglib2.img.basictypeaccess.array.FloatArray;
+import net.imglib2.img.basictypeaccess.array.AbstractFloatArray;
 import net.imglib2.img.basictypeaccess.volatiles.VolatileFloatAccess;
 
 /**
@@ -137,18 +137,18 @@ public class FloatBufferAccess extends AbstractBufferAccess< FloatBufferAccess, 
 	 */
 	
 	/**
-	 * Copy values into a {@link FloatArray}.
+	 * Copy values into a {@link AbstractFloatArray}.
 	 * 
 	 * @param array
 	 * @return
 	 * @see FloatBuffer#get(float[])
 	 */
-	public FloatBuffer getValues(final FloatArray array) {
+	public FloatBuffer getValues(final AbstractFloatArray< ? > array) {
 		return buffer.duplicate().get( array.getCurrentStorageArray() );
 	}
 	
 	/**
-	 * Copy values into a {@link FloatArray}.
+	 * Copy values into a {@link AbstractFloatArray}.
 	 * 
 	 * @param array
 	 * @param offset
@@ -156,23 +156,23 @@ public class FloatBufferAccess extends AbstractBufferAccess< FloatBufferAccess, 
 	 * @return
 	 * @see FloatBuffer#get(float[], int, int)
 	 */
-	public FloatBuffer getValues(final FloatArray array, int offset, int length) {
+	public FloatBuffer getValues(final AbstractFloatArray< ? > array, int offset, int length) {
 		return buffer.duplicate().get( array.getCurrentStorageArray(), offset, length );
 	}
 	
 	/**
-	 * Copy values from a {@link FloatArray}.
+	 * Copy values from a {@link AbstractFloatArray}.
 	 * 
 	 * @param array
 	 * @return
-	 * @see FloatBuffer#put(FloatArray, int, int)
+	 * @see FloatBuffer#put(float[])
 	 */
-	public FloatBuffer setValues(final FloatArray array) {
+	public FloatBuffer setValues(final AbstractFloatArray< ? > array) {
 		return buffer.duplicate().put( array.getCurrentStorageArray() );
 	}
 	
 	/**
-	 * Copy values from a {@link FloatArray}.
+	 * Copy values from a {@link AbstractFloatArray}.
 	 * 
 	 * @param array
 	 * @param offset
@@ -180,7 +180,7 @@ public class FloatBufferAccess extends AbstractBufferAccess< FloatBufferAccess, 
 	 * @return
 	 * @see FloatBuffer#put(float[], int, int)
 	 */
-	public FloatBuffer setValues(final FloatArray array, int offset, int length) {
+	public FloatBuffer setValues(final AbstractFloatArray< ? > array, int offset, int length) {
 		return buffer.duplicate().put( array.getCurrentStorageArray(), offset, length );
 	}
 	

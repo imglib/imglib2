@@ -36,7 +36,7 @@ package net.imglib2.img.basictypeaccess.nio;
 import java.nio.ByteBuffer;
 import java.nio.CharBuffer;
 
-import net.imglib2.img.basictypeaccess.array.CharArray;
+import net.imglib2.img.basictypeaccess.array.AbstractCharArray;
 import net.imglib2.img.basictypeaccess.volatiles.VolatileCharAccess;
 
 /**
@@ -137,18 +137,18 @@ public class CharBufferAccess extends AbstractBufferAccess< CharBufferAccess, Ch
 	 */
 	
 	/**
-	 * Copy values into a {@link CharArray}.
+	 * Copy values into a {@link AbstractCharArray}.
 	 * 
 	 * @param array
 	 * @return
 	 * @see CharBuffer#get(char[])
 	 */
-	public CharBuffer getValues(final CharArray array) {
+	public CharBuffer getValues(final AbstractCharArray< ? > array) {
 		return buffer.duplicate().get( array.getCurrentStorageArray() );
 	}
 	
 	/**
-	 * Copy values into a {@link CharArray}.
+	 * Copy values into a {@link AbstractCharArray}.
 	 * 
 	 * @param array
 	 * @param offset
@@ -156,23 +156,23 @@ public class CharBufferAccess extends AbstractBufferAccess< CharBufferAccess, Ch
 	 * @return
 	 * @see CharBuffer#get(char[], int, int)
 	 */
-	public CharBuffer getValues(final CharArray array, int offset, int length) {
+	public CharBuffer getValues(final AbstractCharArray< ? > array, int offset, int length) {
 		return buffer.duplicate().get( array.getCurrentStorageArray(), offset, length );
 	}
 	
 	/**
-	 * Copy values from a {@link CharArray}.
+	 * Copy values from a {@link AbstractCharArray}.
 	 * 
 	 * @param array
 	 * @return
-	 * @see CharBuffer#put(CharArray, int, int)
+	 * @see CharBuffer#put(char[])
 	 */
-	public CharBuffer setValues(final CharArray array) {
+	public CharBuffer setValues(final AbstractCharArray< ? > array) {
 		return buffer.duplicate().put( array.getCurrentStorageArray() );
 	}
 	
 	/**
-	 * Copy values from a {@link CharArray}.
+	 * Copy values from a {@link AbstractCharArray}.
 	 * 
 	 * @param array
 	 * @param offset
@@ -180,7 +180,7 @@ public class CharBufferAccess extends AbstractBufferAccess< CharBufferAccess, Ch
 	 * @return
 	 * @see CharBuffer#put(char[], int, int)
 	 */
-	public CharBuffer setValues(final CharArray array, int offset, int length) {
+	public CharBuffer setValues(final AbstractCharArray< ? > array, int offset, int length) {
 		return buffer.duplicate().put( array.getCurrentStorageArray(), offset, length );
 	}
 	
