@@ -79,7 +79,7 @@ public final class NtreeImg< T extends NativeType< T >, A extends NtreeAccess< ?
 	@Override
 	public A update( final Object updater )
 	{
-		return data.createInstance( ( ( PositionProvider ) updater ).getPosition() );
+		return data.createView(updater);
 	}
 
 	@Override

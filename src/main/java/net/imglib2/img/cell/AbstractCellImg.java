@@ -38,6 +38,7 @@ import net.imglib2.IterableInterval;
 import net.imglib2.RandomAccessible;
 import net.imglib2.img.AbstractNativeImg;
 import net.imglib2.img.Img;
+import net.imglib2.img.basictypeaccess.DataAccess;
 import net.imglib2.type.NativeType;
 import net.imglib2.util.Fraction;
 
@@ -50,7 +51,7 @@ import net.imglib2.util.Fraction;
  */
 public abstract class AbstractCellImg<
 				T extends NativeType< T >,
-				A,
+				A extends DataAccess,
 				C extends Cell< A >,
 				I extends RandomAccessible< C > & IterableInterval< C > >
 		extends AbstractNativeImg< T, A >
@@ -83,7 +84,7 @@ public abstract class AbstractCellImg<
 	public A update( final Object cursor )
 	{
 		// directly get data?
-		return ( ( CellImgSampler< C > ) cursor ).getCell().getData();
+		return (A) ( ( CellImgSampler< C > ) cursor ).getCell().getData().createView(cursor);
 	}
 
 	@Override

@@ -34,10 +34,17 @@
 
 package net.imglib2.img.sparse;
 
-public interface NtreeAccess< L extends Comparable< L >, A extends NtreeAccess< L, A > >
+import net.imglib2.img.basictypeaccess.DataAccess;
+import net.imglib2.img.sparse.NtreeImg.PositionProvider;
+
+public interface NtreeAccess< L extends Comparable< L >, A extends NtreeAccess< L, A > > extends DataAccess
 {
 
 	Ntree< L > getCurrentStorageNtree();
 
 	A createInstance( long[] pos );
+	
+	public default A createView(Object updater) {
+		return createInstance( ( ( PositionProvider ) updater ).getPosition() );
+	}
 }

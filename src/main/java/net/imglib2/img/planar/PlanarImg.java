@@ -111,11 +111,12 @@ public class PlanarImg< T extends NativeType< T >, A extends ArrayDataAccess< A 
 		public int getCurrentSliceIndex();
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public A update( final Object c )
 	{
 		final int i = ( ( PlanarContainerSampler ) c ).getCurrentSliceIndex();
-		return mirror.get( i < 0 ? 0 : ( i >= numSlices ? numSlices - 1 : i ) );
+		return (A) mirror.get( i < 0 ? 0 : ( i >= numSlices ? numSlices - 1 : i ) ).createView(c);
 	}
 
 	/**

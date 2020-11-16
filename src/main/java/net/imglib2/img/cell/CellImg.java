@@ -34,11 +34,12 @@
 package net.imglib2.img.cell;
 
 import net.imglib2.img.ImgFactory;
+import net.imglib2.img.basictypeaccess.DataAccess;
 import net.imglib2.img.list.ListImg;
 import net.imglib2.type.NativeType;
 import net.imglib2.util.Fraction;
 
-public class CellImg< T extends NativeType< T >, A > extends AbstractCellImg< T, A, Cell< A >, ListImg< Cell< A > > >
+public class CellImg< T extends NativeType< T >, A extends DataAccess > extends AbstractCellImg< T, A, Cell< A >, ListImg< Cell< A > > >
 {
 	private final CellImgFactory< T > factory;
 

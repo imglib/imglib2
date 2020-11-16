@@ -41,7 +41,7 @@ package net.imglib2.img.basictypeaccess;
  *            primitive array type
  * @author Curtis Rueden
  */
-public interface PlanarAccess< A >
+public interface PlanarAccess< A > extends DataAccess
 {
 	A getPlane( int no );
 

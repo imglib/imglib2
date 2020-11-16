@@ -34,15 +34,37 @@
 
 package net.imglib2.img.basictypeaccess;
 
-/**
- * TODO
- * 
- * @author Stephan Preibisch
- * @author Stephan Saalfeld
- */
-public interface ByteAccess extends DataAccess
-{
-	public byte getValue( final int index );
+import net.imglib2.Cursor;
+import net.imglib2.img.NativeImg;
+import net.imglib2.type.NativeType;
 
-	public void setValue( final int index, final byte value );
+/**
+ * Top-level interface for access containers
+ * 
+ * Generally, sub-interfaces define specific getValue and setValue
+ * methods for a given index.
+ * 
+ * @author Mark Kittisopikul
+ *
+ */
+public interface DataAccess {
+	
+	/**
+	 * Create a copy of the current access without copying the underlying data.
+	 * 
+	 * Useful for access containers whose instances are not thread safe such as
+	 * {@link java.nio.Buffer} derivatives that have a state.
+	 * 
+	 * By default, <code>createView</code> returns <code>this</code> object
+	 * instance.
+	 * 
+	 * @param o Usually an accessor like {@link Cursor}. See {@link NativeImg#update(Object)}
+	 * @return A view of the original access and of the same concrete type.
+	 * @see NativeImg#update(Object)
+	 * @see NativeType#updateContainer(Object)
+	 */
+	public default DataAccess createView(final Object o) {
+		return this;
+	}
+	
 }
