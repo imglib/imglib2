@@ -52,7 +52,7 @@ public class FloatBufferAccess extends AbstractBufferAccess< FloatBufferAccess, 
 	 */
 	private static final long serialVersionUID = -7265085228179236189L;
 
-	private static final int NUM_BYTES = Float.BYTES;
+	private static final int NUM_BYTES_PER_ENTITY = Float.BYTES;
 
 	public FloatBufferAccess( final FloatBuffer buffer, final boolean isValid )
 	{
@@ -93,8 +93,8 @@ public class FloatBufferAccess extends AbstractBufferAccess< FloatBufferAccess, 
 	 */
 
 	@Override
-	public int getNumBytes() {
-		return NUM_BYTES;
+	public int getNumBytesPerEntity() {
+		return NUM_BYTES_PER_ENTITY;
 	}
 
 	@Override
@@ -110,6 +110,18 @@ public class FloatBufferAccess extends AbstractBufferAccess< FloatBufferAccess, 
 	@Override
 	protected FloatBuffer duplicateBuffer(FloatBuffer buffer) {
 		return buffer.duplicate();
+	}
+	
+	/**
+	 * Override abstract implementation to allow for longer non-direct Buffers since
+	 * ByteBuffer is restricted to Integer.MAX_VALUE entities.
+	 */
+	@Override
+	protected FloatBufferAccess allocate( int numEntities, boolean isDirect, boolean isValid) {
+		if(isDirect)
+			return super.allocate( numEntities, isDirect, isValid );
+		else
+			return new FloatBufferAccess( numEntities, isValid );
 	}
 	
 	/*

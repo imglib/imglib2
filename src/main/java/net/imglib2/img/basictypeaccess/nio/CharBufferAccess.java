@@ -52,7 +52,7 @@ public class CharBufferAccess extends AbstractBufferAccess< CharBufferAccess, Ch
 	 */
 	private static final long serialVersionUID = -7265085228179236189L;
 
-	private static final int NUM_BYTES = Character.BYTES;
+	private static final int NUM_BYTES_PER_ENTITY = Character.BYTES;
 
 	public CharBufferAccess( final CharBuffer buffer, final boolean isValid )
 	{
@@ -93,8 +93,8 @@ public class CharBufferAccess extends AbstractBufferAccess< CharBufferAccess, Ch
 	 */
 
 	@Override
-	public int getNumBytes() {
-		return NUM_BYTES;
+	public int getNumBytesPerEntity() {
+		return NUM_BYTES_PER_ENTITY;
 	}
 
 	@Override
@@ -110,6 +110,18 @@ public class CharBufferAccess extends AbstractBufferAccess< CharBufferAccess, Ch
 	@Override
 	protected CharBuffer duplicateBuffer(CharBuffer buffer) {
 		return buffer.duplicate();
+	}
+	
+	/**
+	 * Override abstract implementation to allow for longer non-direct Buffers since
+	 * ByteBuffer is restricted to Integer.MAX_VALUE entities.
+	 */
+	@Override
+	protected CharBufferAccess allocate( int numEntities, boolean isDirect, boolean isValid) {
+		if(isDirect)
+			return super.allocate( numEntities, isDirect, isValid );
+		else
+			return new CharBufferAccess( numEntities, isValid );
 	}
 	
 	/*

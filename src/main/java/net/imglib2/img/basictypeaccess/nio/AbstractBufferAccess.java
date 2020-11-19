@@ -58,7 +58,7 @@ public abstract class AbstractBufferAccess <A extends AbstractBufferAccess< A, B
 	/**
 	 * Default valid setting if not specified
 	 */
-	protected static boolean DEFAULT_IS_VALID = true;
+	protected final static boolean DEFAULT_IS_VALID = true;
 	
 	/**
 	 * If valid or not as per {@link VolatileAccess}.
@@ -162,9 +162,9 @@ public abstract class AbstractBufferAccess <A extends AbstractBufferAccess< A, B
 	 */
 	protected ByteBuffer allocateByteBuffer( int numEntities, boolean isDirect ) {
 		if(isDirect)
-			return ByteBuffer.allocateDirect( numEntities * getNumBytes() );
+			return ByteBuffer.allocateDirect( numEntities * getNumBytesPerEntity() );
 		else
-			return ByteBuffer.allocate( numEntities * getNumBytes() );
+			return ByteBuffer.allocate( numEntities * getNumBytesPerEntity() );
 	}
 	
 	/**
@@ -199,7 +199,7 @@ public abstract class AbstractBufferAccess <A extends AbstractBufferAccess< A, B
 	 * 
 	 * This usually retrieves a static field.
 	 */
-	public abstract int getNumBytes();
+	public abstract int getNumBytesPerEntity();
 	
 	/**
 	 * Create a new instance of this class given a Buffer of the same type.

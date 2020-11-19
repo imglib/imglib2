@@ -73,7 +73,7 @@ public interface BufferAccess < A > extends VolatileAccess, ArrayDataAccess< A >
 	 * 
 	 * @return
 	 */
-	public int getNumBytes();
+	public int getNumBytesPerEntity();
 		
 	/**
 	 * Create a new instance from a ByteBuffer

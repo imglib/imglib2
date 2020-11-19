@@ -52,7 +52,7 @@ public class LongBufferAccess extends AbstractBufferAccess< LongBufferAccess, Lo
 	 */
 	private static final long serialVersionUID = -7265085228179236189L;
 
-	private static final int NUM_BYTES = Long.BYTES;
+	private static final int NUM_BYTES_PER_ENTITY = Long.BYTES;
 
 	public LongBufferAccess( final LongBuffer buffer, final boolean isValid )
 	{
@@ -93,8 +93,8 @@ public class LongBufferAccess extends AbstractBufferAccess< LongBufferAccess, Lo
 	 */
 
 	@Override
-	public int getNumBytes() {
-		return NUM_BYTES;
+	public int getNumBytesPerEntity() {
+		return NUM_BYTES_PER_ENTITY;
 	}
 
 	@Override
@@ -110,6 +110,18 @@ public class LongBufferAccess extends AbstractBufferAccess< LongBufferAccess, Lo
 	@Override
 	protected LongBuffer duplicateBuffer(LongBuffer buffer) {
 		return buffer.duplicate();
+	}
+	
+	/**
+	 * Override abstract implementation to allow for longer non-direct Buffers since
+	 * ByteBuffer is restricted to Integer.MAX_VALUE entities.
+	 */
+	@Override
+	protected LongBufferAccess allocate( int numEntities, boolean isDirect, boolean isValid) {
+		if(isDirect)
+			return super.allocate( numEntities, isDirect, isValid );
+		else
+			return new LongBufferAccess( numEntities, isValid );
 	}
 	
 	/*

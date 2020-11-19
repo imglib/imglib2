@@ -51,7 +51,7 @@ public class ByteBufferAccess extends AbstractBufferAccess< ByteBufferAccess, By
 	 */
 	private static final long serialVersionUID = -7265085228179236189L;
 
-	private static final int NUM_BYTES = Byte.BYTES;
+	private static final int NUM_BYTES_PER_ENTITY = Byte.BYTES;
 
 	public ByteBufferAccess( final ByteBuffer buffer, final boolean isValid )
 	{
@@ -86,10 +86,10 @@ public class ByteBufferAccess extends AbstractBufferAccess< ByteBufferAccess, By
 	 */
 
 	@Override
-	public int getNumBytes() {
-		return NUM_BYTES;
+	public int getNumBytesPerEntity() {
+		return NUM_BYTES_PER_ENTITY;
 	}
-
+	
 	@Override
 	public ByteBufferAccess newInstance(ByteBuffer buffer, boolean isValid) {
 		return fromByteBuffer(buffer, isValid);
