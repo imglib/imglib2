@@ -11,13 +11,13 @@
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice,
  *    this list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  *    this list of conditions and the following disclaimer in the documentation
  *    and/or other materials provided with the distribution.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -41,14 +41,14 @@ import net.imglib2.img.basictypeaccess.volatiles.VolatileShortAccess;
 
 /**
  * Access for {@link ShortBuffer}
- * 
+ *
  * @author Mark Kittisopikul
  */
 public class ShortBufferAccess extends AbstractBufferAccess< ShortBufferAccess, ShortBuffer > implements VolatileShortAccess
 {
 
 	/**
-	 * Automatically generated 
+	 * Automatically generated
 	 */
 	private static final long serialVersionUID = -7265085228179236189L;
 
@@ -56,153 +56,182 @@ public class ShortBufferAccess extends AbstractBufferAccess< ShortBufferAccess, 
 
 	public ShortBufferAccess( final ShortBuffer buffer, final boolean isValid )
 	{
-		super(buffer, isValid);
+		super( buffer, isValid );
 	}
-	
-	public ShortBufferAccess( final int numEntities, final boolean isValid ) {
-		super( ShortBuffer.allocate(numEntities), isValid );
+
+	public ShortBufferAccess( final int numEntities, final boolean isValid )
+	{
+		super( ShortBuffer.allocate( numEntities ), isValid );
 	}
-	
-	public ShortBufferAccess( final ByteBuffer buffer, boolean isValid) {
-		super(buffer.asShortBuffer(), isValid);
+
+	public ShortBufferAccess( final ByteBuffer buffer, final boolean isValid )
+	{
+		super( buffer.asShortBuffer(), isValid );
 	}
-	
+
 	// Convenience constructors
-	
-	public ShortBufferAccess( final ShortBuffer buffer ) { this(buffer,     DEFAULT_IS_VALID); }
-	public ShortBufferAccess( final int numEntities   ) { this(numEntities, DEFAULT_IS_VALID); }
-	public ShortBufferAccess( final ByteBuffer buffer ) { this(buffer,      DEFAULT_IS_VALID); }
-	public ShortBufferAccess() { this( (ShortBuffer) null, false); }
+
+	public ShortBufferAccess( final ShortBuffer buffer )
+	{
+		this( buffer, DEFAULT_IS_VALID );
+	}
+
+	public ShortBufferAccess( final int numEntities )
+	{
+		this( numEntities, DEFAULT_IS_VALID );
+	}
+
+	public ShortBufferAccess( final ByteBuffer buffer )
+	{
+		this( buffer, DEFAULT_IS_VALID );
+	}
+
+	public ShortBufferAccess()
+	{
+		this( ( ShortBuffer ) null, false );
+	}
 
 	/*
 	 * ShortAccess methods
 	 */
-	
+
 	@Override
-	public short getValue( int index ) {
+	public short getValue( final int index )
+	{
 		return buffer.get( index );
 	}
 
 	@Override
-	public void setValue( int index, short value ) {
+	public void setValue( final int index, final short value )
+	{
 		buffer.put( index, value );
 	}
-	
+
 	/*
 	 * AbstractBufferAccess methods
 	 */
 
 	@Override
-	public int getNumBytesPerEntity() {
+	public int getNumBytesPerEntity()
+	{
 		return NUM_BYTES_PER_ENTITY;
 	}
 
 	@Override
-	public ShortBufferAccess newInstance(ByteBuffer buffer, boolean isValid) {
-		return fromByteBuffer(buffer, isValid);
+	public ShortBufferAccess newInstance( final ByteBuffer buffer, final boolean isValid )
+	{
+		return fromByteBuffer( buffer, isValid );
 	}
-	
+
 	@Override
-	public ShortBufferAccess newInstance(ShortBuffer buffer, boolean isValid) {
-		return new ShortBufferAccess(buffer, isValid);
+	public ShortBufferAccess newInstance( final ShortBuffer buffer, final boolean isValid )
+	{
+		return new ShortBufferAccess( buffer, isValid );
 	}
-	
+
 	@Override
-	protected ShortBuffer duplicateBuffer(ShortBuffer buffer) {
+	protected ShortBuffer duplicateBuffer( final ShortBuffer buffer )
+	{
 		return buffer.duplicate();
 	}
-	
+
 	/**
-	 * Override abstract implementation to allow for longer non-direct Buffers since
-	 * ByteBuffer is restricted to Integer.MAX_VALUE entities.
+	 * Override abstract implementation to allow for longer non-direct Buffers
+	 * since ByteBuffer is restricted to Integer.MAX_VALUE entities.
 	 */
 	@Override
-	protected ShortBufferAccess allocate( int numEntities, boolean isDirect, boolean isValid) {
-		if(isDirect)
+	protected ShortBufferAccess allocate( final int numEntities, final boolean isDirect, final boolean isValid )
+	{
+		if ( isDirect )
 			return super.allocate( numEntities, isDirect, isValid );
 		else
 			return new ShortBufferAccess( numEntities, isValid );
 	}
-	
+
 	/*
 	 * Static methods
 	 */
 
 	/**
 	 * Create a new ShortBufferAccess from a ByteBuffer
-	 * 
+	 *
 	 * @param buffer
 	 * @param isValid
 	 * @return
 	 */
-	public static ShortBufferAccess fromByteBuffer(ByteBuffer buffer, boolean isValid) {
-		return new ShortBufferAccess(buffer, isValid);
+	public static ShortBufferAccess fromByteBuffer( final ByteBuffer buffer, final boolean isValid )
+	{
+		return new ShortBufferAccess( buffer, isValid );
 	}
 
-	
 	/*
 	 * Bulk convenience methods
-	 * 
-	 * These are not trivial because the buffer should be duplicated
-	 * to prevent changing the current buffer state. The duplicated
-	 * buffer is returned for chained operations.
+	 *
+	 * These are not trivial because the buffer should be duplicated to prevent
+	 * changing the current buffer state. The duplicated buffer is returned for
+	 * chained operations.
 	 */
-	
+
 	/**
 	 * Copy values into a {@link AbstractShortArray}.
-	 * 
+	 *
 	 * @param array
 	 * @return
 	 * @see ShortBuffer#get(short[])
 	 */
-	public ShortBuffer getValues(final AbstractShortArray< ? > array) {
+	public ShortBuffer getValues( final AbstractShortArray< ? > array )
+	{
 		return buffer.duplicate().get( array.getCurrentStorageArray() );
 	}
-	
+
 	/**
 	 * Copy values into a {@link AbstractShortArray}.
-	 * 
+	 *
 	 * @param array
 	 * @param offset
 	 * @param length
 	 * @return
 	 * @see ShortBuffer#get(short[], int, int)
 	 */
-	public ShortBuffer getValues(final AbstractShortArray< ? > array, int offset, int length) {
+	public ShortBuffer getValues( final AbstractShortArray< ? > array, final int offset, final int length )
+	{
 		return buffer.duplicate().get( array.getCurrentStorageArray(), offset, length );
 	}
-	
+
 	/**
 	 * Copy values from a {@link AbstractShortArray}.
-	 * 
+	 *
 	 * @param array
 	 * @return
 	 * @see ShortBuffer#put(short[])
 	 */
-	public ShortBuffer setValues(final AbstractShortArray< ? > array) {
+	public ShortBuffer setValues( final AbstractShortArray< ? > array )
+	{
 		return buffer.duplicate().put( array.getCurrentStorageArray() );
 	}
-	
+
 	/**
 	 * Copy values from a {@link AbstractShortArray}.
-	 * 
+	 *
 	 * @param array
 	 * @param offset
 	 * @param length
 	 * @return
 	 * @see ShortBuffer#put(short[], int, int)
 	 */
-	public ShortBuffer setValues(final AbstractShortArray< ? > array, int offset, int length) {
+	public ShortBuffer setValues( final AbstractShortArray< ? > array, final int offset, final int length )
+	{
 		return buffer.duplicate().put( array.getCurrentStorageArray(), offset, length );
 	}
-	
+
 	/**
 	 * Copy values from another ShortBufferAccess.
-	 * 
+	 *
 	 * @param access
 	 * @return
 	 */
-	public ShortBuffer setValues(final ShortBufferAccess access) {
+	public ShortBuffer setValues( final ShortBufferAccess access )
+	{
 		return buffer.duplicate().put( access.getCurrentStorageArray() );
 	}
 

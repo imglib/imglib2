@@ -11,13 +11,13 @@
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice,
  *    this list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  *    this list of conditions and the following disclaimer in the documentation
  *    and/or other materials provided with the distribution.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -40,31 +40,35 @@ import net.imglib2.type.NativeType;
 
 /**
  * Top-level interface for access containers
- * 
- * Generally, sub-interfaces define specific getValue and setValue
- * methods for a given index.
- * 
+ *
+ * Generally, sub-interfaces define specific getValue and setValue methods for a
+ * given index.
+ *
  * @author Mark Kittisopikul
  *
  */
-public interface DataAccess {
-	
+public interface DataAccess
+{
+
 	/**
 	 * Create a copy of the current access without copying the underlying data.
-	 * 
+	 *
 	 * Useful for access containers whose instances are not thread safe such as
 	 * {@link java.nio.Buffer} derivatives that have a state.
-	 * 
+	 *
 	 * By default, <code>createView</code> returns <code>this</code> object
 	 * instance.
-	 * 
-	 * @param o Usually an accessor like {@link Cursor}. See {@link NativeImg#update(Object)}
+	 *
+	 * @param o
+	 *            Usually an accessor like {@link Cursor}. See
+	 *            {@link NativeImg#update(Object)}
 	 * @return A view of the original access and of the same concrete type.
 	 * @see NativeImg#update(Object)
 	 * @see NativeType#updateContainer(Object)
 	 */
-	public default DataAccess createView(final Object o) {
+	public default DataAccess createView( final Object o )
+	{
 		return this;
 	}
-	
+
 }

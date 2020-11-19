@@ -11,13 +11,13 @@
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice,
  *    this list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  *    this list of conditions and the following disclaimer in the documentation
  *    and/or other materials provided with the distribution.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -43,72 +43,79 @@ import net.imglib2.img.basictypeaccess.volatiles.VolatileAccess;
 /**
  * Base abstract class for {@link DataAccess} implementations that wrap
  * {@link Buffer}.
- * 
+ *
  * @author Mark Kittisopikul
  * @author Philipp Hanslovsky (initial specification)
  *
- * @param <A> Subclass used as return type for 
- * {@link #newInstance(Buffer, boolean)} and
- * {@link #newInstance(ByteBuffer, boolean)}
- * 
- * @param <B> {@link Buffer} subclass
+ * @param <A>
+ *            Subclass used as return type for
+ *            {@link #newInstance(Buffer, boolean)} and
+ *            {@link #newInstance(ByteBuffer, boolean)}
+ *
+ * @param <B>
+ *            {@link Buffer} subclass
  */
-public abstract class AbstractBufferAccess <A extends AbstractBufferAccess< A, B >, B extends Buffer> implements BufferAccess< A > {
-	
+public abstract class AbstractBufferAccess< A extends AbstractBufferAccess< A, B >, B extends Buffer > implements BufferAccess< A >
+{
+
 	/**
 	 * Default valid setting if not specified
 	 */
 	protected final static boolean DEFAULT_IS_VALID = true;
-	
+
 	/**
 	 * If valid or not as per {@link VolatileAccess}.
 	 */
 	protected final boolean isValid;
 
 	protected final B buffer;
-	
+
 	/*
 	 * Constructors
 	 */
 
-	public AbstractBufferAccess(final B buffer, final boolean isValid) {
+	public AbstractBufferAccess( final B buffer, final boolean isValid )
+	{
 		this.buffer = buffer;
 		this.isValid = isValid;
 	}
-	
-	public AbstractBufferAccess(final B buffer) {
-		this(buffer, DEFAULT_IS_VALID);
+
+	public AbstractBufferAccess( final B buffer )
+	{
+		this( buffer, DEFAULT_IS_VALID );
 	}
-	
-	public AbstractBufferAccess(final Function<Integer,B> allocate, final int numEntities) {
-		this( allocate.apply(numEntities) );
+
+	public AbstractBufferAccess( final Function< Integer, B > allocate, final int numEntities )
+	{
+		this( allocate.apply( numEntities ) );
 	}
-	
+
 	/*
 	 * Public methods
 	 */
-	
+
 	/**
-	 * Returns a new instance of BufferAccess with duplicated Buffer for
-	 * thread safety.
+	 * Returns a new instance of BufferAccess with duplicated Buffer for thread
+	 * safety.
 	 */
 	@Override
-	public A createView(Object o) {
-		return newInstance( duplicateBuffer(buffer), isValid() );
+	public A createView( final Object o )
+	{
+		return newInstance( duplicateBuffer( buffer ), isValid() );
 	}
-	
+
 	@Override
 	public boolean isValid()
 	{
 		return isValid;
 	}
-	
+
 	/**
-	 * Respects the directness of the buffer.
-	 * If this buffer is direct, then the new backing buffer is also direct.
+	 * Respects the directness of the buffer. If this buffer is direct, then the
+	 * new backing buffer is also direct.
 	 */
 	@Override
-	public A createArray( int numEntities )
+	public A createArray( final int numEntities )
 	{
 		return allocate( numEntities );
 	}
@@ -124,100 +131,106 @@ public abstract class AbstractBufferAccess <A extends AbstractBufferAccess< A, B
 
 	/**
 	 * Returns the Buffer's limit or zero if buffer is null.
-	 * 
+	 *
 	 * @see Buffer#limit()
 	 */
 	@Override
 	public int getArrayLength()
 	{
-		if( buffer == null )
+		if ( buffer == null )
 			return 0;
 		else
 			return buffer.limit();
 	}
-	
+
 	/**
 	 * Return the Buffer's directness or false is the buffer is null.
 	 */
 	@Override
-	public boolean isDirect() {
+	public boolean isDirect()
+	{
 		return buffer != null && buffer.isDirect();
 	}
-	
+
 	@Override
-	public boolean isReadOnly() {
+	public boolean isReadOnly()
+	{
 		return buffer.isReadOnly();
 	}
-	
+
 	/*
 	 * Protected methods
 	 */
-	
+
 	/**
 	 * Allocate a new ByteBuffer with initial capacity and directness.
-	 * 
+	 *
 	 * @param numEntities
 	 * @param isDirect
 	 * @return
 	 */
-	protected ByteBuffer allocateByteBuffer( int numEntities, boolean isDirect ) {
-		if(isDirect)
+	protected ByteBuffer allocateByteBuffer( final int numEntities, final boolean isDirect )
+	{
+		if ( isDirect )
 			return ByteBuffer.allocateDirect( numEntities * getNumBytesPerEntity() );
 		else
 			return ByteBuffer.allocate( numEntities * getNumBytesPerEntity() );
 	}
-	
+
 	/**
 	 * Allocate a new BufferAccess specifying the directness and validity.
-	 * 
+	 *
 	 * @param numEntities
 	 * @param isDirect
 	 * @param isValid
 	 * @return
 	 */
-	protected A allocate( int numEntities, boolean isDirect, boolean isValid) {
-		return newInstance( allocateByteBuffer(numEntities, isDirect), isValid );
+	protected A allocate( final int numEntities, final boolean isDirect, final boolean isValid )
+	{
+		return newInstance( allocateByteBuffer( numEntities, isDirect ), isValid );
 	}
-	
+
 	/**
-	 * Allocate a new BufferAccess using the current buffer's directness
-	 * and validity.
-	 * 
+	 * Allocate a new BufferAccess using the current buffer's directness and
+	 * validity.
+	 *
 	 * @param numEntities
 	 * @return
 	 */
-	protected A allocate( int numEntities ) {
+	protected A allocate( final int numEntities )
+	{
 		return allocate( numEntities, isDirect(), isValid() );
 	}
-	
+
 	/*
 	 * Abstract methods
 	 */
-	
+
 	/**
 	 * Get number of bytes for a specific primitive type.
-	 * 
+	 *
 	 * This usually retrieves a static field.
 	 */
+	@Override
 	public abstract int getNumBytesPerEntity();
-	
+
 	/**
 	 * Create a new instance of this class given a Buffer of the same type.
-	 * 
+	 *
 	 * @param buffer
 	 * @param isValid
 	 * @return
 	 */
-	public abstract A newInstance(B buffer, boolean isValid );
-		
+	public abstract A newInstance( B buffer, boolean isValid );
+
 	/**
 	 * Call Buffer.duplicate()
-	 * 
+	 *
 	 * Buffer.duplicate() only exists in the interface since Java 9
 	 * https://docs.oracle.com/javase/9/docs/api/java/nio/Buffer.html#duplicate--
-	 * 
+	 *
 	 * @return
 	 */
-	protected abstract B duplicateBuffer(B buffer);
-	
+	protected abstract B duplicateBuffer( B buffer );
+
 }

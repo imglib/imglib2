@@ -11,13 +11,13 @@
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice,
  *    this list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  *    this list of conditions and the following disclaimer in the documentation
  *    and/or other materials provided with the distribution.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -41,14 +41,14 @@ import net.imglib2.img.basictypeaccess.volatiles.VolatileFloatAccess;
 
 /**
  * Access for {@link FloatBuffer}
- * 
+ *
  * @author Mark Kittisopikul
  */
 public class FloatBufferAccess extends AbstractBufferAccess< FloatBufferAccess, FloatBuffer > implements VolatileFloatAccess
 {
 
 	/**
-	 * Automatically generated 
+	 * Automatically generated
 	 */
 	private static final long serialVersionUID = -7265085228179236189L;
 
@@ -56,153 +56,182 @@ public class FloatBufferAccess extends AbstractBufferAccess< FloatBufferAccess, 
 
 	public FloatBufferAccess( final FloatBuffer buffer, final boolean isValid )
 	{
-		super(buffer, isValid);
+		super( buffer, isValid );
 	}
-	
-	public FloatBufferAccess( final int numEntities, final boolean isValid ) {
-		super( FloatBuffer.allocate(numEntities), isValid );
+
+	public FloatBufferAccess( final int numEntities, final boolean isValid )
+	{
+		super( FloatBuffer.allocate( numEntities ), isValid );
 	}
-	
-	public FloatBufferAccess( final ByteBuffer buffer, boolean isValid) {
-		super(buffer.asFloatBuffer(), isValid);
+
+	public FloatBufferAccess( final ByteBuffer buffer, final boolean isValid )
+	{
+		super( buffer.asFloatBuffer(), isValid );
 	}
-	
+
 	// Convenience constructors
-	
-	public FloatBufferAccess( final FloatBuffer buffer ) { this(buffer,     DEFAULT_IS_VALID); }
-	public FloatBufferAccess( final int numEntities   ) { this(numEntities, DEFAULT_IS_VALID); }
-	public FloatBufferAccess( final ByteBuffer buffer ) { this(buffer,      DEFAULT_IS_VALID); }
-	public FloatBufferAccess() { this( (FloatBuffer) null, false); }
+
+	public FloatBufferAccess( final FloatBuffer buffer )
+	{
+		this( buffer, DEFAULT_IS_VALID );
+	}
+
+	public FloatBufferAccess( final int numEntities )
+	{
+		this( numEntities, DEFAULT_IS_VALID );
+	}
+
+	public FloatBufferAccess( final ByteBuffer buffer )
+	{
+		this( buffer, DEFAULT_IS_VALID );
+	}
+
+	public FloatBufferAccess()
+	{
+		this( ( FloatBuffer ) null, false );
+	}
 
 	/*
 	 * FloatAccess methods
 	 */
-	
+
 	@Override
-	public float getValue( int index ) {
+	public float getValue( final int index )
+	{
 		return buffer.get( index );
 	}
 
 	@Override
-	public void setValue( int index, float value ) {
+	public void setValue( final int index, final float value )
+	{
 		buffer.put( index, value );
 	}
-	
+
 	/*
 	 * AbstractBufferAccess methods
 	 */
 
 	@Override
-	public int getNumBytesPerEntity() {
+	public int getNumBytesPerEntity()
+	{
 		return NUM_BYTES_PER_ENTITY;
 	}
 
 	@Override
-	public FloatBufferAccess newInstance(ByteBuffer buffer, boolean isValid) {
-		return fromByteBuffer(buffer, isValid);
+	public FloatBufferAccess newInstance( final ByteBuffer buffer, final boolean isValid )
+	{
+		return fromByteBuffer( buffer, isValid );
 	}
-	
+
 	@Override
-	public FloatBufferAccess newInstance(FloatBuffer buffer, boolean isValid) {
-		return new FloatBufferAccess(buffer, isValid);
+	public FloatBufferAccess newInstance( final FloatBuffer buffer, final boolean isValid )
+	{
+		return new FloatBufferAccess( buffer, isValid );
 	}
-	
+
 	@Override
-	protected FloatBuffer duplicateBuffer(FloatBuffer buffer) {
+	protected FloatBuffer duplicateBuffer( final FloatBuffer buffer )
+	{
 		return buffer.duplicate();
 	}
-	
+
 	/**
-	 * Override abstract implementation to allow for longer non-direct Buffers since
-	 * ByteBuffer is restricted to Integer.MAX_VALUE entities.
+	 * Override abstract implementation to allow for longer non-direct Buffers
+	 * since ByteBuffer is restricted to Integer.MAX_VALUE entities.
 	 */
 	@Override
-	protected FloatBufferAccess allocate( int numEntities, boolean isDirect, boolean isValid) {
-		if(isDirect)
+	protected FloatBufferAccess allocate( final int numEntities, final boolean isDirect, final boolean isValid )
+	{
+		if ( isDirect )
 			return super.allocate( numEntities, isDirect, isValid );
 		else
 			return new FloatBufferAccess( numEntities, isValid );
 	}
-	
+
 	/*
 	 * Static methods
 	 */
 
 	/**
 	 * Create a new FloatBufferAccess from a ByteBuffer
-	 * 
+	 *
 	 * @param buffer
 	 * @param isValid
 	 * @return
 	 */
-	public static FloatBufferAccess fromByteBuffer(ByteBuffer buffer, boolean isValid) {
-		return new FloatBufferAccess(buffer, isValid);
+	public static FloatBufferAccess fromByteBuffer( final ByteBuffer buffer, final boolean isValid )
+	{
+		return new FloatBufferAccess( buffer, isValid );
 	}
 
-	
 	/*
 	 * Bulk convenience methods
-	 * 
-	 * These are not trivial because the buffer should be duplicated
-	 * to prevent changing the current buffer state. The duplicated
-	 * buffer is returned for chained operations.
+	 *
+	 * These are not trivial because the buffer should be duplicated to prevent
+	 * changing the current buffer state. The duplicated buffer is returned for
+	 * chained operations.
 	 */
-	
+
 	/**
 	 * Copy values into a {@link AbstractFloatArray}.
-	 * 
+	 *
 	 * @param array
 	 * @return
 	 * @see FloatBuffer#get(float[])
 	 */
-	public FloatBuffer getValues(final AbstractFloatArray< ? > array) {
+	public FloatBuffer getValues( final AbstractFloatArray< ? > array )
+	{
 		return buffer.duplicate().get( array.getCurrentStorageArray() );
 	}
-	
+
 	/**
 	 * Copy values into a {@link AbstractFloatArray}.
-	 * 
+	 *
 	 * @param array
 	 * @param offset
 	 * @param length
 	 * @return
 	 * @see FloatBuffer#get(float[], int, int)
 	 */
-	public FloatBuffer getValues(final AbstractFloatArray< ? > array, int offset, int length) {
+	public FloatBuffer getValues( final AbstractFloatArray< ? > array, final int offset, final int length )
+	{
 		return buffer.duplicate().get( array.getCurrentStorageArray(), offset, length );
 	}
-	
+
 	/**
 	 * Copy values from a {@link AbstractFloatArray}.
-	 * 
+	 *
 	 * @param array
 	 * @return
 	 * @see FloatBuffer#put(float[])
 	 */
-	public FloatBuffer setValues(final AbstractFloatArray< ? > array) {
+	public FloatBuffer setValues( final AbstractFloatArray< ? > array )
+	{
 		return buffer.duplicate().put( array.getCurrentStorageArray() );
 	}
-	
+
 	/**
 	 * Copy values from a {@link AbstractFloatArray}.
-	 * 
+	 *
 	 * @param array
 	 * @param offset
 	 * @param length
 	 * @return
 	 * @see FloatBuffer#put(float[], int, int)
 	 */
-	public FloatBuffer setValues(final AbstractFloatArray< ? > array, int offset, int length) {
+	public FloatBuffer setValues( final AbstractFloatArray< ? > array, final int offset, final int length )
+	{
 		return buffer.duplicate().put( array.getCurrentStorageArray(), offset, length );
 	}
-	
+
 	/**
 	 * Copy values from another FloatBufferAccess.
-	 * 
+	 *
 	 * @param access
 	 * @return
 	 */
-	public FloatBuffer setValues(final FloatBufferAccess access) {
+	public FloatBuffer setValues( final FloatBufferAccess access )
+	{
 		return buffer.duplicate().put( access.getCurrentStorageArray() );
 	}
 
