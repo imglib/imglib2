@@ -43,8 +43,10 @@ public interface NtreeAccess< L extends Comparable< L >, A extends NtreeAccess< 
 	Ntree< L > getCurrentStorageNtree();
 
 	A createInstance( long[] pos );
-	
-	public default A createView(Object updater) {
+
+	@Override
+	public default A createView( final Object updater )
+	{
 		return createInstance( ( ( PositionProvider ) updater ).getPosition() );
 	}
 }

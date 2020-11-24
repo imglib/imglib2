@@ -116,7 +116,7 @@ public class PlanarImg< T extends NativeType< T >, A extends ArrayDataAccess< A 
 	public A update( final Object c )
 	{
 		final int i = ( ( PlanarContainerSampler ) c ).getCurrentSliceIndex();
-		return (A) mirror.get( i < 0 ? 0 : ( i >= numSlices ? numSlices - 1 : i ) ).createView(c);
+		return ( A ) mirror.get( i < 0 ? 0 : ( i >= numSlices ? numSlices - 1 : i ) ).createView( c );
 	}
 
 	/**
@@ -342,7 +342,7 @@ public class PlanarImg< T extends NativeType< T >, A extends ArrayDataAccess< A 
 	/**
 	 * How many slices has a PlanarImg with the given dimensions?
 	 */
-	public static int numberOfSlices( long[] dimensions )
+	public static int numberOfSlices( final long[] dimensions )
 	{
 		int s = 1;
 		for ( int d = 2; d < dimensions.length; ++d )
@@ -352,39 +352,39 @@ public class PlanarImg< T extends NativeType< T >, A extends ArrayDataAccess< A 
 
 	// -- Helper methods --
 
-	private static int[] longToIntArray( long[] dim )
+	private static int[] longToIntArray( final long[] dim )
 	{
-		int[] dimensions = new int[ dim.length ];
+		final int[] dimensions = new int[ dim.length ];
 		for ( int d = 0; d < dim.length; ++d )
 			dimensions[ d ] = ( int ) dim[ d ];
 		return dimensions;
 	}
 
-	private static int[] computeSliceSteps( long[] dimensions )
+	private static int[] computeSliceSteps( final long[] dimensions )
 	{
 		final int n = dimensions.length;
 		if ( n <= 2 )
 			return null;
-		int[] sliceSteps = new int[ n ];
+		final int[] sliceSteps = new int[ n ];
 		sliceSteps[ 2 ] = 1;
 		for ( int i = 3; i < n; ++i )
 			sliceSteps[ i ] = ( int ) dimensions[ i - 1 ] * sliceSteps[ i - 1 ];
 		return sliceSteps;
 	}
 
-	private static < A > List< A > emptySlices( long[] dim )
+	private static < A > List< A > emptySlices( final long[] dim )
 	{
-		int numSlices = numberOfSlices( dim );
-		List< A > mirror = new ArrayList<>( numSlices );
+		final int numSlices = numberOfSlices( dim );
+		final List< A > mirror = new ArrayList<>( numSlices );
 		for ( int i = 0; i < numSlices; ++i )
 			mirror.add( null );
 		return mirror;
 	}
 
-	private static < A extends ArrayDataAccess< A > > List< A > createSlices( A creator, long[] dim, Fraction entitiesPerPixel )
+	private static < A extends ArrayDataAccess< A > > List< A > createSlices( final A creator, final long[] dim, final Fraction entitiesPerPixel )
 	{
-		int numSlices = numberOfSlices( dim );
-		List< A > mirror = new ArrayList<>( numSlices );
+		final int numSlices = numberOfSlices( dim );
+		final List< A > mirror = new ArrayList<>( numSlices );
 		final int pixelsPerPlane = (int) (( ( dim.length > 1 ) ? dim[ 1 ] : 1 ) * dim[ 0 ]);
 		final int numEntitiesPerSlice = ( int ) entitiesPerPixel.mulCeil( pixelsPerPlane );
 		for ( int i = 0; i < numSlices; ++i )

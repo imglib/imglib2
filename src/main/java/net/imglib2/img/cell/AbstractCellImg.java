@@ -84,7 +84,7 @@ public abstract class AbstractCellImg<
 	public A update( final Object cursor )
 	{
 		// directly get data?
-		return (A) ( ( CellImgSampler< C > ) cursor ).getCell().getData().createView(cursor);
+		return ( A ) ( ( CellImgSampler< C > ) cursor ).getCell().getData().createView( cursor );
 	}
 
 	@Override

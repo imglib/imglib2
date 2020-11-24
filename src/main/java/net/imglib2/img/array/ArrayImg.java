@@ -84,7 +84,7 @@ public class ArrayImg< T extends NativeType< T >, A extends DataAccess > extends
 	@Override
 	public A update( final Object o )
 	{
-		return (A) data.createView(o);
+		return ( A ) data.createView( o );
 	}
 
 	@Override
