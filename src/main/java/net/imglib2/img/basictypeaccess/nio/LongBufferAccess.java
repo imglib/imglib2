@@ -130,7 +130,7 @@ public class LongBufferAccess extends AbstractBufferAccess< LongBufferAccess, Lo
 	}
 
 	@Override
-	protected LongBuffer duplicateBuffer( final LongBuffer buffer )
+	LongBuffer duplicateBuffer( final LongBuffer buffer )
 	{
 		return buffer.duplicate();
 	}
@@ -140,7 +140,7 @@ public class LongBufferAccess extends AbstractBufferAccess< LongBufferAccess, Lo
 	 * since ByteBuffer is restricted to Integer.MAX_VALUE entities.
 	 */
 	@Override
-	protected LongBufferAccess allocate( final int numEntities, final boolean isDirect, final boolean isValid )
+	LongBufferAccess allocate( final int numEntities, final boolean isDirect, final boolean isValid )
 	{
 		if ( isDirect )
 			return super.allocate( numEntities, isDirect, isValid );

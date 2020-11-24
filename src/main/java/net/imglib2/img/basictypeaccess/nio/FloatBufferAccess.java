@@ -130,7 +130,7 @@ public class FloatBufferAccess extends AbstractBufferAccess< FloatBufferAccess, 
 	}
 
 	@Override
-	protected FloatBuffer duplicateBuffer( final FloatBuffer buffer )
+	FloatBuffer duplicateBuffer( final FloatBuffer buffer )
 	{
 		return buffer.duplicate();
 	}
@@ -140,7 +140,7 @@ public class FloatBufferAccess extends AbstractBufferAccess< FloatBufferAccess, 
 	 * since ByteBuffer is restricted to Integer.MAX_VALUE entities.
 	 */
 	@Override
-	protected FloatBufferAccess allocate( final int numEntities, final boolean isDirect, final boolean isValid )
+	FloatBufferAccess allocate( final int numEntities, final boolean isDirect, final boolean isValid )
 	{
 		if ( isDirect )
 			return super.allocate( numEntities, isDirect, isValid );

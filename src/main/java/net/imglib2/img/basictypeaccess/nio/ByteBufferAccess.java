@@ -108,7 +108,7 @@ public class ByteBufferAccess extends AbstractBufferAccess< ByteBufferAccess, By
 	}
 
 	@Override
-	protected ByteBuffer duplicateBuffer( final ByteBuffer buffer )
+	ByteBuffer duplicateBuffer( final ByteBuffer buffer )
 	{
 		return buffer.duplicate();
 	}

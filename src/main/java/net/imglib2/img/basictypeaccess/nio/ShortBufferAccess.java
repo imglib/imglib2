@@ -130,7 +130,7 @@ public class ShortBufferAccess extends AbstractBufferAccess< ShortBufferAccess, 
 	}
 
 	@Override
-	protected ShortBuffer duplicateBuffer( final ShortBuffer buffer )
+	ShortBuffer duplicateBuffer( final ShortBuffer buffer )
 	{
 		return buffer.duplicate();
 	}
@@ -140,7 +140,7 @@ public class ShortBufferAccess extends AbstractBufferAccess< ShortBufferAccess, 
 	 * since ByteBuffer is restricted to Integer.MAX_VALUE entities.
 	 */
 	@Override
-	protected ShortBufferAccess allocate( final int numEntities, final boolean isDirect, final boolean isValid )
+	ShortBufferAccess allocate( final int numEntities, final boolean isDirect, final boolean isValid )
 	{
 		if ( isDirect )
 			return super.allocate( numEntities, isDirect, isValid );

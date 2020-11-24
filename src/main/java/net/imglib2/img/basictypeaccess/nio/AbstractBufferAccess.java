@@ -61,14 +61,14 @@ public abstract class AbstractBufferAccess< A extends AbstractBufferAccess< A, B
 	/**
 	 * Default valid setting if not specified
 	 */
-	protected final static boolean DEFAULT_IS_VALID = true;
+	static final boolean DEFAULT_IS_VALID = true;
 
 	/**
 	 * If valid or not as per {@link VolatileAccess}.
 	 */
-	protected final boolean isValid;
+	private final boolean isValid;
 
-	protected final B buffer;
+	final B buffer;
 
 	/*
 	 * Constructors
@@ -169,7 +169,7 @@ public abstract class AbstractBufferAccess< A extends AbstractBufferAccess< A, B
 	 * @param isDirect
 	 * @return
 	 */
-	protected ByteBuffer allocateByteBuffer( final int numEntities, final boolean isDirect )
+	ByteBuffer allocateByteBuffer( final int numEntities, final boolean isDirect )
 	{
 		if ( isDirect )
 			return ByteBuffer.allocateDirect( numEntities * getNumBytesPerEntity() );
@@ -185,7 +185,7 @@ public abstract class AbstractBufferAccess< A extends AbstractBufferAccess< A, B
 	 * @param isValid
 	 * @return
 	 */
-	protected A allocate( final int numEntities, final boolean isDirect, final boolean isValid )
+	A allocate( final int numEntities, final boolean isDirect, final boolean isValid )
 	{
 		return newInstance( allocateByteBuffer( numEntities, isDirect ), isValid );
 	}
@@ -197,7 +197,7 @@ public abstract class AbstractBufferAccess< A extends AbstractBufferAccess< A, B
 	 * @param numEntities
 	 * @return
 	 */
-	protected A allocate( final int numEntities )
+	A allocate( final int numEntities )
 	{
 		return allocate( numEntities, isDirect(), isValid() );
 	}
@@ -231,6 +231,6 @@ public abstract class AbstractBufferAccess< A extends AbstractBufferAccess< A, B
 	 *
 	 * @return
 	 */
-	protected abstract B duplicateBuffer( B buffer );
+	abstract B duplicateBuffer( B buffer );
 
 }

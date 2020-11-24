@@ -130,7 +130,7 @@ public class DoubleBufferAccess extends AbstractBufferAccess< DoubleBufferAccess
 	}
 
 	@Override
-	protected DoubleBuffer duplicateBuffer( final DoubleBuffer buffer )
+	DoubleBuffer duplicateBuffer( final DoubleBuffer buffer )
 	{
 		return buffer.duplicate();
 	}
@@ -140,7 +140,7 @@ public class DoubleBufferAccess extends AbstractBufferAccess< DoubleBufferAccess
 	 * since ByteBuffer is restricted to Integer.MAX_VALUE entities.
 	 */
 	@Override
-	protected DoubleBufferAccess allocate( final int numEntities, final boolean isDirect, final boolean isValid )
+	DoubleBufferAccess allocate( final int numEntities, final boolean isDirect, final boolean isValid )
 	{
 		if ( isDirect )
 			return super.allocate( numEntities, isDirect, isValid );

@@ -130,7 +130,7 @@ public class CharBufferAccess extends AbstractBufferAccess< CharBufferAccess, Ch
 	}
 
 	@Override
-	protected CharBuffer duplicateBuffer( final CharBuffer buffer )
+	CharBuffer duplicateBuffer( final CharBuffer buffer )
 	{
 		return buffer.duplicate();
 	}
@@ -140,7 +140,7 @@ public class CharBufferAccess extends AbstractBufferAccess< CharBufferAccess, Ch
 	 * since ByteBuffer is restricted to Integer.MAX_VALUE entities.
 	 */
 	@Override
-	protected CharBufferAccess allocate( final int numEntities, final boolean isDirect, final boolean isValid )
+	CharBufferAccess allocate( final int numEntities, final boolean isDirect, final boolean isValid )
 	{
 		if ( isDirect )
 			return super.allocate( numEntities, isDirect, isValid );
