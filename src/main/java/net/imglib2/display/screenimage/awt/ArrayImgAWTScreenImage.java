@@ -108,4 +108,19 @@ public abstract class ArrayImgAWTScreenImage< T extends NativeType< T >, A exten
 		img.dimensions( dimensions );
 		return dimensions;
 	}
+
+	/**
+	 * Deprecated constructor for when A was not bounded by DataAccess
+	 * 
+	 * @param type
+	 * @param data
+	 *            - will be cast to DataAccess type A
+	 * @param dim
+	 */
+	@SuppressWarnings( "unchecked" )
+	@Deprecated
+	public ArrayImgAWTScreenImage( final T type, final Object data, final long[] dim )
+	{
+		this( type, ( A ) data, dim );
+	}
 }

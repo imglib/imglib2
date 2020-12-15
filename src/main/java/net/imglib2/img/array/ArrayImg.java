@@ -80,7 +80,7 @@ public class ArrayImg< T extends NativeType< T >, A extends DataAccess > extends
 		this.data = data;
 	}
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings( "unchecked" )
 	@Override
 	public A update( final Object o )
 	{
@@ -232,5 +232,21 @@ public class ArrayImg< T extends NativeType< T >, A extends DataAccess > extends
 	public Object subIntervalIterationOrder( final Interval interval )
 	{
 		return new FlatIterationOrder( interval );
+	}
+
+	/**
+	 * Deprecated constructor for binary compatibility when A was not bounded by
+	 * DataAccess
+	 * 
+	 * @param data
+	 *            - will be cast to DataAccess type A
+	 * @param dim
+	 * @param entitiesPerPixel
+	 */
+	@SuppressWarnings( "unchecked" )
+	@Deprecated
+	public ArrayImg( final Object data, final long[] dim, final Fraction entitiesPerPixel )
+	{
+		this( ( A ) data, dim, entitiesPerPixel );
 	}
 }
