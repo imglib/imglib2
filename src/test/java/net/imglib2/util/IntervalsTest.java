@@ -36,6 +36,7 @@ package net.imglib2.util;
 
 import net.imglib2.Dimensions;
 import net.imglib2.FinalDimensions;
+import net.imglib2.FinalInterval;
 import net.imglib2.FinalRealInterval;
 import net.imglib2.Interval;
 import net.imglib2.RealInterval;
@@ -43,6 +44,7 @@ import net.imglib2.test.ImgLib2Assert;
 
 import org.junit.Test;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
@@ -207,5 +209,22 @@ public class IntervalsTest
 		final Dimensions differentDimensions = new FinalDimensions( 1, 3 );
 		assertTrue( Intervals.equalDimensions( dimensions, sameDimensions ) );
 		assertFalse( Intervals.equalDimensions( dimensions, differentDimensions ) );
+	}
+
+	@Test
+	public void testIntersection()
+	{
+		final Interval a = FinalInterval.createMinMax( 1, 2, 3, 4 );
+		final Interval b = FinalInterval.createMinMax( 2, 3, 4, 5 );
+		final Interval c = FinalInterval.createMinMax( 4, 5, 6, 7 );
+
+		final Interval aIa = Intervals.intersect( a, a );
+		final Interval aIb = Intervals.intersect( a, b );
+		final Interval bIa = Intervals.intersect( b, a );
+		final Interval aIc = Intervals.intersect( a, c );
+
+		assertTrue( "self-intersection", Intervals.equals( a, aIa ));
+		assertTrue( "intersection order", Intervals.equals( bIa, aIb ));
+		assertEquals( "non-intersecting", 0, Intervals.numElements( aIc ));
 	}
 }
