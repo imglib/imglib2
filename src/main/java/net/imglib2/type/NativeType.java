@@ -79,7 +79,7 @@ public interface NativeType< T extends NativeType< T > > extends Type< T >
 	 * @return the number of storage type entities required to store one pixel
 	 *         value.
 	 */
-	public Fraction getEntitiesPerPixel();
+	Fraction getEntitiesPerPixel();
 
 	/**
 	 * Creates a new {@link NativeType} which stores in the same physical array.
@@ -88,9 +88,9 @@ public interface NativeType< T extends NativeType< T > > extends Type< T >
 	 * @return a new {@link NativeType} instance working on the same
 	 *         {@link NativeImg}
 	 */
-	public T duplicateTypeOnSameNativeImg();
+	T duplicateTypeOnSameNativeImg();
 
-	public NativeTypeFactory< T, ? > getNativeTypeFactory();
+	NativeTypeFactory< T, ? > getNativeTypeFactory();
 
 	/**
 	 * This method is used by an accessor (e.g., a {@link Cursor}) to request an
@@ -126,7 +126,7 @@ public interface NativeType< T extends NativeType< T > > extends Type< T >
 	 *            reference to an accessor which can be passed on to the
 	 *            container (which will know what to do with it).
 	 */
-	public void updateContainer( Object c );
+	void updateContainer( Object c );
 
 	/**
 	 * Set the index into the current data array.
@@ -138,7 +138,7 @@ public interface NativeType< T extends NativeType< T > > extends Type< T >
 	 * @param i
 	 *            the new array index
 	 */
-	public void updateIndex( final int i );
+	void updateIndex( final int i );
 
 	/**
 	 * Get the current index into the current data array.
@@ -149,7 +149,7 @@ public interface NativeType< T extends NativeType< T > > extends Type< T >
 	 *
 	 * @return the current index into the underlying data array
 	 */
-	public int getIndex();
+	int getIndex();
 
 	/**
 	 * Increment the index into the current data array.
@@ -158,7 +158,7 @@ public interface NativeType< T extends NativeType< T > > extends Type< T >
 	 * This is used by accessors (e.g., a {@link Cursor}) to position the
 	 * {@link NativeType} in the container.
 	 */
-	public void incIndex();
+	void incIndex();
 
 	/**
 	 * Increases the index into the current data array by {@code increment}
@@ -171,7 +171,7 @@ public interface NativeType< T extends NativeType< T > > extends Type< T >
 	 * @param increment
 	 *            how many steps
 	 */
-	public void incIndex( final int increment );
+	void incIndex( final int increment );
 
 	/**
 	 * Decrement the index into the current data array.
@@ -180,7 +180,7 @@ public interface NativeType< T extends NativeType< T > > extends Type< T >
 	 * This is used by accessors (e.g., a {@link Cursor}) to position the
 	 * {@link NativeType} in the container.
 	 */
-	public void decIndex();
+	void decIndex();
 
 	/**
 	 * Decrease the index into the current data array by {@code decrement}
@@ -193,5 +193,5 @@ public interface NativeType< T extends NativeType< T > > extends Type< T >
 	 * @param decrement
 	 *            how many steps
 	 */
-	public void decIndex( final int decrement );
+	void decIndex( final int decrement );
 }
