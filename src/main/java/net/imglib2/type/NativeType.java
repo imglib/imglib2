@@ -11,13 +11,13 @@
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice,
  *    this list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  *    this list of conditions and the following disclaimer in the documentation
  *    and/or other materials provided with the distribution.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -128,6 +128,8 @@ public interface NativeType< T extends NativeType< T > > extends Type< T >
 	 */
 	void updateContainer( Object c );
 
+	Index index();
+
 	/**
 	 * Set the index into the current data array.
 	 *
@@ -138,7 +140,11 @@ public interface NativeType< T extends NativeType< T > > extends Type< T >
 	 * @param i
 	 *            the new array index
 	 */
-	void updateIndex( final int i );
+	@Deprecated
+	default void updateIndex( final int i )
+	{
+		index().set( i );
+	}
 
 	/**
 	 * Get the current index into the current data array.
@@ -149,7 +155,11 @@ public interface NativeType< T extends NativeType< T > > extends Type< T >
 	 *
 	 * @return the current index into the underlying data array
 	 */
-	int getIndex();
+	@Deprecated
+	default int getIndex()
+	{
+		return index().get();
+	}
 
 	/**
 	 * Increment the index into the current data array.
@@ -158,7 +168,11 @@ public interface NativeType< T extends NativeType< T > > extends Type< T >
 	 * This is used by accessors (e.g., a {@link Cursor}) to position the
 	 * {@link NativeType} in the container.
 	 */
-	void incIndex();
+	@Deprecated
+	default void incIndex()
+	{
+		index().inc();
+	}
 
 	/**
 	 * Increases the index into the current data array by {@code increment}
@@ -171,7 +185,11 @@ public interface NativeType< T extends NativeType< T > > extends Type< T >
 	 * @param increment
 	 *            how many steps
 	 */
-	void incIndex( final int increment );
+	@Deprecated
+	default void incIndex( final int increment )
+	{
+		index().inc( increment );
+	}
 
 	/**
 	 * Decrement the index into the current data array.
@@ -180,7 +198,11 @@ public interface NativeType< T extends NativeType< T > > extends Type< T >
 	 * This is used by accessors (e.g., a {@link Cursor}) to position the
 	 * {@link NativeType} in the container.
 	 */
-	void decIndex();
+	@Deprecated
+	default void decIndex()
+	{
+		index().dec();
+	}
 
 	/**
 	 * Decrease the index into the current data array by {@code decrement}
@@ -193,5 +215,9 @@ public interface NativeType< T extends NativeType< T > > extends Type< T >
 	 * @param decrement
 	 *            how many steps
 	 */
-	void decIndex( final int decrement );
+	@Deprecated
+	default void decIndex( final int decrement )
+	{
+		index().dec( decrement );
+	}
 }
