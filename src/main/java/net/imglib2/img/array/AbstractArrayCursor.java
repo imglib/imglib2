@@ -36,6 +36,7 @@ package net.imglib2.img.array;
 
 import net.imglib2.AbstractCursorInt;
 import net.imglib2.Cursor;
+import net.imglib2.type.Index;
 import net.imglib2.type.NativeType;
 import net.imglib2.util.IntervalIndexer;
 
@@ -68,6 +69,8 @@ public abstract class AbstractArrayCursor< T extends NativeType< T > > extends A
 	 */
 	protected final T type;
 
+	private final Index index;
+
 	/**
 	 * Source image
 	 */
@@ -89,11 +92,12 @@ public abstract class AbstractArrayCursor< T extends NativeType< T > > extends A
 
 		this.img = cursor.img;
 		this.type = img.createLinkedType();
+		this.index = type.index();
 		this.offset = cursor.offset;
 		this.size = cursor.size;
 		this.lastIndex = cursor.lastIndex;
 
-		type.updateIndex( cursor.type.getIndex() );
+		index.set( cursor.index.get() );
 		type.updateContainer( this );
 	}
 
@@ -109,6 +113,7 @@ public abstract class AbstractArrayCursor< T extends NativeType< T > > extends A
 		super( img.numDimensions() );
 
 		this.type = img.createLinkedType();
+		this.index = type.index();
 		this.img = img;
 		this.lastIndex = offset + size - 1;
 		this.offset = offset;
@@ -126,25 +131,25 @@ public abstract class AbstractArrayCursor< T extends NativeType< T > > extends A
 	@Override
 	public boolean hasNext()
 	{
-		return type.getIndex() < lastIndex;
+		return index.get() < lastIndex;
 	}
 
 	@Override
 	public void jumpFwd( final long steps )
 	{
-		type.incIndex( ( int ) steps );
+		index.inc( ( int ) steps );
 	}
 
 	@Override
 	public void fwd()
 	{
-		type.incIndex();
+		index.inc();
 	}
 
 	@Override
 	public void reset()
 	{
-		type.updateIndex( offset - 1 );
+		index.set( offset - 1 );
 		type.updateContainer( this );
 	}
 
@@ -157,12 +162,12 @@ public abstract class AbstractArrayCursor< T extends NativeType< T > > extends A
 	@Override
 	public int getIntPosition( final int dim )
 	{
-		return IntervalIndexer.indexToPosition( type.getIndex(), img.dim, dim );
+		return IntervalIndexer.indexToPosition( index.get(), img.dim, dim );
 	}
 
 	@Override
 	public void localize( final int[] position )
 	{
-		IntervalIndexer.indexToPosition( type.getIndex(), img.dim, position );
+		IntervalIndexer.indexToPosition( index.get(), img.dim, position );
 	}
 }
