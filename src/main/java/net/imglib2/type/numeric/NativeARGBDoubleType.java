@@ -37,6 +37,7 @@ package net.imglib2.type.numeric;
 import net.imglib2.img.NativeImg;
 import net.imglib2.img.basictypeaccess.DoubleAccess;
 import net.imglib2.img.basictypeaccess.array.DoubleArray;
+import net.imglib2.type.Index;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.NativeTypeFactory;
 import net.imglib2.util.Fraction;
@@ -47,9 +48,7 @@ import net.imglib2.util.Fraction;
  */
 public class NativeARGBDoubleType extends AbstractARGBDoubleType< NativeARGBDoubleType > implements NativeType< NativeARGBDoubleType >
 {
-	private int i = 0;
-
-	private int ai = 0, ri = 1, gi = 2, bi = 3;
+	private final Index i;
 
 	final protected NativeImg< ?, ? extends DoubleAccess > img;
 
@@ -57,11 +56,13 @@ public class NativeARGBDoubleType extends AbstractARGBDoubleType< NativeARGBDoub
 
 	public NativeARGBDoubleType( final NativeImg< ?, ? extends DoubleAccess > img )
 	{
+		i = new Index();
 		this.img = img;
 	}
 
 	public NativeARGBDoubleType( final double a, final double r, final double g, final double b )
 	{
+		i = new Index();
 		img = null;
 		dataAccess = new DoubleArray( 4 );
 		set( a, r, g, b );
@@ -69,6 +70,7 @@ public class NativeARGBDoubleType extends AbstractARGBDoubleType< NativeARGBDoub
 
 	public NativeARGBDoubleType( final DoubleAccess access )
 	{
+		i = new Index();
 		img = null;
 		dataAccess = access;
 	}
@@ -82,6 +84,12 @@ public class NativeARGBDoubleType extends AbstractARGBDoubleType< NativeARGBDoub
 	public void updateContainer( final Object c )
 	{
 		dataAccess = img.update( c );
+	}
+
+	@Override
+	public Index index()
+	{
+		return i;
 	}
 
 	@Override
@@ -101,58 +109,67 @@ public class NativeARGBDoubleType extends AbstractARGBDoubleType< NativeARGBDoub
 	@Override
 	public double getA()
 	{
+		final int ai = i.get() << 2;
 		return dataAccess.getValue( ai );
 	}
 
 	@Override
 	public double getR()
 	{
-		return dataAccess.getValue( ri );
+		final int ai = i.get() << 2;
+		return dataAccess.getValue( ai + 1 );
 	}
 
 	@Override
 	public double getG()
 	{
-		return dataAccess.getValue( gi );
+		final int ai = i.get() << 2;
+		return dataAccess.getValue( ai + 2 );
 	}
 
 	@Override
 	public double getB()
 	{
-		return dataAccess.getValue( bi );
+		final int ai = i.get() << 2;
+		return dataAccess.getValue( ai + 3 );
 	}
 
 	@Override
 	public void setA( final double a )
 	{
+		final int ai = i.get() << 2;
 		dataAccess.setValue( ai, a );
 	}
 
 	@Override
 	public void setR( final double r )
 	{
-		dataAccess.setValue( ri, r );
+		final int ai = i.get() << 2;
+		dataAccess.setValue( ai + 1, r );
 	}
 
 	@Override
 	public void setG( final double g )
 	{
-		dataAccess.setValue( gi, g );
+		final int ai = i.get() << 2;
+		dataAccess.setValue( ai + 2, g );
 	}
 
 	@Override
 	public void setB( final double b )
 	{
-		dataAccess.setValue( bi, b );
+		final int ai = i.get() << 2;
+		dataAccess.setValue( ai + 3, b );
 	}
 
 	@Override
 	public void set( final double a, final double r, final double g, final double b )
 	{
+		final int ai = i.get() << 2;
 		dataAccess.setValue( ai, a );
-		dataAccess.setValue( ri, r );
-		dataAccess.setValue( gi, g );
-		dataAccess.setValue( bi, b );
+		dataAccess.setValue( ai + 1, r );
+		dataAccess.setValue( ai + 2, g );
+		dataAccess.setValue( ai + 3, b );
 	}
 
 	public void set( final ARGBDoubleType c )
@@ -176,65 +193,5 @@ public class NativeARGBDoubleType extends AbstractARGBDoubleType< NativeARGBDoub
 	public Fraction getEntitiesPerPixel()
 	{
 		return new Fraction( 4, 1 );
-	}
-
-	@Override
-	public void updateIndex( final int index )
-	{
-		this.i = index;
-		ai = i * 4;
-		ri = ai + 1;
-		gi = ai + 2;
-		bi = ai + 3;
-	}
-
-	@Override
-	public void incIndex()
-	{
-		++i;
-		ai += 4;
-		ri += 4;
-		gi += 4;
-		bi += 4;
-	}
-
-	@Override
-	public void incIndex( final int increment )
-	{
-		i += increment;
-
-		final int inc2 = increment * 4;
-		ai += inc2;
-		ri += inc2;
-		gi += inc2;
-		bi += inc2;
-	}
-
-	@Override
-	public void decIndex()
-	{
-		--i;
-		ai -= 4;
-		ri -= 4;
-		gi -= 4;
-		bi -= 4;
-	}
-
-	@Override
-	public void decIndex( final int decrement )
-	{
-		i -= decrement;
-
-		final int dec2 = decrement * 4;
-		ai -= dec2;
-		ri -= dec2;
-		gi -= dec2;
-		bi -= dec2;
-	}
-
-	@Override
-	public int getIndex()
-	{
-		return i;
 	}
 }

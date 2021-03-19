@@ -40,6 +40,7 @@ import net.imglib2.img.NativeImg;
 import net.imglib2.img.basictypeaccess.LongAccess;
 import net.imglib2.img.basictypeaccess.array.LongArray;
 import net.imglib2.type.BooleanType;
+import net.imglib2.type.Index;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.NativeTypeFactory;
 import net.imglib2.type.numeric.IntegerType;
@@ -56,7 +57,7 @@ import net.imglib2.util.Util;
 public class BitType extends AbstractIntegerType< BitType > implements BooleanType< BitType >, NativeType< BitType >, IntegerType< BitType >
 {
 	// Maximum count is Integer.MAX_VALUE * (64 / getBitsPerPixel())
-	protected int i = 0;
+	protected final Index i;
 
 	final protected NativeImg< ?, ? extends LongAccess > img;
 
@@ -66,6 +67,7 @@ public class BitType extends AbstractIntegerType< BitType > implements BooleanTy
 	// this is the constructor if you want it to read from an array
 	public BitType( final NativeImg< ?, ? extends LongAccess > bitStorage )
 	{
+		i = new Index();
 		img = bitStorage;
 	}
 
@@ -97,6 +99,12 @@ public class BitType extends AbstractIntegerType< BitType > implements BooleanTy
 	}
 
 	@Override
+	public Index index()
+	{
+		return i;
+	}
+
+	@Override
 	public BitType duplicateTypeOnSameNativeImg()
 	{
 		return new BitType( img );
@@ -113,7 +121,8 @@ public class BitType extends AbstractIntegerType< BitType > implements BooleanTy
 	@Override
 	public boolean get()
 	{
-		return 1 == ( ( dataAccess.getValue( i >>> 6 ) >>> ( ( i & 63 ) ) ) & 1l );
+		final int j = i.get();
+		return 1 == ( ( dataAccess.getValue( j >>> 6 ) >>> ( ( j & 63 ) ) ) & 1l );
 	}
 
 	// Crops value to within mask
@@ -125,8 +134,9 @@ public class BitType extends AbstractIntegerType< BitType > implements BooleanTy
 		final long shift = k % 64;
 		*/
 		// Same as above, minus one multiplication, plus one shift to multiply the reminder by 2
-		final int i1 = i >>> 6; // Same as i / 64
-		final long bit = 1l << (i & 63);
+		final int j = i.get();
+		final int i1 = j >>> 6; // Same as i / 64
+		final long bit = 1l << (j & 63);
 		synchronized ( dataAccess )
 		{
 			// Clear or set the bit
@@ -314,42 +324,6 @@ public class BitType extends AbstractIntegerType< BitType > implements BooleanTy
 	public Fraction getEntitiesPerPixel()
 	{
 		return new Fraction(1, 64);
-	}
-
-	@Override
-	public void updateIndex( final int index )
-	{
-		this.i = index;
-	}
-
-	@Override
-	public int getIndex()
-	{
-		return i;
-	}
-
-	@Override
-	public void incIndex()
-	{
-		++i;
-	}
-
-	@Override
-	public void incIndex( final int increment )
-	{
-		i += increment;
-	}
-
-	@Override
-	public void decIndex()
-	{
-		--i;
-	}
-
-	@Override
-	public void decIndex( final int decrement )
-	{
-		i -= decrement;
 	}
 
 	@Override

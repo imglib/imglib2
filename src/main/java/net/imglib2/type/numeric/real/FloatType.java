@@ -37,6 +37,7 @@ package net.imglib2.type.numeric.real;
 import net.imglib2.img.NativeImg;
 import net.imglib2.img.basictypeaccess.FloatAccess;
 import net.imglib2.img.basictypeaccess.array.FloatArray;
+import net.imglib2.type.Index;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.NativeTypeFactory;
 import net.imglib2.util.Fraction;
@@ -50,7 +51,7 @@ import net.imglib2.util.Util;
  */
 public class FloatType extends AbstractRealType< FloatType > implements NativeType< FloatType >
 {
-	private int i = 0;
+	private final Index i;
 
 	final protected NativeImg< ?, ? extends FloatAccess > img;
 
@@ -60,12 +61,14 @@ public class FloatType extends AbstractRealType< FloatType > implements NativeTy
 	// this is the constructor if you want it to read from an array
 	public FloatType( final NativeImg< ?, ? extends FloatAccess > floatStorage )
 	{
+		i = new Index();
 		img = floatStorage;
 	}
 
 	// this is the constructor if you want it to be a variable
 	public FloatType( final float value )
 	{
+		i = new Index();
 		img = null;
 		dataAccess = new FloatArray( 1 );
 		set( value );
@@ -74,6 +77,7 @@ public class FloatType extends AbstractRealType< FloatType > implements NativeTy
 	// this is the constructor if you want to specify the dataAccess
 	public FloatType( final FloatAccess access )
 	{
+		i = new Index();
 		img = null;
 		dataAccess = access;
 	}
@@ -88,6 +92,12 @@ public class FloatType extends AbstractRealType< FloatType > implements NativeTy
 	public void updateContainer( final Object c )
 	{
 		dataAccess = img.update( c );
+	}
+
+	@Override
+	public Index index()
+	{
+		return i;
 	}
 
 	@Override
@@ -106,12 +116,12 @@ public class FloatType extends AbstractRealType< FloatType > implements NativeTy
 
 	public float get()
 	{
-		return dataAccess.getValue( i );
+		return dataAccess.getValue( i.get() );
 	}
 
 	public void set( final float f )
 	{
-		dataAccess.setValue( i, f );
+		dataAccess.setValue( i.get(), f );
 	}
 
 	@Override
@@ -240,42 +250,6 @@ public class FloatType extends AbstractRealType< FloatType > implements NativeTy
 	public Fraction getEntitiesPerPixel()
 	{
 		return new Fraction();
-	}
-
-	@Override
-	public void updateIndex( final int index )
-	{
-		i = index;
-	}
-
-	@Override
-	public int getIndex()
-	{
-		return i;
-	}
-
-	@Override
-	public void incIndex()
-	{
-		++i;
-	}
-
-	@Override
-	public void incIndex( final int increment )
-	{
-		i += increment;
-	}
-
-	@Override
-	public void decIndex()
-	{
-		--i;
-	}
-
-	@Override
-	public void decIndex( final int decrement )
-	{
-		i -= decrement;
 	}
 
 	@Override

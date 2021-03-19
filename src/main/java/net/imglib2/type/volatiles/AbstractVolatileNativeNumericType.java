@@ -34,6 +34,7 @@
 
 package net.imglib2.type.volatiles;
 
+import net.imglib2.type.Index;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.NumericType;
 import net.imglib2.util.Fraction;
@@ -66,38 +67,8 @@ public abstract class AbstractVolatileNativeNumericType< N extends NumericType< 
 	}
 
 	@Override
-	public void updateIndex( final int i )
+	public Index index()
 	{
-		t.updateIndex( i );
-	}
-
-	@Override
-	public int getIndex()
-	{
-		return t.getIndex();
-	}
-
-	@Override
-	public void incIndex()
-	{
-		t.incIndex();
-	}
-
-	@Override
-	public void incIndex( final int increment )
-	{
-		t.incIndex( increment );
-	}
-
-	@Override
-	public void decIndex()
-	{
-		t.decIndex();
-	}
-
-	@Override
-	public void decIndex( final int decrement )
-	{
-		t.decIndex( decrement );
+		return t.index();
 	}
 }

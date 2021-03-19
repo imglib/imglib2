@@ -37,6 +37,7 @@ package net.imglib2.type.numeric.integer;
 import net.imglib2.img.NativeImg;
 import net.imglib2.img.basictypeaccess.ByteAccess;
 import net.imglib2.img.basictypeaccess.array.ByteArray;
+import net.imglib2.type.Index;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.NativeTypeFactory;
 import net.imglib2.util.Fraction;
@@ -50,7 +51,7 @@ import net.imglib2.util.Util;
  */
 public abstract class GenericByteType< T extends GenericByteType< T > > extends AbstractIntegerType< T > implements NativeType< T >
 {
-	int i = 0;
+	final Index i;
 
 	final protected NativeImg< ?, ? extends ByteAccess > img;
 
@@ -60,12 +61,14 @@ public abstract class GenericByteType< T extends GenericByteType< T > > extends 
 	// this is the constructor if you want it to read from an array
 	public GenericByteType( final NativeImg< ?, ? extends ByteAccess > byteStorage )
 	{
+		i = new Index();
 		img = byteStorage;
 	}
 
 	// this is the constructor if you want it to be a variable
 	public GenericByteType( final byte value )
 	{
+		i = new Index();
 		img = null;
 		dataAccess = new ByteArray( 1 );
 		setByte( value );
@@ -74,6 +77,7 @@ public abstract class GenericByteType< T extends GenericByteType< T > > extends 
 	// this is the constructor if you want to specify the dataAccess
 	public GenericByteType( final ByteAccess access )
 	{
+		i = new Index();
 		img = null;
 		dataAccess = access;
 	}
@@ -97,6 +101,12 @@ public abstract class GenericByteType< T extends GenericByteType< T > > extends 
 	}
 
 	@Override
+	public Index index()
+	{
+		return i;
+	}
+
+	@Override
 	public abstract NativeTypeFactory< T, ByteAccess > getNativeTypeFactory();
 
 	/**
@@ -105,7 +115,7 @@ public abstract class GenericByteType< T extends GenericByteType< T > > extends 
 	@Deprecated
 	protected byte getValue()
 	{
-		return dataAccess.getValue( i );
+		return dataAccess.getValue( i.get() );
 	}
 
 	/**
@@ -114,7 +124,7 @@ public abstract class GenericByteType< T extends GenericByteType< T > > extends 
 	@Deprecated
 	protected void setValue( final byte f )
 	{
-		dataAccess.setValue( i, f );
+		dataAccess.setValue( i.get(), f );
 	}
 
 	/**
@@ -124,7 +134,7 @@ public abstract class GenericByteType< T extends GenericByteType< T > > extends 
 	 */
 	public byte getByte()
 	{
-		return dataAccess.getValue( i );
+		return dataAccess.getValue( i.get() );
 	}
 
 	/**
@@ -132,7 +142,7 @@ public abstract class GenericByteType< T extends GenericByteType< T > > extends 
 	 */
 	public void setByte( final byte f )
 	{
-		dataAccess.setValue( i, f );
+		dataAccess.setValue( i.get(), f );
 	}
 
 	@Override
@@ -213,42 +223,6 @@ public abstract class GenericByteType< T extends GenericByteType< T > > extends 
 	public String toString()
 	{
 		return "" + getByte();
-	}
-
-	@Override
-	public void updateIndex( final int index )
-	{
-		i = index;
-	}
-
-	@Override
-	public int getIndex()
-	{
-		return i;
-	}
-
-	@Override
-	public void incIndex()
-	{
-		++i;
-	}
-
-	@Override
-	public void incIndex( final int increment )
-	{
-		i += increment;
-	}
-
-	@Override
-	public void decIndex()
-	{
-		--i;
-	}
-
-	@Override
-	public void decIndex( final int decrement )
-	{
-		i -= decrement;
 	}
 
 	@Override

@@ -113,12 +113,12 @@ public class BasePairCharType extends AbstractNativeType< BasePairCharType > imp
 
 	public char getChar()
 	{
-		return dataAccess.getValue( i );
+		return dataAccess.getValue( i.get() );
 	}
 
 	public void setChar( final char f )
 	{
-		dataAccess.setValue( i, f );
+		dataAccess.setValue( i.get(), f );
 	}
 
 	@Override
@@ -136,7 +136,7 @@ public class BasePairCharType extends AbstractNativeType< BasePairCharType > imp
 	@Override
 	public void set( final BasePairCharType c )
 	{
-		dataAccess.setValue( i, c.getChar() );
+		dataAccess.setValue( i.get(), c.getChar() );
 	}
 
 	@Override

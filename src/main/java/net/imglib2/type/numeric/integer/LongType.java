@@ -95,7 +95,7 @@ public class LongType extends GenericLongType< LongType >
 
 	public void set( final long f )
 	{
-		dataAccess.setValue( i, f );
+		dataAccess.setValue( i.get(), f );
 	}
 
 	@Override

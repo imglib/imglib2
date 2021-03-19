@@ -79,7 +79,6 @@ public abstract class AbstractBit64Type< T extends AbstractBit64Type< T > > exte
 	public AbstractBit64Type( final long value, final int nBits )
 	{
 		this( ( NativeImg< ?, ? extends LongAccess > ) null, nBits );
-		updateIndex( 0 );
 		dataAccess = new LongArray( 1 );
 		setBits( value );
 	}
@@ -88,7 +87,6 @@ public abstract class AbstractBit64Type< T extends AbstractBit64Type< T > > exte
 	public AbstractBit64Type( final LongAccess access, final int nBits )
 	{
 		this( ( NativeImg< ?, ? extends LongAccess > ) null, nBits );
-		updateIndex( 0 );
 		dataAccess = access;
 	}
 
@@ -104,7 +102,7 @@ public abstract class AbstractBit64Type< T extends AbstractBit64Type< T > > exte
 	 * @return
 	 */
 	protected long getBits() {
-		final long k = i * nBits;
+		final long k = i.get() * nBits;
 		final int i1 = (int)(k >>> 6); // k / 64;
 		final long shift = k & 63; // Same as k % 64;
 		final long v = dataAccess.getValue(i1);
@@ -134,7 +132,7 @@ public abstract class AbstractBit64Type< T extends AbstractBit64Type< T > > exte
 	 * @param value
 	 */
 	protected void setBits( final long value ) {
-		final long k = i * nBits;
+		final long k = i.get() * nBits;
 		final int i1 = (int)(k >>> 6); // k / 64;
 		final long shift = k & 63; // Same as k % 64;
 		final long safeValue = value & mask;
