@@ -36,6 +36,7 @@ package net.imglib2.img.cell;
 
 import net.imglib2.AbstractCursor;
 import net.imglib2.Cursor;
+import net.imglib2.type.Index;
 import net.imglib2.type.NativeType;
 
 /**
@@ -48,6 +49,8 @@ public class CellCursor< T extends NativeType< T >, C extends Cell< ? > >
 		implements AbstractCellImg.CellImgSampler< C >
 {
 	protected final T type;
+
+	protected final Index i;
 
 	protected final Cursor< C > cursorOnCells;
 
@@ -69,13 +72,14 @@ public class CellCursor< T extends NativeType< T >, C extends Cell< ? > >
 		super( cursor.numDimensions() );
 
 		this.type = cursor.type.duplicateTypeOnSameNativeImg();
+		i = type.index();
 		this.cursorOnCells = cursor.cursorOnCells.copyCursor();
 		isNotLastCell = cursor.isNotLastCell;
 		lastIndexInCell = cursor.lastIndexInCell;
 		index = cursor.index;
 
 		type.updateContainer( this );
-		type.updateIndex( index );
+		i.set( index );
 	}
 
 	public CellCursor( final AbstractCellImg< T, ?, C, ? > img )
@@ -83,6 +87,7 @@ public class CellCursor< T extends NativeType< T >, C extends Cell< ? > >
 		super( img.numDimensions() );
 
 		this.type = img.createLinkedType();
+		i = type.index();
 		this.cursorOnCells = img.getCells().cursor();
 
 		reset();
@@ -130,7 +135,7 @@ public class CellCursor< T extends NativeType< T >, C extends Cell< ? > >
 			lastIndexInCell = ( int ) ( getCell().size() - 1 );
 		}
 		index = ( int ) newIndex;
-		type.updateIndex( index );
+		i.set( index );
 		type.updateContainer( this );
 	}
 
@@ -142,7 +147,7 @@ public class CellCursor< T extends NativeType< T >, C extends Cell< ? > >
 			moveToNextCell();
 			index = 0;
 		}
-		type.updateIndex( index );
+		i.set( index );
 	}
 
 	@Override
@@ -150,7 +155,7 @@ public class CellCursor< T extends NativeType< T >, C extends Cell< ? > >
 	{
 		cursorOnCells.reset();
 		moveToNextCell();
-		type.updateIndex( index );
+		i.set( index );
 	}
 
 	@Override

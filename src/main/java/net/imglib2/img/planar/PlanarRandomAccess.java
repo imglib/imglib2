@@ -37,6 +37,7 @@ package net.imglib2.img.planar;
 import net.imglib2.AbstractLocalizableInt;
 import net.imglib2.Localizable;
 import net.imglib2.RandomAccess;
+import net.imglib2.type.Index;
 import net.imglib2.type.NativeType;
 
 /**
@@ -56,6 +57,8 @@ public class PlanarRandomAccess< T extends NativeType< T > > extends AbstractLoc
 
 	final protected T type;
 
+	final protected Index index;
+
 	protected int sliceIndex;
 
 	protected PlanarRandomAccess( final PlanarRandomAccess< T > randomAccess )
@@ -70,8 +73,9 @@ public class PlanarRandomAccess< T extends NativeType< T > > extends AbstractLoc
 			position[ d ] = randomAccess.position[ d ];
 
 		type = randomAccess.type.duplicateTypeOnSameNativeImg();
+		index = type.index();
 		type.updateContainer( this );
-		type.updateIndex( randomAccess.type.getIndex() );
+		index.set( randomAccess.index.get() );
 	}
 
 	public PlanarRandomAccess( final PlanarImg< T, ? > container )
@@ -82,7 +86,8 @@ public class PlanarRandomAccess< T extends NativeType< T > > extends AbstractLoc
 		width = ( int ) container.dimension( 0 );
 
 		type = container.createLinkedType();
-		type.updateIndex( 0 );
+		index = type.index();
+		index.set( 0 );
 		type.updateContainer( this );
 	}
 
@@ -116,9 +121,9 @@ public class PlanarRandomAccess< T extends NativeType< T > > extends AbstractLoc
 		++position[ d ];
 
 		if ( d == 0 )
-			type.incIndex();
+			index.inc();
 		else if ( d == 1 )
-			type.incIndex( width );
+			index.inc( width );
 		else
 		{
 			sliceIndex += sliceSteps[ d ];
@@ -132,9 +137,9 @@ public class PlanarRandomAccess< T extends NativeType< T > > extends AbstractLoc
 		--position[ d ];
 
 		if ( d == 0 )
-			type.decIndex();
+			index.dec();
 		else if ( d == 1 )
-			type.decIndex( width );
+			index.dec( width );
 		else
 		{
 			sliceIndex -= sliceSteps[ d ];
@@ -149,11 +154,11 @@ public class PlanarRandomAccess< T extends NativeType< T > > extends AbstractLoc
 
 		if ( d == 0 )
 		{
-			type.incIndex( distance );
+			index.inc( distance );
 		}
 		else if ( d == 1 )
 		{
-			type.incIndex( distance * width );
+			index.inc( distance * width );
 		}
 		else
 		{
@@ -173,7 +178,7 @@ public class PlanarRandomAccess< T extends NativeType< T > > extends AbstractLoc
 	{
 		final int d0 = localizable.getIntPosition( 0 );
 		final int d1 = localizable.getIntPosition( 1 );
-		type.incIndex( d0 + d1 * width );
+		index.inc( d0 + d1 * width );
 		position[ 0 ] += d0;
 		position[ 1 ] += d1;
 
@@ -201,7 +206,7 @@ public class PlanarRandomAccess< T extends NativeType< T > > extends AbstractLoc
 	@Override
 	public void move( final int[] distance )
 	{
-		type.incIndex( distance[ 0 ] + distance[ 1 ] * width );
+		index.inc( distance[ 0 ] + distance[ 1 ] * width );
 		position[ 0 ] += distance[ 0 ];
 		position[ 1 ] += distance[ 1 ];
 
@@ -229,7 +234,7 @@ public class PlanarRandomAccess< T extends NativeType< T > > extends AbstractLoc
 	@Override
 	public void move( final long[] distance )
 	{
-		type.incIndex( ( int ) distance[ 0 ] + ( int ) distance[ 1 ] * width );
+		index.inc( ( int ) distance[ 0 ] + ( int ) distance[ 1 ] * width );
 		position[ 0 ] += ( int ) distance[ 0 ];
 		position[ 1 ] += ( int ) distance[ 1 ];
 
@@ -259,11 +264,11 @@ public class PlanarRandomAccess< T extends NativeType< T > > extends AbstractLoc
 	{
 		if ( d == 0 )
 		{
-			type.incIndex( pos - position[ 0 ] );
+			index.inc( pos - position[ 0 ] );
 		}
 		else if ( d == 1 )
 		{
-			type.incIndex( ( pos - position[ 1 ] ) * width );
+			index.inc( ( pos - position[ 1 ] ) * width );
 		}
 		else
 		{
@@ -285,7 +290,7 @@ public class PlanarRandomAccess< T extends NativeType< T > > extends AbstractLoc
 	{
 		final int p0 = localizable.getIntPosition( 0 );
 		final int p1 = localizable.getIntPosition( 1 );
-		type.updateIndex( p0 + p1 * width );
+		index.set( p0 + p1 * width );
 		position[ 0 ] = p0;
 		position[ 1 ] = p1;
 
@@ -314,7 +319,7 @@ public class PlanarRandomAccess< T extends NativeType< T > > extends AbstractLoc
 	@Override
 	public void setPosition( final int[] pos )
 	{
-		type.updateIndex( pos[ 0 ] + pos[ 1 ] * width );
+		index.set( pos[ 0 ] + pos[ 1 ] * width );
 		position[ 0 ] = pos[ 0 ];
 		position[ 1 ] = pos[ 1 ];
 
@@ -341,7 +346,7 @@ public class PlanarRandomAccess< T extends NativeType< T > > extends AbstractLoc
 	@Override
 	public void setPosition( final long[] pos )
 	{
-		type.updateIndex( ( int ) pos[ 0 ] + ( int ) pos[ 1 ] * width );
+		index.set( ( int ) pos[ 0 ] + ( int ) pos[ 1 ] * width );
 		position[ 0 ] = ( int ) pos[ 0 ];
 		position[ 1 ] = ( int ) pos[ 1 ];
 

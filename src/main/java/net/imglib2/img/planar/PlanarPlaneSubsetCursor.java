@@ -36,6 +36,7 @@ package net.imglib2.img.planar;
 
 import net.imglib2.AbstractCursorInt;
 import net.imglib2.Interval;
+import net.imglib2.type.Index;
 import net.imglib2.type.NativeType;
 
 /**
@@ -54,6 +55,8 @@ public class PlanarPlaneSubsetCursor< T extends NativeType< T >> extends
 	 * Access to the type
 	 */
 	private final T type;
+
+	private final Index index;
 
 	/**
 	 * Container
@@ -77,7 +80,7 @@ public class PlanarPlaneSubsetCursor< T extends NativeType< T >> extends
 
 	/**
 	 * Copy Constructor
-	 * 
+	 *
 	 * @param cursor - the cursor to copy from.
 	 */
 	protected PlanarPlaneSubsetCursor( final PlanarPlaneSubsetCursor< T > cursor )
@@ -86,18 +89,19 @@ public class PlanarPlaneSubsetCursor< T extends NativeType< T >> extends
 
 		container = cursor.container;
 		this.type = container.createLinkedType();
+		index = type.index();
 
 		sliceIndex = cursor.sliceIndex;
 		planeSize = cursor.planeSize;
 		lastPlaneIndex = cursor.lastPlaneIndex;
 
 		type.updateContainer( this );
-		type.updateIndex( cursor.type.getIndex() );
+		index.set( cursor.index.get() );
 	}
 
 	/**
 	 * Constructor
-	 * 
+	 *
 	 * @param container - the container this cursor shall work on.
 	 * @param interval - the interval to iterate over.
 	 */
@@ -106,12 +110,13 @@ public class PlanarPlaneSubsetCursor< T extends NativeType< T >> extends
 		super( container.numDimensions() );
 
 		this.type = container.createLinkedType();
+		index = type.index();
 
 		this.container = container;
 
 		this.planeSize = ( ( n > 1 ) ? ( int ) interval.dimension( 1 ) : 1 )
 				* ( int ) interval.dimension( 0 );
-		
+
 		this.lastPlaneIndex = planeSize - 1;
 
 		this.sliceIndex = ( int ) ( offset( interval ) / planeSize );
@@ -161,7 +166,7 @@ public class PlanarPlaneSubsetCursor< T extends NativeType< T >> extends
 	@Override
 	public final boolean hasNext()
 	{
-		return type.getIndex() < lastPlaneIndex;
+		return index.get() < lastPlaneIndex;
 	}
 
 	/**
@@ -170,7 +175,7 @@ public class PlanarPlaneSubsetCursor< T extends NativeType< T >> extends
 	@Override
 	public final void fwd()
 	{
-		type.incIndex();
+		index.inc();
 	}
 
 	/**
@@ -179,7 +184,7 @@ public class PlanarPlaneSubsetCursor< T extends NativeType< T >> extends
 	@Override
 	public final void jumpFwd( final long steps )
 	{
-		type.incIndex( ( int ) steps );
+		index.inc( ( int ) steps );
 	}
 
 	/**
@@ -189,7 +194,7 @@ public class PlanarPlaneSubsetCursor< T extends NativeType< T >> extends
 	public final void reset()
 	{
 		// Set index inside the slice
-		type.updateIndex( -1 );
+		index.set( -1 );
 		type.updateContainer( this );
 	}
 
@@ -208,7 +213,7 @@ public class PlanarPlaneSubsetCursor< T extends NativeType< T >> extends
 	@Override
 	public final void localize( final int[] position )
 	{
-		container.indexToGlobalPosition( sliceIndex, type.getIndex(), position );
+		container.indexToGlobalPosition( sliceIndex, index.get(), position );
 	}
 
 	/**
@@ -217,7 +222,7 @@ public class PlanarPlaneSubsetCursor< T extends NativeType< T >> extends
 	@Override
 	public final int getIntPosition( final int dim )
 	{
-		return container.indexToGlobalPosition( sliceIndex, type.getIndex(), dim );
+		return container.indexToGlobalPosition( sliceIndex, index.get(), dim );
 	}
 
 	private long offset(final Interval interval) {

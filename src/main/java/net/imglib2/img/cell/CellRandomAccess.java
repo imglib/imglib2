@@ -37,6 +37,7 @@ package net.imglib2.img.cell;
 import net.imglib2.AbstractLocalizable;
 import net.imglib2.Localizable;
 import net.imglib2.RandomAccess;
+import net.imglib2.type.Index;
 import net.imglib2.type.NativeType;
 
 /**
@@ -52,6 +53,8 @@ public class CellRandomAccess< T extends NativeType< T >, C extends Cell< ? > >
 		implements RandomAccess< T >, AbstractCellImg.CellImgSampler< C >
 {
 	protected final T type;
+
+	protected final Index i;
 
 	protected final CellGrid grid;
 
@@ -84,6 +87,7 @@ public class CellRandomAccess< T extends NativeType< T >, C extends Cell< ? > >
 		super( randomAccess.numDimensions() );
 
 		type = randomAccess.type.duplicateTypeOnSameNativeImg();
+		i = type.index();
 		grid = randomAccess.grid;
 		randomAccessOnCells = randomAccess.randomAccessOnCells.copyRandomAccess();
 
@@ -102,7 +106,7 @@ public class CellRandomAccess< T extends NativeType< T >, C extends Cell< ? > >
 		index = randomAccess.index;
 		if ( !isOutOfBounds )
 			type.updateContainer( this );
-		type.updateIndex( index );
+		i.set( index );
 	}
 
 	public CellRandomAccess( final AbstractCellImg< T, ?, C, ? > img )
@@ -110,6 +114,7 @@ public class CellRandomAccess< T extends NativeType< T >, C extends Cell< ? > >
 		super( img.numDimensions() );
 
 		type = img.createLinkedType();
+		i = type.index();
 		grid = img.getCellGrid();
 		randomAccessOnCells = img.getCells().randomAccess();
 
@@ -164,7 +169,7 @@ public class CellRandomAccess< T extends NativeType< T >, C extends Cell< ? > >
 			randomAccessOnCells.fwd( d );
 			updatePosition( position[ d ] >= dimensions[ d ] );
 		}
-		type.updateIndex( index );
+		i.set( index );
 	}
 
 	@Override
@@ -176,7 +181,7 @@ public class CellRandomAccess< T extends NativeType< T >, C extends Cell< ? > >
 			randomAccessOnCells.bck( d );
 			updatePosition( position[ d ] < 0 );
 		}
-		type.updateIndex( index );
+		i.set( index );
 	}
 
 	@Override
@@ -189,7 +194,7 @@ public class CellRandomAccess< T extends NativeType< T >, C extends Cell< ? > >
 			randomAccessOnCells.setPosition( position[ d ] / cellDims[ d ], d );
 			updatePosition( position[ d ] < 0 || position[ d ] >= dimensions[ d ] );
 		}
-		type.updateIndex( index );
+		i.set( index );
 	}
 
 	@Override
@@ -202,7 +207,7 @@ public class CellRandomAccess< T extends NativeType< T >, C extends Cell< ? > >
 			randomAccessOnCells.setPosition( position[ d ] / cellDims[ d ], d );
 			updatePosition( position[ d ] < 0 || position[ d ] >= dimensions[ d ] );
 		}
-		type.updateIndex( index );
+		i.set( index );
 	}
 
 	@Override
@@ -238,7 +243,7 @@ public class CellRandomAccess< T extends NativeType< T >, C extends Cell< ? > >
 				}
 			}
 		}
-		type.updateIndex( index );
+		i.set( index );
 	}
 
 	@Override
@@ -272,7 +277,7 @@ public class CellRandomAccess< T extends NativeType< T >, C extends Cell< ? > >
 				}
 			}
 		}
-		type.updateIndex( index );
+		i.set( index );
 	}
 
 	@Override
@@ -306,7 +311,7 @@ public class CellRandomAccess< T extends NativeType< T >, C extends Cell< ? > >
 				}
 			}
 		}
-		type.updateIndex( index );
+		i.set( index );
 	}
 
 	@Override
@@ -319,7 +324,7 @@ public class CellRandomAccess< T extends NativeType< T >, C extends Cell< ? > >
 			randomAccessOnCells.setPosition( pos / cellDims[ d ], d );
 			updatePosition( position[ d ] < 0 || position[ d ] >= dimensions[ d ] );
 		}
-		type.updateIndex( index );
+		i.set( index );
 	}
 
 	@Override
@@ -332,7 +337,7 @@ public class CellRandomAccess< T extends NativeType< T >, C extends Cell< ? > >
 			randomAccessOnCells.setPosition( pos / cellDims[ d ], d );
 			updatePosition( position[ d ] < 0 || position[ d ] >= dimensions[ d ] );
 		}
-		type.updateIndex( index );
+		i.set( index );
 	}
 
 	@Override
@@ -368,7 +373,7 @@ public class CellRandomAccess< T extends NativeType< T >, C extends Cell< ? > >
 				}
 			}
 		}
-		type.updateIndex( index );
+		i.set( index );
 	}
 
 	@Override
@@ -387,7 +392,7 @@ public class CellRandomAccess< T extends NativeType< T >, C extends Cell< ? > >
 				position[ d ] = pos[ d ];
 			}
 		}
-		type.updateIndex( index );
+		i.set( index );
 	}
 
 	private void setPos2( final int[] pos, final int d0 )
@@ -439,7 +444,7 @@ public class CellRandomAccess< T extends NativeType< T >, C extends Cell< ? > >
 				}
 			}
 		}
-		type.updateIndex( index );
+		i.set( index );
 	}
 
 	/**

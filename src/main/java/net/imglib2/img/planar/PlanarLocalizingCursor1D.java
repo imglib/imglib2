@@ -61,13 +61,13 @@ public class PlanarLocalizingCursor1D< T extends NativeType< T > > extends Plana
 	@Override
 	public boolean hasNext()
 	{
-		return type.getIndex() < lastIndex;
+		return i.get() < lastIndex;
 	}
 
 	@Override
 	public void fwd()
 	{
-		type.incIndex();
+		i.inc();
 		++position[ 0 ];
 	}
 }
