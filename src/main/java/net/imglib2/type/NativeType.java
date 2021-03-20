@@ -128,17 +128,16 @@ public interface NativeType< T extends NativeType< T > > extends Type< T >
 	 */
 	void updateContainer( Object c );
 
+	/**
+	 * Get the (modifiable) index into the current data array. The returned
+	 * instance will always be the same for the same Type.
+	 */
 	Index index();
 
 	/**
 	 * Set the index into the current data array.
-	 *
-	 * <p>
-	 * This is used by accessors (e.g., a {@link Cursor}) to position the
-	 * {@link NativeType} in the container.
-	 *
-	 * @param i
-	 *            the new array index
+	 * @deprecated Use {@code index().set(int)} instead. If possible, request the
+	 * {@code index()} object only once and re-use it.
 	 */
 	@Deprecated
 	default void updateIndex( final int i )
@@ -148,12 +147,8 @@ public interface NativeType< T extends NativeType< T > > extends Type< T >
 
 	/**
 	 * Get the current index into the current data array.
-	 *
-	 * <p>
-	 * This is used by accessors (e.g., a {@link Cursor}) to position the
-	 * {@link NativeType} in the container.
-	 *
-	 * @return the current index into the underlying data array
+	 * @deprecated Use {@code index().get()} instead. If possible, request the
+	 * {@code index()} object only once and re-use it.
 	 */
 	@Deprecated
 	default int getIndex()
@@ -163,10 +158,8 @@ public interface NativeType< T extends NativeType< T > > extends Type< T >
 
 	/**
 	 * Increment the index into the current data array.
-	 *
-	 * <p>
-	 * This is used by accessors (e.g., a {@link Cursor}) to position the
-	 * {@link NativeType} in the container.
+	 * @deprecated Use {@code index().inc()} instead. If possible, request the
+	 * {@code index()} object only once and re-use it.
 	 */
 	@Deprecated
 	default void incIndex()
@@ -177,13 +170,8 @@ public interface NativeType< T extends NativeType< T > > extends Type< T >
 	/**
 	 * Increases the index into the current data array by {@code increment}
 	 * steps.
-	 *
-	 * <p>
-	 * This is used by accessors (e.g., a {@link Cursor}) to position the
-	 * {@link NativeType} in the container.
-	 *
-	 * @param increment
-	 *            how many steps
+	 * @deprecated Use {@code index().inc(int)} instead. If possible, request the
+	 * {@code index()} object only once and re-use it.
 	 */
 	@Deprecated
 	default void incIndex( final int increment )
@@ -193,10 +181,8 @@ public interface NativeType< T extends NativeType< T > > extends Type< T >
 
 	/**
 	 * Decrement the index into the current data array.
-	 *
-	 * <p>
-	 * This is used by accessors (e.g., a {@link Cursor}) to position the
-	 * {@link NativeType} in the container.
+	 * @deprecated Use {@code index().dec()} instead. If possible, request the
+	 * {@code index()} object only once and re-use it.
 	 */
 	@Deprecated
 	default void decIndex()
@@ -207,13 +193,8 @@ public interface NativeType< T extends NativeType< T > > extends Type< T >
 	/**
 	 * Decrease the index into the current data array by {@code decrement}
 	 * steps.
-	 *
-	 * <p>
-	 * This is used by accessors (e.g., a {@link Cursor}) to position the
-	 * {@link NativeType} in the container.
-	 *
-	 * @param decrement
-	 *            how many steps
+	 * @deprecated Use {@code index().dec(int)} instead. If possible, request the
+	 * {@code index()} object only once and re-use it.
 	 */
 	@Deprecated
 	default void decIndex( final int decrement )
