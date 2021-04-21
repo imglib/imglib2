@@ -303,7 +303,8 @@ public abstract class AbstractLongListImg< T > extends AbstractImg< T >
 		@Override
 		public void move( final long distance, final int d )
 		{
-			move( distance, d );
+			i += step[ d ] * distance;
+			position[ d ] += distance;
 		}
 
 		@Override
