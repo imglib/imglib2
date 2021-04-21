@@ -70,7 +70,7 @@ public abstract class AbstractArrayLocalizingCursor< T extends NativeType< T > >
 	 */
 	protected final T type;
 
-	private final Index index;
+	private final Index typeIndex;
 
 	/**
 	 * The underlying source {@link ArrayImg}.
@@ -99,7 +99,7 @@ public abstract class AbstractArrayLocalizingCursor< T extends NativeType< T > >
 
 		this.img = cursor.img;
 		this.type = img.createLinkedType();
-		this.index = type.index();
+		this.typeIndex = type.index();
 		this.offset = cursor.offset;
 		this.size = cursor.size;
 
@@ -112,7 +112,7 @@ public abstract class AbstractArrayLocalizingCursor< T extends NativeType< T > >
 			max[ d ] = cursor.max[ d ];
 		}
 
-		index.set( cursor.index.get() );
+		typeIndex.set( cursor.typeIndex.get() );
 		type.updateContainer( this );
 	}
 
@@ -132,7 +132,7 @@ public abstract class AbstractArrayLocalizingCursor< T extends NativeType< T > >
 		this.size = size;
 
 		this.type = img.createLinkedType();
-		this.index = type.index();
+		this.typeIndex = type.index();
 		this.lastIndex = offset + size - 1;
 
 		max = new int[ n ];
@@ -157,7 +157,7 @@ public abstract class AbstractArrayLocalizingCursor< T extends NativeType< T > >
 	@Override
 	public boolean hasNext()
 	{
-		return index.get() < lastIndex;
+		return typeIndex.get() < lastIndex;
 	}
 
 	/**
@@ -166,7 +166,7 @@ public abstract class AbstractArrayLocalizingCursor< T extends NativeType< T > >
 	@Override
 	public void fwd()
 	{
-		index.inc();
+		typeIndex.inc();
 
 //		 for ( int d = 0; d < n; ++d )
 //		 {
@@ -207,8 +207,8 @@ public abstract class AbstractArrayLocalizingCursor< T extends NativeType< T > >
 	@Override
 	public void jumpFwd( final long steps )
 	{
-		index.inc( ( int ) steps );
-		IntervalIndexer.indexToPosition( index.get(), img.dim, position );
+		typeIndex.inc( ( int ) steps );
+		IntervalIndexer.indexToPosition( typeIndex.get(), img.dim, position );
 	}
 
 	/**
@@ -217,7 +217,7 @@ public abstract class AbstractArrayLocalizingCursor< T extends NativeType< T > >
 	@Override
 	public void reset()
 	{
-		index.set( offset - 1 );
+		typeIndex.set( offset - 1 );
 
 		IntervalIndexer.indexToPosition( offset, img.dim, position );
 		position[ 0 ]--;

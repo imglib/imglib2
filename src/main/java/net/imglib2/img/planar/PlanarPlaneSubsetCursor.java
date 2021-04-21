@@ -56,7 +56,7 @@ public class PlanarPlaneSubsetCursor< T extends NativeType< T >> extends
 	 */
 	private final T type;
 
-	private final Index index;
+	private final Index typeIndex;
 
 	/**
 	 * Container
@@ -89,14 +89,14 @@ public class PlanarPlaneSubsetCursor< T extends NativeType< T >> extends
 
 		container = cursor.container;
 		this.type = container.createLinkedType();
-		index = type.index();
+		typeIndex = type.index();
 
 		sliceIndex = cursor.sliceIndex;
 		planeSize = cursor.planeSize;
 		lastPlaneIndex = cursor.lastPlaneIndex;
 
 		type.updateContainer( this );
-		index.set( cursor.index.get() );
+		typeIndex.set( cursor.typeIndex.get() );
 	}
 
 	/**
@@ -110,7 +110,7 @@ public class PlanarPlaneSubsetCursor< T extends NativeType< T >> extends
 		super( container.numDimensions() );
 
 		this.type = container.createLinkedType();
-		index = type.index();
+		typeIndex = type.index();
 
 		this.container = container;
 
@@ -166,7 +166,7 @@ public class PlanarPlaneSubsetCursor< T extends NativeType< T >> extends
 	@Override
 	public final boolean hasNext()
 	{
-		return index.get() < lastPlaneIndex;
+		return typeIndex.get() < lastPlaneIndex;
 	}
 
 	/**
@@ -175,7 +175,7 @@ public class PlanarPlaneSubsetCursor< T extends NativeType< T >> extends
 	@Override
 	public final void fwd()
 	{
-		index.inc();
+		typeIndex.inc();
 	}
 
 	/**
@@ -184,7 +184,7 @@ public class PlanarPlaneSubsetCursor< T extends NativeType< T >> extends
 	@Override
 	public final void jumpFwd( final long steps )
 	{
-		index.inc( ( int ) steps );
+		typeIndex.inc( ( int ) steps );
 	}
 
 	/**
@@ -194,7 +194,7 @@ public class PlanarPlaneSubsetCursor< T extends NativeType< T >> extends
 	public final void reset()
 	{
 		// Set index inside the slice
-		index.set( -1 );
+		typeIndex.set( -1 );
 		type.updateContainer( this );
 	}
 
@@ -213,7 +213,7 @@ public class PlanarPlaneSubsetCursor< T extends NativeType< T >> extends
 	@Override
 	public final void localize( final int[] position )
 	{
-		container.indexToGlobalPosition( sliceIndex, index.get(), position );
+		container.indexToGlobalPosition( sliceIndex, typeIndex.get(), position );
 	}
 
 	/**
@@ -222,7 +222,7 @@ public class PlanarPlaneSubsetCursor< T extends NativeType< T >> extends
 	@Override
 	public final int getIntPosition( final int dim )
 	{
-		return container.indexToGlobalPosition( sliceIndex, index.get(), dim );
+		return container.indexToGlobalPosition( sliceIndex, typeIndex.get(), dim );
 	}
 
 	private long offset(final Interval interval) {

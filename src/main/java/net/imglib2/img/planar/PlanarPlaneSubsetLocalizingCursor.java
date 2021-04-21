@@ -56,7 +56,7 @@ public class PlanarPlaneSubsetLocalizingCursor< T extends NativeType< T > >
 	 */
 	private final T type;
 
-	private final Index index;
+	private final Index typeIndex;
 
 	/**
 	 * Container
@@ -79,7 +79,7 @@ public class PlanarPlaneSubsetLocalizingCursor< T extends NativeType< T > >
 
 	/**
 	 * Copy Constructor
-	 * 
+	 *
 	 * @param cursor
 	 *            PlanarPlaneSubsetLocalizingCursor to copy from
 	 */
@@ -89,7 +89,7 @@ public class PlanarPlaneSubsetLocalizingCursor< T extends NativeType< T > >
 
 		container = cursor.container;
 		this.type = container.createLinkedType();
-		index = type.index();
+		typeIndex = type.index();
 
 		sliceIndex = cursor.sliceIndex;
 		lastIndexPlane = cursor.lastIndexPlane;
@@ -100,7 +100,7 @@ public class PlanarPlaneSubsetLocalizingCursor< T extends NativeType< T > >
 			position[ d ] = cursor.position[ d ];
 
 		type.updateContainer( this );
-		index.set( cursor.index.get() );
+		typeIndex.set( cursor.typeIndex.get() );
 	}
 
 	/**
@@ -116,7 +116,7 @@ public class PlanarPlaneSubsetLocalizingCursor< T extends NativeType< T > >
 		super( container.numDimensions() );
 
 		this.type = container.createLinkedType();
-		index = type.index();
+		typeIndex = type.index();
 
 		this.container = container;
 
@@ -177,7 +177,7 @@ public class PlanarPlaneSubsetLocalizingCursor< T extends NativeType< T > >
 	@Override
 	public final boolean hasNext()
 	{
-		return index.get() < lastIndexPlane;
+		return typeIndex.get() < lastIndexPlane;
 	}
 
 	/**
@@ -186,7 +186,7 @@ public class PlanarPlaneSubsetLocalizingCursor< T extends NativeType< T > >
 	@Override
 	public final void fwd()
 	{
-		index.inc();
+		typeIndex.inc();
 		if ( ++position[ 0 ] > maxX && n > 1 )
 		{
 			position[ 0 ] = 0;
@@ -200,8 +200,8 @@ public class PlanarPlaneSubsetLocalizingCursor< T extends NativeType< T > >
 	@Override
 	public final void jumpFwd( final long steps )
 	{
-		index.inc( ( int ) steps );
-		updatePositionFromIndex( index.get() );
+		typeIndex.inc( ( int ) steps );
+		updatePositionFromIndex( typeIndex.get() );
 	}
 
 	private void updatePositionFromIndex( final int index )
@@ -222,8 +222,8 @@ public class PlanarPlaneSubsetLocalizingCursor< T extends NativeType< T > >
 	@Override
 	public final void reset()
 	{
-		index.set( -1 );
-		updatePositionFromIndex( index.get() );
+		typeIndex.set( -1 );
+		updatePositionFromIndex( typeIndex.get() );
 	}
 
 	/**

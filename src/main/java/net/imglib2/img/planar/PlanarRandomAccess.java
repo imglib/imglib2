@@ -57,7 +57,7 @@ public class PlanarRandomAccess< T extends NativeType< T > > extends AbstractLoc
 
 	final protected T type;
 
-	final protected Index index;
+	final protected Index typeIndex;
 
 	protected int sliceIndex;
 
@@ -73,9 +73,9 @@ public class PlanarRandomAccess< T extends NativeType< T > > extends AbstractLoc
 			position[ d ] = randomAccess.position[ d ];
 
 		type = randomAccess.type.duplicateTypeOnSameNativeImg();
-		index = type.index();
+		typeIndex = type.index();
 		type.updateContainer( this );
-		index.set( randomAccess.index.get() );
+		typeIndex.set( randomAccess.typeIndex.get() );
 	}
 
 	public PlanarRandomAccess( final PlanarImg< T, ? > container )
@@ -86,8 +86,8 @@ public class PlanarRandomAccess< T extends NativeType< T > > extends AbstractLoc
 		width = ( int ) container.dimension( 0 );
 
 		type = container.createLinkedType();
-		index = type.index();
-		index.set( 0 );
+		typeIndex = type.index();
+		typeIndex.set( 0 );
 		type.updateContainer( this );
 	}
 
@@ -121,9 +121,9 @@ public class PlanarRandomAccess< T extends NativeType< T > > extends AbstractLoc
 		++position[ d ];
 
 		if ( d == 0 )
-			index.inc();
+			typeIndex.inc();
 		else if ( d == 1 )
-			index.inc( width );
+			typeIndex.inc( width );
 		else
 		{
 			sliceIndex += sliceSteps[ d ];
@@ -137,9 +137,9 @@ public class PlanarRandomAccess< T extends NativeType< T > > extends AbstractLoc
 		--position[ d ];
 
 		if ( d == 0 )
-			index.dec();
+			typeIndex.dec();
 		else if ( d == 1 )
-			index.dec( width );
+			typeIndex.dec( width );
 		else
 		{
 			sliceIndex -= sliceSteps[ d ];
@@ -154,11 +154,11 @@ public class PlanarRandomAccess< T extends NativeType< T > > extends AbstractLoc
 
 		if ( d == 0 )
 		{
-			index.inc( distance );
+			typeIndex.inc( distance );
 		}
 		else if ( d == 1 )
 		{
-			index.inc( distance * width );
+			typeIndex.inc( distance * width );
 		}
 		else
 		{
@@ -178,7 +178,7 @@ public class PlanarRandomAccess< T extends NativeType< T > > extends AbstractLoc
 	{
 		final int d0 = localizable.getIntPosition( 0 );
 		final int d1 = localizable.getIntPosition( 1 );
-		index.inc( d0 + d1 * width );
+		typeIndex.inc( d0 + d1 * width );
 		position[ 0 ] += d0;
 		position[ 1 ] += d1;
 
@@ -206,7 +206,7 @@ public class PlanarRandomAccess< T extends NativeType< T > > extends AbstractLoc
 	@Override
 	public void move( final int[] distance )
 	{
-		index.inc( distance[ 0 ] + distance[ 1 ] * width );
+		typeIndex.inc( distance[ 0 ] + distance[ 1 ] * width );
 		position[ 0 ] += distance[ 0 ];
 		position[ 1 ] += distance[ 1 ];
 
@@ -234,7 +234,7 @@ public class PlanarRandomAccess< T extends NativeType< T > > extends AbstractLoc
 	@Override
 	public void move( final long[] distance )
 	{
-		index.inc( ( int ) distance[ 0 ] + ( int ) distance[ 1 ] * width );
+		typeIndex.inc( ( int ) distance[ 0 ] + ( int ) distance[ 1 ] * width );
 		position[ 0 ] += ( int ) distance[ 0 ];
 		position[ 1 ] += ( int ) distance[ 1 ];
 
@@ -264,11 +264,11 @@ public class PlanarRandomAccess< T extends NativeType< T > > extends AbstractLoc
 	{
 		if ( d == 0 )
 		{
-			index.inc( pos - position[ 0 ] );
+			typeIndex.inc( pos - position[ 0 ] );
 		}
 		else if ( d == 1 )
 		{
-			index.inc( ( pos - position[ 1 ] ) * width );
+			typeIndex.inc( ( pos - position[ 1 ] ) * width );
 		}
 		else
 		{
@@ -290,7 +290,7 @@ public class PlanarRandomAccess< T extends NativeType< T > > extends AbstractLoc
 	{
 		final int p0 = localizable.getIntPosition( 0 );
 		final int p1 = localizable.getIntPosition( 1 );
-		index.set( p0 + p1 * width );
+		typeIndex.set( p0 + p1 * width );
 		position[ 0 ] = p0;
 		position[ 1 ] = p1;
 
@@ -319,7 +319,7 @@ public class PlanarRandomAccess< T extends NativeType< T > > extends AbstractLoc
 	@Override
 	public void setPosition( final int[] pos )
 	{
-		index.set( pos[ 0 ] + pos[ 1 ] * width );
+		typeIndex.set( pos[ 0 ] + pos[ 1 ] * width );
 		position[ 0 ] = pos[ 0 ];
 		position[ 1 ] = pos[ 1 ];
 
@@ -346,7 +346,7 @@ public class PlanarRandomAccess< T extends NativeType< T > > extends AbstractLoc
 	@Override
 	public void setPosition( final long[] pos )
 	{
-		index.set( ( int ) pos[ 0 ] + ( int ) pos[ 1 ] * width );
+		typeIndex.set( ( int ) pos[ 0 ] + ( int ) pos[ 1 ] * width );
 		position[ 0 ] = ( int ) pos[ 0 ];
 		position[ 1 ] = ( int ) pos[ 1 ];
 

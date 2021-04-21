@@ -69,7 +69,7 @@ public abstract class AbstractArrayCursor< T extends NativeType< T > > extends A
 	 */
 	protected final T type;
 
-	private final Index index;
+	private final Index typeIndex;
 
 	/**
 	 * Source image
@@ -92,12 +92,12 @@ public abstract class AbstractArrayCursor< T extends NativeType< T > > extends A
 
 		this.img = cursor.img;
 		this.type = img.createLinkedType();
-		this.index = type.index();
+		this.typeIndex = type.index();
 		this.offset = cursor.offset;
 		this.size = cursor.size;
 		this.lastIndex = cursor.lastIndex;
 
-		index.set( cursor.index.get() );
+		typeIndex.set( cursor.typeIndex.get() );
 		type.updateContainer( this );
 	}
 
@@ -113,7 +113,7 @@ public abstract class AbstractArrayCursor< T extends NativeType< T > > extends A
 		super( img.numDimensions() );
 
 		this.type = img.createLinkedType();
-		this.index = type.index();
+		this.typeIndex = type.index();
 		this.img = img;
 		this.lastIndex = offset + size - 1;
 		this.offset = offset;
@@ -131,25 +131,25 @@ public abstract class AbstractArrayCursor< T extends NativeType< T > > extends A
 	@Override
 	public boolean hasNext()
 	{
-		return index.get() < lastIndex;
+		return typeIndex.get() < lastIndex;
 	}
 
 	@Override
 	public void jumpFwd( final long steps )
 	{
-		index.inc( ( int ) steps );
+		typeIndex.inc( ( int ) steps );
 	}
 
 	@Override
 	public void fwd()
 	{
-		index.inc();
+		typeIndex.inc();
 	}
 
 	@Override
 	public void reset()
 	{
-		index.set( offset - 1 );
+		typeIndex.set( offset - 1 );
 		type.updateContainer( this );
 	}
 
@@ -162,12 +162,12 @@ public abstract class AbstractArrayCursor< T extends NativeType< T > > extends A
 	@Override
 	public int getIntPosition( final int dim )
 	{
-		return IntervalIndexer.indexToPosition( index.get(), img.dim, dim );
+		return IntervalIndexer.indexToPosition( typeIndex.get(), img.dim, dim );
 	}
 
 	@Override
 	public void localize( final int[] position )
 	{
-		IntervalIndexer.indexToPosition( index.get(), img.dim, position );
+		IntervalIndexer.indexToPosition( typeIndex.get(), img.dim, position );
 	}
 }

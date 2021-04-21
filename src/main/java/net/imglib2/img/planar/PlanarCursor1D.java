@@ -51,20 +51,20 @@ public class PlanarCursor1D< T extends NativeType< T > > extends PlanarCursor< T
 	@Override
 	public boolean hasNext()
 	{
-		return i.get() < lastIndex;
+		return typeIndex.get() < lastIndex;
 	}
 
 	@Override
 	public void localize( final int[] position )
 	{
-		position[ 0 ] = i.get();
+		position[ 0 ] = typeIndex.get();
 	}
 
 	@Override
 	public int getIntPosition( final int dim )
 	{
 		if ( dim == 0 )
-			return i.get();
+			return typeIndex.get();
 		return 0;
 	}
 }

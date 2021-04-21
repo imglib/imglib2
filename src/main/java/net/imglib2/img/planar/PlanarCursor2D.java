@@ -53,19 +53,19 @@ public class PlanarCursor2D< T extends NativeType< T > > extends PlanarCursor< T
 	@Override
 	public boolean hasNext()
 	{
-		return i.get() < lastIndex;
+		return typeIndex.get() < lastIndex;
 	}
 
 	@Override
 	public void fwd()
 	{
-		i.inc();
+		typeIndex.inc();
 	}
 
 	@Override
 	public void localize( final int[] position )
 	{
-		final int indexInSlice = i.get();
+		final int indexInSlice = typeIndex.get();
 		final int dim0 = container.dimensions[ 0 ];
 		position[ 1 ] = indexInSlice / dim0;
 		position[ 0 ] = indexInSlice - position[ 1 ] * dim0;
@@ -74,7 +74,7 @@ public class PlanarCursor2D< T extends NativeType< T > > extends PlanarCursor< T
 	@Override
 	public int getIntPosition( final int dim )
 	{
-		final int indexInSlice = i.get();
+		final int indexInSlice = typeIndex.get();
 		final int dim0 = container.dimensions[ 0 ];
 		final int pos1 = indexInSlice / dim0;
 		if ( dim == 0 )

@@ -60,7 +60,7 @@ public class CellCursor< T extends NativeType< T >, C extends Cell< ? > >
 	 * The current index of the type. It is faster to duplicate this here than
 	 * to access it through type.getIndex().
 	 */
-	protected int index;
+	protected int typeIndex;
 
 	/**
 	 * Caches cursorOnCells.hasNext().
@@ -76,10 +76,10 @@ public class CellCursor< T extends NativeType< T >, C extends Cell< ? > >
 		this.cursorOnCells = cursor.cursorOnCells.copyCursor();
 		isNotLastCell = cursor.isNotLastCell;
 		lastIndexInCell = cursor.lastIndexInCell;
-		index = cursor.index;
+		typeIndex = cursor.typeIndex;
 
 		type.updateContainer( this );
-		i.set( index );
+		i.set( typeIndex );
 	}
 
 	public CellCursor( final AbstractCellImg< T, ?, C, ? > img )
@@ -120,13 +120,13 @@ public class CellCursor< T extends NativeType< T >, C extends Cell< ? > >
 	@Override
 	public boolean hasNext()
 	{
-		return ( index < lastIndexInCell ) || isNotLastCell;
+		return ( typeIndex < lastIndexInCell ) || isNotLastCell;
 	}
 
 	@Override
 	public void jumpFwd( final long steps )
 	{
-		long newIndex = index + steps;
+		long newIndex = typeIndex + steps;
 		while ( newIndex > lastIndexInCell )
 		{
 			newIndex -= lastIndexInCell + 1;
@@ -134,20 +134,20 @@ public class CellCursor< T extends NativeType< T >, C extends Cell< ? > >
 			isNotLastCell = cursorOnCells.hasNext();
 			lastIndexInCell = ( int ) ( getCell().size() - 1 );
 		}
-		index = ( int ) newIndex;
-		i.set( index );
+		typeIndex = ( int ) newIndex;
+		i.set( typeIndex );
 		type.updateContainer( this );
 	}
 
 	@Override
 	public void fwd()
 	{
-		if ( ++index > lastIndexInCell )
+		if ( ++typeIndex > lastIndexInCell )
 		{
 			moveToNextCell();
-			index = 0;
+			typeIndex = 0;
 		}
-		i.set( index );
+		i.set( typeIndex );
 	}
 
 	@Override
@@ -155,7 +155,7 @@ public class CellCursor< T extends NativeType< T >, C extends Cell< ? > >
 	{
 		cursorOnCells.reset();
 		moveToNextCell();
-		i.set( index );
+		i.set( typeIndex );
 	}
 
 	@Override
@@ -167,13 +167,13 @@ public class CellCursor< T extends NativeType< T >, C extends Cell< ? > >
 	@Override
 	public long getLongPosition( final int dim )
 	{
-		return getCell().indexToGlobalPosition( index, dim );
+		return getCell().indexToGlobalPosition( typeIndex, dim );
 	}
 
 	@Override
 	public void localize( final long[] position )
 	{
-		getCell().indexToGlobalPosition( index, position );
+		getCell().indexToGlobalPosition( typeIndex, position );
 	}
 
 	/**
@@ -185,7 +185,7 @@ public class CellCursor< T extends NativeType< T >, C extends Cell< ? > >
 		cursorOnCells.fwd();
 		isNotLastCell = cursorOnCells.hasNext();
 		lastIndexInCell = ( int ) ( getCell().size() - 1 );
-		index = -1;
+		typeIndex = -1;
 		type.updateContainer( this );
 	}
 }

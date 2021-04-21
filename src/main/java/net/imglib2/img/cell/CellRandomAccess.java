@@ -54,7 +54,7 @@ public class CellRandomAccess< T extends NativeType< T >, C extends Cell< ? > >
 {
 	protected final T type;
 
-	protected final Index i;
+	protected final Index typeIndex;
 
 	protected final CellGrid grid;
 
@@ -87,7 +87,7 @@ public class CellRandomAccess< T extends NativeType< T >, C extends Cell< ? > >
 		super( randomAccess.numDimensions() );
 
 		type = randomAccess.type.duplicateTypeOnSameNativeImg();
-		i = type.index();
+		typeIndex = type.index();
 		grid = randomAccess.grid;
 		randomAccessOnCells = randomAccess.randomAccessOnCells.copyRandomAccess();
 
@@ -106,7 +106,7 @@ public class CellRandomAccess< T extends NativeType< T >, C extends Cell< ? > >
 		index = randomAccess.index;
 		if ( !isOutOfBounds )
 			type.updateContainer( this );
-		i.set( index );
+		typeIndex.set( index );
 	}
 
 	public CellRandomAccess( final AbstractCellImg< T, ?, C, ? > img )
@@ -114,7 +114,7 @@ public class CellRandomAccess< T extends NativeType< T >, C extends Cell< ? > >
 		super( img.numDimensions() );
 
 		type = img.createLinkedType();
-		i = type.index();
+		typeIndex = type.index();
 		grid = img.getCellGrid();
 		randomAccessOnCells = img.getCells().randomAccess();
 
@@ -169,7 +169,7 @@ public class CellRandomAccess< T extends NativeType< T >, C extends Cell< ? > >
 			randomAccessOnCells.fwd( d );
 			updatePosition( position[ d ] >= dimensions[ d ] );
 		}
-		i.set( index );
+		typeIndex.set( index );
 	}
 
 	@Override
@@ -181,7 +181,7 @@ public class CellRandomAccess< T extends NativeType< T >, C extends Cell< ? > >
 			randomAccessOnCells.bck( d );
 			updatePosition( position[ d ] < 0 );
 		}
-		i.set( index );
+		typeIndex.set( index );
 	}
 
 	@Override
@@ -194,7 +194,7 @@ public class CellRandomAccess< T extends NativeType< T >, C extends Cell< ? > >
 			randomAccessOnCells.setPosition( position[ d ] / cellDims[ d ], d );
 			updatePosition( position[ d ] < 0 || position[ d ] >= dimensions[ d ] );
 		}
-		i.set( index );
+		typeIndex.set( index );
 	}
 
 	@Override
@@ -207,7 +207,7 @@ public class CellRandomAccess< T extends NativeType< T >, C extends Cell< ? > >
 			randomAccessOnCells.setPosition( position[ d ] / cellDims[ d ], d );
 			updatePosition( position[ d ] < 0 || position[ d ] >= dimensions[ d ] );
 		}
-		i.set( index );
+		typeIndex.set( index );
 	}
 
 	@Override
@@ -243,7 +243,7 @@ public class CellRandomAccess< T extends NativeType< T >, C extends Cell< ? > >
 				}
 			}
 		}
-		i.set( index );
+		typeIndex.set( index );
 	}
 
 	@Override
@@ -277,7 +277,7 @@ public class CellRandomAccess< T extends NativeType< T >, C extends Cell< ? > >
 				}
 			}
 		}
-		i.set( index );
+		typeIndex.set( index );
 	}
 
 	@Override
@@ -311,7 +311,7 @@ public class CellRandomAccess< T extends NativeType< T >, C extends Cell< ? > >
 				}
 			}
 		}
-		i.set( index );
+		typeIndex.set( index );
 	}
 
 	@Override
@@ -324,7 +324,7 @@ public class CellRandomAccess< T extends NativeType< T >, C extends Cell< ? > >
 			randomAccessOnCells.setPosition( pos / cellDims[ d ], d );
 			updatePosition( position[ d ] < 0 || position[ d ] >= dimensions[ d ] );
 		}
-		i.set( index );
+		typeIndex.set( index );
 	}
 
 	@Override
@@ -337,7 +337,7 @@ public class CellRandomAccess< T extends NativeType< T >, C extends Cell< ? > >
 			randomAccessOnCells.setPosition( pos / cellDims[ d ], d );
 			updatePosition( position[ d ] < 0 || position[ d ] >= dimensions[ d ] );
 		}
-		i.set( index );
+		typeIndex.set( index );
 	}
 
 	@Override
@@ -373,7 +373,7 @@ public class CellRandomAccess< T extends NativeType< T >, C extends Cell< ? > >
 				}
 			}
 		}
-		i.set( index );
+		typeIndex.set( index );
 	}
 
 	@Override
@@ -392,7 +392,7 @@ public class CellRandomAccess< T extends NativeType< T >, C extends Cell< ? > >
 				position[ d ] = pos[ d ];
 			}
 		}
-		i.set( index );
+		typeIndex.set( index );
 	}
 
 	private void setPos2( final int[] pos, final int d0 )
@@ -444,7 +444,7 @@ public class CellRandomAccess< T extends NativeType< T >, C extends Cell< ? > >
 				}
 			}
 		}
-		i.set( index );
+		typeIndex.set( index );
 	}
 
 	/**

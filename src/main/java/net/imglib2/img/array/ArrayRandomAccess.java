@@ -53,7 +53,7 @@ public class ArrayRandomAccess< T extends NativeType< T > > extends AbstractLoca
 {
 	protected final T type;
 
-	private final Index index;
+	private final Index typeIndex;
 
 	final ArrayImg< T, ? > img;
 
@@ -63,13 +63,13 @@ public class ArrayRandomAccess< T extends NativeType< T > > extends AbstractLoca
 
 		this.img = randomAccess.img;
 		this.type = img.createLinkedType();
-		this.index = type.index();
+		this.typeIndex = type.index();
 
-		index.set( 0 );
+		typeIndex.set( 0 );
 		for ( int d = 0; d < n; d++ )
 		{
 			position[ d ] = randomAccess.position[ d ];
-			index.inc( position[ d ] * img.steps[ d ] );
+			typeIndex.inc( position[ d ] * img.steps[ d ] );
 		}
 
 		type.updateContainer( this );
@@ -81,9 +81,9 @@ public class ArrayRandomAccess< T extends NativeType< T > > extends AbstractLoca
 
 		this.img = container;
 		this.type = container.createLinkedType();
-		this.index = type.index();
+		this.typeIndex = type.index();
 
-		index.set( 0 );
+		typeIndex.set( 0 );
 		for ( int d = 0; d < n; d++ )
 			position[ d ] = 0;
 
@@ -99,28 +99,28 @@ public class ArrayRandomAccess< T extends NativeType< T > > extends AbstractLoca
 	@Override
 	public void fwd( final int d )
 	{
-		index.inc( img.steps[ d ] );
+		typeIndex.inc( img.steps[ d ] );
 		++position[ d ];
 	}
 
 	@Override
 	public void bck( final int d )
 	{
-		index.dec( img.steps[ d ] );
+		typeIndex.dec( img.steps[ d ] );
 		--position[ d ];
 	}
 
 	@Override
 	public void move( final int distance, final int d )
 	{
-		index.inc( img.steps[ d ] * distance );
+		typeIndex.inc( img.steps[ d ] * distance );
 		position[ d ] += distance;
 	}
 
 	@Override
 	public void move( final long distance, final int d )
 	{
-		index.inc( img.steps[ d ] * ( int ) distance );
+		typeIndex.inc( img.steps[ d ] * ( int ) distance );
 		position[ d ] += distance;
 	}
 
@@ -134,7 +134,7 @@ public class ArrayRandomAccess< T extends NativeType< T > > extends AbstractLoca
 			position[ d ] += distance;
 			move += distance * img.steps[ d ];
 		}
-		index.inc( move );
+		typeIndex.inc( move );
 	}
 
 	@Override
@@ -146,7 +146,7 @@ public class ArrayRandomAccess< T extends NativeType< T > > extends AbstractLoca
 			position[ d ] += distance[ d ];
 			move += distance[ d ] * img.steps[ d ];
 		}
-		index.inc( move );
+		typeIndex.inc( move );
 	}
 
 	@Override
@@ -158,7 +158,7 @@ public class ArrayRandomAccess< T extends NativeType< T > > extends AbstractLoca
 			position[ d ] += distance[ d ];
 			move += distance[ d ] * img.steps[ d ];
 		}
-		index.inc( move );
+		typeIndex.inc( move );
 	}
 
 	@Override
@@ -170,7 +170,7 @@ public class ArrayRandomAccess< T extends NativeType< T > > extends AbstractLoca
 			position[ d ] = localizable.getIntPosition( d );
 			i += position[ d ] * img.steps[ d ];
 		}
-		index.set( i );
+		typeIndex.set( i );
 	}
 
 	@Override
@@ -182,7 +182,7 @@ public class ArrayRandomAccess< T extends NativeType< T > > extends AbstractLoca
 			position[ d ] = pos[ d ];
 			i += pos[ d ] * img.steps[ d ];
 		}
-		index.set( i );
+		typeIndex.set( i );
 	}
 
 	@Override
@@ -195,20 +195,20 @@ public class ArrayRandomAccess< T extends NativeType< T > > extends AbstractLoca
 			position[ d ] = p;
 			i += p * img.steps[ d ];
 		}
-		index.set( i );
+		typeIndex.set( i );
 	}
 
 	@Override
 	public void setPosition( final int pos, final int d )
 	{
-		index.inc( ( pos - position[ d ] ) * img.steps[ d ] );
+		typeIndex.inc( ( pos - position[ d ] ) * img.steps[ d ] );
 		position[ d ] = pos;
 	}
 
 	@Override
 	public void setPosition( final long pos, final int d )
 	{
-		index.inc( ( ( int ) pos - position[ d ] ) * img.steps[ d ] );
+		typeIndex.inc( ( ( int ) pos - position[ d ] ) * img.steps[ d ] );
 		position[ d ] = ( int ) pos;
 	}
 
@@ -231,7 +231,7 @@ public class ArrayRandomAccess< T extends NativeType< T > > extends AbstractLoca
 	 */
 	public void fwdDim0()
 	{
-		index.inc();
+		typeIndex.inc();
 		++position[ 0 ];
 	}
 
@@ -240,7 +240,7 @@ public class ArrayRandomAccess< T extends NativeType< T > > extends AbstractLoca
 	 */
 	public void bckDim0()
 	{
-		index.dec();
+		typeIndex.dec();
 		--position[ 0 ];
 	}
 
@@ -252,7 +252,7 @@ public class ArrayRandomAccess< T extends NativeType< T > > extends AbstractLoca
 	 */
 	public void moveDim0( final int distance )
 	{
-		index.inc( distance );
+		typeIndex.inc( distance );
 		position[ 0 ] += distance;
 	}
 
@@ -264,7 +264,7 @@ public class ArrayRandomAccess< T extends NativeType< T > > extends AbstractLoca
 	 */
 	public void move( final long distance )
 	{
-		index.inc( ( int ) distance );
+		typeIndex.inc( ( int ) distance );
 		position[ 0 ] += distance;
 	}
 
@@ -279,7 +279,7 @@ public class ArrayRandomAccess< T extends NativeType< T > > extends AbstractLoca
 	 */
 	public void setPositionDim0( final int pos )
 	{
-		index.set( pos );
+		typeIndex.set( pos );
 		position[ 0 ] = pos;
 	}
 
@@ -294,7 +294,7 @@ public class ArrayRandomAccess< T extends NativeType< T > > extends AbstractLoca
 	 */
 	public void setPositionDim0( final long pos )
 	{
-		index.set( ( int ) pos );
+		typeIndex.set( ( int ) pos );
 		position[ 0 ] = ( int ) pos;
 	}
 }

@@ -50,7 +50,7 @@ public class PlanarCursor< T extends NativeType< T > > extends AbstractCursorInt
 {
 	protected final T type;
 
-	protected final Index i;
+	protected final Index typeIndex;
 
 	protected final PlanarImg< T, ? > container;
 
@@ -70,7 +70,7 @@ public class PlanarCursor< T extends NativeType< T > > extends AbstractCursorInt
 
 		container = cursor.container;
 		this.type = container.createLinkedType();
-		i = type.index();
+		typeIndex = type.index();
 
 		lastIndex = cursor.lastIndex;
 		lastSliceIndex = cursor.lastSliceIndex;
@@ -78,7 +78,7 @@ public class PlanarCursor< T extends NativeType< T > > extends AbstractCursorInt
 		index = cursor.index;
 
 		type.updateContainer( this );
-		i.set( index );
+		typeIndex.set( index );
 	}
 
 	public PlanarCursor( final PlanarImg< T, ? > container )
@@ -86,7 +86,7 @@ public class PlanarCursor< T extends NativeType< T > > extends AbstractCursorInt
 		super( container.numDimensions() );
 
 		this.type = container.createLinkedType();
-		this.i = type.index();
+		this.typeIndex = type.index();
 		this.container = container;
 
 		lastIndex = ( ( n > 1 ) ? container.dimensions[ 1 ] : 1 ) * container.dimensions[ 0 ] - 1;
@@ -140,7 +140,7 @@ public class PlanarCursor< T extends NativeType< T > > extends AbstractCursorInt
 			++sliceIndex;
 			type.updateContainer( this );
 		}
-		i.set( index );
+		typeIndex.set( index );
 	}
 
 	@Override
@@ -155,7 +155,7 @@ public class PlanarCursor< T extends NativeType< T > > extends AbstractCursorInt
 			type.updateContainer( this );
 		}
 		index = ( int ) newIndex;
-		i.set( index );
+		typeIndex.set( index );
 	}
 
 	@Override
@@ -163,7 +163,7 @@ public class PlanarCursor< T extends NativeType< T > > extends AbstractCursorInt
 	{
 		sliceIndex = 0;
 		index = -1;
-		i.set( -1 );
+		typeIndex.set( -1 );
 		type.updateContainer( this );
 	}
 

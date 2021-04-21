@@ -50,7 +50,7 @@ public class PlanarLocalizingCursor< T extends NativeType< T > > extends Abstrac
 {
 	protected final T type;
 
-	protected final Index i;
+	protected final Index typeIndex;
 
 	protected final PlanarImg< T, ? > container;
 
@@ -76,7 +76,7 @@ public class PlanarLocalizingCursor< T extends NativeType< T > > extends Abstrac
 
 		container = cursor.container;
 		this.type = container.createLinkedType();
-		i = type.index();
+		typeIndex = type.index();
 
 		lastIndex = cursor.lastIndex;
 		lastSliceIndex = cursor.lastSliceIndex;
@@ -92,7 +92,7 @@ public class PlanarLocalizingCursor< T extends NativeType< T > > extends Abstrac
 		index = cursor.index;
 
 		type.updateContainer( this );
-		i.set( index );
+		typeIndex.set( index );
 	}
 
 	public PlanarLocalizingCursor( final PlanarImg< T, ? > container )
@@ -100,7 +100,7 @@ public class PlanarLocalizingCursor< T extends NativeType< T > > extends Abstrac
 		super( container.numDimensions() );
 
 		this.type = container.createLinkedType();
-		i = type.index();
+		typeIndex = type.index();
 		this.container = container;
 
 		lastIndex = ( ( n > 1 ) ? container.dimensions[ 1 ] : 1 ) * container.dimensions[ 0 ] - 1;
@@ -158,7 +158,7 @@ public class PlanarLocalizingCursor< T extends NativeType< T > > extends Abstrac
 			++sliceIndex;
 			type.updateContainer( this );
 		}
-		i.set( index );
+		typeIndex.set( index );
 
 		for ( int d = 0; d < n; ++d )
 		{
@@ -181,7 +181,7 @@ public class PlanarLocalizingCursor< T extends NativeType< T > > extends Abstrac
 			type.updateContainer( this );
 		}
 		index = ( int ) newIndex;
-		i.set( index );
+		typeIndex.set( index );
 		container.indexToGlobalPosition( sliceIndex, index, position );
 	}
 
@@ -194,7 +194,7 @@ public class PlanarLocalizingCursor< T extends NativeType< T > > extends Abstrac
 
 		sliceIndex = 0;
 		index = -1;
-		i.set( -1 );
+		typeIndex.set( -1 );
 		type.updateContainer( this );
 	}
 }
