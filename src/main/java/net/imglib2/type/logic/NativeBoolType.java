@@ -40,6 +40,7 @@ import net.imglib2.img.NativeImg;
 import net.imglib2.img.basictypeaccess.BooleanAccess;
 import net.imglib2.img.basictypeaccess.array.BooleanArray;
 import net.imglib2.type.BooleanType;
+import net.imglib2.type.Index;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.NativeTypeFactory;
 import net.imglib2.type.numeric.integer.AbstractIntegerType;
@@ -53,7 +54,7 @@ import net.imglib2.util.Util;
  */
 public class NativeBoolType extends AbstractIntegerType< NativeBoolType > implements BooleanType< NativeBoolType >, NativeType< NativeBoolType >
 {
-	int i = 0;
+	final Index i;
 
 	final protected NativeImg< ?, ? extends BooleanAccess > img;
 
@@ -63,12 +64,14 @@ public class NativeBoolType extends AbstractIntegerType< NativeBoolType > implem
 	// this is the constructor if you want it to read from an array
 	public NativeBoolType( final NativeImg< ?, ? extends BooleanAccess > boolStorage )
 	{
+		i = new Index();
 		img = boolStorage;
 	}
 
 	// this is the constructor if you want it to be a variable
 	public NativeBoolType( final boolean value )
 	{
+		i = new Index();
 		img = null;
 		dataAccess = new BooleanArray( 1 );
 		set( value );
@@ -77,6 +80,7 @@ public class NativeBoolType extends AbstractIntegerType< NativeBoolType > implem
 	// this is the constructor if you want to specify the dataAccess
 	public NativeBoolType( final BooleanAccess access )
 	{
+		i = new Index();
 		img = null;
 		dataAccess = access;
 	}
@@ -113,6 +117,12 @@ public class NativeBoolType extends AbstractIntegerType< NativeBoolType > implem
 		dataAccess = img.update( c );
 	}
 
+	@Override
+	public Index index()
+	{
+		return i;
+	}
+
 	/**
 	 * Returns the primitive boolean value that is used to store this type.
 	 *
@@ -121,7 +131,7 @@ public class NativeBoolType extends AbstractIntegerType< NativeBoolType > implem
 	@Override
 	public boolean get()
 	{
-		return dataAccess.getValue( i );
+		return dataAccess.getValue( i.get() );
 	}
 
 	/**
@@ -130,7 +140,7 @@ public class NativeBoolType extends AbstractIntegerType< NativeBoolType > implem
 	@Override
 	public void set( final boolean f )
 	{
-		dataAccess.setValue( i, f );
+		dataAccess.setValue( i.get(), f );
 	}
 
 	@Override
@@ -207,42 +217,6 @@ public class NativeBoolType extends AbstractIntegerType< NativeBoolType > implem
 	public String toString()
 	{
 		return "" + get();
-	}
-
-	@Override
-	public void updateIndex( final int index )
-	{
-		i = index;
-	}
-
-	@Override
-	public int getIndex()
-	{
-		return i;
-	}
-
-	@Override
-	public void incIndex()
-	{
-		++i;
-	}
-
-	@Override
-	public void incIndex( final int increment )
-	{
-		i += increment;
-	}
-
-	@Override
-	public void decIndex()
-	{
-		--i;
-	}
-
-	@Override
-	public void decIndex( final int decrement )
-	{
-		i -= decrement;
 	}
 
 	@Override

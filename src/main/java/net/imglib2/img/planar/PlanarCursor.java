@@ -35,6 +35,7 @@
 package net.imglib2.img.planar;
 
 import net.imglib2.AbstractCursorInt;
+import net.imglib2.type.Index;
 import net.imglib2.type.NativeType;
 
 /**
@@ -48,6 +49,8 @@ import net.imglib2.type.NativeType;
 public class PlanarCursor< T extends NativeType< T > > extends AbstractCursorInt< T > implements PlanarImg.PlanarContainerSampler
 {
 	protected final T type;
+
+	protected final Index typeIndex;
 
 	protected final PlanarImg< T, ? > container;
 
@@ -67,6 +70,7 @@ public class PlanarCursor< T extends NativeType< T > > extends AbstractCursorInt
 
 		container = cursor.container;
 		this.type = container.createLinkedType();
+		typeIndex = type.index();
 
 		lastIndex = cursor.lastIndex;
 		lastSliceIndex = cursor.lastSliceIndex;
@@ -74,7 +78,7 @@ public class PlanarCursor< T extends NativeType< T > > extends AbstractCursorInt
 		index = cursor.index;
 
 		type.updateContainer( this );
-		type.updateIndex( index );
+		typeIndex.set( index );
 	}
 
 	public PlanarCursor( final PlanarImg< T, ? > container )
@@ -82,6 +86,7 @@ public class PlanarCursor< T extends NativeType< T > > extends AbstractCursorInt
 		super( container.numDimensions() );
 
 		this.type = container.createLinkedType();
+		this.typeIndex = type.index();
 		this.container = container;
 
 		lastIndex = ( ( n > 1 ) ? container.dimensions[ 1 ] : 1 ) * container.dimensions[ 0 ] - 1;
@@ -117,7 +122,7 @@ public class PlanarCursor< T extends NativeType< T > > extends AbstractCursorInt
 	/**
 	 * Note: This test is fragile in a sense that it returns true for elements
 	 * after the last element as well.
-	 * 
+	 *
 	 * @return false for the last element
 	 */
 	@Override
@@ -135,7 +140,7 @@ public class PlanarCursor< T extends NativeType< T > > extends AbstractCursorInt
 			++sliceIndex;
 			type.updateContainer( this );
 		}
-		type.updateIndex( index );
+		typeIndex.set( index );
 	}
 
 	@Override
@@ -150,7 +155,7 @@ public class PlanarCursor< T extends NativeType< T > > extends AbstractCursorInt
 			type.updateContainer( this );
 		}
 		index = ( int ) newIndex;
-		type.updateIndex( index );
+		typeIndex.set( index );
 	}
 
 	@Override
@@ -158,7 +163,7 @@ public class PlanarCursor< T extends NativeType< T > > extends AbstractCursorInt
 	{
 		sliceIndex = 0;
 		index = -1;
-		type.updateIndex( -1 );
+		typeIndex.set( -1 );
 		type.updateContainer( this );
 	}
 

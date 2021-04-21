@@ -48,7 +48,7 @@ import net.imglib2.util.Fraction;
 public abstract class AbstractBitType< T extends AbstractBitType< T > > implements NativeType< T >
 {
 	// Maximum count is Integer.MAX_VALUE * (64 / getBitsPerPixel())
-	protected long i = 0;
+	protected final Index i;
 
 	// the number of bits per pixel
 	protected final int nBits;
@@ -64,6 +64,7 @@ public abstract class AbstractBitType< T extends AbstractBitType< T > > implemen
 			final NativeImg< ?, ? extends LongAccess > bitStorage,
 			final int nBits )
 	{
+		i = new Index();
 		img = bitStorage;
 		this.nBits = nBits;
 	}
@@ -75,43 +76,13 @@ public abstract class AbstractBitType< T extends AbstractBitType< T > > implemen
 	}
 
 	@Override
+	public Index index()
+	{
+		return i;
+	}
+
+	@Override
 	public abstract NativeTypeFactory< T, LongAccess > getNativeTypeFactory();
-
-	@Override
-	public int getIndex()
-	{
-		return ( int ) i;
-	}
-
-	@Override
-	public void updateIndex( final int index )
-	{
-		i = index;
-	}
-
-	@Override
-	public void incIndex()
-	{
-		++i;
-	}
-
-	@Override
-	public void incIndex( final int increment )
-	{
-		i += increment;
-	}
-
-	@Override
-	public void decIndex()
-	{
-		--i;
-	}
-
-	@Override
-	public void decIndex( final int decrement )
-	{
-		i -= decrement;
-	}
 
 	@Override
 	public Fraction getEntitiesPerPixel()

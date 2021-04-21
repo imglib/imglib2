@@ -104,7 +104,8 @@ public class Unsigned2BitType extends AbstractIntegerBitType< Unsigned2BitType >
 		//return (dataAccess.getValue((int)(i >>> 5)) >>> ((i % 32) << 1)) & mask;
 		// Even less operations
 		// div 32 == shr 5
-		return ( dataAccess.getValue( ( int ) ( i >>> 5 ) ) >>> ( ( i & 31 ) << 1 ) ) & mask;
+		final long j = i.get();
+		return ( dataAccess.getValue( ( int ) ( j >>> 5 ) ) >>> ( ( j & 31 ) << 1 ) ) & mask;
 	}
 
 	// Crops value to within mask
@@ -117,8 +118,9 @@ public class Unsigned2BitType extends AbstractIntegerBitType< Unsigned2BitType >
 		final long shift = k % 64;
 		*/
 		// Same as above, minus one multiplication, plus one shift to multiply the reminder by 2
-		final int i1 = ( int ) ( i >>> 5 ); // Same as (i * 2) / 64 = (i << 1) >>> 6
-		final long shift = ( i << 1 ) & 63; // Same as (i * 2) % 64
+		final long j = i.get();
+		final int i1 = ( int ) ( j >>> 5 ); // Same as (i * 2) / 64 = (i << 1) >>> 6
+		final long shift = ( j << 1 ) & 63; // Same as (i * 2) % 64
 		// Clear the bits first, then or the masked value
 
 		final long bitsToRetain = ~( mask << shift );

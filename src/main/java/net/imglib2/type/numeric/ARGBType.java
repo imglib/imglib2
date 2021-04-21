@@ -144,12 +144,12 @@ public class ARGBType extends AbstractNativeType< ARGBType > implements NumericT
 
 	public int get()
 	{
-		return dataAccess.getValue( i );
+		return dataAccess.getValue( i.get() );
 	}
 
 	public void set( final int f )
 	{
-		dataAccess.setValue( i, f );
+		dataAccess.setValue( i.get(), f );
 	}
 
 	@Override
@@ -201,7 +201,7 @@ public class ARGBType extends AbstractNativeType< ARGBType > implements NumericT
 
 		set( rgba( red( value1 ) - red( value2 ), green( value1 ) - green( value2 ), blue( value1 ) - blue( value2 ), alpha( value1 ) - alpha( value2 ) ) );
 	}
-	
+
 	@Override
 	public void pow( final ARGBType c )
 	{
@@ -212,9 +212,9 @@ public class ARGBType extends AbstractNativeType< ARGBType > implements NumericT
 						Math.pow( red( value1 ), red( value2 ) ),
 						Math.pow( green( value1 ), green( value2 ) ),
 						Math.pow( blue( value1 ), blue( value2 ) ),
-						Math.pow( alpha( value1 ), alpha( value2 ) ) ) );		
+						Math.pow( alpha( value1 ), alpha( value2 ) ) ) );
 	}
-	
+
 	@Override
 	public void pow( final double power )
 	{

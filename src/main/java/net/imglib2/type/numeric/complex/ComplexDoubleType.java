@@ -37,6 +37,7 @@ package net.imglib2.type.numeric.complex;
 import net.imglib2.img.NativeImg;
 import net.imglib2.img.basictypeaccess.DoubleAccess;
 import net.imglib2.img.basictypeaccess.array.DoubleArray;
+import net.imglib2.type.Index;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.NativeTypeFactory;
 import net.imglib2.util.Fraction;
@@ -49,7 +50,7 @@ import net.imglib2.util.Fraction;
  */
 public class ComplexDoubleType extends AbstractComplexType< ComplexDoubleType > implements NativeType< ComplexDoubleType >
 {
-	private int i = 0;
+	private final Index i;
 
 	// the indices for real and imaginary value
 	private int realI = 0, imaginaryI = 1;
@@ -62,12 +63,14 @@ public class ComplexDoubleType extends AbstractComplexType< ComplexDoubleType > 
 	// this is the constructor if you want it to read from an array
 	public ComplexDoubleType( final NativeImg< ?, ? extends DoubleAccess > complexfloatStorage )
 	{
+		i = new Index();
 		img = complexfloatStorage;
 	}
 
 	// this is the constructor if you want it to be a variable
 	public ComplexDoubleType( final double r, final double i )
 	{
+		this.i = new Index();
 		img = null;
 		dataAccess = new DoubleArray( 2 );
 		set( r, i );
@@ -76,6 +79,7 @@ public class ComplexDoubleType extends AbstractComplexType< ComplexDoubleType > 
 	// this is the constructor if you want to specify the dataAccess
 	public ComplexDoubleType( final DoubleAccess access )
 	{
+		i = new Index();
 		img = null;
 		dataAccess = access;
 	}
@@ -90,6 +94,12 @@ public class ComplexDoubleType extends AbstractComplexType< ComplexDoubleType > 
 	public void updateContainer( final Object c )
 	{
 		dataAccess = img.update( c );
+	}
+
+	@Override
+	public Index index()
+	{
+		return i;
 	}
 
 	@Override
@@ -109,55 +119,56 @@ public class ComplexDoubleType extends AbstractComplexType< ComplexDoubleType > 
 	@Override
 	public float getRealFloat()
 	{
-		return ( float ) dataAccess.getValue( realI );
+		return ( float ) dataAccess.getValue( i.get() << 1 );
 	}
 
 	@Override
 	public double getRealDouble()
 	{
-		return dataAccess.getValue( realI );
+		return dataAccess.getValue( i.get() << 1 );
 	}
 
 	@Override
 	public float getImaginaryFloat()
 	{
-		return ( float ) dataAccess.getValue( imaginaryI );
+		return ( float ) dataAccess.getValue( ( i.get() << 1 ) + 1 );
 	}
 
 	@Override
 	public double getImaginaryDouble()
 	{
-		return dataAccess.getValue( imaginaryI );
+		return dataAccess.getValue( ( i.get() << 1 ) + 1 );
 	}
 
 	@Override
 	public void setReal( final float r )
 	{
-		dataAccess.setValue( realI, r );
+		dataAccess.setValue( i.get() << 1, r );
 	}
 
 	@Override
 	public void setReal( final double r )
 	{
-		dataAccess.setValue( realI, r );
+		dataAccess.setValue( i.get() << 1, r );
 	}
 
 	@Override
 	public void setImaginary( final float i )
 	{
-		dataAccess.setValue( imaginaryI, i );
+		dataAccess.setValue( ( this.i.get() << 1 ) + 1, i );
 	}
 
 	@Override
 	public void setImaginary( final double i )
 	{
-		dataAccess.setValue( imaginaryI, i );
+		dataAccess.setValue( ( this.i.get() << 1 ) + 1, i );
 	}
 
 	public void set( final double r, final double i )
 	{
-		dataAccess.setValue( realI, r );
-		dataAccess.setValue( imaginaryI, i );
+		final int j = this.i.get() << 1;
+		dataAccess.setValue( j, r );
+		dataAccess.setValue( j + 1, i );
 	}
 
 	@Override
@@ -183,54 +194,5 @@ public class ComplexDoubleType extends AbstractComplexType< ComplexDoubleType > 
 	public Fraction getEntitiesPerPixel()
 	{
 		return new Fraction( 2, 1 );
-	}
-
-	@Override
-	public void updateIndex( final int index )
-	{
-		this.i = index;
-		realI = index * 2;
-		imaginaryI = index * 2 + 1;
-	}
-
-	@Override
-	public void incIndex()
-	{
-		++i;
-		realI += 2;
-		imaginaryI += 2;
-	}
-
-	@Override
-	public void incIndex( final int increment )
-	{
-		i += increment;
-
-		final int inc2 = 2 * increment;
-		realI += inc2;
-		imaginaryI += inc2;
-	}
-
-	@Override
-	public void decIndex()
-	{
-		--i;
-		realI -= 2;
-		imaginaryI -= 2;
-	}
-
-	@Override
-	public void decIndex( final int decrement )
-	{
-		i -= decrement;
-		final int dec2 = 2 * decrement;
-		realI -= dec2;
-		imaginaryI -= dec2;
-	}
-
-	@Override
-	public int getIndex()
-	{
-		return i;
 	}
 }

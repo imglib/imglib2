@@ -97,7 +97,8 @@ public class Unsigned12BitType extends AbstractIntegerBitType< Unsigned12BitType
 	@Override
 	public long get()
 	{
-		final long k = i * 12;
+		long j = i.get();
+		final long k = j * 12;
 		final int i1 = ( int ) ( k >>> 6 ); // k / 64;
 		final long shift = k & 63; // k % 64;
 		final long v = dataAccess.getValue( i1 );
@@ -121,7 +122,8 @@ public class Unsigned12BitType extends AbstractIntegerBitType< Unsigned12BitType
 	@Override
 	public void set( final long value )
 	{
-		final long k = i * 12;
+		long j = i.get();
+		final long k = j * 12;
 		final int i1 = ( int ) ( k >>> 6 ); // k / 64;
 		final long shift = k & 63; // k % 64;
 		final long safeValue = value & mask;

@@ -11,13 +11,13 @@
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice,
  *    this list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  *    this list of conditions and the following disclaimer in the documentation
  *    and/or other materials provided with the distribution.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -79,7 +79,7 @@ public interface NativeType< T extends NativeType< T > > extends Type< T >
 	 * @return the number of storage type entities required to store one pixel
 	 *         value.
 	 */
-	public Fraction getEntitiesPerPixel();
+	Fraction getEntitiesPerPixel();
 
 	/**
 	 * Creates a new {@link NativeType} which stores in the same physical array.
@@ -88,9 +88,9 @@ public interface NativeType< T extends NativeType< T > > extends Type< T >
 	 * @return a new {@link NativeType} instance working on the same
 	 *         {@link NativeImg}
 	 */
-	public T duplicateTypeOnSameNativeImg();
+	T duplicateTypeOnSameNativeImg();
 
-	public NativeTypeFactory< T, ? > getNativeTypeFactory();
+	NativeTypeFactory< T, ? > getNativeTypeFactory();
 
 	/**
 	 * This method is used by an accessor (e.g., a {@link Cursor}) to request an
@@ -126,72 +126,79 @@ public interface NativeType< T extends NativeType< T > > extends Type< T >
 	 *            reference to an accessor which can be passed on to the
 	 *            container (which will know what to do with it).
 	 */
-	public void updateContainer( Object c );
+	void updateContainer( Object c );
+
+	/**
+	 * Get the (modifiable) index into the current data array. The returned
+	 * instance will always be the same for the same Type.
+	 */
+	Index index();
 
 	/**
 	 * Set the index into the current data array.
-	 *
-	 * <p>
-	 * This is used by accessors (e.g., a {@link Cursor}) to position the
-	 * {@link NativeType} in the container.
-	 *
-	 * @param i
-	 *            the new array index
+	 * @deprecated Use {@code index().set(int)} instead. If possible, request the
+	 * {@code index()} object only once and re-use it.
 	 */
-	public void updateIndex( final int i );
+	@Deprecated
+	default void updateIndex( final int i )
+	{
+		index().set( i );
+	}
 
 	/**
 	 * Get the current index into the current data array.
-	 *
-	 * <p>
-	 * This is used by accessors (e.g., a {@link Cursor}) to position the
-	 * {@link NativeType} in the container.
-	 *
-	 * @return the current index into the underlying data array
+	 * @deprecated Use {@code index().get()} instead. If possible, request the
+	 * {@code index()} object only once and re-use it.
 	 */
-	public int getIndex();
+	@Deprecated
+	default int getIndex()
+	{
+		return index().get();
+	}
 
 	/**
 	 * Increment the index into the current data array.
-	 *
-	 * <p>
-	 * This is used by accessors (e.g., a {@link Cursor}) to position the
-	 * {@link NativeType} in the container.
+	 * @deprecated Use {@code index().inc()} instead. If possible, request the
+	 * {@code index()} object only once and re-use it.
 	 */
-	public void incIndex();
+	@Deprecated
+	default void incIndex()
+	{
+		index().inc();
+	}
 
 	/**
 	 * Increases the index into the current data array by {@code increment}
 	 * steps.
-	 *
-	 * <p>
-	 * This is used by accessors (e.g., a {@link Cursor}) to position the
-	 * {@link NativeType} in the container.
-	 *
-	 * @param increment
-	 *            how many steps
+	 * @deprecated Use {@code index().inc(int)} instead. If possible, request the
+	 * {@code index()} object only once and re-use it.
 	 */
-	public void incIndex( final int increment );
+	@Deprecated
+	default void incIndex( final int increment )
+	{
+		index().inc( increment );
+	}
 
 	/**
 	 * Decrement the index into the current data array.
-	 *
-	 * <p>
-	 * This is used by accessors (e.g., a {@link Cursor}) to position the
-	 * {@link NativeType} in the container.
+	 * @deprecated Use {@code index().dec()} instead. If possible, request the
+	 * {@code index()} object only once and re-use it.
 	 */
-	public void decIndex();
+	@Deprecated
+	default void decIndex()
+	{
+		index().dec();
+	}
 
 	/**
 	 * Decrease the index into the current data array by {@code decrement}
 	 * steps.
-	 *
-	 * <p>
-	 * This is used by accessors (e.g., a {@link Cursor}) to position the
-	 * {@link NativeType} in the container.
-	 *
-	 * @param decrement
-	 *            how many steps
+	 * @deprecated Use {@code index().dec(int)} instead. If possible, request the
+	 * {@code index()} object only once and re-use it.
 	 */
-	public void decIndex( final int decrement );
+	@Deprecated
+	default void decIndex( final int decrement )
+	{
+		index().dec( decrement );
+	}
 }

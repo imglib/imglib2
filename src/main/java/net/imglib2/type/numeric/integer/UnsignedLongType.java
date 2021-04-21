@@ -218,7 +218,7 @@ public class UnsignedLongType extends GenericLongType< UnsignedLongType >
 	 */
 	public long get()
 	{
-		return dataAccess.getValue( i );
+		return dataAccess.getValue( i.get() );
 	}
 
 	/**
@@ -234,7 +234,7 @@ public class UnsignedLongType extends GenericLongType< UnsignedLongType >
 
 	public void set( final long value )
 	{
-		dataAccess.setValue( i, value );
+		dataAccess.setValue( i.get(), value );
 	}
 
 	@Override

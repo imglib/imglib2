@@ -36,6 +36,7 @@ package net.imglib2.img.cell;
 
 import net.imglib2.AbstractLocalizingCursor;
 import net.imglib2.Cursor;
+import net.imglib2.type.Index;
 import net.imglib2.type.NativeType;
 
 /**
@@ -48,6 +49,8 @@ public class CellLocalizingCursor< T extends NativeType< T >, C extends Cell< ? 
 	implements AbstractCellImg.CellImgSampler< C >
 {
 	protected final T type;
+
+	protected final Index typeIndex;
 
 	protected final Cursor< C > cursorOnCells;
 
@@ -73,6 +76,7 @@ public class CellLocalizingCursor< T extends NativeType< T >, C extends Cell< ? 
 		super( cursor.numDimensions() );
 
 		this.type = cursor.type.duplicateTypeOnSameNativeImg();
+		typeIndex = type.index();
 		this.cursorOnCells = cursor.cursorOnCells.copyCursor();
 		this.currentCellMin = cursor.currentCellMin;
 		this.currentCellMax = cursor.currentCellMax;
@@ -84,7 +88,7 @@ public class CellLocalizingCursor< T extends NativeType< T >, C extends Cell< ? 
 		index = cursor.index;
 
 		type.updateContainer( this );
-		type.updateIndex( index );
+		typeIndex.set( index );
 	}
 
 	public CellLocalizingCursor( final AbstractCellImg< T, ?, C, ? > img )
@@ -92,6 +96,7 @@ public class CellLocalizingCursor< T extends NativeType< T >, C extends Cell< ? 
 		super( img.numDimensions() );
 
 		this.type = img.createLinkedType();
+		typeIndex = type.index();
 		this.cursorOnCells = img.getCells().cursor();
 		this.currentCellMin = null;
 		this.currentCellMax = null;
@@ -148,7 +153,7 @@ public class CellLocalizingCursor< T extends NativeType< T >, C extends Cell< ? 
 		index = ( int ) newIndex;
 		cell.indexToGlobalPosition( index, position );
 
-		type.updateIndex( index );
+		typeIndex.set( index );
 		type.updateContainer( this );
 	}
 
@@ -160,7 +165,7 @@ public class CellLocalizingCursor< T extends NativeType< T >, C extends Cell< ? 
 			moveToNextCell();
 			index = 0;
 		}
-		type.updateIndex( index );
+		typeIndex.set( index );
 
 		for ( int d = 0; d < n; ++d )
 		{
@@ -177,7 +182,7 @@ public class CellLocalizingCursor< T extends NativeType< T >, C extends Cell< ? 
 		cursorOnCells.reset();
 		moveToNextCell();
 		index = -1;
-		type.updateIndex( index );
+		typeIndex.set( index );
 	}
 
 	/**

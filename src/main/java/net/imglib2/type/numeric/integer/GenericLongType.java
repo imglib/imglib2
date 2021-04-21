@@ -36,6 +36,7 @@ package net.imglib2.type.numeric.integer;
 import net.imglib2.img.NativeImg;
 import net.imglib2.img.basictypeaccess.LongAccess;
 import net.imglib2.img.basictypeaccess.array.LongArray;
+import net.imglib2.type.Index;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.NativeTypeFactory;
 import net.imglib2.util.Fraction;
@@ -48,7 +49,7 @@ import net.imglib2.util.Util;
  */
 public abstract class GenericLongType< T extends GenericLongType< T > > extends AbstractIntegerType< T > implements NativeType< T >
 {
-	int i = 0;
+	final Index i;
 
 	final protected NativeImg< ?, ? extends LongAccess > img;
 
@@ -58,12 +59,14 @@ public abstract class GenericLongType< T extends GenericLongType< T > > extends 
 	// this is the constructor if you want it to read from an array
 	public GenericLongType( final NativeImg< ?, ? extends LongAccess > longStorage )
 	{
+		i = new Index();
 		img = longStorage;
 	}
 
 	// this is the constructor if you want it to be a variable
 	public GenericLongType( final long value )
 	{
+		i = new Index();
 		img = null;
 		dataAccess = new LongArray( 1 );
 		setLong( value );
@@ -72,6 +75,7 @@ public abstract class GenericLongType< T extends GenericLongType< T > > extends 
 	// this is the constructor if you want to specify the dataAccess
 	public GenericLongType( final LongAccess access )
 	{
+		i = new Index();
 		img = null;
 		dataAccess = access;
 	}
@@ -95,6 +99,12 @@ public abstract class GenericLongType< T extends GenericLongType< T > > extends 
 	}
 
 	@Override
+	public Index index()
+	{
+		return i;
+	}
+
+	@Override
 	public abstract NativeTypeFactory< T, LongAccess > getNativeTypeFactory();
 
 	/**
@@ -103,7 +113,7 @@ public abstract class GenericLongType< T extends GenericLongType< T > > extends 
 	@Deprecated
 	protected long getValue()
 	{
-		return dataAccess.getValue( i );
+		return dataAccess.getValue( i.get() );
 	}
 
 	/**
@@ -112,7 +122,7 @@ public abstract class GenericLongType< T extends GenericLongType< T > > extends 
 	@Deprecated
 	protected void setValue( final long f )
 	{
-		dataAccess.setValue( i, f );
+		dataAccess.setValue( i.get(), f );
 	}
 
 	/**
@@ -122,7 +132,7 @@ public abstract class GenericLongType< T extends GenericLongType< T > > extends 
 	 */
 	public long getLong()
 	{
-		return dataAccess.getValue( i );
+		return dataAccess.getValue( i.get() );
 	}
 
 	/**
@@ -130,7 +140,7 @@ public abstract class GenericLongType< T extends GenericLongType< T > > extends 
 	 */
 	public void setLong( final long f )
 	{
-		dataAccess.setValue( i, f );
+		dataAccess.setValue( i.get(), f );
 	}
 
 	@Override
@@ -205,42 +215,6 @@ public abstract class GenericLongType< T extends GenericLongType< T > > extends 
 	public String toString()
 	{
 		return "" + getLong();
-	}
-
-	@Override
-	public void updateIndex( final int index )
-	{
-		i = index;
-	}
-
-	@Override
-	public int getIndex()
-	{
-		return i;
-	}
-
-	@Override
-	public void incIndex()
-	{
-		++i;
-	}
-
-	@Override
-	public void incIndex( final int increment )
-	{
-		i += increment;
-	}
-
-	@Override
-	public void decIndex()
-	{
-		--i;
-	}
-
-	@Override
-	public void decIndex( final int decrement )
-	{
-		i -= decrement;
 	}
 
 	@Override

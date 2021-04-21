@@ -37,6 +37,7 @@ package net.imglib2.type.numeric.real;
 import net.imglib2.img.NativeImg;
 import net.imglib2.img.basictypeaccess.DoubleAccess;
 import net.imglib2.img.basictypeaccess.array.DoubleArray;
+import net.imglib2.type.Index;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.NativeTypeFactory;
 import net.imglib2.util.Fraction;
@@ -49,7 +50,7 @@ import net.imglib2.util.Fraction;
  */
 public class DoubleType extends AbstractRealType< DoubleType > implements NativeType< DoubleType >
 {
-	private int i = 0;
+	private final Index i;
 
 	final protected NativeImg< ?, ? extends DoubleAccess > img;
 
@@ -59,12 +60,14 @@ public class DoubleType extends AbstractRealType< DoubleType > implements Native
 	// this is the constructor if you want it to read from an array
 	public DoubleType( final NativeImg< ?, ? extends DoubleAccess > doubleStorage )
 	{
+		i = new Index();
 		img = doubleStorage;
 	}
 
 	// this is the constructor if you want it to be a variable
 	public DoubleType( final double value )
 	{
+		i = new Index();
 		img = null;
 		dataAccess = new DoubleArray( 1 );
 		set( value );
@@ -73,6 +76,7 @@ public class DoubleType extends AbstractRealType< DoubleType > implements Native
 	// this is the constructor if you want to specify the dataAccess
 	public DoubleType( final DoubleAccess access )
 	{
+		i = new Index();
 		img = null;
 		dataAccess = access;
 	}
@@ -87,6 +91,12 @@ public class DoubleType extends AbstractRealType< DoubleType > implements Native
 	public void updateContainer( final Object c )
 	{
 		dataAccess = img.update( c );
+	}
+
+	@Override
+	public Index index()
+	{
+		return i;
 	}
 
 	@Override
@@ -105,12 +115,12 @@ public class DoubleType extends AbstractRealType< DoubleType > implements Native
 
 	public double get()
 	{
-		return dataAccess.getValue( i );
+		return dataAccess.getValue( i.get() );
 	}
 
 	public void set( final double f )
 	{
-		dataAccess.setValue( i, f );
+		dataAccess.setValue( i.get(), f );
 	}
 
 	@Override
@@ -171,42 +181,6 @@ public class DoubleType extends AbstractRealType< DoubleType > implements Native
 	public Fraction getEntitiesPerPixel()
 	{
 		return new Fraction();
-	}
-
-	@Override
-	public void updateIndex( final int index )
-	{
-		i = index;
-	}
-
-	@Override
-	public int getIndex()
-	{
-		return i;
-	}
-
-	@Override
-	public void incIndex()
-	{
-		++i;
-	}
-
-	@Override
-	public void incIndex( final int increment )
-	{
-		i += increment;
-	}
-
-	@Override
-	public void decIndex()
-	{
-		--i;
-	}
-
-	@Override
-	public void decIndex( final int decrement )
-	{
-		i -= decrement;
 	}
 
 	@Override

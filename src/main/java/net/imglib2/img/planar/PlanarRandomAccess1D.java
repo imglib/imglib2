@@ -57,21 +57,21 @@ public class PlanarRandomAccess1D< T extends NativeType< T > > extends PlanarRan
 	public void fwd( final int dim )
 	{
 		++position[ 0 ];
-		type.incIndex();
+		typeIndex.inc();
 	}
 
 	@Override
 	public void bck( final int dim )
 	{
 		--position[ 0 ];
-		type.decIndex();
+		typeIndex.dec();
 	}
 
 	@Override
 	public void move( final int distance, final int d )
 	{
 		position[ 0 ] += distance;
-		type.incIndex( distance );
+		typeIndex.inc( distance );
 	}
 
 	@Override
@@ -79,27 +79,27 @@ public class PlanarRandomAccess1D< T extends NativeType< T > > extends PlanarRan
 	{
 		final int distance = localizable.getIntPosition( 0 );
 		position[ 0 ] += distance;
-		type.incIndex( distance );
+		typeIndex.inc( distance );
 	}
 
 	@Override
 	public void move( final int[] distance )
 	{
 		position[ 0 ] += distance[ 0 ];
-		type.incIndex( distance[ 0 ] );
+		typeIndex.inc( distance[ 0 ] );
 	}
 
 	@Override
 	public void move( final long[] distance )
 	{
 		position[ 0 ] += ( int ) distance[ 0 ];
-		type.incIndex( ( int ) distance[ 0 ] );
+		typeIndex.inc( ( int ) distance[ 0 ] );
 	}
 
 	@Override
 	public void setPosition( final int pos, final int dim )
 	{
-		type.updateIndex( pos );
+		typeIndex.set( pos );
 		position[ 0 ] = pos;
 	}
 
@@ -107,21 +107,21 @@ public class PlanarRandomAccess1D< T extends NativeType< T > > extends PlanarRan
 	public void setPosition( final Localizable localizable )
 	{
 		final int pos = localizable.getIntPosition( 0 );
-		type.updateIndex( pos );
+		typeIndex.set( pos );
 		this.position[ 0 ] = pos;
 	}
 
 	@Override
 	public void setPosition( final int[] position )
 	{
-		type.updateIndex( position[ 0 ] );
+		typeIndex.set( position[ 0 ] );
 		this.position[ 0 ] = position[ 0 ];
 	}
 
 	@Override
 	public void setPosition( final long[] position )
 	{
-		type.updateIndex( ( int ) position[ 0 ] );
+		typeIndex.set( ( int ) position[ 0 ] );
 		this.position[ 0 ] = ( int ) position[ 0 ];
 	}
 }

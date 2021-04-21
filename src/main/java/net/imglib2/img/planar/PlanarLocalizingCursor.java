@@ -35,6 +35,7 @@
 package net.imglib2.img.planar;
 
 import net.imglib2.AbstractLocalizingCursorInt;
+import net.imglib2.type.Index;
 import net.imglib2.type.NativeType;
 
 /**
@@ -48,6 +49,8 @@ import net.imglib2.type.NativeType;
 public class PlanarLocalizingCursor< T extends NativeType< T > > extends AbstractLocalizingCursorInt< T > implements PlanarImg.PlanarContainerSampler
 {
 	protected final T type;
+
+	protected final Index typeIndex;
 
 	protected final PlanarImg< T, ? > container;
 
@@ -73,6 +76,7 @@ public class PlanarLocalizingCursor< T extends NativeType< T > > extends Abstrac
 
 		container = cursor.container;
 		this.type = container.createLinkedType();
+		typeIndex = type.index();
 
 		lastIndex = cursor.lastIndex;
 		lastSliceIndex = cursor.lastSliceIndex;
@@ -88,7 +92,7 @@ public class PlanarLocalizingCursor< T extends NativeType< T > > extends Abstrac
 		index = cursor.index;
 
 		type.updateContainer( this );
-		type.updateIndex( index );
+		typeIndex.set( index );
 	}
 
 	public PlanarLocalizingCursor( final PlanarImg< T, ? > container )
@@ -96,6 +100,7 @@ public class PlanarLocalizingCursor< T extends NativeType< T > > extends Abstrac
 		super( container.numDimensions() );
 
 		this.type = container.createLinkedType();
+		typeIndex = type.index();
 		this.container = container;
 
 		lastIndex = ( ( n > 1 ) ? container.dimensions[ 1 ] : 1 ) * container.dimensions[ 0 ] - 1;
@@ -135,7 +140,7 @@ public class PlanarLocalizingCursor< T extends NativeType< T > > extends Abstrac
 	/**
 	 * Note: This test is fragile in a sense that it returns true for elements
 	 * after the last element as well.
-	 * 
+	 *
 	 * @return false for the last element
 	 */
 	@Override
@@ -153,7 +158,7 @@ public class PlanarLocalizingCursor< T extends NativeType< T > > extends Abstrac
 			++sliceIndex;
 			type.updateContainer( this );
 		}
-		type.updateIndex( index );
+		typeIndex.set( index );
 
 		for ( int d = 0; d < n; ++d )
 		{
@@ -176,7 +181,7 @@ public class PlanarLocalizingCursor< T extends NativeType< T > > extends Abstrac
 			type.updateContainer( this );
 		}
 		index = ( int ) newIndex;
-		type.updateIndex( index );
+		typeIndex.set( index );
 		container.indexToGlobalPosition( sliceIndex, index, position );
 	}
 
@@ -189,7 +194,7 @@ public class PlanarLocalizingCursor< T extends NativeType< T > > extends Abstrac
 
 		sliceIndex = 0;
 		index = -1;
-		type.updateIndex( -1 );
+		typeIndex.set( -1 );
 		type.updateContainer( this );
 	}
 }

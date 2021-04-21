@@ -37,6 +37,7 @@ package net.imglib2.type.numeric.integer;
 import net.imglib2.img.NativeImg;
 import net.imglib2.img.basictypeaccess.IntAccess;
 import net.imglib2.img.basictypeaccess.array.IntArray;
+import net.imglib2.type.Index;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.NativeTypeFactory;
 import net.imglib2.util.Fraction;
@@ -50,7 +51,7 @@ import net.imglib2.util.Util;
  */
 public abstract class GenericIntType< T extends GenericIntType< T > > extends AbstractIntegerType< T > implements NativeType< T >
 {
-	int i = 0;
+	final Index i;
 
 	final protected NativeImg< ?, ? extends IntAccess > img;
 
@@ -60,12 +61,14 @@ public abstract class GenericIntType< T extends GenericIntType< T > > extends Ab
 	// this is the constructor if you want it to read from an array
 	public GenericIntType( final NativeImg< ?, ? extends IntAccess > intStorage )
 	{
+		i = new Index();
 		img = intStorage;
 	}
 
 	// this is the constructor if you want it to be a variable
 	public GenericIntType( final int value )
 	{
+		i = new Index();
 		img = null;
 		dataAccess = new IntArray( 1 );
 		setInt( value );
@@ -74,6 +77,7 @@ public abstract class GenericIntType< T extends GenericIntType< T > > extends Ab
 	// this is the constructor if you want to specify the dataAccess
 	public GenericIntType( final IntAccess access )
 	{
+		i = new Index();
 		img = null;
 		dataAccess = access;
 	}
@@ -97,6 +101,12 @@ public abstract class GenericIntType< T extends GenericIntType< T > > extends Ab
 	}
 
 	@Override
+	public Index index()
+	{
+		return i;
+	}
+
+	@Override
 	public abstract NativeTypeFactory< T, IntAccess > getNativeTypeFactory();
 
 	/**
@@ -105,7 +115,7 @@ public abstract class GenericIntType< T extends GenericIntType< T > > extends Ab
 	@Deprecated
 	protected int getValue()
 	{
-		return dataAccess.getValue( i );
+		return dataAccess.getValue( i.get() );
 	}
 
 	/**
@@ -114,7 +124,7 @@ public abstract class GenericIntType< T extends GenericIntType< T > > extends Ab
 	@Deprecated
 	protected void setValue( final int f )
 	{
-		dataAccess.setValue( i, f );
+		dataAccess.setValue( i.get(), f );
 	}
 
 	/**
@@ -124,7 +134,7 @@ public abstract class GenericIntType< T extends GenericIntType< T > > extends Ab
 	 */
 	public int getInt()
 	{
-		return dataAccess.getValue( i );
+		return dataAccess.getValue( i.get() );
 	}
 
 	/**
@@ -132,7 +142,7 @@ public abstract class GenericIntType< T extends GenericIntType< T > > extends Ab
 	 */
 	public void setInt( final int f )
 	{
-		dataAccess.setValue( i, f );
+		dataAccess.setValue( i.get(), f );
 	}
 
 	@Override
@@ -176,14 +186,14 @@ public abstract class GenericIntType< T extends GenericIntType< T > > extends Ab
 		final int a = getInt();
 		setInt( a - c.getInt() );
 	}
-	
+
 	@Override
 	public void pow( final T c )
 	{
 		final int a = getInt();
 		setReal( Math.pow( a, c.getInt() ) );
 	}
-	
+
 	@Override
 	public void pow( final double power )
 	{
@@ -227,42 +237,6 @@ public abstract class GenericIntType< T extends GenericIntType< T > > extends Ab
 	public String toString()
 	{
 		return "" + getInt();
-	}
-
-	@Override
-	public void updateIndex( final int index )
-	{
-		i = index;
-	}
-
-	@Override
-	public int getIndex()
-	{
-		return i;
-	}
-
-	@Override
-	public void incIndex()
-	{
-		++i;
-	}
-
-	@Override
-	public void incIndex( final int increment )
-	{
-		i += increment;
-	}
-
-	@Override
-	public void decIndex()
-	{
-		--i;
-	}
-
-	@Override
-	public void decIndex( final int decrement )
-	{
-		i -= decrement;
 	}
 
 	@Override

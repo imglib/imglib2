@@ -37,6 +37,7 @@ package net.imglib2.type.numeric.integer;
 import net.imglib2.img.NativeImg;
 import net.imglib2.img.basictypeaccess.ShortAccess;
 import net.imglib2.img.basictypeaccess.array.ShortArray;
+import net.imglib2.type.Index;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.NativeTypeFactory;
 import net.imglib2.type.numeric.IntegerType;
@@ -54,7 +55,7 @@ public abstract class GenericShortType< T extends GenericShortType< T > >
 		extends AbstractIntegerType< T >
 		implements NativeType< T >
 {
-	int i = 0;
+	final Index i;
 
 	final protected NativeImg< ?, ? extends ShortAccess > img;
 
@@ -64,12 +65,14 @@ public abstract class GenericShortType< T extends GenericShortType< T > >
 	// this is the constructor if you want it to read from an array
 	public GenericShortType( final NativeImg< ?, ? extends ShortAccess > shortStorage )
 	{
+		i = new Index();
 		img = shortStorage;
 	}
 
 	// this is the constructor if you want it to be a variable
 	public GenericShortType( final short value )
 	{
+		i = new Index();
 		img = null;
 		dataAccess = new ShortArray( 1 );
 		setShort( value );
@@ -78,6 +81,7 @@ public abstract class GenericShortType< T extends GenericShortType< T > >
 	// this is the constructor if you want to specify the dataAccess
 	public GenericShortType( final ShortAccess access )
 	{
+		i = new Index();
 		img = null;
 		dataAccess = access;
 	}
@@ -101,6 +105,12 @@ public abstract class GenericShortType< T extends GenericShortType< T > >
 	}
 
 	@Override
+	public Index index()
+	{
+		return i;
+	}
+
+	@Override
 	public abstract NativeTypeFactory< T, ShortAccess > getNativeTypeFactory();
 
 	/**
@@ -109,7 +119,7 @@ public abstract class GenericShortType< T extends GenericShortType< T > >
 	@Deprecated
 	protected short getValue()
 	{
-		return dataAccess.getValue( i );
+		return dataAccess.getValue( i.get() );
 	}
 
 	/**
@@ -118,7 +128,7 @@ public abstract class GenericShortType< T extends GenericShortType< T > >
 	@Deprecated
 	protected void setValue( final short f )
 	{
-		dataAccess.setValue( i, f );
+		dataAccess.setValue( i.get(), f );
 	}
 
 	/**
@@ -128,7 +138,7 @@ public abstract class GenericShortType< T extends GenericShortType< T > >
 	 */
 	public short getShort()
 	{
-		return dataAccess.getValue( i );
+		return dataAccess.getValue( i.get() );
 	}
 
 	/**
@@ -136,7 +146,7 @@ public abstract class GenericShortType< T extends GenericShortType< T > >
 	 */
 	public void setShort( final short f )
 	{
-		dataAccess.setValue( i, f );
+		dataAccess.setValue( i.get(), f );
 	}
 
 	@Override
@@ -217,42 +227,6 @@ public abstract class GenericShortType< T extends GenericShortType< T > >
 	public String toString()
 	{
 		return "" + getShort();
-	}
-
-	@Override
-	public void updateIndex( final int index )
-	{
-		i = index;
-	}
-
-	@Override
-	public int getIndex()
-	{
-		return i;
-	}
-
-	@Override
-	public void incIndex()
-	{
-		++i;
-	}
-
-	@Override
-	public void incIndex( final int increment )
-	{
-		i += increment;
-	}
-
-	@Override
-	public void decIndex()
-	{
-		--i;
-	}
-
-	@Override
-	public void decIndex( final int decrement )
-	{
-		i -= decrement;
 	}
 
 	@Override
