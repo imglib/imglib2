@@ -36,6 +36,8 @@ package net.imglib2.img.basictypeaccess.array;
 
 import java.io.Serializable;
 
+import net.imglib2.img.basictypeaccess.DataAccess;
+
 /**
  * Trivial interface for primitive array based data access implementations
  * that can replicate themselves and return the underlying array.
@@ -43,7 +45,7 @@ import java.io.Serializable;
  * @author Stephan Preibisch
  * @author Stephan Saalfeld
  */
-public interface ArrayDataAccess< A > extends Serializable
+public interface ArrayDataAccess< A > extends DataAccess, Serializable
 {
 	A createArray( int numEntities );
 

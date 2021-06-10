@@ -47,6 +47,7 @@ import java.awt.image.WritableRaster;
 
 import net.imglib2.Dimensions;
 import net.imglib2.img.array.ArrayImg;
+import net.imglib2.img.basictypeaccess.DataAccess;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
 
@@ -55,7 +56,7 @@ import net.imglib2.type.numeric.RealType;
  * 
  * @author Curtis Rueden
  */
-public abstract class ArrayImgAWTScreenImage< T extends NativeType< T >, A > extends ArrayImg< T, A > implements AWTScreenImage
+public abstract class ArrayImgAWTScreenImage< T extends NativeType< T >, A extends DataAccess > extends ArrayImg< T, A > implements AWTScreenImage
 {
 
 	private final BufferedImage bufferedImage;
@@ -106,5 +107,20 @@ public abstract class ArrayImgAWTScreenImage< T extends NativeType< T >, A > ext
 		final long[] dimensions = new long[ img.numDimensions() ];
 		img.dimensions( dimensions );
 		return dimensions;
+	}
+
+	/**
+	 * Deprecated constructor for when A was not bounded by DataAccess
+	 * 
+	 * @param type
+	 * @param data
+	 *            - will be cast to DataAccess type A
+	 * @param dim
+	 */
+	@SuppressWarnings( "unchecked" )
+	@Deprecated
+	public ArrayImgAWTScreenImage( final T type, final Object data, final long[] dim )
+	{
+		this( type, ( A ) data, dim );
 	}
 }

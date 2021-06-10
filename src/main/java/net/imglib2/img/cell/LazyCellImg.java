@@ -35,6 +35,7 @@ package net.imglib2.img.cell;
 
 import net.imglib2.img.Img;
 import net.imglib2.img.ImgFactory;
+import net.imglib2.img.basictypeaccess.DataAccess;
 import net.imglib2.img.cell.LazyCellImg.LazyCells;
 import net.imglib2.img.list.AbstractLongListImg;
 import net.imglib2.type.NativeType;
@@ -53,7 +54,7 @@ import net.imglib2.util.Fraction;
  *
  * @author Tobias Pietzsch
  */
-public class LazyCellImg< T extends NativeType< T >, A >
+public class LazyCellImg< T extends NativeType< T >, A extends DataAccess >
 		extends AbstractCellImg< T, A, Cell< A >, LazyCells< Cell< A > > >
 {
 	@FunctionalInterface
