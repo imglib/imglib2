@@ -122,6 +122,9 @@ public class RealPointSampleList< T > implements IterableRealInterval< T >
 		@Override
 		public void jumpFwd( final long steps )
 		{
+			if ( steps == 0 )
+				return;
+
 			index += steps;
 			position = coordinates.get( index );
 			sample = samples.get( index );
