@@ -1,5 +1,5 @@
 [![](https://img.shields.io/maven-central/v/net.imglib2/imglib2.svg)](http://search.maven.org/#search%7Cgav%7C1%7Cg%3A%22net.imglib2%22%20AND%20a%3A%22imglib2%22)
-[![](https://travis-ci.org/imglib/imglib2.svg?branch=master)](https://travis-ci.org/imglib/imglib2)
+[![](https://github.com/imglib/imglib2/actions/workflows/build-main.yml/badge.svg)](https://github.com/imglib/imglib2/actions/workflows/build-main.yml)
 [![Join the chat at https://gitter.im/imglib/imglib2](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/imglib/imglib2?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 ImgLib2 is a general-purpose, multidimensional image processing library.
