@@ -60,7 +60,7 @@ Resources
 * [ImgLib2 Examples](http://imagej.net/ImgLib2_Examples)
 * [Online Javadoc](http://javadoc.imagej.net/ImgLib2/)
 * [Performance benchmarks](http://developer.imagej.net/imglib-benchmarks)
-
+* [ImgLib2 publication](https://academic.oup.com/bioinformatics/article/28/22/3009/240540)
 
 Building the source code
 ------------------------
