@@ -35,9 +35,20 @@ package net.imglib2.img.cell;
 
 import java.util.Arrays;
 
+import java.util.Iterator;
+import net.imglib2.Cursor;
+import net.imglib2.FinalInterval;
+import net.imglib2.FlatIterationOrder;
+import net.imglib2.Interval;
+import net.imglib2.IterableInterval;
+import net.imglib2.Point;
 import net.imglib2.Positionable;
+import net.imglib2.RandomAccess;
+import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.util.IntervalIndexer;
+import net.imglib2.util.Intervals;
 import net.imglib2.util.Util;
+import net.imglib2.view.RandomAccessibleIntervalCursor;
 
 /**
  * Defines {@link AbstractCellImg} geometry and translates between image, cell,
@@ -82,6 +93,8 @@ public class CellGrid
 			borderSize[ d ] = ( int ) ( dimensions[ d ] - ( numCells[ d ] - 1 ) * cellDimensions[ d ] );
 		}
 		hashcode = 31 * Arrays.hashCode( dimensions ) + Arrays.hashCode( cellDimensions );
+
+		cellIntervals = new CellIntervals();
 	}
 
 	public CellGrid( final CellGrid grid )
@@ -92,6 +105,7 @@ public class CellGrid
 		numCells = grid.numCells.clone();
 		borderSize = grid.borderSize.clone();
 		hashcode = grid.hashcode;
+		cellIntervals = new CellIntervals();
 	}
 
 	public int numDimensions()
@@ -237,6 +251,17 @@ public class CellGrid
 		}
 	}
 
+	public void getCellInterval( final long[] cellGridPosition, final long[] cellMin, final long[] cellMax )
+	{
+		for ( int d = 0; d < n; ++d )
+		{
+			final long gridPos = cellGridPosition[ d ];
+			final int cellDim = ( gridPos + 1 == numCells[ d ] ) ? borderSize[ d ] : cellDimensions[ d ];
+			cellMin[ d ] = gridPos * cellDimensions[ d ];
+			cellMax[ d ] = cellMin[ d ] + cellDim - 1;
+		}
+	}
+
 	/**
 	 * From the position of a cell in the grid, compute the size of the cell in
 	 * dimension {@code d}. The size will be the standard
@@ -336,5 +361,121 @@ public class CellGrid
 		return getClass().getSimpleName()
 				+ "( dims = " + Util.printCoordinates( dimensions )
 				+ ", cellDims = " + Util.printCoordinates( cellDimensions ) + " )";
+	}
+
+	private class CellIntervalsRA extends Point implements RandomAccess< Interval >
+	{
+		private final long[] min = new long[ CellGrid.this.n ];
+
+		private final long[] max = new long[ CellGrid.this.n ];
+
+		private final Interval interval = FinalInterval.wrap( min, max );
+
+		@Override
+		public Interval get()
+		{
+			getCellInterval( position, min, max );
+			return interval;
+		}
+
+		CellIntervalsRA()
+		{
+			super( CellGrid.this.n );
+		}
+
+		CellIntervalsRA( CellIntervalsRA ra )
+		{
+			super( ra );
+		}
+
+		@Override
+		public RandomAccess< Interval > copyRandomAccess()
+		{
+			return copy();
+		}
+
+		@Override
+		public RandomAccess< Interval > copy()
+		{
+			return new CellIntervalsRA( this );
+		}
+	}
+
+	public class CellIntervals implements RandomAccessibleInterval< Interval >, IterableInterval< Interval >
+	{
+		private final long size = Intervals.numElements( numCells );
+
+		@Override
+		public int numDimensions()
+		{
+			return n;
+		}
+
+		@Override
+		public long min( final int d )
+		{
+			return 0;
+		}
+
+		@Override
+		public long max( final int d )
+		{
+			return numCells[ d ] - 1;
+		}
+
+		@Override
+		public RandomAccess< Interval > randomAccess()
+		{
+			return new CellIntervalsRA();
+		}
+
+		@Override
+		public RandomAccess< Interval > randomAccess( final Interval interval )
+		{
+			return randomAccess();
+		}
+
+		@Override
+		public Cursor< Interval > cursor()
+		{
+			return new RandomAccessibleIntervalCursor<>( this );
+		}
+
+		@Override
+		public Cursor< Interval > localizingCursor()
+		{
+			return cursor();
+		}
+
+		@Override
+		public long size()
+		{
+			return size;
+		}
+
+		@Override
+		public Interval firstElement()
+		{
+			return cursor().next();
+		}
+
+		@Override
+		public FlatIterationOrder iterationOrder()
+		{
+			return new FlatIterationOrder( this );
+		}
+
+		@Override
+		public Iterator< Interval > iterator()
+		{
+			return cursor();
+		}
+	}
+
+	private final CellIntervals cellIntervals;
+
+	public CellIntervals cellIntervals()
+	{
+		return cellIntervals;
 	}
 }
