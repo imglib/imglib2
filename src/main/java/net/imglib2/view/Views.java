@@ -69,6 +69,7 @@ import net.imglib2.type.Type;
 import net.imglib2.type.numeric.IntegerType;
 import net.imglib2.type.numeric.NumericType;
 import net.imglib2.type.numeric.RealType;
+import net.imglib2.util.Grid;
 import net.imglib2.util.Intervals;
 import net.imglib2.util.Pair;
 import net.imglib2.util.Util;
@@ -397,6 +398,68 @@ public class Views
 	public static < T > IntervalView< T > interval( final RandomAccessible< T > randomAccessible, final Interval interval )
 	{
 		return new IntervalView<>( randomAccessible, interval );
+	}
+
+	/**
+	 * Given a RandomAccessible {@code img}, and a RandomAccessible of Intervals
+	 * {@code intervals}, return a RandomAccessible of
+	 * {@link #interval(RandomAccessible, Interval) interval}s on {@code img}.
+	 * <p>
+	 * For example, if {@code intervals} contains intervals that tile the
+	 * interval of an image, this method returns a RandomAccessible of the tiles
+	 * of that image.
+	 */
+	public static < T > RandomAccessible< RandomAccessibleInterval< T > > intervals( final RandomAccessible< T > img, final RandomAccessible< ? extends Interval > intervals )
+	{
+		return new FunctionView<>( intervals, interval -> Views.interval( img, interval ) );
+	}
+
+	/**
+	 * Given a RandomAccessible {@code img}, and a RandomAccessibleInterval of
+	 * intervals {@code intervals}, return a RandomAccessibleInterval of
+	 * {@link #interval(RandomAccessible, Interval) interval}s on {@code img}.
+	 * <p>
+	 * For example, if {@code intervals} contains intervals that tile the
+	 * interval of an image, this method returns a RandomAccessible of the tiles
+	 * of that image.
+	 */
+	public static < T > RandomAccessibleInterval< RandomAccessibleInterval< T > > intervals( final RandomAccessible< T > img, final RandomAccessibleInterval< ? extends Interval > intervals )
+	{
+		return Views.interval( intervals( img, ( RandomAccessible< ? extends Interval > ) intervals ), intervals );
+	}
+
+	/**
+	 * Split the {@code source} image into blocks of the given {@code tileSize}.
+	 *
+	 * @param tileSize
+	 *     size of a "standard" block (blocks at the border may be truncated).
+	 *     If {@code tileSize.length} doesn't match the number of {@code source}
+	 *     dimensions, it is truncated or extended with 1s.
+	 */
+	public static < T > RandomAccessibleInterval< RandomAccessibleInterval< T > > tiles( final RandomAccessibleInterval< T > source, final long... tileSize )
+	{
+		long[] b = tileSize;
+		if ( tileSize.length != source.numDimensions() )
+		{
+			b = Arrays.copyOf( tileSize, source.numDimensions() );
+			if ( b.length > tileSize.length )
+				Arrays.fill( b, tileSize.length, b.length, 1 );
+		}
+		final Grid grid = new Grid( source.dimensionsAsLongArray(), b );
+		return intervals( source, grid.cellIntervals() );
+	}
+
+	/**
+	 * Split the {@code source} image into blocks of the given {@code tileSize}.
+	 *
+	 * @param tileSize
+	 *     size of a "standard" block (blocks at the border may be truncated).
+	 *     If {@code tileSize.length} doesn't match the number of {@code source}
+	 *     dimensions, it is truncated or extended with 1s.
+	 */
+	public static < T > RandomAccessibleInterval< RandomAccessibleInterval< T > > tiles( final RandomAccessibleInterval< T > source, final int... tileSize )
+	{
+		return tiles( source, Util.int2long( tileSize ) );
 	}
 
 	/**
