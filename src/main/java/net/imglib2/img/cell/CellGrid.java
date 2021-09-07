@@ -59,6 +59,13 @@ public class CellGrid
 
 	private final int hashcode;
 
+	/**
+	 * @param dimensions
+	 * 		the dimensions of the image (in pixels, not in cells).
+	 * @param cellDimensions
+	 * 		the dimensions of a standard cell (in pixels). Cells on the max border
+	 * 		of the image may be cut off and have different dimensions.
+	 */
 	public CellGrid(
 			final long[] dimensions,
 			final int[] cellDimensions )
@@ -92,17 +99,27 @@ public class CellGrid
 		return n;
 	}
 
+	/**
+	 * Get the number of cells in each dimension as a new long[].
+	 */
 	public long[] getGridDimensions()
 	{
 		return numCells.clone();
 	}
 
-	public void gridDimensions( final long[] s )
+	/**
+	 * Write the number of cells in each dimension into the provided {@code
+	 * dimensions} array.
+	 */
+	public void gridDimensions( final long[] dimensions )
 	{
 		for ( int i = 0; i < n; ++i )
-			s[ i ] = numCells[ i ];
+			dimensions[ i ] = numCells[ i ];
 	}
 
+	/**
+	 * Get the number of cells in dimension {@code d}.
+	 */
 	public long gridDimension( final int d )
 	{
 		return numCells[ d ];
@@ -118,10 +135,9 @@ public class CellGrid
 	}
 
 	/**
-	 * Write the number of pixels in each dimension into long[]. Note, that this
-	 * is the number of pixels in all cells combined, not the number of cells!
-	 *
-	 * @param dimensions
+	 * Write the number of pixels in each dimension into the provided {@code
+	 * dimensions} array. Note, that this is the number of pixels in all cells
+	 * combined, not the number of cells!
 	 */
 	public void imgDimensions( final long[] dimensions )
 	{
@@ -130,10 +146,8 @@ public class CellGrid
 	}
 
 	/**
-	 * Get the number of pixels in a given dimension <em>d</em>. Note, that this
-	 * is the number of pixels in all cells combined, not the number of cells!
-	 *
-	 * @param d
+	 * Get the number of pixels in dimension {@code d}. Note, that this is the number
+	 * of pixels in all cells combined, not the number of cells!
 	 */
 	public long imgDimension( final int d )
 	{
@@ -141,11 +155,18 @@ public class CellGrid
 	}
 
 	/**
-	 * Write the number of pixels in a standard cell in each dimension into
-	 * long[]. Cells on the max border of the image may be cut off and have
-	 * different dimensions.
-	 *
-	 * @param dimensions
+	 * Get the number of pixels in a standard cell in each dimension as a new int[].
+	 * Cells on the borders of the image may be cut off and have different dimensions.
+	 */
+	public int[] getCellDimensions()
+	{
+		return cellDimensions.clone();
+	}
+
+	/**
+	 * Write the number of pixels in a standard cell in each dimension into the
+	 * provided {@code dimensions} array. Cells on the max border of the image may be
+	 * cut off and have different dimensions.
 	 */
 	public void cellDimensions( final int[] dimensions )
 	{
@@ -154,11 +175,8 @@ public class CellGrid
 	}
 
 	/**
-	 * Get the number of pixels in a standard cell in a given dimension
-	 * <em>d</em>. Cells on the max border of the image may be cut off and have
-	 * different dimensions.
-	 *
-	 * @param d
+	 * Get the number of pixels in a standard cell in dimension {@code d}. Cells on the
+	 * max border of the image may be cut off and have different dimensions.
 	 */
 	public int cellDimension( final int d )
 	{
