@@ -36,7 +36,7 @@
 	</mailingLists>
 
 	<scm>
-		<connection>scm:git:git://github.com/imglib/imglib2</connection>
+		<connection>scm:git:https://github.com/imglib/imglib2</connection>
 		<developerConnection>scm:git:git@github.com:imglib/imglib2</developerConnection>
 		<tag>HEAD</tag>
 		<url>https://github.com/imglib/imglib2</url>
