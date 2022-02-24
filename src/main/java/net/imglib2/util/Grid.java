@@ -11,13 +11,13 @@
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice,
  *    this list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  *    this list of conditions and the following disclaimer in the documentation
  *    and/or other materials provided with the distribution.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -31,10 +31,9 @@
  * POSSIBILITY OF SUCH DAMAGE.
  * #L%
  */
-package net.imglib2.img.cell;
+package net.imglib2.util;
 
 import java.util.Arrays;
-
 import java.util.Iterator;
 import net.imglib2.Cursor;
 import net.imglib2.FinalInterval;
@@ -45,28 +44,31 @@ import net.imglib2.Point;
 import net.imglib2.Positionable;
 import net.imglib2.RandomAccess;
 import net.imglib2.RandomAccessibleInterval;
-import net.imglib2.util.IntervalIndexer;
-import net.imglib2.util.Intervals;
-import net.imglib2.util.Util;
+import net.imglib2.img.cell.CellGrid;
 import net.imglib2.view.RandomAccessibleIntervalCursor;
 
 /**
- * Defines {@link AbstractCellImg} geometry and translates between image, cell,
- * and grid coordinates.
+ * Defines a regular grid on an interval and translates between interval and grid
+ * coordinates.
+ * <p>
+ * In contrast to {@link CellGrid}, all coordinates are in {@code long}, and
+ * gridlines can be shifted such that cells at the min border are truncated.
  *
  * @author Tobias Pietzsch
  */
-public class CellGrid
+public class Grid
 {
 	private final int n;
 
 	private final long[] dimensions;
 
-	private final int[] cellDimensions;
+	private final long[] cellDimensions;
+
+	private final long[] minBorderSize;
 
 	private final long[] numCells;
 
-	private final int[] borderSize;
+	private final long[] maxBorderSize;
 
 	private final int hashcode;
 
@@ -77,33 +79,64 @@ public class CellGrid
 	 * 		the dimensions of a standard cell (in pixels). Cells on the max border
 	 * 		of the image may be cut off and have different dimensions.
 	 */
-	public CellGrid(
+	public Grid(
 			final long[] dimensions,
-			final int[] cellDimensions )
+			final long[] cellDimensions )
+	{
+		this( dimensions, cellDimensions, new long[ dimensions.length ] );
+	}
+
+	/**
+	 * @param dimensions
+	 * 		the dimensions of the image (in pixels, not in cells).
+	 * @param cellDimensions
+	 * 		the dimensions of a standard cell (in pixels). Cells on the borders
+	 * 		of the image may be cut off and have different dimensions.
+	 * @param offset
+	 * 		offset of the grid on the min border. Cell on the min border of the
+	 * 		image will be cut off according to offset. For example, if {@code
+	 * 		cellDimensions={10,10}} and {@code offset={5,0}} then the first cell
+	 * 		will have dimensions {@code {5,10}} (summing {@code dimensions} is
+	 * 		larger than {@code {10,10}}.
+	 */
+	public Grid(
+			final long[] dimensions,
+			final long[] cellDimensions,
+			final long[] offset )
 	{
 		this.n = dimensions.length;
 		this.dimensions = dimensions.clone();
 		this.cellDimensions = cellDimensions.clone();
 
 		numCells = new long[ n ];
-		borderSize = new int[ n ];
+		minBorderSize = new long[ n ];
+		maxBorderSize = new long[ n ];
 		for ( int d = 0; d < n; ++d )
 		{
-			numCells[ d ] = ( dimensions[ d ] - 1 ) / cellDimensions[ d ] + 1;
-			borderSize[ d ] = ( int ) ( dimensions[ d ] - ( numCells[ d ] - 1 ) * cellDimensions[ d ] );
+			final long cd = cellDimensions[ d ];
+			final long po = ( offset[ d ] % cd + cd ) % cd; // project offset into [0, cd). Also works for negative offsets.
+			minBorderSize[ d ] = Math.min( po == 0 ? cellDimensions[ d ] : po, dimensions[ d ] );
+			final long d0 = dimensions[ d ] - minBorderSize[ d ];
+			numCells[ d ] = d0 == 0 ? 1 : ( d0 - 1 ) / cd + 2;
+			maxBorderSize[ d ] = ( int ) ( d0 - ( numCells[ d ] - 2 ) * cd );
 		}
-		hashcode = 31 * Arrays.hashCode( dimensions ) + Arrays.hashCode( cellDimensions );
+
+		int hash = Arrays.hashCode( dimensions );
+		hash = hash * 31 + Arrays.hashCode( cellDimensions );
+		hash = hash * 31 + Arrays.hashCode( minBorderSize );
+		hashcode = hash;
 
 		cellIntervals = new CellIntervals();
 	}
 
-	public CellGrid( final CellGrid grid )
+	public Grid( final Grid grid )
 	{
 		n = grid.n;
 		dimensions = grid.dimensions.clone();
 		cellDimensions = grid.cellDimensions.clone();
 		numCells = grid.numCells.clone();
-		borderSize = grid.borderSize.clone();
+		minBorderSize = grid.minBorderSize.clone();
+		maxBorderSize = grid.maxBorderSize.clone();
 		hashcode = grid.hashcode;
 		cellIntervals = new CellIntervals();
 	}
@@ -169,20 +202,20 @@ public class CellGrid
 	}
 
 	/**
-	 * Get the number of pixels in a standard cell in each dimension as a new int[].
+	 * Get the number of pixels in a standard cell in each dimension as a new long[].
 	 * Cells on the borders of the image may be cut off and have different dimensions.
 	 */
-	public int[] getCellDimensions()
+	public long[] getCellDimensions()
 	{
 		return cellDimensions.clone();
 	}
 
 	/**
 	 * Write the number of pixels in a standard cell in each dimension into the
-	 * provided {@code dimensions} array. Cells on the max border of the image may be
+	 * provided {@code dimensions} array. Cells on the max borders of the image may be
 	 * cut off and have different dimensions.
 	 */
-	public void cellDimensions( final int[] dimensions )
+	public void cellDimensions( final long[] dimensions )
 	{
 		for ( int i = 0; i < n; ++i )
 			dimensions[ i ] = cellDimensions[ i ];
@@ -190,9 +223,9 @@ public class CellGrid
 
 	/**
 	 * Get the number of pixels in a standard cell in dimension {@code d}. Cells on the
-	 * max border of the image may be cut off and have different dimensions.
+	 * borders of the image may be cut off and have different dimensions.
 	 */
-	public int cellDimension( final int d )
+	public long cellDimension( final int d )
 	{
 		return cellDimensions[ d ];
 	}
@@ -206,25 +239,38 @@ public class CellGrid
 	 * <p>
 	 * Note, that this method assumes that the cell grid has flat iteration
 	 * order. It this is not the case, use
-	 * {@link #getCellDimensions(long[], long[], int[])}.
+	 * {@link #getCellDimensions(long[], long[], long[])}.
 	 * </p>
 	 *
 	 * @param index
-	 *            flattened grid coordinates of the cell.
+	 * 		flattened grid coordinates of the cell.
 	 * @param cellMin
-	 *            offset of the cell in image coordinates are written here.
+	 * 		offset of the cell in image coordinates are written here.
 	 * @param cellDims
-	 *            dimensions of the cell are written here.
+	 * 		dimensions of the cell are written here.
 	 */
-	public void getCellDimensions( long index, final long[] cellMin, final int[] cellDims )
+	public void getCellDimensions( long index, final long[] cellMin, final long[] cellDims )
 	{
 		for ( int d = 0; d < n; ++d )
 		{
 			final long j = index / numCells[ d ];
 			final long gridPos = index - j * numCells[ d ];
 			index = j;
-			cellDims[ d ] = ( ( gridPos == numCells[ d ] - 1 ) ? borderSize[ d ] : cellDimensions[ d ] );
-			cellMin[ d ] = gridPos * cellDimensions[ d ];
+			if ( gridPos == 0 )
+			{
+				cellDims[ d ] = minBorderSize[ d ];
+				cellMin[ d ] = 0;
+			}
+			else if ( gridPos == numCells[ d ] - 1 )
+			{
+				cellDims[ d ] = maxBorderSize[ d ];
+				cellMin[ d ] = minBorderSize[ d ] + ( gridPos - 1 ) * cellDimensions[ d ];
+			}
+			else
+			{
+				cellDims[ d ] = cellDimensions[ d ];
+				cellMin[ d ] = minBorderSize[ d ] + ( gridPos - 1 ) * cellDimensions[ d ];
+			}
 		}
 	}
 
@@ -236,18 +282,32 @@ public class CellGrid
 	 * which case it might be truncated.
 	 *
 	 * @param cellGridPosition
-	 *            grid coordinates of the cell.
+	 * 		grid coordinates of the cell.
 	 * @param cellMin
-	 *            offset of the cell in image coordinates are written here.
+	 * 		offset of the cell in image coordinates are written here.
 	 * @param cellDims
-	 *            dimensions of the cell are written here.
+	 * 		dimensions of the cell are written here.
 	 */
-	public void getCellDimensions( final long[] cellGridPosition, final long[] cellMin, final int[] cellDims )
+	public void getCellDimensions( final long[] cellGridPosition, final long[] cellMin, final long[] cellDims )
 	{
 		for ( int d = 0; d < n; ++d )
 		{
-			cellDims[ d ] = ( ( cellGridPosition[ d ] + 1 == numCells[ d ] ) ? borderSize[ d ] : cellDimensions[ d ] );
-			cellMin[ d ] = cellGridPosition[ d ] * cellDimensions[ d ];
+			final long gridPos = cellGridPosition[ d ];
+			if ( gridPos == 0 )
+			{
+				cellDims[ d ] = minBorderSize[ d ];
+				cellMin[ d ] = 0;
+			}
+			else if ( gridPos == numCells[ d ] - 1 )
+			{
+				cellDims[ d ] = maxBorderSize[ d ];
+				cellMin[ d ] = minBorderSize[ d ] + ( gridPos - 1 ) * cellDimensions[ d ];
+			}
+			else
+			{
+				cellDims[ d ] = cellDimensions[ d ];
+				cellMin[ d ] = minBorderSize[ d ] + ( gridPos - 1 ) * cellDimensions[ d ];
+			}
 		}
 	}
 
@@ -256,9 +316,21 @@ public class CellGrid
 		for ( int d = 0; d < n; ++d )
 		{
 			final long gridPos = cellGridPosition[ d ];
-			final int cellDim = ( gridPos + 1 == numCells[ d ] ) ? borderSize[ d ] : cellDimensions[ d ];
-			cellMin[ d ] = gridPos * cellDimensions[ d ];
-			cellMax[ d ] = cellMin[ d ] + cellDim - 1;
+			if ( gridPos == 0 )
+			{
+				cellMin[ d ] = 0;
+				cellMax[ d ] = minBorderSize[ d ] - 1;
+			}
+			else if ( gridPos == numCells[ d ] - 1 )
+			{
+				cellMin[ d ] = minBorderSize[ d ] + ( gridPos - 1 ) * cellDimensions[ d ];
+				cellMax[ d ] = cellMin[ d ] + maxBorderSize[ d ] - 1;
+			}
+			else
+			{
+				cellMin[ d ] = minBorderSize[ d ] + ( gridPos - 1 ) * cellDimensions[ d ];
+				cellMax[ d ] = cellMin[ d ] + cellDimensions[ d ] - 1;
+			}
 		}
 	}
 
@@ -269,14 +341,20 @@ public class CellGrid
 	 * which case it might be truncated.
 	 *
 	 * @param d
-	 *            dimension index
+	 * 		dimension index
 	 * @param cellGridPosition
-	 *            grid coordinates of the cell in dimension {@code d}.
+	 * 		grid coordinates of the cell in dimension {@code d}.
+	 *
 	 * @return size of the cell in dimension {@code d}.
 	 */
-	public int getCellDimension( final int d, final long cellGridPosition )
+	public long getCellDimension( final int d, final long cellGridPosition )
 	{
-		return ( ( cellGridPosition + 1 == numCells[ d ] ) ? borderSize[ d ] : cellDimensions[ d ] );
+		if ( cellGridPosition == 0 )
+			return minBorderSize[ d ];
+		else if ( cellGridPosition == numCells[ d ] - 1 )
+			return maxBorderSize[ d ];
+		else
+			return cellDimensions[ d ];
 	}
 
 	/**
@@ -285,14 +363,18 @@ public class CellGrid
 	 * cell in image coordinates).
 	 *
 	 * @param d
-	 *            dimension index
+	 * 		dimension index
 	 * @param cellGridPosition
-	 *            grid coordinates of the cell in dimension {@code d}.
+	 * 		grid coordinates of the cell in dimension {@code d}.
+	 *
 	 * @return offset of the cell in dimension {@code d} (in image coordinates).
 	 */
 	public long getCellMin( final int d, final long cellGridPosition )
 	{
-		return cellGridPosition * cellDimensions[ d ];
+		if ( cellGridPosition == 0 )
+			return 0;
+		else
+			return minBorderSize[ d ] + ( cellGridPosition - 1 ) * cellDimensions[ d ];
 	}
 
 	/**
@@ -300,9 +382,9 @@ public class CellGrid
 	 * cell in the grid.
 	 *
 	 * @param index
-	 *            flattened grid coordinates of the cell.
+	 * 		flattened grid coordinates of the cell.
 	 * @param cellGridPosition
-	 *            grid coordinates of the cell are written here.
+	 * 		grid coordinates of the cell are written here.
 	 */
 	public void getCellGridPositionFlat( final long index, final long[] cellGridPosition )
 	{
@@ -313,28 +395,38 @@ public class CellGrid
 	 * Get the grid position of the cell containing the element at {@code position}.
 	 *
 	 * @param position
-	 *            position of an element in the image.
+	 * 		position of an element in the image.
 	 * @param cellPos
-	 *            is set to the grid position of the cell containing the element.
+	 * 		is set to the grid position of the cell containing the element.
 	 */
 	public void getCellPosition( final long[] position, final long[] cellPos )
 	{
 		for ( int d = 0; d < n; ++d )
-			cellPos[ d ] = position[ d ] / cellDimensions[ d ];
+		{
+			if ( position[ d ] < minBorderSize[ d ] )
+				cellPos[ d ] = 0;
+			else
+				cellPos[ d ] = ( position[ d ] - minBorderSize[ d ] ) / cellDimensions[ d ];
+		}
 	}
 
 	/**
 	 * Get the grid position of the cell containing the element at {@code position}.
 	 *
 	 * @param position
-	 *            position of an element in the image.
+	 * 		position of an element in the image.
 	 * @param cellPos
-	 *            is set to the grid position of the cell containing the element.
+	 * 		is set to the grid position of the cell containing the element.
 	 */
 	public void getCellPosition( final long[] position, final Positionable cellPos )
 	{
 		for ( int d = 0; d < n; ++d )
-			cellPos.setPosition( position[ d ] / cellDimensions[ d ], d );
+		{
+			if ( position[ d ] < minBorderSize[ d ] )
+				cellPos.setPosition( 0, d );
+			else
+				cellPos.setPosition( ( position[ d ] - minBorderSize[ d ] ) / cellDimensions[ d ], d );
+		}
 	}
 
 	@Override
@@ -346,11 +438,12 @@ public class CellGrid
 	@Override
 	public boolean equals( final Object obj )
 	{
-		if ( obj instanceof CellGrid )
+		if ( obj instanceof Grid )
 		{
-			final CellGrid other = ( CellGrid ) obj;
+			final Grid other = ( Grid ) obj;
 			return Arrays.equals( dimensions, other.dimensions )
-					&& Arrays.equals( cellDimensions, other.cellDimensions );
+					&& Arrays.equals( cellDimensions, other.cellDimensions )
+					&& Arrays.equals( minBorderSize, other.minBorderSize );
 		}
 		return false;
 	}
@@ -358,16 +451,20 @@ public class CellGrid
 	@Override
 	public String toString()
 	{
+		final long[] offset = new long[ n ];
+		Arrays.setAll( offset, d -> cellDimensions[ d ] == minBorderSize[ d ] ? 0 : minBorderSize[ d ] );
+
 		return getClass().getSimpleName()
 				+ "( dims = " + Util.printCoordinates( dimensions )
-				+ ", cellDims = " + Util.printCoordinates( cellDimensions ) + " )";
+				+ ", cellDims = " + Util.printCoordinates( cellDimensions )
+				+ ", offset = " + Util.printCoordinates( offset ) + " )";
 	}
 
 	private class CellIntervalsRA extends Point implements RandomAccess< Interval >
 	{
-		private final long[] min = new long[ CellGrid.this.n ];
+		private final long[] min = new long[ Grid.this.n ];
 
-		private final long[] max = new long[ CellGrid.this.n ];
+		private final long[] max = new long[ Grid.this.n ];
 
 		private final Interval interval = FinalInterval.wrap( min, max );
 
@@ -380,7 +477,7 @@ public class CellGrid
 
 		CellIntervalsRA()
 		{
-			super( CellGrid.this.n );
+			super( Grid.this.n );
 		}
 
 		CellIntervalsRA( CellIntervalsRA ra )
