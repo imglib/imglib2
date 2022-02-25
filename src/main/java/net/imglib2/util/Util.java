@@ -70,6 +70,7 @@ import java.util.stream.StreamSupport;
  * @author Stephan Preibisch
  * @author Stephan Saalfeld
  * @author Curtis Rueden
+ * @author Philipp Hanslovsky
  */
 public class Util
 {
@@ -780,6 +781,11 @@ public class Util
 	}
 
 	/**
+	 *
+	 * This method has been deprecated.
+	 * Use {@link RandomAccessibleInterval#getType()} instead.
+	 * TODO: Cannot deprecate because rai parameter is not actually a RandomAccessibleInterval
+	 *
 	 * Gets an instance of T from the {@link RandomAccessibleInterval} by
 	 * querying the value at the min coordinate
 	 * 
@@ -789,8 +795,14 @@ public class Util
 	 *            - the {@link RandomAccessibleInterval}
 	 * @return - an instance of T
 	 */
+	@Deprecated
 	final public static < T, F extends Interval & RandomAccessible< T > > T getTypeFromInterval( final F rai )
 	{
+		if (rai instanceof RandomAccessibleInterval)
+			return ((RandomAccessibleInterval<T>) rai).getType();
+		// TODO can we remove generic parameter F and use
+		//      RandomAccessible<T> rai instead?
+		//      This would be a breaking change, though.
 		// create RandomAccess
 		final RandomAccess< T > randomAccess = rai.randomAccess();
 
