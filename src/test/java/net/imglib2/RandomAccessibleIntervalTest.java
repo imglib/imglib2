@@ -2,7 +2,7 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2024 Tobias Pietzsch, Stephan Preibisch, Stephan Saalfeld,
+ * Copyright (C) 2009 - 2022 Tobias Pietzsch, Stephan Preibisch, Stephan Saalfeld,
  * John Bogovic, Albert Cardona, Barry DeZonia, Christian Dietz, Jan Funke,
  * Aivar Grislis, Jonathan Hale, Grant Harris, Stefan Helfrich, Mark Hiner,
  * Martin Horn, Steffen Jaensch, Lee Kamentsky, Larry Lindsey, Melissa Linkert,
@@ -32,59 +32,28 @@
  * #L%
  */
 
-package net.imglib2.img;
+package net.imglib2;
 
-import net.imglib2.type.NativeType;
-import net.imglib2.util.Fraction;
+import net.imglib2.img.array.ArrayImgs;
+import net.imglib2.type.numeric.integer.ByteType;
+import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
 
 /**
- * TODO
- * 
- * @author Stephan Preibisch
- * @author Stephan Saalfeld
+ * Tests {@link RandomAccessibleInterval}.
+ *
  * @author Philipp Hanslovsky
  */
-public abstract class AbstractNativeImg< T extends NativeType< T >, A >
-		extends AbstractImg< T >
-		implements NativeImg< T, A >
+public class RandomAccessibleIntervalTest
 {
-	final protected Fraction entitiesPerPixel;
-	protected long numEntities;
 
-	protected T linkedType;
-
-	public AbstractNativeImg( final long[] dim, final Fraction entitiesPerPixel )
+	@Test
+	public void testGetType()
 	{
-		super( dim );
-		this.entitiesPerPixel = entitiesPerPixel;
-		this.numEntities = entitiesPerPixel.mulCeil( numPixels );
-	}
-
-	@Override
-	public void setLinkedType( final T type )
-	{
-		this.linkedType = type;
-	}
-
-	@Override
-	public T createLinkedType()
-	{
-		try
-		{
-			return linkedType.duplicateTypeOnSameNativeImg();
-		}
-		catch ( final NullPointerException e )
-		{
-			return null;
-		}
-	}
-
-	@Override
-	public T getType() {
-		try {
-			return linkedType.createVariable();
-		} catch ( final NullPointerException e ) {
-			return super.getType();
-		}
+		// setup
+		final RandomAccessibleInterval< ? > rai = ArrayImgs.bytes( 1 );
+		// process & test
+		assertEquals( ByteType.class, rai.getType().getClass() );
 	}
 }
