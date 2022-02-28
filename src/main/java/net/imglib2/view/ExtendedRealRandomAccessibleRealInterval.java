@@ -91,4 +91,10 @@ final public class ExtendedRealRandomAccessibleRealInterval< T, F extends RealRa
 	{
 		return factory;
 	}
+
+	@Override
+	public T getType() {
+		// source may have an optimized implementation for getType
+		return source.getType();
+	}
 }
