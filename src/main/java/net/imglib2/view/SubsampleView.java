@@ -278,4 +278,10 @@ public class SubsampleView< T > implements RandomAccessible< T >, View
 	{
 		return steps.clone();
 	}
+
+	@Override
+	public T getType() {
+		// source may have an optimized implementation for getType
+		return source.getType();
+	}
 }
