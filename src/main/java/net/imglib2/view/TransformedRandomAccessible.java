@@ -69,4 +69,9 @@ public interface TransformedRandomAccessible< T > extends RandomAccessible< T >,
 	 *         source} coordinates.
 	 */
 	Transform getTransformToSource();
+
+	default T getType() {
+		// source may have an optimized implementation for getType
+		return getSource().getType();
+	}
 }
