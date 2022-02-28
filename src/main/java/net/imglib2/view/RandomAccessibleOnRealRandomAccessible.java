@@ -229,4 +229,10 @@ public class RandomAccessibleOnRealRandomAccessible< T > extends AbstractEuclide
 	{
 		return new RandomAccessOnRealRandomAccessible( source.realRandomAccess( interval ) );
 	}
+
+	@Override
+	public T getType() {
+		// source may have an optimized implementation for getType
+		return source.getType();
+	}
 }
