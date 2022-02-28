@@ -34,6 +34,8 @@
 
 package net.imglib2;
 
+import net.imglib2.util.Intervals;
+
 /**
  * <p>
  * <em>f</em>:{x&isin;R<sup><em>n</em></sup>|[min,max]&rarr;T}
@@ -60,4 +62,16 @@ package net.imglib2;
  * @author Stephan Saalfeld
  */
 public interface RealRandomAccessibleRealInterval< T > extends RealRandomAccessible< T >, RealInterval
-{}
+{
+	/**
+	 *
+	 * Gets an instance of T from the {@link RealRandomAccessibleRealInterval}.
+	 * By default, this queries the value at the min coordinate but individual classes
+	 * may choose different implementations for improved performance.
+	 *
+	 * @return - an instance of T
+	 */
+	default T getType() {
+		return getAt( Intervals.minAsDoubleArray( this ) );
+	}
+}
