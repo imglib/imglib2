@@ -180,4 +180,16 @@ public interface RandomAccessible< T > extends EuclideanSpace
 	{
 		return randomAccess().setPositionAndGet( position );
 	}
+
+	/**
+	 *
+	 * Gets an instance of T from the {@link RandomAccessible}.
+	 * By default, this queries the value at the default coordinate of {@link RandomAccessible#randomAccess()}
+	 * but individual classes may choose different implementations for improved performance.
+	 *
+	 * @return - an instance of T
+	 */
+	default T getType() {
+		return randomAccess().get();
+	}
 }
