@@ -102,4 +102,9 @@ public class PositionRandomAccessible implements RandomAccessible< LongType >
 	{
 		return randomAccess();
 	}
+
+	@Override
+	public LongType getType() {
+		return new LongType();
+	}
 }

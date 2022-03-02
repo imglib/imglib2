@@ -103,4 +103,9 @@ public class FunctionRandomAccessible< T > extends AbstractFunctionEuclideanSpac
 	{
 		return randomAccess();
 	}
+
+	@Override
+	public T getType() {
+		return super.typeSupplier.get();
+	}
 }

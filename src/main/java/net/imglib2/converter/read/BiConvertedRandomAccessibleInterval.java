@@ -141,4 +141,10 @@ public class BiConvertedRandomAccessibleInterval< A, B, C > extends AbstractWrap
 	{
 		return converterSupplier;
 	}
+
+	@Override
+	public C getType()
+	{
+		return convertedSupplier.get();
+	}
 }

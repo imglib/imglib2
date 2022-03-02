@@ -128,4 +128,10 @@ public class ConvertedRandomAccessibleInterval< A, B > extends AbstractWrappedIn
 	{
 		return converterSupplier;
 	}
+
+	@Override
+	public B getType()
+	{
+		return convertedSupplier.get();
+	}
 }
