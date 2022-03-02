@@ -39,6 +39,7 @@ import java.util.function.Supplier;
 import net.imglib2.AbstractWrappedInterval;
 import net.imglib2.Interval;
 import net.imglib2.RandomAccessibleInterval;
+import net.imglib2.Sampler;
 
 /**
  * TODO
@@ -73,5 +74,32 @@ public class WriteConvertedRandomAccessibleInterval< A, B > extends AbstractWrap
 	public WriteConvertedRandomAccess< A, B > randomAccess( final Interval interval )
 	{
 		return new WriteConvertedRandomAccess< A, B >( sourceInterval.randomAccess( interval ), converterSupplier );
+	}
+
+	@Override
+	public B getType() {
+		return converterSupplier.get().convert( ( Sampler< ? extends A > ) new ConstantSampler( getSource().getType() ) );
+	}
+
+	private static class ConstantSampler< T > implements Sampler< T >
+	{
+
+		private final T t;
+
+		public ConstantSampler( T t ) {
+			this.t = t;
+		}
+
+		@Override
+		public T get()
+		{
+			return t;
+		}
+
+		@Override
+		public Sampler< T > copy()
+		{
+			return new ConstantSampler<>( t );
+		}
 	}
 }

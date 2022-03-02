@@ -132,4 +132,10 @@ public class BiConvertedRandomAccessible< A, B, C > extends AbstractConvertedRan
 	{
 		return converterSupplier;
 	}
+
+	@Override
+	public C getType()
+	{
+		return convertedSupplier.get();
+	}
 }

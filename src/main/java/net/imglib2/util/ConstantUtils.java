@@ -88,6 +88,11 @@ public class ConstantUtils
 			{
 				return randomAccess();
 			}
+
+			@Override
+			public T getType() {
+				return constant;
+			}
 		};
 	}
 

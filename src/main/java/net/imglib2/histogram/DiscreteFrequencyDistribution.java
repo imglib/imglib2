@@ -366,4 +366,9 @@ public class DiscreteFrequencyDistribution implements Img< LongType >
 		return new DiscreteFrequencyDistribution( counts.copy() );
 	}
 
+	@Override
+	public LongType getType() {
+		return new LongType();
+	}
+
 }

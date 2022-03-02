@@ -147,6 +147,11 @@ public class StackView< T > extends AbstractInterval implements RandomAccessible
 				new DefaultRA< T >( slices, interval );
 	}
 
+	@Override
+	public T getType() {
+		return slices.length > 0 ? slices[0].getType() : null;
+	}
+
 	/**
 	 * Get the source slices that are stacked in this {@link StackView}. These
 	 * are {@code (numDimensions() - 1)} dimensional
