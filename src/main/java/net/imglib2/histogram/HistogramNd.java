@@ -1020,6 +1020,11 @@ public class HistogramNd< T > implements Img< LongType >
 		return new HistogramNd< T >( this );
 	}
 
+	@Override
+	public LongType getType() {
+		return new LongType();
+	}
+
 	// -- helpers --
 
 	private void reset()

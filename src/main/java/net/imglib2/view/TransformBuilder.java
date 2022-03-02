@@ -388,6 +388,11 @@ public class TransformBuilder< T >
 			{
 				return new TransformRandomAccess< T >( s.randomAccess(), t );
 			}
+
+			@Override
+			public T getType() {
+				return s.getType();
+			}
 		};
 	}
 
@@ -417,6 +422,11 @@ public class TransformBuilder< T >
 					return new FullSourceMapMixedRandomAccess< T >( s.randomAccess(), t );
 				return new MixedRandomAccess< T >( s.randomAccess(), t );
 			}
+
+			@Override
+			public T getType() {
+				return s.getType();
+			}
 		};
 	}
 
@@ -440,6 +450,11 @@ public class TransformBuilder< T >
 			public TranslationRandomAccess< T > randomAccess( final Interval interval )
 			{
 				return new TranslationRandomAccess< T >( s.randomAccess(), t );
+			}
+
+			@Override
+			public T getType() {
+				return s.getType();
 			}
 		};
 	}
@@ -469,6 +484,11 @@ public class TransformBuilder< T >
 				if ( full )
 					return new FullSourceMapSlicingRandomAccess< T >( s.randomAccess(), t );
 				return new SlicingRandomAccess< T >( s.randomAccess(), t );
+			}
+
+			@Override
+			public T getType() {
+				return s.getType();
 			}
 		};
 	}
