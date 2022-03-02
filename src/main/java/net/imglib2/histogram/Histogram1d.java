@@ -721,6 +721,10 @@ public class Histogram1d< T > implements Img< LongType >
 		return new Histogram1d< T >( this );
 	}
 
+	public LongType getType() {
+		return new LongType();
+	}
+
 	// -- helpers --
 
 	private void reset()
