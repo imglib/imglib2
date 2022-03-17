@@ -31,7 +31,7 @@
  * POSSIBILITY OF SUCH DAMAGE.
  * #L%
  */
-package net.imglib2.type.numeric.integer;
+package net.imglib2.type.numeric;
 
 import net.imglib2.Localizable;
 import net.imglib2.Positionable;
@@ -41,7 +41,6 @@ import net.imglib2.img.basictypeaccess.array.LongArray;
 import net.imglib2.type.AbstractNativeType;
 import net.imglib2.type.Index;
 import net.imglib2.type.NativeTypeFactory;
-import net.imglib2.type.numeric.NumericType;
 import net.imglib2.util.Fraction;
 import net.imglib2.util.Util;
 

@@ -31,7 +31,7 @@
  * POSSIBILITY OF SUCH DAMAGE.
  * #L%
  */
-package net.imglib2.type.numeric.integer;
+package net.imglib2.type.numeric;
 
 import net.imglib2.img.NativeImg;
 import net.imglib2.img.basictypeaccess.LongAccess;
@@ -40,78 +40,56 @@ import net.imglib2.type.NativeTypeFactory;
 /**
  *
  */
-public class UnsignedLongVectorType extends GenericLongVectorType< UnsignedLongVectorType >
+public class LongVectorType extends GenericLongVectorType< LongVectorType >
 {
 	@SuppressWarnings( "hiding" )
 	@Override
-	protected NativeTypeFactory< UnsignedLongVectorType, LongAccess > createTypeFactory() {
+	protected NativeTypeFactory< LongVectorType, LongAccess > createTypeFactory() {
 
-		return  NativeTypeFactory.LONG( ( img ) -> new UnsignedLongVectorType( img, numElements ) );
+		return  NativeTypeFactory.LONG( ( img ) -> new LongVectorType( img, numElements ) );
 	}
 
 	// this is the constructor if you want it to read from an array
-	public UnsignedLongVectorType( final NativeImg< ?, ? extends LongAccess > longStorage, final int numElements )
+	public LongVectorType( final NativeImg< ?, ? extends LongAccess > longStorage, final int numElements )
 	{
 		super(longStorage, numElements);
 	}
 
 	// this is the constructor if you want it to be a variable
-	public UnsignedLongVectorType( final long[] value )
+	public LongVectorType( final long[] value )
 	{
 		super(value);
 	}
 
 	// this is the constructor if you want to specify the dataAccess
-	public UnsignedLongVectorType( final LongAccess access, final int numElements )
+	public LongVectorType( final LongAccess access, final int numElements )
 	{
 		super(access, numElements);
 	}
 
 	// this is the constructor if you want it to be a variable
-	public UnsignedLongVectorType( final int numElements )
+	public LongVectorType( final int numElements )
 	{
 		this( new long[numElements] );
 	}
 
 	@Override
-	public UnsignedLongVectorType createVariable()
+	public LongVectorType createVariable()
 	{
-		return new UnsignedLongVectorType(numElements);
+		return new LongVectorType(numElements);
 	}
 
 	@Override
-	public UnsignedLongVectorType copy()
+	public LongVectorType copy()
 	{
-		final UnsignedLongVectorType copy = new UnsignedLongVectorType(numElements);
+		final LongVectorType copy = new LongVectorType(numElements);
 		copy.set(this);
 		return copy;
 	}
 
 	@Override
-	public UnsignedLongVectorType duplicateTypeOnSameNativeImg()
+	public LongVectorType duplicateTypeOnSameNativeImg()
 	{
-		return new UnsignedLongVectorType(img, numElements);
-	}
-
-	/**
-	 * Divide this vector by another {@link UnsignedLongVectorType} element wise.
-	 * Behavior is undefined if the other {@link UnsignedLongVectorType} has a
-	 * different number of elements, this is not checked.
-	 */
-	@Override
-	public void div( final UnsignedLongVectorType t )
-	{
-		final int ai = i.get() * numElements;
-		final int ti = t.i.get() * t.numElements;
-
-		for ( int j = 0; j < numElements; ++j )
-		{
-			final int k = ai + j;
-			dataAccess.setValue(
-					k,
-					UnsignedLongType.divide(
-							dataAccess.getValue( k ),
-							t.dataAccess.getValue( ti + j ) ) );
-		}
+		return new LongVectorType(img, numElements);
 	}
 }
