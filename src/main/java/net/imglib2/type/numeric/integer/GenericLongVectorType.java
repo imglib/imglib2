@@ -163,9 +163,21 @@ public abstract class GenericLongVectorType< T extends GenericLongVectorType< T 
 	}
 
 	/**
+	 * Set the values to those of another {@link GenericLongVectorType}
+	 * starting from an offset in the other type.
+	 * The other array's length must be &ge; offset + this type's length.
+	 */
+	public void setOffset( final long[] t, final int offset )
+	{
+		final int ai = i.get() * numElements;
+
+		for ( int j = 0; j < numElements; ++j )
+			dataAccess.setValue( ai + j, t[ j + offset ] );
+	}
+
+	/**
 	 * Set the values to those of another {@link GenericLongVectorType}.
-	 * Behavior is undefined if the other {@link GenericLongVectorType} has a
-	 * different number of elements, this is not checked.
+	 * The other type's length must be &ge; this type's length.
 	 */
 	@Override
 	public void set( final T t )
@@ -176,6 +188,20 @@ public abstract class GenericLongVectorType< T extends GenericLongVectorType< T 
 
 		for ( int j = 0; j < numElements; ++j )
 			dataAccess.setValue( ai + j, t.dataAccess.getValue( ti + j ) );
+	}
+
+	/**
+	 * Set the values to those of another {@link GenericLongVectorType}
+	 * starting from an offset in the other type.
+	 * The other type's length must be &ge; offset + this type's length.
+	 */
+	public void setOffset( final T t, final int offset )
+	{
+		final int ai = i.get() * numElements;
+		final int ti = t.i.get() * t.numElements;
+
+		for ( int j = 0; j < numElements; ++j )
+			dataAccess.setValue( ai + j, t.dataAccess.getValue( ti + j + offset ) );
 	}
 
 	/**
