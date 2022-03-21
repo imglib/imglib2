@@ -11,13 +11,13 @@
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice,
  *    this list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  *    this list of conditions and the following disclaimer in the documentation
  *    and/or other materials provided with the distribution.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -48,7 +48,12 @@ import net.imglib2.type.numeric.NumericType;
 abstract public class AbstractNumericComposite< T extends NumericType< T >, C extends AbstractNumericComposite< T, C > > extends AbstractComposite< T > implements NumericType< C >, Iterable< T >
 {
 	final protected int length;
-	
+
+	public int getLength()
+	{
+		return length;
+	}
+
 	final protected Iterator< T > iterator = new Iterator< T >()
 	{
 		@Override
@@ -71,7 +76,7 @@ abstract public class AbstractNumericComposite< T extends NumericType< T >, C ex
 			throw new UnsupportedOperationException();
 		}
 	};
-	
+
 	public AbstractNumericComposite( final RandomAccess< T > sourceAccess, final int length )
 	{
 		super( sourceAccess );
@@ -219,7 +224,7 @@ abstract public class AbstractNumericComposite< T extends NumericType< T >, C ex
 	}
 
 	@Override
-	public boolean valueEquals( C t )
+	public boolean valueEquals( final C t )
 	{
 		if ( t.length == length )
 		{
