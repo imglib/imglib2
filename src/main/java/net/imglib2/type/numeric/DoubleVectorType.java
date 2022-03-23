@@ -41,13 +41,15 @@ import net.imglib2.img.basictypeaccess.DoubleAccess;
 import net.imglib2.img.basictypeaccess.array.DoubleArray;
 import net.imglib2.type.AbstractNativeType;
 import net.imglib2.type.NativeTypeFactory;
+import net.imglib2.type.numeric.real.DoubleType;
 import net.imglib2.util.Fraction;
+import net.imglib2.view.composite.Composite;
 
 /**
  * Double vector types.
  *
  */
-public class DoubleVectorType extends AbstractNativeType< DoubleVectorType > implements NumericType< DoubleVectorType >, RealPositionable, RealLocalizable
+public class DoubleVectorType extends AbstractNativeType< DoubleVectorType > implements NumericType< DoubleVectorType >, RealPositionable, RealLocalizable, Composite< DoubleType >
 {
 	private final int numElements;
 
@@ -55,6 +57,8 @@ public class DoubleVectorType extends AbstractNativeType< DoubleVectorType > imp
 
 	// the DataAccess that holds the information
 	private DoubleAccess dataAccess;
+
+	private final DoubleType type = new DoubleType();
 
 	private final NativeTypeFactory< DoubleVectorType, DoubleAccess > typeFactory;
 
@@ -89,7 +93,7 @@ public class DoubleVectorType extends AbstractNativeType< DoubleVectorType > imp
 		img = null;
 		this.numElements = numElements;
 		dataAccess = access;
-		typeFactory = createTypeFactory(numElements);
+		typeFactory = createTypeFactory( numElements );
 	}
 
 	// this is the constructor if you want it to be a variable
@@ -123,8 +127,8 @@ public class DoubleVectorType extends AbstractNativeType< DoubleVectorType > imp
 
 	/**
 	 * Fill an array with the elements of this {@link DoubleVectorType}. This is
-	 * more efficient than subsequent calls of {@link #getDouble(int)} because the
-	 * base offset has to be calculated only once.
+	 * more efficient than subsequent calls of {@link #getDouble(int)} because
+	 * the base offset has to be calculated only once.
 	 *
 	 * @param values
 	 */
@@ -151,8 +155,8 @@ public class DoubleVectorType extends AbstractNativeType< DoubleVectorType > imp
 
 	/**
 	 * Set the values to those of another {@link DoubleVectorType} starting from
-	 * an offset in the other type. The array's length must be &ge; offset
-	 * + this type's length.
+	 * an offset in the other type. The array's length must be &ge; offset +
+	 * this type's length.
 	 */
 	public void setOffset( final double[] t, final int offset )
 	{
@@ -525,7 +529,7 @@ public class DoubleVectorType extends AbstractNativeType< DoubleVectorType > imp
 	{
 		final int ai = i.get() * numElements;
 		for ( int j = 0; j < numElements; ++j )
-			position[ j ] = (float)dataAccess.getValue( ai + j );
+			position[ j ] = ( float ) dataAccess.getValue( ai + j );
 	}
 
 	@Override
@@ -545,21 +549,21 @@ public class DoubleVectorType extends AbstractNativeType< DoubleVectorType > imp
 	@Override
 	public DoubleVectorType createVariable()
 	{
-		return new DoubleVectorType(numElements);
+		return new DoubleVectorType( numElements );
 	}
 
 	@Override
 	public DoubleVectorType copy()
 	{
-		final DoubleVectorType copy = new DoubleVectorType(numElements);
-		copy.set(this);
+		final DoubleVectorType copy = new DoubleVectorType( numElements );
+		copy.set( this );
 		return copy;
 	}
 
 	@Override
 	public DoubleVectorType duplicateTypeOnSameNativeImg()
 	{
-		return new DoubleVectorType(img, numElements);
+		return new DoubleVectorType( img, numElements );
 	}
 
 	@Override
@@ -643,5 +647,12 @@ public class DoubleVectorType extends AbstractNativeType< DoubleVectorType > imp
 	public void setPosition( final double position, final int d )
 	{
 		setDouble( position, d );
+	}
+
+	@Override
+	public DoubleType get( @SuppressWarnings( "hiding" ) final long i )
+	{
+		type.set( getDouble( ( int )i ) );
+		return type;
 	}
 }
