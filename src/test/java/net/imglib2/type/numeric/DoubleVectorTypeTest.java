@@ -89,15 +89,18 @@ public class DoubleVectorTypeTest
 		}
 	}
 
-	private static final void benchmarkRealLocalizable1(final long[] size, final double[] test, final Iterable< ? extends RealLocalizable > img, final String comment) {
+	private static final void benchmarkRealLocalizable1( final long[] size, final double[] test, final Iterable< ? extends RealLocalizable > img, final String comment )
+	{
 
 		final long time = System.nanoTime();
 
 		int i = 0;
-		for (final RealLocalizable t : img ) {
+		for ( final RealLocalizable t : img )
+		{
 
-			for (int j = 0; j < size[0]; ++j) {
-				assertEquals( test[i], t.getDoublePosition( j ), 0 );
+			for ( int j = 0; j < size[ 0 ]; ++j )
+			{
+				assertEquals( test[ i ], t.getDoublePosition( j ), 0 );
 				++i;
 			}
 		}
@@ -105,15 +108,18 @@ public class DoubleVectorTypeTest
 		System.out.println( comment + ( System.nanoTime() - time ) );
 	}
 
-	private static final void benchmarkRealLocalizable2(final long[] size, final double[] test, final Iterable< ? extends RealLocalizable > img, final String comment) {
+	private static final void benchmarkRealLocalizable2( final long[] size, final double[] test, final Iterable< ? extends RealLocalizable > img, final String comment )
+	{
 
 		final long time = System.nanoTime();
 
 		int i = 0;
-		for (final RealLocalizable t : img ) {
+		for ( final RealLocalizable t : img )
+		{
 
-			for (int j = 0; j < size[0]; ++j) {
-				assertEquals( test[i], t.getDoublePosition( j ), 0 );
+			for ( int j = 0; j < size[ 0 ]; ++j )
+			{
+				assertEquals( test[ i ], t.getDoublePosition( j ), 0 );
 				++i;
 			}
 		}
@@ -121,15 +127,18 @@ public class DoubleVectorTypeTest
 		System.out.println( comment + ( System.nanoTime() - time ) );
 	}
 
-	private static final void benchmarkRealLocalizable3(final long[] size, final double[] test, final Iterable< ? extends RealLocalizable > img, final String comment) {
+	private static final void benchmarkRealLocalizable3( final long[] size, final double[] test, final Iterable< ? extends RealLocalizable > img, final String comment )
+	{
 
 		final long time = System.nanoTime();
 
 		int i = 0;
-		for (final RealLocalizable t : img ) {
+		for ( final RealLocalizable t : img )
+		{
 
-			for (int j = 0; j < size[0]; ++j) {
-				assertEquals( test[i], t.getDoublePosition( j ), 0 );
+			for ( int j = 0; j < size[ 0 ]; ++j )
+			{
+				assertEquals( test[ i ], t.getDoublePosition( j ), 0 );
 				++i;
 			}
 		}
@@ -137,15 +146,18 @@ public class DoubleVectorTypeTest
 		System.out.println( comment + ( System.nanoTime() - time ) );
 	}
 
-	private static final void benchmarkComposite1(final long[] size, final double[] test, final Iterable< ? extends Composite< DoubleType > > img, final String comment) {
+	private static final void benchmarkComposite1( final long[] size, final double[] test, final Iterable< ? extends Composite< DoubleType > > img, final String comment )
+	{
 
 		final long time = System.nanoTime();
 
 		int i = 0;
-		for (final Composite< DoubleType > t : img ) {
+		for ( final Composite< DoubleType > t : img )
+		{
 
-			for (int j = 0; j < size[0]; ++j) {
-				assertEquals( test[i], t.get( j ).get(), 0 );
+			for ( int j = 0; j < size[ 0 ]; ++j )
+			{
+				assertEquals( test[ i ], t.get( j ).get(), 0 );
 				++i;
 			}
 		}
@@ -153,15 +165,18 @@ public class DoubleVectorTypeTest
 		System.out.println( comment + ( System.nanoTime() - time ) );
 	}
 
-	private static final void benchmarkComposite2(final long[] size, final double[] test, final Iterable< ? extends Composite< DoubleType > > img, final String comment) {
+	private static final void benchmarkComposite2( final long[] size, final double[] test, final Iterable< ? extends Composite< DoubleType > > img, final String comment )
+	{
 
 		final long time = System.nanoTime();
 
 		int i = 0;
-		for (final Composite< DoubleType > t : img ) {
+		for ( final Composite< DoubleType > t : img )
+		{
 
-			for (int j = 0; j < size[0]; ++j) {
-				assertEquals( test[i], t.get( j ).get(), 0 );
+			for ( int j = 0; j < size[ 0 ]; ++j )
+			{
+				assertEquals( test[ i ], t.get( j ).get(), 0 );
 				++i;
 			}
 		}
@@ -169,15 +184,39 @@ public class DoubleVectorTypeTest
 		System.out.println( comment + ( System.nanoTime() - time ) );
 	}
 
-	private static final void benchmarkComposite3(final long[] size, final double[] test, final Iterable< ? extends Composite< DoubleType > > img, final String comment) {
+	private static final void benchmarkComposite3( final long[] size, final double[] test, final Iterable< ? extends Composite< DoubleType > > img, final String comment )
+	{
 
 		final long time = System.nanoTime();
 
 		int i = 0;
-		for (final Composite< DoubleType > t : img ) {
+		for ( final Composite< DoubleType > t : img )
+		{
 
-			for (int j = 0; j < size[0]; ++j) {
-				assertEquals( test[i], t.get( j ).get(), 0 );
+			for ( int j = 0; j < size[ 0 ]; ++j )
+			{
+				assertEquals( test[ i ], t.get( j ).get(), 0 );
+				++i;
+			}
+		}
+
+		System.out.println( comment + ( System.nanoTime() - time ) );
+	}
+
+	private static final void benchmarkDoubleVectorRead( final long[] size, final double[] test, final Iterable< DoubleVectorType > img, final String comment )
+	{
+
+		final long time = System.nanoTime();
+
+		int i = 0;
+		final double[] ref = new double[ ( int ) size[ 0 ] ];
+		for ( final DoubleVectorType t : img )
+		{
+
+			t.read( ref );
+			for ( int j = 0; j < size[ 0 ]; ++j )
+			{
+				assertEquals( test[ i ], ref[ j ], 0 );
 				++i;
 			}
 		}
@@ -186,46 +225,43 @@ public class DoubleVectorTypeTest
 	}
 
 	@Test
-	public void benchmarkDoubleVectorType() {
+	public void benchmarkDoubleVectorType()
+	{
 
-		final long[] size = {3, 500, 200, 300};
-		final Random rnd = new Random(0);
-		final double[] test = new double[(int)(size[0] * size[1] * size[2] * size[3])];
-		for (int i = 0; i < test.length; ++i) {
+		final long[] size = { 3, 500, 200, 300 };
+		final Random rnd = new Random( 0 );
+		final double[] test = new double[ ( int ) ( size[ 0 ] * size[ 1 ] * size[ 2 ] * size[ 3 ] ) ];
+		for ( int i = 0; i < test.length; ++i )
+		{
 
 			test[ i ] = rnd.nextDouble();
 		}
 
-		final CompositeIntervalView< DoubleType, RealComposite< DoubleType > > img1 = Views.collapseReal(
-				Views.moveAxis(
-						ArrayImgs.doubles(test, size),
-						0,
-						3));
-		final ArrayImg<DoubleVectorType, DoubleArray> img2 = new ArrayImg<>( new DoubleArray( test ), Arrays.copyOfRange( size, 1, size.length ), new Fraction(size[0], 1));
-		img2.setLinkedType( new DoubleVectorType( img2, (int )size[0] ) );
-
+		final CompositeIntervalView< DoubleType, RealComposite< DoubleType > > img1 = Views.collapseReal( Views.moveAxis( ArrayImgs.doubles( test, size ), 0, 3 ) );
+		final ArrayImg< DoubleVectorType, DoubleArray > img2 = new ArrayImg<>( new DoubleArray( test ), Arrays.copyOfRange( size, 1, size.length ), new Fraction( size[ 0 ], 1 ) );
+		img2.setLinkedType( new DoubleVectorType( img2, ( int ) size[ 0 ] ) );
 
 		benchmarkRealLocalizable1( size, test, Views.iterable( img1 ), "RealComposite polymorphic RealLocalizable:       " );
-		benchmarkRealLocalizable1( size, test, img2,                   "DoubleVector polymorphic RealLocalizable:        " );
+		benchmarkRealLocalizable1( size, test, img2, "DoubleVector polymorphic RealLocalizable:        " );
 		benchmarkRealLocalizable1( size, test, Views.iterable( img1 ), "RealComposite polymorphic RealLocalizable:       " );
-		benchmarkRealLocalizable1( size, test, img2,                   "DoubleVector polymorphic RealLocalizable:        " );
+		benchmarkRealLocalizable1( size, test, img2, "DoubleVector polymorphic RealLocalizable:        " );
 
 		benchmarkRealLocalizable2( size, test, Views.iterable( img1 ), "RealComposite monomorphic RealLocalizable:       " );
-		benchmarkRealLocalizable3( size, test, img2,                   "DoubleVector monomorphic RealLocalizable:        " );
+		benchmarkRealLocalizable3( size, test, img2, "DoubleVector monomorphic RealLocalizable:        " );
 		benchmarkRealLocalizable2( size, test, Views.iterable( img1 ), "RealComposite monomorphic RealLocalizable:       " );
-		benchmarkRealLocalizable3( size, test, img2,                   "DoubleVector monomorphic RealLocalizable:        " );
+		benchmarkRealLocalizable3( size, test, img2, "DoubleVector monomorphic RealLocalizable:        " );
 
-		benchmarkComposite1( size, test, Views.iterable( img1 ),       "RealComposite polymorphic Composite<DoubleType>: " );
-		benchmarkComposite1( size, test, img2,                         "DoubleVector polymorphic Composite<DoubleType>:  " );
-		benchmarkComposite1( size, test, Views.iterable( img1 ),       "RealComposite polymorphic Composite<DoubleType>: " );
-		benchmarkComposite1( size, test, img2,                         "DoubleVector polymorphic Composite<DoubleType>:  " );
+		benchmarkComposite1( size, test, Views.iterable( img1 ), "RealComposite polymorphic Composite<DoubleType>: " );
+		benchmarkComposite1( size, test, img2, "DoubleVector polymorphic Composite<DoubleType>:  " );
+		benchmarkComposite1( size, test, Views.iterable( img1 ), "RealComposite polymorphic Composite<DoubleType>: " );
+		benchmarkComposite1( size, test, img2, "DoubleVector polymorphic Composite<DoubleType>:  " );
 
-		benchmarkComposite2( size, test, Views.iterable( img1 ),       "RealComposite monomorphic Composite<DoubleType>: " );
-		benchmarkComposite3( size, test, img2,                         "DoubleVector monomorphic Composite<DoubleType>:  " );
-		benchmarkComposite2( size, test, Views.iterable( img1 ),       "RealComposite monomorphic Composite<DoubleType>: " );
-		benchmarkComposite3( size, test, img2,                         "DoubleVector monomorphic Composite<DoubleType>:  " );
+		benchmarkComposite2( size, test, Views.iterable( img1 ), "RealComposite monomorphic Composite<DoubleType>: " );
+		benchmarkComposite3( size, test, img2, "DoubleVector monomorphic Composite<DoubleType>:  " );
+		benchmarkComposite2( size, test, Views.iterable( img1 ), "RealComposite monomorphic Composite<DoubleType>: " );
+		benchmarkComposite3( size, test, img2, "DoubleVector monomorphic Composite<DoubleType>:  " );
 
+		benchmarkDoubleVectorRead( size, test, img2, "DoubleVector DoubleVectorType.read:              " );
+		benchmarkDoubleVectorRead( size, test, img2, "DoubleVector DoubleVectorType.read:              " );
 	}
-
 }
-

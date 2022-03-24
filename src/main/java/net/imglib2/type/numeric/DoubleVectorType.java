@@ -652,7 +652,7 @@ public class DoubleVectorType extends AbstractNativeType< DoubleVectorType > imp
 	@Override
 	public DoubleType get( @SuppressWarnings( "hiding" ) final long i )
 	{
-		type.set( getDouble( ( int )i ) );
+		type.set( getDouble( ( int ) i ) );
 		return type;
 	}
 }
