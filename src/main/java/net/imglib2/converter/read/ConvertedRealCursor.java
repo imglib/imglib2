@@ -11,13 +11,13 @@
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice,
  *    this list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  *    this list of conditions and the following disclaimer in the documentation
  *    and/or other materials provided with the distribution.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -39,17 +39,18 @@ import java.util.function.Supplier;
 import net.imglib2.RealCursor;
 import net.imglib2.converter.AbstractConvertedRealCursor;
 import net.imglib2.converter.Converter;
-import net.imglib2.type.Type;
 
 /**
  * TODO
  *
  */
-public class ConvertedRealCursor< A, B extends Type< B > > extends AbstractConvertedRealCursor< A, B >
+public class ConvertedRealCursor< A, B > extends AbstractConvertedRealCursor< A, B >
 {
+	final protected Supplier< Converter< ? super A, ? super B > > converterSupplier;
+
 	final protected Converter< ? super A, ? super B > converter;
 
-	final protected Supplier< Converter< ? super A, ? super B > > converterSupplier;
+	final protected Supplier< ? extends B > convertedSupplier;
 
 	final protected B converted;
 
@@ -59,17 +60,18 @@ public class ConvertedRealCursor< A, B extends Type< B > > extends AbstractConve
 	 *
 	 * @param source
 	 * @param converterSupplier
-	 * @param b
+	 * @param convertedSupplier
 	 */
 	public ConvertedRealCursor(
 			final RealCursor< A > source,
 			final Supplier< Converter< ? super A, ? super B > > converterSupplier,
-			final B b )
+			final Supplier< ? extends B > convertedSupplier )
 	{
 		super( source );
 		this.converterSupplier = converterSupplier;
 		this.converter = converterSupplier.get();
-		this.converted = b.copy();
+		this.convertedSupplier = convertedSupplier;
+		this.converted = convertedSupplier.get();
 	}
 
 	/**
@@ -78,14 +80,14 @@ public class ConvertedRealCursor< A, B extends Type< B > > extends AbstractConve
 	 *
 	 * @param source
 	 * @param converter
-	 * @param b
+	 * @param convertedSupplier
 	 */
 	public ConvertedRealCursor(
 			final RealCursor< A > source,
 			final Converter< ? super A, ? super B > converter,
-			final B b )
+			final Supplier< ? extends B > convertedSupplier )
 	{
-		this( source, () -> converter, b );
+		this( source, () -> converter, convertedSupplier );
 	}
 
 	@Override
@@ -98,6 +100,6 @@ public class ConvertedRealCursor< A, B extends Type< B > > extends AbstractConve
 	@Override
 	public ConvertedRealCursor< A, B > copy()
 	{
-		return new ConvertedRealCursor< A, B >( ( RealCursor< A > ) source.copy(), converterSupplier, converted );
+		return new ConvertedRealCursor< A, B >( ( RealCursor< A > ) source.copy(), converterSupplier, convertedSupplier );
 	}
 }

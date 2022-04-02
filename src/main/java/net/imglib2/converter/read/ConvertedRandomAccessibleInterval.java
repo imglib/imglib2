@@ -11,13 +11,13 @@
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice,
  *    this list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  *    this list of conditions and the following disclaimer in the documentation
  *    and/or other materials provided with the distribution.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -47,60 +47,85 @@ import net.imglib2.type.Type;
  * TODO
  *
  */
-public class ConvertedRandomAccessibleInterval< A, B extends Type< B > > extends AbstractWrappedInterval< RandomAccessibleInterval< A > > implements RandomAccessibleInterval< B >, View
+public class ConvertedRandomAccessibleInterval< A, B > extends AbstractWrappedInterval< RandomAccessibleInterval< A > > implements RandomAccessibleInterval< B >, View
 {
 	final protected Supplier< Converter< ? super A, ? super B > > converterSupplier;
 
-	final protected B converted;
+	final protected Supplier< ? extends B > convertedSupplier;
 
 	public ConvertedRandomAccessibleInterval(
 			final RandomAccessibleInterval< A > source,
 			final Supplier< Converter< ? super A, ? super B > > converterSupplier,
-			final B b )
+			final Supplier< ? extends B > convertedSupplier )
 	{
 		super( source );
 		this.converterSupplier = converterSupplier;
-		this.converted = b.copy();
+		this.convertedSupplier = convertedSupplier;
 	}
 
 	public ConvertedRandomAccessibleInterval(
 			final RandomAccessibleInterval< A > source,
 			final Converter< ? super A, ? super B > converter,
-			final B b )
+			final Supplier< ? extends B > convertedSupplier )
 	{
-		this( source, () -> converter, b );
+		this( source, () -> converter, convertedSupplier );
 	}
 
 	@Override
 	public ConvertedRandomAccess< A, B > randomAccess()
 	{
-		return new ConvertedRandomAccess< A, B >( sourceInterval.randomAccess(), converterSupplier, converted );
+		return new ConvertedRandomAccess< A, B >( sourceInterval.randomAccess(), converterSupplier, convertedSupplier );
 	}
 
 	@Override
 	public ConvertedRandomAccess< A, B > randomAccess( final Interval interval )
 	{
-		return new ConvertedRandomAccess< A, B >( sourceInterval.randomAccess( interval ), converterSupplier, converted );
+		return new ConvertedRandomAccess< A, B >( sourceInterval.randomAccess( interval ), converterSupplier, convertedSupplier );
 	}
 
 	/**
+	 * @deprecated Use {@link #getDestinationSupplier()} instead.
+	 *
 	 * @return an instance of the destination {@link Type}.
 	 */
+	@Deprecated
 	public B getDestinationType()
 	{
-		return converted.copy();
+		return convertedSupplier.get();
 	}
+
+	/**
+	 *
+	 * @return the supplier of conversion destination instances
+	 */
+	public Supplier< ? extends B > getDestinationSupplier()
+	{
+		return convertedSupplier;
+	}
+
 
 	/**
 	 * Returns an instance of the {@link Converter}.  If the
-	 * {@link ConvertedIterableInterval} was created with a {@link Converter}
+	 * {@link ConvertedRandomAccessibleInterval} was created with a {@link Converter}
 	 * instead of a {@link Supplier}, then the returned converter will be this
 	 * instance.
 	 *
+	 * @deprecated Use {@link #getConverterSupplier()} instead
+	 *
 	 * @return
 	 */
+	@Deprecated
 	public Converter< ? super A, ? super B > getConverter()
 	{
 		return converterSupplier.get();
+	}
+
+	/**
+	 *
+	 * @return the supplier of converter instances
+	 */
+	public Supplier< Converter< ? super A, ? super B > > getConverterSupplier()
+	{
+		return converterSupplier;
 	}
 }

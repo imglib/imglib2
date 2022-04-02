@@ -11,13 +11,13 @@
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice,
  *    this list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  *    this list of conditions and the following disclaimer in the documentation
  *    and/or other materials provided with the distribution.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -47,13 +47,13 @@ import net.imglib2.type.Type;
  * TODO
  *
  */
-public class BiConvertedIterableInterval< A, B, C extends Type< C > > extends AbstractConvertedIterableInterval< A, C >
+public class BiConvertedIterableInterval< A, B, C > extends AbstractConvertedIterableInterval< A, C >
 {
 	protected final IterableInterval< B > sourceIntervalB;
 
 	protected final Supplier< BiConverter< ? super A, ? super B, ? super C > > converterSupplier;
 
-	protected final C converted;
+	protected final Supplier< ? extends C > convertedSupplier;
 
 	/**
 	 * Creates a copy of c for conversion.
@@ -64,19 +64,19 @@ public class BiConvertedIterableInterval< A, B, C extends Type< C > > extends Ab
 	 * 			that this is the smaller {@link Interval}.
 	 * @param sourceB
 	 * @param converterSupplier
-	 * @param c
+	 * @param convertedSupplier
 	 */
 	public BiConvertedIterableInterval(
 			final IterableInterval< A > sourceA,
 			final IterableInterval< B > sourceB,
 			final Supplier< BiConverter< ? super A, ? super B, ? super C > > converterSupplier,
-			final C c )
+			final Supplier< ? extends C > convertedSupplier )
 	{
 		super( sourceA );
 
 		this.sourceIntervalB = sourceB;
 		this.converterSupplier = converterSupplier;
-		this.converted = c.copy();
+		this.convertedSupplier = convertedSupplier;
 	}
 
 	/**
@@ -88,21 +88,21 @@ public class BiConvertedIterableInterval< A, B, C extends Type< C > > extends Ab
 	 * 			that this is the smaller {@link Interval}.
 	 * @param sourceB
 	 * @param converter
-	 * @param c
+	 * @param convertedSupplier
 	 */
 	public BiConvertedIterableInterval(
 			final IterableInterval< A > sourceA,
 			final IterableInterval< B > sourceB,
 			final BiConverter< ? super A, ? super B, ? super C > converter,
-			final C c )
+			final Supplier< ? extends C > convertedSupplier )
 	{
-		this( sourceA, sourceB, () -> converter, c );
+		this( sourceA, sourceB, () -> converter, convertedSupplier );
 	}
 
 	@Override
 	public BiConvertedCursor< A, B, C > cursor()
 	{
-		return new BiConvertedCursor<>( sourceInterval.cursor(), sourceIntervalB.cursor(), converterSupplier, converted );
+		return new BiConvertedCursor<>( sourceInterval.cursor(), sourceIntervalB.cursor(), converterSupplier, convertedSupplier );
 	}
 
 	/**
@@ -114,27 +114,52 @@ public class BiConvertedIterableInterval< A, B, C extends Type< C > > extends Ab
 	@Override
 	public BiConvertedCursor< A, B, C > localizingCursor()
 	{
-		return new BiConvertedCursor<>( sourceInterval.localizingCursor(), sourceIntervalB.cursor(), converterSupplier, converted );
+		return new BiConvertedCursor<>( sourceInterval.localizingCursor(), sourceIntervalB.cursor(), converterSupplier, convertedSupplier );
 	}
 
 	/**
+	 * @deprecated Use {@link #getDestinationSupplier()} instead.
+	 *
 	 * @return an instance of the destination {@link Type}.
 	 */
+	@Deprecated
 	public C getDestinationType()
 	{
-		return converted.copy();
+		return convertedSupplier.get();
 	}
+
+	/**
+	 *
+	 * @return the supplier of conversion destination instances
+	 */
+	public Supplier< ? extends C > getDestinationSupplier()
+	{
+		return convertedSupplier;
+	}
+
 
 	/**
 	 * Returns an instance of the {@link BiConverter}.  If the
-	 * {@link BiConvertedIterableInterval} was created with a
-	 * {@link BiConverter} instead of a {@link Supplier}, then the returned
-	 * {@link BiConverter} will be this instance.
+	 * {@link BiConvertedIterableInterval} was created with a {@link BiConverter}
+	 * instead of a {@link Supplier}, then the returned converter will be this
+	 * instance.
+	 *
+	 * @deprecated Use {@link #getConverterSupplier()} instead
 	 *
 	 * @return
 	 */
+	@Deprecated
 	public BiConverter< ? super A, ? super B, ? super C > getConverter()
 	{
 		return converterSupplier.get();
+	}
+
+	/**
+	 *
+	 * @return the supplier of converter instances
+	 */
+	public Supplier< BiConverter< ? super A, ? super B, ? super C > > getConverterSupplier()
+	{
+		return converterSupplier;
 	}
 }
