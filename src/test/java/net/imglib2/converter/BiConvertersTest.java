@@ -125,7 +125,7 @@ public class BiConvertersTest
 	{
 		final ArrayImg< IntType, ? > sourceA = ArrayImgs.ints( dataA, 20, 30 );
 		final ArrayImg< IntType, ? > sourceB = ArrayImgs.ints( dataB, 20, 30 );
-		final RandomAccessibleInterval< int[] > sumRAI = Converters.convertRAI(
+		final RandomAccessibleInterval< int[] > sumRAI = Converters.convertRAI2(
 				sourceA,
 				sourceB,
 				( a, b, c ) -> {
@@ -133,7 +133,7 @@ public class BiConvertersTest
 					c[ 1 ] = b.get();
 				},
 				() -> new int[ 2 ] );
-		final IterableInterval< int[] > sumIterable = Converters.convert(
+		final IterableInterval< int[] > sumIterable = Converters.convert2(
 				( IterableInterval< IntType > ) sourceA,
 				sourceB,
 				( a, b, c ) -> {
@@ -142,7 +142,7 @@ public class BiConvertersTest
 				},
 				() -> new int[ 2 ] );
 		final RandomAccessibleInterval< int[] > sumRA = Views.interval(
-				Converters.<IntType, IntType, int[]>convert(
+				Converters.convert2(
 						Views.extendBorder( sourceA ),
 						Views.extendBorder( sourceB ),
 						( a, b, c ) -> {
@@ -153,7 +153,7 @@ public class BiConvertersTest
 				sourceA );
 		final RandomAccessibleInterval< int[] > sumRRA = Views.interval(
 				Views.raster(
-						Converters.<IntType, IntType, int[]>convert(
+						Converters.convert2(
 							Views.interpolate( Views.extendBorder( sourceA ), new NearestNeighborInterpolatorFactory<>() ),
 							Views.interpolate( Views.extendBorder( sourceB ), new NearestNeighborInterpolatorFactory<>() ),
 							( a, b, c ) -> {

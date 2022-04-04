@@ -224,7 +224,7 @@ public class DoubleVectorTypeTest
 		System.out.println( comment + ( System.nanoTime() - time ) );
 	}
 
-	@Test
+//	@Test
 	public void benchmarkDoubleVectorType()
 	{
 

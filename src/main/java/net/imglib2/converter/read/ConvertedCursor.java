@@ -55,8 +55,6 @@ public class ConvertedCursor< A, B > extends AbstractConvertedCursor< A, B >
 	final protected B converted;
 
 	/**
-	 * Creates a copy of b for conversion that can be accessed through
-	 * {@link #get()}.
 	 *
 	 * @param source
 	 * @param converterSupplier
@@ -75,8 +73,6 @@ public class ConvertedCursor< A, B > extends AbstractConvertedCursor< A, B >
 	}
 
 	/**
-	 * Creates a copy of b for conversion that can be accessed through
-	 * {@link #get()}.
 	 *
 	 * @param source
 	 * @param converter
