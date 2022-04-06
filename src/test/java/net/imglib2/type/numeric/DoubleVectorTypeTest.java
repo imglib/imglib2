@@ -263,5 +263,5 @@ public class DoubleVectorTypeTest
 
 		benchmarkDoubleVectorRead( size, test, img2, "DoubleVector DoubleVectorType.read:              " );
 		benchmarkDoubleVectorRead( size, test, img2, "DoubleVector DoubleVectorType.read:              " );
-	}
+}
 }
