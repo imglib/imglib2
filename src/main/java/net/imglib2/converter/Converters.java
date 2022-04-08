@@ -95,7 +95,7 @@ public class Converters
 	 * converted {@link RandomAccessibleInterval} has no effect.
 	 *
 	 * @param source
-	 * @param converter
+	 * @param converter must be stateless when multi-threading
 	 * @param b
 	 * @return a converted {@link RandomAccessible} whose {@link RandomAccess
 	 *         RandomAccesses} perform on-the-fly value conversion using the
@@ -115,8 +115,13 @@ public class Converters
 	 * Conversion is done on-the-fly when reading values. Writing to the
 	 * converted {@link RandomAccessibleInterval} has no effect.
 	 *
+	 * The method signature is <code>convert2</code> because many Java
+	 * compilers cannot resolve the correct overload when the target
+	 * {@link Supplier} is passed as a lambda and cause spurious and
+	 * seemingly false ambiguous method errors.
+	 *
 	 * @param source
-	 * @param converter
+	 * @param converter must be stateless when multi-threading
 	 * @param targetSupplier
 	 * @return a converted {@link RandomAccessible} whose {@link RandomAccess
 	 *         RandomAccesses} perform on-the-fly value conversion using the
@@ -160,6 +165,11 @@ public class Converters
 	 * Conversion is done on-the-fly when reading values. Writing to the
 	 * converted {@link RandomAccessibleInterval} has no effect.
 	 *
+	 * The method signature is <code>convert2</code> because many Java
+	 * compilers cannot resolve the correct overload when the target
+	 * {@link Supplier} is passed as a lambda and cause spurious and
+	 * seemingly false ambiguous method errors.
+	 *
 	 * @param source
 	 * @param converterSupplier
 	 * @param targetSupplier
@@ -181,7 +191,7 @@ public class Converters
 	 * Conversion is done on-the-fly both when reading and writing values.
 	 *
 	 * @param source
-	 * @param converter
+	 * @param converter must be stateless when multi-threading
 	 * @return a converted {@link RandomAccessible} whose {@link RandomAccess
 	 *         RandomAccesses} perform on-the-fly value conversion using the
 	 *         provided converter.
@@ -218,7 +228,7 @@ public class Converters
 	 * converted {@link RandomAccessibleInterval} has no effect.
 	 *
 	 * @param source
-	 * @param converter
+	 * @param converter must be stateless when multi-threading
 	 * @param b
 	 * @return a converted {@link RandomAccessibleInterval} whose
 	 *         {@link RandomAccess RandomAccesses} perform on-the-fly value
@@ -238,8 +248,13 @@ public class Converters
 	 * Conversion is done on-the-fly when reading values. Writing to the
 	 * converted {@link RandomAccessibleInterval} has no effect.
 	 *
+	 * The method signature is <code>convert2</code> because many Java
+	 * compilers cannot resolve the correct overload when the target
+	 * {@link Supplier} is passed as a lambda and cause spurious and
+	 * seemingly false ambiguous method errors.
+	 *
 	 * @param source
-	 * @param converter
+	 * @param converter must be stateless when multi-threading
 	 * @param targetSupplier
 	 * @return a converted {@link RandomAccessibleInterval} whose
 	 *         {@link RandomAccess RandomAccesses} perform on-the-fly value
@@ -284,6 +299,11 @@ public class Converters
 	 * Conversion is done on-the-fly when reading values. Writing to the
 	 * converted {@link RandomAccessibleInterval} has no effect.
 	 *
+	 * The method signature is <code>convert2</code> because many Java
+	 * compilers cannot resolve the correct overload when the target
+	 * {@link Supplier} is passed as a lambda and cause spurious and
+	 * seemingly false ambiguous method errors.
+	 *
 	 * @param source
 	 * @param converterSupplier
 	 * @param targetSupplier
@@ -312,7 +332,7 @@ public class Converters
 	 * and {@link IterableInterval}.
 	 *
 	 * @param source
-	 * @param converter
+	 * @param converter must be stateless when multi-threading
 	 * @param b
 	 * @return a converted {@link RandomAccessibleInterval} whose
 	 *         {@link RandomAccess RandomAccesses} perform on-the-fly value
@@ -338,8 +358,13 @@ public class Converters
 	 * for an object that implements both {@link RandomAccessibleInterval}
 	 * and {@link IterableInterval}.
 	 *
+	 * The method signature is <code>convertRAI2</code> because many Java
+	 * compilers cannot resolve the correct overload when the target
+	 * {@link Supplier} is passed as a lambda and cause spurious and
+	 * seemingly false ambiguous method errors.
+	 *
 	 * @param source
-	 * @param converter
+	 * @param converter must be stateless when multi-threading
 	 * @param targetSupplier
 	 * @return a converted {@link RandomAccessibleInterval} whose
 	 *         {@link RandomAccess RandomAccesses} perform on-the-fly value
@@ -392,6 +417,11 @@ public class Converters
 	 * for an object that implements both {@link RandomAccessibleInterval}
 	 * and {@link IterableInterval}.
 	 *
+	 * The method signature is <code>convertRAI2</code> because many Java
+	 * compilers cannot resolve the correct overload when the target
+	 * {@link Supplier} is passed as a lambda and cause spurious and
+	 * seemingly false ambiguous method errors.
+	 *
 	 * @param source
 	 * @param converterSupplier
 	 * @param targetSupplier
@@ -413,7 +443,7 @@ public class Converters
 	 * Conversion is done on-the-fly both when reading and writing values.
 	 *
 	 * @param source
-	 * @param converter
+	 * @param converter must be stateless when multi-threading
 	 * @return a converted {@link RandomAccessibleInterval} whose
 	 *         {@link RandomAccess RandomAccesses} perform on-the-fly value
 	 *         conversion using the provided converter.
@@ -455,7 +485,7 @@ public class Converters
 	 * and {@link IterableInterval}.
 	 *
 	 * @param source
-	 * @param converter
+	 * @param converter must be stateless when multi-threading
 	 * @return a converted {@link RandomAccessibleInterval} whose
 	 *         {@link RandomAccess RandomAccesses} perform on-the-fly value
 	 *         conversion using the provided converter.
@@ -474,7 +504,7 @@ public class Converters
 	 * {@link IterableRealInterval} has no effect.
 	 *
 	 * @param source
-	 * @param converter
+	 * @param converter must be stateless when multi-threading
 	 * @param b
 	 * @return a converted {@link IterableRealInterval} whose {@link RealCursor RealCursors}
 	 *         perform on-the-fly value conversion using the provided converter.
@@ -493,8 +523,13 @@ public class Converters
 	 * on-the-fly when reading values. Writing to the converted
 	 * {@link IterableRealInterval} has no effect.
 	 *
+	 * The method signature is <code>convert2</code> because many Java
+	 * compilers cannot resolve the correct overload when the target
+	 * {@link Supplier} is passed as a lambda and cause spurious and
+	 * seemingly false ambiguous method errors.
+	 *
 	 * @param source
-	 * @param converter
+	 * @param converter must be stateless when multi-threading
 	 * @param targetSupplier
 	 * @return a converted {@link IterableRealInterval} whose {@link RealCursor RealCursors}
 	 *         perform on-the-fly value conversion using the provided converter.
@@ -535,6 +570,11 @@ public class Converters
 	 * {@link RealCursor#get()} you a converted sample. Conversion is done
 	 * on-the-fly when reading values. Writing to the converted
 	 * {@link IterableRealInterval} has no effect.
+	 *
+	 * The method signature is <code>convert2</code> because many Java
+	 * compilers cannot resolve the correct overload when the target
+	 * {@link Supplier} is passed as a lambda and cause spurious and
+	 * seemingly false ambiguous method errors.
 	 *
 	 * @param source
 	 * @param converterSupplier
@@ -581,7 +621,7 @@ public class Converters
 	 * {@link IterableInterval} has no effect.
 	 *
 	 * @param source
-	 * @param converter
+	 * @param converter must be stateless when multi-threading
 	 * @param b
 	 * @return a converted {@link IterableInterval} whose {@link Cursor Cursors}
 	 *         perform on-the-fly value conversion using the provided converter.
@@ -600,8 +640,13 @@ public class Converters
 	 * on-the-fly when reading values. Writing to the converted
 	 * {@link IterableInterval} has no effect.
 	 *
+	 * The method signature is <code>convert2</code> because many Java
+	 * compilers cannot resolve the correct overload when the target
+	 * {@link Supplier} is passed as a lambda and cause spurious and
+	 * seemingly false ambiguous method errors.
+	 *
 	 * @param source
-	 * @param converter
+	 * @param converter must be stateless when multi-threading
 	 * @param targetSupplier
 	 * @return a converted {@link IterableInterval} whose {@link Cursor Cursors}
 	 *         perform on-the-fly value conversion using the provided converter.
@@ -643,6 +688,11 @@ public class Converters
 	 * on-the-fly when reading values. Writing to the converted
 	 * {@link IterableInterval} has no effect.
 	 *
+	 * The method signature is <code>convert2</code> because many Java
+	 * compilers cannot resolve the correct overload when the target
+	 * {@link Supplier} is passed as a lambda and cause spurious and
+	 * seemingly false ambiguous method errors.
+	 *
 	 * @param source
 	 * @param converterSupplier
 	 * @param targetSupplier
@@ -663,7 +713,7 @@ public class Converters
 	 * on-the-fly both when reading and writing values.
 	 *
 	 * @param source
-	 * @param converter
+	 * @param converter must be stateless when multi-threading
 	 * @return a converted {@link IterableInterval} whose {@link Cursor Cursors}
 	 *         perform on-the-fly value conversion using the provided converter.
 	 */
@@ -680,7 +730,7 @@ public class Converters
 	 * on-the-fly both when reading and writing values.
 	 *
 	 * @param source
-	 * @param converter
+	 * @param converter must be stateless when multi-threading
 	 * @return a converted {@link IterableRealInterval} whose {@link RealCursor RealCursors}
 	 *         perform on-the-fly value conversion using the provided converter.
 	 */
@@ -715,7 +765,7 @@ public class Converters
 	 * on-the-fly both when reading and writing values.
 	 *
 	 * @param source
-	 * @param converter
+	 * @param converter must be stateless when multi-threading
 	 * @return a {@link WriteConvertedIterableRandomAccessibleInterval} whose
 	 *         {@link Sampler Samplers} perform on-the-fly value conversion
 	 *         using the provided converter.
@@ -755,7 +805,7 @@ public class Converters
 	 * converted {@link RealRandomAccessibleRealInterval} has no effect.
 	 *
 	 * @param source
-	 * @param converter
+	 * @param converter must be stateless when multi-threading
 	 * @param b
 	 * @return a converted {@link RealRandomAccessibleRealInterval} whose
 	 *         {@link RealRandomAccess RealRandomAccesses} perform on-the-fly value
@@ -775,8 +825,13 @@ public class Converters
 	 * Conversion is done on-the-fly when reading values. Writing to the
 	 * converted {@link RealRandomAccessibleRealInterval} has no effect.
 	 *
+	 * The method signature is <code>convert2</code> because many Java
+	 * compilers cannot resolve the correct overload when the target
+	 * {@link Supplier} is passed as a lambda and cause spurious and
+	 * seemingly false ambiguous method errors.
+	 *
 	 * @param source
-	 * @param converter
+	 * @param converter must be stateless when multi-threading
 	 * @param targetSupplier
 	 * @return a converted {@link RealRandomAccessibleRealInterval} whose
 	 *         {@link RealRandomAccess RealRandomAccesses} perform on-the-fly value
@@ -820,6 +875,11 @@ public class Converters
 	 * Conversion is done on-the-fly when reading values. Writing to the
 	 * converted {@link RealRandomAccessibleRealInterval} has no effect.
 	 *
+	 * The method signature is <code>convert2</code> because many Java
+	 * compilers cannot resolve the correct overload when the target
+	 * {@link Supplier} is passed as a lambda and cause spurious and
+	 * seemingly false ambiguous method errors.
+	 *
 	 * @param source
 	 * @param converterSupplier
 	 * @param targetSupplier
@@ -842,7 +902,7 @@ public class Converters
 	 * converted {@link RandomAccessibleInterval} has no effect.
 	 *
 	 * @param source
-	 * @param converter
+	 * @param converter must be stateless when multi-threading
 	 * @param b
 	 * @return a converted {@link RealRandomAccessible} whose {@link RealRandomAccess
 	 *         RealRandomAccesses} perform on-the-fly value conversion using the
@@ -862,8 +922,13 @@ public class Converters
 	 * Conversion is done on-the-fly when reading values. Writing to the
 	 * converted {@link RandomAccessibleInterval} has no effect.
 	 *
+	 * The method signature is <code>convert2</code> because many Java
+	 * compilers cannot resolve the correct overload when the target
+	 * {@link Supplier} is passed as a lambda and cause spurious and
+	 * seemingly false ambiguous method errors.
+	 *
 	 * @param source
-	 * @param converter
+	 * @param converter must be stateless when multi-threading
 	 * @param targetSupplier
 	 * @return a converted {@link RealRandomAccessible} whose {@link RealRandomAccess
 	 *         RealRandomAccesses} perform on-the-fly value conversion using the
@@ -906,6 +971,11 @@ public class Converters
 	 * RealRandomAccesses} {@link RealRandomAccess#get()} you a converted sample.
 	 * Conversion is done on-the-fly when reading values. Writing to the
 	 * converted {@link RandomAccessibleInterval} has no effect.
+	 *
+	 * The method signature is <code>convert2</code> because many Java
+	 * compilers cannot resolve the correct overload when the target
+	 * {@link Supplier} is passed as a lambda and cause spurious and
+	 * seemingly false ambiguous method errors.
 	 *
 	 * @param source
 	 * @param converterSupplier
@@ -1050,7 +1120,7 @@ public class Converters
 	 * {@link Converter} from {@link Composite} of A to B.
 	 *
 	 * @param components
-	 * @param composer
+	 * @param composer must be stateless when multi-threading
 	 * @param targetType
 	 * @return
 	 */
@@ -1071,8 +1141,13 @@ public class Converters
 	 * {@link RandomAccessibleInterval} of some target {@link Type} B using a
 	 * {@link Converter} from {@link Composite} of A to B.
 	 *
+	 * The method signature is <code>composeReal2</code> because many Java
+	 * compilers cannot resolve the correct overload when the target
+	 * {@link Supplier} is passed as a lambda and cause spurious and
+	 * seemingly false ambiguous method errors.
+	 *
 	 * @param components
-	 * @param composer
+	 * @param composer must be stateless when multi-threading
 	 * @param targetSupplier
 	 * @return
 	 */
@@ -1094,7 +1169,7 @@ public class Converters
 	 * {@link Converter} from {@link Composite} of A to B.
 	 *
 	 * @param components
-	 * @param composer
+	 * @param composer must be stateless when multi-threading
 	 * @param targetType
 	 * @return
 	 */
@@ -1115,8 +1190,13 @@ public class Converters
 	 * {@link RandomAccessibleInterval} of some target {@link Type} B using a
 	 * {@link Converter} from {@link Composite} of A to B.
 	 *
+	 * The method signature is <code>composeNumeric2</code> because many Java
+	 * compilers cannot resolve the correct overload when the target
+	 * {@link Supplier} is passed as a lambda and cause spurious and
+	 * seemingly false ambiguous method errors.
+	 *
 	 * @param components
-	 * @param composer
+	 * @param composer must be stateless when multi-threading
 	 * @param targetSupplier
 	 * @return
 	 */
@@ -1138,7 +1218,7 @@ public class Converters
 	 * {@link Converter} from {@link Composite} of A to B.
 	 *
 	 * @param components
-	 * @param composer
+	 * @param composer must be stateless when multi-threading
 	 * @param targetType
 	 * @return
 	 */
@@ -1159,8 +1239,13 @@ public class Converters
 	 * {@link RandomAccessibleInterval} of some target {@link Type} B using a
 	 * {@link Converter} from {@link Composite} of A to B.
 	 *
+	 * The method signature is <code>compose2</code> because many Java
+	 * compilers cannot resolve the correct overload when the target
+	 * {@link Supplier} is passed as a lambda and cause spurious and
+	 * seemingly false ambiguous method errors.
+	 *
 	 * @param components
-	 * @param composer
+	 * @param composer must be stateless when multi-threading
 	 * @param targetSupplier
 	 * @return
 	 */
@@ -1183,8 +1268,9 @@ public class Converters
 	 *
 	 * @param sourceA
 	 * @param sourceB
-	 * @param converter a two variable function into a preallocated output, e.g.
-	 *     {@code (a, b, c) -> c.set(a.get() + b.get())}
+	 * @param converter a two variable function into a preallocated output,
+	 *     e.g. {@code (a, b, c) -> c.set(a.get() + b.get())} must be
+	 *     stateless when multi-threading
 	 * @param c
 	 * @return a converted {@link RandomAccessible} whose {@link RandomAccess
 	 *         RandomAccesses} perform on-the-fly value conversion using the
@@ -1205,10 +1291,16 @@ public class Converters
 	 * Conversion is done on-the-fly when reading values. Writing to the
 	 * converted {@link RandomAccessibleInterval} has no effect.
 	 *
+	 * The method signature is <code>convert2</code> because many Java
+	 * compilers cannot resolve the correct overload when the target
+	 * {@link Supplier} is passed as a lambda and cause spurious and
+	 * seemingly false ambiguous method errors.
+	 *
 	 * @param sourceA
 	 * @param sourceB
-	 * @param converter a two variable function into a preallocated output, e.g.
-	 *     {@code (a, b, c) -> c.set(a.get() + b.get())}
+	 * @param converter a two variable function into a preallocated output,
+	 *     e.g. {@code (a, b, c) -> c.set(a.get() + b.get())} must be
+	 *     stateless when multi-threading
 	 * @param targetSupplier
 	 * @return a converted {@link RandomAccessible} whose {@link RandomAccess
 	 *         RandomAccesses} perform on-the-fly value conversion using the
@@ -1254,6 +1346,11 @@ public class Converters
 	 * Conversion is done on-the-fly when reading values. Writing to the
 	 * converted {@link RandomAccessibleInterval} has no effect.
 	 *
+	 * The method signature is <code>convert2</code> because many Java
+	 * compilers cannot resolve the correct overload when the target
+	 * {@link Supplier} is passed as a lambda and cause spurious and
+	 * seemingly false ambiguous method errors.
+	 *
 	 * @param sourceA
 	 * @param sourceB
 	 * @param converterSupplier a supplier of a two variable function into a
@@ -1281,8 +1378,9 @@ public class Converters
 	 *
 	 * @param sourceA
 	 * @param sourceB
-	 * @param converter a two variable function into a preallocated output, e.g.
-	 *     {@code (a, b, c) -> c.set(a.get() + b.get())}
+	 * @param converter a two variable function into a preallocated output,
+	 *     e.g. {@code (a, b, c) -> c.set(a.get() + b.get())} must be
+	 *     stateless when multi-threading
 	 * @param c
 	 * @return a converted {@link RandomAccessibleInterval} whose
 	 *         {@link RandomAccess RandomAccesses} perform on-the-fly value
@@ -1303,10 +1401,16 @@ public class Converters
 	 * Conversion is done on-the-fly when reading values. Writing to the
 	 * converted {@link RandomAccessibleInterval} has no effect.
 	 *
+	 * The method signature is <code>convert2</code> because many Java
+	 * compilers cannot resolve the correct overload when the target
+	 * {@link Supplier} is passed as a lambda and cause spurious and
+	 * seemingly false ambiguous method errors.
+	 *
 	 * @param sourceA
 	 * @param sourceB
-	 * @param converter a two variable function into a preallocated output, e.g.
-	 *     {@code (a, b, c) -> c.set(a.get() + b.get())}
+	 * @param converter a two variable function into a preallocated output,
+	 *     e.g. {@code (a, b, c) -> c.set(a.get() + b.get())} must be
+	 *     stateless when multi-threading
 	 * @param targetSupplier
 	 * @return a converted {@link RandomAccessibleInterval} whose
 	 *         {@link RandomAccess RandomAccesses} perform on-the-fly value
@@ -1352,6 +1456,11 @@ public class Converters
 	 * Conversion is done on-the-fly when reading values. Writing to the
 	 * converted {@link RandomAccessibleInterval} has no effect.
 	 *
+	 * The method signature is <code>convert2</code> because many Java
+	 * compilers cannot resolve the correct overload when the target
+	 * {@link Supplier} is passed as a lambda and cause spurious and
+	 * seemingly false ambiguous method errors.
+	 *
 	 * @param sourceA
 	 * @param sourceB
 	 * @param converterSupplier a supplier of a two variable function into a
@@ -1385,8 +1494,9 @@ public class Converters
 	 *
 	 * @param sourceA
 	 * @param sourceB
-	 * @param converter a two variable function into a preallocated output, e.g.
-	 *     {@code (a, b, c) -> c.set(a.get() + b.get())}
+	 * @param converter a two variable function into a preallocated output,
+	 *     e.g. {@code (a, b, c) -> c.set(a.get() + b.get())} must be
+	 *     stateless when multi-threading
 	 * @param c
 	 * @return a converted {@link RandomAccessibleInterval} whose
 	 *         {@link RandomAccess RandomAccesses} perform on-the-fly value
@@ -1413,10 +1523,16 @@ public class Converters
 	 * for an object that implements both {@link RandomAccessibleInterval}
 	 * and {@link IterableInterval}.
 	 *
+	 * The method signature is <code>convertRAI2</code> because many Java
+	 * compilers cannot resolve the correct overload when the target
+	 * {@link Supplier} is passed as a lambda and cause spurious and
+	 * seemingly false ambiguous method errors.
+	 *
 	 * @param sourceA
 	 * @param sourceB
-	 * @param converter a two variable function into a preallocated output, e.g.
-	 *     {@code (a, b, c) -> c.set(a.get() + b.get())}
+	 * @param converter a two variable function into a preallocated output,
+	 *     e.g. {@code (a, b, c) -> c.set(a.get() + b.get())} must be
+	 *     stateless when multi-threading
 	 * @param targetSupplier
 	 * @return a converted {@link RandomAccessibleInterval} whose
 	 *         {@link RandomAccess RandomAccesses} perform on-the-fly value
@@ -1474,6 +1590,11 @@ public class Converters
 	 * for an object that implements both {@link RandomAccessibleInterval}
 	 * and {@link IterableInterval}.
 	 *
+	 * The method signature is <code>convertRAI2</code> because many Java
+	 * compilers cannot resolve the correct overload when the target
+	 * {@link Supplier} is passed as a lambda and cause spurious and
+	 * seemingly false ambiguous method errors.
+	 *
 	 * @param sourceA
 	 * @param sourceB
 	 * @param converterSupplier s aupplier of a two variable function into a
@@ -1501,8 +1622,9 @@ public class Converters
 	 *
 	 * @param sourceA
 	 * @param sourceB
-	 * @param converter a two variable function into a preallocated output, e.g.
-	 *     {@code (a, b, c) -> c.set(a.get() + b.get())}
+	 * @param converter a two variable function into a preallocated output,
+	 *     e.g. {@code (a, b, c) -> c.set(a.get() + b.get())} must be
+	 *     stateless when multi-threading
 	 * @param c
 	 * @return a converted {@link IterableInterval} whose {@link Cursor Cursors}
 	 *         perform on-the-fly value conversion using the provided converter.
@@ -1522,10 +1644,16 @@ public class Converters
 	 * on-the-fly when reading values. Writing to the converted
 	 * {@link IterableInterval} has no effect.
 	 *
+	 * The method signature is <code>convert2</code> because many Java
+	 * compilers cannot resolve the correct overload when the target
+	 * {@link Supplier} is passed as a lambda and cause spurious and
+	 * seemingly false ambiguous method errors.
+	 *
 	 * @param sourceA
 	 * @param sourceB
-	 * @param converter a two variable function into a preallocated output, e.g.
-	 *     {@code (a, b, c) -> c.set(a.get() + b.get())}
+	 * @param converter a two variable function into a preallocated output,
+	 *     e.g. {@code (a, b, c) -> c.set(a.get() + b.get())} must be
+	 *     stateless when multi-threading
 	 * @param targetSupplier
 	 * @return a converted {@link IterableInterval} whose {@link Cursor Cursors}
 	 *         perform on-the-fly value conversion using the provided converter.
@@ -1569,6 +1697,11 @@ public class Converters
 	 * on-the-fly when reading values. Writing to the converted
 	 * {@link IterableInterval} has no effect.
 	 *
+	 * The method signature is <code>convert2</code> because many Java
+	 * compilers cannot resolve the correct overload when the target
+	 * {@link Supplier} is passed as a lambda and cause spurious and
+	 * seemingly false ambiguous method errors.
+	 *
 	 * @param sourceA
 	 * @param sourceB
 	 * @param converterSupplier supplies a two variable function into a
@@ -1595,8 +1728,9 @@ public class Converters
 	 *
 	 * @param sourceA
 	 * @param sourceB
-	 * @param converter a two variable function into a preallocated output, e.g.
-	 *     {@code (a, b, c) -> c.set(a.get() + b.get())}
+	 * @param converter a two variable function into a preallocated output,
+	 *     e.g. {@code (a, b, c) -> c.set(a.get() + b.get())} must be
+	 *     stateless when multi-threading
 	 * @param c
 	 * @return a converted {@link IterableRealInterval} whose {@link RealCursor RealCursors}
 	 *         perform on-the-fly value conversion using the provided converter.
@@ -1616,10 +1750,16 @@ public class Converters
 	 * on-the-fly when reading values. Writing to the converted
 	 * {@link IterableRealInterval} has no effect.
 	 *
+	 * The method signature is <code>convert2</code> because many Java
+	 * compilers cannot resolve the correct overload when the target
+	 * {@link Supplier} is passed as a lambda and cause spurious and
+	 * seemingly false ambiguous method errors.
+	 *
 	 * @param sourceA
 	 * @param sourceB
-	 * @param converter a two variable function into a preallocated output, e.g.
-	 *     {@code (a, b, c) -> c.set(a.get() + b.get())}
+	 * @param converter a two variable function into a preallocated output,
+	 *     e.g. {@code (a, b, c) -> c.set(a.get() + b.get())} must be
+	 *     stateless when multi-threading
 	 * @param targetSupplier
 	 * @return a converted {@link IterableRealInterval} whose {@link RealCursor RealCursors}
 	 *         perform on-the-fly value conversion using the provided converter.
@@ -1663,6 +1803,11 @@ public class Converters
 	 * on-the-fly when reading values. Writing to the converted
 	 * {@link IterableInterval} has no effect.
 	 *
+	 * The method signature is <code>convert2</code> because many Java
+	 * compilers cannot resolve the correct overload when the target
+	 * {@link Supplier} is passed as a lambda and cause spurious and
+	 * seemingly false ambiguous method errors.
+	 *
 	 * @param sourceA
 	 * @param sourceB
 	 * @param converterSupplier supplies a two variable function into a
@@ -1689,8 +1834,9 @@ public class Converters
 	 *
 	 * @param sourceA
 	 * @param sourceB
-	 * @param converter a two variable function into a preallocated output, e.g.
-	 *     {@code (a, b, c) -> c.set(a.get() + b.get())}
+	 * @param converter a two variable function into a preallocated output,
+	 *     e.g. {@code (a, b, c) -> c.set(a.get() + b.get())} must be
+	 *     stateless when multi-threading
 	 * @param c
 	 * @return a converted {@link RealRandomAccessibleRealInterval} whose
 	 *         {@link RealRandomAccess RealRandomAccesses} perform on-the-fly value
@@ -1711,10 +1857,16 @@ public class Converters
 	 * Conversion is done on-the-fly when reading values. Writing to the
 	 * converted {@link RealRandomAccessibleRealInterval} has no effect.
 	 *
+	 * The method signature is <code>convert2</code> because many Java
+	 * compilers cannot resolve the correct overload when the target
+	 * {@link Supplier} is passed as a lambda and cause spurious and
+	 * seemingly false ambiguous method errors.
+	 *
 	 * @param sourceA
 	 * @param sourceB
-	 * @param converter a two variable function into a preallocated output, e.g.
-	 *     {@code (a, b, c) -> c.set(a.get() + b.get())}
+	 * @param converter a two variable function into a preallocated output,
+	 *     e.g. {@code (a, b, c) -> c.set(a.get() + b.get())} must be
+	 *     stateless when multi-threading
 	 * @param targetSupplier
 	 * @return a converted {@link RealRandomAccessibleRealInterval} whose
 	 *         {@link RealRandomAccess RealRandomAccesses} perform on-the-fly value
@@ -1760,6 +1912,11 @@ public class Converters
 	 * Conversion is done on-the-fly when reading values. Writing to the
 	 * converted {@link RealRandomAccessibleRealInterval} has no effect.
 	 *
+	 * The method signature is <code>convert2</code> because many Java
+	 * compilers cannot resolve the correct overload when the target
+	 * {@link Supplier} is passed as a lambda and cause spurious and
+	 * seemingly false ambiguous method errors.
+	 *
 	 * @param sourceA
 	 * @param sourceB
 	 * @param converterSupplier a supplier of a two variable function into a
@@ -1787,8 +1944,9 @@ public class Converters
 	 *
 	 * @param sourceA
 	 * @param sourceB
-	 * @param converter a two variable function into a preallocated output, e.g.
-	 *     {@code (a, b, c) -> c.set(a.get() + b.get())}
+	 * @param converter a two variable function into a preallocated output,
+	 *     e.g. {@code (a, b, c) -> c.set(a.get() + b.get())} must be
+	 *     stateless when multi-threading
 	 * @param c
 	 * @return a converted {@link RealRandomAccessible} whose {@link RealRandomAccess
 	 *         RealRandomAccesses} perform on-the-fly value conversion using the
@@ -1809,10 +1967,16 @@ public class Converters
 	 * Conversion is done on-the-fly when reading values. Writing to the
 	 * converted {@link RandomAccessibleInterval} has no effect.
 	 *
+	 * The method signature is <code>convert2</code> because many Java
+	 * compilers cannot resolve the correct overload when the target
+	 * {@link Supplier} is passed as a lambda and cause spurious and
+	 * seemingly false ambiguous method errors.
+	 *
 	 * @param sourceA
 	 * @param sourceB
-	 * @param converter a two variable function into a preallocated output, e.g.
-	 *     {@code (a, b, c) -> c.set(a.get() + b.get())}
+	 * @param converter a two variable function into a preallocated output,
+	 *     e.g. {@code (a, b, c) -> c.set(a.get() + b.get())} must be
+	 *     stateless when multi-threading
 	 * @param targetSupplier
 	 * @return a converted {@link RealRandomAccessible} whose {@link RealRandomAccess
 	 *         RealRandomAccesses} perform on-the-fly value conversion using the
@@ -1857,6 +2021,11 @@ public class Converters
 	 * RealRandomAccesses} {@link RealRandomAccess#get()} you a converted sample.
 	 * Conversion is done on-the-fly when reading values. Writing to the
 	 * converted {@link RandomAccessibleInterval} has no effect.
+	 *
+	 * The method signature is <code>convert2</code> because many Java
+	 * compilers cannot resolve the correct overload when the target
+	 * {@link Supplier} is passed as a lambda and cause spurious and
+	 * seemingly false ambiguous method errors.
 	 *
 	 * @param sourceA
 	 * @param sourceB
