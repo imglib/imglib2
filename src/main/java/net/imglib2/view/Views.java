@@ -11,13 +11,13 @@
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice,
  *    this list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  *    this list of conditions and the following disclaimer in the documentation
  *    and/or other materials provided with the distribution.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -65,7 +65,6 @@ import net.imglib2.transform.integer.permutation.SingleDimensionPermutationTrans
 import net.imglib2.transform.integer.shear.InverseShearTransform;
 import net.imglib2.transform.integer.shear.ShearTransform;
 import net.imglib2.type.BooleanType;
-import net.imglib2.type.Type;
 import net.imglib2.type.numeric.IntegerType;
 import net.imglib2.type.numeric.NumericType;
 import net.imglib2.type.numeric.RealType;
@@ -186,24 +185,6 @@ public class Views
 	public static < T, F extends RandomAccessibleInterval< T > > ExtendedRandomAccessibleInterval< T, F > extendValue( final F source, final T value )
 	{
 		return new ExtendedRandomAccessibleInterval<>( source, new OutOfBoundsConstantValueFactory<>( value ) );
-	}
-
-	/**
-	 * Extend a RandomAccessibleInterval with a constant-value out-of-bounds
-	 * strategy.
-	 *
-	 * @param source
-	 *            the interval to extend.
-	 * @return (unbounded) RandomAccessible which extends the input interval to
-	 *         infinity.
-	 * @see net.imglib2.outofbounds.OutOfBoundsConstantValue
-	 * @deprecated use {@code extendValue} with unbounded type parameter T
-	 */
-	@SuppressWarnings({ "unchecked", "rawtypes", "cast" })
-	@Deprecated
-	public static < T extends Type< T >, F extends RandomAccessibleInterval< T > > ExtendedRandomAccessibleInterval< T, F > extendValue( final F source, final T value )
-	{
-		return ( ExtendedRandomAccessibleInterval< T, F > ) Views.extendValue( ( RandomAccessibleInterval ) source, ( Object ) value );
 	}
 
 	/**
@@ -1436,25 +1417,6 @@ public class Views
 	public static < T > IntervalView< T > expandValue( final RandomAccessibleInterval< T > source, final T t, final long... border )
 	{
 		return interval( extendValue( source, t ), Intervals.expand( source, border ) );
-	}
-
-	/**
-	 * Expand a RandomAccessibleInterval as specified by border. source will be
-	 * extended with a constant value specified by the caller.
-	 *
-	 * @param source
-	 *            the interval to expand.
-	 * @param t
-	 *            Constant extension of source.
-	 * @return Expansion of the {@link RandomAccessibleInterval} source as
-	 *         specified by t and border.
-	 * @deprecated use {@code expandValue} with unbounded type parameter T
-	 */
-	@SuppressWarnings({ "unchecked", "rawtypes" })
-	@Deprecated
-	public static < T extends Type< T > > IntervalView< T > expandValue( final RandomAccessibleInterval< T > source, final T t, final long... border )
-	{
-		return expandValue( ( RandomAccessibleInterval ) source, ( Object ) t, border );
 	}
 
 	/**
