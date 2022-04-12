@@ -756,10 +756,10 @@ public class Intervals
 	 */
 	public static long numElements( final Dimensions interval )
 	{
-		long numPixels = interval.dimension( 0 ) > 0 ? interval.dimension( 0 ) : 0;
+		long numPixels = Math.max( interval.dimension( 0 ), 0 );
 		final int n = interval.numDimensions();
 		for ( int d = 1; d < n; ++d )
-			numPixels *= interval.dimension( d ) > 0 ? interval.dimension( d ) : 0;
+			numPixels *= Math.max( interval.dimension( d ), 0 );
 		return numPixels;
 	}
 
@@ -772,9 +772,9 @@ public class Intervals
 	 */
 	public static long numElements( final int... dimensions )
 	{
-		long numPixels = dimensions[ 0 ] > 0 ? dimensions[ 0 ] : 0;
+		long numPixels = Math.max( dimensions[ 0 ], 0 );
 		for ( int d = 1; d < dimensions.length; ++d )
-			numPixels *= dimensions[ d ] > 0 ? dimensions[ d ] : 0;
+			numPixels *= Math.max( dimensions[ d ], 0 );
 		return numPixels;
 	}
 
@@ -787,9 +787,9 @@ public class Intervals
 	 */
 	public static long numElements( final long... dimensions )
 	{
-		long numPixels = dimensions[ 0 ] > 0 ? dimensions[ 0 ] : 0;
+		long numPixels = Math.max( dimensions[ 0 ], 0 );
 		for ( int d = 1; d < dimensions.length; ++d )
-			numPixels *= dimensions[ d ] > 0 ? dimensions[ d ] : 0;
+			numPixels *= Math.max( dimensions[ d ], 0 );
 		return numPixels;
 	}
 

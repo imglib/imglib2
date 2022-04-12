@@ -226,5 +226,8 @@ public class IntervalsTest
 		assertTrue( "self-intersection", Intervals.equals( a, aIa ));
 		assertTrue( "intersection order", Intervals.equals( bIa, aIb ));
 		assertEquals( "non-intersecting", 0, Intervals.numElements( aIc ));
+
+		assertFalse( "intersecting not empty", Intervals.isEmpty( aIb ));
+		assertTrue( "non-intersecting is empty", Intervals.isEmpty( aIc ));
 	}
 }
