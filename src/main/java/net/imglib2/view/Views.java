@@ -78,6 +78,7 @@ import net.imglib2.view.composite.CompositeIntervalView;
 import net.imglib2.view.composite.CompositeView;
 import net.imglib2.view.composite.GenericComposite;
 import net.imglib2.view.composite.InflateView;
+import net.imglib2.view.composite.InterleaveView;
 import net.imglib2.view.composite.NumericComposite;
 import net.imglib2.view.composite.RealComposite;
 
@@ -1676,5 +1677,19 @@ public class Views
 	public static < T > InflateView< T > inflate( final RandomAccessible< ? extends Composite< T > > source ) {
 
 		return new InflateView<>( source );
+	}
+
+	/**
+	 * Interleave an n-dimensional {@link RandomAccessible} of {@link Composite}
+	 * of T into an n+1-dimensonal {@link RandomAccessible} of T.  The
+	 * components of the source are the 0-th dimension of the result
+	 *
+	 * @param <T>
+	 * @param source
+	 * @return {@link RandomAccessible} of T
+	 */
+	public static < T > InterleaveView< T > interleave( final RandomAccessible< ? extends Composite< T > > source ) {
+
+		return new InterleaveView<>( source );
 	}
 }
