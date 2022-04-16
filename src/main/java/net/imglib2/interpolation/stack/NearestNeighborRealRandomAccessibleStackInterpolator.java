@@ -113,7 +113,7 @@ public class NearestNeighborRealRandomAccessibleStackInterpolator< T > extends A
 
 		slices = a.slices;
 		sliceAccesses = Cast.unchecked( Array.newInstance( RealRandomAccess.class, a.sliceAccesses.length ) );
-		sliceAccess = a.sliceAccess.copyRealRandomAccess();
+		sliceAccess = a.sliceAccess.copy();
 
 		position = a.position.clone();
 		sliceIndex = a.sliceIndex;
@@ -494,11 +494,5 @@ public class NearestNeighborRealRandomAccessibleStackInterpolator< T > extends A
 	public NearestNeighborRealRandomAccessibleStackInterpolator< T > copy()
 	{
 		return new NearestNeighborRealRandomAccessibleStackInterpolator< T >( this );
-	}
-
-	@Override
-	public NearestNeighborRealRandomAccessibleStackInterpolator< T > copyRealRandomAccess()
-	{
-		return copy();
 	}
 }

@@ -116,7 +116,7 @@ public class LinearRealRandomAccessibleStackInterpolator< T extends NumericType<
 
 		if ( a.sliceAccess != a.sliceAccess2 )
 		{
-			sliceAccess2 = a.sliceAccess2.copyRealRandomAccess();
+			sliceAccess2 = a.sliceAccess2.copy();
 			sliceAccesses[ sliceIndex + 1 ] = sliceAccess2;
 		}
 
@@ -570,11 +570,5 @@ public class LinearRealRandomAccessibleStackInterpolator< T extends NumericType<
 	public LinearRealRandomAccessibleStackInterpolator< T > copy()
 	{
 		return new LinearRealRandomAccessibleStackInterpolator< T >( this );
-	}
-
-	@Override
-	public LinearRealRandomAccessibleStackInterpolator< T > copyRealRandomAccess()
-	{
-		return copy();
 	}
 }

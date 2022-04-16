@@ -11,13 +11,13 @@
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice,
  *    this list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  *    this list of conditions and the following disclaimer in the documentation
  *    and/or other materials provided with the distribution.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -48,9 +48,14 @@ public interface RealRandomAccess< T > extends RealLocalizable, RealPositionable
 	// we must avoid doing so for now. For details, see:
 	// http://bugs.sun.com/view_bug.do?bug_id=6656332
 	// The bug is fixed in JDK7.
-	RealRandomAccess< T > copyRealRandomAccess();
-//	@Override
-//	public RealRandomAccess< T > copy();
+	@Deprecated
+	public default RealRandomAccess< T > copyRealRandomAccess()
+	{
+		return copy();
+	}
+
+	@Override
+	public RealRandomAccess< T > copy();
 
 	/**
 	 * Convenience method that moves the {@link RealRandomAccess} to the given
@@ -81,7 +86,7 @@ public interface RealRandomAccess< T > extends RealLocalizable, RealPositionable
 	 * }
 	 * </pre>
 	 */
-	default T setPositionAndGet( double... position )
+	default T setPositionAndGet( final double... position )
 	{
 		assert position.length == numDimensions();
 
@@ -118,7 +123,7 @@ public interface RealRandomAccess< T > extends RealLocalizable, RealPositionable
 	 * }
 	 * </pre>
 	 */
-	default T setPositionAndGet( float... position )
+	default T setPositionAndGet( final float... position )
 	{
 		assert position.length == numDimensions();
 
@@ -155,7 +160,7 @@ public interface RealRandomAccess< T > extends RealLocalizable, RealPositionable
 	 * }
 	 * </pre>
 	 */
-	default T setPositionAndGet( RealLocalizable position )
+	default T setPositionAndGet( final RealLocalizable position )
 	{
 		assert position.numDimensions() == numDimensions();
 

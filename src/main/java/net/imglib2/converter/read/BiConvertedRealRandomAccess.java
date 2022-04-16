@@ -246,8 +246,8 @@ final public class BiConvertedRealRandomAccess< A, B, C > extends AbstractConver
 	public BiConvertedRealRandomAccess< A, B, C > copy()
 	{
 		return new BiConvertedRealRandomAccess<>(
-				source.copyRealRandomAccess(),
-				sourceB.copyRealRandomAccess(),
+				source.copy(),
+				sourceB.copy(),
 				converterSupplier,
 				convertedSupplier );
 	}

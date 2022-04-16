@@ -11,13 +11,13 @@
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice,
  *    this list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  *    this list of conditions and the following disclaimer in the documentation
  *    and/or other materials provided with the distribution.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -40,7 +40,7 @@ import net.imglib2.RealRandomAccess;
 
 /**
  * TODO
- * 
+ *
  */
 abstract public class AbstractConvertedRealRandomAccess< A, B > implements RealRandomAccess< B >
 {
@@ -157,67 +157,61 @@ abstract public class AbstractConvertedRealRandomAccess< A, B > implements RealR
 	abstract public AbstractConvertedRealRandomAccess< A, B > copy();
 
 	@Override
-	public AbstractConvertedRealRandomAccess< A, B > copyRealRandomAccess()
-	{
-		return copy();
-	}
-
-	@Override
-	public void move( float distance, int d )
+	public void move( final float distance, final int d )
 	{
 		source.move( distance, d );
 	}
 
 	@Override
-	public void move( double distance, int d )
+	public void move( final double distance, final int d )
 	{
 		source.move( distance, d );
 	}
 
 	@Override
-	public void move( RealLocalizable localizable )
+	public void move( final RealLocalizable localizable )
 	{
 		source.move( localizable );
 	}
 
 	@Override
-	public void move( float[] distance )
+	public void move( final float[] distance )
 	{
 		source.move( distance );
 	}
 
 	@Override
-	public void move( double[] distance )
+	public void move( final double[] distance )
 	{
 		source.move( distance );
 	}
 
 	@Override
-	public void setPosition( RealLocalizable localizable )
+	public void setPosition( final RealLocalizable localizable )
 	{
 		source.setPosition( localizable );
 	}
 
 	@Override
-	public void setPosition( float[] position )
+	public void setPosition( final float[] position )
 	{
 		source.setPosition( position );
 	}
 
 	@Override
-	public void setPosition( double[] position )
+	public void setPosition( final double[] position )
 	{
 		source.setPosition( position );
 	}
 
 	@Override
-	public void setPosition( float position, int d )
+	public void setPosition( final float position, final int d )
 	{
 		source.setPosition( position, d );
 	}
 
 	@Override
-	public void setPosition( double position, int d )
+	public void setPosition( final double position, final int d )
 	{
 		source.setPosition( position, d );
 	}
