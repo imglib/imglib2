@@ -75,12 +75,6 @@ public class ConstantUtils
 				{
 					return new ConstantRandomAccess();
 				}
-
-				@Override
-				public ConstantRandomAccess copyRandomAccess()
-				{
-					return copy();
-				}
 			}
 
 			@Override

@@ -11,13 +11,13 @@
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice,
  *    this list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  *    this list of conditions and the following disclaimer in the documentation
  *    and/or other materials provided with the distribution.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -42,14 +42,13 @@ import net.imglib2.RandomAccess;
 import net.imglib2.RandomAccessible;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.RealLocalizable;
-import net.imglib2.Sampler;
 import net.imglib2.view.Views;
 
 public class Localizables
 {
 	/**
 	 * @deprecated
-	 * Use {@link Localizable#positionAsLongArray}. 
+	 * Use {@link Localizable#positionAsLongArray}.
 	 */
 	@Deprecated
 	public static long[] asLongArray( final Localizable localizable )
@@ -59,6 +58,13 @@ public class Localizables
 		return result;
 	}
 
+	/**
+	 * Create an n-dimensional {@link RandomAccessible} whose value domain is
+	 * its source domain.
+	 *
+	 * @param n
+	 * @return
+	 */
 	public static RandomAccessible< Localizable > randomAccessible( final int n )
 	{
 		return new LocationRandomAccessible( n );
@@ -193,19 +199,13 @@ public class Localizables
 		}
 
 		@Override
-		public RandomAccess< Localizable > copyRandomAccess()
-		{
-			return new LocationRandomAccess( this );
-		}
-
-		@Override
 		public Localizable get()
 		{
 			return this;
 		}
 
 		@Override
-		public Sampler< Localizable > copy()
+		public RandomAccess< Localizable > copy()
 		{
 			return copyRandomAccess();
 		}

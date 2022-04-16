@@ -11,13 +11,13 @@
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice,
  *    this list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  *    this list of conditions and the following disclaimer in the documentation
  *    and/or other materials provided with the distribution.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -35,8 +35,8 @@
 package net.imglib2;
 
 /**
- * 
- * 
+ *
+ *
  * @author Tobias Pietzsch
  * @author Stephan Preibisch
  * @author Stephan Saalfeld
@@ -51,9 +51,14 @@ public interface RandomAccess< T > extends Localizable, Positionable, Sampler< T
 	// we must avoid doing so for now. For details, see:
 	// http://bugs.sun.com/view_bug.do?bug_id=6656332
 	// The bug is fixed in JDK7.
-	RandomAccess< T > copyRandomAccess();
-//	@Override
-//	RandomAccess< T > copy();
+	@Deprecated
+	public default RandomAccess< T > copyRandomAccess()
+	{
+		return copy();
+	}
+
+	@Override
+	RandomAccess< T > copy();
 
 	/**
 	 * Convenience method that moves the {@link RealRandomAccess} to the given
@@ -84,7 +89,7 @@ public interface RandomAccess< T > extends Localizable, Positionable, Sampler< T
 	 * }
 	 * </pre>
 	 */
-	default T setPositionAndGet( long... position )
+	default T setPositionAndGet( final long... position )
 	{
 		assert position.length == numDimensions();
 
@@ -121,7 +126,7 @@ public interface RandomAccess< T > extends Localizable, Positionable, Sampler< T
 	 * }
 	 * </pre>
 	 */
-	default T setPositionAndGet( int... position )
+	default T setPositionAndGet( final int... position )
 	{
 		assert position.length == numDimensions();
 
@@ -158,7 +163,7 @@ public interface RandomAccess< T > extends Localizable, Positionable, Sampler< T
 	 * }
 	 * </pre>
 	 */
-	default T setPositionAndGet( Localizable position )
+	default T setPositionAndGet( final Localizable position )
 	{
 		assert position.numDimensions() == numDimensions();
 

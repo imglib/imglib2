@@ -11,13 +11,13 @@
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice,
  *    this list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  *    this list of conditions and the following disclaimer in the documentation
  *    and/or other materials provided with the distribution.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -100,53 +100,53 @@ public class HyperSlice< T > implements RandomAccessible< T >
 		}
 
 		@Override
-		public void localize( int[] position )
+		public void localize( final int[] position )
 		{
 			for ( int d = 0; d < numDimensions; ++d )
 				position[ d ] = sourceAccess.getIntPosition( axes[ d ] );
 		}
 
 		@Override
-		public void localize( long[] position )
+		public void localize( final long[] position )
 		{
 			for ( int d = 0; d < numDimensions; ++d )
 				position[ d ] = sourceAccess.getLongPosition( axes[ d ] );
 		}
 
 		@Override
-		public int getIntPosition( int d )
+		public int getIntPosition( final int d )
 		{
 			return sourceAccess.getIntPosition( axes[ d ] );
 		}
 
 		@Override
-		public long getLongPosition( int d )
+		public long getLongPosition( final int d )
 		{
 			return sourceAccess.getLongPosition( axes[ d ] );
 		}
 
 		@Override
-		public void localize( float[] position )
+		public void localize( final float[] position )
 		{
 			for ( int d = 0; d < numDimensions; ++d )
 				position[ d ] = sourceAccess.getFloatPosition( axes[ d ] );
 		}
 
 		@Override
-		public void localize( double[] position )
+		public void localize( final double[] position )
 		{
 			for ( int d = 0; d < numDimensions; ++d )
 				position[ d ] = sourceAccess.getDoublePosition( axes[ d ] );
 		}
 
 		@Override
-		public float getFloatPosition( int d )
+		public float getFloatPosition( final int d )
 		{
 			return sourceAccess.getFloatPosition( axes[ d ] );
 		}
 
 		@Override
-		public double getDoublePosition( int d )
+		public double getDoublePosition( final int d )
 		{
 			return sourceAccess.getDoublePosition( axes[ d ] );
 		}
@@ -158,79 +158,79 @@ public class HyperSlice< T > implements RandomAccessible< T >
 		}
 
 		@Override
-		public void fwd( int d )
+		public void fwd( final int d )
 		{
 			sourceAccess.fwd( axes[ d ] );
 		}
 
 		@Override
-		public void bck( int d )
+		public void bck( final int d )
 		{
 			sourceAccess.bck( axes[ d ] );
 		}
 
 		@Override
-		public void move( int distance, int d )
+		public void move( final int distance, final int d )
 		{
 			sourceAccess.move( distance, axes[ d ] );
 		}
 
 		@Override
-		public void move( long distance, int d )
+		public void move( final long distance, final int d )
 		{
 			sourceAccess.move( distance, axes[ d ] );
 		}
 
 		@Override
-		public void move( Localizable localizable )
+		public void move( final Localizable localizable )
 		{
 			for ( int d = 0; d < numDimensions; ++d )
 				sourceAccess.move( localizable.getLongPosition( d ), axes[ d ] );
 		}
 
 		@Override
-		public void move( int[] distance )
+		public void move( final int[] distance )
 		{
 			for ( int d = 0; d < numDimensions; ++d )
 				sourceAccess.move( distance[ d ], axes[ d ] );
 		}
 
 		@Override
-		public void move( long[] distance )
+		public void move( final long[] distance )
 		{
 			for ( int d = 0; d < numDimensions; ++d )
 				sourceAccess.move( distance[ d ], axes[ d ] );
 		}
 
 		@Override
-		public void setPosition( Localizable localizable )
+		public void setPosition( final Localizable localizable )
 		{
 			for ( int d = 0; d < numDimensions; ++d )
 				sourceAccess.setPosition( localizable.getLongPosition( d ), axes[ d ] );
 		}
 
 		@Override
-		public void setPosition( int[] position )
+		public void setPosition( final int[] position )
 		{
 			for ( int d = 0; d < numDimensions; ++d )
 				sourceAccess.setPosition( position[ d ], axes[ d ] );
 		}
 
 		@Override
-		public void setPosition( long[] position )
+		public void setPosition( final long[] position )
 		{
 			for ( int d = 0; d < numDimensions; ++d )
 				sourceAccess.setPosition( position[ d ], axes[ d ] );
 		}
 
 		@Override
-		public void setPosition( int position, int d )
+		public void setPosition( final int position, final int d )
 		{
 			sourceAccess.setPosition( position, axes[ d ] );
 		}
 
 		@Override
-		public void setPosition( long position, int d )
+		public void setPosition( final long position, final int d )
 		{
 			sourceAccess.setPosition( position, axes[ d ] );
 		}
@@ -245,12 +245,6 @@ public class HyperSlice< T > implements RandomAccessible< T >
 		public HyperSliceRandomAccess copy()
 		{
 			return new HyperSliceRandomAccess();
-		}
-
-		@Override
-		public HyperSliceRandomAccess copyRandomAccess()
-		{
-			return copy();
 		}
 	}
 
@@ -303,7 +297,7 @@ public class HyperSlice< T > implements RandomAccessible< T >
 	}
 
 	@Override
-	public RandomAccess< T > randomAccess( Interval interval )
+	public RandomAccess< T > randomAccess( final Interval interval )
 	{
 		return new HyperSliceRandomAccess();
 	}

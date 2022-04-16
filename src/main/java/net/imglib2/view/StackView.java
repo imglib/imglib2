@@ -11,13 +11,13 @@
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice,
  *    this list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  *    this list of conditions and the following disclaimer in the documentation
  *    and/or other materials provided with the distribution.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -49,10 +49,10 @@ import net.imglib2.util.Cast;
 /**
  * A stack of <em>n</em>-dimensional {@link RandomAccessibleInterval}s, forming
  * a <em>(n+1)</em>-dimensional {@link RandomAccessibleInterval}.
- * 
+ *
  * @param <T>
  *            the pixel type.
- * 
+ *
  * @author Tobias Pietzsch
  */
 public class StackView< T > extends AbstractInterval implements RandomAccessibleInterval< T >, View
@@ -61,7 +61,7 @@ public class StackView< T > extends AbstractInterval implements RandomAccessible
 	 * Describes how a {@link RandomAccess} on the <em>(n+1)</em>-dimensional
 	 * {@link StackView} maps position changes into position changes of the
 	 * underlying <em>n</em>-dimensional {@link RandomAccess}es.
-	 * 
+	 *
 	 * <p>
 	 * Each {@link RandomAccess} on a {@link StackView} keeps a list of
 	 * {@link RandomAccess}es on all constituent hyper-slices of the
@@ -71,12 +71,12 @@ public class StackView< T > extends AbstractInterval implements RandomAccessible
 	{
 		/**
 		 * The default behavior is the following.
-		 * 
+		 *
 		 * <p>
 		 * There is one "active" slice {@link RandomAccess}, namely the
 		 * <em>z</em>th {@link RandomAccess}, where <em>z</em> denotes the
 		 * <em>(n+1)</em>th dimension of the current position.
-		 * 
+		 *
 		 * <p>
 		 * When changing any dimension of the position, except the
 		 * <em>(n+1)</em>th, this position change is applied to the active slice
@@ -90,7 +90,7 @@ public class StackView< T > extends AbstractInterval implements RandomAccessible
 		 * Alternative behavior for some special cases; this is faster assuming
 		 * that we access in a loop over dimensions with the last dimension (the
 		 * hyper-slice dimension) in the inner loop. Works as follows.
-		 * 
+		 *
 		 * <p>
 		 * When changing any dimension of the position, except the
 		 * <em>(n+1)</em>th, this position change is applied to the <em>all</em>
@@ -98,7 +98,7 @@ public class StackView< T > extends AbstractInterval implements RandomAccessible
 		 * of the position is maintained as an index. When {@code get()} is
 		 * called it is forwarded to the slice {@link RandomAccess} at that
 		 * index.
-		 * 
+		 *
 		 * <p>
 		 * The potential advantage of this approach is that it does not need to
 		 * do a full {@code setPosition()} when changing slices. Only use this
@@ -166,19 +166,19 @@ public class StackView< T > extends AbstractInterval implements RandomAccessible
 	{
 		return stackAccessMode;
 	}
-	
+
 	/**
 	 * A {@link RandomAccess} on a {@link StackView}. It keeps a list of
 	 * {@link RandomAccess}es on all constituent hyper-slices of the
 	 * {@link StackView}.
-	 * 
+	 *
 	 * <p>
 	 * When changing any dimension of the position, except the <em>(n+1)</em>th,
 	 * this position change is applied to the active slice {@link RandomAccess}.
 	 * When changing the <em>(n+1)</em>th dimension of the position, a new slice
 	 * {@link RandomAccess} becomes active is set to the position of the
 	 * previously active slice {@link RandomAccess}.
-	 * 
+	 *
 	 * @param <T>
 	 *            the pixel type
 	 */
@@ -440,35 +440,29 @@ public class StackView< T > extends AbstractInterval implements RandomAccessible
 		{
 			return new DefaultRA< T >( this );
 		}
-
-		@Override
-		public DefaultRA< T > copyRandomAccess()
-		{
-			return copy();
-		}
 	}
 
 	/**
 	 * A {@link RandomAccess} on a {@link StackView}. It keeps a list of
 	 * {@link RandomAccess}es on all constituent hyper-slices of the
 	 * {@link StackView}.
-	 * 
+	 *
 	 * <p>
 	 * When changing any dimension of the position, except the <em>(n+1)</em>th,
 	 * this position change is applied to the <em>all</em> slice
 	 * {@link RandomAccess}es. The current <em>(n+1)</em>th dimension of the
 	 * position is maintained as an index. When {@code get()} is called it is
 	 * forwarded to the slice {@link RandomAccess} at that index.
-	 * 
+	 *
 	 * <p>
 	 * The potential advantage of this approach is that it does not need to do a
 	 * full {@code setPosition()} when changing slices.This is faster assuming
 	 * that we access in a loop over dimensions with the last dimension (the
 	 * hyper-slice dimension) in the inner loop.
-	 * 
+	 *
 	 * <p>
 	 * Only use this if you know what you are doing.
-	 * 
+	 *
 	 * @param <T>
 	 *            the pixel type
 	 */
@@ -720,12 +714,6 @@ public class StackView< T > extends AbstractInterval implements RandomAccessible
 		public MoveAllSlicesRA< T > copy()
 		{
 			return new MoveAllSlicesRA< T >( this );
-		}
-
-		@Override
-		public MoveAllSlicesRA< T > copyRandomAccess()
-		{
-			return copy();
 		}
 	}
 }
