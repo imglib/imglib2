@@ -207,7 +207,7 @@ public class Localizables
 		@Override
 		public RandomAccess< Localizable > copy()
 		{
-			return copyRandomAccess();
+			return new LocationRandomAccess( this );
 		}
 	}
 }
