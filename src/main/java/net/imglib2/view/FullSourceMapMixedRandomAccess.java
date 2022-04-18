@@ -131,7 +131,7 @@ public final class FullSourceMapMixedRandomAccess< T > extends AbstractEuclidean
 	{
 		super( randomAccess.numDimensions() );
 
-		this.s = randomAccess.s.copyRandomAccess();
+		this.s = randomAccess.s.copy();
 		this.m = randomAccess.m;
 		this.translation = randomAccess.translation.clone();
 		this.sourceInv = randomAccess.sourceInv.clone();

@@ -86,7 +86,7 @@ public class OutOfBoundsBorder< T > extends AbstractLocalizable implements OutOf
 			dimIsOutOfBounds[ d ] = outOfBounds.dimIsOutOfBounds[ d ];
 		}
 
-		outOfBoundsRandomAccess = outOfBounds.outOfBoundsRandomAccess.copyRandomAccess();
+		outOfBoundsRandomAccess = outOfBounds.outOfBoundsRandomAccess.copy();
 	}
 
 	public < F extends Interval & RandomAccessible< T > > OutOfBoundsBorder( final F f )

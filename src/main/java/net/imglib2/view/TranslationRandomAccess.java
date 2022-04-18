@@ -68,7 +68,7 @@ public final class TranslationRandomAccess< T > extends AbstractEuclideanSpace i
 	{
 		super( randomAccess.numDimensions() );
 
-		s = randomAccess.s.copyRandomAccess();
+		s = randomAccess.s.copy();
 		translation = randomAccess.translation.clone();
 		tmp = new long[ n ];
 	}

@@ -99,7 +99,7 @@ final public class ConvertedRandomAccess< A, B > extends AbstractConvertedRandom
 	public ConvertedRandomAccess< A, B > copy()
 	{
 		return new ConvertedRandomAccess< A, B >(
-				source.copyRandomAccess(),
+				source.copy(),
 				converterSupplier,
 				convertedSupplier );
 	}

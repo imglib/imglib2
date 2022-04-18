@@ -93,7 +93,7 @@ public class RealComposite< T extends RealType< T > > extends AbstractNumericCom
 	@Override
 	public RealComposite< T > copy()
 	{
-		return new RealComposite< T >( sourceAccess.copyRandomAccess(), length );
+		return new RealComposite< T >( sourceAccess.copy(), length );
 	}
 
 	@Override

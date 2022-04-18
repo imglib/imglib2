@@ -81,7 +81,7 @@ public final class TransformRandomAccess< T > extends AbstractLocalizable implem
 	protected TransformRandomAccess( final TransformRandomAccess< T > randomAccess )
 	{
 		super( randomAccess.numDimensions() );
-		this.source = randomAccess.source.copyRandomAccess();
+		this.source = randomAccess.source.copy();
 		this.transformToSource = randomAccess.transformToSource;
 		this.tmp = new long[ randomAccess.tmp.length ];
 	}

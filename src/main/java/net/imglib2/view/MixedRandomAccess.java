@@ -133,7 +133,7 @@ public final class MixedRandomAccess< T > extends AbstractLocalizable implements
 	{
 		super( randomAccess.numDimensions() );
 
-		this.s = randomAccess.s.copyRandomAccess();
+		this.s = randomAccess.s.copy();
 		this.m = randomAccess.m;
 
 		this.translation = randomAccess.translation.clone();

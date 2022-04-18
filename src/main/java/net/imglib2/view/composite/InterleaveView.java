@@ -70,7 +70,7 @@ public class InterleaveView< T > implements RandomAccessible< T >, View
 
 		protected InterleaveRandomAccess( final InterleaveRandomAccess other )
 		{
-			sourceAccess = other.sourceAccess.copyRandomAccess();
+			sourceAccess = other.sourceAccess.copy();
 		}
 
 		@Override

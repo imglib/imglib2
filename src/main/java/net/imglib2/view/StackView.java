@@ -237,7 +237,7 @@ public class StackView< T > extends AbstractInterval implements RandomAccessible
 		{
 			sliceAccesses = Cast.unchecked( Array.newInstance( RandomAccess.class, a.sliceAccesses.length ) );
 			for ( int i = 0; i < sliceAccesses.length; ++i )
-				sliceAccesses[ i ] = a.sliceAccesses[ i ].copyRandomAccess();
+				sliceAccesses[ i ] = a.sliceAccesses[ i ].copy();
 			slice = a.slice;
 			sliceAccess = sliceAccesses[ slice ];
 			n = a.n;
@@ -519,7 +519,7 @@ public class StackView< T > extends AbstractInterval implements RandomAccessible
 		{
 			sliceAccesses = Cast.unchecked( Array.newInstance( RandomAccess.class, a.sliceAccesses.length ) );
 			for ( int i = 0; i < sliceAccesses.length; ++i )
-				sliceAccesses[ i ] = a.sliceAccesses[ i ].copyRandomAccess();
+				sliceAccesses[ i ] = a.sliceAccesses[ i ].copy();
 			slice = a.slice;
 			n = a.n;
 			sd = a.sd;

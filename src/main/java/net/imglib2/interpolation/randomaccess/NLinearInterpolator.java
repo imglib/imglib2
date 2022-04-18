@@ -92,7 +92,7 @@ public class NLinearInterpolator< T extends NumericType< T > > extends Floor< Ra
 
 	protected NLinearInterpolator( final NLinearInterpolator< T > interpolator )
 	{
-		super( interpolator.target.copyRandomAccess() );
+		super( interpolator.target.copy() );
 
 		weights = interpolator.weights.clone();
 		code = interpolator.code;

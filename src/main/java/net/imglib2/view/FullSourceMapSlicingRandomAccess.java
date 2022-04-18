@@ -110,7 +110,7 @@ public class FullSourceMapSlicingRandomAccess< T > extends AbstractEuclideanSpac
 	protected FullSourceMapSlicingRandomAccess( final FullSourceMapSlicingRandomAccess< T > randomAccess )
 	{
 		super( randomAccess.numDimensions() );
-		s = randomAccess.s.copyRandomAccess();
+		s = randomAccess.s.copy();
 		m = randomAccess.m;
 		sourceComponent = randomAccess.sourceComponent.clone();
 		tmpPosition = randomAccess.tmpPosition.clone();

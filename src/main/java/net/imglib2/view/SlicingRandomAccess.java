@@ -115,7 +115,7 @@ public class SlicingRandomAccess< T > extends AbstractLocalizable implements Ran
 	protected SlicingRandomAccess( final SlicingRandomAccess< T > randomAccess )
 	{
 		super( randomAccess.numDimensions() );
-		s = randomAccess.s.copyRandomAccess();
+		s = randomAccess.s.copy();
 		m = randomAccess.m;
 		sourceZero = randomAccess.sourceZero.clone();
 		sourceComponent = randomAccess.sourceComponent.clone();

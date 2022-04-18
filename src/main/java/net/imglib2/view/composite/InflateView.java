@@ -70,7 +70,7 @@ public class InflateView< T > implements RandomAccessible< T >, View
 
 		protected InflateRandomAccess( final InflateRandomAccess other )
 		{
-			sourceAccess = other.sourceAccess.copyRandomAccess();
+			sourceAccess = other.sourceAccess.copy();
 		}
 
 		@Override

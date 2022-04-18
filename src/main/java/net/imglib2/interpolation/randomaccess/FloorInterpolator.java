@@ -65,7 +65,7 @@ public class FloorInterpolator< T > extends Floor< RandomAccess< T > > implement
 {
 	protected FloorInterpolator( final FloorInterpolator< T > floorInterpolator )
 	{
-		super( floorInterpolator.target.copyRandomAccess() );
+		super( floorInterpolator.target.copy() );
 	}
 
 	protected FloorInterpolator( final RandomAccessible< T > randomAccessible )

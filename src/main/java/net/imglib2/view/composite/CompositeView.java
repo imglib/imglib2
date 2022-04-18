@@ -69,7 +69,7 @@ public class CompositeView< T, C extends Composite< T > > implements RandomAcces
 
 		protected CompositeRandomAccess( final CompositeRandomAccess other )
 		{
-			sourceAccess = other.sourceAccess.copyRandomAccess();
+			sourceAccess = other.sourceAccess.copy();
 			composite = compositeFactory.create( sourceAccess );
 		}
 

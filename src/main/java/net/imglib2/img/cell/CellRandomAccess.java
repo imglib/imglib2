@@ -89,7 +89,7 @@ public class CellRandomAccess< T extends NativeType< T >, C extends Cell< ? > >
 		type = randomAccess.type.duplicateTypeOnSameNativeImg();
 		typeIndex = type.index();
 		grid = randomAccess.grid;
-		randomAccessOnCells = randomAccess.randomAccessOnCells.copyRandomAccess();
+		randomAccessOnCells = randomAccess.randomAccessOnCells.copy();
 
 		randomAccess.localize( position );
 

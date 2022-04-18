@@ -121,7 +121,7 @@ public class LanczosInterpolator< T extends RealType< T > > extends FloorOffset<
 
 	public LanczosInterpolator( final LanczosInterpolator< T > interpolator )
 	{
-		super( interpolator.target.copyRandomAccess(), interpolator.offset );
+		super( interpolator.target.copy(), interpolator.offset );
 
 		this.alpha = interpolator.alpha;
 

@@ -107,7 +107,7 @@ public class OutOfBoundsPeriodic< T > extends AbstractLocalizable implements Out
 			dimIsOutOfBounds[ d ] = outOfBounds.dimIsOutOfBounds[ d ];
 		}
 
-		outOfBoundsRandomAccess = outOfBounds.outOfBoundsRandomAccess.copyRandomAccess();
+		outOfBoundsRandomAccess = outOfBounds.outOfBoundsRandomAccess.copy();
 	}
 
 	public < F extends Interval & RandomAccessible< T > > OutOfBoundsPeriodic( final F f )
