@@ -11,13 +11,13 @@
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice,
  *    this list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  *    this list of conditions and the following disclaimer in the documentation
  *    and/or other materials provided with the distribution.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -35,12 +35,16 @@
 package net.imglib2.type.numeric.real;
 
 import net.imglib2.img.NativeImg;
+import net.imglib2.img.array.ArrayImg;
+import net.imglib2.img.array.ArrayImgs;
 import net.imglib2.img.basictypeaccess.DoubleAccess;
 import net.imglib2.img.basictypeaccess.array.DoubleArray;
 import net.imglib2.type.Index;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.NativeTypeFactory;
 import net.imglib2.util.Fraction;
+import net.imglib2.view.Views;
+import net.imglib2.view.composite.RealComposite;
 
 /**
  * TODO
@@ -189,7 +193,32 @@ public class DoubleType extends AbstractRealType< DoubleType > implements Native
 		return 64;
 	}
 
-	public static boolean equals(double a, double b) {
+	public static boolean equals( final double a, final double b )
+	{
 		return Double.doubleToLongBits( a ) == Double.doubleToLongBits( b );
+	}
+
+	/**
+	 * Create an n-dimensional {@link RealComposite} of {@link DoubleType}
+	 * backed by a 1-dimensional {@link ArrayImg}.
+	 *
+	 * @param n number of dimensions
+	 * @return
+	 */
+	public static RealComposite< DoubleType > createVector( final int n )
+	{
+		return Views.collapseReal( ArrayImgs.doubles( n ) ).randomAccess().get();
+	}
+
+	/**
+	 * Wrap an array as an n-dimensional {@link RealComposite} of
+	 * {@link DoubleType}.
+	 *
+	 * @param array
+	 * @return
+	 */
+	public static RealComposite< DoubleType > wrapVector( final double[] array )
+	{
+		return Views.collapseReal( ArrayImgs.doubles( array, array.length ) ).randomAccess().get();
 	}
 }
