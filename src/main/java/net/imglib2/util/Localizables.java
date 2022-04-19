@@ -41,7 +41,11 @@ import net.imglib2.Point;
 import net.imglib2.RandomAccess;
 import net.imglib2.RandomAccessible;
 import net.imglib2.RandomAccessibleInterval;
+import net.imglib2.RealInterval;
 import net.imglib2.RealLocalizable;
+import net.imglib2.RealPoint;
+import net.imglib2.RealRandomAccess;
+import net.imglib2.RealRandomAccessible;
 import net.imglib2.view.Views;
 
 public class Localizables
@@ -73,6 +77,18 @@ public class Localizables
 	public static RandomAccessibleInterval< Localizable > randomAccessibleInterval( final Interval interval )
 	{
 		return Views.interval( randomAccessible( interval.numDimensions() ), interval );
+	}
+
+	/**
+	 * Create an n-dimensional {@link RealRandomAccessible} whose value domain is
+	 * its source domain.
+	 *
+	 * @param n
+	 * @return
+	 */
+	public static RealRandomAccessible< RealLocalizable > realRandomAccessible( final int n )
+	{
+		return new RealLocationRealRandomAccessible( n );
 	}
 
 	/**
@@ -208,6 +224,54 @@ public class Localizables
 		public RandomAccess< Localizable > copy()
 		{
 			return new LocationRandomAccess( this );
+		}
+	}
+
+	private static class RealLocationRealRandomAccessible extends AbstractEuclideanSpace implements RealRandomAccessible< RealLocalizable >
+	{
+		public RealLocationRealRandomAccessible( final int n )
+		{
+			super( n );
+		}
+
+		@Override
+		public RealLocationRealRandomAccess realRandomAccess()
+		{
+			return new RealLocationRealRandomAccess( n );
+		}
+
+		@Override
+		public RealLocationRealRandomAccess realRandomAccess( final RealInterval interval )
+		{
+			return realRandomAccess();
+		}
+	}
+
+	/**
+	 * A RandomAccess that returns it's current position as value.
+	 */
+	private static class RealLocationRealRandomAccess extends RealPoint implements RealRandomAccess< RealLocalizable >
+	{
+		public RealLocationRealRandomAccess( final int n )
+		{
+			super( n );
+		}
+
+		public RealLocationRealRandomAccess( final RealLocalizable initialPosition )
+		{
+			super( initialPosition );
+		}
+
+		@Override
+		public RealLocationRealRandomAccess get()
+		{
+			return this;
+		}
+
+		@Override
+		public RealLocationRealRandomAccess copy()
+		{
+			return new RealLocationRealRandomAccess( this );
 		}
 	}
 }
