@@ -352,7 +352,7 @@ public class Converters
 	 * Conversion is done on-the-fly when reading values. Writing to the
 	 * converted {@link RandomAccessibleInterval} has no effect.
 	 *
-	 * Delegates to {@link Converters#convert(RandomAccessibleInterval, Converter, Supplier)}.
+	 * Delegates to {@link Converters#convert2(RandomAccessibleInterval, Converter, Supplier)}.
 	 * The different method name avoids situations where the compiler
 	 * or a scripting language interpreter picks the undesired method
 	 * for an object that implements both {@link RandomAccessibleInterval}
@@ -411,7 +411,7 @@ public class Converters
 	 * Conversion is done on-the-fly when reading values. Writing to the
 	 * converted {@link RandomAccessibleInterval} has no effect.
 	 *
-	 * Delegates to {@link Converters#convert(RandomAccessibleInterval, Converter, Supplier)}.
+	 * Delegates to {@link Converters#convert2(RandomAccessibleInterval, Converter, Supplier)}.
 	 * The different method name avoids situations where the compiler
 	 * or a scripting language interpreter picks the undesired method
 	 * for an object that implements both {@link RandomAccessibleInterval}

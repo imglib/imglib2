@@ -64,7 +64,7 @@ public class BiConvertedRealCursor< A, B, C > extends AbstractConvertedRealCurso
 	 * @param sourceA
 	 * @param sourceB
 	 * @param converterSupplier
-	 * @param c
+	 * @param convertedSupplier
 	 */
 	public BiConvertedRealCursor(
 			final RealCursor< A > sourceA,
@@ -87,7 +87,7 @@ public class BiConvertedRealCursor< A, B, C > extends AbstractConvertedRealCurso
 	 * @param sourceA
 	 * @param sourceB
 	 * @param converter
-	 * @param c
+	 * @param convertedSupplier
 	 */
 	public BiConvertedRealCursor(
 			final RealCursor< A > sourceA,

@@ -56,7 +56,7 @@ public class PointSample< T > extends AbstractLocalizable implements RandomAcces
 	 * Protected constructor that can re-use the passed position array.
 	 *
 	 * @param sampleSupplier
-	 *            a supplier to create the sample instance (can be () -> t) for
+	 *            a supplier to create the sample instance (can be {@code () -> t}) for
 	 *            instances that are re-used (like {@link Type}).
 	 * @param position
 	 *            array used to store the position.
@@ -73,7 +73,7 @@ public class PointSample< T > extends AbstractLocalizable implements RandomAcces
 	 * Create a point in <i>nDimensional</i> space initialized to 0,0,...
 	 *
 	 * @param sampleSupplier
-	 *            a supplier to create the sample instance (can be () -> t) for
+	 *            a supplier to create the sample instance (can be {@code () -> t}) for
 	 *            instances that are re-used (like {@link Type}).
 	 * @param n
 	 *            number of dimensions of the space
@@ -89,7 +89,7 @@ public class PointSample< T > extends AbstractLocalizable implements RandomAcces
 	 * the position.
 	 *
 	 * @param sampleSupplier
-	 *            a supplier to create the sample instance (can be () -> t) for
+	 *            a supplier to create the sample instance (can be {@code () -> t}) for
 	 *            instances that are re-used (like {@link Type}).
 	 * @param position
 	 *            the initial position. The length of the array determines the
@@ -105,7 +105,7 @@ public class PointSample< T > extends AbstractLocalizable implements RandomAcces
 	 * the position.
 	 *
 	 * @param sampleSupplier
-	 *            a supplier to create the sample instance (can be () -> t) for
+	 *            a supplier to create the sample instance (can be {@code () -> t}) for
 	 *            instances that are re-used (like {@link Type}).
 	 * @param position
 	 *            the initial position. The length of the array determines the
@@ -122,7 +122,7 @@ public class PointSample< T > extends AbstractLocalizable implements RandomAcces
 	 * {@link Localizable}
 	 *
 	 * @param sampleSupplier
-	 *            a supplier to create the sample instance (can be () -> t) for
+	 *            a supplier to create the sample instance (can be {@code () -> t}) for
 	 *            instances that are re-used (like {@link Type}).
 	 * @param localizable
 	 *            the initial position. Its dimensionality determines the
@@ -257,7 +257,7 @@ public class PointSample< T > extends AbstractLocalizable implements RandomAcces
 	 * its coordinates in the provided position array.
 	 *
 	 * @param sampleSupplier
-	 *            a supplier to create the sample instance (can be () -> t) for
+	 *            a supplier to create the sample instance (can be {@code () -> t}) for
 	 *            instances that are re-used (like {@link Type}).
 	 * @param position
 	 *            array to use for storing the position.

@@ -315,7 +315,7 @@ public class RealPointSample< T > extends AbstractRealLocalizable implements Rea
 	 * stores its coordinates in the provided position array.
 	 *
 	 * @param sampleSupplier
-	 *            a supplier to create the sample instance (can be () -> t) for
+	 *            a supplier to create the sample instance (can be {@code () -> t}) for
 	 *            instances that are re-used (like {@link Type}).
 	 * @param position
 	 *            array to use for storing the position.
