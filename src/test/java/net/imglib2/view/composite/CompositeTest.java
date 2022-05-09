@@ -56,7 +56,7 @@ public class CompositeTest
 	{
 		Arrays.setAll( refDouble, i -> rnd.nextDouble() * 100 );
 		for ( int i = 0; i < refFloat.length; ++i )
-			refFloat[ i ]= rnd.nextFloat() * 100;
+			refFloat[ i ] = rnd.nextFloat() * 100;
 	}
 
 	@Test
@@ -111,11 +111,9 @@ public class CompositeTest
 			srcAccess.setPosition( i, collapsed.numDimensions() );
 			assertEquals( composite.get( i ).get(), srcAccess.get().get(), 0.0000001 );
 
-			System.out.println( i );
-
 			++i;
-			if (i < img.dimension( collapsed.numDimensions() ) )
-					i = 0;
+			if ( i == img.dimension( collapsed.numDimensions() ) )
+				i = 0;
 		}
 	}
 
