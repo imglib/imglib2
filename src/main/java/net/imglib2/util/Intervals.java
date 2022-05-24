@@ -545,8 +545,8 @@ public class Intervals
 	 *
 	 * Create a {@link FinalInterval} that represents that interval.
 	 *
-	 * May produce unexpected results for empty {@link Interval}s. Use {@link union} if
-	 * either input interval could be empty.
+	 * May produce unexpected results for empty {@link Interval}s.
+	 * Use {@link #union(Interval, Interval)} if either input interval could be empty.
 	 *
 	 * @param intervalA
 	 *            input interval
@@ -605,8 +605,8 @@ public class Intervals
 	 *
 	 * Create a {@link RealInterval} that represents that interval.
 	 *
-	 * May produce unexpected results for empty {@link RealInterval}s. Use {@link union} if
-	 * either input interval could be empty.
+	 * May produce unexpected results for empty {@link RealInterval}s.
+	 * Use {@link #union(RealInterval, RealInterval)} if either input interval could be empty.
 	 *
 	 * @param intervalA
 	 *            input interval
