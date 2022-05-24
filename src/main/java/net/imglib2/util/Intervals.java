@@ -589,15 +589,7 @@ public class Intervals
 		else if( isEmpty( intervalB ))
 			return new FinalInterval( intervalA );
 
-		final int n = intervalA.numDimensions();
-		final long[] min = new long[ n ];
-		final long[] max = new long[ n ];
-		for ( int d = 0; d < n; ++d )
-		{
-			min[ d ] = Math.min( intervalA.min( d ), intervalB.min( d ) );
-			max[ d ] = Math.max( intervalA.max( d ), intervalB.max( d ) );
-		}
-		return new FinalInterval( min, max );
+		return unionUnsafe( intervalA, intervalB );
 	}
 
 	/**
@@ -649,15 +641,7 @@ public class Intervals
 		else if( isEmpty( intervalB ))
 			return new FinalRealInterval( intervalA );
 
-		final int n = intervalA.numDimensions();
-		final double[] min = new double[ n ];
-		final double[] max = new double[ n ];
-		for ( int d = 0; d < n; ++d )
-		{
-			min[ d ] = Math.min( intervalA.realMin( d ), intervalB.realMin( d ) );
-			max[ d ] = Math.max( intervalA.realMax( d ), intervalB.realMax( d ) );
-		}
-		return new FinalRealInterval( min, max );
+		return unionUnsafe( intervalA, intervalB );
 	}
 
 	/**
