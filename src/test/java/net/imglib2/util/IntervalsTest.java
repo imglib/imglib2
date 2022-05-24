@@ -36,6 +36,7 @@ package net.imglib2.util;
 
 import net.imglib2.Dimensions;
 import net.imglib2.FinalDimensions;
+import net.imglib2.FinalInterval;
 import net.imglib2.FinalRealInterval;
 import net.imglib2.Interval;
 import net.imglib2.RealInterval;
@@ -43,6 +44,7 @@ import net.imglib2.test.ImgLib2Assert;
 
 import org.junit.Test;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
@@ -207,5 +209,72 @@ public class IntervalsTest
 		final Dimensions differentDimensions = new FinalDimensions( 1, 3 );
 		assertTrue( Intervals.equalDimensions( dimensions, sameDimensions ) );
 		assertFalse( Intervals.equalDimensions( dimensions, differentDimensions ) );
+	}
+
+	@Test
+	public void testIntersection()
+	{
+		final Interval a = FinalInterval.createMinMax( 1, 2, 3, 4 );
+		final Interval b = FinalInterval.createMinMax( 2, 3, 4, 5 );
+		final Interval c = FinalInterval.createMinMax( 4, 5, 6, 7 );
+
+		final Interval aIa = Intervals.intersect( a, a );
+		final Interval aIb = Intervals.intersect( a, b );
+		final Interval bIa = Intervals.intersect( b, a );
+		final Interval aIc = Intervals.intersect( a, c );
+
+		assertTrue( "self-intersection", Intervals.equals( a, aIa ));
+		assertTrue( "intersection order", Intervals.equals( bIa, aIb ));
+		assertEquals( "non-intersecting", 0, Intervals.numElements( aIc ));
+
+		assertFalse( "intersecting not empty", Intervals.isEmpty( aIb ));
+		assertTrue( "non-intersecting is empty", Intervals.isEmpty( aIc ));
+	}
+
+	@Test
+	public void testUnion()
+	{
+		final FinalInterval a = FinalInterval.createMinMax( 1, 2, 3, 4 );
+		final FinalInterval b = FinalInterval.createMinMax( 2, 3, 4, 5 );
+		final FinalInterval aUbTrue = FinalInterval.createMinMax( 1, 2, 4, 5 );
+
+		final FinalInterval aUa = Intervals.union( a, a );
+		assertTrue( "self-union", Intervals.equals( a, aUa ));
+
+		final FinalInterval aUb = Intervals.union( a, b );
+		final FinalInterval bUa = Intervals.union( a, b );
+		assertEquals( "union", aUbTrue, aUb );
+		assertEquals( "union commutes", aUbTrue, bUa );
+
+		final FinalInterval empty = FinalInterval.createMinMax( 0, 0, -1, -1 );
+		final FinalInterval aUempty = Intervals.union( a, empty );
+		assertEquals( "union with empty", a, aUempty );
+
+		final FinalInterval emptyUempty = Intervals.union( empty, empty );
+		assertEquals( "empty union empty", empty, emptyUempty );
+	}
+
+	@Test
+	public void testRealUnion()
+	{
+		final double eps = 1e-9;
+		final FinalRealInterval a = FinalRealInterval.createMinMax( 1.1, 2.2, 3.3, 4.4 );
+		final FinalRealInterval b = FinalRealInterval.createMinMax( 2.2, 3.3, 4.4, 5.5 );
+		final FinalRealInterval aUbTrue = FinalRealInterval.createMinMax( 1.1, 2.2, 4.4, 5.5 );
+
+		final FinalRealInterval aUa = Intervals.union( a, a );
+		assertTrue( "self-union", Intervals.equals( a, aUa ));
+
+		final FinalRealInterval aUb = Intervals.union( a, b );
+		final FinalRealInterval bUa = Intervals.union( a, b );
+		assertTrue( "union", Intervals.equals( aUbTrue, aUb, eps) );
+		assertTrue( "union commutes", Intervals.equals( aUbTrue, bUa, eps) );
+
+		final FinalRealInterval empty = FinalRealInterval.createMinMax( 0, 0, -1, -1 );
+		final FinalRealInterval aUempty = Intervals.union( a, empty );
+		assertTrue( "union with empty", Intervals.equals( a, aUempty, eps ));
+
+		final FinalRealInterval emptyUempty = Intervals.union( empty, empty );
+		assertTrue( "empty union empty", Intervals.equals( empty, emptyUempty, eps ));
 	}
 }

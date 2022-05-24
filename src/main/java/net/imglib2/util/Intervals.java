@@ -545,13 +545,16 @@ public class Intervals
 	 *
 	 * Create a {@link FinalInterval} that represents that interval.
 	 *
+	 * May produce unexpected results for empty {@link Interval}s.
+	 * Use {@link #union(Interval, Interval)} if either input interval could be empty.
+	 *
 	 * @param intervalA
 	 *            input interval
 	 * @param intervalB
 	 *            input interval
 	 * @return union of input intervals
 	 */
-	public static FinalInterval union( final Interval intervalA, final Interval intervalB )
+	public static FinalInterval unionUnsafe( final Interval intervalA, final Interval intervalB )
 	{
 		assert intervalA.numDimensions() == intervalB.numDimensions();
 
@@ -569,7 +572,7 @@ public class Intervals
 	/**
 	 * Compute the smallest interval that contains both input intervals.
 	 *
-	 * Create a {@link RealInterval} that represents that interval.
+	 * Create a {@link FinalInterval} that represents that interval.
 	 *
 	 * @param intervalA
 	 *            input interval
@@ -577,7 +580,33 @@ public class Intervals
 	 *            input interval
 	 * @return union of input intervals
 	 */
-	public static FinalRealInterval union( final RealInterval intervalA, final RealInterval intervalB )
+	public static FinalInterval union( final Interval intervalA, final Interval intervalB )
+	{
+		assert intervalA.numDimensions() == intervalB.numDimensions();
+
+		if( isEmpty( intervalA ))
+			return new FinalInterval( intervalB );
+		else if( isEmpty( intervalB ))
+			return new FinalInterval( intervalA );
+
+		return unionUnsafe( intervalA, intervalB );
+	}
+
+	/**
+	 * Compute the smallest interval that contains both input intervals.
+	 *
+	 * Create a {@link RealInterval} that represents that interval.
+	 *
+	 * May produce unexpected results for empty {@link RealInterval}s.
+	 * Use {@link #union(RealInterval, RealInterval)} if either input interval could be empty.
+	 *
+	 * @param intervalA
+	 *            input interval
+	 * @param intervalB
+	 *            input interval
+	 * @return union of input intervals
+	 */
+	public static FinalRealInterval unionUnsafe( final RealInterval intervalA, final RealInterval intervalB )
 	{
 		assert intervalA.numDimensions() == intervalB.numDimensions();
 
@@ -590,6 +619,29 @@ public class Intervals
 			max[ d ] = Math.max( intervalA.realMax( d ), intervalB.realMax( d ) );
 		}
 		return new FinalRealInterval( min, max );
+	}
+
+	/**
+	 * Compute the smallest interval that contains both input intervals.
+	 *
+	 * Create a {@link RealInterval} that represents that interval.
+	 *
+	 * @param intervalA
+	 *            input interval
+	 * @param intervalB
+	 *            input interval
+	 * @return union of input intervals
+	 */
+	public static FinalRealInterval union( final RealInterval intervalA, final RealInterval intervalB )
+	{
+		assert intervalA.numDimensions() == intervalB.numDimensions();
+
+		if( isEmpty( intervalA ))
+			return new FinalRealInterval( intervalB );
+		else if( isEmpty( intervalB ))
+			return new FinalRealInterval( intervalA );
+
+		return unionUnsafe( intervalA, intervalB );
 	}
 
 	/**
@@ -756,10 +808,10 @@ public class Intervals
 	 */
 	public static long numElements( final Dimensions interval )
 	{
-		long numPixels = interval.dimension( 0 );
+		long numPixels = Math.max( interval.dimension( 0 ), 0 );
 		final int n = interval.numDimensions();
 		for ( int d = 1; d < n; ++d )
-			numPixels *= interval.dimension( d );
+			numPixels *= Math.max( interval.dimension( d ), 0 );
 		return numPixels;
 	}
 
@@ -772,9 +824,9 @@ public class Intervals
 	 */
 	public static long numElements( final int... dimensions )
 	{
-		long numPixels = dimensions[ 0 ];
+		long numPixels = Math.max( dimensions[ 0 ], 0 );
 		for ( int d = 1; d < dimensions.length; ++d )
-			numPixels *= dimensions[ d ];
+			numPixels *= Math.max( dimensions[ d ], 0 );
 		return numPixels;
 	}
 
@@ -787,9 +839,9 @@ public class Intervals
 	 */
 	public static long numElements( final long... dimensions )
 	{
-		long numPixels = dimensions[ 0 ];
+		long numPixels = Math.max( dimensions[ 0 ], 0 );
 		for ( int d = 1; d < dimensions.length; ++d )
-			numPixels *= dimensions[ d ];
+			numPixels *= Math.max( dimensions[ d ], 0 );
 		return numPixels;
 	}
 
