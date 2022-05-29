@@ -11,13 +11,13 @@
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice,
  *    this list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  *    this list of conditions and the following disclaimer in the documentation
  *    and/or other materials provided with the distribution.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -47,11 +47,11 @@ import net.imglib2.transform.integer.Mixed;
  * current position can be recovered from the position of the source
  * RandomAccess. Localize can be implemented via localize on the source
  * RandomAccess.
- * 
+ *
  * <p>
  * For the general case, see {@link MixedRandomAccess}.
  * </p>
- * 
+ *
  * @param <T>
  * @author Tobias Pietzsch
  */
@@ -131,7 +131,7 @@ public final class FullSourceMapMixedRandomAccess< T > extends AbstractEuclidean
 	{
 		super( randomAccess.numDimensions() );
 
-		this.s = randomAccess.s.copyRandomAccess();
+		this.s = randomAccess.s.copy();
 		this.m = randomAccess.m;
 		this.translation = randomAccess.translation.clone();
 		this.sourceInv = randomAccess.sourceInv.clone();
@@ -372,11 +372,5 @@ public final class FullSourceMapMixedRandomAccess< T > extends AbstractEuclidean
 	public FullSourceMapMixedRandomAccess< T > copy()
 	{
 		return new FullSourceMapMixedRandomAccess< T >( this );
-	}
-
-	@Override
-	public FullSourceMapMixedRandomAccess< T > copyRandomAccess()
-	{
-		return copy();
 	}
 }

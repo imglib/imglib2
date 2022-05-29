@@ -11,13 +11,13 @@
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice,
  *    this list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  *    this list of conditions and the following disclaimer in the documentation
  *    and/or other materials provided with the distribution.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -33,7 +33,10 @@
  */
 package net.imglib2.view.composite;
 
+import net.imglib2.Localizable;
 import net.imglib2.RandomAccess;
+import net.imglib2.RealLocalizable;
+import net.imglib2.RealPositionable;
 import net.imglib2.img.Img;
 import net.imglib2.img.array.ArrayImg;
 import net.imglib2.img.array.ArrayImgFactory;
@@ -43,37 +46,36 @@ import net.imglib2.type.numeric.NumericType;
 import net.imglib2.type.numeric.RealType;
 
 /**
- * A vector of {@link RealType} scalars.  It is a {@link NumericType}
- * itself, implementing the {@link NumericType} algebra as element-wise
- * operations.
+ * A vector of {@link RealType} scalars. It is a {@link NumericType} itself,
+ * implementing the {@link NumericType} algebra as element-wise operations.
  *
  * @author Stephan Saalfeld
  */
-public class RealComposite< T extends RealType< T > > extends AbstractNumericComposite< T, RealComposite< T > >
+public class RealComposite< T extends RealType< T > > extends AbstractNumericComposite< T, RealComposite< T > > implements RealPositionable, RealLocalizable
 {
-	static public class Factory< T extends RealType< T > > implements CompositeFactory< T, RealComposite< T > > 
+	static public class Factory< T extends RealType< T > > implements CompositeFactory< T, RealComposite< T > >
 	{
 		final protected int numChannels;
-		
+
 		public Factory( final int numChannels )
 		{
 			this.numChannels = numChannels;
 		}
-		
+
 		@Override
 		public RealComposite< T > create( final RandomAccess< T > sourceAccess )
 		{
 			return new RealComposite< T >( sourceAccess, numChannels );
 		}
 	}
-	
+
 	public RealComposite( final RandomAccess< T > sourceAccess, final int length )
 	{
 		super( sourceAccess, length );
 	}
 
 	/**
-	 * Generates a 1D {@link ArrayImg}&lt;T&gt; 
+	 * Generates a 1D {@link ArrayImg}&lt;T&gt;
 	 */
 	@Override
 	@SuppressWarnings( { "unchecked", "rawtypes" } )
@@ -91,6 +93,220 @@ public class RealComposite< T extends RealType< T > > extends AbstractNumericCom
 	@Override
 	public RealComposite< T > copy()
 	{
-		return new RealComposite< T >( sourceAccess.copyRandomAccess(), length );
+		return new RealComposite< T >( sourceAccess.copy(), length );
+	}
+
+	@Override
+	public void fwd( final int d )
+	{
+		get( d ).inc();
+	}
+
+	@Override
+	public void bck( final int d )
+	{
+		get( d ).dec();
+	}
+
+	@Override
+	public void move( final int distance, final int d )
+	{
+		final T t = get( d );
+		t.setReal( t.getRealDouble() + distance );
+	}
+
+	@Override
+	public void move( final long distance, final int d )
+	{
+		final T t = get( d );
+		t.setReal( t.getRealDouble() + distance );
+	}
+
+	@Override
+	public void move( final Localizable distance )
+	{
+		sourceAccess.setPosition( 0, this.d );
+		for ( int d = 0; d < length; ++d )
+		{
+			final T t = sourceAccess.get();
+			t.setReal( t.getRealDouble() + distance.getDoublePosition( d ) );
+			sourceAccess.fwd( this.d );
+		}
+	}
+
+	@Override
+	public void move( final int[] distance )
+	{
+		sourceAccess.setPosition( 0, this.d );
+		for ( int d = 0; d < length; ++d )
+		{
+			final T t = sourceAccess.get();
+			t.setReal( t.getRealDouble() + distance[ d ] );
+			sourceAccess.fwd( this.d );
+		}
+	}
+
+	@Override
+	public void move( final long[] distance )
+	{
+		sourceAccess.setPosition( 0, this.d );
+		for ( int d = 0; d < length; ++d )
+		{
+			final T t = sourceAccess.get();
+			t.setReal( t.getRealDouble() + distance[ d ] );
+			sourceAccess.fwd( this.d );
+		}
+	}
+
+	@Override
+	public void setPosition( final Localizable position )
+	{
+		sourceAccess.setPosition( 0, this.d );
+		for ( int d = 0; d < length; ++d )
+		{
+			sourceAccess.get().setReal( position.getDoublePosition( d ) );
+			sourceAccess.fwd( this.d );
+		}
+	}
+
+	@Override
+	public void setPosition( final int[] position )
+	{
+		sourceAccess.setPosition( 0, this.d );
+		for ( int d = 0; d < length; ++d )
+		{
+			sourceAccess.get().setReal( position[ d ] );
+			sourceAccess.fwd( this.d );
+		}
+	}
+
+	@Override
+	public void setPosition( final long[] position )
+	{
+		sourceAccess.setPosition( 0, this.d );
+		for ( int d = 0; d < length; ++d )
+		{
+			sourceAccess.get().setReal( position[ d ] );
+			sourceAccess.fwd( this.d );
+		}
+	}
+
+	@Override
+	public void setPosition( final int position, final int d )
+	{
+		get( d ).setReal( position );
+	}
+
+	@Override
+	public void setPosition( final long position, final int d )
+	{
+		get( d ).setReal( position );
+	}
+
+	@Override
+	public int numDimensions()
+	{
+		return length;
+	}
+
+	@Override
+	public double getDoublePosition( final int d )
+	{
+		return get( d ).getRealDouble();
+	}
+
+	@Override
+	public void move( final float distance, final int d )
+	{
+		final T t = get( d );
+		t.setReal( t.getRealDouble() + distance );
+	}
+
+	@Override
+	public void move( final double distance, final int d )
+	{
+		final T t = get( d );
+		t.setReal( t.getRealDouble() + distance );
+	}
+
+	@Override
+	public void move( final RealLocalizable distance )
+	{
+		sourceAccess.setPosition( 0, this.d );
+		for ( int d = 0; d < length; ++d )
+		{
+			final T t = sourceAccess.get();
+			t.setReal( t.getRealDouble() + distance.getDoublePosition( d ) );
+			sourceAccess.fwd( this.d );
+		}
+	}
+
+	@Override
+	public void move( final float[] distance )
+	{
+		sourceAccess.setPosition( 0, this.d );
+		for ( int d = 0; d < length; ++d )
+		{
+			final T t = sourceAccess.get();
+			t.setReal( t.getRealDouble() + distance[ d ] );
+			sourceAccess.fwd( this.d );
+		}
+	}
+
+	@Override
+	public void move( final double[] distance )
+	{
+		sourceAccess.setPosition( 0, this.d );
+		for ( int d = 0; d < length; ++d )
+		{
+			final T t = sourceAccess.get();
+			t.setReal( t.getRealDouble() + distance[ d ] );
+			sourceAccess.fwd( this.d );
+		}
+	}
+
+	@Override
+	public void setPosition( final RealLocalizable position )
+	{
+		sourceAccess.setPosition( 0, this.d );
+		for ( int d = 0; d < length; ++d )
+		{
+			sourceAccess.get().setReal( position.getDoublePosition( d ) );
+			sourceAccess.fwd( this.d );
+		}
+	}
+
+	@Override
+	public void setPosition( final float[] position )
+	{
+		sourceAccess.setPosition( 0, this.d );
+		for ( int d = 0; d < length; ++d )
+		{
+			sourceAccess.get().setReal( position[ d ] );
+			sourceAccess.fwd( this.d );
+		}
+	}
+
+	@Override
+	public void setPosition( final double[] position )
+	{
+		sourceAccess.setPosition( 0, this.d );
+		for ( int d = 0; d < length; ++d )
+		{
+			sourceAccess.get().setReal( position[ d ] );
+			sourceAccess.fwd( this.d );
+		}
+	}
+
+	@Override
+	public void setPosition( final float position, final int d )
+	{
+		get( d ).setReal( position );
+	}
+
+	@Override
+	public void setPosition( final double position, final int d )
+	{
+		get( d ).setReal( position );
 	}
 }

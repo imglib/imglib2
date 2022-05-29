@@ -11,13 +11,13 @@
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice,
  *    this list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  *    this list of conditions and the following disclaimer in the documentation
  *    and/or other materials provided with the distribution.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -40,10 +40,10 @@ import net.imglib2.type.numeric.NumericType;
 import net.imglib2.util.Util;
 
 /**
- * 
+ *
  * Adds a exponential windowing to the mirrored content outside the Interval
  * boundaries
- * 
+ *
  * @param <T>
  * @author Stephan Preibisch
  * @author Stephan Saalfeld
@@ -166,11 +166,5 @@ public class OutOfBoundsMirrorExpWindowing< T extends NumericType< T > > extends
 	public OutOfBoundsMirrorExpWindowing< T > copy()
 	{
 		return new OutOfBoundsMirrorExpWindowing< T >( this );
-	}
-
-	@Override
-	public OutOfBoundsMirrorExpWindowing< T > copyRandomAccess()
-	{
-		return copy();
 	}
 }

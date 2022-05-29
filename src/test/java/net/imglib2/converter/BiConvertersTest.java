@@ -11,13 +11,13 @@
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice,
  *    this list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  *    this list of conditions and the following disclaimer in the documentation
  *    and/or other materials provided with the distribution.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -116,6 +116,75 @@ public class BiConvertersTest
 			assertEquals( sumCursorIterable.next().get(), dataA[ i ] + dataB[ i ] );
 			assertEquals( sumCursorRA.next().get(), dataA[ i ] + dataB[ i ] );
 			assertEquals( sumCursorRRA.next().get(), dataA[ i ] + dataB[ i ] );
+			++i;
+		}
+	}
+
+	@Test
+	public void testBiConvertersToArray()
+	{
+		final ArrayImg< IntType, ? > sourceA = ArrayImgs.ints( dataA, 20, 30 );
+		final ArrayImg< IntType, ? > sourceB = ArrayImgs.ints( dataB, 20, 30 );
+		final RandomAccessibleInterval< int[] > sumRAI = Converters.convertRAI2(
+				sourceA,
+				sourceB,
+				( a, b, c ) -> {
+					c[ 0 ] = a.get();
+					c[ 1 ] = b.get();
+				},
+				() -> new int[ 2 ] );
+		final IterableInterval< int[] > sumIterable = Converters.convert2(
+				( IterableInterval< IntType > ) sourceA,
+				sourceB,
+				( a, b, c ) -> {
+					c[ 0 ] = a.get();
+					c[ 1 ] = b.get();
+				},
+				() -> new int[ 2 ] );
+		final RandomAccessibleInterval< int[] > sumRA = Views.interval(
+				Converters.convert2(
+						Views.extendBorder( sourceA ),
+						Views.extendBorder( sourceB ),
+						( a, b, c ) -> {
+							c[ 0 ] = a.get();
+							c[ 1 ] = b.get();
+						},
+						() -> new int[ 2 ] ),
+				sourceA );
+		final RandomAccessibleInterval< int[] > sumRRA = Views.interval(
+				Views.raster(
+						Converters.convert2(
+							Views.interpolate( Views.extendBorder( sourceA ), new NearestNeighborInterpolatorFactory<>() ),
+							Views.interpolate( Views.extendBorder( sourceB ), new NearestNeighborInterpolatorFactory<>() ),
+							( a, b, c ) -> {
+								c[ 0 ] = a.get();
+								c[ 1 ] = b.get();
+							},
+							() -> new int[ 2 ] ) ),
+				sourceA );
+
+		final Cursor< int[] > sumCursorRAI = Views.iterable( sumRAI ).cursor();
+		final Cursor< int[] > sumCursorIterable = sumIterable.cursor();
+		final Cursor< int[] > sumCursorRA = Views.iterable( sumRA ).cursor();
+		final Cursor< int[] > sumCursorRRA = Views.iterable( sumRRA ).cursor();
+		int i = 0;
+		while ( sumCursorRAI.hasNext() )
+		{
+			int[] t = sumCursorRAI.next();
+			assertEquals( t[0], dataA[ i ] );
+			assertEquals( t[1], dataB[ i ] );
+
+			t = sumCursorIterable.next();
+			assertEquals( t[ 0 ], dataA[ i ] );
+			assertEquals( t[ 1 ], dataB[ i ] );
+
+			t = sumCursorRA.next();
+			assertEquals( t[ 0 ], dataA[ i ] );
+			assertEquals( t[ 1 ], dataB[ i ] );
+
+			t = sumCursorRRA.next();
+			assertEquals( t[ 0 ], dataA[ i ] );
+			assertEquals( t[ 1 ], dataB[ i ] );
 			++i;
 		}
 	}

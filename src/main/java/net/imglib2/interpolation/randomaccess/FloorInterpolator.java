@@ -11,13 +11,13 @@
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice,
  *    this list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  *    this list of conditions and the following disclaimer in the documentation
  *    and/or other materials provided with the distribution.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -42,7 +42,7 @@ import net.imglib2.position.transform.Floor;
 /**
  * {@link RealRandomAccess} to a {@link RandomAccess} by nearest floor
  * interpolation (i.e., the value is sampled at floor(<em>x</em>)).
- * 
+ *
  * <p>In ImgLib2, the coordinate of a sample corresponds to the 'center' point
  * of the sample, i.e. the location at which the sample was acquired.  This
  * scheme is intuitive in both rasters and irregularly samples data but can
@@ -56,16 +56,16 @@ import net.imglib2.position.transform.Floor;
  * {@link FloorInterpolator} means using the top-left-scheme, rendering it
  * using {@link NearestNeighborInterpolator}, {@link NLinearInterpolator}, or
  * {@link LanczosInterpolator} means using the center-scheme.</p>
- * 
+ *
  * @param <T>
- * 
+ *
  * @author Stephan Saalfeld
  */
 public class FloorInterpolator< T > extends Floor< RandomAccess< T > > implements RealRandomAccess< T >
 {
 	protected FloorInterpolator( final FloorInterpolator< T > floorInterpolator )
 	{
-		super( floorInterpolator.target.copyRandomAccess() );
+		super( floorInterpolator.target.copy() );
 	}
 
 	protected FloorInterpolator( final RandomAccessible< T > randomAccessible )
@@ -83,11 +83,5 @@ public class FloorInterpolator< T > extends Floor< RandomAccess< T > > implement
 	public FloorInterpolator< T > copy()
 	{
 		return new FloorInterpolator< T >( this );
-	}
-
-	@Override
-	public FloorInterpolator< T > copyRealRandomAccess()
-	{
-		return copy();
 	}
 }

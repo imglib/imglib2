@@ -11,13 +11,13 @@
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice,
  *    this list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  *    this list of conditions and the following disclaimer in the documentation
  *    and/or other materials provided with the distribution.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -50,29 +50,29 @@ import net.imglib2.type.numeric.NumericType;
  */
 public class NumericComposite< T extends NumericType< T > > extends AbstractNumericComposite< T, NumericComposite< T > >
 {
-	static public class Factory< T extends NumericType< T > > implements CompositeFactory< T, NumericComposite< T > > 
+	static public class Factory< T extends NumericType< T > > implements CompositeFactory< T, NumericComposite< T > >
 	{
 		final protected int numChannels;
-		
+
 		public Factory( final int numChannels )
 		{
 			this.numChannels = numChannels;
 		}
-		
+
 		@Override
 		public NumericComposite< T > create( final RandomAccess< T > sourceAccess )
 		{
 			return new NumericComposite< T >( sourceAccess, numChannels );
 		}
 	}
-	
+
 	public NumericComposite( final RandomAccess< T > sourceAccess, final int length )
 	{
 		super( sourceAccess, length );
 	}
 
 	/**
-	 * Generates a 1D {@link ArrayImg}&lt;T&gt; 
+	 * Generates a 1D {@link ArrayImg}&lt;T&gt;
 	 */
 	@Override
 	@SuppressWarnings( { "unchecked", "rawtypes" } )
@@ -90,6 +90,6 @@ public class NumericComposite< T extends NumericType< T > > extends AbstractNume
 	@Override
 	public NumericComposite< T > copy()
 	{
-		return new NumericComposite< T >( sourceAccess.copyRandomAccess(), length );
+		return new NumericComposite< T >( sourceAccess.copy(), length );
 	}
 }

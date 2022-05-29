@@ -40,89 +40,97 @@ import net.imglib2.RandomAccessible;
 import net.imglib2.View;
 
 /**
- * {@link CompositeView} collapses the trailing dimension of a
+ * {@link InterleaveView} collapses the trailing dimension of a
  * {@link RandomAccessible} of T into a {@link Composite} of T. The results is
  * an (<em>n</em>-1)-dimensional {@link RandomAccessible} of {@link Composite}
  * of T.
  *
  * @author Stephan Saalfeld
  */
-public class CompositeView< T, C extends Composite< T > > implements RandomAccessible< C >, View
+public class InterleaveView< T > implements RandomAccessible< T >, View
 {
-	final protected CompositeFactory< T, C > compositeFactory;
-
-	final protected RandomAccessible< T > source;
+	final protected RandomAccessible< ? extends Composite< T > > source;
 
 	final protected int n;
 
-	public class CompositeRandomAccess implements RandomAccess< C >
+	public class InterleaveRandomAccess implements RandomAccess< T >
 	{
-		final protected RandomAccess< T > sourceAccess;
+		final protected RandomAccess< ? extends Composite< T > > sourceAccess;
 
-		final protected C composite;
+		protected Composite< T > composite;
 
-		public CompositeRandomAccess()
+		protected boolean needsUpdate = true;
+
+		protected long compositePosition = 0;
+
+		public InterleaveRandomAccess()
 		{
 			sourceAccess = source.randomAccess();
-			composite = compositeFactory.create( sourceAccess );
 		}
 
-		protected CompositeRandomAccess( final CompositeRandomAccess other )
+		protected InterleaveRandomAccess( final InterleaveRandomAccess other )
 		{
 			sourceAccess = other.sourceAccess.copy();
-			composite = compositeFactory.create( sourceAccess );
 		}
 
 		@Override
 		public void localize( final int[] position )
 		{
-			for ( int d = 0; d < n; ++d )
-				position[ d ] = sourceAccess.getIntPosition( d );
+			for ( int d = 1; d < n; ++d )
+				position[ d ] = sourceAccess.getIntPosition( d - 1 );
+
+			position[ 0 ] = ( int ) compositePosition;
 		}
 
 		@Override
 		public void localize( final long[] position )
 		{
-			for ( int d = 0; d < n; ++d )
-				position[ d ] = sourceAccess.getLongPosition( d );
+			for ( int d = 1; d < n; ++d )
+				position[ d ] = sourceAccess.getLongPosition( d - 1 );
+
+			position[ 0 ] = ( int ) compositePosition;
 		}
 
 		@Override
 		public int getIntPosition( final int d )
 		{
-			return sourceAccess.getIntPosition( d );
+			return d == 0 ? ( int ) compositePosition : sourceAccess.getIntPosition( d - 1 );
 		}
 
 		@Override
 		public long getLongPosition( final int d )
 		{
-			return sourceAccess.getLongPosition( d );
+			return d == 0 ? compositePosition : sourceAccess.getLongPosition( d - 1 );
 		}
 
 		@Override
 		public void localize( final float[] position )
 		{
-			for ( int d = 0; d < n; ++d )
-				position[ d ] = sourceAccess.getFloatPosition( d );
+			for ( int d = 1; d < n; ++d )
+				position[ d ] = sourceAccess.getFloatPosition( d - 1 );
+
+			position[ 0 ] = compositePosition;
 		}
 
 		@Override
 		public void localize( final double[] position )
 		{
-			for ( int d = 0; d < n; ++d )
-				position[ d ] = sourceAccess.getDoublePosition( d );
+			for ( int d = 1; d < n; ++d )
+				position[ d ] = sourceAccess.getDoublePosition( d - 1 );
+
+			position[ 0 ] = compositePosition;
 		}
 
 		@Override
 		public float getFloatPosition( final int d )
 		{
-			return sourceAccess.getFloatPosition( d );
+			return d == 0 ? compositePosition : sourceAccess.getFloatPosition( d - 1 );
 		}
 
 		@Override
 		public double getDoublePosition( final int d )
 		{
-			return sourceAccess.getFloatPosition( d );
+			return d == 0 ? compositePosition : sourceAccess.getDoublePosition( d - 1 );
 		}
 
 		@Override
@@ -134,99 +142,151 @@ public class CompositeView< T, C extends Composite< T > > implements RandomAcces
 		@Override
 		public void fwd( final int d )
 		{
-			sourceAccess.fwd( d );
+			if ( d == 0 )
+				++compositePosition;
+			else
+			{
+				needsUpdate = true;
+				sourceAccess.fwd( d - 1 );
+			}
 		}
 
 		@Override
 		public void bck( final int d )
 		{
-			sourceAccess.bck( d );
+			if ( d == 0 )
+				--compositePosition;
+			else
+			{
+				needsUpdate = true;
+				sourceAccess.bck( d - 1 );
+			}
 		}
 
 		@Override
 		public void move( final int distance, final int d )
 		{
-			sourceAccess.move( distance, d );
+			if ( d == 0 )
+				compositePosition += distance;
+			else
+			{
+				needsUpdate = true;
+				sourceAccess.move( distance, d - 1 );
+			}
 		}
 
 		@Override
 		public void move( final long distance, final int d )
 		{
-			sourceAccess.move( distance, d );
+			if ( d == 0 )
+				compositePosition += distance;
+			else
+			{
+				needsUpdate = true;
+				sourceAccess.move( distance, d - 1 );
+			}
 		}
 
 		@Override
 		public void move( final Localizable localizable )
 		{
-			for ( int d = 0; d < n; ++d )
-				sourceAccess.move( localizable.getLongPosition( d ), d );
+			needsUpdate = true;
+			compositePosition += localizable.getLongPosition( 0 );
+			for ( int d = 1; d < n; ++d )
+				sourceAccess.move( localizable.getLongPosition( d ), d - 1 );
 		}
 
 		@Override
 		public void move( final int[] distance )
 		{
-			for ( int d = 0; d < n; ++d )
-				sourceAccess.move( distance[ d ], d );
+			needsUpdate = true;
+			compositePosition += distance[ 0 ];
+			for ( int d = 1; d < n; ++d )
+				sourceAccess.move( distance[ d ], d - 1 );
 		}
 
 		@Override
 		public void move( final long[] distance )
 		{
-			for ( int d = 0; d < n; ++d )
-				sourceAccess.move( distance[ d ], d );
+			needsUpdate = true;
+			compositePosition += distance[ 0 ];
+			for ( int d = 1; d < n; ++d )
+				sourceAccess.move( distance[ d ], d - 1 );
 		}
 
 		@Override
 		public void setPosition( final Localizable localizable )
 		{
-			for ( int d = 0; d < n; ++d )
-				sourceAccess.setPosition( localizable.getLongPosition( d ), d );
+			needsUpdate = true;
+			compositePosition = localizable.getLongPosition( 0 );
+			for ( int d = 1; d < n; ++d )
+				sourceAccess.setPosition( localizable.getLongPosition( d ), d - 1 );
 		}
 
 		@Override
 		public void setPosition( final int[] position )
 		{
-			for ( int d = 0; d < n; ++d )
-				sourceAccess.setPosition( position[ d ], d );
+			needsUpdate = true;
+			compositePosition = position[ 0 ];
+			for ( int d = 1; d < n; ++d )
+				sourceAccess.setPosition( position[ d ], d - 1 );
 		}
 
 		@Override
 		public void setPosition( final long[] position )
 		{
-			for ( int d = 0; d < n; ++d )
-				sourceAccess.setPosition( position[ d ], d );
+			needsUpdate = true;
+			compositePosition = position[ 0 ];
+			for ( int d = 1; d < n; ++d )
+				sourceAccess.setPosition( position[ d ], d - 1 );
 		}
 
 		@Override
 		public void setPosition( final int position, final int d )
 		{
-			sourceAccess.setPosition( position, d );
+			if ( d == 0 )
+				compositePosition = position;
+			else
+			{
+				needsUpdate = true;
+				sourceAccess.setPosition( position, d - 1 );
+			}
 		}
 
 		@Override
 		public void setPosition( final long position, final int d )
 		{
-			sourceAccess.setPosition( position, d );
+			if ( d == 0 )
+				compositePosition = position;
+			else
+			{
+				needsUpdate = true;
+				sourceAccess.setPosition( position, d - 1 );
+			}
 		}
 
 		@Override
-		public C get()
+		public T get()
 		{
-			return composite;
+			if ( needsUpdate )
+			{
+				composite = sourceAccess.get();
+				needsUpdate = false;
+			}
+			return composite.get( compositePosition );
 		}
 
 		@Override
-		public CompositeRandomAccess copy()
+		public InterleaveRandomAccess copy()
 		{
-			return new CompositeRandomAccess( this );
+			return new InterleaveRandomAccess( this );
 		}
 	}
 
-	public CompositeView( final RandomAccessible< T > source, final CompositeFactory< T, C > compositeFactory )
+	public InterleaveView( final RandomAccessible< ? extends Composite< T > > source )
 	{
 		this.source = source;
-		this.compositeFactory = compositeFactory;
-		n = source.numDimensions() - 1;
+		n = source.numDimensions() + 1;
 	}
 
 	@Override
@@ -236,15 +296,14 @@ public class CompositeView< T, C extends Composite< T > > implements RandomAcces
 	}
 
 	@Override
-	public CompositeRandomAccess randomAccess()
+	public InterleaveRandomAccess randomAccess()
 	{
-		return new CompositeRandomAccess();
+		return new InterleaveRandomAccess();
 	}
 
 	@Override
-	public CompositeRandomAccess randomAccess( final Interval interval )
+	public InterleaveRandomAccess randomAccess( final Interval interval )
 	{
 		return randomAccess();
 	}
-
 }

@@ -11,13 +11,13 @@
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice,
  *    this list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  *    this list of conditions and the following disclaimer in the documentation
  *    and/or other materials provided with the distribution.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -45,26 +45,26 @@ import net.imglib2.type.Type;
  * TODO
  *
  */
-public class ConvertedIterableRealInterval< A, B extends Type< B > > extends AbstractConvertedIterableRealInterval< A, B >
+public class ConvertedIterableRealInterval< A, B > extends AbstractConvertedIterableRealInterval< A, B >
 {
 	final protected Supplier< Converter< ? super A, ? super B > > converterSupplier;
 
-	final protected B converted;
+	final protected Supplier< ? extends B> convertedSupplier;
 
 	/**
 	 * Creates a copy of b for conversion.
 	 *
 	 * @param source
-	 * @param b
+	 * @param convertedSupplier
 	 */
 	public ConvertedIterableRealInterval(
 			final IterableRealInterval< A > source,
 			final Supplier< Converter< ? super A, ? super B > > converterSupplier,
-			final B b )
+			final Supplier< ? extends B> convertedSupplier )
 	{
 		super( source );
 		this.converterSupplier = converterSupplier;
-		this.converted = b.copy();
+		this.convertedSupplier = convertedSupplier;
 	}
 
 	/**
@@ -72,46 +72,71 @@ public class ConvertedIterableRealInterval< A, B extends Type< B > > extends Abs
 	 *
 	 * @param source
 	 * @param converter
-	 * @param b
+	 * @param convertedSupplier
 	 */
 	public ConvertedIterableRealInterval(
 			final IterableRealInterval< A > source,
 			final Converter< ? super A, ? super B > converter,
-			final B b )
+			final Supplier< ? extends B> convertedSupplier )
 	{
-		this( source, () -> converter, b );
+		this( source, () -> converter, convertedSupplier );
 	}
 
 	@Override
 	public ConvertedRealCursor< A, B > cursor()
 	{
-		return new ConvertedRealCursor< A, B >( sourceInterval.cursor(), converterSupplier, converted );
+		return new ConvertedRealCursor< A, B >( sourceInterval.cursor(), converterSupplier, convertedSupplier );
 	}
 
 	@Override
 	public ConvertedRealCursor< A, B > localizingCursor()
 	{
-		return new ConvertedRealCursor< A, B >( sourceInterval.localizingCursor(), converterSupplier, converted );
+		return new ConvertedRealCursor< A, B >( sourceInterval.localizingCursor(), converterSupplier, convertedSupplier );
 	}
 
 	/**
+	 * @deprecated Use {@link #getDestinationSupplier()} instead.
+	 *
 	 * @return an instance of the destination {@link Type}.
 	 */
+	@Deprecated
 	public B getDestinationType()
 	{
-		return converted.copy();
+		return convertedSupplier.get();
 	}
+
+	/**
+	 *
+	 * @return the supplier of conversion destination instances
+	 */
+	public Supplier< ? extends B > getDestinationSupplier()
+	{
+		return convertedSupplier;
+	}
+
 
 	/**
 	 * Returns an instance of the {@link Converter}.  If the
-	 * {@link ConvertedIterableInterval} was created with a {@link Converter}
+	 * {@link ConvertedIterableRealInterval} was created with a {@link Converter}
 	 * instead of a {@link Supplier}, then the returned converter will be this
 	 * instance.
 	 *
+	 * @deprecated Use {@link #getConverterSupplier()} instead
+	 *
 	 * @return
 	 */
+	@Deprecated
 	public Converter< ? super A, ? super B > getConverter()
 	{
 		return converterSupplier.get();
+	}
+
+	/**
+	 *
+	 * @return the supplier of converter instances
+	 */
+	public Supplier< Converter< ? super A, ? super B > > getConverterSupplier()
+	{
+		return converterSupplier;
 	}
 }

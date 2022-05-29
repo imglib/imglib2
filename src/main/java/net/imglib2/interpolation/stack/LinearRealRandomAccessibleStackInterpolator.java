@@ -11,13 +11,13 @@
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice,
  *    this list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  *    this list of conditions and the following disclaimer in the documentation
  *    and/or other materials provided with the distribution.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -80,7 +80,6 @@ public class LinearRealRandomAccessibleStackInterpolator< T extends NumericType<
 	protected double w1 = 0;
 
 
-	@SuppressWarnings( "unchecked" )
 	public LinearRealRandomAccessibleStackInterpolator(
 			final RealRandomAccessible< T >[] slices )
 	{
@@ -105,7 +104,7 @@ public class LinearRealRandomAccessibleStackInterpolator< T extends NumericType<
 	{
 		this(
 				slices.toArray(
-						Cast.unchecked(
+						Cast.<RealRandomAccessible< T >[]>unchecked(
 								Array.newInstance( RealRandomAccessible.class, slices.size() ) ) ) );
 
 	}
@@ -117,7 +116,7 @@ public class LinearRealRandomAccessibleStackInterpolator< T extends NumericType<
 
 		if ( a.sliceAccess != a.sliceAccess2 )
 		{
-			sliceAccess2 = a.sliceAccess2.copyRealRandomAccess();
+			sliceAccess2 = a.sliceAccess2.copy();
 			sliceAccesses[ sliceIndex + 1 ] = sliceAccess2;
 		}
 
@@ -126,7 +125,7 @@ public class LinearRealRandomAccessibleStackInterpolator< T extends NumericType<
 	}
 
 	@Override
-	protected int getSliceIndex( final double position )
+	protected int getSliceIndex( @SuppressWarnings( "hiding" ) final double position )
 	{
 		return Math.max( 0, Math.min( lastSliceIndex, ( int )Math.floor( position ) ) );
 	}
@@ -571,11 +570,5 @@ public class LinearRealRandomAccessibleStackInterpolator< T extends NumericType<
 	public LinearRealRandomAccessibleStackInterpolator< T > copy()
 	{
 		return new LinearRealRandomAccessibleStackInterpolator< T >( this );
-	}
-
-	@Override
-	public LinearRealRandomAccessibleStackInterpolator< T > copyRealRandomAccess()
-	{
-		return copy();
 	}
 }

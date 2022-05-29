@@ -11,13 +11,13 @@
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice,
  *    this list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  *    this list of conditions and the following disclaimer in the documentation
  *    and/or other materials provided with the distribution.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -35,6 +35,8 @@
 package net.imglib2.type.numeric.real;
 
 import net.imglib2.img.NativeImg;
+import net.imglib2.img.array.ArrayImg;
+import net.imglib2.img.array.ArrayImgs;
 import net.imglib2.img.basictypeaccess.FloatAccess;
 import net.imglib2.img.basictypeaccess.array.FloatArray;
 import net.imglib2.type.Index;
@@ -42,6 +44,8 @@ import net.imglib2.type.NativeType;
 import net.imglib2.type.NativeTypeFactory;
 import net.imglib2.util.Fraction;
 import net.imglib2.util.Util;
+import net.imglib2.view.Views;
+import net.imglib2.view.composite.RealComposite;
 
 /**
  * TODO
@@ -282,8 +286,33 @@ public class FloatType extends AbstractRealType< FloatType > implements NativeTy
 		return Float.hashCode( get() );
 	}
 
-	public static boolean equals( float a, float b )
+	public static boolean equals( final float a, final float b )
 	{
 		return Float.floatToIntBits( a ) == Float.floatToIntBits( b );
 	}
+
+	/**
+	 * Create an n-dimensional {@link RealComposite} of {@link FloatType}
+	 * backed by a 1-dimensional {@link ArrayImg}.
+	 *
+	 * @param n number of dimensions
+	 * @return
+	 */
+	public static RealComposite< FloatType > createVector( final int n )
+	{
+		return Views.collapseReal( ArrayImgs.floats( n ) ).randomAccess().get();
+	}
+
+	/**
+	 * Wrap an array as an n-dimensional {@link RealComposite} of
+	 * {@link FloatType}.
+	 *
+	 * @param array
+	 * @return
+	 */
+	public static RealComposite< FloatType > wrapVector( final float[] array )
+	{
+		return Views.collapseReal( ArrayImgs.floats( array, array.length ) ).randomAccess().get();
+	}
+
 }

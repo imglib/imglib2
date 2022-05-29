@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="1280"
+   height="640"
+   id="svg2"
+   version="1.1"
+   inkscape:version="0.92.5 (2060ec1f9f, 2020-04-08)"
+   sodipodi:docname="imglib2-logo-social.svg"
+   inkscape:export-filename="/home/saalfelds/workspace/imglib2/core/doc/imglib2-logo.png"
+   inkscape:export-xdpi="91.637733"
+   inkscape:export-ydpi="91.637733">
+  <defs
+     id="defs4" />
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="1"
+     inkscape:pageshadow="2"
+     inkscape:zoom="0.35"
+     inkscape:cx="-1748.3443"
+     inkscape:cy="122.99808"
+     inkscape:document-units="px"
+     inkscape:current-layer="layer1"
+     showgrid="false"
+     inkscape:snap-bbox="true"
+     inkscape:bbox-paths="true"
+     inkscape:bbox-nodes="true"
+     inkscape:snap-bbox-edge-midpoints="true"
+     inkscape:snap-nodes="true"
+     inkscape:snap-global="false"
+     fit-margin-top="20"
+     fit-margin-left="20"
+     fit-margin-right="15"
+     fit-margin-bottom="15"
+     inkscape:window-width="5048"
+     inkscape:window-height="2090"
+     inkscape:window-x="72"
+     inkscape:window-y="33"
+     inkscape:window-maximized="1" />
+  <metadata
+     id="metadata7">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(-55.54867,66.525023)">
+    <rect
+       y="-202.77016"
+       x="472.61307"
+       height="558.18134"
+       width="231.31927"
+       id="rect2987"
+       style="fill:#00ff00;fill-opacity:1;stroke:none;stroke-width:1"
+       transform="matrix(0.95129162,0.30829248,-0.38117977,0.92450094,0,0)" />
+    <rect
+       style="fill:#000000;fill-opacity:1;stroke:none;stroke-width:1"
+       id="rect2985"
+       width="237.993"
+       height="543.49646"
+       x="147.95419"
+       y="-27.885427"
+       transform="matrix(1,0,-0.09775877,0.99521014,0,0)" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:175.01821899px;line-height:125%;font-family:Ubuntu;-inkscape-font-specification:'Ubuntu Bold';letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1"
+       x="579.28381"
+       y="512.815"
+       id="text2993"
+       transform="skewX(7.4308913)"><tspan
+         sodipodi:role="line"
+         id="tspan2995"
+         x="579.28381"
+         y="512.815"
+         style="font-style:italic;-inkscape-font-specification:'Ubuntu Bold Italic';stroke-width:1">ImgLib2</tspan></text>
+  </g>
+</svg>

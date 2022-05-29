@@ -11,13 +11,13 @@
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice,
  *    this list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  *    this list of conditions and the following disclaimer in the documentation
  *    and/or other materials provided with the distribution.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -40,19 +40,20 @@ import net.imglib2.Cursor;
 import net.imglib2.IterableInterval;
 import net.imglib2.converter.AbstractConvertedCursor;
 import net.imglib2.converter.BiConverter;
-import net.imglib2.type.Type;
 
 /**
  * TODO
  *
  */
-public class BiConvertedCursor< A, B, C extends Type< C > > extends AbstractConvertedCursor< A, C >
+public class BiConvertedCursor< A, B, C > extends AbstractConvertedCursor< A, C >
 {
 	protected final Supplier< BiConverter< ? super A, ? super B, ? super C > > converterSupplier;
 
 	protected final BiConverter< ? super A, ? super B, ? super C > converter;
 
 	protected final Cursor< B > sourceB;
+
+	protected final Supplier< ? extends C > convertedSupplier;
 
 	protected final C converted;
 
@@ -64,13 +65,14 @@ public class BiConvertedCursor< A, B, C extends Type< C > > extends AbstractConv
 			final Cursor< A > sourceA,
 			final Cursor< B > sourceB,
 			final Supplier< BiConverter< ? super A, ? super B, ? super C > > converterSupplier,
-			final C c )
+			final Supplier< ? extends C > convertedSupplier )
 	{
 		super( sourceA );
 		this.sourceB = sourceB;
 		this.converterSupplier = converterSupplier;
 		this.converter = converterSupplier.get();
-		this.converted = c.copy();
+		this.convertedSupplier = convertedSupplier;
+		converted = convertedSupplier.get();
 	}
 
 	/**
@@ -81,9 +83,9 @@ public class BiConvertedCursor< A, B, C extends Type< C > > extends AbstractConv
 			final Cursor< A > sourceA,
 			final Cursor< B > sourceB,
 			final BiConverter< ? super A, ? super B, ? super C > converter,
-			final C c )
+			final Supplier< ? extends C > convertedSupplier )
 	{
-		this( sourceA, sourceB, () -> converter, c );
+		this( sourceA, sourceB, () -> converter, convertedSupplier );
 	}
 
 	@Override
@@ -140,6 +142,6 @@ public class BiConvertedCursor< A, B, C extends Type< C > > extends AbstractConv
 				( Cursor< A > ) source.copy(),
 				( Cursor< B > ) sourceB.copy(),
 				converterSupplier,
-				converted );
+				convertedSupplier );
 	}
 }

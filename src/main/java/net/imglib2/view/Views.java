@@ -74,9 +74,12 @@ import net.imglib2.util.Intervals;
 import net.imglib2.util.Pair;
 import net.imglib2.util.Util;
 import net.imglib2.view.StackView.StackAccessMode;
+import net.imglib2.view.composite.Composite;
 import net.imglib2.view.composite.CompositeIntervalView;
 import net.imglib2.view.composite.CompositeView;
 import net.imglib2.view.composite.GenericComposite;
+import net.imglib2.view.composite.InflateView;
+import net.imglib2.view.composite.InterleaveView;
 import net.imglib2.view.composite.NumericComposite;
 import net.imglib2.view.composite.RealComposite;
 
@@ -1698,5 +1701,33 @@ public class Views
 
 		final RandomAccessibleInterval< T > stacked = Views.stack( mode, hyperSlices );
 		return Views.moveAxis( stacked, stacked.numDimensions() - 1, concatenationAxis );
+	}
+
+	/**
+	 * Inflate an n-dimensional {@link RandomAccessible} of {@link Composite}
+	 * of T into an n+1-dimensonal {@link RandomAccessible} of T.  The
+	 * components of the source are the n-th dimension of the result
+	 *
+	 * @param <T>
+	 * @param source
+	 * @return {@link RandomAccessible} of T
+	 */
+	public static < T > InflateView< T > inflate( final RandomAccessible< ? extends Composite< T > > source ) {
+
+		return new InflateView<>( source );
+	}
+
+	/**
+	 * Interleave an n-dimensional {@link RandomAccessible} of {@link Composite}
+	 * of T into an n+1-dimensonal {@link RandomAccessible} of T.  The
+	 * components of the source are the 0-th dimension of the result
+	 *
+	 * @param <T>
+	 * @param source
+	 * @return {@link RandomAccessible} of T
+	 */
+	public static < T > InterleaveView< T > interleave( final RandomAccessible< ? extends Composite< T > > source ) {
+
+		return new InterleaveView<>( source );
 	}
 }
