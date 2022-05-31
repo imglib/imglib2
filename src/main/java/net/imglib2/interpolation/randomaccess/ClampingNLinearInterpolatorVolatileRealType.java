@@ -40,7 +40,7 @@ import net.imglib2.type.volatiles.AbstractVolatileRealType;
 
 /**
  * N-linear interpolator for {@link RealType} values with overflow check.
- * Interpoalted values are clamped to the range {@link RealType#getMinValue()},{@link RealType#getMaxValue()}.
+ * Interpolated values are clamped to the range {@link RealType#getMinValue()},{@link RealType#getMaxValue()}.
  *
  * @param <T>
  *
