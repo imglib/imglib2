@@ -65,15 +65,15 @@ public class ClampingNLinearInterpolatorFactory< T extends NumericType< T > > im
 			else
 				return new ClampingNLinearInterpolatorRealType( randomAccessible );
 		}
-		else if ( ARGBType.class.isInstance( type ) )
+		else if ( type instanceof ARGBType )
 		{
 			return ( RealRandomAccess ) new NLinearInterpolatorARGB( ( RandomAccessible ) randomAccessible );
 		}
-		else if ( VolatileARGBType.class.isInstance( type ) )
+		else if ( type instanceof VolatileARGBType )
 		{
 			return ( RealRandomAccess ) new ClampingNLinearInterpolatorVolatileARGB< VolatileARGBType >( ( RandomAccessible ) randomAccessible );
 		}
-		else if ( AbstractMaskedRealType.class.isInstance( type ) )
+		else if ( type instanceof AbstractMaskedRealType )
 		{
 			return ( RealRandomAccess ) new ClampingNLinearInterpolatorMaskedRealType( randomAccessible );
 		}
