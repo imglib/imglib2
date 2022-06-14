@@ -39,6 +39,7 @@ import net.imglib2.RealRandomAccess;
 import net.imglib2.Volatile;
 import net.imglib2.interpolation.InterpolatorFactory;
 import net.imglib2.type.mask.AbstractMaskedRealType;
+import net.imglib2.type.mask.VolatileMaskedRealType;
 import net.imglib2.type.numeric.ARGBType;
 import net.imglib2.type.numeric.NumericType;
 import net.imglib2.type.numeric.RealType;
@@ -76,6 +77,10 @@ public class ClampingNLinearInterpolatorFactory< T extends NumericType< T > > im
 		else if ( type instanceof AbstractMaskedRealType )
 		{
 			return ( RealRandomAccess ) new ClampingNLinearInterpolatorMaskedRealType( randomAccessible );
+		}
+		else if ( type instanceof VolatileMaskedRealType )
+		{
+			return ( RealRandomAccess ) new ClampingNLinearInterpolatorVolatileMaskedRealType( randomAccessible );
 		}
 		else
 			// fall back to (non-clamping) NLinearInterpolator
