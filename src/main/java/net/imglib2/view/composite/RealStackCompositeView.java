@@ -10,11 +10,11 @@ import net.imglib2.RealRandomAccessible;
 import net.imglib2.View;
 
 /**
- * {@link RealStackCompositeView} converts an array of {@link RealRandomAccessible}s
+ * A {@link RealStackCompositeView} converts an array of {@link RealRandomAccessible}s
  * of T into a RealRandomAccessible of {@link Composite} of T.
  * <p>
  * This view has the same dimensionality as each source RealRandomAccessible, and
- * the i-th value of the composite of the output is the value of the i-th input source.
+ * at every position, the i-th value of the composite is the value for the i-th input source.
  *
  * @author John Bogovic
  */
@@ -37,9 +37,10 @@ public class RealStackCompositeView< T > implements RealRandomAccessible<Composi
 	@SuppressWarnings( "unchecked" )
 	public RealStackCompositeView( final RealRandomAccessible< T >... sources )
 	{
+		assert( sources.length > 0 );
 		this.sources = sources;
 		n = sources.length;
-		nd = sources.length > 0 ? sources[0].numDimensions() : 0;
+		nd = sources[0].numDimensions();
 		access = new CompositeRealRandomAccess();
 	}
 
@@ -47,12 +48,9 @@ public class RealStackCompositeView< T > implements RealRandomAccessible<Composi
 	{
 		final protected RealRandomAccess< T >[] sourceAccesses;
 
-		final protected long p;
-
 		@SuppressWarnings( "unchecked" )
 		public CompositeRealRandomAccess()
 		{
-			p = 0;
 			sourceAccesses = new RealRandomAccess[ n ];
 			for ( int i = 0; i < n; i++ )
 				sourceAccesses[ i ] = sources[ i ].realRandomAccess();
@@ -61,7 +59,6 @@ public class RealStackCompositeView< T > implements RealRandomAccessible<Composi
 		@SuppressWarnings( "unchecked" )
 		protected CompositeRealRandomAccess( final CompositeRealRandomAccess other )
 		{
-			p = 0;
 			sourceAccesses = new RealRandomAccess[ n ];
 			for ( int i = 0; i < n; i++ )
 				sourceAccesses[ i ] = other.sourceAccesses[i].copy();
