@@ -11,13 +11,13 @@
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice,
  *    this list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  *    this list of conditions and the following disclaimer in the documentation
  *    and/or other materials provided with the distribution.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -137,10 +137,10 @@ public interface RandomAccessible< T > extends EuclideanSpace
 	 * <p>
 	 * This method is a short cut for {@code randomAccess().setPositionAndGet( position );}
 	 *
-	 * @param position
+	 * @param position, length must be &ge; {@link #numDimensions()}
 	 * @return value of the the {@link RandomAccessible} at {@code position}.
 	 */
-	default T getAt( long... position )
+	default T getAt( final long... position )
 	{
 		return randomAccess().setPositionAndGet( position );
 	}
@@ -155,10 +155,10 @@ public interface RandomAccessible< T > extends EuclideanSpace
 	 * <p>
 	 * This method is a short cut for {@code randomAccess().setPositionAndGet( position );}
 	 *
-	 * @param position
+	 * @param position, length must be &ge; {@link #numDimensions()}
 	 * @return value of the the {@link RandomAccessible} at {@code position}.
 	 */
-	default T getAt( int... position )
+	default T getAt( final int... position )
 	{
 		return randomAccess().setPositionAndGet( position );
 	}
@@ -173,10 +173,10 @@ public interface RandomAccessible< T > extends EuclideanSpace
 	 * <p>
 	 * This method is a short cut for {@code randomAccess().setPositionAndGet( position );}
 	 *
-	 * @param position
+	 * @param position, {@link Localizable#numDimensions()} must be &ge; {@link #numDimensions()}
 	 * @return value of the the {@link RandomAccessible} at {@code position}.
 	 */
-	default T getAt( Localizable position )
+	default T getAt( final Localizable position )
 	{
 		return randomAccess().setPositionAndGet( position );
 	}
