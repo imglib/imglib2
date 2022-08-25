@@ -11,13 +11,13 @@
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice,
  *    this list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  *    this list of conditions and the following disclaimer in the documentation
  *    and/or other materials provided with the distribution.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -50,7 +50,7 @@ public interface Localizable extends RealLocalizable
 	 * Write the current position into the passed array.
 	 *
 	 * @param position
-	 *            receives current position
+	 *            receives current position, length must be &ge; {@link #numDimensions()}
 	 */
 	default void localize( final int[] position )
 	{
@@ -63,7 +63,7 @@ public interface Localizable extends RealLocalizable
 	 * Write the current position into the passed array.
 	 *
 	 * @param position
-	 *            receives current position
+	 *            receives current position, length must be &ge; {@link #numDimensions()}
 	 */
 	default void localize( final long[] position )
 	{
@@ -76,15 +76,24 @@ public interface Localizable extends RealLocalizable
 	 * Write the current position into the passed {@link Positionable}.
 	 *
 	 * Note for developers: This default implementation forwards to
-	 * {@link Positionable#setPosition(Localizable)}, so don't do the
-	 * same there.
+	 * {@link Positionable#setPosition(Localizable)}, so don't do the same
+	 * there.
 	 *
 	 * @param position
-	 *            receives current position
+	 *            receives current position,
+	 *            {@link Positionable#numDimensions()} must be &ge;
+	 *            {@link #numDimensions()}
 	 */
 	default void localize( final Positionable position )
 	{
-		position.setPosition( this );
+		if ( position.numDimensions() == numDimensions() )
+			position.setPosition( this );
+		else
+		{
+			final int n = numDimensions();
+			for ( int d = 0; d < n; ++d )
+				position.setPosition( getLongPosition( d ), d );
+		}
 	}
 
 	/**

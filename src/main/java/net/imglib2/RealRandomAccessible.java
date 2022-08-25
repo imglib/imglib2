@@ -11,13 +11,13 @@
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice,
  *    this list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  *    this list of conditions and the following disclaimer in the documentation
  *    and/or other materials provided with the distribution.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -76,10 +76,10 @@ public interface RealRandomAccessible< T > extends EuclideanSpace
 	 * <p>
 	 * This method is a short cut for {@code realRandomAccess().setPositionAndGet( position );}
 	 *
-	 * @param position
+	 * @param position, length must be &ge; {@link #numDimensions()}
 	 * @return value of the the {@link RandomAccessible} at {@code position}.
 	 */
-	default T getAt( float... position )
+	default T getAt( final float... position )
 	{
 		return realRandomAccess().setPositionAndGet( position );
 	}
@@ -94,10 +94,10 @@ public interface RealRandomAccessible< T > extends EuclideanSpace
 	 * <p>
 	 * This method is a short cut for {@code realRandomAccess().setPositionAndGet( position );}
 	 *
-	 * @param position
+	 * @param position, length must be &ge; {@link #numDimensions()}
 	 * @return value of the the {@link RandomAccessible} at {@code position}.
 	 */
-	default T getAt( double... position )
+	default T getAt( final double... position )
 	{
 		return realRandomAccess().setPositionAndGet( position );
 	}
@@ -112,10 +112,10 @@ public interface RealRandomAccessible< T > extends EuclideanSpace
 	 * <p>
 	 * This method is a short cut for {@code realRandomAccess().setPositionAndGet( position );}
 	 *
-	 * @param position
+	 * @param position, {@link RealLocalizable#numDimensions()} must be &ge; {@link #numDimensions()}
 	 * @return value of the the {@link RandomAccessible} at {@code position}.
 	 */
-	default T getAt( RealLocalizable position )
+	default T getAt( final RealLocalizable position )
 	{
 		return realRandomAccess().setPositionAndGet( position );
 	}

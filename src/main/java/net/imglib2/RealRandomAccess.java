@@ -88,7 +88,7 @@ public interface RealRandomAccess< T > extends RealLocalizable, RealPositionable
 	 */
 	default T setPositionAndGet( final double... position )
 	{
-		assert position.length == numDimensions();
+		assert position.length >= numDimensions();
 
 		setPosition( position );
 		return get();
@@ -125,7 +125,7 @@ public interface RealRandomAccess< T > extends RealLocalizable, RealPositionable
 	 */
 	default T setPositionAndGet( final float... position )
 	{
-		assert position.length == numDimensions();
+		assert position.length >= numDimensions();
 
 		setPosition( position );
 		return get();
@@ -162,7 +162,7 @@ public interface RealRandomAccess< T > extends RealLocalizable, RealPositionable
 	 */
 	default T setPositionAndGet( final RealLocalizable position )
 	{
-		assert position.numDimensions() == numDimensions();
+		assert position.numDimensions() >= numDimensions();
 
 		setPosition( position );
 		return get();
