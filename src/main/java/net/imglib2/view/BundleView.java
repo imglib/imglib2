@@ -40,7 +40,7 @@ import net.imglib2.converter.AbstractConvertedRandomAccess;
 
 /**
  * A {@link RandomAccessible} that bundles the coordinates and value domain
- * of a {@link RandomAccessible RandomAccessible&lt;T&ft;} as a
+ * of a {@link RandomAccessible RandomAccessible&lt;T&gt;} as a
  * {@link RandomAccessible RandomAccessible&lt;RandomAccess&lt;T&gt;&gt;}.
  * This is useful for code that need access to both coordinates and values but
  * is implemented as a consumer of values (e.g. in a

@@ -1733,8 +1733,8 @@ public class Views
 
 	/**
 	 * Bundle the coordinates and values of a
-	 * {@link RandomAccessible RandomAccessible&lt;T&ft;} as a
-	 * {@link RandomAccessible&lt;RandomAccess&lt;T&gt;&gt;}.  This is useful
+	 * {@link RandomAccessible RandomAccessible&lt;T&gt;} as a
+	 * {@link RandomAccessible RandomAccessible&lt;RandomAccess&lt;T&gt;&gt;}.  This is useful
 	 * for code that needs access to both coordinates and values but is
 	 * implemented as a consumer of values (e.g. in a
 	 * <code>for (A t : iterable)...</code> loop).
