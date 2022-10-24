@@ -199,7 +199,7 @@ public abstract class AbstractPositionableTransform< LocalizablePositionable ext
 	@Override
 	public String toString()
 	{
-		final StringBuffer pos = new StringBuffer( "(" );
+		final StringBuilder pos = new StringBuilder( "(" );
 		pos.append( position[ 0 ] );
 
 		for ( int d = 1; d < n; d++ )
