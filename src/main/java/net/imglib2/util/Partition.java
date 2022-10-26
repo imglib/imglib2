@@ -11,13 +11,13 @@
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice,
  *    this list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  *    this list of conditions and the following disclaimer in the documentation
  *    and/or other materials provided with the distribution.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -384,6 +384,50 @@ public class Partition
 		return i;
 	}
 
+	public static int partitionSubList( int i, int j, final double[] values )
+	{
+		final int len = j - i + 1;
+		if ( len <= 2 )
+		{
+			if ( len <= 0 )
+				throw new IllegalArgumentException();
+			if ( values[ i ] > values[ j ] )
+				swap( i, j, values );
+			return i;
+		}
+		else
+		{
+			final int m = ( i + j ) / 2;
+			if ( values[ i ] > values[ m ] )
+				swap( i, m, values );
+			if ( values[ i ] > values[ j ] )
+				swap( i, j, values );
+			if ( values[ m ] > values[ j ] )
+				swap( m, j, values );
+			swap( m, i + 1, values );
+			final int p = ++i;
+			final double pivot = values[ p ];
+			while ( true )
+			{
+				while ( values[ ++i ] < pivot )
+					;
+				while ( values[ --j ] > pivot )
+					;
+				if ( j < i )
+					break;
+				swap( i, j, values );
+			}
+			swap( p, j, values );
+			return j;
+		}
+	}
+
+	private static void swap( int i, int j, final double[] values ) {
+		final double tmp = values[ i ];
+		values[ i ] = values[ j ];
+		values[ j ] = tmp;
+	}
+
 	/**
 	 * Partition a subarray of {@code values}.
 	 *
@@ -400,7 +444,7 @@ public class Partition
 	 *            array
 	 * @return index of pivot element
 	 */
-	public static int partitionSubList( int i, int j, final double[] values )
+	public static int partitionSubListOLD( int i, int j, final double[] values )
 	{
 		final int pivotIndex = j;
 		final double pivot = values[ j-- ];
@@ -1173,6 +1217,5 @@ public class Partition
 			permutation[ pivotIndex ] = permutation[ iIndex ];
 			permutation[ iIndex ] = permutationPivot;
 		}
-		return;
 	}
 }
