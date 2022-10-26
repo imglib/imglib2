@@ -43,6 +43,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.ListIterator;
 
+import java.util.Random;
 import org.junit.Test;
 
 /**
@@ -180,7 +181,33 @@ public class PartitionTest
 		assertTrue( p >= i && p <= j );
 
 		for ( int k = i; k < p; ++k )
-			assertTrue( values[ k ] < values[ p ] );
+			assertTrue( values[ k ] <= values[ p ] );
+
+		for ( int k = p + 1; k < j; ++k )
+			assertTrue( values[ k ] >= values[ p ] );
+
+		Arrays.sort( values );
+		assertArrayEquals( sortedValues, values, 0 );
+	}
+
+	@Test
+	public void testPartitionDoubleBig()
+	{
+		final double[] values = new double[] {7,4,2,3,9,0,10};
+//		final Random random = new Random(1);
+//		for ( int i = 0; i < values.length; i++ )
+//			values[ i ] = random.nextDouble();
+		final double[] sortedValues = values.clone();
+		Arrays.sort( sortedValues );
+
+		final int i = 0;
+		final int j = values.length - 1;
+		final int p = Partition.partitionSubList( i, j, values );
+
+		assertTrue( p >= i && p <= j );
+
+		for ( int k = i; k < p; ++k )
+			assertTrue( values[ k ] <= values[ p ] );
 
 		for ( int k = p + 1; k < j; ++k )
 			assertTrue( values[ k ] >= values[ p ] );

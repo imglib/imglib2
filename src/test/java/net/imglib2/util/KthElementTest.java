@@ -44,6 +44,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.ListIterator;
 
+import java.util.Random;
 import org.junit.Test;
 
 /**
@@ -311,6 +312,43 @@ public class KthElementTest
 		// should be identical
 		Arrays.sort( values, i, j + 1 );
 		assertArrayEquals( sortedValues, values, 0 );
+	}
+
+	@Test
+	public void testMedianDoubleFullLarge()
+	{
+		final Random random = new Random();
+		for ( int run = 0; run < 10000; ++run )
+		{
+			final int size = 1 + random.nextInt( 1000 );
+//			System.out.println( "run " + (run+1) + ", size = " + size );
+			final double[] values = new double[ size ];
+			for ( int i = 0; i < values.length; i++ )
+				values[ i ] = random.nextDouble();
+			final double[] sortedValues = values.clone();
+
+			final int i = 0;
+			final int j = values.length - 1;
+			final int k = i + ( j - i ) / 2;
+			KthElement.kthElement( k, values );
+			Arrays.sort( sortedValues );
+
+			// the elements at the k-th positions should be equal
+			assertEquals( values[ k ], sortedValues[ k ], 0 );
+
+			// the elements before the k-th should be equal or smaller than the k-th
+			for ( int p = i; p < k; ++p )
+				assertTrue( values[ p ] <= values[ k ] );
+
+			// the elements after the k-th should be equal or greater than the k-th
+			for ( int p = k + 1; p <= j; ++p )
+				assertTrue( values[ p ] >= values[ k ] );
+
+			// all elements should be contained in list, i.e., after sorting lists
+			// should be identical
+			Arrays.sort( values, i, j + 1 );
+			assertArrayEquals( sortedValues, values, 0 );
+		}
 	}
 
 	@Test
