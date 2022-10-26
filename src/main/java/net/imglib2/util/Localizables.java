@@ -200,7 +200,7 @@ public class Localizables
 	}
 
 	/**
-	 * A RandomAccess that returns it's current position as value.
+	 * A RandomAccess that returns its current position as value.
 	 */
 	private static class LocationRandomAccess extends Point implements RandomAccess< Localizable >
 	{
@@ -248,7 +248,7 @@ public class Localizables
 	}
 
 	/**
-	 * A RandomAccess that returns it's current position as value.
+	 * A RandomAccess that returns its current position as value.
 	 */
 	private static class RealLocationRealRandomAccess extends RealPoint implements RealRandomAccess< RealLocalizable >
 	{

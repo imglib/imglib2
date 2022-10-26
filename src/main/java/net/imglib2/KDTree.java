@@ -75,7 +75,7 @@ public class KDTree< T > implements EuclideanSpace, IterableRealInterval< T >
 	final protected double[] max;
 
 	/**
-	 * A KDTreeNode that stores it's value as a reference.
+	 * A KDTreeNode that stores its value as a reference.
 	 */
 	protected final static class ValueNode< T > extends KDTreeNode< T >
 	{
@@ -125,7 +125,7 @@ public class KDTree< T > implements EuclideanSpace, IterableRealInterval< T >
 	}
 
 	/**
-	 * A KDTreeNode that stores it's value as a Sampler.
+	 * A KDTreeNode that stores its value as a Sampler.
 	 */
 	protected static final class SamplerNode< T > extends KDTreeNode< T >
 	{
