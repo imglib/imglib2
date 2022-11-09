@@ -37,6 +37,7 @@ package net.imglib2.img.list;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import java.util.List;
 import net.imglib2.img.Img;
 import net.imglib2.type.Type;
 
@@ -61,7 +62,7 @@ import net.imglib2.type.Type;
  */
 public class ListImg< T > extends AbstractListImg< T >
 {
-	final private ArrayList< T > pixels;
+	final private List< T > pixels;
 
 	public ListImg( final long[] dim, final T type )
 	{
@@ -86,9 +87,9 @@ public class ListImg< T > extends AbstractListImg< T >
 	public ListImg( final Collection< T > collection, final long... dim )
 	{
 		super( dim );
-		
+
 		assert numPixels == collection.size() : "Dimensions do not match number of pixels.";
-		
+
 		pixels = new ArrayList< T >( ( int ) numPixels );
 		pixels.addAll( collection );
 	}
@@ -129,5 +130,18 @@ public class ListImg< T > extends AbstractListImg< T >
 			return ( ListImg< T > ) copy;
 		}
 		return new ListImg< T >( this.pixels, dimension );
+	}
+
+	private ListImg( final List< T > pixels, final boolean dummy, final long... dim )
+	{
+		super( dim );
+
+		assert numPixels == pixels.size() : "Dimensions do not match number of pixels.";
+		this.pixels = pixels;
+	}
+
+	public static < T > ListImg< T > wrap( List< T > pixels, final long... dim )
+	{
+		return new ListImg<>( pixels, false, dim );
 	}
 }
