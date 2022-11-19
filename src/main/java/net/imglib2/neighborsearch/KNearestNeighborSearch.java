@@ -89,7 +89,10 @@ public interface KNearestNeighborSearch< T > extends NearestNeighborSearch< T >
 	 * the last search and the <em>i</em><sup>th</sup> nearest neighbor, ordered
 	 * by square Euclidean distance.
 	 */
-	double getDistance( int i );
+	default double getDistance( final int i )
+	{
+		return Math.sqrt( getSquareDistance( i ) );
+	}
 
 	/**
 	 * Create a copy.
