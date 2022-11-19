@@ -69,18 +69,6 @@ public abstract class AbstractImg< T > implements Img< T >
 			max[ i ] = size[ i ] - 1;
 	}
 
-	@Override
-	public Iterator< T > iterator()
-	{
-		return cursor();
-	}
-
-	@Override
-	public T firstElement()
-	{
-		return cursor().next();
-	}
-
 	public static long numElements( final long[] dim )
 	{
 		long numPixels = 1;

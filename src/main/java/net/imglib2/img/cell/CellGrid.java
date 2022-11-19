@@ -448,21 +448,9 @@ public class CellGrid
 		}
 
 		@Override
-		public Interval firstElement()
-		{
-			return cursor().next();
-		}
-
-		@Override
 		public FlatIterationOrder iterationOrder()
 		{
 			return new FlatIterationOrder( this );
-		}
-
-		@Override
-		public Iterator< Interval > iterator()
-		{
-			return cursor();
 		}
 	}
 

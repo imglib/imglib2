@@ -106,7 +106,10 @@ public interface IterableRealInterval< T > extends RealInterval, Iterable< T >
 	 *
 	 * @return the first element in iteration order.
 	 */
-	T firstElement();
+	default T firstElement() // TODO: fix places where it is not necessary to implement this anymore
+	{
+		return iterator().next();
+	}
 
 	/**
 	 * Returns the iteration order of this {@link IterableRealInterval}. If the
@@ -123,4 +126,10 @@ public interface IterableRealInterval< T > extends RealInterval, Iterable< T >
 	 * @return the iteration order of this {@link IterableRealInterval}.
 	 */
 	Object iterationOrder();
+
+	@Override
+	default java.util.Iterator< T > iterator() // TODO: fix places where it is not necessary to implement this anymore
+	{
+		return cursor();
+	}
 }

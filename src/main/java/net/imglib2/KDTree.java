@@ -712,12 +712,6 @@ public class KDTree< T > implements EuclideanSpace, IterableRealInterval< T >
 	}
 
 	@Override
-	public KDTreeCursor iterator()
-	{
-		return new KDTreeCursor( this );
-	}
-
-	@Override
 	public KDTreeCursor cursor()
 	{
 		return new KDTreeCursor( this );
@@ -727,11 +721,5 @@ public class KDTree< T > implements EuclideanSpace, IterableRealInterval< T >
 	public KDTreeCursor localizingCursor()
 	{
 		return new KDTreeCursor( this );
-	}
-
-	@Override
-	public T firstElement()
-	{
-		return iterator().next();
 	}
 }

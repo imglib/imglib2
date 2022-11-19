@@ -218,12 +218,6 @@ public class PointSampleList< T > extends AbstractInterval implements IterableIn
 	}
 
 	@Override
-	public T firstElement()
-	{
-		return samples.get( 0 );
-	}
-
-	@Override
 	public Cursor< T > localizingCursor()
 	{
 		return new PointSampleListCursor();
@@ -233,11 +227,5 @@ public class PointSampleList< T > extends AbstractInterval implements IterableIn
 	public long size()
 	{
 		return samples.size();
-	}
-
-	@Override
-	public Iterator< T > iterator()
-	{
-		return cursor();
 	}
 }
