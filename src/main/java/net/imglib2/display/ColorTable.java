@@ -70,7 +70,7 @@ public interface ColorTable
 	 *            The index into the color table.
 	 * @return The value of the table at the specified position.
 	 */
-	int get( final int comp, final int bin );
+	int get( int comp, int bin );
 
 	/**
 	 * Gets an individual value from a color table with given number of bins.
@@ -83,5 +83,5 @@ public interface ColorTable
 	 *            The index into the color table.
 	 * @return The value of the table at the specified position.
 	 */
-	int getResampled( final int comp, final int bins, final int bin );
+	int getResampled( int comp, int bins, int bin );
 }

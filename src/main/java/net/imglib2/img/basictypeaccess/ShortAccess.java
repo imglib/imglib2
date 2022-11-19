@@ -42,7 +42,7 @@ package net.imglib2.img.basictypeaccess;
  */
 public interface ShortAccess extends DataAccess
 {
-	short getValue( final int index );
+	short getValue( int index );
 
-	void setValue( final int index, final short value );
+	void setValue( int index, short value );
 }

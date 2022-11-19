@@ -58,7 +58,7 @@ public abstract class NativeImgFactory< T extends NativeType< T > > extends ImgF
 	 * @return new {@link NativeImg} with the specified {@code dimensions}.
 	 */
 	@Override
-	public abstract NativeImg< T, ? > create( final long... dimensions );
+	public abstract NativeImg< T, ? > create( long... dimensions );
 
 	/**
 	 * Create an {@code Img<T>} with the specified {@code dimensions}.
@@ -103,7 +103,7 @@ public abstract class NativeImgFactory< T extends NativeType< T > > extends ImgF
 
 	@Override
 	@Deprecated
-	public abstract NativeImg< T, ? > create( final long[] dimension, final T type );
+	public abstract NativeImg< T, ? > create( long[] dimension, T type );
 
 	@Deprecated
 	public NativeImgFactory( )

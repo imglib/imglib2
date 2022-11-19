@@ -65,7 +65,7 @@ public interface Mixed extends Transform, BoundingBoxTransform
 	 *            array of size at least the target dimension to store the
 	 *            result.
 	 */
-	void getTranslation( final long[] translation );
+	void getTranslation( long[] translation );
 
 	/**
 	 * Get the d-th component of translation (see
@@ -73,7 +73,7 @@ public interface Mixed extends Transform, BoundingBoxTransform
 	 *
 	 * @param d
 	 */
-	long getTranslation( final int d );
+	long getTranslation( int d );
 
 	/**
 	 * Get a boolean array indicating which target dimensions are _not_ taken
@@ -89,7 +89,7 @@ public interface Mixed extends Transform, BoundingBoxTransform
 	 *            array of size at least the target dimension to store the
 	 *            result.
 	 */
-	void getComponentZero( final boolean[] zero );
+	void getComponentZero( boolean[] zero );
 
 	/**
 	 * Get the d-th component of zeroing vector (see {@link
@@ -97,7 +97,7 @@ public interface Mixed extends Transform, BoundingBoxTransform
 	 *
 	 * @param d
 	 */
-	boolean getComponentZero( final int d );
+	boolean getComponentZero( int d );
 
 	/**
 	 * Get an array indicating for each target dimensions from which source
@@ -114,7 +114,7 @@ public interface Mixed extends Transform, BoundingBoxTransform
 	 *            array of size at least the target dimension to store the
 	 *            result.
 	 */
-	void getComponentMapping( final int[] component );
+	void getComponentMapping( int[] component );
 
 	/**
 	 * Get the source dimension which is mapped to the d-th target dimension
@@ -122,7 +122,7 @@ public interface Mixed extends Transform, BoundingBoxTransform
 	 *
 	 * @param d
 	 */
-	int getComponentMapping( final int d );
+	int getComponentMapping( int d );
 
 	/**
 	 * Get an array indicating for each target component, whether the source
@@ -137,7 +137,7 @@ public interface Mixed extends Transform, BoundingBoxTransform
 	 *            array of size at least the target dimension to store the
 	 *            result.
 	 */
-	void getComponentInversion( final boolean[] invert );
+	void getComponentInversion( boolean[] invert );
 
 	/**
 	 * Get the d-th component of inversion vector (see {@link
@@ -145,7 +145,7 @@ public interface Mixed extends Transform, BoundingBoxTransform
 	 *
 	 * @param d
 	 */
-	boolean getComponentInversion( final int d );
+	boolean getComponentInversion( int d );
 
 	/**
 	 * Get the matrix that transforms homogeneous source points to homogeneous

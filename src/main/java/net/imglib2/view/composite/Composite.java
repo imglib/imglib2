@@ -46,5 +46,5 @@ public interface Composite< T >
 	 * @param i
 	 * @return
 	 */
-	T get( final long i );
+	T get( long i );
 }

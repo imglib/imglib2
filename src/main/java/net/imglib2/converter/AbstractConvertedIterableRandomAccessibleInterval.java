@@ -58,7 +58,7 @@ abstract public class AbstractConvertedIterableRandomAccessibleInterval< A, B, S
 	abstract public AbstractConvertedRandomAccess< A, B > randomAccess();
 
 	@Override
-	abstract public AbstractConvertedRandomAccess< A, B > randomAccess( final Interval interval );
+	abstract public AbstractConvertedRandomAccess< A, B > randomAccess( Interval interval );
 
 	@Override
 	public long size()

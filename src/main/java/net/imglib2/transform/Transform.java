@@ -73,7 +73,7 @@ public interface Transform
 	 * @param target
 	 *            set this to the target coordinates.
 	 */
-	void apply( final long[] source, final long[] target );
+	void apply( long[] source, long[] target );
 
 	/**
 	 * Apply the {@link Transform} to a source vector to obtain a target vector.
@@ -83,7 +83,7 @@ public interface Transform
 	 * @param target
 	 *            set this to the target coordinates.
 	 */
-	void apply( final int[] source, final int[] target );
+	void apply( int[] source, int[] target );
 
 	/**
 	 * Apply the {@link Transform} to a source {@link Localizable} to obtain a
@@ -94,5 +94,5 @@ public interface Transform
 	 * @param target
 	 *            set this to the target coordinates.
 	 */
-	void apply( final Localizable source, final Positionable target );
+	void apply( Localizable source, Positionable target );
 }

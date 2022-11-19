@@ -50,13 +50,13 @@ abstract public class AbstractARGBDoubleType< T extends AbstractARGBDoubleType< 
 
 	abstract public double getB();
 
-	abstract public void setA( final double a );
+	abstract public void setA( double a );
 
-	abstract public void setR( final double r );
+	abstract public void setR( double r );
 
-	abstract public void setG( final double g );
+	abstract public void setG( double g );
 
-	abstract public void setB( final double b );
+	abstract public void setB( double b );
 
 	public void set( final double a, final double r, final double g, final double b )
 	{

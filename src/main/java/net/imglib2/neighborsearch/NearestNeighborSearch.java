@@ -54,7 +54,7 @@ public interface NearestNeighborSearch< T > extends EuclideanSpace
 	 * 
 	 * @param reference
 	 */
-	void search( final RealLocalizable reference );
+	void search( RealLocalizable reference );
 
 	/**
 	 * Access the data of the nearest neighbor. Data is accessed through a

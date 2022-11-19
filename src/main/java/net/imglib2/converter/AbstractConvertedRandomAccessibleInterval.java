@@ -58,6 +58,6 @@ abstract public class AbstractConvertedRandomAccessibleInterval< A, B > extends 
 	abstract public AbstractConvertedRandomAccess< A, B > randomAccess();
 
 	@Override
-	abstract public AbstractConvertedRandomAccess< A, B > randomAccess( final Interval interval );
+	abstract public AbstractConvertedRandomAccess< A, B > randomAccess( Interval interval );
 
 }

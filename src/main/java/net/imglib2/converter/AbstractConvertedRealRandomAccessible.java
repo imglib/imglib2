@@ -66,5 +66,5 @@ abstract public class AbstractConvertedRealRandomAccessible< A, B > implements R
 	abstract public AbstractConvertedRealRandomAccess< A, B > realRandomAccess();
 
 	@Override
-	abstract public AbstractConvertedRealRandomAccess< A, B > realRandomAccess( final RealInterval interval );
+	abstract public AbstractConvertedRealRandomAccess< A, B > realRandomAccess( RealInterval interval );
 }

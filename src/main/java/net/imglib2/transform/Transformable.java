@@ -56,6 +56,6 @@ public interface Transformable< O, T extends Transform >
 	 *            the destination space.
 	 * @return a copy built to operate similarly in the transformed space.
 	 */
-	O transform( final T t );
+	O transform( T t );
 
 }

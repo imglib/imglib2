@@ -66,7 +66,7 @@ public interface DataAccess
 	 * @see NativeImg#update(Object)
 	 * @see NativeType#updateContainer(Object)
 	 */
-	default DataAccess createView( final Object o )
+	default DataAccess createView( Object o )
 	{
 		return this;
 	}

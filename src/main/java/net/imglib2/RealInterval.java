@@ -93,7 +93,7 @@ public interface RealInterval extends EuclideanSpace
 	 *            dimension
 	 * @return maximum in dimension d.
 	 */
-	double realMax( final int d );
+	double realMax( int d );
 
 	/**
 	 * Write the maximum of each dimension into double[].
