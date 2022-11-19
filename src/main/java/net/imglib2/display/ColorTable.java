@@ -40,13 +40,13 @@ package net.imglib2.display;
 public interface ColorTable
 {
 	// TODO ARG What about C,M,Y,K?
-	public static final int RED = 0;
+	int RED = 0;
 
-	public static final int GREEN = 1;
+	int GREEN = 1;
 
-	public static final int BLUE = 2;
+	int BLUE = 2;
 
-	public static final int ALPHA = 3;
+	int ALPHA = 3;
 
 	int lookupARGB( double min, double max, double value );
 
