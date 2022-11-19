@@ -82,9 +82,9 @@ public abstract class AbstractListImg< T > extends AbstractImg< T >
 		IntervalIndexer.createAllocationSteps( this.dim, step );
 	}
 
-	protected abstract T get( final int index );
+	protected abstract T get( int index );
 
-	protected abstract void set( final int index, final T value );
+	protected abstract void set( int index, T value );
 
 	@Override
 	public ListCursor< T > cursor()

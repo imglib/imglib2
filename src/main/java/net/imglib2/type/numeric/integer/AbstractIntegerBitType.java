@@ -67,7 +67,8 @@ public abstract class AbstractIntegerBitType< T extends AbstractIntegerBitType< 
 	}
 
 	public abstract long get();
-	public abstract void set( final long value );
+
+	public abstract void set( long value );
 
 	@Override
 	public int getBitsPerPixel() { return nBits; }

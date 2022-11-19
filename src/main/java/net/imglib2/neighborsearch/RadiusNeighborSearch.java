@@ -67,7 +67,7 @@ public interface RadiusNeighborSearch< T > extends EuclideanSpace
 	 *            whether the results should be ordered by ascending distances
 	 *            to reference.
 	 */
-	void search( final RealLocalizable reference, final double radius, final boolean sortResults );
+	void search( RealLocalizable reference, double radius, boolean sortResults );
 
 	/**
 	 * Get the number of points found within radius after a
@@ -85,14 +85,14 @@ public interface RadiusNeighborSearch< T > extends EuclideanSpace
 	 * {@link Sampler} that guarantees write access if the underlying data set
 	 * is writable.
 	 */
-	Sampler< T > getSampler( final int i );
+	Sampler< T > getSampler( int i );
 
 	/**
 	 * Access the position of the <em>i</em><sup>th</sup> neighbor within
 	 * radius. If {@code sortResults} was set to true, neighbors are ordered by
 	 * square Euclidean distance to the reference.
 	 */
-	RealLocalizable getPosition( final int i );
+	RealLocalizable getPosition( int i );
 
 	/**
 	 * Access the square Euclidean distance between the reference location as
@@ -100,11 +100,11 @@ public interface RadiusNeighborSearch< T > extends EuclideanSpace
 	 * {@code sortResults} was set to true, neighbors are ordered by square
 	 * Euclidean distance to the reference.
 	 */
-	double getSquareDistance( final int i );
+	double getSquareDistance( int i );
 
 	/**
 	 * Access the Euclidean distance between the reference location as used for
 	 * the last search and the <em>i</em><sup>th</sup> neighbor.
 	 */
-	double getDistance( final int i );
+	double getDistance( int i );
 }

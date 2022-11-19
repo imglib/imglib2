@@ -63,7 +63,7 @@ public interface Interval extends RealInterval, Dimensions
 	 *            dimension
 	 * @return minimum in dimension d.
 	 */
-	long min( final int d );
+	long min( int d );
 
 	/**
 	 * Write the minimum of each dimension into long[].
@@ -96,7 +96,7 @@ public interface Interval extends RealInterval, Dimensions
 	 *            dimension
 	 * @return maximum in dimension d.
 	 */
-	long max( final int d );
+	long max( int d );
 
 	/**
 	 * Write the maximum of each dimension into long[].

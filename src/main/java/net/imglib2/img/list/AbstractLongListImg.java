@@ -396,9 +396,9 @@ public abstract class AbstractLongListImg< T > extends AbstractImg< T >
 		IntervalIndexer.createAllocationSteps( dimension, step );
 	}
 
-	protected abstract T get( final long index );
+	protected abstract T get( long index );
 
-	protected abstract void set( final long index, final T value );
+	protected abstract void set( long index, T value );
 
 	@Override
 	public LongListCursor cursor()

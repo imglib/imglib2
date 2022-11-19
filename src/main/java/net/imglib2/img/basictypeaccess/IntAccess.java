@@ -42,7 +42,7 @@ package net.imglib2.img.basictypeaccess;
  */
 public interface IntAccess extends DataAccess
 {
-	int getValue( final int index );
+	int getValue( int index );
 
-	void setValue( final int index, final int value );
+	void setValue( int index, int value );
 }

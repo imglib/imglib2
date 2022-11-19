@@ -104,7 +104,7 @@ public abstract class AbstractArrayColorTable< T > implements ArrayColorTable< T
 	 * </p>
 	 */
 	@Override
-	public abstract int get( final int comp, final int bin );
+	public abstract int get( int comp, int bin );
 
 	/**
 	 * {@inheritDoc}
@@ -113,6 +113,6 @@ public abstract class AbstractArrayColorTable< T > implements ArrayColorTable< T
 	 * </p>
 	 */
 	@Override
-	public abstract int getResampled( final int comp, final int bins, final int bin );
+	public abstract int getResampled( int comp, int bins, int bin );
 
 }

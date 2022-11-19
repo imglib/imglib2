@@ -48,7 +48,7 @@ import net.imglib2.RealRandomAccess;
  */
 public interface InterpolatorFactory< T, F >
 {
-	RealRandomAccess< T > create( final F f );
+	RealRandomAccess< T > create( F f );
 
-	RealRandomAccess< T > create( final F f, final RealInterval interval );
+	RealRandomAccess< T > create( F f, RealInterval interval );
 }

@@ -43,5 +43,5 @@ import net.imglib2.RandomAccess;
  */
 public interface CompositeFactory< T, C extends Composite< T > >
 {
-	C create( final RandomAccess< T > sourceAccess );
+	C create( RandomAccess< T > sourceAccess );
 }
