@@ -55,8 +55,8 @@ package net.imglib2;
 public interface IterableInterval< T > extends IterableRealInterval< T >, Interval
 {
 	@Override
-	public Cursor< T > cursor();
+	Cursor< T > cursor();
 
 	@Override
-	public Cursor< T > localizingCursor();
+	Cursor< T > localizingCursor();
 }

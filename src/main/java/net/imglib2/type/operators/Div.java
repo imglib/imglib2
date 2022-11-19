@@ -40,5 +40,5 @@ package net.imglib2.type.operators;
  */
 public interface Div< T >
 {
-	public void div( T c );
+	void div( T c );
 }

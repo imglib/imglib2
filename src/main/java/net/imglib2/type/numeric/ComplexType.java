@@ -40,33 +40,33 @@ package net.imglib2.type.numeric;
  */
 public interface ComplexType< T extends ComplexType< T >> extends NumericType< T >
 {
-	public double getRealDouble();
+	double getRealDouble();
 
-	public float getRealFloat();
+	float getRealFloat();
 
-	public double getImaginaryDouble();
+	double getImaginaryDouble();
 
-	public float getImaginaryFloat();
+	float getImaginaryFloat();
 
-	public void setReal( float f );
+	void setReal( float f );
 
-	public void setReal( double f );
+	void setReal( double f );
 
-	public void setImaginary( float f );
+	void setImaginary( float f );
 
-	public void setImaginary( double f );
+	void setImaginary( double f );
 
-	public void setComplexNumber( float r, float i );
+	void setComplexNumber( float r, float i );
 
-	public void setComplexNumber( double r, double i );
+	void setComplexNumber( double r, double i );
 
-	public float getPowerFloat();
+	float getPowerFloat();
 
-	public double getPowerDouble();
+	double getPowerDouble();
 
-	public float getPhaseFloat();
+	float getPhaseFloat();
 
-	public double getPhaseDouble();
+	double getPhaseDouble();
 
-	public void complexConjugate();
+	void complexConjugate();
 }

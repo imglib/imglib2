@@ -42,15 +42,15 @@ package net.imglib2.type.numeric;
  */
 public interface RealType< T extends RealType< T >> extends ComplexType< T >, Comparable< T >
 {
-	public void inc();
+	void inc();
 
-	public void dec();
+	void dec();
 
-	public double getMaxValue();
+	double getMaxValue();
 
-	public double getMinValue();
+	double getMinValue();
 
-	public double getMinIncrement();
+	double getMinIncrement();
 
-	public int getBitsPerPixel();
+	int getBitsPerPixel();
 }

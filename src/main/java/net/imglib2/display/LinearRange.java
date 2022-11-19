@@ -41,11 +41,11 @@ package net.imglib2.display;
  */
 public interface LinearRange
 {
-	public double getMin();
+	double getMin();
 
-	public double getMax();
+	double getMax();
 
-	public void setMin( double min );
+	void setMin( double min );
 
-	public void setMax( double max );
+	void setMax( double max );
 }

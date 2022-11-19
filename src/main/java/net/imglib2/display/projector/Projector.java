@@ -41,5 +41,5 @@ package net.imglib2.display.projector;
  */
 public interface Projector
 {
-	public void map();
+	void map();
 }

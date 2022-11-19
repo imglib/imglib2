@@ -47,6 +47,6 @@ public interface AWTScreenImage extends ScreenImage< Image >
 {
 
 	@Override
-	public Image image();
+	Image image();
 
 }

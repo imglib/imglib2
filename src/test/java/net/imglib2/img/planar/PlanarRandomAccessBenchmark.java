@@ -133,7 +133,7 @@ public class PlanarRandomAccessBenchmark
 
 	public interface Benchmark
 	{
-		public void run();
+		void run();
 	}
 
 	public static void benchmark( final Benchmark b )

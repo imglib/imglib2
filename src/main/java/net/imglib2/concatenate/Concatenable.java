@@ -55,7 +55,7 @@ public interface Concatenable< A >
 	 * equivalent to first applying <em>a</em> to <em>x</em> and then applying
 	 * <em>b</em> to the result.
 	 */
-	public Concatenable< A > concatenate( A a );
+	Concatenable< A > concatenate( A a );
 
-	public Class< A > getConcatenableClass();
+	Class< A > getConcatenableClass();
 }

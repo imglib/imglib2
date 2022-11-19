@@ -50,5 +50,5 @@ import net.imglib2.Sampler;
 public interface Bounded
 {
 	/** True if located out of image bounds. */
-	public boolean isOutOfBounds();
+	boolean isOutOfBounds();
 }

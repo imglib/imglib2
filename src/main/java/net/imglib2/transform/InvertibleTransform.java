@@ -67,7 +67,7 @@ public interface InvertibleTransform extends Transform
 	 * @param target
 	 *            target coordinates.
 	 */
-	public void applyInverse( final long[] source, final long[] target );
+	void applyInverse( final long[] source, final long[] target );
 
 	/**
 	 * Apply the inverse transform to a target vector to obtain a source vector.
@@ -77,7 +77,7 @@ public interface InvertibleTransform extends Transform
 	 * @param target
 	 *            target coordinates.
 	 */
-	public void applyInverse( final int[] source, final int[] target );
+	void applyInverse( final int[] source, final int[] target );
 
 	/**
 	 * Apply the inverse transform to a target {@link Localizable} to obtain a
@@ -88,12 +88,12 @@ public interface InvertibleTransform extends Transform
 	 * @param target
 	 *            target coordinates.
 	 */
-	public void applyInverse( final Positionable source, final Localizable target );
+	void applyInverse( final Positionable source, final Localizable target );
 
 	/**
 	 * Get the inverse transform.
 	 * 
 	 * @return the inverse transform
 	 */
-	public InvertibleTransform inverse();
+	InvertibleTransform inverse();
 }

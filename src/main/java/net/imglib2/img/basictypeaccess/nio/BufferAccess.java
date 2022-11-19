@@ -59,7 +59,7 @@ public interface BufferAccess< A > extends VolatileAccess, ArrayDataAccess< A >
 	 * @return true if the Buffer is direct.
 	 * @see Buffer#isDirect()
 	 */
-	public boolean isDirect();
+	boolean isDirect();
 
 	/**
 	 * Determine if data can be read only and not written
@@ -67,14 +67,14 @@ public interface BufferAccess< A > extends VolatileAccess, ArrayDataAccess< A >
 	 * @return
 	 * @see Buffer#isReadOnly()
 	 */
-	public boolean isReadOnly();
+	boolean isReadOnly();
 
 	/**
 	 * Number of bytes for this type
 	 *
 	 * @return
 	 */
-	public int getNumBytesPerEntity();
+	int getNumBytesPerEntity();
 
 	/**
 	 * Create a new instance from a ByteBuffer
@@ -83,6 +83,6 @@ public interface BufferAccess< A > extends VolatileAccess, ArrayDataAccess< A >
 	 * @param isValid
 	 * @return
 	 */
-	public A newInstance( ByteBuffer buffer, boolean isValid );
+	A newInstance( ByteBuffer buffer, boolean isValid );
 
 }

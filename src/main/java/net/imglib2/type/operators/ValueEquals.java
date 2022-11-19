@@ -42,5 +42,5 @@ package net.imglib2.type.operators;
  */
 public interface ValueEquals< T >
 {
-	public boolean valueEquals( T t );
+	boolean valueEquals( T t );
 }

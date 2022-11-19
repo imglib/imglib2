@@ -40,5 +40,5 @@ package net.imglib2.type.operators;
  */
 public interface Pow< T >
 {
-	public void pow( T c );
+	void pow( T c );
 }

@@ -146,5 +146,5 @@ public interface RealLocalizable extends EuclideanSpace
 	 *            dimension
 	 * @return dimension of current position
 	 */
-	public double getDoublePosition( int d );
+	double getDoublePosition( int d );
 }

@@ -51,18 +51,18 @@ public interface Iterator
 	 * @param steps
 	 *            number of steps to move forward
 	 */
-	public void jumpFwd( long steps );
+	void jumpFwd( long steps );
 
 	/**
 	 * Move forward.
 	 */
-	public void fwd();
+	void fwd();
 
 	/**
 	 * Reset the {@link Iterator}, that is put it to where it would be if newly
 	 * created.
 	 */
-	public void reset();
+	void reset();
 
 	/**
 	 * Returns true if another step forward is possible.
@@ -70,5 +70,5 @@ public interface Iterator
 	 * @return true, if there is another step forward is possible, otherwise
 	 *         false
 	 */
-	public boolean hasNext();
+	boolean hasNext();
 }

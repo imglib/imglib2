@@ -55,45 +55,45 @@ public interface KNearestNeighborSearch< T > extends NearestNeighborSearch< T >
 	 * @param reference
 	 */
 	@Override
-	public void search( final RealLocalizable reference );
+	void search( final RealLocalizable reference );
 
 	/**
 	 * Get the of k nearest neighbor points used in this search
 	 * 
 	 * @return the number of nearest neighbor points k used for this search
 	 */
-	public int getK();
+	int getK();
 
 	/**
 	 * Access the data of the <em>i</em><sup>th</sup> nearest neighbor, ordered
 	 * by square Euclidean distance. Data is accessed through a {@link Sampler}
 	 * that guarantees write access if the underlying data set is writable.
 	 */
-	public Sampler< T > getSampler( final int i );
+	Sampler< T > getSampler( final int i );
 
 	/**
 	 * Access the position of the <em>i</em><sup>th</sup> nearest neighbor,
 	 * ordered by square Euclidean distance.
 	 */
-	public RealLocalizable getPosition( final int i );
+	RealLocalizable getPosition( final int i );
 
 	/**
 	 * Access the square Euclidean distance between the reference location as
 	 * used for the last search and the <em>i</em><sup>th</sup> nearest
 	 * neighbor, ordered by square Euclidean distance.
 	 */
-	public double getSquareDistance( final int i );
+	double getSquareDistance( final int i );
 
 	/**
 	 * Access the Euclidean distance between the reference location as used for
 	 * the last search and the <em>i</em><sup>th</sup> nearest neighbor, ordered
 	 * by square Euclidean distance.
 	 */
-	public double getDistance( final int i );
+	double getDistance( final int i );
 
 	/**
 	 * Create a copy.
 	 */
 	@Override
-	public KNearestNeighborSearch< T > copy();
+	KNearestNeighborSearch< T > copy();
 }

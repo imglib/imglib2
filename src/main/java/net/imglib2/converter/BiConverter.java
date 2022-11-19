@@ -43,5 +43,5 @@ package net.imglib2.converter;
  */
 public interface BiConverter< A, B, C >
 {
-	public void convert( A inputA, B outputB, C output );
+	void convert( A inputA, B outputB, C output );
 }

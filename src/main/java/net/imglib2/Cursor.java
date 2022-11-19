@@ -84,7 +84,7 @@ public interface Cursor< T > extends RealCursor< T >, Localizable
 	// http://bugs.sun.com/view_bug.do?bug_id=6656332
 	// The bug is fixed in JDK7.
 	@Override
-	public Cursor< T > copyCursor();
+	Cursor< T > copyCursor();
 //	@Override
 //	public Cursor< T > copy();
 }

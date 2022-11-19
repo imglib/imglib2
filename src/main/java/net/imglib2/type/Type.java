@@ -56,7 +56,7 @@ public interface Type< T extends Type< T > > extends ValueEquals< T >
 	 * 
 	 * @return a new {@link Type} variable
 	 */
-	public T createVariable();
+	T createVariable();
 
 	/**
 	 * Creates a new {@link Type} variable that has the value of this
@@ -64,7 +64,7 @@ public interface Type< T extends Type< T > > extends ValueEquals< T >
 	 * 
 	 * @return a new {@link Type} variable
 	 */
-	public T copy();
+	T copy();
 
 	/**
 	 * Sets the value of another {@link Type}.
@@ -72,5 +72,5 @@ public interface Type< T extends Type< T > > extends ValueEquals< T >
 	 * @param c
 	 *            the new value
 	 */
-	public void set( T c );
+	void set( T c );
 }

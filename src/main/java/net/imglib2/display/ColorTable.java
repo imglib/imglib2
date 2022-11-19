@@ -48,18 +48,18 @@ public interface ColorTable
 
 	public static final int ALPHA = 3;
 
-	public int lookupARGB( double min, double max, double value );
+	int lookupARGB( double min, double max, double value );
 
 	/**
 	 * Gets the number of color components in the table (typically 3 for RGB or
 	 * 4 for RGBA).
 	 */
-	public int getComponentCount();
+	int getComponentCount();
 
 	/**
 	 * Gets the number of elements for each color component in the table.
 	 */
-	public int getLength();
+	int getLength();
 
 	/**
 	 * Gets an individual value from the color table.
@@ -70,7 +70,7 @@ public interface ColorTable
 	 *            The index into the color table.
 	 * @return The value of the table at the specified position.
 	 */
-	public int get( final int comp, final int bin );
+	int get( final int comp, final int bin );
 
 	/**
 	 * Gets an individual value from a color table with given number of bins.
@@ -83,5 +83,5 @@ public interface ColorTable
 	 *            The index into the color table.
 	 * @return The value of the table at the specified position.
 	 */
-	public int getResampled( final int comp, final int bins, final int bin );
+	int getResampled( final int comp, final int bins, final int bin );
 }

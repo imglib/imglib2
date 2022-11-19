@@ -68,7 +68,7 @@ public interface IterableRealInterval< T > extends RealInterval, Iterable< T >
 	 *
 	 * @return fast iterating iterator
 	 */
-	public RealCursor< T > cursor();
+	RealCursor< T > cursor();
 
 	/**
 	 * <p>
@@ -83,7 +83,7 @@ public interface IterableRealInterval< T > extends RealInterval, Iterable< T >
 	 *
 	 * @return fast localizing iterator
 	 */
-	public RealCursor< T > localizingCursor();
+	RealCursor< T > localizingCursor();
 
 	/**
 	 * <p>
@@ -93,12 +93,12 @@ public interface IterableRealInterval< T > extends RealInterval, Iterable< T >
 	 *
 	 * @return number of elements
 	 */
-	public long size();
+	long size();
 
 	/**
 	 * Get the first element of this {@link IterableRealInterval}. This is a
 	 * shortcut for <code>cursor().next()</code>.
-	 *
+	 * <p>
 	 * This can be used to create a new variable of type T using
 	 * <code>firstElement().createVariable()</code>, which is useful in generic
 	 * methods to store temporary results, e.g., a running sum over pixels in
@@ -106,7 +106,7 @@ public interface IterableRealInterval< T > extends RealInterval, Iterable< T >
 	 *
 	 * @return the first element in iteration order.
 	 */
-	public T firstElement();
+	T firstElement();
 
 	/**
 	 * Returns the iteration order of this {@link IterableRealInterval}. If the
@@ -122,5 +122,5 @@ public interface IterableRealInterval< T > extends RealInterval, Iterable< T >
 	 *
 	 * @return the iteration order of this {@link IterableRealInterval}.
 	 */
-	public Object iterationOrder();
+	Object iterationOrder();
 }

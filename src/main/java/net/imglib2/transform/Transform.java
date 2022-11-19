@@ -56,14 +56,14 @@ public interface Transform
 	 * 
 	 * @return the dimension of the source vector.
 	 */
-	public int numSourceDimensions();
+	int numSourceDimensions();
 
 	/**
 	 * Returns <em>m</em>, the dimension of the target vector.
 	 * 
 	 * @return the dimension of the target vector.
 	 */
-	public int numTargetDimensions();
+	int numTargetDimensions();
 
 	/**
 	 * Apply the {@link Transform} to a source vector to obtain a target vector.
@@ -73,7 +73,7 @@ public interface Transform
 	 * @param target
 	 *            set this to the target coordinates.
 	 */
-	public void apply( final long[] source, final long[] target );
+	void apply( final long[] source, final long[] target );
 
 	/**
 	 * Apply the {@link Transform} to a source vector to obtain a target vector.
@@ -83,7 +83,7 @@ public interface Transform
 	 * @param target
 	 *            set this to the target coordinates.
 	 */
-	public void apply( final int[] source, final int[] target );
+	void apply( final int[] source, final int[] target );
 
 	/**
 	 * Apply the {@link Transform} to a source {@link Localizable} to obtain a
@@ -94,5 +94,5 @@ public interface Transform
 	 * @param target
 	 *            set this to the target coordinates.
 	 */
-	public void apply( final Localizable source, final Positionable target );
+	void apply( final Localizable source, final Positionable target );
 }
