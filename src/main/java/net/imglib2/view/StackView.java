@@ -67,7 +67,7 @@ public class StackView< T > extends AbstractInterval implements RandomAccessible
 	 * {@link RandomAccess}es on all constituent hyper-slices of the
 	 * {@link StackView}.
 	 */
-	public static enum StackAccessMode
+	public enum StackAccessMode
 	{
 		/**
 		 * The default behavior is the following.
