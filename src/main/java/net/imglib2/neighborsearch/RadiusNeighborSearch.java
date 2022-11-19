@@ -106,5 +106,8 @@ public interface RadiusNeighborSearch< T > extends EuclideanSpace
 	 * Access the Euclidean distance between the reference location as used for
 	 * the last search and the <em>i</em><sup>th</sup> neighbor.
 	 */
-	double getDistance( int i );
+	default double getDistance( final int i )
+	{
+		return Math.sqrt( getSquareDistance( i ) );
+	}
 }
