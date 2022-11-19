@@ -78,23 +78,9 @@ public class IterableRandomAccessibleInterval< T > extends AbstractWrappedInterv
 	}
 
 	@Override
-	public T firstElement()
-	{
-		// we cannot simply create an randomaccessible on interval
-		// this does not ensure it will be placed at the first element
-		return cursor().next();
-	}
-
-	@Override
 	public FlatIterationOrder iterationOrder()
 	{
 		return new FlatIterationOrder( sourceInterval );
-	}
-
-	@Override
-	public Iterator< T > iterator()
-	{
-		return cursor();
 	}
 
 	@Override

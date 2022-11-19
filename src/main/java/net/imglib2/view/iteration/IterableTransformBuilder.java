@@ -129,21 +129,9 @@ public class IterableTransformBuilder< T > extends TransformBuilder< T >
 		}
 
 		@Override
-		public T firstElement()
-		{
-			return cursor().next();
-		}
-
-		@Override
 		public Object iterationOrder()
 		{
 			return iterableSource.subIntervalIterationOrder( interval );
-		}
-
-		@Override
-		public Iterator< T > iterator()
-		{
-			return cursor();
 		}
 
 		@Override
@@ -191,21 +179,9 @@ public class IterableTransformBuilder< T > extends TransformBuilder< T >
 		}
 
 		@Override
-		public T firstElement()
-		{
-			return cursor().next();
-		}
-
-		@Override
 		public Object iterationOrder()
 		{
 			return hasFlatIterationOrder ? new FlatIterationOrder( interval ) : this;
-		}
-
-		@Override
-		public Iterator< T > iterator()
-		{
-			return cursor();
 		}
 
 		@Override

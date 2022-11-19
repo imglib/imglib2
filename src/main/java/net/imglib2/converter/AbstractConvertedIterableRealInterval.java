@@ -64,18 +64,6 @@ abstract public class AbstractConvertedIterableRealInterval< A, B > extends Abst
 	}
 
 	@Override
-	public Iterator< B > iterator()
-	{
-		return cursor();
-	}
-
-	@Override
-	public B firstElement()
-	{
-		return cursor().next();
-	}
-
-	@Override
 	abstract public AbstractConvertedRealCursor< A, B > cursor();
 
 	@Override

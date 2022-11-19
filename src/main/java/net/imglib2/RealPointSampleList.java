@@ -255,10 +255,4 @@ public class RealPointSampleList< T > implements IterableRealInterval< T >
 	{
 		return n;
 	}
-
-	@Override
-	public Iterator< T > iterator()
-	{
-		return cursor();
-	}
 }
