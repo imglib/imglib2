@@ -64,7 +64,7 @@ public enum PrimitiveType
 
 	private final int byteCount;
 
-	private PrimitiveType( final int byteCount )
+	PrimitiveType( final int byteCount )
 	{
 		this.byteCount = byteCount;
 	}
