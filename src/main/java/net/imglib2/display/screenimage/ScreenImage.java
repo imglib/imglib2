@@ -45,5 +45,5 @@ package net.imglib2.display.screenimage;
  */
 public interface ScreenImage< T >
 {
-	public T image();
+	T image();
 }

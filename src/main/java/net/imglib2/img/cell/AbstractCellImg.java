@@ -76,7 +76,7 @@ public abstract class AbstractCellImg<
 		/**
 		 * @return the cell the sampler is currently in.
 		 */
-		public C getCell();
+		C getCell();
 	}
 
 	@Override

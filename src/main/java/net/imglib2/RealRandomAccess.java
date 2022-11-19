@@ -49,13 +49,13 @@ public interface RealRandomAccess< T > extends RealLocalizable, RealPositionable
 	// http://bugs.sun.com/view_bug.do?bug_id=6656332
 	// The bug is fixed in JDK7.
 	@Deprecated
-	public default RealRandomAccess< T > copyRealRandomAccess()
+	default RealRandomAccess< T > copyRealRandomAccess()
 	{
 		return copy();
 	}
 
 	@Override
-	public RealRandomAccess< T > copy();
+	RealRandomAccess< T > copy();
 
 	/**
 	 * Convenience method that moves the {@link RealRandomAccess} to the given

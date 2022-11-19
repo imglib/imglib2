@@ -45,5 +45,5 @@ import net.imglib2.RealRandomAccess;
 public interface RealOutOfBounds< T > extends OutOfBounds< T >, RealRandomAccess< T >
 {
 	@Override
-	public RealOutOfBounds< T > copy();
+	RealOutOfBounds< T > copy();
 }

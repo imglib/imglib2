@@ -44,5 +44,5 @@ import net.imglib2.RandomAccess;
 public interface OutOfBounds< T > extends RandomAccess< T >, Bounded
 {
 	@Override
-	public OutOfBounds< T > copy();
+	OutOfBounds< T > copy();
 }

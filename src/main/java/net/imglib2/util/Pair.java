@@ -36,7 +36,7 @@ package net.imglib2.util;
 
 public interface Pair< A, B >
 {
-	public A getA();
+	A getA();
 
-	public B getB();
+	B getB();
 }

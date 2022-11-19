@@ -54,37 +54,37 @@ public interface NearestNeighborSearch< T > extends EuclideanSpace
 	 * 
 	 * @param reference
 	 */
-	public void search( final RealLocalizable reference );
+	void search( final RealLocalizable reference );
 
 	/**
 	 * Access the data of the nearest neighbor. Data is accessed through a
 	 * {@link Sampler} that guarantees write access if the underlying data set
 	 * is writable.
 	 */
-	public Sampler< T > getSampler();
+	Sampler< T > getSampler();
 
 	/**
 	 * Access the position of the nearest neighbor, ordered by square Euclidean
 	 * distance.
 	 */
-	public RealLocalizable getPosition();
+	RealLocalizable getPosition();
 
 	/**
 	 * Access the square Euclidean distance between the reference location as
 	 * used for the last search and the nearest neighbor, ordered by square
 	 * Euclidean distance.
 	 */
-	public double getSquareDistance();
+	double getSquareDistance();
 
 	/**
 	 * Access the Euclidean distance between the reference location as used for
 	 * the last search and the nearest neighbor, ordered by square Euclidean
 	 * distance.
 	 */
-	public double getDistance();
+	double getDistance();
 
 	/**
 	 * Create a copy.
 	 */
-	public NearestNeighborSearch< T > copy();
+	NearestNeighborSearch< T > copy();
 }

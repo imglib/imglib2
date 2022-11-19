@@ -70,7 +70,7 @@ public class JUnitTestBase
 	 */
 	protected interface Function
 	{
-		public float calculate( long[] pos );
+		float calculate( long[] pos );
 	}
 
 	/**

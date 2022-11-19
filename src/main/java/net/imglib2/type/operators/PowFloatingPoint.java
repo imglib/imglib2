@@ -38,5 +38,5 @@ package net.imglib2.type.operators;
  */
 public interface PowFloatingPoint
 {
-	public void pow( double d );
+	void pow( double d );
 }

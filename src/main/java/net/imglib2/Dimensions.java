@@ -77,7 +77,7 @@ public interface Dimensions extends EuclideanSpace
 	 *
 	 * @param d
 	 */
-	public long dimension( int d );
+	long dimension( int d );
 
 	/**
 	 * Allocates a new long array with the dimensions of this object.

@@ -38,5 +38,5 @@ package net.imglib2.type.operators;
  */
 public interface SetZero
 {
-	public void setZero();
+	void setZero();
 }

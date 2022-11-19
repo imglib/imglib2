@@ -49,7 +49,7 @@ public interface RealPositionable extends Positionable
 	 * @param distance
 	 * @param d
 	 */
-	public void move( float distance, int d );
+	void move( float distance, int d );
 
 	/**
 	 * Move the element in one dimension for some distance.
@@ -57,7 +57,7 @@ public interface RealPositionable extends Positionable
 	 * @param distance
 	 * @param d
 	 */
-	public void move( double distance, int d );
+	void move( double distance, int d );
 
 	/**
 	 * Move the element relative to its current location using a
@@ -67,7 +67,7 @@ public interface RealPositionable extends Positionable
 	 *            relative offset, {@link RealLocalizable#numDimensions()} must
 	 *            be &ge; {@link #numDimensions()}
 	 */
-	public void move( RealLocalizable distance );
+	void move( RealLocalizable distance );
 
 	/**
 	 * Move the element relative to its current location using a float[] as
@@ -76,7 +76,7 @@ public interface RealPositionable extends Positionable
 	 * @param distance,
 	 *            length must be &ge; {@link #numDimensions()}
 	 */
-	public void move( float[] distance );
+	void move( float[] distance );
 
 	/**
 	 * Move the element relative to its current location using a float[] as
@@ -85,7 +85,7 @@ public interface RealPositionable extends Positionable
 	 * @param distance,
 	 *            length must be &ge; {@link #numDimensions()}
 	 */
-	public void move( double[] distance );
+	void move( double[] distance );
 
 	/**
 	 * Place the element at the same location as a given {@link RealLocalizable}
@@ -94,7 +94,7 @@ public interface RealPositionable extends Positionable
 	 *            absolute position, {@link RealLocalizable#numDimensions()}
 	 *            must be &ge; {@link #numDimensions()}
 	 */
-	public void setPosition( RealLocalizable position );
+	void setPosition( RealLocalizable position );
 
 	/**
 	 * Set the position of the element.
@@ -103,7 +103,7 @@ public interface RealPositionable extends Positionable
 	 *            absolute position, length must be &ge;
 	 *            {@link #numDimensions()}
 	 */
-	public void setPosition( float position[] );
+	void setPosition( float position[] );
 
 	/**
 	 * Set the position of the element.
@@ -112,7 +112,7 @@ public interface RealPositionable extends Positionable
 	 *            absolute position, length must be &ge;
 	 *            {@link #numDimensions()}
 	 */
-	public void setPosition( double position[] );
+	void setPosition( double position[] );
 
 	/**
 	 * Set the position of the element for one dimension.
@@ -120,7 +120,7 @@ public interface RealPositionable extends Positionable
 	 * @param position
 	 * @param d
 	 */
-	public void setPosition( float position, int d );
+	void setPosition( float position, int d );
 
 	/**
 	 * Set the position of the element for one dimension.
@@ -128,5 +128,5 @@ public interface RealPositionable extends Positionable
 	 * @param position
 	 * @param d
 	 */
-	public void setPosition( double position, int d );
+	void setPosition( double position, int d );
 }

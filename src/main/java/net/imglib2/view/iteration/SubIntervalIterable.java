@@ -55,7 +55,7 @@ public interface SubIntervalIterable< T >
 	 * @return true if a {@link Cursor} can be optimized given the
 	 *         {@link Interval}
 	 */
-	public boolean supportsOptimizedCursor( Interval interval );
+	boolean supportsOptimizedCursor( Interval interval );
 
 	/**
 	 * Returns the iteration order given the interval.
@@ -65,7 +65,7 @@ public interface SubIntervalIterable< T >
 	 * 
 	 * @return the iteration order object @see {@link IterableRealInterval}
 	 */
-	public Object subIntervalIterationOrder( Interval interval );
+	Object subIntervalIterationOrder( Interval interval );
 
 	/**
 	 * Create a {@link Cursor} to iterate over the given {@link Interval}.
@@ -75,7 +75,7 @@ public interface SubIntervalIterable< T >
 	 * 
 	 * @return {@link Cursor}
 	 */
-	public Cursor< T > cursor( Interval interval );
+	Cursor< T > cursor( Interval interval );
 
 	/**
 	 * Create a {@link Cursor} to iterate over the given {@link Interval}.
@@ -85,5 +85,5 @@ public interface SubIntervalIterable< T >
 	 * 
 	 * @return {@link Cursor}
 	 */
-	public Cursor< T > localizingCursor( Interval interval );
+	Cursor< T > localizingCursor( Interval interval );
 }

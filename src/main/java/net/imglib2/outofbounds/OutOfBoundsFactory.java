@@ -43,5 +43,5 @@ package net.imglib2.outofbounds;
  */
 public interface OutOfBoundsFactory< T, F >
 {
-	public OutOfBounds< T > create( F f );
+	OutOfBounds< T > create( F f );
 }

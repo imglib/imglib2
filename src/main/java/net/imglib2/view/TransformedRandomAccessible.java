@@ -54,7 +54,7 @@ public interface TransformedRandomAccessible< T > extends RandomAccessible< T >,
 	 * 
 	 * @return the source {@link RandomAccessible}.
 	 */
-	public RandomAccessible< T > getSource();
+	RandomAccessible< T > getSource();
 
 	/**
 	 * Get the transformation from view coordinates into {@link #getSource()
@@ -68,5 +68,5 @@ public interface TransformedRandomAccessible< T > extends RandomAccessible< T >,
 	 * @return transformation from view coordinates into {@link #getSource()
 	 *         source} coordinates.
 	 */
-	public Transform getTransformToSource();
+	Transform getTransformToSource();
 }

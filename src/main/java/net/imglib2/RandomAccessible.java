@@ -107,7 +107,7 @@ public interface RandomAccessible< T > extends EuclideanSpace
 	 *
 	 * @return random access sampler
 	 */
-	public RandomAccess< T > randomAccess();
+	RandomAccess< T > randomAccess();
 
 	/**
 	 * Create a random access sampler for integer coordinates.
@@ -125,7 +125,7 @@ public interface RandomAccessible< T > extends EuclideanSpace
 	 *
 	 * @return random access sampler
 	 */
-	public RandomAccess< T > randomAccess( Interval interval );
+	RandomAccess< T > randomAccess( Interval interval );
 
 	/**
 	 * Convenience method to query a {@link RandomAccessible} for the value at a

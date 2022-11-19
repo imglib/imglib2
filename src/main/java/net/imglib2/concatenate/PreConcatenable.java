@@ -56,7 +56,7 @@ public interface PreConcatenable< A >
 	 * equivalent to first applying <em>a</em> to <em>x</em> and then applying
 	 * <em>b</em> to the result.
 	 */
-	public PreConcatenable< A > preConcatenate( A a );
+	PreConcatenable< A > preConcatenate( A a );
 
-	public Class< A > getPreConcatenableClass();
+	Class< A > getPreConcatenableClass();
 }

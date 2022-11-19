@@ -60,11 +60,11 @@ public interface Img< T >
 	 * 
 	 * @return a factory for Imgs of the same kind as this one.
 	 */
-	public ImgFactory< T > factory();
+	ImgFactory< T > factory();
 
 	/**
 	 * @return - A copy of the current {@link Img} instance, all pixels are
 	 *         duplicated
 	 */
-	public Img< T > copy();
+	Img< T > copy();
 }

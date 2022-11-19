@@ -42,15 +42,15 @@ import java.math.BigInteger;
  */
 public interface IntegerType< T extends IntegerType< T >> extends RealType< T >
 {
-	public int getInteger();
+	int getInteger();
 
-	public long getIntegerLong();
+	long getIntegerLong();
 
-	public BigInteger getBigInteger();
+	BigInteger getBigInteger();
 
-	public void setInteger( int f );
+	void setInteger( int f );
 
-	public void setInteger( long f );
+	void setInteger( long f );
 
-	public void setBigInteger( BigInteger b );
+	void setBigInteger( BigInteger b );
 }

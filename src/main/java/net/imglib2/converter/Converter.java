@@ -46,5 +46,5 @@ import java.util.function.BiConsumer;
  */
 public interface Converter< A, B >
 {
-	public void convert( A input, B output );
+	void convert( A input, B output );
 }

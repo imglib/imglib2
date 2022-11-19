@@ -148,7 +148,7 @@ public interface Localizable extends RealLocalizable
 	 *            dimension
 	 * @return dimension of current position
 	 */
-	public long getLongPosition( int d );
+	long getLongPosition( int d );
 
 	@Override
 	default float getFloatPosition( final int d )

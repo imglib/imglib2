@@ -51,9 +51,9 @@ public interface NativeImg< T extends Type< T >, A > extends Img< T >
 	 *            cursor
 	 * @return native array which is referred to by the updater
 	 */
-	public A update( final Object updater );
+	A update( final Object updater );
 
-	public void setLinkedType( final T type );
+	void setLinkedType( final T type );
 
-	public T createLinkedType();
+	T createLinkedType();
 }

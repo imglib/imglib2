@@ -40,5 +40,5 @@ package net.imglib2.type.operators;
  */
 public interface Mul< T >
 {
-	public void mul( T c );
+	void mul( T c );
 }

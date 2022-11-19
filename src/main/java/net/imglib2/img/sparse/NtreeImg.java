@@ -69,7 +69,7 @@ public final class NtreeImg< T extends NativeType< T >, A extends NtreeAccess< ?
 		this.data = img.data;
 	}
 
-	public static interface PositionProvider
+	public interface PositionProvider
 	{
 		long[] getPosition();
 	}

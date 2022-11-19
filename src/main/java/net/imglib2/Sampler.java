@@ -59,7 +59,7 @@ public interface Sampler< T >
 	 * Access the actual <em>T</em> instance providing access to a pixel,
 	 * sub-pixel or integral region value the {@link Sampler} points at.
 	 */
-	public T get();
+	T get();
 
 	/**
 	 * @return - A new {@link Sampler} in the same state accessing the same
@@ -72,5 +72,5 @@ public interface Sampler< T >
 	 *         value, not necessarily the same instance (this is the case for an
 	 *         {@link ArrayCursor} for example)
 	 */
-	public Sampler< T > copy();
+	Sampler< T > copy();
 }

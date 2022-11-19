@@ -52,7 +52,7 @@ public interface RandomAccess< T > extends Localizable, Positionable, Sampler< T
 	// http://bugs.sun.com/view_bug.do?bug_id=6656332
 	// The bug is fixed in JDK7.
 	@Deprecated
-	public default RandomAccess< T > copyRandomAccess()
+	default RandomAccess< T > copyRandomAccess()
 	{
 		return copy();
 	}

@@ -108,7 +108,7 @@ public class PlanarImg< T extends NativeType< T >, A extends ArrayDataAccess< A 
 		/**
 		 * @return the index of the slice the sampler is currently accessing.
 		 */
-		public int getCurrentSliceIndex();
+		int getCurrentSliceIndex();
 	}
 
 	@SuppressWarnings("unchecked")

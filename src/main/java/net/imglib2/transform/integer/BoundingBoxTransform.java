@@ -50,5 +50,5 @@ public interface BoundingBoxTransform
 	 * @param boundingBox
 	 * @return the transformed bounding box
 	 */
-	public BoundingBox transform( BoundingBox boundingBox );
+	BoundingBox transform( BoundingBox boundingBox );
 }

@@ -49,7 +49,7 @@ public interface Positionable extends EuclideanSpace
 	 * @param d
 	 *            dimension
 	 */
-	public void fwd( int d );
+	void fwd( int d );
 
 	/**
 	 * Move by -1 in one dimension.
@@ -57,7 +57,7 @@ public interface Positionable extends EuclideanSpace
 	 * @param d
 	 *            dimension
 	 */
-	public void bck( int d );
+	void bck( int d );
 
 	/**
 	 * Move the element in one dimension for some distance.
@@ -67,7 +67,7 @@ public interface Positionable extends EuclideanSpace
 	 * @param d
 	 *            dimension
 	 */
-	public void move( int distance, int d );
+	void move( int distance, int d );
 
 	/**
 	 * Move the element in one dimension for some distance.
@@ -77,7 +77,7 @@ public interface Positionable extends EuclideanSpace
 	 * @param d
 	 *            dimension
 	 */
-	public void move( long distance, int d );
+	void move( long distance, int d );
 
 	/**
 	 * Move the element relative to its current location using an
@@ -87,7 +87,7 @@ public interface Positionable extends EuclideanSpace
 	 *            relative offset, {@link Localizable#numDimensions()} must be
 	 *            &ge; {@link #numDimensions()}
 	 */
-	public void move( Localizable distance );
+	void move( Localizable distance );
 
 	/**
 	 * Move the element relative to its current location using an int[] as
@@ -96,7 +96,7 @@ public interface Positionable extends EuclideanSpace
 	 * @param distance
 	 *            relative offset, length must be &ge; {@link #numDimensions()}
 	 */
-	public void move( int[] distance );
+	void move( int[] distance );
 
 	/**
 	 * Move the element relative to its current location using a long[] as
@@ -105,7 +105,7 @@ public interface Positionable extends EuclideanSpace
 	 * @param distance
 	 *            relative offset, length must be &ge; {@link #numDimensions()}
 	 */
-	public void move( long[] distance );
+	void move( long[] distance );
 
 	/**
 	 * Place the element at the same location as a given {@link Localizable}
@@ -114,7 +114,7 @@ public interface Positionable extends EuclideanSpace
 	 *            absolute position, {@link Localizable#numDimensions()} must be
 	 *            &ge; {@link #numDimensions()}
 	 */
-	public void setPosition( Localizable position );
+	void setPosition( Localizable position );
 
 	/**
 	 * Set the position of the element.
@@ -123,7 +123,7 @@ public interface Positionable extends EuclideanSpace
 	 *            absolute position, length must be &ge;
 	 *            {@link #numDimensions()}
 	 */
-	public void setPosition( int[] position );
+	void setPosition( int[] position );
 
 	/**
 	 * Set the position of the element.
@@ -132,7 +132,7 @@ public interface Positionable extends EuclideanSpace
 	 *            absolute position, length must be &ge;
 	 *            {@link #numDimensions()}
 	 */
-	public void setPosition( long[] position );
+	void setPosition( long[] position );
 
 	/**
 	 * Set the position of the element for one dimension.
@@ -142,7 +142,7 @@ public interface Positionable extends EuclideanSpace
 	 * @param d
 	 *            dimension
 	 */
-	public void setPosition( int position, int d );
+	void setPosition( int position, int d );
 
 	/**
 	 * Set the position of the element for one dimension.
@@ -152,5 +152,5 @@ public interface Positionable extends EuclideanSpace
 	 * @param d
 	 *            dimension
 	 */
-	public void setPosition( long position, int d );
+	void setPosition( long position, int d );
 }
