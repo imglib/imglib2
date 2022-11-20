@@ -57,12 +57,6 @@ public abstract class AbstractLocalizingCursor< T > extends AbstractLocalizable 
 	}
 
 	@Override
-	public void remove()
-	{
-		// NB: no action.
-	}
-
-	@Override
 	public T next()
 	{
 		fwd();

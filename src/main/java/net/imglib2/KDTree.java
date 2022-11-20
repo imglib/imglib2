@@ -709,12 +709,6 @@ public class KDTree< T > implements EuclideanSpace, IterableRealInterval< T >
 			fwd();
 			return get();
 		}
-
-		@Override
-		public void remove()
-		{
-			// NB: no action.
-		}
 	}
 
 	@Override
