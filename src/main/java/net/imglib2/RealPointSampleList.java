@@ -138,12 +138,6 @@ public class RealPointSampleList< T > implements IterableRealInterval< T >
 			fwd();
 			return sample;
 		}
-
-		@Override
-		public void remove()
-		{
-			/* Not yet implemented */
-		}
 	}
 
 	final protected int n;

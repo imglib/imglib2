@@ -369,13 +369,6 @@ public class HistogramNdTest
 					tuple.get( 2 ).set( ( argbValue.get() >> 0 ) & 0xff );
 					return tuple;
 				}
-
-				@Override
-				public void remove()
-				{
-					// do nothing
-				}
-
 			};
 		}
 

@@ -152,10 +152,6 @@ public final class RandomAccessibleIntervalCursor< T > extends AbstractInterval 
 	}
 
 	@Override
-	public void remove()
-	{}
-
-	@Override
 	public RandomAccessibleIntervalCursor< T > copy()
 	{
 		return new RandomAccessibleIntervalCursor< T >( this );

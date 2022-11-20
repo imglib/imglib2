@@ -69,12 +69,6 @@ abstract public class AbstractNumericComposite< T extends NumericType< T >, C ex
 			final T t = sourceAccess.get();
 			return t;
 		}
-
-		@Override
-		public void remove()
-		{
-			throw new UnsupportedOperationException();
-		}
 	};
 
 	public AbstractNumericComposite( final RandomAccess< T > sourceAccess, final int length )

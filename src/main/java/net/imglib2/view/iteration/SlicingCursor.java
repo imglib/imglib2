@@ -250,13 +250,4 @@ public class SlicingCursor< T > extends AbstractEuclideanSpace implements Cursor
 	{
 		return s.next();
 	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public void remove()
-	{
-		return;
-	}
 }

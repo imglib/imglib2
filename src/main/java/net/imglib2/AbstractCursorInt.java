@@ -74,12 +74,6 @@ public abstract class AbstractCursorInt< T > extends AbstractEuclideanSpace impl
 	}
 
 	@Override
-	public void remove()
-	{
-		// NB: no action.
-	}
-
-	@Override
 	public T next()
 	{
 		fwd();

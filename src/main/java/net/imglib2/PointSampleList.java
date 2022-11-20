@@ -160,12 +160,6 @@ public class PointSampleList< T > extends AbstractInterval implements IterableIn
 			fwd();
 			return sample;
 		}
-
-		@Override
-		public void remove()
-		{
-			/* Not yet implemented */
-		}
 	}
 
 	final protected ArrayList< Point > coordinates = new ArrayList< Point >();
