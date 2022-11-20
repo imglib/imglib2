@@ -97,22 +97,4 @@ public abstract class AbstractArrayColorTable< T > implements ArrayColorTable< T
 		return values.length;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 * <p>
-	 * Value is unsigned 8 bits.
-	 * </p>
-	 */
-	@Override
-	public abstract int get( int comp, int bin );
-
-	/**
-	 * {@inheritDoc}
-	 * <p>
-	 * Value is unsigned 8 bits.
-	 * </p>
-	 */
-	@Override
-	public abstract int getResampled( int comp, int bins, int bin );
-
 }

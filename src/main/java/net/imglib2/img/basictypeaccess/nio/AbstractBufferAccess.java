@@ -207,14 +207,6 @@ public abstract class AbstractBufferAccess< A extends AbstractBufferAccess< A, B
 	 */
 
 	/**
-	 * Get number of bytes for a specific primitive type.
-	 *
-	 * This usually retrieves a static field.
-	 */
-	@Override
-	public abstract int getNumBytesPerEntity();
-
-	/**
 	 * Create a new instance of this class given a Buffer of the same type.
 	 *
 	 * @param buffer
