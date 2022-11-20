@@ -54,7 +54,4 @@ public abstract class AbstractNativeType< T extends AbstractNativeType< T >> imp
 	{
 		return i;
 	}
-
-	@Override
-	public abstract String toString();
 }

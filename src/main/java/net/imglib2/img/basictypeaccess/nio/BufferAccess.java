@@ -70,9 +70,10 @@ public interface BufferAccess< A > extends VolatileAccess, ArrayDataAccess< A >
 	boolean isReadOnly();
 
 	/**
-	 * Number of bytes for this type
+	 * Get number of bytes for one entity in this {@code BufferAccess}.
+	 * This usually retrieves a static field.
 	 *
-	 * @return
+	 * @return number of bytes
 	 */
 	int getNumBytesPerEntity();
 
