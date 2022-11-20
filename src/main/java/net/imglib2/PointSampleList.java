@@ -65,12 +65,6 @@ public class PointSampleList< T > extends AbstractInterval implements IterableIn
 		}
 
 		@Override
-		final public Cursor< T > copyCursor()
-		{
-			return copy();
-		}
-
-		@Override
 		public double getDoublePosition( final int d )
 		{
 			return position.getDoublePosition( d );

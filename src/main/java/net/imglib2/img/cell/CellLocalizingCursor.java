@@ -77,7 +77,7 @@ public class CellLocalizingCursor< T extends NativeType< T >, C extends Cell< ? 
 
 		this.type = cursor.type.duplicateTypeOnSameNativeImg();
 		typeIndex = type.index();
-		this.cursorOnCells = cursor.cursorOnCells.copyCursor();
+		this.cursorOnCells = cursor.cursorOnCells.copy();
 		this.currentCellMin = cursor.currentCellMin;
 		this.currentCellMax = cursor.currentCellMax;
 
@@ -120,12 +120,6 @@ public class CellLocalizingCursor< T extends NativeType< T >, C extends Cell< ? 
 	public CellLocalizingCursor< T, C > copy()
 	{
 		return new CellLocalizingCursor<>( this );
-	}
-
-	@Override
-	public CellLocalizingCursor< T, C > copyCursor()
-	{
-		return copy();
 	}
 
 	@Override

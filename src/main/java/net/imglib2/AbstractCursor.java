@@ -145,7 +145,4 @@ public abstract class AbstractCursor< T > extends AbstractEuclideanSpace impleme
 
 	@Override
 	abstract public AbstractCursor< T > copy();
-
-	@Override
-	abstract public AbstractCursor< T > copyCursor();
 }

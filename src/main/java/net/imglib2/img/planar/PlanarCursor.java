@@ -113,12 +113,6 @@ public class PlanarCursor< T extends NativeType< T > > extends AbstractCursorInt
 		return new PlanarCursor< T >( this );
 	}
 
-	@Override
-	public PlanarCursor< T > copyCursor()
-	{
-		return copy();
-	}
-
 	/**
 	 * Note: This test is fragile in a sense that it returns true for elements
 	 * after the last element as well.

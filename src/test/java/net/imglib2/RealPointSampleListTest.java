@@ -129,7 +129,7 @@ public class RealPointSampleListTest
 		while ( cursor.hasNext() )
 		{
 			cursor.fwd();
-			copies.add( cursor.copyCursor() );
+			copies.add( cursor.copy() );
 		}
 
 		cursor.reset();

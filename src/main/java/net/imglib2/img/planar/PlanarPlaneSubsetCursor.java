@@ -155,15 +155,6 @@ public class PlanarPlaneSubsetCursor< T extends NativeType< T >> extends
 	 * {@inheritDoc}
 	 */
 	@Override
-	public PlanarPlaneSubsetCursor< T > copyCursor()
-	{
-		return copy();
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
 	public final boolean hasNext()
 	{
 		return typeIndex.get() < lastPlaneIndex;

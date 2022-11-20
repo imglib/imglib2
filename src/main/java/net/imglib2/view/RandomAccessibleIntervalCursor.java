@@ -162,12 +162,6 @@ public final class RandomAccessibleIntervalCursor< T > extends AbstractInterval 
 	}
 
 	@Override
-	public RandomAccessibleIntervalCursor< T > copyCursor()
-	{
-		return copy();
-	}
-
-	@Override
 	public void localize( final float[] position )
 	{
 		randomAccess.localize( position );

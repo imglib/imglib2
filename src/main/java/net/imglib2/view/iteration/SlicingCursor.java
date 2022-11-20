@@ -210,15 +210,6 @@ public class SlicingCursor< T > extends AbstractEuclideanSpace implements Cursor
 	 * {@inheritDoc}
 	 */
 	@Override
-	public SlicingCursor< T > copyCursor()
-	{
-		return copy();
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
 	public void jumpFwd( final long steps )
 	{
 		s.jumpFwd( steps );

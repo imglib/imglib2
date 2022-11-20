@@ -257,7 +257,7 @@ public class KDTree< T > implements EuclideanSpace, IterableRealInterval< T >
 		while ( cursor.hasNext() )
 		{
 			cursor.next();
-			values.add( cursor.copyCursor() );
+			values.add( cursor.copy() );
 		}
 		root = makeSamplerNode( values, 0, values.size() - 1, 0 );
 	}
@@ -715,13 +715,6 @@ public class KDTree< T > implements EuclideanSpace, IterableRealInterval< T >
 		{
 			// NB: no action.
 		}
-
-		@Override
-		public KDTreeCursor copyCursor()
-		{
-			return copy();
-		}
-
 	}
 
 	@Override
