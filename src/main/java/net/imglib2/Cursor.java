@@ -83,8 +83,16 @@ public interface Cursor< T > extends RealCursor< T >, Localizable
 	// we must avoid doing so for now. For details, see:
 	// http://bugs.sun.com/view_bug.do?bug_id=6656332
 	// The bug is fixed in JDK7.
+	/**
+	 * @deprecated Use {@link #copy()} instead
+	 */
+	@Deprecated
 	@Override
-	Cursor< T > copyCursor();
-//	@Override
-//	public Cursor< T > copy();
+	default Cursor< T > copyCursor()
+	{
+		return copy();
+	}
+
+	@Override
+	Cursor< T > copy();
 }

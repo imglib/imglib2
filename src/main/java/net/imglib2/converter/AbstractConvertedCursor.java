@@ -142,10 +142,4 @@ abstract public class AbstractConvertedCursor< A, B > implements Cursor< B >
 
 	@Override
 	abstract public AbstractConvertedCursor< A, B > copy();
-
-	@Override
-	public AbstractConvertedCursor< A, B > copyCursor()
-	{
-		return copy();
-	}
 }

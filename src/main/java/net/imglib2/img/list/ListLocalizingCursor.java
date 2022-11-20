@@ -139,10 +139,4 @@ final public class ListLocalizingCursor< T > extends AbstractLocalizingCursorInt
 	{
 		return new ListLocalizingCursor< T >( this );
 	}
-
-	@Override
-	public ListLocalizingCursor< T > copyCursor()
-	{
-		return copy();
-	}
 }

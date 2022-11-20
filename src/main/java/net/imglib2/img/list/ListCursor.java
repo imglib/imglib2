@@ -94,12 +94,6 @@ final public class ListCursor< T > extends AbstractCursorInt< T >
 	}
 
 	@Override
-	public ListCursor< T > copyCursor()
-	{
-		return copy();
-	}
-
-	@Override
 	public boolean hasNext()
 	{
 		return i < maxNumPixels;

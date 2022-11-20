@@ -101,12 +101,6 @@ public final class NtreeCursor< T extends NativeType< T >> extends
 	}
 
 	@Override
-	public NtreeCursor< T > copyCursor()
-	{
-		return copy();
-	}
-
-	@Override
 	public long[] getPosition()
 	{
 		return position;

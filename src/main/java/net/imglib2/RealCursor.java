@@ -83,7 +83,15 @@ public interface RealCursor< T > extends RealLocalizable, Sampler< T >, Iterator
 	// we must avoid doing so for now. For details, see:
 	// http://bugs.sun.com/view_bug.do?bug_id=6656332
 	// The bug is fixed in JDK7.
-	RealCursor< T > copyCursor();
-//@Override
-//public RealCursor< T > copy();
+	/**
+	 * @deprecated Use {@link #copy()} instead
+	 */
+	@Deprecated
+	default RealCursor< T > copyCursor()
+	{
+		return copy();
+	}
+
+	@Override
+	RealCursor< T > copy();
 }

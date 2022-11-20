@@ -73,7 +73,7 @@ public class CellCursor< T extends NativeType< T >, C extends Cell< ? > >
 
 		this.type = cursor.type.duplicateTypeOnSameNativeImg();
 		i = type.index();
-		this.cursorOnCells = cursor.cursorOnCells.copyCursor();
+		this.cursorOnCells = cursor.cursorOnCells.copy();
 		isNotLastCell = cursor.isNotLastCell;
 		lastIndexInCell = cursor.lastIndexInCell;
 		typeIndex = cursor.typeIndex;
@@ -109,12 +109,6 @@ public class CellCursor< T extends NativeType< T >, C extends Cell< ? > >
 	public CellCursor< T, C > copy()
 	{
 		return new CellCursor<>( this );
-	}
-
-	@Override
-	public CellCursor< T, C > copyCursor()
-	{
-		return copy();
 	}
 
 	@Override

@@ -78,10 +78,4 @@ public final class ArraySubIntervalCursor< T extends NativeType< T > > extends A
 	{
 		return new ArraySubIntervalCursor< T >( this );
 	}
-
-	@Override
-	public ArraySubIntervalCursor< T > copyCursor()
-	{
-		return copy();
-	}
 }

@@ -118,10 +118,4 @@ abstract public class AbstractConvertedRealCursor< A, B > implements RealCursor<
 
 	@Override
 	abstract public AbstractConvertedRealCursor< A, B > copy();
-
-	@Override
-	public AbstractConvertedRealCursor< A, B > copyCursor()
-	{
-		return copy();
-	}
 }

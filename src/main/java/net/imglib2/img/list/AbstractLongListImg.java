@@ -110,12 +110,6 @@ public abstract class AbstractLongListImg< T > extends AbstractImg< T >
 		}
 
 		@Override
-		public LongListCursor copyCursor()
-		{
-			return copy();
-		}
-
-		@Override
 		public boolean hasNext()
 		{
 			return i < maxNumPixels;
@@ -238,12 +232,6 @@ public abstract class AbstractLongListImg< T > extends AbstractImg< T >
 		public LongListLocalizingCursor copy()
 		{
 			return new LongListLocalizingCursor( this );
-		}
-
-		@Override
-		public LongListLocalizingCursor copyCursor()
-		{
-			return copy();
 		}
 	}
 
