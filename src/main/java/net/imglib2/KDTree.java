@@ -668,13 +668,6 @@ public class KDTree< T > implements EuclideanSpace, IterableRealInterval< T >
 		}
 
 		@Override
-		public void jumpFwd( final long steps )
-		{
-			for ( long i = 0; i < steps; ++i )
-				fwd();
-		}
-
-		@Override
 		public void fwd()
 		{
 			if ( nodes.isEmpty() )

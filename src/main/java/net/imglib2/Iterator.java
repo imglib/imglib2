@@ -47,11 +47,17 @@ public interface Iterator
 {
 	/**
 	 * Move steps &times; forward.
-	 * 
+	 * <p>
+	 * Highly recommended to override this with a more efficient version.
+	 *
 	 * @param steps
 	 *            number of steps to move forward
 	 */
-	void jumpFwd( long steps );
+	default void jumpFwd( long steps )
+	{
+		for ( long j = 0; j < steps; ++j )
+			fwd();
+	};
 
 	/**
 	 * Move forward.
