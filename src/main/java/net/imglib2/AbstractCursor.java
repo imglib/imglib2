@@ -69,13 +69,6 @@ public abstract class AbstractCursor< T > extends AbstractEuclideanSpace impleme
 		tmp = new long[ n ];
 	}
 
-	@Override
-	public T next()
-	{
-		fwd();
-		return get();
-	}
-
 	/**
 	 * Highly recommended to override this with a more efficient version.
 	 * 

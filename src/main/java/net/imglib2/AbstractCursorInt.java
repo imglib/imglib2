@@ -73,13 +73,6 @@ public abstract class AbstractCursorInt< T > extends AbstractEuclideanSpace impl
 		tmp = new int[ n ];
 	}
 
-	@Override
-	public T next()
-	{
-		fwd();
-		return get();
-	}
-
 	/**
 	 * Highly recommended to override this with a more efficient version.
 	 * 

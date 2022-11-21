@@ -104,13 +104,6 @@ abstract public class AbstractConvertedRealCursor< A, B > implements RealCursor<
 	}
 
 	@Override
-	public B next()
-	{
-		fwd();
-		return get();
-	}
-
-	@Override
 	public void remove()
 	{
 		source.remove();
