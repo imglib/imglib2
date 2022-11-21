@@ -34,6 +34,9 @@
 
 package net.imglib2;
 
+import java.util.NoSuchElementException;
+import java.util.function.Consumer;
+
 /**
  * A RealCursor iterates over a set of RealLocalizable elements, for example
  * intensity values sampled at a finite set of arbitrary real positions.
@@ -94,4 +97,18 @@ public interface RealCursor< T > extends RealLocalizable, Sampler< T >, Iterator
 
 	@Override
 	RealCursor< T > copy();
+
+	/**
+	 * Default implementation, calls {@link #fwd()} then {@link #get()}.
+	 * <p>
+	 * Note, that {@code hasNext()} is not checked before {@codw fwd()}.
+	 * If such a check is desired it should be implemented in {@code fwd()}
+	 * (throwing {@code NoSuchElementException}).
+	 */
+	@Override
+	default T next()
+	{
+		fwd();
+		return get();
+	}
 }

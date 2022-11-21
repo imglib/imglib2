@@ -128,13 +128,6 @@ abstract public class AbstractConvertedCursor< A, B > implements Cursor< B >
 	}
 
 	@Override
-	public B next()
-	{
-		fwd();
-		return get();
-	}
-
-	@Override
 	public void remove()
 	{
 		source.remove();
