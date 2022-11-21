@@ -101,7 +101,7 @@ public interface RealCursor< T > extends RealLocalizable, Sampler< T >, Iterator
 	/**
 	 * Default implementation, calls {@link #fwd()} then {@link #get()}.
 	 * <p>
-	 * Note, that {@code hasNext()} is not checked before {@codw fwd()}.
+	 * Note, that {@code hasNext()} is not checked before {@code fwd()}.
 	 * If such a check is desired it should be implemented in {@code fwd()}
 	 * (throwing {@code NoSuchElementException}).
 	 */
