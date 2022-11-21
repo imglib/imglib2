@@ -57,12 +57,5 @@ public abstract class AbstractLocalizingCursor< T > extends AbstractLocalizable 
 	}
 
 	@Override
-	public void jumpFwd( final long steps )
-	{
-		for ( long j = 0; j < steps; ++j )
-			fwd();
-	}
-
-	@Override
 	abstract public AbstractLocalizingCursor< T > copy();
 }

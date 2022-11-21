@@ -65,15 +65,6 @@ public class IntervalSampler< T > implements ProjectedSampler< T >
 	}
 
 	@Override
-	public void jumpFwd( final long steps )
-	{
-		for ( int i = 0; i < steps; i++ )
-		{
-			fwd();
-		}
-	}
-
-	@Override
 	public void fwd()
 	{
 		m_source.fwd( m_projectionDimension );

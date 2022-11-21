@@ -69,18 +69,6 @@ public abstract class AbstractCursor< T > extends AbstractEuclideanSpace impleme
 		tmp = new long[ n ];
 	}
 
-	/**
-	 * Highly recommended to override this with a more efficient version.
-	 * 
-	 * @param steps
-	 */
-	@Override
-	public void jumpFwd( final long steps )
-	{
-		for ( long j = 0; j < steps; ++j )
-			fwd();
-	}
-
 	@Override
 	public void localize( final float[] pos )
 	{
