@@ -146,4 +146,13 @@ public class RadiusNeighborSearchOnKDTree< T > implements RadiusNeighborSearch< 
 	{
 		return Math.sqrt( resultPoints.get( i ).b );
 	}
+
+	@Override
+	public RadiusNeighborSearchOnKDTree< T > copy()
+	{
+		final RadiusNeighborSearchOnKDTree< T > copy = new RadiusNeighborSearchOnKDTree<>( tree );
+		System.arraycopy( pos, 0, copy.pos, 0, pos.length );
+		copy.resultPoints.addAll( resultPoints );
+		return copy;
+	}
 }
