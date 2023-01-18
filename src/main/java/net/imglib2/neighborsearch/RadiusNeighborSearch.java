@@ -110,4 +110,9 @@ public interface RadiusNeighborSearch< T > extends EuclideanSpace
 	{
 		return Math.sqrt( getSquareDistance( i ) );
 	}
+
+	/**
+	 * Create a copy.
+	 */
+	RadiusNeighborSearch< T > copy();
 }
