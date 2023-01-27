@@ -73,7 +73,8 @@ public class OutOfBoundsMirrorExpWindowing< T extends NumericType< T > > extends
 		weights = outOfBounds.weights.clone();
 	}
 
-	public < F extends Interval & RandomAccessible< T > > OutOfBoundsMirrorExpWindowing( final F f, final int[] fadeOutDistance, final float exponent )
+	public < F extends Interval & RandomAccessible< T > > OutOfBoundsMirrorExpWindowing( final F f, final int[] fadeOutDistance,
+			final float exponent )
 	{
 		super( f );
 

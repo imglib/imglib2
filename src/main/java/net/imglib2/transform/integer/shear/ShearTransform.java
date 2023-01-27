@@ -49,7 +49,6 @@ import net.imglib2.transform.integer.BoundingBox;
  */
 public class ShearTransform extends AbstractShearTransform
 {
-	
 
 	/**
 	 * @param nDim					Number of dimensions (source and target dimensions must be the same)
@@ -57,19 +56,18 @@ public class ShearTransform extends AbstractShearTransform
 	 * @param referenceDimension	Dimension used as reference for shear.
 	 */
 	public ShearTransform(
-			int nDim, 
+			int nDim,
 			int shearDimension,
-			int referenceDimension ) 
+			int referenceDimension )
 	{
 		super( nDim, shearDimension, referenceDimension );
-		this.inverse = new InverseShearTransform( 
-				nDim, 
+		this.inverse = new InverseShearTransform(
+				nDim,
 				shearDimension,
 				referenceDimension,
 				this );
 	}
-	
-	
+
 	/**
 	 * Protected constructor for passing an inverse to avoid construction of unnecessary objects.
 	 * 
@@ -78,24 +76,22 @@ public class ShearTransform extends AbstractShearTransform
 	 * @param referenceDimension	Dimension used as reference for shear.
 	 * @param inverse				
 	 */
-	protected ShearTransform( 
-			int nDim, 
+	protected ShearTransform(
+			int nDim,
 			int shearDimension,
-			int referenceDimension, 
-			AbstractShearTransform inverse ) 
+			int referenceDimension,
+			AbstractShearTransform inverse )
 	{
 		super( nDim, shearDimension, referenceDimension, inverse );
 	}
 
-
 	@Override
-	public void apply( long[] source, long[] target ) 
+	public void apply( long[] source, long[] target )
 	{
 		assert source.length >= this.nDim && target.length >= nDim;
 		System.arraycopy( source, 0, target, 0, source.length );
 		target[ shearDimension ] += target[ referenceDimension ];
 	}
-	
 
 	@Override
 	public void apply( int[] source, int[] target )
@@ -104,24 +100,21 @@ public class ShearTransform extends AbstractShearTransform
 		System.arraycopy( source, 0, target, 0, source.length );
 		target[ shearDimension ] += target[ referenceDimension ];
 	}
-	
 
 	@Override
-	public void apply( Localizable source, Positionable target ) 
+	public void apply( Localizable source, Positionable target )
 	{
 		assert source.numDimensions() >= this.nDim && target.numDimensions() >= nDim;
 		target.setPosition( source );
 		target.setPosition( source.getLongPosition( shearDimension ) + source.getLongPosition( referenceDimension ), shearDimension );
 	}
-	
 
 	@Override
 	public ShearTransform copy()
 	{
-//		do just return this; ?
+		//		do just return this; ?
 		return new ShearTransform( this.nDim, this.shearDimension, this.referenceDimension );
 	}
-
 
 	@Override
 	public long[] getShear()
@@ -130,17 +123,16 @@ public class ShearTransform extends AbstractShearTransform
 		shear[ this.shearDimension ] = 1;
 		return shear;
 	}
-	
-	
-	@Override public BoundingBox transform( BoundingBox bb )
+
+	@Override
+	public BoundingBox transform( BoundingBox bb )
 	{
 		bb.orderMinMax();
 		long[] c = bb.corner2;
 		// assume that corner2[ i ] > corner1[ i ]
 		long diff = c[ this.referenceDimension ] - bb.corner1[ this.referenceDimension ];
-		c[ this.shearDimension ] +=diff;
+		c[ this.shearDimension ] += diff;
 		return bb;
 	}
-	
 
 }

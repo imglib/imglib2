@@ -48,6 +48,7 @@ import net.imglib2.RandomAccessible;
 public class HyperSlice< T > implements RandomAccessible< T >
 {
 	final protected RandomAccessible< T > source;
+
 	final protected int numDimensions;
 
 	/* in the hyperslice */
@@ -66,7 +67,7 @@ public class HyperSlice< T > implements RandomAccessible< T >
 	 */
 	private Interval sourceInterval( final Interval interval )
 	{
-		assert interval.numDimensions() == axes.length : "Interval dimensions do not match Hyperslice dimensions.";
+		assert interval.numDimensions() == axes.length: "Interval dimensions do not match Hyperslice dimensions.";
 
 		final long[] min = new long[ numDimensions ];
 		final long[] max = new long[ numDimensions ];
@@ -280,8 +281,8 @@ public class HyperSlice< T > implements RandomAccessible< T >
 				axes[ db++ ] = d;
 		}
 
-//		System.out.println( "axes       " + Arrays.toString( axes ) );
-//		System.out.println( "fixed axes " + Arrays.toString( sortedFixedAxes ) );
+		//		System.out.println( "axes       " + Arrays.toString( axes ) );
+		//		System.out.println( "fixed axes " + Arrays.toString( sortedFixedAxes ) );
 	}
 
 	@Override

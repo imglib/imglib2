@@ -52,7 +52,7 @@ import net.imglib2.type.numeric.RealType;
  * @author Grant Harris
  * @author Curtis Rueden
  */
-public class RealLUTConverter< R extends RealType< R >> extends
+public class RealLUTConverter< R extends RealType< R > > extends
 		AbstractLinearRange implements Converter< R, ARGBType >
 {
 

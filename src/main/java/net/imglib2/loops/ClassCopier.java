@@ -67,7 +67,8 @@ class ClassCopier< T >
 	public Class< ? extends T > copy()
 	{
 		@SuppressWarnings( "unchecked" )
-		final Class< ? extends T > copy = ( Class< ? extends T > ) new ClassCopyLoader( original.getClassLoader() ).bytesToClass( original.getName(), bytes );
+		final Class< ? extends T > copy =
+				( Class< ? extends T > ) new ClassCopyLoader( original.getClassLoader() ).bytesToClass( original.getName(), bytes );
 		return copy;
 	}
 

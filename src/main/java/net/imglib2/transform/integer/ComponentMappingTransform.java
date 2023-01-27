@@ -54,7 +54,8 @@ import net.imglib2.concatenate.PreConcatenable;
  * 
  * @author Tobias Pietzsch
  */
-public class ComponentMappingTransform extends AbstractMixedTransform implements ComponentMapping, Concatenable< ComponentMapping >, PreConcatenable< ComponentMapping >
+public class ComponentMappingTransform extends AbstractMixedTransform
+		implements ComponentMapping, Concatenable< ComponentMapping >, PreConcatenable< ComponentMapping >
 {
 	/**
 	 * for each component of the target vector: from which source vector

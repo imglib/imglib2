@@ -74,7 +74,8 @@ abstract public class AbstractFloatArray< A extends AbstractFloatArray< A > > im
 	}
 
 	@Override
-	public int getArrayLength() {
+	public int getArrayLength()
+	{
 		return data.length;
 	}
 }

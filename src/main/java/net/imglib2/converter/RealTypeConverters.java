@@ -77,7 +77,7 @@ public final class RealTypeConverters
 		RealType< ? > s = Util.getTypeFromInterval( sourceInterval );
 		RealType< ? > d = Util.getTypeFromInterval( destination );
 		Converter< RealType< ? >, RealType< ? > > copy = getConverter( s, d );
-		boolean useMultiThreading = Intervals.numElements(destination) >= 20_000;
+		boolean useMultiThreading = Intervals.numElements( destination ) >= 20_000;
 		LoopBuilder.setImages( sourceInterval, destination ).multiThreaded( useMultiThreading ).forEachPixel( copy::convert );
 	}
 

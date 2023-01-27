@@ -843,7 +843,8 @@ public class Partition
 	 *            ordering function on T
 	 * @return index of pivot element
 	 */
-	public static < T > int partitionSubList( int i, int j, final List< T > values, final int[] permutation, final Comparator< ? super T > compare )
+	public static < T > int partitionSubList( int i, int j, final List< T > values, final int[] permutation,
+			final Comparator< ? super T > compare )
 	{
 		final int pivotIndex = j;
 		final int permutationPivot = permutation[ j ];
@@ -1026,7 +1027,8 @@ public class Partition
 	 * @param compare
 	 *            ordering function on T
 	 */
-	public static < T > void partitionSubList( final ListIterator< T > i, final ListIterator< T > j, final int[] permutation, final Comparator< ? super T > compare )
+	public static < T > void partitionSubList( final ListIterator< T > i, final ListIterator< T > j, final int[] permutation,
+			final Comparator< ? super T > compare )
 	{
 		final int pivotIndex = j.previousIndex();
 		final int permutationPivot = permutation[ pivotIndex ];
@@ -1113,7 +1115,8 @@ public class Partition
 	 *            elements of this array are permuted in the same way as the
 	 *            elements in the values list
 	 */
-	public static < T extends Comparable< T > > void partitionSubList( final ListIterator< T > i, final ListIterator< T > j, final int[] permutation )
+	public static < T extends Comparable< T > > void partitionSubList( final ListIterator< T > i, final ListIterator< T > j,
+			final int[] permutation )
 	{
 		final int pivotIndex = j.previousIndex();
 		final int permutationPivot = permutation[ pivotIndex ];

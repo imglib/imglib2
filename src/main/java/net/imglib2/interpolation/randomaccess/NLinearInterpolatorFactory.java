@@ -57,8 +57,8 @@ public class NLinearInterpolatorFactory< T extends NumericType< T > > implements
 			return new NLinearInterpolator1D< T >( randomAccessible );
 		case 2:
 			return new NLinearInterpolator2D< T >( randomAccessible );
-//		case 3:
-//			return new NLinearInterpolator3D< T >( randomAccessible );
+		//		case 3:
+		//			return new NLinearInterpolator3D< T >( randomAccessible );
 		default:
 			return new NLinearInterpolator< T >( randomAccessible );
 		}

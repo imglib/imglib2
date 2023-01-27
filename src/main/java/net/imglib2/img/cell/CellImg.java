@@ -43,7 +43,8 @@ public class CellImg< T extends NativeType< T >, A extends DataAccess > extends 
 {
 	private final CellImgFactory< T > factory;
 
-	public CellImg( final CellImgFactory< T > factory, final CellGrid grid, final ListImg< Cell< A > > imgOfCells, final Fraction entitiesPerPixel )
+	public CellImg( final CellImgFactory< T > factory, final CellGrid grid, final ListImg< Cell< A > > imgOfCells,
+			final Fraction entitiesPerPixel )
 	{
 		super( grid, imgOfCells, entitiesPerPixel );
 		this.factory = factory;

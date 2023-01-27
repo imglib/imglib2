@@ -46,7 +46,8 @@ import net.imglib2.RealPositionable;
  *
  * @author Stephan Saalfeld
  */
-public abstract class AbstractPositionableTransform< LocalizablePositionable extends Localizable & Positionable > extends AbstractEuclideanSpace implements RealPositionable, RealLocalizable
+public abstract class AbstractPositionableTransform< LocalizablePositionable extends Localizable & Positionable >
+		extends AbstractEuclideanSpace implements RealPositionable, RealLocalizable
 {
 	final protected LocalizablePositionable target;
 

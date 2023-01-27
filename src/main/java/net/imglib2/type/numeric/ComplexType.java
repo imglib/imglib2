@@ -38,7 +38,7 @@ package net.imglib2.type.numeric;
  * TODO
  * 
  */
-public interface ComplexType< T extends ComplexType< T >> extends NumericType< T >
+public interface ComplexType< T extends ComplexType< T > > extends NumericType< T >
 {
 	double getRealDouble();
 

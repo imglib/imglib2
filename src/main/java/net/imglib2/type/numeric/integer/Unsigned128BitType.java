@@ -124,7 +124,8 @@ public class Unsigned128BitType extends AbstractIntegerType< Unsigned128BitType 
 		return new Unsigned128BitType( img );
 	}
 
-	private static final NativeTypeFactory< Unsigned128BitType, LongAccess > typeFactory = NativeTypeFactory.LONG( Unsigned128BitType::new );
+	private static final NativeTypeFactory< Unsigned128BitType, LongAccess > typeFactory =
+			NativeTypeFactory.LONG( Unsigned128BitType::new );
 
 	@Override
 	public NativeTypeFactory< Unsigned128BitType, LongAccess > getNativeTypeFactory()
@@ -216,7 +217,7 @@ public class Unsigned128BitType extends AbstractIntegerType< Unsigned128BitType 
 	@Override
 	public float getRealFloat()
 	{
-		return (float) getRealDouble();
+		return ( float ) getRealDouble();
 	}
 
 	@Override
@@ -254,7 +255,7 @@ public class Unsigned128BitType extends AbstractIntegerType< Unsigned128BitType 
 	@Override
 	public void setReal( float real )
 	{
-		setReal( (double) real );
+		setReal( ( double ) real );
 	}
 
 	@Override
@@ -262,10 +263,10 @@ public class Unsigned128BitType extends AbstractIntegerType< Unsigned128BitType 
 	{
 		real = Math.floor( real + 0.5 );
 		final double base = Math.pow( 2, 64 );
-		double upper = Math.floor(real / base );
+		double upper = Math.floor( real / base );
 		double lower = real - base * upper;
 		set( UnsignedLongType.doubleToUnsignedLong( lower ),
-				UnsignedLongType.doubleToUnsignedLong( upper ));
+				UnsignedLongType.doubleToUnsignedLong( upper ) );
 	}
 
 	/**

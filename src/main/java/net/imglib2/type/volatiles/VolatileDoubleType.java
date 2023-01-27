@@ -54,7 +54,7 @@ public class VolatileDoubleType extends AbstractVolatileNativeRealType< DoubleTy
 
 	private static class WrappedDoubleType extends DoubleType
 	{
-		public WrappedDoubleType( final NativeImg<?, ? extends DoubleAccess> img )
+		public WrappedDoubleType( final NativeImg< ?, ? extends DoubleAccess > img )
 		{
 			super( img );
 		}
@@ -106,7 +106,7 @@ public class VolatileDoubleType extends AbstractVolatileNativeRealType< DoubleTy
 	public void updateContainer( final Object c )
 	{
 		final VolatileDoubleAccess a = img.update( c );
-		( ( WrappedDoubleType )t ).setAccess( a );
+		( ( WrappedDoubleType ) t ).setAccess( a );
 		setValid( a.isValid() );
 	}
 
@@ -130,7 +130,8 @@ public class VolatileDoubleType extends AbstractVolatileNativeRealType< DoubleTy
 		return v;
 	}
 
-	private static final NativeTypeFactory< VolatileDoubleType, VolatileDoubleAccess > typeFactory = NativeTypeFactory.DOUBLE( VolatileDoubleType::new );
+	private static final NativeTypeFactory< VolatileDoubleType, VolatileDoubleAccess > typeFactory =
+			NativeTypeFactory.DOUBLE( VolatileDoubleType::new );
 
 	@Override
 	public NativeTypeFactory< VolatileDoubleType, ? > getNativeTypeFactory()

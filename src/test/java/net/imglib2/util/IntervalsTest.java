@@ -223,12 +223,12 @@ public class IntervalsTest
 		final Interval bIa = Intervals.intersect( b, a );
 		final Interval aIc = Intervals.intersect( a, c );
 
-		assertTrue( "self-intersection", Intervals.equals( a, aIa ));
-		assertTrue( "intersection order", Intervals.equals( bIa, aIb ));
-		assertEquals( "non-intersecting", 0, Intervals.numElements( aIc ));
+		assertTrue( "self-intersection", Intervals.equals( a, aIa ) );
+		assertTrue( "intersection order", Intervals.equals( bIa, aIb ) );
+		assertEquals( "non-intersecting", 0, Intervals.numElements( aIc ) );
 
-		assertFalse( "intersecting not empty", Intervals.isEmpty( aIb ));
-		assertTrue( "non-intersecting is empty", Intervals.isEmpty( aIc ));
+		assertFalse( "intersecting not empty", Intervals.isEmpty( aIb ) );
+		assertTrue( "non-intersecting is empty", Intervals.isEmpty( aIc ) );
 	}
 
 	@Test
@@ -239,7 +239,7 @@ public class IntervalsTest
 		final FinalInterval aUbTrue = FinalInterval.createMinMax( 1, 2, 4, 5 );
 
 		final FinalInterval aUa = Intervals.union( a, a );
-		assertTrue( "self-union", Intervals.equals( a, aUa ));
+		assertTrue( "self-union", Intervals.equals( a, aUa ) );
 
 		final FinalInterval aUb = Intervals.union( a, b );
 		final FinalInterval bUa = Intervals.union( a, b );
@@ -263,18 +263,18 @@ public class IntervalsTest
 		final FinalRealInterval aUbTrue = FinalRealInterval.createMinMax( 1.1, 2.2, 4.4, 5.5 );
 
 		final FinalRealInterval aUa = Intervals.union( a, a );
-		assertTrue( "self-union", Intervals.equals( a, aUa ));
+		assertTrue( "self-union", Intervals.equals( a, aUa ) );
 
 		final FinalRealInterval aUb = Intervals.union( a, b );
 		final FinalRealInterval bUa = Intervals.union( a, b );
-		assertTrue( "union", Intervals.equals( aUbTrue, aUb, eps) );
-		assertTrue( "union commutes", Intervals.equals( aUbTrue, bUa, eps) );
+		assertTrue( "union", Intervals.equals( aUbTrue, aUb, eps ) );
+		assertTrue( "union commutes", Intervals.equals( aUbTrue, bUa, eps ) );
 
 		final FinalRealInterval empty = FinalRealInterval.createMinMax( 0, 0, -1, -1 );
 		final FinalRealInterval aUempty = Intervals.union( a, empty );
-		assertTrue( "union with empty", Intervals.equals( a, aUempty, eps ));
+		assertTrue( "union with empty", Intervals.equals( a, aUempty, eps ) );
 
 		final FinalRealInterval emptyUempty = Intervals.union( empty, empty );
-		assertTrue( "empty union empty", Intervals.equals( empty, emptyUempty, eps ));
+		assertTrue( "empty union empty", Intervals.equals( empty, emptyUempty, eps ) );
 	}
 }

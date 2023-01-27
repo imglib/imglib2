@@ -74,7 +74,8 @@ abstract public class AbstractLongArray< A extends AbstractLongArray< A > > impl
 	}
 
 	@Override
-	public int getArrayLength() {
+	public int getArrayLength()
+	{
 		return data.length;
 	}
 }

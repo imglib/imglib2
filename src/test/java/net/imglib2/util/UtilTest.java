@@ -71,89 +71,91 @@ public class UtilTest
 	@Test
 	public void testPrintCoordinatesEmpty()
 	{
-	    final double[] doubleCoordinates = {};
-	    final int[] intCoordinates = {};
-	    final long[] longCoordinates = {};
-	    final float[] floatCoordinates = {};
-	    final boolean[] booleanCoordinates = {};
-	    final RealLocalizable rl = new RealPoint();
-	    String expected  = "(Array empty)";
-	    String rlExpected = "(RealLocalizable empty)";
+		final double[] doubleCoordinates = {};
+		final int[] intCoordinates = {};
+		final long[] longCoordinates = {};
+		final float[] floatCoordinates = {};
+		final boolean[] booleanCoordinates = {};
+		final RealLocalizable rl = new RealPoint();
+		String expected = "(Array empty)";
+		String rlExpected = "(RealLocalizable empty)";
 
-	    assertEquals(expected, Util.printCoordinates(doubleCoordinates));
-	    assertEquals(expected, Util.printCoordinates(intCoordinates));
-	    assertEquals(expected, Util.printCoordinates(longCoordinates));
-	    assertEquals(expected, Util.printCoordinates(floatCoordinates));
-	    assertEquals(expected, Util.printCoordinates(booleanCoordinates));
-	    assertEquals(rlExpected, Util.printCoordinates(rl));
+		assertEquals( expected, Util.printCoordinates( doubleCoordinates ) );
+		assertEquals( expected, Util.printCoordinates( intCoordinates ) );
+		assertEquals( expected, Util.printCoordinates( longCoordinates ) );
+		assertEquals( expected, Util.printCoordinates( floatCoordinates ) );
+		assertEquals( expected, Util.printCoordinates( booleanCoordinates ) );
+		assertEquals( rlExpected, Util.printCoordinates( rl ) );
 	}
 
 	@Test
 	public void testPrintCoordinatesNull()
 	{
-	    final double[] nullDouble = null;
-	    final int[] nullInt = null;
-	    final long[] nullLong = null;
-	    final float[] nullFloat = null;
-	    final boolean[] nullBoolean = null;
-	    final RealLocalizable nullRl = null;
-	    String expected  = "(Array empty)";
-	    String rlExpected = "(RealLocalizable empty)";
+		final double[] nullDouble = null;
+		final int[] nullInt = null;
+		final long[] nullLong = null;
+		final float[] nullFloat = null;
+		final boolean[] nullBoolean = null;
+		final RealLocalizable nullRl = null;
+		String expected = "(Array empty)";
+		String rlExpected = "(RealLocalizable empty)";
 
-	    assertEquals(expected, Util.printCoordinates(nullDouble));
-	    assertEquals(expected, Util.printCoordinates(nullInt));
-	    assertEquals(expected, Util.printCoordinates(nullLong));
-	    assertEquals(expected, Util.printCoordinates(nullFloat));
-	    assertEquals(expected, Util.printCoordinates(nullBoolean));
-	    assertEquals(rlExpected, Util.printCoordinates(nullRl));
+		assertEquals( expected, Util.printCoordinates( nullDouble ) );
+		assertEquals( expected, Util.printCoordinates( nullInt ) );
+		assertEquals( expected, Util.printCoordinates( nullLong ) );
+		assertEquals( expected, Util.printCoordinates( nullFloat ) );
+		assertEquals( expected, Util.printCoordinates( nullBoolean ) );
+		assertEquals( rlExpected, Util.printCoordinates( nullRl ) );
 
 	}
 
 	@Test
 	public void testPrintCoordinatesOneElem()
 	{
-	    final double[] oneElemDouble = {1};
-	    final int[] oneElemInt = {1};
-	    final long[] oneElemLong = {1};
-	    final boolean[] oneElemBoolean = {true};
-	    final RealLocalizable oneElemRl = new RealPoint(oneElemDouble);
-	    String expected  = "(1)";
-	    String expectedDouble  = "(1.0)";
+		final double[] oneElemDouble = { 1 };
+		final int[] oneElemInt = { 1 };
+		final long[] oneElemLong = { 1 };
+		final boolean[] oneElemBoolean = { true };
+		final RealLocalizable oneElemRl = new RealPoint( oneElemDouble );
+		String expected = "(1)";
+		String expectedDouble = "(1.0)";
 
-	    assertEquals(expectedDouble, Util.printCoordinates(oneElemDouble));
-	    assertEquals(expected, Util.printCoordinates(oneElemInt));
-	    assertEquals(expected, Util.printCoordinates(oneElemLong));
-	    assertEquals(expected, Util.printCoordinates(oneElemBoolean));
-	    assertEquals(expectedDouble, Util.printCoordinates(oneElemRl));
+		assertEquals( expectedDouble, Util.printCoordinates( oneElemDouble ) );
+		assertEquals( expected, Util.printCoordinates( oneElemInt ) );
+		assertEquals( expected, Util.printCoordinates( oneElemLong ) );
+		assertEquals( expected, Util.printCoordinates( oneElemBoolean ) );
+		assertEquals( expectedDouble, Util.printCoordinates( oneElemRl ) );
 
 	}
 
 	@Test
 	public void testPrintCoordinatesManyElems()
 	{
-	    final double[] doubleData = {1,5,7};
-	    final int[] intData = {1,5,7};
-	    final long[] longData = {1,5,7};
-	    final boolean[] booleanData = {true, false, true};
-	    final RealLocalizable rlData = new RealPoint(doubleData);
-	    String expected  = "(1, 5, 7)";
-	    String expectedDouble  = "(1.0, 5.0, 7.0)";
-	    String expectedBoolean  = "(1, 0, 1)";
+		final double[] doubleData = { 1, 5, 7 };
+		final int[] intData = { 1, 5, 7 };
+		final long[] longData = { 1, 5, 7 };
+		final boolean[] booleanData = { true, false, true };
+		final RealLocalizable rlData = new RealPoint( doubleData );
+		String expected = "(1, 5, 7)";
+		String expectedDouble = "(1.0, 5.0, 7.0)";
+		String expectedBoolean = "(1, 0, 1)";
 
-	    assertEquals(expectedDouble, Util.printCoordinates(doubleData));
-	    assertEquals(expected, Util.printCoordinates(intData));
-	    assertEquals(expected, Util.printCoordinates(longData));
-	    assertEquals(expectedBoolean, Util.printCoordinates(booleanData));
-	    assertEquals(expectedDouble, Util.printCoordinates(rlData));
+		assertEquals( expectedDouble, Util.printCoordinates( doubleData ) );
+		assertEquals( expected, Util.printCoordinates( intData ) );
+		assertEquals( expected, Util.printCoordinates( longData ) );
+		assertEquals( expectedBoolean, Util.printCoordinates( booleanData ) );
+		assertEquals( expectedDouble, Util.printCoordinates( rlData ) );
 
 	}
 
 	@Test
-	public void testGetSuitableImgFactory() {
+	public void testGetSuitableImgFactory()
+	{
 		final ImgFactory< BitType > smallBitFactory = Util.getSuitableImgFactory( new FinalInterval( 10, 10 ), new BitType() );
 		assertTrue( smallBitFactory instanceof ArrayImgFactory );
 
-		final ImgFactory< BitType > largeBitFactory = Util.getSuitableImgFactory( new FinalInterval( 1_000_000_000, 1_000_000_000 ), new BitType() );
+		final ImgFactory< BitType > largeBitFactory =
+				Util.getSuitableImgFactory( new FinalInterval( 1_000_000_000, 1_000_000_000 ), new BitType() );
 		assertTrue( largeBitFactory instanceof CellImgFactory );
 
 		final ImgFactory< BoolType > boolFactory = Util.getSuitableImgFactory( new FinalInterval( 10, 10 ), new BoolType() );
@@ -161,20 +163,22 @@ public class UtilTest
 	}
 
 	@Test
-	public void testImagesEqual() {
-		assertTrue( Util.imagesEqual( intsImage(1,2,3), intsImage(1,2,3) ) );
-		assertFalse( Util.imagesEqual( intsImage(1), intsImage(1,2,3) ) );
-		assertFalse( Util.imagesEqual( intsImage(1,2,3), intsImage(1,4,3) ) );
-		assertTrue( Util.imagesEqual( doublesImage(1,2,3), doublesImage(1,2,3) ) );
-		assertFalse( Util.imagesEqual( doublesImage(1,2,3), doublesImage(1,4,3) ) );
+	public void testImagesEqual()
+	{
+		assertTrue( Util.imagesEqual( intsImage( 1, 2, 3 ), intsImage( 1, 2, 3 ) ) );
+		assertFalse( Util.imagesEqual( intsImage( 1 ), intsImage( 1, 2, 3 ) ) );
+		assertFalse( Util.imagesEqual( intsImage( 1, 2, 3 ), intsImage( 1, 4, 3 ) ) );
+		assertTrue( Util.imagesEqual( doublesImage( 1, 2, 3 ), doublesImage( 1, 2, 3 ) ) );
+		assertFalse( Util.imagesEqual( doublesImage( 1, 2, 3 ), doublesImage( 1, 4, 3 ) ) );
 	}
 
 	@Test
-	public void testImagesEqualWithPredicate() {
-		BiPredicate< RealType<?>, RealType<?> > predicate = ( a, b ) -> a.getRealDouble() == b.getRealDouble();
-		assertTrue( Util.imagesEqual( intsImage(1,2,3), doublesImage(1,2,3), predicate ) );
-		assertFalse( Util.imagesEqual( intsImage(1), doublesImage(1,2,3), predicate ) );
-		assertFalse( Util.imagesEqual( intsImage(1,2,3), doublesImage(1,4,3), predicate ) );
+	public void testImagesEqualWithPredicate()
+	{
+		BiPredicate< RealType< ? >, RealType< ? > > predicate = ( a, b ) -> a.getRealDouble() == b.getRealDouble();
+		assertTrue( Util.imagesEqual( intsImage( 1, 2, 3 ), doublesImage( 1, 2, 3 ), predicate ) );
+		assertFalse( Util.imagesEqual( intsImage( 1 ), doublesImage( 1, 2, 3 ), predicate ) );
+		assertFalse( Util.imagesEqual( intsImage( 1, 2, 3 ), doublesImage( 1, 4, 3 ), predicate ) );
 	}
 
 	private Img< IntType > intsImage( int... pixels )
@@ -182,7 +186,7 @@ public class UtilTest
 		return ArrayImgs.ints( pixels, pixels.length );
 	}
 
-	private Img<DoubleType > doublesImage( double... pixels )
+	private Img< DoubleType > doublesImage( double... pixels )
 	{
 		return ArrayImgs.doubles( pixels, pixels.length );
 	}
@@ -259,7 +263,8 @@ public class UtilTest
 	}
 
 	@Test
-	public void testGetArrayOrCellImgFactoryWithEntitiesPerPixelLessThanOne() {
+	public void testGetArrayOrCellImgFactoryWithEntitiesPerPixelLessThanOne()
+	{
 		// NB: An ArrayImg internally uses a LongAccess to store the image content.
 		// The JVM allows to create a LongAccess of a required size. But an ArrayImg
 		// must not be used with a size greater than Integer.MAX_VALUE, as some

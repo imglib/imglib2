@@ -55,10 +55,11 @@ import org.junit.Test;
  * @author Stephan Preibisch
  * @author Tobias Pietzsch
  */
-public class BitTypeTest {
+public class BitTypeTest
+{
 
 	static ArrayImg< BitType, LongArray > img;
-	
+
 	/**
 	 * @throws java.lang.Exception
 	 */
@@ -91,7 +92,7 @@ public class BitTypeTest {
 		for ( final BitType t : img )
 			assertTrue( !t.get() );
 	}
-	
+
 	/**
 	 * Test method for {@link net.imglib2.type.logic.BitType#setOne()}.
 	 */
@@ -113,9 +114,10 @@ public class BitTypeTest {
 	 * representation of a BitType.
 	 */
 	@Test
-	public void testGetBigInteger() {
+	public void testGetBigInteger()
+	{
 
-		final BitType l = new BitType(false);
+		final BitType l = new BitType( false );
 
 		assertEquals( BigInteger.ZERO, l.getBigInteger() );
 	}
@@ -125,7 +127,8 @@ public class BitTypeTest {
 	 * returned is within BitType range.
 	 */
 	@Test
-	public void testSetBigInteger() {
+	public void testSetBigInteger()
+	{
 
 		final BitType ul = new BitType( false );
 
@@ -137,308 +140,308 @@ public class BitTypeTest {
 		assertEquals( ul.get(), true );
 	}
 
-//	/**
-//	 * Test method for {@link net.imglib2.type.logic.BitType#toString()}.
-//	 */
-//	@Test
-//	public void testToString() {
-//		fail("Not yet implemented");
-//	}
-//
-//	/**
-//	 * Test method for {@link net.imglib2.type.logic.BitType#inc()}.
-//	 */
-//	@Test
-//	public void testInc() {
-//		fail("Not yet implemented");
-//	}
-//
-//	/**
-//	 * Test method for {@link net.imglib2.type.logic.BitType#dec()}.
-//	 */
-//	@Test
-//	public void testDec() {
-//		fail("Not yet implemented");
-//	}
-//
-//	/**
-//	 * Test method for {@link net.imglib2.type.logic.BitType#BitType(net.imglib2.img.NativeImg)}.
-//	 */
-//	@Test
-//	public void testBitTypeNativeImgOfBitTypeQextendsLongAccess() {
-//		fail("Not yet implemented");
-//	}
-//
-//	/**
-//	 * Test method for {@link net.imglib2.type.logic.BitType#BitType(boolean)}.
-//	 */
-//	@Test
-//	public void testBitTypeBoolean() {
-//		fail("Not yet implemented");
-//	}
-//
-//	/**
-//	 * Test method for {@link net.imglib2.type.logic.BitType#BitType(net.imglib2.img.basictypeaccess.LongAccess)}.
-//	 */
-//	@Test
-//	public void testBitTypeLongAccess() {
-//		fail("Not yet implemented");
-//	}
-//
-//	/**
-//	 * Test method for {@link net.imglib2.type.logic.BitType#BitType()}.
-//	 */
-//	@Test
-//	public void testBitType() {
-//		fail("Not yet implemented");
-//	}
-//
-//	/**
-//	 * Test method for {@link net.imglib2.type.logic.BitType#createSuitableNativeImg(net.imglib2.img.NativeImgFactory, long[])}.
-//	 */
-//	@Test
-//	public void testCreateSuitableNativeImg() {
-//		fail("Not yet implemented");
-//	}
-//
-//	/**
-//	 * Test method for {@link net.imglib2.type.logic.BitType#updateContainer(java.lang.Object)}.
-//	 */
-//	@Test
-//	public void testUpdateContainer() {
-//		fail("Not yet implemented");
-//	}
-//
-//	/**
-//	 * Test method for {@link net.imglib2.type.logic.BitType#duplicateTypeOnSameNativeImg()}.
-//	 */
-//	@Test
-//	public void testDuplicateTypeOnSameNativeImg() {
-//		fail("Not yet implemented");
-//	}
-//
-//	/**
-//	 * Test method for {@link net.imglib2.type.logic.BitType#get()}.
-//	 */
-//	@Test
-//	public void testGet() {
-//		fail("Not yet implemented");
-//	}
-//
-//	/**
-//	 * Test method for {@link net.imglib2.type.logic.BitType#set(boolean)}.
-//	 */
-//	@Test
-//	public void testSetBoolean() {
-//		fail("Not yet implemented");
-//	}
-//
-//	/**
-//	 * Test method for {@link net.imglib2.type.logic.BitType#getInteger()}.
-//	 */
-//	@Test
-//	public void testGetInteger() {
-//		fail("Not yet implemented");
-//	}
-//
-//	/**
-//	 * Test method for {@link net.imglib2.type.logic.BitType#getIntegerLong()}.
-//	 */
-//	@Test
-//	public void testGetIntegerLong() {
-//		fail("Not yet implemented");
-//	}
-//
-//	/**
-//	 * Test method for {@link net.imglib2.type.logic.BitType#setInteger(int)}.
-//	 */
-//	@Test
-//	public void testSetIntegerInt() {
-//		fail("Not yet implemented");
-//	}
-//
-//	/**
-//	 * Test method for {@link net.imglib2.type.logic.BitType#setInteger(long)}.
-//	 */
-//	@Test
-//	public void testSetIntegerLong() {
-//		fail("Not yet implemented");
-//	}
-//
-//	/**
-//	 * Test method for {@link net.imglib2.type.logic.BitType#getMaxValue()}.
-//	 */
-//	@Test
-//	public void testGetMaxValue() {
-//		fail("Not yet implemented");
-//	}
-//
-//	/**
-//	 * Test method for {@link net.imglib2.type.logic.BitType#getMinValue()}.
-//	 */
-//	@Test
-//	public void testGetMinValue() {
-//		fail("Not yet implemented");
-//	}
-//
-//	/**
-//	 * Test method for {@link net.imglib2.type.logic.BitType#set(net.imglib2.type.logic.BitType)}.
-//	 */
-//	@Test
-//	public void testSetBitType() {
-//		fail("Not yet implemented");
-//	}
-//
-//	/**
-//	 * Test method for {@link net.imglib2.type.logic.BitType#and(net.imglib2.type.logic.BitType)}.
-//	 */
-//	@Test
-//	public void testAnd() {
-//		fail("Not yet implemented");
-//	}
-//
-//	/**
-//	 * Test method for {@link net.imglib2.type.logic.BitType#or(net.imglib2.type.logic.BitType)}.
-//	 */
-//	@Test
-//	public void testOr() {
-//		fail("Not yet implemented");
-//	}
-//
-//	/**
-//	 * Test method for {@link net.imglib2.type.logic.BitType#xor(net.imglib2.type.logic.BitType)}.
-//	 */
-//	@Test
-//	public void testXor() {
-//		fail("Not yet implemented");
-//	}
-//
-//	/**
-//	 * Test method for {@link net.imglib2.type.logic.BitType#not()}.
-//	 */
-//	@Test
-//	public void testNot() {
-//		fail("Not yet implemented");
-//	}
-//
-//	/**
-//	 * Test method for {@link net.imglib2.type.logic.BitType#add(net.imglib2.type.logic.BitType)}.
-//	 */
-//	@Test
-//	public void testAddBitType() {
-//		fail("Not yet implemented");
-//	}
-//
-//	/**
-//	 * Test method for {@link net.imglib2.type.logic.BitType#div(net.imglib2.type.logic.BitType)}.
-//	 */
-//	@Test
-//	public void testDivBitType() {
-//		fail("Not yet implemented");
-//	}
-//
-//	/**
-//	 * Test method for {@link net.imglib2.type.logic.BitType#mul(net.imglib2.type.logic.BitType)}.
-//	 */
-//	@Test
-//	public void testMulBitType() {
-//		fail("Not yet implemented");
-//	}
-//
-//	/**
-//	 * Test method for {@link net.imglib2.type.logic.BitType#sub(net.imglib2.type.logic.BitType)}.
-//	 */
-//	@Test
-//	public void testSubBitType() {
-//		fail("Not yet implemented");
-//	}
-//
-//	/**
-//	 * Test method for {@link net.imglib2.type.logic.BitType#compareTo(net.imglib2.type.logic.BitType)}.
-//	 */
-//	@Test
-//	public void testCompareToBitType() {
-//		fail("Not yet implemented");
-//	}
-//
-//	/**
-//	 * Test method for {@link net.imglib2.type.logic.BitType#createVariable()}.
-//	 */
-//	@Test
-//	public void testCreateVariable() {
-//		fail("Not yet implemented");
-//	}
-//
-//	/**
-//	 * Test method for {@link net.imglib2.type.logic.BitType#copy()}.
-//	 */
-//	@Test
-//	public void testCopy() {
-//		fail("Not yet implemented");
-//	}
-//
-//	/**
-//	 * Test method for {@link net.imglib2.type.logic.BitType#getEntitiesPerPixel()}.
-//	 */
-//	@Test
-//	public void testGetEntitiesPerPixel() {
-//		fail("Not yet implemented");
-//	}
-//
-//	/**
-//	 * Test method for {@link net.imglib2.type.logic.BitType#updateIndex(int)}.
-//	 */
-//	@Test
-//	public void testUpdateIndex() {
-//		fail("Not yet implemented");
-//	}
-//
-//	/**
-//	 * Test method for {@link net.imglib2.type.logic.BitType#getIndex()}.
-//	 */
-//	@Test
-//	public void testGetIndex() {
-//		fail("Not yet implemented");
-//	}
-//
-//	/**
-//	 * Test method for {@link net.imglib2.type.logic.BitType#incIndex()}.
-//	 */
-//	@Test
-//	public void testIncIndex() {
-//		fail("Not yet implemented");
-//	}
-//
-//	/**
-//	 * Test method for {@link net.imglib2.type.logic.BitType#incIndex(int)}.
-//	 */
-//	@Test
-//	public void testIncIndexInt() {
-//		fail("Not yet implemented");
-//	}
-//
-//	/**
-//	 * Test method for {@link net.imglib2.type.logic.BitType#decIndex()}.
-//	 */
-//	@Test
-//	public void testDecIndex() {
-//		fail("Not yet implemented");
-//	}
-//
-//	/**
-//	 * Test method for {@link net.imglib2.type.logic.BitType#decIndex(int)}.
-//	 */
-//	@Test
-//	public void testDecIndexInt() {
-//		fail("Not yet implemented");
-//	}
-//
-//	/**
-//	 * Test method for {@link net.imglib2.type.logic.BitType#getBitsPerPixel()}.
-//	 */
-//	@Test
-//	public void testGetBitsPerPixel() {
-//		fail("Not yet implemented");
-//	}
+	//	/**
+	//	 * Test method for {@link net.imglib2.type.logic.BitType#toString()}.
+	//	 */
+	//	@Test
+	//	public void testToString() {
+	//		fail("Not yet implemented");
+	//	}
+	//
+	//	/**
+	//	 * Test method for {@link net.imglib2.type.logic.BitType#inc()}.
+	//	 */
+	//	@Test
+	//	public void testInc() {
+	//		fail("Not yet implemented");
+	//	}
+	//
+	//	/**
+	//	 * Test method for {@link net.imglib2.type.logic.BitType#dec()}.
+	//	 */
+	//	@Test
+	//	public void testDec() {
+	//		fail("Not yet implemented");
+	//	}
+	//
+	//	/**
+	//	 * Test method for {@link net.imglib2.type.logic.BitType#BitType(net.imglib2.img.NativeImg)}.
+	//	 */
+	//	@Test
+	//	public void testBitTypeNativeImgOfBitTypeQextendsLongAccess() {
+	//		fail("Not yet implemented");
+	//	}
+	//
+	//	/**
+	//	 * Test method for {@link net.imglib2.type.logic.BitType#BitType(boolean)}.
+	//	 */
+	//	@Test
+	//	public void testBitTypeBoolean() {
+	//		fail("Not yet implemented");
+	//	}
+	//
+	//	/**
+	//	 * Test method for {@link net.imglib2.type.logic.BitType#BitType(net.imglib2.img.basictypeaccess.LongAccess)}.
+	//	 */
+	//	@Test
+	//	public void testBitTypeLongAccess() {
+	//		fail("Not yet implemented");
+	//	}
+	//
+	//	/**
+	//	 * Test method for {@link net.imglib2.type.logic.BitType#BitType()}.
+	//	 */
+	//	@Test
+	//	public void testBitType() {
+	//		fail("Not yet implemented");
+	//	}
+	//
+	//	/**
+	//	 * Test method for {@link net.imglib2.type.logic.BitType#createSuitableNativeImg(net.imglib2.img.NativeImgFactory, long[])}.
+	//	 */
+	//	@Test
+	//	public void testCreateSuitableNativeImg() {
+	//		fail("Not yet implemented");
+	//	}
+	//
+	//	/**
+	//	 * Test method for {@link net.imglib2.type.logic.BitType#updateContainer(java.lang.Object)}.
+	//	 */
+	//	@Test
+	//	public void testUpdateContainer() {
+	//		fail("Not yet implemented");
+	//	}
+	//
+	//	/**
+	//	 * Test method for {@link net.imglib2.type.logic.BitType#duplicateTypeOnSameNativeImg()}.
+	//	 */
+	//	@Test
+	//	public void testDuplicateTypeOnSameNativeImg() {
+	//		fail("Not yet implemented");
+	//	}
+	//
+	//	/**
+	//	 * Test method for {@link net.imglib2.type.logic.BitType#get()}.
+	//	 */
+	//	@Test
+	//	public void testGet() {
+	//		fail("Not yet implemented");
+	//	}
+	//
+	//	/**
+	//	 * Test method for {@link net.imglib2.type.logic.BitType#set(boolean)}.
+	//	 */
+	//	@Test
+	//	public void testSetBoolean() {
+	//		fail("Not yet implemented");
+	//	}
+	//
+	//	/**
+	//	 * Test method for {@link net.imglib2.type.logic.BitType#getInteger()}.
+	//	 */
+	//	@Test
+	//	public void testGetInteger() {
+	//		fail("Not yet implemented");
+	//	}
+	//
+	//	/**
+	//	 * Test method for {@link net.imglib2.type.logic.BitType#getIntegerLong()}.
+	//	 */
+	//	@Test
+	//	public void testGetIntegerLong() {
+	//		fail("Not yet implemented");
+	//	}
+	//
+	//	/**
+	//	 * Test method for {@link net.imglib2.type.logic.BitType#setInteger(int)}.
+	//	 */
+	//	@Test
+	//	public void testSetIntegerInt() {
+	//		fail("Not yet implemented");
+	//	}
+	//
+	//	/**
+	//	 * Test method for {@link net.imglib2.type.logic.BitType#setInteger(long)}.
+	//	 */
+	//	@Test
+	//	public void testSetIntegerLong() {
+	//		fail("Not yet implemented");
+	//	}
+	//
+	//	/**
+	//	 * Test method for {@link net.imglib2.type.logic.BitType#getMaxValue()}.
+	//	 */
+	//	@Test
+	//	public void testGetMaxValue() {
+	//		fail("Not yet implemented");
+	//	}
+	//
+	//	/**
+	//	 * Test method for {@link net.imglib2.type.logic.BitType#getMinValue()}.
+	//	 */
+	//	@Test
+	//	public void testGetMinValue() {
+	//		fail("Not yet implemented");
+	//	}
+	//
+	//	/**
+	//	 * Test method for {@link net.imglib2.type.logic.BitType#set(net.imglib2.type.logic.BitType)}.
+	//	 */
+	//	@Test
+	//	public void testSetBitType() {
+	//		fail("Not yet implemented");
+	//	}
+	//
+	//	/**
+	//	 * Test method for {@link net.imglib2.type.logic.BitType#and(net.imglib2.type.logic.BitType)}.
+	//	 */
+	//	@Test
+	//	public void testAnd() {
+	//		fail("Not yet implemented");
+	//	}
+	//
+	//	/**
+	//	 * Test method for {@link net.imglib2.type.logic.BitType#or(net.imglib2.type.logic.BitType)}.
+	//	 */
+	//	@Test
+	//	public void testOr() {
+	//		fail("Not yet implemented");
+	//	}
+	//
+	//	/**
+	//	 * Test method for {@link net.imglib2.type.logic.BitType#xor(net.imglib2.type.logic.BitType)}.
+	//	 */
+	//	@Test
+	//	public void testXor() {
+	//		fail("Not yet implemented");
+	//	}
+	//
+	//	/**
+	//	 * Test method for {@link net.imglib2.type.logic.BitType#not()}.
+	//	 */
+	//	@Test
+	//	public void testNot() {
+	//		fail("Not yet implemented");
+	//	}
+	//
+	//	/**
+	//	 * Test method for {@link net.imglib2.type.logic.BitType#add(net.imglib2.type.logic.BitType)}.
+	//	 */
+	//	@Test
+	//	public void testAddBitType() {
+	//		fail("Not yet implemented");
+	//	}
+	//
+	//	/**
+	//	 * Test method for {@link net.imglib2.type.logic.BitType#div(net.imglib2.type.logic.BitType)}.
+	//	 */
+	//	@Test
+	//	public void testDivBitType() {
+	//		fail("Not yet implemented");
+	//	}
+	//
+	//	/**
+	//	 * Test method for {@link net.imglib2.type.logic.BitType#mul(net.imglib2.type.logic.BitType)}.
+	//	 */
+	//	@Test
+	//	public void testMulBitType() {
+	//		fail("Not yet implemented");
+	//	}
+	//
+	//	/**
+	//	 * Test method for {@link net.imglib2.type.logic.BitType#sub(net.imglib2.type.logic.BitType)}.
+	//	 */
+	//	@Test
+	//	public void testSubBitType() {
+	//		fail("Not yet implemented");
+	//	}
+	//
+	//	/**
+	//	 * Test method for {@link net.imglib2.type.logic.BitType#compareTo(net.imglib2.type.logic.BitType)}.
+	//	 */
+	//	@Test
+	//	public void testCompareToBitType() {
+	//		fail("Not yet implemented");
+	//	}
+	//
+	//	/**
+	//	 * Test method for {@link net.imglib2.type.logic.BitType#createVariable()}.
+	//	 */
+	//	@Test
+	//	public void testCreateVariable() {
+	//		fail("Not yet implemented");
+	//	}
+	//
+	//	/**
+	//	 * Test method for {@link net.imglib2.type.logic.BitType#copy()}.
+	//	 */
+	//	@Test
+	//	public void testCopy() {
+	//		fail("Not yet implemented");
+	//	}
+	//
+	//	/**
+	//	 * Test method for {@link net.imglib2.type.logic.BitType#getEntitiesPerPixel()}.
+	//	 */
+	//	@Test
+	//	public void testGetEntitiesPerPixel() {
+	//		fail("Not yet implemented");
+	//	}
+	//
+	//	/**
+	//	 * Test method for {@link net.imglib2.type.logic.BitType#updateIndex(int)}.
+	//	 */
+	//	@Test
+	//	public void testUpdateIndex() {
+	//		fail("Not yet implemented");
+	//	}
+	//
+	//	/**
+	//	 * Test method for {@link net.imglib2.type.logic.BitType#getIndex()}.
+	//	 */
+	//	@Test
+	//	public void testGetIndex() {
+	//		fail("Not yet implemented");
+	//	}
+	//
+	//	/**
+	//	 * Test method for {@link net.imglib2.type.logic.BitType#incIndex()}.
+	//	 */
+	//	@Test
+	//	public void testIncIndex() {
+	//		fail("Not yet implemented");
+	//	}
+	//
+	//	/**
+	//	 * Test method for {@link net.imglib2.type.logic.BitType#incIndex(int)}.
+	//	 */
+	//	@Test
+	//	public void testIncIndexInt() {
+	//		fail("Not yet implemented");
+	//	}
+	//
+	//	/**
+	//	 * Test method for {@link net.imglib2.type.logic.BitType#decIndex()}.
+	//	 */
+	//	@Test
+	//	public void testDecIndex() {
+	//		fail("Not yet implemented");
+	//	}
+	//
+	//	/**
+	//	 * Test method for {@link net.imglib2.type.logic.BitType#decIndex(int)}.
+	//	 */
+	//	@Test
+	//	public void testDecIndexInt() {
+	//		fail("Not yet implemented");
+	//	}
+	//
+	//	/**
+	//	 * Test method for {@link net.imglib2.type.logic.BitType#getBitsPerPixel()}.
+	//	 */
+	//	@Test
+	//	public void testGetBitsPerPixel() {
+	//		fail("Not yet implemented");
+	//	}
 
 }

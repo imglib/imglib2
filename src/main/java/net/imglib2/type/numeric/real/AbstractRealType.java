@@ -41,7 +41,7 @@ import net.imglib2.type.numeric.complex.AbstractComplexType;
  * TODO
  * 
  */
-public abstract class AbstractRealType< T extends AbstractRealType< T >> extends AbstractComplexType< T > implements RealType< T >
+public abstract class AbstractRealType< T extends AbstractRealType< T > > extends AbstractComplexType< T > implements RealType< T >
 {
 	@Override
 	public float getImaginaryFloat()
@@ -116,13 +116,13 @@ public abstract class AbstractRealType< T extends AbstractRealType< T >> extends
 	{
 		setReal( getRealDouble() - c.getRealDouble() );
 	}
-	
+
 	@Override
 	public void pow( final T c )
 	{
 		setReal( Math.pow( getRealDouble(), c.getRealDouble() ) );
 	}
-	
+
 	@Override
 	public void pow( final double power )
 	{
@@ -158,8 +158,8 @@ public abstract class AbstractRealType< T extends AbstractRealType< T >> extends
 	{
 		if ( !getClass().isInstance( obj ) )
 			return false;
-		@SuppressWarnings("unchecked")
-		final T t = (T) obj;
+		@SuppressWarnings( "unchecked" )
+		final T t = ( T ) obj;
 		return AbstractRealType.this.valueEquals( t );
 	}
 

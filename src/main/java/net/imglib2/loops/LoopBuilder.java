@@ -112,7 +112,8 @@ public class LoopBuilder< T >
 	/**
 	 * @see LoopBuilder
 	 */
-	public static < A, B > LoopBuilder< BiConsumer< A, B > > setImages( final RandomAccessibleInterval< A > a, final RandomAccessibleInterval< B > b )
+	public static < A, B > LoopBuilder< BiConsumer< A, B > > setImages( final RandomAccessibleInterval< A > a,
+			final RandomAccessibleInterval< B > b )
 	{
 		return new LoopBuilder<>( a, b );
 	}
@@ -120,7 +121,8 @@ public class LoopBuilder< T >
 	/**
 	 * @see LoopBuilder
 	 */
-	public static < A, B, C > LoopBuilder< TriConsumer< A, B, C > > setImages( final RandomAccessibleInterval< A > a, final RandomAccessibleInterval< B > b, final RandomAccessibleInterval< C > c )
+	public static < A, B, C > LoopBuilder< TriConsumer< A, B, C > > setImages( final RandomAccessibleInterval< A > a,
+			final RandomAccessibleInterval< B > b, final RandomAccessibleInterval< C > c )
 	{
 		return new LoopBuilder<>( a, b, c );
 	}
@@ -128,7 +130,8 @@ public class LoopBuilder< T >
 	/**
 	 * @see LoopBuilder
 	 */
-	public static < A, B, C, D > LoopBuilder< FourConsumer< A, B, C, D > > setImages( final RandomAccessibleInterval< A > a, final RandomAccessibleInterval< B > b, final RandomAccessibleInterval< C > c, final RandomAccessibleInterval< D > d )
+	public static < A, B, C, D > LoopBuilder< FourConsumer< A, B, C, D > > setImages( final RandomAccessibleInterval< A > a,
+			final RandomAccessibleInterval< B > b, final RandomAccessibleInterval< C > c, final RandomAccessibleInterval< D > d )
 	{
 		return new LoopBuilder<>( a, b, c, d );
 	}
@@ -136,7 +139,9 @@ public class LoopBuilder< T >
 	/**
 	 * @see LoopBuilder
 	 */
-	public static < A, B, C, D, E > LoopBuilder< FiveConsumer< A, B, C, D, E > > setImages( final RandomAccessibleInterval< A > a, final RandomAccessibleInterval< B > b, final RandomAccessibleInterval< C > c, final RandomAccessibleInterval< D > d, final RandomAccessibleInterval< E > e )
+	public static < A, B, C, D, E > LoopBuilder< FiveConsumer< A, B, C, D, E > > setImages( final RandomAccessibleInterval< A > a,
+			final RandomAccessibleInterval< B > b, final RandomAccessibleInterval< C > c, final RandomAccessibleInterval< D > d,
+			final RandomAccessibleInterval< E > e )
 	{
 		return new LoopBuilder<>( a, b, c, d, e );
 	}
@@ -144,7 +149,9 @@ public class LoopBuilder< T >
 	/**
 	 * @see LoopBuilder
 	 */
-	public static < A, B, C, D, E, F > LoopBuilder< SixConsumer< A, B, C, D, E, F > > setImages( final RandomAccessibleInterval< A > a, final RandomAccessibleInterval< B > b, final RandomAccessibleInterval< C > c, final RandomAccessibleInterval< D > d, final RandomAccessibleInterval< E > e, final RandomAccessibleInterval< F > f )
+	public static < A, B, C, D, E, F > LoopBuilder< SixConsumer< A, B, C, D, E, F > > setImages( final RandomAccessibleInterval< A > a,
+			final RandomAccessibleInterval< B > b, final RandomAccessibleInterval< C > c, final RandomAccessibleInterval< D > d,
+			final RandomAccessibleInterval< E > e, final RandomAccessibleInterval< F > f )
 	{
 		return new LoopBuilder<>( a, b, c, d, e, f );
 	}
@@ -356,7 +363,8 @@ public class LoopBuilder< T >
 		return taskExecutor.forEachApply( chunks, chunk -> runOnChunkUsingRandomAccesses( images, chunkAction, chunk ) );
 	}
 
-	static < T, R > R runOnChunkUsingRandomAccesses( RandomAccessibleInterval[] images, Function< Chunk< T >, R > chunkAction, Interval subInterval )
+	static < T, R > R runOnChunkUsingRandomAccesses( RandomAccessibleInterval[] images, Function< Chunk< T >, R > chunkAction,
+			Interval subInterval )
 	{
 		final List< RandomAccess< ? > > samplers = ListUtils.map( LoopBuilder::initRandomAccess, images );
 		final Positionable synced = SyncedPositionables.create( samplers );
@@ -377,9 +385,7 @@ public class LoopBuilder< T >
 
 	private List< IterableInterval< ? > > imagesAsIterableIntervals()
 	{
-		return useFlatIterationOrder ?
-				flatIterableIntervals() :
-				equalIterationOrderIterableIntervals();
+		return useFlatIterationOrder ? flatIterableIntervals() : equalIterationOrderIterableIntervals();
 	}
 
 	private < R > List< R > runUsingCursors( List< IterableInterval< ? > > iterableIntervals, Function< Chunk< T >, R > chunkAction )
@@ -387,11 +393,12 @@ public class LoopBuilder< T >
 		int nTasks = taskExecutor.suggestNumberOfTasks();
 		final FinalInterval indices = new FinalInterval( Intervals.numElements( images[ 0 ] ) );
 		List< Interval > chunks = IntervalChunks.chunkInterval( indices, nTasks );
-		return taskExecutor.forEachApply( chunks, chunk ->
-				LoopBuilder.runOnChunkUsingCursors( iterableIntervals, chunkAction, chunk.min( 0 ), chunk.dimension( 0 ) ) );
+		return taskExecutor.forEachApply( chunks,
+				chunk -> LoopBuilder.runOnChunkUsingCursors( iterableIntervals, chunkAction, chunk.min( 0 ), chunk.dimension( 0 ) ) );
 	}
 
-	static < T, R > R runOnChunkUsingCursors( List< IterableInterval< ? > > iterableIntervals, Function< Chunk< T >, R > chunkAction, long offset, long numElements )
+	static < T, R > R runOnChunkUsingCursors( List< IterableInterval< ? > > iterableIntervals, Function< Chunk< T >, R > chunkAction,
+			long offset, long numElements )
 	{
 		final List< Cursor< ? > > cursors = ListUtils.map( IterableInterval::cursor, iterableIntervals );
 		if ( offset != 0 )

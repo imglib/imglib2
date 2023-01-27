@@ -46,11 +46,15 @@ import net.imglib2.type.volatiles.AbstractVolatileRealType;
  *
  * @author Tobias Pietzsch &lt;tobias.pietzsch@gmail.com&gt;
  */
-public class ClampingNLinearInterpolatorVolatileRealType< R extends RealType< R >, T extends AbstractVolatileRealType< R, T > > extends NLinearInterpolator< T >
+public class ClampingNLinearInterpolatorVolatileRealType< R extends RealType< R >, T extends AbstractVolatileRealType< R, T > >
+		extends NLinearInterpolator< T >
 {
 	protected double acc;
+
 	protected boolean valid;
+
 	protected final double clampMin;
+
 	protected final double clampMax;
 
 	protected ClampingNLinearInterpolatorVolatileRealType( final ClampingNLinearInterpolatorVolatileRealType< R, T > interpolator )

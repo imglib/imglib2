@@ -49,7 +49,8 @@ import net.imglib2.type.NativeType;
  * @author Stephan Saalfeld
  * @author Tobias Pietzsch
  */
-public class PlanarRandomAccess< T extends NativeType< T > > extends AbstractLocalizableInt implements RandomAccess< T >, PlanarImg.PlanarContainerSampler
+public class PlanarRandomAccess< T extends NativeType< T > > extends AbstractLocalizableInt
+		implements RandomAccess< T >, PlanarImg.PlanarContainerSampler
 {
 	final protected int[] sliceSteps;
 

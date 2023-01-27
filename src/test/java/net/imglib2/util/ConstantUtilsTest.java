@@ -77,7 +77,8 @@ public class ConstantUtilsTest
 		final Random rng = new Random( 100 );
 		final long[] dims = LongStream.generate( () -> rng.nextInt( 5 ) + 1 ).limit( nDim ).toArray();
 		final IntType constVal = new IntType( 123 );
-		final RandomAccessibleInterval< IntType > randomAccessibleInterval = ConstantUtils.constantRandomAccessibleInterval( constVal, new FinalInterval( dims ) );
+		final RandomAccessibleInterval< IntType > randomAccessibleInterval =
+				ConstantUtils.constantRandomAccessibleInterval( constVal, new FinalInterval( dims ) );
 
 		Assert.assertArrayEquals( dims, Intervals.dimensionsAsLongArray( randomAccessibleInterval ) );
 		Assert.assertArrayEquals( new long[ nDim ], randomAccessibleInterval.minAsLongArray() );

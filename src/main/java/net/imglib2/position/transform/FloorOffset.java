@@ -48,7 +48,8 @@ import net.imglib2.RealPositionable;
  *
  * @author Stephan Saalfeld
  */
-public class FloorOffset< LocalizablePositionable extends Localizable & Positionable > extends AbstractPositionableTransform< LocalizablePositionable >
+public class FloorOffset< LocalizablePositionable extends Localizable & Positionable >
+		extends AbstractPositionableTransform< LocalizablePositionable >
 {
 	final protected long[] offset;
 

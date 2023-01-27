@@ -48,7 +48,8 @@ import net.imglib2.RealPositionable;
  *
  * @author Stephan Saalfeld
  */
-public class Floor< LocalizablePositionable extends Localizable & Positionable > extends AbstractPositionableTransform< LocalizablePositionable >
+public class Floor< LocalizablePositionable extends Localizable & Positionable >
+		extends AbstractPositionableTransform< LocalizablePositionable >
 {
 	public Floor( final LocalizablePositionable target )
 	{

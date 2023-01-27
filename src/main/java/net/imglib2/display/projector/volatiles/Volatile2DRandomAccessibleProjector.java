@@ -55,7 +55,8 @@ public class Volatile2DRandomAccessibleProjector< T, A extends Volatile< T >, B 
 {
 	protected boolean valid = false;
 
-	public Volatile2DRandomAccessibleProjector( final int dimX, final int dimY, final RandomAccessible< A > source, final RandomAccessibleInterval< B > target, final Converter< ? super A, B > converter )
+	public Volatile2DRandomAccessibleProjector( final int dimX, final int dimY, final RandomAccessible< A > source,
+			final RandomAccessibleInterval< B > target, final Converter< ? super A, B > converter )
 	{
 		super( dimX, dimY, source, Views.iterable( target ), converter );
 	}

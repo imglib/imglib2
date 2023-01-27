@@ -53,7 +53,7 @@ import net.imglib2.util.IntervalIndexer;
  * 
  * @param <A>
  */
-public class PlanarImgXYByteProjector< A extends GenericByteType< A >> extends AbstractProjector2D
+public class PlanarImgXYByteProjector< A extends GenericByteType< A > > extends AbstractProjector2D
 {
 
 	private final PlanarImg< A, ByteArray > source;
@@ -89,7 +89,8 @@ public class PlanarImgXYByteProjector< A extends GenericByteType< A >> extends A
 	 * @param normalizationFactor
 	 * @param min
 	 */
-	public PlanarImgXYByteProjector( final PlanarImg< A, ByteArray > source, final ArrayImg< UnsignedByteType, ByteArray > target, final double normalizationFactor, final double min )
+	public PlanarImgXYByteProjector( final PlanarImg< A, ByteArray > source, final ArrayImg< UnsignedByteType, ByteArray > target,
+			final double normalizationFactor, final double min )
 	{
 		super( source.numDimensions() );
 
@@ -153,7 +154,8 @@ public class PlanarImgXYByteProjector< A extends GenericByteType< A >> extends A
 			{
 				// normalizedValue = (oldValue - min) * normalizationFactor
 				// clamped to 0 .. 255
-				targetArray[ i ] = ( byte ) Math.min( 255, Math.max( 0, ( Math.round( ( ( targetArray[ i ] & 0xFF ) - minCopy ) * normalizationFactor ) ) ) );
+				targetArray[ i ] = ( byte ) Math.min( 255,
+						Math.max( 0, ( Math.round( ( ( targetArray[ i ] & 0xFF ) - minCopy ) * normalizationFactor ) ) ) );
 			}
 		}
 	}

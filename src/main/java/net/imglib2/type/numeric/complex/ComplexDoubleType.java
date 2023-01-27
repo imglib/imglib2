@@ -108,7 +108,8 @@ public class ComplexDoubleType extends AbstractComplexType< ComplexDoubleType > 
 		return new ComplexDoubleType( img );
 	}
 
-	private static final NativeTypeFactory< ComplexDoubleType, DoubleAccess > typeFactory = NativeTypeFactory.DOUBLE( ComplexDoubleType::new );
+	private static final NativeTypeFactory< ComplexDoubleType, DoubleAccess > typeFactory =
+			NativeTypeFactory.DOUBLE( ComplexDoubleType::new );
 
 	@Override
 	public NativeTypeFactory< ComplexDoubleType, DoubleAccess > getNativeTypeFactory()

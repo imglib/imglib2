@@ -71,15 +71,18 @@ public class PlanarIterableSubIntervalCursorTest extends AbstractSubIntervalIter
 
 		intervalLine = new FinalInterval( new long[] { 0, 12, 3, 5, 1 }, new long[] { dimensions[ 0 ] - 1, 13, 3, 5, 1 } );
 
-		intervalShifted = new FinalInterval( new long[] { 0, 0, 3, 5, 1 }, new long[] { dimensions[ 0 ] - 1, dimensions[ 1 ] - 1, 4, 5, 1 } );
+		intervalShifted =
+				new FinalInterval( new long[] { 0, 0, 3, 5, 1 }, new long[] { dimensions[ 0 ] - 1, dimensions[ 1 ] - 1, 4, 5, 1 } );
 
 		intervalFast = new FinalInterval( new long[] { dimensions[ 0 ], dimensions[ 1 ], 5, 1, 1 } );
 
 		intervalFastPart = new FinalInterval( new long[] { dimensions[ 0 ], 2, 3, 1, 1 } );
 
-		intervalSinglePlaneShifted = new FinalInterval( new long[] { 0, 0, 3, 5, 1 }, new long[] { dimensions[ 0 ] - 1, dimensions[ 1 ] - 1, 3, 5, 1 } );
+		intervalSinglePlaneShifted =
+				new FinalInterval( new long[] { 0, 0, 3, 5, 1 }, new long[] { dimensions[ 0 ] - 1, dimensions[ 1 ] - 1, 3, 5, 1 } );
 
-		intervalSinglePlaneFull = new FinalInterval( new long[] { 0, 0, 1, 1, 1 }, new long[] { dimensions[ 0 ] - 1, dimensions[ 1 ] - 1, 1, 1, 1 } );
+		intervalSinglePlaneFull =
+				new FinalInterval( new long[] { 0, 0, 1, 1, 1 }, new long[] { dimensions[ 0 ] - 1, dimensions[ 1 ] - 1, 1, 1, 1 } );
 
 		// create random data for all dims and fill the planar img
 		numValues = 1;

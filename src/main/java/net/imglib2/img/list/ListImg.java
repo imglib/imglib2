@@ -86,9 +86,9 @@ public class ListImg< T > extends AbstractListImg< T >
 	public ListImg( final Collection< T > collection, final long... dim )
 	{
 		super( dim );
-		
-		assert numPixels == collection.size() : "Dimensions do not match number of pixels.";
-		
+
+		assert numPixels == collection.size(): "Dimensions do not match number of pixels.";
+
 		pixels = new ArrayList< T >( ( int ) numPixels );
 		pixels.addAll( collection );
 	}

@@ -62,17 +62,21 @@ public class CellImgTest
 			if ( dim[ i ].length > 1 )
 			{
 				assertTrue( "ArrayImg vs CellImg failed for dim = " + Util.printCoordinates( dim[ i ] ),
-						ImgTestHelper.testImg( dim[ i ], new ArrayImgFactory<>( new FloatType() ), new CellImgFactory<>( new FloatType(), 10 ) ) );
+						ImgTestHelper.testImg( dim[ i ], new ArrayImgFactory<>( new FloatType() ),
+								new CellImgFactory<>( new FloatType(), 10 ) ) );
 				assertTrue( "CellImg vs ArrayImg failed for dim = " + Util.printCoordinates( dim[ i ] ),
-						ImgTestHelper.testImg( dim[ i ], new CellImgFactory<>( new FloatType() ), new ArrayImgFactory<>( new FloatType() ) ) );
+						ImgTestHelper.testImg( dim[ i ], new CellImgFactory<>( new FloatType() ),
+								new ArrayImgFactory<>( new FloatType() ) ) );
 				assertTrue( "CellImg vs CellImg failed for dim = " + Util.printCoordinates( dim[ i ] ),
-						ImgTestHelper.testImg( dim[ i ], new CellImgFactory<>( new FloatType(), 5 ), new CellImgFactory<>( new FloatType() ) ) );
+						ImgTestHelper.testImg( dim[ i ], new CellImgFactory<>( new FloatType(), 5 ),
+								new CellImgFactory<>( new FloatType() ) ) );
 			}
 		}
 	}
 
 	@Test
-	public void testCellImgInvalidDimensions() {
+	public void testCellImgInvalidDimensions()
+	{
 		ImgTestHelper.assertInvalidDims( new CellImgFactory<>( new FloatType(), 100 ) );
 	}
 }

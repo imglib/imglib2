@@ -74,7 +74,8 @@ abstract public class AbstractByteArray< A extends AbstractByteArray< A > > impl
 	}
 
 	@Override
-	public int getArrayLength() {
+	public int getArrayLength()
+	{
 		return data.length;
 	}
 }

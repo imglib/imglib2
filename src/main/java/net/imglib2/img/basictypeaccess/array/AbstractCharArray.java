@@ -74,7 +74,8 @@ abstract public class AbstractCharArray< A extends AbstractCharArray< A > > impl
 	}
 
 	@Override
-	public int getArrayLength() {
+	public int getArrayLength()
+	{
 		return data.length;
 	}
 }

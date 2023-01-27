@@ -57,7 +57,6 @@ final public class BiConvertedRandomAccess< A, B, C > extends AbstractConvertedR
 
 	protected final C converted;
 
-
 	public BiConvertedRandomAccess(
 			final RandomAccess< A > sourceA,
 			final RandomAccess< B > sourceB,

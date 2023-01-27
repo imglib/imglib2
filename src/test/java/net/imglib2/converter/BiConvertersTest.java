@@ -99,10 +99,10 @@ public class BiConvertersTest
 		final RandomAccessibleInterval< IntType > sumRRA = Views.interval(
 				Views.raster(
 						Converters.convert(
-							Views.interpolate( Views.extendBorder( sourceA ), new NearestNeighborInterpolatorFactory<>() ),
-							Views.interpolate( Views.extendBorder( sourceB ), new NearestNeighborInterpolatorFactory<>() ),
-							( a, b, c ) -> c.set( a.get() + b.get() ),
-							new IntType() )),
+								Views.interpolate( Views.extendBorder( sourceA ), new NearestNeighborInterpolatorFactory<>() ),
+								Views.interpolate( Views.extendBorder( sourceB ), new NearestNeighborInterpolatorFactory<>() ),
+								( a, b, c ) -> c.set( a.get() + b.get() ),
+								new IntType() ) ),
 				sourceA );
 
 		final Cursor< IntType > sumCursorRAI = Views.iterable( sumRAI ).cursor();
@@ -154,13 +154,13 @@ public class BiConvertersTest
 		final RandomAccessibleInterval< int[] > sumRRA = Views.interval(
 				Views.raster(
 						Converters.convert2(
-							Views.interpolate( Views.extendBorder( sourceA ), new NearestNeighborInterpolatorFactory<>() ),
-							Views.interpolate( Views.extendBorder( sourceB ), new NearestNeighborInterpolatorFactory<>() ),
-							( a, b, c ) -> {
-								c[ 0 ] = a.get();
-								c[ 1 ] = b.get();
-							},
-							() -> new int[ 2 ] ) ),
+								Views.interpolate( Views.extendBorder( sourceA ), new NearestNeighborInterpolatorFactory<>() ),
+								Views.interpolate( Views.extendBorder( sourceB ), new NearestNeighborInterpolatorFactory<>() ),
+								( a, b, c ) -> {
+									c[ 0 ] = a.get();
+									c[ 1 ] = b.get();
+								},
+								() -> new int[ 2 ] ) ),
 				sourceA );
 
 		final Cursor< int[] > sumCursorRAI = Views.iterable( sumRAI ).cursor();
@@ -171,8 +171,8 @@ public class BiConvertersTest
 		while ( sumCursorRAI.hasNext() )
 		{
 			int[] t = sumCursorRAI.next();
-			assertEquals( t[0], dataA[ i ] );
-			assertEquals( t[1], dataB[ i ] );
+			assertEquals( t[ 0 ], dataA[ i ] );
+			assertEquals( t[ 1 ], dataB[ i ] );
 
 			t = sumCursorIterable.next();
 			assertEquals( t[ 0 ], dataA[ i ] );

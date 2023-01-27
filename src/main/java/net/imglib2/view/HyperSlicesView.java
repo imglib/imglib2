@@ -55,6 +55,7 @@ import net.imglib2.RandomAccessible;
 public class HyperSlicesView< T > implements RandomAccessible< HyperSlice< T > >
 {
 	final protected RandomAccessible< T > source;
+
 	final protected int numDimensions;
 
 	/* outside of the hyperslice */
@@ -122,6 +123,5 @@ public class HyperSlicesView< T > implements RandomAccessible< HyperSlice< T > >
 		 * one pixel thick (constant) in all outer dimensions */
 		return randomAccess();
 	}
-
 
 }

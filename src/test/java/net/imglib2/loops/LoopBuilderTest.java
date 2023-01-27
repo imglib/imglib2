@@ -89,7 +89,8 @@ public class LoopBuilderTest
 		return Views.translate( result, random.nextInt(), random.nextInt(), random.nextInt() );
 	}
 
-	private void assertSum( RandomAccessibleInterval< IntType > imageA, RandomAccessibleInterval< IntType > imageB, final RandomAccessibleInterval< IntType > sum )
+	private void assertSum( RandomAccessibleInterval< IntType > imageA, RandomAccessibleInterval< IntType > imageB,
+			final RandomAccessibleInterval< IntType > sum )
 	{
 		final Cursor< IntType > a = Views.iterable( imageA ).cursor();
 		final Cursor< IntType > b = Views.iterable( imageB ).cursor();
@@ -155,6 +156,7 @@ public class LoopBuilderTest
 	}
 
 	private final BiConsumer< IntType, IntType > COPY_ACTION = ( i, o ) -> o.set( i );
+
 	private final Function< LoopBuilder.Chunk< BiConsumer< IntType, IntType > >, Object > CHUNK_COPY_ACTION = chunk -> {
 		chunk.forEachPixel( COPY_ACTION );
 		return null;
@@ -222,9 +224,10 @@ public class LoopBuilderTest
 	}
 
 	@Test( expected = IllegalArgumentException.class )
-	public void testCheckDimensions() {
-		RandomAccessibleInterval<IntType> imageA = ArrayImgs.ints( 10, 10 );
-		RandomAccessibleInterval<IntType> imageB = ArrayImgs.ints( 10, 10, 2 );
-		LoopBuilder.setImages( imageA, imageB ).forEachPixel( (a, b) -> {} );
+	public void testCheckDimensions()
+	{
+		RandomAccessibleInterval< IntType > imageA = ArrayImgs.ints( 10, 10 );
+		RandomAccessibleInterval< IntType > imageB = ArrayImgs.ints( 10, 10, 2 );
+		LoopBuilder.setImages( imageA, imageB ).forEachPixel( ( a, b ) -> {} );
 	}
 }

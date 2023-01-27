@@ -67,42 +67,44 @@ public class AbstractConvertedRandomAccessibleIntervalTest
 	@Test
 	public void test()
 	{
-		final AbstractConvertedRandomAccessibleInterval< DoubleType, DoubleType > converted = new AbstractConvertedRandomAccessibleInterval< DoubleType, DoubleType >( data )
-		{
-
-			@Override
-			public AbstractConvertedRandomAccess< DoubleType, DoubleType > randomAccess()
-			{
-				return new AbstractConvertedRandomAccess< DoubleType, DoubleType >( data.randomAccess() )
+		final AbstractConvertedRandomAccessibleInterval< DoubleType, DoubleType > converted =
+				new AbstractConvertedRandomAccessibleInterval< DoubleType, DoubleType >( data )
 				{
 
-					DoubleType t = new DoubleType();
-
 					@Override
-					public DoubleType get()
+					public AbstractConvertedRandomAccess< DoubleType, DoubleType > randomAccess()
 					{
-						t.set( this.source.get() );
-						t.mul( this.source.getDoublePosition( this.source.numDimensions() - 1 ) );
-						return t;
+						return new AbstractConvertedRandomAccess< DoubleType, DoubleType >( data.randomAccess() )
+						{
+
+							DoubleType t = new DoubleType();
+
+							@Override
+							public DoubleType get()
+							{
+								t.set( this.source.get() );
+								t.mul( this.source.getDoublePosition( this.source.numDimensions() - 1 ) );
+								return t;
+							}
+
+							@Override
+							public AbstractConvertedRandomAccess< DoubleType, DoubleType > copy()
+							{
+								return null;
+							}
+						};
 					}
 
 					@Override
-					public AbstractConvertedRandomAccess< DoubleType, DoubleType > copy()
+					public AbstractConvertedRandomAccess< DoubleType, DoubleType > randomAccess( final Interval interval )
 					{
-						return null;
+						return randomAccess();
 					}
+
 				};
-			}
 
-			@Override
-			public AbstractConvertedRandomAccess< DoubleType, DoubleType > randomAccess( final Interval interval )
-			{
-				return randomAccess();
-			}
-
-		};
-
-		for ( final Cursor< Pair< DoubleType, DoubleType > > c = Views.interval( Views.pair( data, converted ), data ).cursor(); c.hasNext(); )
+		for ( final Cursor< Pair< DoubleType, DoubleType > > c = Views.interval( Views.pair( data, converted ), data ).cursor();
+				c.hasNext(); )
 		{
 			final Pair< DoubleType, DoubleType > p = c.next();
 			final double pos = c.getDoublePosition( c.numDimensions() - 1 );

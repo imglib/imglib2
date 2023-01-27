@@ -94,7 +94,8 @@ public class RandomAccessibleProjector2D< A, B > extends AbstractProjector2D
 	 *            a converter that is applied to each point in the plain. This
 	 *            can e.g. be used for normalization, conversions, ...
 	 */
-	public RandomAccessibleProjector2D( final int dimX, final int dimY, final RandomAccessible< A > source, final RandomAccessibleInterval< B > target, final Converter< ? super A, B > converter )
+	public RandomAccessibleProjector2D( final int dimX, final int dimY, final RandomAccessible< A > source,
+			final RandomAccessibleInterval< B > target, final Converter< ? super A, B > converter )
 	{
 		super( source.numDimensions() );
 		this.dimX = dimX;

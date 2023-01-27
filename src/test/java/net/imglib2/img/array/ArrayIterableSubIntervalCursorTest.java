@@ -55,7 +55,7 @@ import org.junit.Test;
  * TODO Javadoc
  * 
  */
-public class ArrayIterableSubIntervalCursorTest extends AbstractSubIntervalIterableCursorTest< ArrayImg< IntType, ? >>
+public class ArrayIterableSubIntervalCursorTest extends AbstractSubIntervalIterableCursorTest< ArrayImg< IntType, ? > >
 {
 	int numValues;
 
@@ -75,7 +75,8 @@ public class ArrayIterableSubIntervalCursorTest extends AbstractSubIntervalItera
 
 		intervalFastPart = new FinalInterval( new long[] { dimensions[ 0 ], 2, 3, 1, 1 } );
 
-		intervalShifted = new FinalInterval( new long[] { 0, 0, 3, 5, 1 }, new long[] { dimensions[ 0 ] - 1, dimensions[ 1 ] - 1, 4, 5, 1 } );
+		intervalShifted =
+				new FinalInterval( new long[] { 0, 0, 3, 5, 1 }, new long[] { dimensions[ 0 ] - 1, dimensions[ 1 ] - 1, 4, 5, 1 } );
 
 		numValues = 1;
 		for ( int d = 0; d < dimensions.length; ++d )

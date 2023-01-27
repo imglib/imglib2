@@ -46,7 +46,7 @@ import net.imglib2.type.numeric.RealType;
  * 
  * @author Barry DeZonia
  */
-public class Real1dBinMapper< T extends RealType< T >> implements BinMapper1d< T >
+public class Real1dBinMapper< T extends RealType< T > > implements BinMapper1d< T >
 {
 
 	// -- instance variables --
@@ -86,10 +86,16 @@ public class Real1dBinMapper< T extends RealType< T >> implements BinMapper1d< T
 		this.minVal = minVal;
 		this.maxVal = maxVal;
 		this.tailBins = tailBins;
-		if ( numBins <= 0 || ( tailBins && numBins <= 2 ) ) { throw new IllegalArgumentException(
-				"invalid Real1dBinMapper: no data bins specified" ); }
-		if ( minVal > maxVal ) { throw new IllegalArgumentException(
-				"invalid Real1dBinMapper: invalid data range specified (min > max)" ); }
+		if ( numBins <= 0 || ( tailBins && numBins <= 2 ) )
+		{
+			throw new IllegalArgumentException(
+					"invalid Real1dBinMapper: no data bins specified" );
+		}
+		if ( minVal > maxVal )
+		{
+			throw new IllegalArgumentException(
+					"invalid Real1dBinMapper: invalid data range specified (min > max)" );
+		}
 		if ( tailBins )
 		{
 			this.interiorBins = bins - 2;
@@ -214,13 +220,16 @@ public class Real1dBinMapper< T extends RealType< T >> implements BinMapper1d< T
 	 *            Flags per dimension for whether to include tail bins
 	 * @return An unpopulated HistogramNd
 	 */
-	public static < K extends RealType< K >> HistogramNd< K > histogramNd(
+	public static < K extends RealType< K > > HistogramNd< K > histogramNd(
 			final double[] minVals, final double[] maxVals, final long[] numBins, final boolean[] tailBins )
 	{
 		if ( ( minVals.length != numBins.length ) ||
-				( minVals.length != tailBins.length ) ) { throw new IllegalArgumentException(
-				"multiDimMappers: differing input array sizes" ); }
-		final List< BinMapper1d< K >> binMappers = new ArrayList< BinMapper1d< K >>();
+				( minVals.length != tailBins.length ) )
+		{
+			throw new IllegalArgumentException(
+					"multiDimMappers: differing input array sizes" );
+		}
+		final List< BinMapper1d< K > > binMappers = new ArrayList< BinMapper1d< K > >();
 		for ( int i = 0; i < minVals.length; i++ )
 		{
 			final Real1dBinMapper< K > mapper =
@@ -234,7 +243,10 @@ public class Real1dBinMapper< T extends RealType< T >> implements BinMapper1d< T
 
 	private double min( final long pos )
 	{
-		if ( pos < 0 || pos > bins - 1 ) { throw new IllegalArgumentException( "invalid bin position specified" ); }
+		if ( pos < 0 || pos > bins - 1 )
+		{
+			throw new IllegalArgumentException( "invalid bin position specified" );
+		}
 		if ( tailBins )
 		{
 			if ( pos == 0 )
@@ -248,7 +260,10 @@ public class Real1dBinMapper< T extends RealType< T >> implements BinMapper1d< T
 
 	private double max( final long pos )
 	{
-		if ( pos < 0 || pos > bins - 1 ) { throw new IllegalArgumentException( "invalid bin position specified" ); }
+		if ( pos < 0 || pos > bins - 1 )
+		{
+			throw new IllegalArgumentException( "invalid bin position specified" );
+		}
 		if ( tailBins )
 		{
 			if ( pos == 0 )

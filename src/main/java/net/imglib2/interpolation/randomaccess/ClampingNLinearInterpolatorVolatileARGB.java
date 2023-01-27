@@ -47,9 +47,11 @@ import net.imglib2.util.Util;
  * @author Stephan Saalfeld &lt;saalfeld@mpi-cbg.de&gt;
  * @author Tobias Pietzsch &lt;tobias.pietzsch@gmail.com&gt;
  */
-public class ClampingNLinearInterpolatorVolatileARGB< T extends AbstractVolatileNumericType< ARGBType, T > > extends NLinearInterpolator< T >
+public class ClampingNLinearInterpolatorVolatileARGB< T extends AbstractVolatileNumericType< ARGBType, T > >
+		extends NLinearInterpolator< T >
 {
 	protected double accA, accR, accG, accB;
+
 	protected boolean valid;
 
 	protected ClampingNLinearInterpolatorVolatileARGB( final ClampingNLinearInterpolatorVolatileARGB< T > interpolator )

@@ -54,7 +54,7 @@ public class VolatileFloatType extends AbstractVolatileNativeRealType< FloatType
 
 	private static class WrappedFloatType extends FloatType
 	{
-		public WrappedFloatType( final NativeImg<?, ? extends FloatAccess> img )
+		public WrappedFloatType( final NativeImg< ?, ? extends FloatAccess > img )
 		{
 			super( img );
 		}
@@ -106,7 +106,7 @@ public class VolatileFloatType extends AbstractVolatileNativeRealType< FloatType
 	public void updateContainer( final Object c )
 	{
 		final VolatileFloatAccess a = img.update( c );
-		( ( WrappedFloatType )t ).setAccess( a );
+		( ( WrappedFloatType ) t ).setAccess( a );
 		setValid( a.isValid() );
 	}
 
@@ -130,7 +130,8 @@ public class VolatileFloatType extends AbstractVolatileNativeRealType< FloatType
 		return v;
 	}
 
-	private static final NativeTypeFactory< VolatileFloatType, VolatileFloatAccess > typeFactory = NativeTypeFactory.FLOAT( VolatileFloatType::new );
+	private static final NativeTypeFactory< VolatileFloatType, VolatileFloatAccess > typeFactory =
+			NativeTypeFactory.FLOAT( VolatileFloatType::new );
 
 	@Override
 	public NativeTypeFactory< VolatileFloatType, ? > getNativeTypeFactory()

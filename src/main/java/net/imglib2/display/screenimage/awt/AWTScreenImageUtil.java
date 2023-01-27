@@ -82,7 +82,7 @@ public class AWTScreenImageUtil
 	 * 
 	 */
 	@SuppressWarnings( { "unchecked", "rawtypes" } )
-	public static < T extends NativeType< T >> ArrayImgAWTScreenImage< T, ? > emptyScreenImage( final T type, final long[] dims )
+	public static < T extends NativeType< T > > ArrayImgAWTScreenImage< T, ? > emptyScreenImage( final T type, final long[] dims )
 	{
 
 		if ( ByteType.class.isAssignableFrom( type.getClass() ) )
@@ -96,7 +96,8 @@ public class AWTScreenImageUtil
 		if ( UnsignedByteType.class.isAssignableFrom( type.getClass() ) )
 		{
 			final ByteArray array = new ByteArray( numElements( dims ) );
-			final ArrayImgAWTScreenImage< UnsignedByteType, ByteArray > container = new UnsignedByteAWTScreenImage( new UnsignedByteType( array ), array, dims );
+			final ArrayImgAWTScreenImage< UnsignedByteType, ByteArray > container =
+					new UnsignedByteAWTScreenImage( new UnsignedByteType( array ), array, dims );
 			container.setLinkedType( new UnsignedByteType( container ) );
 			return ( ArrayImgAWTScreenImage ) container;
 		}
@@ -104,7 +105,8 @@ public class AWTScreenImageUtil
 		if ( ShortType.class.isAssignableFrom( type.getClass() ) )
 		{
 			final ShortArray array = new ShortArray( numElements( dims ) );
-			final ArrayImgAWTScreenImage< ShortType, ShortArray > container = new ShortAWTScreenImage( new ShortType( array ), array, dims );
+			final ArrayImgAWTScreenImage< ShortType, ShortArray > container =
+					new ShortAWTScreenImage( new ShortType( array ), array, dims );
 			container.setLinkedType( new ShortType( container ) );
 			return ( ArrayImgAWTScreenImage ) container;
 		}
@@ -112,7 +114,8 @@ public class AWTScreenImageUtil
 		if ( UnsignedShortType.class.isAssignableFrom( type.getClass() ) )
 		{
 			final ShortArray array = new ShortArray( numElements( dims ) );
-			final ArrayImgAWTScreenImage< UnsignedShortType, ShortArray > container = new UnsignedShortAWTScreenImage( new UnsignedShortType( array ), array, dims );
+			final ArrayImgAWTScreenImage< UnsignedShortType, ShortArray > container =
+					new UnsignedShortAWTScreenImage( new UnsignedShortType( array ), array, dims );
 			container.setLinkedType( new UnsignedShortType( container ) );
 			return ( ArrayImgAWTScreenImage ) container;
 		}
@@ -128,7 +131,8 @@ public class AWTScreenImageUtil
 		if ( UnsignedIntType.class.isAssignableFrom( type.getClass() ) )
 		{
 			final IntArray array = new IntArray( numElements( dims ) );
-			final ArrayImgAWTScreenImage< UnsignedIntType, IntArray > container = new UnsignedIntAWTScreenImage( new UnsignedIntType( array ), array, dims );
+			final ArrayImgAWTScreenImage< UnsignedIntType, IntArray > container =
+					new UnsignedIntAWTScreenImage( new UnsignedIntType( array ), array, dims );
 			container.setLinkedType( new UnsignedIntType( container ) );
 			return ( ArrayImgAWTScreenImage ) container;
 		}
@@ -136,7 +140,8 @@ public class AWTScreenImageUtil
 		if ( FloatType.class.isAssignableFrom( type.getClass() ) )
 		{
 			final FloatArray array = new FloatArray( numElements( dims ) );
-			final ArrayImgAWTScreenImage< FloatType, FloatArray > container = new FloatAWTScreenImage( new FloatType( array ), array, dims );
+			final ArrayImgAWTScreenImage< FloatType, FloatArray > container =
+					new FloatAWTScreenImage( new FloatType( array ), array, dims );
 			container.setLinkedType( new FloatType( container ) );
 			return ( ArrayImgAWTScreenImage ) container;
 		}
@@ -144,7 +149,8 @@ public class AWTScreenImageUtil
 		if ( DoubleType.class.isAssignableFrom( type.getClass() ) )
 		{
 			final DoubleArray array = new DoubleArray( numElements( dims ) );
-			final ArrayImgAWTScreenImage< DoubleType, DoubleArray > container = new DoubleAWTScreenImage( new DoubleType( array ), array, dims );
+			final ArrayImgAWTScreenImage< DoubleType, DoubleArray > container =
+					new DoubleAWTScreenImage( new DoubleType( array ), array, dims );
 			container.setLinkedType( new DoubleType( container ) );
 			return ( ArrayImgAWTScreenImage ) container;
 		}

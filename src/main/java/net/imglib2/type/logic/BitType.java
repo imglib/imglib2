@@ -136,7 +136,7 @@ public class BitType extends AbstractIntegerType< BitType > implements BooleanTy
 		// Same as above, minus one multiplication, plus one shift to multiply the reminder by 2
 		final int j = i.get();
 		final int i1 = j >>> 6; // Same as i / 64
-		final long bit = 1l << (j & 63);
+		final long bit = 1l << ( j & 63 );
 		synchronized ( dataAccess )
 		{
 			// Clear or set the bit
@@ -323,7 +323,7 @@ public class BitType extends AbstractIntegerType< BitType > implements BooleanTy
 	@Override
 	public Fraction getEntitiesPerPixel()
 	{
-		return new Fraction(1, 64);
+		return new Fraction( 1, 64 );
 	}
 
 	@Override

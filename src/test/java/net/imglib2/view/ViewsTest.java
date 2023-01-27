@@ -56,39 +56,44 @@ import static org.junit.Assert.assertTrue;
 public class ViewsTest
 {
 	@Test
-	public void testMoveAxisUp() {
+	public void testMoveAxisUp()
+	{
 		RandomAccessible< Localizable > input = Localizables.randomAccessible( 4 );
 		RandomAccessible< Localizable > view = Views.moveAxis( input, 1, 3 );
 		RandomAccess< Localizable > ra = view.randomAccess();
-		ra.setPosition( new long[] {1, 3, 4, 2} );
-		assertArrayEquals( new long[] {1, 2, 3, 4}, ra.get().positionAsLongArray() );
+		ra.setPosition( new long[] { 1, 3, 4, 2 } );
+		assertArrayEquals( new long[] { 1, 2, 3, 4 }, ra.get().positionAsLongArray() );
 	}
 
 	@Test
-	public void testMoveAxisDown() {
+	public void testMoveAxisDown()
+	{
 		RandomAccessible< Localizable > input = Localizables.randomAccessible( 4 );
 		RandomAccessible< Localizable > view = Views.moveAxis( input, 3, 1 );
 		RandomAccess< Localizable > ra = view.randomAccess();
-		ra.setPosition( new long[] {1, 4, 2, 3} );
-		assertArrayEquals( new long[] {1, 2, 3, 4}, ra.get().positionAsLongArray() );
+		ra.setPosition( new long[] { 1, 4, 2, 3 } );
+		assertArrayEquals( new long[] { 1, 2, 3, 4 }, ra.get().positionAsLongArray() );
 	}
 
 	@Test
-	public void testMoveAxisUpForInteval() {
-		Img<?> img = ArrayImgs.bytes( 1, 2, 3, 4 );
+	public void testMoveAxisUpForInteval()
+	{
+		Img< ? > img = ArrayImgs.bytes( 1, 2, 3, 4 );
 		RandomAccessibleInterval< ? > view = Views.moveAxis( img, 1, 3 );
-		assertArrayEquals( new long[]{ 1, 3, 4, 2 }, Intervals.dimensionsAsLongArray( view ) );
+		assertArrayEquals( new long[] { 1, 3, 4, 2 }, Intervals.dimensionsAsLongArray( view ) );
 	}
 
 	@Test
-	public void testMoveAxisDownForInteval() {
-		Img<?> img = ArrayImgs.bytes( 1, 2, 3, 4 );
+	public void testMoveAxisDownForInteval()
+	{
+		Img< ? > img = ArrayImgs.bytes( 1, 2, 3, 4 );
 		RandomAccessibleInterval< ? > view = Views.moveAxis( img, 3, 1 );
-		assertArrayEquals( new long[]{ 1, 4, 2, 3 }, Intervals.dimensionsAsLongArray( view ) );
+		assertArrayEquals( new long[] { 1, 4, 2, 3 }, Intervals.dimensionsAsLongArray( view ) );
 	}
 
 	@Test
-	public void testExtendValue() {
+	public void testExtendValue()
+	{
 		final long[] dims = { 2, 3, 4 };
 		final long[] border = { 1, 1, 1 };
 
@@ -106,7 +111,8 @@ public class ViewsTest
 			final long[] dims,
 			final double insideValue,
 			final double doubleExtension,
-			final float floatExtension ) {
+			final float floatExtension )
+	{
 		final RandomAccessibleInterval< DoubleType > rai = ArrayImgs.doubles( dims );
 		Views.iterable( rai ).forEach( px -> px.setReal( insideValue ) );
 		testValueExtended(
@@ -128,7 +134,8 @@ public class ViewsTest
 			final double insideValue,
 			final double doubleExtension,
 			final float floatExtension,
-			final long... border) {
+			final long... border )
+	{
 		final RandomAccessibleInterval< DoubleType > rai = ArrayImgs.doubles( dims );
 		Views.iterable( rai ).forEach( px -> px.setReal( insideValue ) );
 		testValueExtended(
@@ -149,7 +156,8 @@ public class ViewsTest
 			final long[] dims,
 			final long insideValue,
 			final long longExtension,
-			final int intExtension ) {
+			final int intExtension )
+	{
 		final RandomAccessibleInterval< LongType > rai = ArrayImgs.longs( dims );
 		Views.iterable( rai ).forEach( px -> px.setInteger( insideValue ) );
 		testValueExtended(
@@ -171,7 +179,8 @@ public class ViewsTest
 			final long insideValue,
 			final long longExtension,
 			final int intExtension,
-			final long... border) {
+			final long... border )
+	{
 		final RandomAccessibleInterval< LongType > rai = ArrayImgs.longs( dims );
 		Views.iterable( rai ).forEach( px -> px.setInteger( insideValue ) );
 		testValueExtended(
@@ -191,7 +200,8 @@ public class ViewsTest
 	private static void testExtendBoolean(
 			final long[] dims,
 			final boolean insideValue,
-			final boolean extension ) {
+			final boolean extension )
+	{
 		final RandomAccessibleInterval< BitType > rai = ArrayImgs.bits( dims );
 		Views.iterable( rai ).forEach( px -> px.set( insideValue ) );
 		testValueExtended(
@@ -206,8 +216,9 @@ public class ViewsTest
 			final long[] dims,
 			final boolean insideValue,
 			final boolean extension,
-			final long... border) {
-		final RandomAccessibleInterval<BitType> rai = ArrayImgs.bits( dims );
+			final long... border )
+	{
+		final RandomAccessibleInterval< BitType > rai = ArrayImgs.bits( dims );
 		Views.iterable( rai ).forEach( px -> px.set( insideValue ) );
 		testValueExtended(
 				Views.expandValue( rai, extension, border ),
@@ -218,13 +229,15 @@ public class ViewsTest
 	}
 
 	private static < T extends Type< T > > void testValueExtended(
-			final RandomAccessible<T> accessible,
+			final RandomAccessible< T > accessible,
 			final Interval inside,
 			final Interval total,
 			final T insideValue,
-			final T outsideValue ) {
+			final T outsideValue )
+	{
 		final Cursor< T > cursor = Views.interval( accessible, total ).cursor();
-		while ( cursor.hasNext() ) {
+		while ( cursor.hasNext() )
+		{
 			final T value = cursor.next();
 			assertTrue( value.valueEquals( Intervals.contains( inside, cursor ) ? insideValue : outsideValue ) );
 		}

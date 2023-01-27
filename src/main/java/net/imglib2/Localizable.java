@@ -105,7 +105,7 @@ public interface Localizable extends RealLocalizable
 	 */
 	default int getIntPosition( final int d )
 	{
-		return (int) getLongPosition( d );
+		return ( int ) getLongPosition( d );
 	}
 
 	/**

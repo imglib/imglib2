@@ -137,7 +137,6 @@ public class BiConvertedIterableInterval< A, B, C > extends AbstractConvertedIte
 		return convertedSupplier;
 	}
 
-
 	/**
 	 * Returns an instance of the {@link BiConverter}.  If the
 	 * {@link BiConvertedIterableInterval} was created with a {@link BiConverter}

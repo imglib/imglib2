@@ -45,8 +45,8 @@ import net.imglib2.type.NativeType;
  * @author Tobias Pietzsch
  */
 public class CellLocalizingCursor< T extends NativeType< T >, C extends Cell< ? > >
-	extends AbstractLocalizingCursor< T >
-	implements AbstractCellImg.CellImgSampler< C >
+		extends AbstractLocalizingCursor< T >
+		implements AbstractCellImg.CellImgSampler< C >
 {
 	protected final T type;
 

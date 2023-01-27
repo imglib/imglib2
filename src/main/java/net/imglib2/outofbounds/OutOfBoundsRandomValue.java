@@ -67,7 +67,8 @@ public class OutOfBoundsRandomValue< T extends RealType< T > > extends AbstractO
 		this.rnd = new Random();
 	}
 
-	public < F extends Interval & RandomAccessible< T > > OutOfBoundsRandomValue( final F f, final T value, final Random rnd, final double min, final double max )
+	public < F extends Interval & RandomAccessible< T > > OutOfBoundsRandomValue( final F f, final T value, final Random rnd,
+			final double min, final double max )
 	{
 		super( f );
 

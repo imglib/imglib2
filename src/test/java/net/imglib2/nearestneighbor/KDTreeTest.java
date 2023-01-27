@@ -56,7 +56,8 @@ import org.junit.Test;
  */
 public class KDTreeTest
 {
-	protected static boolean testNearestNeighbor( final int numDimensions, final int numPoints, final int numTests, final float min, final float max )
+	protected static boolean testNearestNeighbor( final int numDimensions, final int numPoints, final int numTests, final float min,
+			final float max )
 	{
 		final ArrayList< RealPoint > points = new ArrayList< RealPoint >();
 		final Random rnd = new Random( 435435435 );
@@ -161,7 +162,8 @@ public class KDTreeTest
 		return nearest;
 	}
 
-	protected static boolean testKNearestNeighbor( final int neighbors, final int numDimensions, final int numPoints, final int numTests, final float min, final float max )
+	protected static boolean testKNearestNeighbor( final int neighbors, final int numDimensions, final int numPoints, final int numTests,
+			final float min, final float max )
 	{
 		final ArrayList< RealPoint > points = new ArrayList< RealPoint >();
 		final Random rnd = new Random( 435435435 );
@@ -285,7 +287,8 @@ public class KDTreeTest
 		return nearest;
 	}
 
-	protected static boolean testRadiusNeighbor( final int numDimensions, final int numPoints, final int numTests, final float min, final float max )
+	protected static boolean testRadiusNeighbor( final int numDimensions, final int numPoints, final int numTests, final float min,
+			final float max )
 	{
 		final ArrayList< RealPoint > points = new ArrayList< RealPoint >();
 		final Random rnd = new Random( 435435435 );
@@ -382,7 +385,8 @@ public class KDTreeTest
 		return true;
 	}
 
-	private static ArrayList< ValuePair< RealPoint, Double > > findNeighborsRadiusExhaustive( final ArrayList< RealPoint > points, final RealPoint t, final double radius, final boolean sortResults )
+	private static ArrayList< ValuePair< RealPoint, Double > > findNeighborsRadiusExhaustive( final ArrayList< RealPoint > points,
+			final RealPoint t, final double radius, final boolean sortResults )
 	{
 		final ArrayList< ValuePair< RealPoint, Double > > withinRadius = new ArrayList< ValuePair< RealPoint, Double > >();
 

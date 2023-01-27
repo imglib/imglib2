@@ -39,21 +39,22 @@ import java.math.BigInteger;
 
 import org.junit.Test;
 
-
-public class ByteTypeTest {
+public class ByteTypeTest
+{
 
 	/**
 	 * Test which verifies {@link ByteType#getBigInteger()} returns the
 	 * {@code BigInteger} representation of a ByteType.
 	 */
 	@Test
-	public void testGetBigInteger() {
+	public void testGetBigInteger()
+	{
 
-		final ByteType l = new ByteType( (byte) 124 );
+		final ByteType l = new ByteType( ( byte ) 124 );
 		assertEquals( BigInteger.valueOf( 124l ), l.getBigInteger() );
 
-		final ByteType l2 = new ByteType( (byte) -18 );
-		assertEquals( BigInteger.valueOf( -18l ) , l2.getBigInteger() );
+		final ByteType l2 = new ByteType( ( byte ) -18 );
+		assertEquals( BigInteger.valueOf( -18l ), l2.getBigInteger() );
 	}
 
 	/**
@@ -61,15 +62,16 @@ public class ByteTypeTest {
 	 * ByteTypes with a {@code BigInteger} and still return a {@code byte} value.
 	 */
 	@Test
-	public void testSetBigInteger() {
+	public void testSetBigInteger()
+	{
 
-		final ByteType l = new ByteType( (byte) 93 );
+		final ByteType l = new ByteType( ( byte ) 93 );
 
-		assertEquals( l.get(), (byte) 93 );
+		assertEquals( l.get(), ( byte ) 93 );
 
 		final BigInteger bi = BigInteger.valueOf( -71l );
 		l.setBigInteger( bi );
-		assertEquals( l.get(), (byte) -71 );
+		assertEquals( l.get(), ( byte ) -71 );
 	}
 
 }

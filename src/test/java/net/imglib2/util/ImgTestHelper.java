@@ -182,15 +182,17 @@ public class ImgTestHelper
 
 			final FloatType t2 = positionable2.get();
 			final FloatType t1 = localizableCursor1.get();
-//			float f1 = t1.getRealFloat();
-//			float f2 = t2.getRealFloat();
+			//			float f1 = t1.getRealFloat();
+			//			float f2 = t2.getRealFloat();
 			t2.set( t1 );
-//			positionable2.get().set( localizableCursor1.get() );
+			//			positionable2.get().set( localizableCursor1.get() );
 		}
 
 		// copy again to the first image using a LocalizableByDimOutsideCursor
 		// and a LocalizableByDimCursor
-		final ExtendedRandomAccessibleInterval< FloatType, Img< FloatType > > extendedImg2 = new ExtendedRandomAccessibleInterval< FloatType, Img< FloatType > >( img2, new OutOfBoundsPeriodicFactory< FloatType, Img< FloatType > >() );
+		final ExtendedRandomAccessibleInterval< FloatType, Img< FloatType > > extendedImg2 =
+				new ExtendedRandomAccessibleInterval< FloatType, Img< FloatType > >( img2,
+						new OutOfBoundsPeriodicFactory< FloatType, Img< FloatType > >() );
 		final RandomAccess< FloatType > outsideCursor2 = extendedImg2.randomAccess();
 		localizableCursor1.reset();
 
@@ -221,8 +223,8 @@ public class ImgTestHelper
 				final FloatType t1 = localizableCursor1.get();
 				final FloatType t2 = outsideCursor2.get();
 
-//				final float f1 = t1.getRealFloat();
-//				final float f2 = t2.getRealFloat();
+				//				final float f1 = t1.getRealFloat();
+				//				final float f2 = t2.getRealFloat();
 
 				t1.set( t2 );
 

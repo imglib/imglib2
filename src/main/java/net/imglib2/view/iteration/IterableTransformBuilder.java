@@ -72,7 +72,8 @@ public class IterableTransformBuilder< T > extends TransformBuilder< T >
 	 * @return an {@link IterableInterval} that iterates {@code interval} of
 	 *         {@code randomAccessible}.
 	 */
-	public static < S > IterableInterval< S > getEfficientIterableInterval( final Interval interval, final RandomAccessible< S > randomAccessible )
+	public static < S > IterableInterval< S > getEfficientIterableInterval( final Interval interval,
+			final RandomAccessible< S > randomAccessible )
 	{
 		return new IterableTransformBuilder< S >( interval, randomAccessible ).buildIterableInterval();
 	}
@@ -162,7 +163,8 @@ public class IterableTransformBuilder< T > extends TransformBuilder< T >
 
 		final boolean hasFlatIterationOrder;
 
-		public Slice( final SubIntervalIterable< T > iterableSource, final Interval sourceInterval, final SlicingTransform transformToSource, final boolean hasFlatIterationOrder )
+		public Slice( final SubIntervalIterable< T > iterableSource, final Interval sourceInterval,
+				final SlicingTransform transformToSource, final boolean hasFlatIterationOrder )
 		{
 			super( interval );
 			numElements = Intervals.numElements( interval );
@@ -245,9 +247,9 @@ public class IterableTransformBuilder< T > extends TransformBuilder< T >
 
 				if ( optimizable )
 				{
-//					System.out.println( "interval = " + Util.printInterval( interval ) );
+					//					System.out.println( "interval = " + Util.printInterval( interval ) );
 					final Interval sliceInterval = t.transform( new BoundingBox( interval ) ).getInterval();
-//					System.out.println( "transformed interval = " + Util.printInterval( sliceInterval ) );
+					//					System.out.println( "transformed interval = " + Util.printInterval( sliceInterval ) );
 					if ( iterableSource.supportsOptimizedCursor( sliceInterval ) )
 					{
 						// check for FlatIterationOrder

@@ -87,7 +87,7 @@ public class IntervalChunks
 		long[] totalMax = Intervals.maxAsLongArray( interval );
 		long[] dimensions = Intervals.dimensionsAsLongArray( interval );
 		long[] cellNumbers = new long[ dimensions.length ];
-		Arrays.setAll(cellNumbers, d -> divideAndRoundUp( dimensions[ d ], cellDimensions[ d ] ) );
+		Arrays.setAll( cellNumbers, d -> divideAndRoundUp( dimensions[ d ], cellDimensions[ d ] ) );
 		long elements = Intervals.numElements( cellNumbers );
 		long[] cellIndicies = new long[ n ];
 		long[] min = new long[ n ];

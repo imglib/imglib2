@@ -56,7 +56,7 @@ public class StopWatchTest
 		StopWatch sw = StopWatch.createAndStart();
 		Thread.sleep( 42 );
 		long nanoTime = sw.nanoTime();
-		assertEquals( 42e6, nanoTime, 1e6);
+		assertEquals( 42e6, nanoTime, 1e6 );
 	}
 
 	@Ignore // NB: Time measurement depends on side effects. The test might sometimes fail. Better ignore it to avoid confusion.
@@ -70,7 +70,7 @@ public class StopWatchTest
 		sw.stop();
 		Thread.sleep( 10 );
 		long nanoTime = sw.nanoTime();
-		assertEquals( 10e6, nanoTime, 1e6);
+		assertEquals( 10e6, nanoTime, 1e6 );
 	}
 
 	@Ignore // NB: Time measurement depends on side effects. The test might sometimes fail. Better ignore it to avoid confusion.
@@ -80,16 +80,17 @@ public class StopWatchTest
 		StopWatch sw = StopWatch.createAndStart();
 		Thread.sleep( 42 );
 		double time = sw.seconds();
-		assertEquals( 0.042, time, 0.010);
+		assertEquals( 0.042, time, 0.010 );
 	}
 
 	// TODO: Fix or remove this test. It may fail depending on locale, e.g., secondsToString(42) will give "42,000 s" for de.
-	public void testSecondsToString() {
-		assertEquals("42.000 s", StopWatch.secondsToString(42));
-		assertEquals("42.000 ms", StopWatch.secondsToString(42e-3));
-		assertEquals("42.000 \u00b5s", StopWatch.secondsToString(42e-6));
-		assertEquals("42.000 ns", StopWatch.secondsToString(42e-9));
-		assertEquals("-42.000 ms", StopWatch.secondsToString(-42e-3));
-		assertEquals("42.000 s", StopWatch.secondsToString(42.00000000001));
+	public void testSecondsToString()
+	{
+		assertEquals( "42.000 s", StopWatch.secondsToString( 42 ) );
+		assertEquals( "42.000 ms", StopWatch.secondsToString( 42e-3 ) );
+		assertEquals( "42.000 \u00b5s", StopWatch.secondsToString( 42e-6 ) );
+		assertEquals( "42.000 ns", StopWatch.secondsToString( 42e-9 ) );
+		assertEquals( "-42.000 ms", StopWatch.secondsToString( -42e-3 ) );
+		assertEquals( "42.000 s", StopWatch.secondsToString( 42.00000000001 ) );
 	}
 }

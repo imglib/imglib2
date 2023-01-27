@@ -815,17 +815,15 @@ public class LinAlgHelpers
 	 */
 	final static public double det3x3( final double[] a )
 	{
-		assert a.length >= 9 : "Not enough coordinates.";
+		assert a.length >= 9: "Not enough coordinates.";
 
-		return
-			a[ 0 ] * a[ 4 ] * a[ 8 ] +
-			a[ 3 ] * a[ 7 ] * a[ 2 ] +
-			a[ 6 ] * a[ 1 ] * a[ 5 ] -
-			a[ 2 ] * a[ 4 ] * a[ 6 ] -
-			a[ 5 ] * a[ 7 ] * a[ 0 ] -
-			a[ 8 ] * a[ 1 ] * a[ 3 ];
+		return a[ 0 ] * a[ 4 ] * a[ 8 ] +
+				a[ 3 ] * a[ 7 ] * a[ 2 ] +
+				a[ 6 ] * a[ 1 ] * a[ 5 ] -
+				a[ 2 ] * a[ 4 ] * a[ 6 ] -
+				a[ 5 ] * a[ 7 ] * a[ 0 ] -
+				a[ 8 ] * a[ 1 ] * a[ 3 ];
 	}
-
 
 	/**
 	 * Calculate the determinant of a 3x3 matrix.
@@ -847,13 +845,12 @@ public class LinAlgHelpers
 			final double m10, final double m11, final double m12,
 			final double m20, final double m21, final double m22 )
 	{
-		return
-			m00 * m11 * m22 +
-			m10 * m21 * m02 +
-			m20 * m01 * m12 -
-			m02 * m11 * m20 -
-			m12 * m21 * m00 -
-			m22 * m01 * m10;
+		return m00 * m11 * m22 +
+				m10 * m21 * m02 +
+				m20 * m01 * m12 -
+				m02 * m11 * m20 -
+				m12 * m21 * m00 -
+				m22 * m01 * m10;
 	}
 
 	/**
@@ -865,10 +862,11 @@ public class LinAlgHelpers
 	 */
 	final static public void invert3x3( final double[] m ) throws IllegalArgumentException
 	{
-		assert m.length >= 9 : "Not enough coordinates.";
+		assert m.length >= 9: "Not enough coordinates.";
 
 		final double det = det3x3( m );
-		if ( det == 0 ) throw new IllegalArgumentException( "Matrix not invertible." );
+		if ( det == 0 )
+			throw new IllegalArgumentException( "Matrix not invertible." );
 
 		final double i00 = ( m[ 4 ] * m[ 8 ] - m[ 5 ] * m[ 7 ] ) / det;
 		final double i01 = ( m[ 2 ] * m[ 7 ] - m[ 1 ] * m[ 8 ] ) / det;
@@ -908,9 +906,10 @@ public class LinAlgHelpers
 			final double m20, final double m21, final double m22 ) throws IllegalArgumentException
 	{
 		final double det = det3x3( m00, m01, m02, m10, m11, m12, m20, m21, m22 );
-		if ( det == 0 ) throw new IllegalArgumentException( "Matrix not invertible." );
+		if ( det == 0 )
+			throw new IllegalArgumentException( "Matrix not invertible." );
 
-		return new double[]{
+		return new double[] {
 				( m11 * m22 - m12 * m21 ) / det, ( m02 * m21 - m01 * m22 ) / det, ( m01 * m12 - m02 * m11 ) / det,
 				( m12 * m20 - m10 * m22 ) / det, ( m00 * m22 - m02 * m20 ) / det, ( m02 * m10 - m00 * m12 ) / det,
 				( m10 * m21 - m11 * m20 ) / det, ( m01 * m20 - m00 * m21 ) / det, ( m00 * m11 - m01 * m10 ) / det };

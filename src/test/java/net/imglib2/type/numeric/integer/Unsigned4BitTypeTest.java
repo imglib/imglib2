@@ -57,7 +57,7 @@ public class Unsigned4BitTypeTest
 	public static void setUpBeforeClass() throws Exception
 	{
 
-		img = new ArrayImgFactory<> ( new Unsigned4BitType() ).create( 10, 20, 30 );
+		img = new ArrayImgFactory<>( new Unsigned4BitType() ).create( 10, 20, 30 );
 	}
 
 	/**
@@ -81,13 +81,14 @@ public class Unsigned4BitTypeTest
 	 * {@code BigInteger} representation of an Unsigned4BitType.
 	 */
 	@Test
-	public void testGetBigInteger() {
+	public void testGetBigInteger()
+	{
 
 		final Unsigned4BitType l = new Unsigned4BitType( 14l );
 		assertEquals( BigInteger.valueOf( 14l ), l.getBigInteger() );
 
 		final Unsigned4BitType l2 = new Unsigned4BitType( -7l );
-		assertEquals( BigInteger.valueOf( 9l ) , l2.getBigInteger() );
+		assertEquals( BigInteger.valueOf( 9l ), l2.getBigInteger() );
 	}
 
 	/**
@@ -96,7 +97,8 @@ public class Unsigned4BitTypeTest
 	 * {@code int} value that is in the proper range.
 	 */
 	@Test
-	public void testSetBigInteger() {
+	public void testSetBigInteger()
+	{
 
 		final Unsigned4BitType l = new Unsigned4BitType( 4l );
 
@@ -136,12 +138,12 @@ public class Unsigned4BitTypeTest
 		assertTrue( i4.equals( b ) );
 	}
 
-
 	/** Tests {@link Unsigned4BitType#hashCode()}. */
 	@Test
 	public void testHashCode()
 	{
-		for (int i = 0; i < 16; i++) {
+		for ( int i = 0; i < 16; i++ )
+		{
 			final Unsigned4BitType b = new Unsigned4BitType( i );
 			assertEquals( i, b.hashCode() );
 		}

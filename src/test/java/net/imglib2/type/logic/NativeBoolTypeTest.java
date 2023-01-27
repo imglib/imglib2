@@ -54,7 +54,8 @@ import org.junit.Test;
  * 
  * @author Curtis Rueden
  */
-public class NativeBoolTypeTest {
+public class NativeBoolTypeTest
+{
 
 	static ArrayImg< NativeBoolType, BooleanArray > img;
 

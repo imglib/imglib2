@@ -115,7 +115,6 @@ public class BiConvertedRealRandomAccessible< A, B, C > extends AbstractConverte
 		return convertedSupplier;
 	}
 
-
 	/**
 	 * Returns an instance of the {@link BiConverter}.  If the
 	 * {@link BiConvertedRealRandomAccessibleRealInterval} was created with a {@link BiConverter}

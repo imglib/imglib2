@@ -54,6 +54,7 @@ import net.imglib2.type.numeric.real.DoubleType;
 public class RealPositionRealRandomAccessible implements RealRandomAccessible< DoubleType >
 {
 	private final int n;
+
 	private final int d;
 
 	public RealPositionRealRandomAccessible( final int numDimensions, final int d )

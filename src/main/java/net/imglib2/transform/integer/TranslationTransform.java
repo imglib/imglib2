@@ -43,7 +43,8 @@ import net.imglib2.concatenate.PreConcatenable;
  * TODO
  * 
  */
-public class TranslationTransform extends AbstractMixedTransform implements Translation, Concatenable< Translation >, PreConcatenable< Translation >
+public class TranslationTransform extends AbstractMixedTransform
+		implements Translation, Concatenable< Translation >, PreConcatenable< Translation >
 {
 	/**
 	 * target = source + translation.
@@ -209,7 +210,8 @@ public class TranslationTransform extends AbstractMixedTransform implements Tran
 			source.setPosition( target.getLongPosition( d ) - translation[ d ], d );
 	}
 
-	public class InverseTranslationTransform extends AbstractMixedTransform implements Translation, Concatenable< Translation >, PreConcatenable< Translation >
+	public class InverseTranslationTransform extends AbstractMixedTransform
+			implements Translation, Concatenable< Translation >, PreConcatenable< Translation >
 	{
 		InverseTranslationTransform( final int targetDim )
 		{

@@ -49,11 +49,13 @@ import net.imglib2.util.Pair;
 public class RandomAccessiblePair< A, B > implements RandomAccessible< Pair< A, B > >
 {
 	final protected RandomAccessible< A > sourceA;
+
 	final protected RandomAccessible< B > sourceB;
 
 	public class RandomAccess implements Pair< A, B >, net.imglib2.RandomAccess< Pair< A, B > >
 	{
 		final protected net.imglib2.RandomAccess< A > a;
+
 		final protected net.imglib2.RandomAccess< B > b;
 
 		public RandomAccess()

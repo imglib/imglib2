@@ -53,7 +53,7 @@ public class VolatileUnsignedIntType extends AbstractVolatileNativeRealType< Uns
 
 	private static class WrappedUnsignedIntType extends UnsignedIntType
 	{
-		public WrappedUnsignedIntType( final NativeImg<?, ? extends IntAccess> img )
+		public WrappedUnsignedIntType( final NativeImg< ?, ? extends IntAccess > img )
 		{
 			super( img );
 		}
@@ -129,7 +129,8 @@ public class VolatileUnsignedIntType extends AbstractVolatileNativeRealType< Uns
 		return v;
 	}
 
-	private static final NativeTypeFactory< VolatileUnsignedIntType, VolatileIntAccess > typeFactory = NativeTypeFactory.INT( VolatileUnsignedIntType::new );
+	private static final NativeTypeFactory< VolatileUnsignedIntType, VolatileIntAccess > typeFactory =
+			NativeTypeFactory.INT( VolatileUnsignedIntType::new );
 
 	@Override
 	public NativeTypeFactory< VolatileUnsignedIntType, ? > getNativeTypeFactory()

@@ -55,7 +55,7 @@ public class ImgFactoryTest
 	@Deprecated
 	public final void testCreateSupplierOfTLongArray()
 	{
-		final ArrayImg< UnsignedByteType, ByteArray > img = ArrayImgs.unsignedBytes(1, 2, 3);
+		final ArrayImg< UnsignedByteType, ByteArray > img = ArrayImgs.unsignedBytes( 1, 2, 3 );
 		final Img< UnsignedByteType > copy = img.factory().create( UnsignedByteType::new, 1, 2, 3 );
 		Assert.assertTrue( ArrayImg.class.isInstance( copy ) );
 		Assert.assertTrue( UnsignedByteType.class.isInstance( copy.iterator().next() ) );

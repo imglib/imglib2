@@ -49,7 +49,8 @@ import net.imglib2.RealRandomAccessible;
  *
  * @author Stephan Saalfeld
  */
-public class FunctionRealRandomAccessible< T > extends AbstractFunctionEuclideanSpace< RealLocalizable, T > implements RealRandomAccessible< T >
+public class FunctionRealRandomAccessible< T > extends AbstractFunctionEuclideanSpace< RealLocalizable, T >
+		implements RealRandomAccessible< T >
 {
 	public FunctionRealRandomAccessible(
 			final int n,
@@ -70,6 +71,7 @@ public class FunctionRealRandomAccessible< T > extends AbstractFunctionEuclidean
 	public class RealFunctionRealRandomAccess extends RealPoint implements RealRandomAccess< T >
 	{
 		private final T t = typeSupplier.get();
+
 		private final BiConsumer< RealLocalizable, ? super T > function = functionSupplier.get();
 
 		public RealFunctionRealRandomAccess()

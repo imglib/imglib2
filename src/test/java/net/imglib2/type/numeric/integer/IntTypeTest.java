@@ -39,21 +39,22 @@ import java.math.BigInteger;
 
 import org.junit.Test;
 
-
-public class IntTypeTest {
+public class IntTypeTest
+{
 
 	/**
 	 * Test which verifies {@link IntType#getBigInteger()} returns the
 	 * {@code BigInteger} representation of an IntType.
 	 */
 	@Test
-	public void testGetBigInteger() {
+	public void testGetBigInteger()
+	{
 
 		final IntType l = new IntType( 10948 );
 		assertEquals( BigInteger.valueOf( 10948l ), l.getBigInteger() );
 
 		final IntType l2 = new IntType( -40913824 );
-		assertEquals( BigInteger.valueOf( -40913824l ) , l2.getBigInteger() );
+		assertEquals( BigInteger.valueOf( -40913824l ), l2.getBigInteger() );
 	}
 
 	/**
@@ -62,7 +63,8 @@ public class IntTypeTest {
 	 * {@code int} value.
 	 */
 	@Test
-	public void testSetBigInteger() {
+	public void testSetBigInteger()
+	{
 
 		final IntType l = new IntType( 0 );
 

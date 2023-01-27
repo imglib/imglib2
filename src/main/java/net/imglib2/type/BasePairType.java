@@ -42,7 +42,7 @@ import net.imglib2.type.label.BasePairBitType.Base;
  * @author Stephan Preibisch
  * @author Stephan Saalfeld
  */
-public interface BasePairType< T extends BasePairType< T >> extends Type< T >, Comparable< T >
+public interface BasePairType< T extends BasePairType< T > > extends Type< T >, Comparable< T >
 {
 	void set( Base base );
 

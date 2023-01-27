@@ -82,7 +82,8 @@ public class NearestNeighborRealRandomAccessibleStackInterpolatorTest
 			stack.add( Views.interpolate( indices, new NearestNeighborInterpolatorFactory<>() ) );
 		}
 
-		final RealRandomAccessible< LongType > interpolatedStack = new Interpolant<>( stack, new NearestNeighborRealRandomAccessibleStackInterpolatorFactory<>(), 3 );
+		final RealRandomAccessible< LongType > interpolatedStack =
+				new Interpolant<>( stack, new NearestNeighborRealRandomAccessibleStackInterpolatorFactory<>(), 3 );
 
 		int i = 0;
 		for ( final LongType t : Views.flatIterable( Views.interval( Views.raster( interpolatedStack ), cropInterval ) ) )

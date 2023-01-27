@@ -81,7 +81,7 @@ public class ImgUtil
 	 * @param dest
 	 *            - the destination for the copy
 	 */
-	public static < T extends RealType< T >> void copy( final double[] src, final int offset, final int[] stride, final Img< T > dest )
+	public static < T extends RealType< T > > void copy( final double[] src, final int offset, final int[] stride, final Img< T > dest )
 	{
 		final Cursor< T > c = dest.localizingCursor();
 		final int[] location = new int[ dest.numDimensions() ];
@@ -101,7 +101,7 @@ public class ImgUtil
 	/**
 	 * @see ImgUtil#copy(double[], int, int[], Img)
 	 */
-	public static < T extends RealType< T >> void copy( final float[] src, final int offset, final int[] stride, final Img< T > dest )
+	public static < T extends RealType< T > > void copy( final float[] src, final int offset, final int[] stride, final Img< T > dest )
 	{
 		final Cursor< T > c = dest.localizingCursor();
 		final int[] location = new int[ dest.numDimensions() ];
@@ -121,7 +121,7 @@ public class ImgUtil
 	/**
 	 * @see ImgUtil#copy(double[], int, int[], Img)
 	 */
-	public static < T extends IntegerType< T >> void copy( final long[] src, final int offset, final int[] stride, final Img< T > dest )
+	public static < T extends IntegerType< T > > void copy( final long[] src, final int offset, final int[] stride, final Img< T > dest )
 	{
 		final Cursor< T > c = dest.localizingCursor();
 		final int[] location = new int[ dest.numDimensions() ];
@@ -141,7 +141,7 @@ public class ImgUtil
 	/**
 	 * @see ImgUtil#copy(double[], int, int[], Img)
 	 */
-	public static < T extends IntegerType< T >> void copy( final int[] src, final int offset, final int[] stride, final Img< T > dest )
+	public static < T extends IntegerType< T > > void copy( final int[] src, final int offset, final int[] stride, final Img< T > dest )
 	{
 		final Cursor< T > c = dest.localizingCursor();
 		final int[] location = new int[ dest.numDimensions() ];
@@ -161,7 +161,7 @@ public class ImgUtil
 	/**
 	 * @see ImgUtil#copy(double[], int, int[], Img)
 	 */
-	public static < T extends BooleanType< T >> void copy( final boolean[] src, final int offset, final int[] stride, final Img< T > dest )
+	public static < T extends BooleanType< T > > void copy( final boolean[] src, final int offset, final int[] stride, final Img< T > dest )
 	{
 		final Cursor< T > c = dest.localizingCursor();
 		final int[] location = new int[ dest.numDimensions() ];
@@ -195,7 +195,7 @@ public class ImgUtil
 	 * @see ImgUtil#copy(double[], int, int[], Img) for a more comprehensive
 	 *      description of addressing
 	 */
-	public static < T extends RealType< T >> void copy( final Img< T > src, final double[] dest, final int offset, final int[] stride )
+	public static < T extends RealType< T > > void copy( final Img< T > src, final double[] dest, final int offset, final int[] stride )
 	{
 		final Cursor< T > c = src.localizingCursor();
 		final int[] location = new int[ src.numDimensions() ];
@@ -215,7 +215,7 @@ public class ImgUtil
 	/**
 	 * @see ImgUtil#copy(Img, double[], int, int[])
 	 */
-	public static < T extends RealType< T >> void copy( final Img< T > src, final float[] dest, final int offset, final int[] stride )
+	public static < T extends RealType< T > > void copy( final Img< T > src, final float[] dest, final int offset, final int[] stride )
 	{
 		final Cursor< T > c = src.localizingCursor();
 		final int[] location = new int[ src.numDimensions() ];
@@ -235,7 +235,7 @@ public class ImgUtil
 	/**
 	 * @see ImgUtil#copy(Img, double[], int, int[])
 	 */
-	public static < T extends IntegerType< T >> void copy( final Img< T > src, final long[] dest, final int offset, final int[] stride )
+	public static < T extends IntegerType< T > > void copy( final Img< T > src, final long[] dest, final int offset, final int[] stride )
 	{
 		final Cursor< T > c = src.localizingCursor();
 		final int[] location = new int[ src.numDimensions() ];
@@ -255,7 +255,7 @@ public class ImgUtil
 	/**
 	 * @see ImgUtil#copy(Img, double[], int, int[])
 	 */
-	public static < T extends IntegerType< T >> void copy( final Img< T > src, final int[] dest, final int offset, final int[] stride )
+	public static < T extends IntegerType< T > > void copy( final Img< T > src, final int[] dest, final int offset, final int[] stride )
 	{
 		final Cursor< T > c = src.localizingCursor();
 		final int[] location = new int[ src.numDimensions() ];
@@ -271,11 +271,11 @@ public class ImgUtil
 			dest[ this_offset ] = t.getInteger();
 		}
 	}
-	
+
 	/**
 	 * @see ImgUtil#copy(Img, double[], int, int[])
 	 */
-	public static < T extends IntegerType< T >> void copy( final Img< T > src, final short[] dest, final int offset, final int[] stride )
+	public static < T extends IntegerType< T > > void copy( final Img< T > src, final short[] dest, final int offset, final int[] stride )
 	{
 		final Cursor< T > c = src.localizingCursor();
 		final int[] location = new int[ src.numDimensions() ];
@@ -288,14 +288,14 @@ public class ImgUtil
 			{
 				this_offset += location[ i ] * stride[ i ];
 			}
-			dest[ this_offset ] = (short) t.getInteger();
+			dest[ this_offset ] = ( short ) t.getInteger();
 		}
 	}
 
 	/**
 	 * @see ImgUtil#copy(Img, double[], int, int[])
 	 */
-	public static < T extends BooleanType< T >> void copy( final Img< T > src, final boolean[] dest, final int offset, final int[] stride )
+	public static < T extends BooleanType< T > > void copy( final Img< T > src, final boolean[] dest, final int offset, final int[] stride )
 	{
 		final Cursor< T > c = src.localizingCursor();
 		final int[] location = new int[ src.numDimensions() ];
@@ -311,14 +311,15 @@ public class ImgUtil
 			dest[ this_offset ] = t.get();
 		}
 	}
-	
+
 	/**
 	 * Copy one image into another, multi-threaded.
 	 */
-	public static < T extends Type< T >> void copy( final RandomAccessibleInterval< T > source, final RandomAccessibleInterval< T > destination )
+	public static < T extends Type< T > > void copy( final RandomAccessibleInterval< T > source,
+			final RandomAccessibleInterval< T > destination )
 	{
-		LoopBuilder.setImages(source, destination)
+		LoopBuilder.setImages( source, destination )
 				.multiThreaded()
-				.forEachPixel( (i,o) -> o.set(i) );
+				.forEachPixel( ( i, o ) -> o.set( i ) );
 	}
 }

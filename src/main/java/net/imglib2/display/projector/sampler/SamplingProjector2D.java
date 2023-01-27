@@ -108,7 +108,8 @@ public class SamplingProjector2D< A, B > extends AbstractProjector2D
 	 *            selection of the third dimension
 	 * @param projectedPositions
 	 */
-	public SamplingProjector2D( final int dimX, final int dimY, final RandomAccessible< A > source, final IterableInterval< B > target, final Converter< ProjectedSampler< A >, B > converter, final int projectedDimension, final long[] projectedPositions )
+	public SamplingProjector2D( final int dimX, final int dimY, final RandomAccessible< A > source, final IterableInterval< B > target,
+			final Converter< ProjectedSampler< A >, B > converter, final int projectedDimension, final long[] projectedPositions )
 	{
 
 		super( source.numDimensions() );
@@ -138,7 +139,8 @@ public class SamplingProjector2D< A, B > extends AbstractProjector2D
 		projectionSampler = new SelectiveSampler< A >( projectedDimension, projectedPositions );
 	}
 
-	public SamplingProjector2D( final int dimX, final int dimY, final RandomAccessibleInterval< A > source, final IterableInterval< B > target, final Converter< ProjectedSampler< A >, B > converter, final int projectedDimension )
+	public SamplingProjector2D( final int dimX, final int dimY, final RandomAccessibleInterval< A > source,
+			final IterableInterval< B > target, final Converter< ProjectedSampler< A >, B > converter, final int projectedDimension )
 	{
 
 		super( source.numDimensions() );

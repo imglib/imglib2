@@ -102,7 +102,6 @@ public class ConvertedRandomAccessible< A, B > extends AbstractConvertedRandomAc
 		return convertedSupplier;
 	}
 
-
 	/**
 	 * Returns an instance of the {@link Converter}.  If the
 	 * {@link ConvertedRandomAccessible} was created with a {@link Converter}

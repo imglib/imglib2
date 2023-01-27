@@ -32,7 +32,6 @@
  * #L%
  */
 
-
 package net.imglib2.type.numeric.integer;
 
 import java.math.BigInteger;
@@ -48,7 +47,8 @@ import net.imglib2.util.Util;
  *
  * @author Albert Cardona
  */
-public abstract class AbstractIntegerBitType< T extends AbstractIntegerBitType< T > > extends AbstractBitType< T > implements IntegerType< T >
+public abstract class AbstractIntegerBitType< T extends AbstractIntegerBitType< T > > extends AbstractBitType< T >
+		implements IntegerType< T >
 {
 	// Maximum count is Integer.MAX_VALUE * (64 / getBitsPerPixel())
 	//protected long i = 0;
@@ -71,113 +71,233 @@ public abstract class AbstractIntegerBitType< T extends AbstractIntegerBitType< 
 	public abstract void set( long value );
 
 	@Override
-	public int getBitsPerPixel() { return nBits; }
+	public int getBitsPerPixel()
+	{
+		return nBits;
+	}
 
 	@Override
-	public double getMinIncrement() { return 1; }
+	public double getMinIncrement()
+	{
+		return 1;
+	}
 
 	@Override
-	public void mul( final float c ) { setReal( getRealDouble() * c ); }
+	public void mul( final float c )
+	{
+		setReal( getRealDouble() * c );
+	}
 
 	@Override
-	public void mul( final double c ) { setReal( getRealDouble() * c ); }
+	public void mul( final double c )
+	{
+		setReal( getRealDouble() * c );
+	}
 
 	@Override
-	public float getRealFloat() { return getIntegerLong(); }
-	@Override
-	public double getRealDouble() { return getIntegerLong(); }
+	public float getRealFloat()
+	{
+		return getIntegerLong();
+	}
 
 	@Override
-	public void setReal( final float real ){ setInteger( Util.round( real ) ); }
-	@Override
-	public void setReal( final double real ){ setInteger( Util.round( real ) ); }
+	public double getRealDouble()
+	{
+		return getIntegerLong();
+	}
 
 	@Override
-	public void setZero() { setInteger( 0 ); }
-	@Override
-	public void setOne() { setInteger( 1 ); }
+	public void setReal( final float real )
+	{
+		setInteger( Util.round( real ) );
+	}
 
 	@Override
-	public String toString() { return "" + getIntegerLong(); }
+	public void setReal( final double real )
+	{
+		setInteger( Util.round( real ) );
+	}
 
 	@Override
-	public int getInteger() { return (int)get(); }
+	public void setZero()
+	{
+		setInteger( 0 );
+	}
 
 	@Override
-	public long getIntegerLong() { return get(); }
+	public void setOne()
+	{
+		setInteger( 1 );
+	}
 
 	@Override
-	public BigInteger getBigInteger() { return BigInteger.valueOf( get() ); }
+	public String toString()
+	{
+		return "" + getIntegerLong();
+	}
 
 	@Override
-	public void setInteger( final int f ) { set( f ); }
+	public int getInteger()
+	{
+		return ( int ) get();
+	}
 
 	@Override
-	public void setInteger( final long f ) { set( f ); }
+	public long getIntegerLong()
+	{
+		return get();
+	}
 
 	@Override
-	public void setBigInteger( final BigInteger b) { set( b.longValue() ); }
+	public BigInteger getBigInteger()
+	{
+		return BigInteger.valueOf( get() );
+	}
+
+	@Override
+	public void setInteger( final int f )
+	{
+		set( f );
+	}
+
+	@Override
+	public void setInteger( final long f )
+	{
+		set( f );
+	}
+
+	@Override
+	public void setBigInteger( final BigInteger b )
+	{
+		set( b.longValue() );
+	}
 
 	/** The maximum value that can be stored is {@code Math.pow(2, nBits) -1}. */
 	@Override
-	public double getMaxValue() { return Math.pow(2, getBitsPerPixel()) -1; }
-	@Override
-	public double getMinValue()  { return 0; }
+	public double getMaxValue()
+	{
+		return Math.pow( 2, getBitsPerPixel() ) - 1;
+	}
 
 	@Override
-	public void inc() {	set(get() + 1); }
+	public double getMinValue()
+	{
+		return 0;
+	}
 
 	@Override
-	public void dec() {	set(get() - 1); }
+	public void inc()
+	{
+		set( get() + 1 );
+	}
 
 	@Override
-	public void add(final T t) { set(get() + t.get()); }
+	public void dec()
+	{
+		set( get() - 1 );
+	}
 
 	@Override
-	public void sub(final T t) { set(get() - t.get()); }
+	public void add( final T t )
+	{
+		set( get() + t.get() );
+	}
 
 	@Override
-	public void mul(final T t) { set(get() * t.get()); }
+	public void sub( final T t )
+	{
+		set( get() - t.get() );
+	}
 
 	@Override
-	public void div(final T t) { set(get() / t.get()); }
-	
-	@Override
-	public void pow(final T t) { setReal( Math.pow( get(), t.get() ) ); }
-	
-	@Override
-	public void pow(final double power) { setReal( Math.pow( get(), power) ); }
+	public void mul( final T t )
+	{
+		set( get() * t.get() );
+	}
 
 	@Override
-	public void set( final T c ) { set( c.get() ); }
+	public void div( final T t )
+	{
+		set( get() / t.get() );
+	}
 
 	@Override
-	public float getImaginaryFloat() { return 0; }
-	@Override
-	public double getImaginaryDouble() { return 0; }
+	public void pow( final T t )
+	{
+		setReal( Math.pow( get(), t.get() ) );
+	}
 
 	@Override
-	public void setImaginary( final float complex ){}
-	@Override
-	public void setImaginary( final double complex ){}
+	public void pow( final double power )
+	{
+		setReal( Math.pow( get(), power ) );
+	}
 
 	@Override
-	public float getPhaseFloat() { return 0; }
-	@Override
-	public double getPhaseDouble() { return 0; }
+	public void set( final T c )
+	{
+		set( c.get() );
+	}
 
 	@Override
-	public float getPowerFloat() { return getRealFloat(); }
-	@Override
-	public double getPowerDouble() { return getRealDouble(); }
+	public float getImaginaryFloat()
+	{
+		return 0;
+	}
 
 	@Override
-	public void setComplexNumber( final float r, final float i ) { setReal( r ); }
-	@Override
-	public void setComplexNumber( final double r, final double i ) { setReal( r ); }
+	public double getImaginaryDouble()
+	{
+		return 0;
+	}
 
 	@Override
-	public void complexConjugate(){}
+	public void setImaginary( final float complex )
+	{}
+
+	@Override
+	public void setImaginary( final double complex )
+	{}
+
+	@Override
+	public float getPhaseFloat()
+	{
+		return 0;
+	}
+
+	@Override
+	public double getPhaseDouble()
+	{
+		return 0;
+	}
+
+	@Override
+	public float getPowerFloat()
+	{
+		return getRealFloat();
+	}
+
+	@Override
+	public double getPowerDouble()
+	{
+		return getRealDouble();
+	}
+
+	@Override
+	public void setComplexNumber( final float r, final float i )
+	{
+		setReal( r );
+	}
+
+	@Override
+	public void setComplexNumber( final double r, final double i )
+	{
+		setReal( r );
+	}
+
+	@Override
+	public void complexConjugate()
+	{}
 
 	@Override
 	public int compareTo( final T other )

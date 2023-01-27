@@ -76,8 +76,7 @@ public class ForkJoinExecutorService extends AbstractExecutorService
 
 	@Override
 	public void shutdown()
-	{
-	}
+	{}
 
 	@Override
 	public List< Runnable > shutdownNow()
@@ -98,8 +97,7 @@ public class ForkJoinExecutorService extends AbstractExecutorService
 	}
 
 	@Override
-	public boolean awaitTermination( long l, TimeUnit timeUnit ) throws
-			InterruptedException
+	public boolean awaitTermination( long l, TimeUnit timeUnit ) throws InterruptedException
 	{
 		// NB: it's possible to implement this method. One might use a set of weak references to collect all tasks submitted.
 		// And this method call ForkJoinTask.get( long, timeUnit), to get the timing correct.
@@ -110,8 +108,7 @@ public class ForkJoinExecutorService extends AbstractExecutorService
 	}
 
 	@Override
-	public < T > List< Future< T > > invokeAll( Collection< ? extends Callable< T > > collection ) throws
-			InterruptedException
+	public < T > List< Future< T > > invokeAll( Collection< ? extends Callable< T > > collection ) throws InterruptedException
 	{
 		// TODO: Revisit if we ever drop support for Java 8.
 		//  For Java 11, the code below could be replaced by
@@ -128,8 +125,8 @@ public class ForkJoinExecutorService extends AbstractExecutorService
 	}
 
 	@Override
-	public < T > List< Future< T > > invokeAll( Collection< ? extends Callable< T > > collection, long l, TimeUnit timeUnit ) throws
-			InterruptedException
+	public < T > List< Future< T > > invokeAll( Collection< ? extends Callable< T > > collection, long l, TimeUnit timeUnit )
+			throws InterruptedException
 	{
 		throw new UnsupportedOperationException( "ForkJoinExecutorService, invokeAll with timeout is not implemented." );
 	}

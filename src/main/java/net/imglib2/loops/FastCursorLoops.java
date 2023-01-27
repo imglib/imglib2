@@ -162,7 +162,8 @@ public final class FastCursorLoops
 
 		private final Cursor< C > cursorC;
 
-		public ThreeCursorLoop( final TriConsumer< A, B, C > action, final Cursor< A > cursorA, final Cursor< B > cursorB, final Cursor< C > cursorC )
+		public ThreeCursorLoop( final TriConsumer< A, B, C > action, final Cursor< A > cursorA, final Cursor< B > cursorB,
+				final Cursor< C > cursorC )
 		{
 			this.action = action;
 			this.cursorA = cursorA;
@@ -191,7 +192,8 @@ public final class FastCursorLoops
 
 		private final Cursor< D > cursorD;
 
-		public FourCursorLoop( final FourConsumer< A, B, C, D > action, final Cursor< A > cursorA, final Cursor< B > cursorB, final Cursor< C > cursorC, final Cursor< D > cursorD )
+		public FourCursorLoop( final FourConsumer< A, B, C, D > action, final Cursor< A > cursorA, final Cursor< B > cursorB,
+				final Cursor< C > cursorC, final Cursor< D > cursorD )
 		{
 			this.action = action;
 			this.cursorA = cursorA;
@@ -223,7 +225,8 @@ public final class FastCursorLoops
 
 		private final Cursor< E > cursorE;
 
-		public FiveCursorLoop( final FiveConsumer< A, B, C, D, E > action, final Cursor< A > cursorA, final Cursor< B > cursorB, final Cursor< C > cursorC, final Cursor< D > cursorD, Cursor< E > cursorE )
+		public FiveCursorLoop( final FiveConsumer< A, B, C, D, E > action, final Cursor< A > cursorA, final Cursor< B > cursorB,
+				final Cursor< C > cursorC, final Cursor< D > cursorD, Cursor< E > cursorE )
 		{
 			this.action = action;
 			this.cursorA = cursorA;
@@ -258,7 +261,8 @@ public final class FastCursorLoops
 
 		private final Cursor< F > cursorF;
 
-		public SixCursorLoop( final SixConsumer< A, B, C, D, E, F > action, final Cursor< A > cursorA, final Cursor< B > cursorB, final Cursor< C > cursorC, final Cursor< D > cursorD, final Cursor< E > cursorE, final Cursor< F > cursorF )
+		public SixCursorLoop( final SixConsumer< A, B, C, D, E, F > action, final Cursor< A > cursorA, final Cursor< B > cursorB,
+				final Cursor< C > cursorC, final Cursor< D > cursorD, final Cursor< E > cursorE, final Cursor< F > cursorF )
 		{
 			this.action = action;
 			this.cursorA = cursorA;

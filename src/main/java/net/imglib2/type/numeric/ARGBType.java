@@ -172,7 +172,8 @@ public class ARGBType extends AbstractNativeType< ARGBType > implements NumericT
 		final int value1 = get();
 		final int value2 = c.get();
 
-		set( rgba( red( value1 ) + red( value2 ), green( value1 ) + green( value2 ), blue( value1 ) + blue( value2 ), alpha( value1 ) + alpha( value2 ) ) );
+		set( rgba( red( value1 ) + red( value2 ), green( value1 ) + green( value2 ), blue( value1 ) + blue( value2 ),
+				alpha( value1 ) + alpha( value2 ) ) );
 	}
 
 	@Override
@@ -181,7 +182,8 @@ public class ARGBType extends AbstractNativeType< ARGBType > implements NumericT
 		final int value1 = get();
 		final int value2 = c.get();
 
-		set( rgba( red( value1 ) / red( value2 ), green( value1 ) / green( value2 ), blue( value1 ) / blue( value2 ), alpha( value1 ) / alpha( value2 ) ) );
+		set( rgba( red( value1 ) / red( value2 ), green( value1 ) / green( value2 ), blue( value1 ) / blue( value2 ),
+				alpha( value1 ) / alpha( value2 ) ) );
 	}
 
 	@Override
@@ -190,7 +192,8 @@ public class ARGBType extends AbstractNativeType< ARGBType > implements NumericT
 		final int value1 = get();
 		final int value2 = c.get();
 
-		set( rgba( red( value1 ) * red( value2 ), green( value1 ) * green( value2 ), blue( value1 ) * blue( value2 ), alpha( value1 ) * alpha( value2 ) ) );
+		set( rgba( red( value1 ) * red( value2 ), green( value1 ) * green( value2 ), blue( value1 ) * blue( value2 ),
+				alpha( value1 ) * alpha( value2 ) ) );
 	}
 
 	@Override
@@ -199,7 +202,8 @@ public class ARGBType extends AbstractNativeType< ARGBType > implements NumericT
 		final int value1 = get();
 		final int value2 = c.get();
 
-		set( rgba( red( value1 ) - red( value2 ), green( value1 ) - green( value2 ), blue( value1 ) - blue( value2 ), alpha( value1 ) - alpha( value2 ) ) );
+		set( rgba( red( value1 ) - red( value2 ), green( value1 ) - green( value2 ), blue( value1 ) - blue( value2 ),
+				alpha( value1 ) - alpha( value2 ) ) );
 	}
 
 	@Override

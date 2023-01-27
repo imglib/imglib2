@@ -80,7 +80,10 @@ final public class ExtendedRandomAccessibleInterval< T, F extends RandomAccessib
 	{
 		assert source.numDimensions() == interval.numDimensions();
 
-		if ( Intervals.contains( source, interval ) ) { return source.randomAccess( interval ); }
+		if ( Intervals.contains( source, interval ) )
+		{
+			return source.randomAccess( interval );
+		}
 		return randomAccess();
 	}
 
@@ -88,7 +91,7 @@ final public class ExtendedRandomAccessibleInterval< T, F extends RandomAccessib
 	{
 		return source;
 	}
-	
+
 	public OutOfBoundsFactory< T, ? super F > getOutOfBoundsFactory()
 	{
 		return factory;

@@ -76,7 +76,10 @@ public class DiscreteFrequencyDistribution implements Img< LongType >
 
 		for ( int i = 0; i < binCounts.length; i++ )
 		{
-			if ( binCounts[ i ] <= 0 ) { throw new IllegalArgumentException( "invalid bin count (<= 0)" ); }
+			if ( binCounts[ i ] <= 0 )
+			{
+				throw new IllegalArgumentException( "invalid bin count (<= 0)" );
+			}
 		}
 
 		// then build object
@@ -131,7 +134,10 @@ public class DiscreteFrequencyDistribution implements Img< LongType >
 	 */
 	public void setFrequency( final long[] binPos, final long value )
 	{
-		if ( value < 0 ) { throw new IllegalArgumentException( "frequency count must be >= 0" ); }
+		if ( value < 0 )
+		{
+			throw new IllegalArgumentException( "frequency count must be >= 0" );
+		}
 		accessor.setPosition( binPos );
 		final long currentValue = accessor.get().get();
 		totalValues += ( value - currentValue );

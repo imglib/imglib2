@@ -43,7 +43,7 @@ import net.imglib2.type.NativeType;
  * @author Tobias Pietzsch
  * 
  */
-public final class NtreeCursor< T extends NativeType< T >> extends
+public final class NtreeCursor< T extends NativeType< T > > extends
 		LocalizingIntervalIterator implements Cursor< T >, PositionProvider
 {
 	private final NtreeImg< T, ? > img;

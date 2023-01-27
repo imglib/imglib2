@@ -34,7 +34,6 @@
 
 package net.imglib2;
 
-
 /**
  * Abstract base class for nodes in a KDTree. A KDTreeNode has coordinates and a
  * value. It provides the coordinates via the {@link RealLocalizable} interface.

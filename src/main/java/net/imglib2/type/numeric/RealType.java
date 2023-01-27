@@ -40,7 +40,7 @@ package net.imglib2.type.numeric;
  * @author Stephan Preibisch
  * @author Stephan Saalfeld
  */
-public interface RealType< T extends RealType< T >> extends ComplexType< T >, Comparable< T >
+public interface RealType< T extends RealType< T > > extends ComplexType< T >, Comparable< T >
 {
 	void inc();
 

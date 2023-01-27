@@ -42,7 +42,7 @@ import net.imglib2.util.Util;
  * TODO
  * 
  */
-public abstract class AbstractComplexType< T extends AbstractComplexType< T >> implements ComplexType< T >
+public abstract class AbstractComplexType< T extends AbstractComplexType< T > > implements ComplexType< T >
 {
 	@Override
 	public void set( final T c )
@@ -112,7 +112,7 @@ public abstract class AbstractComplexType< T extends AbstractComplexType< T >> i
 		setReal( Math.pow( getRealDouble(), c.getRealDouble() ) );
 		setImaginary( Math.pow( getImaginaryDouble(), c.getImaginaryDouble() ) );
 	}
-	
+
 	@Override
 	public void pow( final double power )
 	{
@@ -194,10 +194,10 @@ public abstract class AbstractComplexType< T extends AbstractComplexType< T >> i
 	@Override
 	public boolean equals( final Object obj )
 	{
-		if ( !getClass().isInstance(obj) )
+		if ( !getClass().isInstance( obj ) )
 			return false;
-		@SuppressWarnings("unchecked")
-		final T t = (T) obj;
+		@SuppressWarnings( "unchecked" )
+		final T t = ( T ) obj;
 		return AbstractComplexType.this.valueEquals( t );
 	}
 

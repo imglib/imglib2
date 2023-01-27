@@ -46,7 +46,8 @@ import net.imglib2.util.Fraction;
  * @author Tobias Pietzsch
  * 
  */
-public final class NtreeImg< T extends NativeType< T >, A extends NtreeAccess< ?, A > > extends AbstractNativeImg< T, A > implements Serializable
+public final class NtreeImg< T extends NativeType< T >, A extends NtreeAccess< ?, A > > extends AbstractNativeImg< T, A >
+		implements Serializable
 {
 	/**
 	 * TODO: remove with proper serialization

@@ -81,7 +81,8 @@ public class CompositeXYRandomAccessibleProjector< A > extends AbstractProjector
 	protected final RandomAccessibleInterval< A > source;
 
 	@SuppressWarnings( "unchecked" )
-	public CompositeXYRandomAccessibleProjector( final RandomAccessibleInterval< A > source, final RandomAccessibleInterval< ARGBType > target, final ArrayList< Converter< A, ARGBType >> converters, final int dimIndex )
+	public CompositeXYRandomAccessibleProjector( final RandomAccessibleInterval< A > source,
+			final RandomAccessibleInterval< ARGBType > target, final ArrayList< Converter< A, ARGBType > > converters, final int dimIndex )
 	{
 		super( source.numDimensions() );
 		this.source = source;
@@ -93,7 +94,10 @@ public class CompositeXYRandomAccessibleProjector< A > extends AbstractProjector
 		positionCount = dimIndex < 0 ? 1 : source.dimension( dimIndex );
 		positionMin = dimIndex < 0 ? 0 : source.min( dimIndex );
 		final int converterCount = converters.size();
-		if ( positionCount != converterCount ) { throw new IllegalArgumentException( "Expected " + positionCount + " converters but got " + converterCount ); }
+		if ( positionCount != converterCount )
+		{
+			throw new IllegalArgumentException( "Expected " + positionCount + " converters but got " + converterCount );
+		}
 
 		min[ dimIndex ] = source.min( dimIndex );
 		max[ dimIndex ] = source.max( dimIndex );

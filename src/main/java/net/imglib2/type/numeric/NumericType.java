@@ -49,6 +49,6 @@ import net.imglib2.type.operators.Sub;
  * TODO
  * 
  */
-public interface NumericType< T extends NumericType< T >> extends Type< T >, Add< T >, Mul< T >, Sub< T >, Div< T >, Pow< T >, SetOne, SetZero, MulFloatingPoint, PowFloatingPoint
-{
-}
+public interface NumericType< T extends NumericType< T > >
+		extends Type< T >, Add< T >, Mul< T >, Sub< T >, Div< T >, Pow< T >, SetOne, SetZero, MulFloatingPoint, PowFloatingPoint
+{}

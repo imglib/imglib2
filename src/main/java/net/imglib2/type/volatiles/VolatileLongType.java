@@ -54,7 +54,7 @@ public class VolatileLongType extends AbstractVolatileNativeRealType< LongType, 
 
 	private static class WrappedLongType extends LongType
 	{
-		public WrappedLongType( final NativeImg<?, ? extends LongAccess> img )
+		public WrappedLongType( final NativeImg< ?, ? extends LongAccess > img )
 		{
 			super( img );
 		}
@@ -106,7 +106,7 @@ public class VolatileLongType extends AbstractVolatileNativeRealType< LongType, 
 	public void updateContainer( final Object c )
 	{
 		final VolatileLongAccess a = img.update( c );
-		( (WrappedLongType) t ).setAccess( a );
+		( ( WrappedLongType ) t ).setAccess( a );
 		setValid( a.isValid() );
 	}
 
@@ -130,7 +130,8 @@ public class VolatileLongType extends AbstractVolatileNativeRealType< LongType, 
 		return v;
 	}
 
-	private static final NativeTypeFactory< VolatileLongType, VolatileLongAccess > typeFactory = NativeTypeFactory.LONG( VolatileLongType::new );
+	private static final NativeTypeFactory< VolatileLongType, VolatileLongAccess > typeFactory =
+			NativeTypeFactory.LONG( VolatileLongType::new );
 
 	@Override
 	public NativeTypeFactory< VolatileLongType, ? > getNativeTypeFactory()

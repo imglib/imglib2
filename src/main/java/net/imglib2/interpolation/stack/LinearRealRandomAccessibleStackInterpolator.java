@@ -60,7 +60,8 @@ import net.imglib2.util.Cast;
  * @param <T>
  *            the pixel type
  */
-public class LinearRealRandomAccessibleStackInterpolator< T extends NumericType< T > > extends NearestNeighborRealRandomAccessibleStackInterpolator< T >
+public class LinearRealRandomAccessibleStackInterpolator< T extends NumericType< T > >
+		extends NearestNeighborRealRandomAccessibleStackInterpolator< T >
 {
 	protected RealRandomAccess< T > sliceAccess2;
 
@@ -78,7 +79,6 @@ public class LinearRealRandomAccessibleStackInterpolator< T extends NumericType<
 	protected double w = 1;
 
 	protected double w1 = 0;
-
 
 	public LinearRealRandomAccessibleStackInterpolator(
 			final RealRandomAccessible< T >[] slices )
@@ -104,7 +104,7 @@ public class LinearRealRandomAccessibleStackInterpolator< T extends NumericType<
 	{
 		this(
 				slices.toArray(
-						Cast.<RealRandomAccessible< T >[]>unchecked(
+						Cast.< RealRandomAccessible< T >[] >unchecked(
 								Array.newInstance( RealRandomAccessible.class, slices.size() ) ) ) );
 
 	}
@@ -127,7 +127,7 @@ public class LinearRealRandomAccessibleStackInterpolator< T extends NumericType<
 	@Override
 	protected int getSliceIndex( @SuppressWarnings( "hiding" ) final double position )
 	{
-		return Math.max( 0, Math.min( lastSliceIndex, ( int )Math.floor( position ) ) );
+		return Math.max( 0, Math.min( lastSliceIndex, ( int ) Math.floor( position ) ) );
 	}
 
 	@Override
@@ -160,7 +160,8 @@ public class LinearRealRandomAccessibleStackInterpolator< T extends NumericType<
 			sliceAccess2 = sliceAccess;
 	}
 
-	protected void updateW() {
+	protected void updateW()
+	{
 
 		w1 = position[ sd ];
 		w1 -= Math.floor( w1 );
@@ -171,7 +172,8 @@ public class LinearRealRandomAccessibleStackInterpolator< T extends NumericType<
 	public void fwd( final int d )
 	{
 		position[ d ] += 1;
-		if ( d < sd ) {
+		if ( d < sd )
+		{
 			sliceAccess.fwd( d );
 			if ( sliceAccess2 != sliceAccess )
 				sliceAccess2.fwd( d );
@@ -184,7 +186,8 @@ public class LinearRealRandomAccessibleStackInterpolator< T extends NumericType<
 	public void bck( final int d )
 	{
 		position[ d ] += 1;
-		if ( d < sd ) {
+		if ( d < sd )
+		{
 			sliceAccess.bck( d );
 			if ( sliceAccess2 != sliceAccess )
 				sliceAccess2.bck( d );
@@ -197,7 +200,8 @@ public class LinearRealRandomAccessibleStackInterpolator< T extends NumericType<
 	public void move( final double distance, final int d )
 	{
 		position[ d ] += distance;
-		if ( d < sd ) {
+		if ( d < sd )
+		{
 			sliceAccess.move( distance, d );
 			if ( sliceAccess2 != sliceAccess )
 				sliceAccess2.move( distance, d );
@@ -518,19 +522,19 @@ public class LinearRealRandomAccessibleStackInterpolator< T extends NumericType<
 	@Override
 	public void setPosition( final int pos, final int d )
 	{
-		setPosition( ( double )pos, d );
+		setPosition( ( double ) pos, d );
 	}
 
 	@Override
 	public void setPosition( final long pos, final int d )
 	{
-		setPosition( ( double )pos, d );
+		setPosition( ( double ) pos, d );
 	}
 
 	@Override
 	public void setPosition( final float pos, final int d )
 	{
-		setPosition( ( double )pos, d );
+		setPosition( ( double ) pos, d );
 	}
 
 	@Override
@@ -549,7 +553,6 @@ public class LinearRealRandomAccessibleStackInterpolator< T extends NumericType<
 			updateW();
 		}
 	}
-
 
 	@Override
 	public T get()

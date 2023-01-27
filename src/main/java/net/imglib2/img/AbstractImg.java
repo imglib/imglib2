@@ -211,9 +211,9 @@ public abstract class AbstractImg< T > implements Img< T >
 		return randomAccess();
 	}
 
-//	@Override
-//	public OrthoSliceIterator< T > createOrthoSliceIterator( final Image< T > image, final int x, final int y, final int[] position )
-//	{
-//		return new OrthoSliceIterator< T >( image, x, y, position );
-//	}
+	//	@Override
+	//	public OrthoSliceIterator< T > createOrthoSliceIterator( final Image< T > image, final int x, final int y, final int[] position )
+	//	{
+	//		return new OrthoSliceIterator< T >( image, x, y, position );
+	//	}
 }

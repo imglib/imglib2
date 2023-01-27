@@ -71,9 +71,11 @@ public class LoopPerformanceBenchmark
 
 	private final RandomAccessibleInterval< DoubleType > out = ArrayImgs.doubles( dim );
 
-	private final RandomAccessibleInterval< DoubleType > backIn = Views.interval( Views.extendBorder( in ), Intervals.translate( out, 1, 0 ) );
+	private final RandomAccessibleInterval< DoubleType > backIn =
+			Views.interval( Views.extendBorder( in ), Intervals.translate( out, 1, 0 ) );
 
-	private final RandomAccessibleInterval< DoubleType > frontIn = Views.interval( Views.extendBorder( in ), Intervals.translate( out, -1, 0 ) );
+	private final RandomAccessibleInterval< DoubleType > frontIn =
+			Views.interval( Views.extendBorder( in ), Intervals.translate( out, -1, 0 ) );
 
 	@Benchmark
 	public void gradient_niceAndSlow()

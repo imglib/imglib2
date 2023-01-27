@@ -138,7 +138,6 @@ public abstract class ImgFactory< T >
 		return imgFactory( typeSupplier.get() );
 	}
 
-
 	/*
 	 * -----------------------------------------------------------------------
 	 *
@@ -151,7 +150,8 @@ public abstract class ImgFactory< T >
 	 */
 
 	@Deprecated
-	public ImgFactory() {
+	public ImgFactory()
+	{
 		type = null;
 	}
 

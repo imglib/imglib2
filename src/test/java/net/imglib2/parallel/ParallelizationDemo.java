@@ -68,9 +68,9 @@ public class ParallelizationDemo
 		List< Integer > list = Arrays.asList( 1, 2, 3, 4 );
 
 		taskExecutor.forEach( list, index -> {
-			System.out.println( "task " + index + " start");
+			System.out.println( "task " + index + " start" );
 			waitOneSecond();
-			System.out.println( "task " + index + " finish");
+			System.out.println( "task " + index + " finish" );
 		} );
 	}
 

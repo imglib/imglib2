@@ -70,7 +70,8 @@ public class ClampingNLinearInterpolatorFactory< T extends NumericType< T > > im
 		}
 		else if ( VolatileARGBType.class.isInstance( type ) )
 		{
-			return ( RealRandomAccess ) new ClampingNLinearInterpolatorVolatileARGB< VolatileARGBType >( ( RandomAccessible ) randomAccessible );
+			return ( RealRandomAccess ) new ClampingNLinearInterpolatorVolatileARGB< VolatileARGBType >(
+					( RandomAccessible ) randomAccessible );
 		}
 		else
 			// fall back to (non-clamping) NLinearInterpolator

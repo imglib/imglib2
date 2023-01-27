@@ -42,7 +42,8 @@ import net.imglib2.interpolation.InterpolatorFactory;
 /**
  *
  */
-public class NearestNeighborRealRandomAccessibleStackInterpolatorFactory< T, F extends List< RealRandomAccessible< T > > > implements InterpolatorFactory< T, F >
+public class NearestNeighborRealRandomAccessibleStackInterpolatorFactory< T, F extends List< RealRandomAccessible< T > > >
+		implements InterpolatorFactory< T, F >
 {
 	@Override
 	public NearestNeighborRealRandomAccessibleStackInterpolator< T > create( final F stack )

@@ -91,7 +91,8 @@ public class ConcatenateUtils
 						iterator.set( c2 );
 						iterator.next();
 					}
-					else if ( PreConcatenable.class.isInstance( c2 ) && ( ( PreConcatenable ) c2 ).getPreConcatenableClass().isInstance( c1 ) )
+					else if ( PreConcatenable.class.isInstance( c2 )
+							&& ( ( PreConcatenable ) c2 ).getPreConcatenableClass().isInstance( c1 ) )
 					{
 						c2 = ( T ) ( ( PreConcatenable ) c2 ).preConcatenate( c1 );
 						iterator.previous();

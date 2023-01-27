@@ -152,10 +152,10 @@ public class NLinearInterpolatorARGB extends NLinearInterpolator< ARGBType >
 		accG += ( ( argb >> 8 ) & 0xff ) * weights[ code ];
 		accB += ( argb & 0xff ) * weights[ code ];
 
-//		System.out.print( "accumulating value at " + target );
-//		System.out.print( "with weights [" );
-//		printCode();
-//		System.out.printf( "] = %f" + "\n", weights[ code ] );
+		//		System.out.print( "accumulating value at " + target );
+		//		System.out.print( "with weights [" );
+		//		printCode();
+		//		System.out.printf( "] = %f" + "\n", weights[ code ] );
 	}
 
 	@SuppressWarnings( "unused" )

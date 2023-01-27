@@ -47,7 +47,7 @@ import net.imglib2.type.NativeType;
  * @author Christian Dietz
  * @author Jonathan Hale
  */
-public class PlanarPlaneSubsetCursor< T extends NativeType< T >> extends
+public class PlanarPlaneSubsetCursor< T extends NativeType< T > > extends
 		AbstractCursorInt< T > implements PlanarImg.PlanarContainerSampler
 {
 
@@ -216,11 +216,12 @@ public class PlanarPlaneSubsetCursor< T extends NativeType< T >> extends
 		return container.indexToGlobalPosition( sliceIndex, typeIndex.get(), dim );
 	}
 
-	private long offset(final Interval interval) {
+	private long offset( final Interval interval )
+	{
 		final int maxDim = numDimensions() - 1;
-		long i = interval.min(maxDim);
-		for (int d = maxDim - 1; d >= 0; --d)
-			i = i * container.dimension(d) + interval.min(d);
+		long i = interval.min( maxDim );
+		for ( int d = maxDim - 1; d >= 0; --d )
+			i = i * container.dimension( d ) + interval.min( d );
 
 		return i;
 	}

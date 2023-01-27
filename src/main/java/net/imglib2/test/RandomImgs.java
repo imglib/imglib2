@@ -103,7 +103,7 @@ public class RandomImgs
 	 * @return Reference to the given image
 	 */
 	public < I extends RandomAccessibleInterval< T >, T >
-	I randomize( final I image )
+			I randomize( final I image )
 	{
 		final T type = Util.getTypeFromInterval( image );
 		Views.iterable( image ).forEach( randomSetter( type ) );

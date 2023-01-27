@@ -86,7 +86,7 @@ class SequentialTaskExecutor implements TaskExecutor
 	@Override
 	public < T > void forEach( List< ? extends T > parameters, Consumer< ? super T > task )
 	{
-		for( T value : parameters )
+		for ( T value : parameters )
 			task.accept( value );
 	}
 

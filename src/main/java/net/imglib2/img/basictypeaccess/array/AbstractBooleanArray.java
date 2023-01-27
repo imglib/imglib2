@@ -73,7 +73,8 @@ public abstract class AbstractBooleanArray< A extends AbstractBooleanArray< A > 
 	}
 
 	@Override
-	public int getArrayLength() {
+	public int getArrayLength()
+	{
 		return data.length;
 	}
 }

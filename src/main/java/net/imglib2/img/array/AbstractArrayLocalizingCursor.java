@@ -168,11 +168,11 @@ public abstract class AbstractArrayLocalizingCursor< T extends NativeType< T > >
 	{
 		typeIndex.inc();
 
-//		 for ( int d = 0; d < n; ++d )
-//		 {
-//		 if ( ++position[ d ] > max[ d ] ) position[ d ] = 0;
-//		 else break;
-//		 }
+		//		 for ( int d = 0; d < n; ++d )
+		//		 {
+		//		 if ( ++position[ d ] > max[ d ] ) position[ d ] = 0;
+		//		 else break;
+		//		 }
 
 		/*
 		 * Benchmarks @ 2014-04-01 demonstrate that the less readable code below

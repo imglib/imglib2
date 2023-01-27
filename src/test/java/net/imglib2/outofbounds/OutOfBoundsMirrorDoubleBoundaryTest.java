@@ -132,9 +132,12 @@ public class OutOfBoundsMirrorDoubleBoundaryTest
 		for ( final IntType t : listImage )
 			t.set( i++ );
 
-		cArray = new ExtendedRandomAccessibleInterval< IntType, Img< IntType > >( arrayImage, new OutOfBoundsMirrorFactory< IntType, Img< IntType > >( Boundary.DOUBLE ) ).randomAccess();
-		cCell = new ExtendedRandomAccessibleInterval< IntType, Img< IntType > >( cellImage, new OutOfBoundsMirrorFactory< IntType, Img< IntType > >( Boundary.DOUBLE ) ).randomAccess();
-		cList = new ExtendedRandomAccessibleInterval< IntType, Img< IntType > >( listImage, new OutOfBoundsMirrorFactory< IntType, Img< IntType > >( Boundary.DOUBLE ) ).randomAccess();
+		cArray = new ExtendedRandomAccessibleInterval< IntType, Img< IntType > >( arrayImage,
+				new OutOfBoundsMirrorFactory< IntType, Img< IntType > >( Boundary.DOUBLE ) ).randomAccess();
+		cCell = new ExtendedRandomAccessibleInterval< IntType, Img< IntType > >( cellImage,
+				new OutOfBoundsMirrorFactory< IntType, Img< IntType > >( Boundary.DOUBLE ) ).randomAccess();
+		cList = new ExtendedRandomAccessibleInterval< IntType, Img< IntType > >( listImage,
+				new OutOfBoundsMirrorFactory< IntType, Img< IntType > >( Boundary.DOUBLE ) ).randomAccess();
 
 	}
 
@@ -158,7 +161,8 @@ public class OutOfBoundsMirrorDoubleBoundaryTest
 	{
 		final int[] expectedX = new int[] { 2, 3, 4, 4, 3, 2, 1, 0, 0, 1, 2, 3, 4, 4, 3, 2, 1, 0, 0, 1, 2, 3 };
 		final int[] expectedY = new int[] { 10, 15, 15, 10, 5, 0, 0, 5, 10, 15, 15, 10, 5, 0, 0, 5, 10, 15, 15, 10, 5, 0, 0, 5 };
-		final int[] expectedZ = new int[] { 40, 40, 20, 0, 0, 20, 40, 40, 20, 0, 0, 20, 40, 40, 20, 0, 0, 20, 40, 40, 20, 0, 0, 20, 40, 40, 20 };
+		final int[] expectedZ =
+				new int[] { 40, 40, 20, 0, 0, 20, 40, 40, 20, 0, 0, 20, 40, 40, 20, 0, 0, 20, 40, 40, 20, 0, 0, 20, 40, 40, 20 };
 
 		cArray.setPosition( -8, 0 );
 		cCell.setPosition( -8, 0 );
@@ -169,7 +173,8 @@ public class OutOfBoundsMirrorDoubleBoundaryTest
 			assertEquals( "CellContainer x failed at iteration " + i + ".", expectedX[ i ], cCell.get().getInteger() );
 			assertEquals( "ListContainer x failed at iteration " + i + ".", expectedX[ i ], cList.get().getInteger() );
 
-			assertEquals( "ArrayContainer x failed isOutOfBounds() at iteration " + i + ".", isOutOfBounds( cArray ), cArray.isOutOfBounds() );
+			assertEquals( "ArrayContainer x failed isOutOfBounds() at iteration " + i + ".", isOutOfBounds( cArray ),
+					cArray.isOutOfBounds() );
 			assertEquals( "CellContainer x failed isOutOfBounds() at iteration " + i + ".", isOutOfBounds( cCell ), cCell.isOutOfBounds() );
 			assertEquals( "ListContainer x failed isOutOfBounds() at iteration " + i + ".", isOutOfBounds( cList ), cList.isOutOfBounds() );
 
@@ -191,7 +196,8 @@ public class OutOfBoundsMirrorDoubleBoundaryTest
 			assertEquals( "CellContainer y failed at iteration " + i + ".", expectedY[ i ], cCell.get().getInteger() );
 			assertEquals( "ListContainer y failed at iteration " + i + ".", expectedY[ i ], cList.get().getInteger() );
 
-			assertEquals( "ArrayContainer y failed isOutOfBounds() at iteration " + i + ".", isOutOfBounds( cArray ), cArray.isOutOfBounds() );
+			assertEquals( "ArrayContainer y failed isOutOfBounds() at iteration " + i + ".", isOutOfBounds( cArray ),
+					cArray.isOutOfBounds() );
 			assertEquals( "CellContainer y failed isOutOfBounds() at iteration " + i + ".", isOutOfBounds( cCell ), cCell.isOutOfBounds() );
 			assertEquals( "ListContainer y failed isOutOfBounds() at iteration " + i + ".", isOutOfBounds( cList ), cList.isOutOfBounds() );
 
@@ -213,7 +219,8 @@ public class OutOfBoundsMirrorDoubleBoundaryTest
 			assertEquals( "CellContainer z failed at iteration " + i + ".", expectedZ[ i ], cCell.get().getInteger() );
 			assertEquals( "LinkContainer z failed at iteration " + i + ".", expectedZ[ i ], cList.get().getInteger() );
 
-			assertEquals( "ArrayContainer z failed isOutOfBounds() at iteration " + i + ".", isOutOfBounds( cArray ), cArray.isOutOfBounds() );
+			assertEquals( "ArrayContainer z failed isOutOfBounds() at iteration " + i + ".", isOutOfBounds( cArray ),
+					cArray.isOutOfBounds() );
 			assertEquals( "CellContainer z failed isOutOfBounds() at iteration " + i + ".", isOutOfBounds( cCell ), cCell.isOutOfBounds() );
 			assertEquals( "LinkContainer z failed isOutOfBounds() at iteration " + i + ".", isOutOfBounds( cList ), cList.isOutOfBounds() );
 
@@ -228,7 +235,8 @@ public class OutOfBoundsMirrorDoubleBoundaryTest
 	{
 		final int[] expectedX = new int[] { 2, 3, 4, 4, 3, 2, 1, 0, 0, 1, 2, 3, 4, 4, 3, 2, 1, 0, 0, 1, 2, 3 };
 		final int[] expectedY = new int[] { 10, 15, 15, 10, 5, 0, 0, 5, 10, 15, 15, 10, 5, 0, 0, 5, 10, 15, 15, 10, 5, 0, 0, 5 };
-		final int[] expectedZ = new int[] { 40, 40, 20, 0, 0, 20, 40, 40, 20, 0, 0, 20, 40, 40, 20, 0, 0, 20, 40, 40, 20, 0, 0, 20, 40, 40, 20 };
+		final int[] expectedZ =
+				new int[] { 40, 40, 20, 0, 0, 20, 40, 40, 20, 0, 0, 20, 40, 40, 20, 0, 0, 20, 40, 40, 20, 0, 0, 20, 40, 40, 20 };
 
 		cArray.setPosition( 7, 0 );
 		cCell.setPosition( 7, 0 );
@@ -239,7 +247,8 @@ public class OutOfBoundsMirrorDoubleBoundaryTest
 			assertEquals( "CellContainer x failed at iteration " + i + ".", expectedX[ i ], cCell.get().getInteger() );
 			assertEquals( "ListContainer x failed at iteration " + i + ".", expectedX[ i ], cList.get().getInteger() );
 
-			assertEquals( "ArrayContainer x failed isOutOfBounds() at iteration " + i + ".", isOutOfBounds( cArray ), cArray.isOutOfBounds() );
+			assertEquals( "ArrayContainer x failed isOutOfBounds() at iteration " + i + ".", isOutOfBounds( cArray ),
+					cArray.isOutOfBounds() );
 			assertEquals( "CellContainer x failed isOutOfBounds() at iteration " + i + ".", isOutOfBounds( cCell ), cCell.isOutOfBounds() );
 			assertEquals( "ListContainer x failed isOutOfBounds() at iteration " + i + ".", isOutOfBounds( cList ), cList.isOutOfBounds() );
 
@@ -261,7 +270,8 @@ public class OutOfBoundsMirrorDoubleBoundaryTest
 			assertEquals( "CellContainer y failed at iteration " + i + ".", expectedY[ i ], cCell.get().getInteger() );
 			assertEquals( "ListContainer y failed at iteration " + i + ".", expectedY[ i ], cList.get().getInteger() );
 
-			assertEquals( "ArrayContainer y failed isOutOfBounds() at iteration " + i + ".", isOutOfBounds( cArray ), cArray.isOutOfBounds() );
+			assertEquals( "ArrayContainer y failed isOutOfBounds() at iteration " + i + ".", isOutOfBounds( cArray ),
+					cArray.isOutOfBounds() );
 			assertEquals( "CellContainer y failed isOutOfBounds() at iteration " + i + ".", isOutOfBounds( cCell ), cCell.isOutOfBounds() );
 			assertEquals( "ListContainer y failed isOutOfBounds() at iteration " + i + ".", isOutOfBounds( cList ), cList.isOutOfBounds() );
 
@@ -283,8 +293,10 @@ public class OutOfBoundsMirrorDoubleBoundaryTest
 			assertEquals( "CellContainer z failed at iteration " + i + ".", expectedZ[ i ], cCell.get().getInteger() );
 			assertEquals( "ListContainer z failed at iteration " + i + ".", expectedZ[ i ], cList.get().getInteger() );
 
-			assertEquals( "ArrayContainer z failed isOutOfBounds() at iteration " + i + ".", isOutOfBounds( cArray ), cArray.isOutOfBounds() );
-			assertEquals( "CellContainer z failed isOutOfBounds() at iteration " + i + ".", isOutOfBounds( cCell ), cArray.isOutOfBounds() );
+			assertEquals( "ArrayContainer z failed isOutOfBounds() at iteration " + i + ".", isOutOfBounds( cArray ),
+					cArray.isOutOfBounds() );
+			assertEquals( "CellContainer z failed isOutOfBounds() at iteration " + i + ".", isOutOfBounds( cCell ),
+					cArray.isOutOfBounds() );
 			assertEquals( "ListContainer z failed isOutOfBounds() at iteration " + i + ".", isOutOfBounds( cList ), cList.isOutOfBounds() );
 
 			cArray.bck( 2 );
@@ -316,7 +328,8 @@ public class OutOfBoundsMirrorDoubleBoundaryTest
 			assertEquals( "CellContainer move failed at iteration " + i + ".", v[ i ], cCell.get().getInteger() );
 			assertEquals( "ListContainer move failed at iteration " + i + ".", v[ i ], cList.get().getInteger() );
 
-			assertEquals( "ArrayContainer z failed isOutOfBounds() at iteration " + i + ".", isOutOfBounds( cArray ), cArray.isOutOfBounds() );
+			assertEquals( "ArrayContainer z failed isOutOfBounds() at iteration " + i + ".", isOutOfBounds( cArray ),
+					cArray.isOutOfBounds() );
 			assertEquals( "CellContainer z failed isOutOfBounds() at iteration " + i + ".", isOutOfBounds( cCell ), cCell.isOutOfBounds() );
 			assertEquals( "ListContainer z failed isOutOfBounds() at iteration " + i + ".", isOutOfBounds( cList ), cList.isOutOfBounds() );
 		}

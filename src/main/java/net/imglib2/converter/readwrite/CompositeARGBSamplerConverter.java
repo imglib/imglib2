@@ -46,20 +46,23 @@ import java.util.function.Function;
 public class CompositeARGBSamplerConverter implements SamplerConverter< Composite< UnsignedByteType >, ARGBType >
 {
 
-	private final Function< Sampler< ? extends Composite< UnsignedByteType >>, ? extends IntAccess > factory;
+	private final Function< Sampler< ? extends Composite< UnsignedByteType > >, ? extends IntAccess > factory;
 
 	public CompositeARGBSamplerConverter( ColorChannelOrder order )
 	{
 		this.factory = getAccessFactory( order );
 	}
 
-	private Function<Sampler<? extends Composite<UnsignedByteType>>,? extends IntAccess> getAccessFactory( ColorChannelOrder order )
+	private Function< Sampler< ? extends Composite< UnsignedByteType > >, ? extends IntAccess > getAccessFactory( ColorChannelOrder order )
 	{
-		switch ( order ) {
-		case ARGB: return CompositeARGBAccess::new;
-		case RGB: return CompositeRGBAccess::new;
+		switch ( order )
+		{
+		case ARGB:
+			return CompositeARGBAccess::new;
+		case RGB:
+			return CompositeRGBAccess::new;
 		}
-		throw new IllegalArgumentException("Converter only supports ARGB and RGB channel order.");
+		throw new IllegalArgumentException( "Converter only supports ARGB and RGB channel order." );
 	}
 
 	@Override

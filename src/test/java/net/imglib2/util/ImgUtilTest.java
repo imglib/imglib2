@@ -60,34 +60,35 @@ import org.junit.Test;
  */
 public class ImgUtilTest
 {
-	
+
 	@Test
 	public void testPercentile()
 	{
-		final double[] data = new double[42];
-		for(int i = 0; i < data.length; i++) {
-		    data[i] = Math.random()*42;
+		final double[] data = new double[ 42 ];
+		for ( int i = 0; i < data.length; i++ )
+		{
+			data[ i ] = Math.random() * 42;
 		}
 		final double[] sortedData = data.clone();
 		final double[] quicksortedData = data.clone();
 		Arrays.sort( sortedData );
 		quicksort( quicksortedData );
-		
-		for(int i = 0; i < 3; i++){
-		
+
+		for ( int i = 0; i < 3; i++ )
+		{
+
 			double percentile = Math.random();
-			
+
 			int pos = Math.min( data.length - 1,
-								Math.max( 0, ( int ) Math.round( ( data.length - 1 ) * percentile ) ) );
-			
+					Math.max( 0, ( int ) Math.round( ( data.length - 1 ) * percentile ) ) );
+
 			final double percentileRes = percentile( data, percentile );
-			
-			assertEquals(quicksortedData[pos], sortedData[pos], 0.001);
-			assertEquals(quicksortedData[pos], percentileRes, 0.001);
-			
+
+			assertEquals( quicksortedData[ pos ], sortedData[ pos ], 0.001 );
+			assertEquals( quicksortedData[ pos ], percentileRes, 0.001 );
+
 		}
-		
-		
+
 	}
 
 	@Test
@@ -98,18 +99,20 @@ public class ImgUtilTest
 		final int[][] strides = { { 1, 3 }, { 3, 1 }, { -1, -3 } };
 		final double[][][] expected = {
 				{
-				{ 0, 1, 2 },
-				{ 3, 4, 5 },
-				{ 6, 7, 8 }
-		}, {
-		{ 0, 3, 6 },
-		{ 1, 4, 7 },
-		{ 2, 5, 8 }
-		}, {
-		{ 8, 7, 6 },
-		{ 5, 4, 3 },
-		{ 2, 1, 0 }
-		} };
+						{ 0, 1, 2 },
+						{ 3, 4, 5 },
+						{ 6, 7, 8 }
+				},
+				{
+						{ 0, 3, 6 },
+						{ 1, 4, 7 },
+						{ 2, 5, 8 }
+				},
+				{
+						{ 8, 7, 6 },
+						{ 5, 4, 3 },
+						{ 2, 1, 0 }
+				} };
 		for ( int i = 0; i < offsets.length; i++ )
 		{
 			final Img< DoubleType > img = new ArrayImgFactory<>( new DoubleType() ).create( 3, 3 );
@@ -137,18 +140,20 @@ public class ImgUtilTest
 		final int[][] strides = { { 1, 3 }, { 3, 1 }, { -1, -3 } };
 		final float[][][] expected = {
 				{
-				{ 0, 1, 2 },
-				{ 3, 4, 5 },
-				{ 6, 7, 8 }
-		}, {
-		{ 0, 3, 6 },
-		{ 1, 4, 7 },
-		{ 2, 5, 8 }
-		}, {
-		{ 8, 7, 6 },
-		{ 5, 4, 3 },
-		{ 2, 1, 0 }
-		} };
+						{ 0, 1, 2 },
+						{ 3, 4, 5 },
+						{ 6, 7, 8 }
+				},
+				{
+						{ 0, 3, 6 },
+						{ 1, 4, 7 },
+						{ 2, 5, 8 }
+				},
+				{
+						{ 8, 7, 6 },
+						{ 5, 4, 3 },
+						{ 2, 1, 0 }
+				} };
 		for ( int i = 0; i < offsets.length; i++ )
 		{
 			final Img< FloatType > img = new ArrayImgFactory<>( new FloatType() ).create( 3, 3 );
@@ -176,18 +181,20 @@ public class ImgUtilTest
 		final int[][] strides = { { 1, 3 }, { 3, 1 }, { -1, -3 } };
 		final long[][][] expected = {
 				{
-				{ 0, 1, 2 },
-				{ 3, 4, 5 },
-				{ 6, 7, 8 }
-		}, {
-		{ 0, 3, 6 },
-		{ 1, 4, 7 },
-		{ 2, 5, 8 }
-		}, {
-		{ 8, 7, 6 },
-		{ 5, 4, 3 },
-		{ 2, 1, 0 }
-		} };
+						{ 0, 1, 2 },
+						{ 3, 4, 5 },
+						{ 6, 7, 8 }
+				},
+				{
+						{ 0, 3, 6 },
+						{ 1, 4, 7 },
+						{ 2, 5, 8 }
+				},
+				{
+						{ 8, 7, 6 },
+						{ 5, 4, 3 },
+						{ 2, 1, 0 }
+				} };
 		for ( int i = 0; i < offsets.length; i++ )
 		{
 			final Img< LongType > img = new ArrayImgFactory<>( new LongType() ).create( 3, 3 );
@@ -215,18 +222,20 @@ public class ImgUtilTest
 		final int[][] strides = { { 1, 3 }, { 3, 1 }, { -1, -3 } };
 		final int[][][] expected = {
 				{
-				{ 0, 1, 2 },
-				{ 3, 4, 5 },
-				{ 6, 7, 8 }
-		}, {
-		{ 0, 3, 6 },
-		{ 1, 4, 7 },
-		{ 2, 5, 8 }
-		}, {
-		{ 8, 7, 6 },
-		{ 5, 4, 3 },
-		{ 2, 1, 0 }
-		} };
+						{ 0, 1, 2 },
+						{ 3, 4, 5 },
+						{ 6, 7, 8 }
+				},
+				{
+						{ 0, 3, 6 },
+						{ 1, 4, 7 },
+						{ 2, 5, 8 }
+				},
+				{
+						{ 8, 7, 6 },
+						{ 5, 4, 3 },
+						{ 2, 1, 0 }
+				} };
 		for ( int i = 0; i < offsets.length; i++ )
 		{
 			final Img< IntType > img = new ArrayImgFactory<>( new IntType() ).create( 3, 3 );
@@ -369,12 +378,12 @@ public class ImgUtilTest
 			assertArrayEquals( expected[ i ], output );
 		}
 	}
-	
+
 	@Test
 	public void testCopyRAItoRAI()
 	{
-		RandomAccessibleInterval<IntType> source = ArrayImgs.ints(new int[]{1, 2, 3, 4, 5, 6}, 2, 3);
-		RandomAccessibleInterval<IntType> destination = ArrayImgs.ints(2, 3);
+		RandomAccessibleInterval< IntType > source = ArrayImgs.ints( new int[] { 1, 2, 3, 4, 5, 6 }, 2, 3 );
+		RandomAccessibleInterval< IntType > destination = ArrayImgs.ints( 2, 3 );
 		ImgUtil.copy( source, destination );
 		ImgLib2Assert.assertImageEquals( source, destination );
 	}

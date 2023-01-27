@@ -74,8 +74,7 @@ public class SequentialExecutorService extends AbstractExecutorService
 	}
 
 	@Override
-	public boolean awaitTermination( long l, TimeUnit timeUnit ) throws
-			InterruptedException
+	public boolean awaitTermination( long l, TimeUnit timeUnit ) throws InterruptedException
 	{
 		return true;
 	}

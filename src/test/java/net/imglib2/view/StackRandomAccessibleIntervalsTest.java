@@ -81,11 +81,14 @@ public class StackRandomAccessibleIntervalsTest
 	{
 		// lets create a stack with every second plane of the input image,
 		// works!
-		final List< RandomAccessibleInterval< UnsignedByteType >> intervals = new ArrayList< RandomAccessibleInterval< UnsignedByteType > >();
+		final List< RandomAccessibleInterval< UnsignedByteType > > intervals =
+				new ArrayList< RandomAccessibleInterval< UnsignedByteType > >();
 		for ( int d = 0; d < img.dimension( 2 ); d++ )
 		{
 			if ( d % 2 == 0 )
-				intervals.add( Views.dropSingletonDimensions( Views.interval( img, new FinalInterval( new long[] { img.min( 0 ), img.min( 1 ), d }, new long[] { img.max( 0 ), img.max( 1 ), d } ) ) ) );
+				intervals.add(
+						Views.dropSingletonDimensions( Views.interval( img, new FinalInterval( new long[] { img.min( 0 ), img.min( 1 ), d },
+								new long[] { img.max( 0 ), img.max( 1 ), d } ) ) ) );
 		}
 
 		// stack it!

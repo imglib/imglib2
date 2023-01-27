@@ -39,7 +39,7 @@ package net.imglib2.img.sparse;
  * 
  * @author Tobias Pietzsch
  */
-public final class Ntree< T extends Comparable< T >>
+public final class Ntree< T extends Comparable< T > >
 {
 
 	public static final class NtreeNode< T >

@@ -90,7 +90,7 @@ public abstract class AbstractWrappedRealInterval< I extends RealInterval > impl
 	{
 		return sourceInterval.numDimensions();
 	}
-	
+
 	public I getSource()
 	{
 		return sourceInterval;

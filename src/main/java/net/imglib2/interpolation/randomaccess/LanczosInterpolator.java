@@ -87,7 +87,8 @@ public class LanczosInterpolator< T extends RealType< T > > extends FloorOffset<
 	 * @param max
 	 *            - range for clipping (ignored if min==max)
 	 */
-	public LanczosInterpolator( final RandomAccessible< T > randomAccessible, final int alpha, final boolean clip, final double min, final double max )
+	public LanczosInterpolator( final RandomAccessible< T > randomAccessible, final int alpha, final boolean clip, final double min,
+			final double max )
 	{
 		super( randomAccessible.randomAccess(), createOffset( alpha, randomAccessible.numDimensions() ) );
 

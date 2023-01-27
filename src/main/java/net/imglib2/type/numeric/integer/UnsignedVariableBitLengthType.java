@@ -56,7 +56,8 @@ import net.imglib2.util.Util;
  * @author Albert Cardona
  * @author Stephan Preibisch
  */
-public class UnsignedVariableBitLengthType extends AbstractBit64Type< UnsignedVariableBitLengthType > implements IntegerType< UnsignedVariableBitLengthType >
+public class UnsignedVariableBitLengthType extends AbstractBit64Type< UnsignedVariableBitLengthType >
+		implements IntegerType< UnsignedVariableBitLengthType >
 {
 	// this is the constructor if you want it to read from an array
 	public UnsignedVariableBitLengthType( final NativeImg< ?, ? extends LongAccess > bitStorage, final int nBits )
@@ -104,7 +105,8 @@ public class UnsignedVariableBitLengthType extends AbstractBit64Type< UnsignedVa
 		return new UnsignedVariableBitLengthType( img, nBits );
 	}
 
-	private final NativeTypeFactory< UnsignedVariableBitLengthType, LongAccess > typeFactory = NativeTypeFactory.LONG( img -> new UnsignedVariableBitLengthType( img, nBits ) );
+	private final NativeTypeFactory< UnsignedVariableBitLengthType, LongAccess > typeFactory =
+			NativeTypeFactory.LONG( img -> new UnsignedVariableBitLengthType( img, nBits ) );
 
 	@Override
 	public NativeTypeFactory< UnsignedVariableBitLengthType, LongAccess > getNativeTypeFactory()
@@ -281,13 +283,15 @@ public class UnsignedVariableBitLengthType extends AbstractBit64Type< UnsignedVa
 	}
 
 	@Override
-	public void pow( final UnsignedVariableBitLengthType c) {
+	public void pow( final UnsignedVariableBitLengthType c )
+	{
 		setReal( Math.pow( get(), c.get() ) );
 	}
 
 	@Override
-	public void pow( final double power ) {
-		setReal( Math.pow( get(), power) );
+	public void pow( final double power )
+	{
+		setReal( Math.pow( get(), power ) );
 	}
 
 	@Override

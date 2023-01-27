@@ -59,22 +59,24 @@ import java.util.Collection;
 @State( Scope.Benchmark )
 public class FlatCollectionsBenchmark
 {
-	Img< IntType > image = RandomImgs.seed( 42 ).nextImage( new IntType(), 100, 100, 100);
+	Img< IntType > image = RandomImgs.seed( 42 ).nextImage( new IntType(), 100, 100, 100 );
 
 	Collection< Integer > list = FlatCollections.integerCollection( image );
 
 	@Benchmark
-	public double benchmarkSumList() {
+	public double benchmarkSumList()
+	{
 		double sum = 0;
-		for( Integer pixel : list )
+		for ( Integer pixel : list )
 			sum += pixel;
 		return sum;
 	}
 
 	@Benchmark
-	public double benchmarkSumImg() {
+	public double benchmarkSumImg()
+	{
 		double sum = 0;
-		for( RealType<?> pixel : image )
+		for ( RealType< ? > pixel : image )
 			sum += pixel.getRealDouble();
 		return sum;
 	}

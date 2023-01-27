@@ -82,7 +82,8 @@ public class CellImgFactory< T extends NativeType< T > > extends NativeImgFactor
 	 * @return
 	 * @throws IllegalArgumentException
 	 */
-	public static int[] getCellDimensions( final int[] defaultCellDimensions, final int n, final Fraction entitiesPerPixel ) throws IllegalArgumentException
+	public static int[] getCellDimensions( final int[] defaultCellDimensions, final int n, final Fraction entitiesPerPixel )
+			throws IllegalArgumentException
 	{
 		final int[] cellDimensions = new int[ n ];
 		final int max = defaultCellDimensions.length - 1;
@@ -143,7 +144,8 @@ public class CellImgFactory< T extends NativeType< T > > extends NativeImgFactor
 			cellCursor.fwd();
 			cellCursor.localize( cellGridPosition );
 			grid.getCellDimensions( cellGridPosition, cellMin, cellDims );
-			final A data = ArrayDataAccessFactory.get( typeFactory ).createArray( ( int ) entitiesPerPixel.mulCeil( Intervals.numElements( cellDims ) ) );
+			final A data = ArrayDataAccessFactory.get( typeFactory )
+					.createArray( ( int ) entitiesPerPixel.mulCeil( Intervals.numElements( cellDims ) ) );
 			cellCursor.set( new Cell<>( cellDims, cellMin, data ) );
 		}
 

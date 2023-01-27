@@ -87,7 +87,7 @@ public class IterableLoopBuilder< T >
 
 	private final List< RandomAccessible< ? > > otherImages;
 
-	private IterableLoopBuilder( IterableInterval< ? > firstImage, RandomAccessible< ? > ... otherImages )
+	private IterableLoopBuilder( IterableInterval< ? > firstImage, RandomAccessible< ? >... otherImages )
 	{
 		this.firstImage = firstImage;
 		this.otherImages = Arrays.asList( otherImages );
@@ -112,7 +112,8 @@ public class IterableLoopBuilder< T >
 	/**
 	 * Sets the images to loop over.
 	 */
-	public static < A, B, C > IterableLoopBuilder< LoopBuilder.TriConsumer< A, B, C > > setImages( IterableInterval< A > a, RandomAccessible< B > b, RandomAccessible< C > c )
+	public static < A, B, C > IterableLoopBuilder< LoopBuilder.TriConsumer< A, B, C > > setImages( IterableInterval< A > a,
+			RandomAccessible< B > b, RandomAccessible< C > c )
 	{
 		return new IterableLoopBuilder<>( a, b, c );
 	}
@@ -133,7 +134,8 @@ public class IterableLoopBuilder< T >
 	 */
 	public < R > List< R > forEachChunk( Function< LoopBuilder.Chunk< T >, R > chunkAction )
 	{
-		List< Interval > intervals = IntervalChunks.chunkInterval( new FinalInterval( firstImage.size() ), taskExecutor.suggestNumberOfTasks() );
+		List< Interval > intervals =
+				IntervalChunks.chunkInterval( new FinalInterval( firstImage.size() ), taskExecutor.suggestNumberOfTasks() );
 		List< Chunk< T > > chunks = ListUtils.map( interval -> new Chunk< T >( firstImage, otherImages, interval ), intervals );
 		return taskExecutor.forEachApply( chunks, chunkAction );
 	}
@@ -157,7 +159,8 @@ public class IterableLoopBuilder< T >
 		return this;
 	}
 
-	private static class Chunk< T > implements LoopBuilder.Chunk< T > {
+	private static class Chunk< T > implements LoopBuilder.Chunk< T >
+	{
 
 		private final IterableInterval< ? > firstImage;
 
@@ -176,7 +179,8 @@ public class IterableLoopBuilder< T >
 		public void forEachPixel( T action )
 		{
 			Cursor< ? > cursor = firstImage.localizingCursor();
-			List< RandomAccess< ? > > randomAccesses = otherImages.stream().map( RandomAccessible::randomAccess ).collect( Collectors.toList());
+			List< RandomAccess< ? > > randomAccesses =
+					otherImages.stream().map( RandomAccessible::randomAccess ).collect( Collectors.toList() );
 			cursor.jumpFwd( interval.min( 0 ) );
 			long size = interval.dimension( 0 );
 			FastCursorRandomAccessLoops.loop( action, size, cursor, randomAccesses );

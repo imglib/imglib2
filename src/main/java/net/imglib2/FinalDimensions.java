@@ -129,7 +129,7 @@ public final class FinalDimensions implements Dimensions
 	public boolean equals( final Object obj )
 	{
 		return obj instanceof FinalDimensions &&
-				Intervals.equalDimensions( this, (FinalDimensions) obj );
+				Intervals.equalDimensions( this, ( FinalDimensions ) obj );
 	}
 
 	@Override

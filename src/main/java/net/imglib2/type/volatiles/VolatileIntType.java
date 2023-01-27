@@ -54,7 +54,7 @@ public class VolatileIntType extends AbstractVolatileNativeRealType< IntType, Vo
 
 	private static class WrappedIntType extends IntType
 	{
-		public WrappedIntType( final NativeImg<?, ? extends IntAccess> img )
+		public WrappedIntType( final NativeImg< ?, ? extends IntAccess > img )
 		{
 			super( img );
 		}
@@ -106,7 +106,7 @@ public class VolatileIntType extends AbstractVolatileNativeRealType< IntType, Vo
 	public void updateContainer( final Object c )
 	{
 		final VolatileIntAccess a = img.update( c );
-		( (WrappedIntType) t ).setAccess( a );
+		( ( WrappedIntType ) t ).setAccess( a );
 		setValid( a.isValid() );
 	}
 
@@ -130,7 +130,8 @@ public class VolatileIntType extends AbstractVolatileNativeRealType< IntType, Vo
 		return v;
 	}
 
-	private static final NativeTypeFactory< VolatileIntType, VolatileIntAccess > typeFactory = NativeTypeFactory.INT( VolatileIntType::new );
+	private static final NativeTypeFactory< VolatileIntType, VolatileIntAccess > typeFactory =
+			NativeTypeFactory.INT( VolatileIntType::new );
 
 	@Override
 	public NativeTypeFactory< VolatileIntType, ? > getNativeTypeFactory()

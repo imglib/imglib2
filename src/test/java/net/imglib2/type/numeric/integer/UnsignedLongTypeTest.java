@@ -41,17 +41,19 @@ import java.math.BigInteger;
 
 import org.junit.Test;
 
-
-public class UnsignedLongTypeTest {
+public class UnsignedLongTypeTest
+{
 
 	private UnsignedLongType u = new UnsignedLongType();
+
 	private UnsignedLongType t = new UnsignedLongType();
 
 	/** Tests that {@link UnsignedLongType#compareTo(UnsignedLongType)} works for
 	 * comparing a positive number to a negative number and vice versa.
 	 */
 	@Test
-	public void testComparePosNeg(){
+	public void testComparePosNeg()
+	{
 
 		u.set( -1L );
 		t.set( 1L );
@@ -71,7 +73,8 @@ public class UnsignedLongTypeTest {
 	 * comparing two negative numbers.
 	 */
 	@Test
-	public void testCompareNegatives(){
+	public void testCompareNegatives()
+	{
 
 		u.set( -9000L );
 		t.set( -9000L );
@@ -91,11 +94,12 @@ public class UnsignedLongTypeTest {
 	 * comparing two positive numbers.
 	 */
 	@Test
-	public void testComparePositives(){
+	public void testComparePositives()
+	{
 
 		u.set( 100L );
 		t.set( 100L );
-		assertEquals( u.compareTo( t ), 0);
+		assertEquals( u.compareTo( t ), 0 );
 
 		u.set( 3098080948019L );
 		t.set( 1L );
@@ -111,7 +115,8 @@ public class UnsignedLongTypeTest {
 	 * when comparing values to zero.
 	 */
 	@Test
-	public void testCompareZero() {
+	public void testCompareZero()
+	{
 
 		u.set( 0L );
 		t.set( 0L );
@@ -132,7 +137,8 @@ public class UnsignedLongTypeTest {
 	 * of range values.
 	 */
 	@Test
-	public void testBIConstructor() {
+	public void testBIConstructor()
+	{
 
 		final BigInteger bi = new BigInteger( "ABCD14984904EFEFEFE4324904294D17A", 16 );
 		final UnsignedLongType l = new UnsignedLongType( bi );
@@ -146,7 +152,8 @@ public class UnsignedLongTypeTest {
 	 * constructed with a {@code long} or a {@code BigInteger}.
 	 */
 	@Test
-	public void testGetBigInteger() {
+	public void testGetBigInteger()
+	{
 
 		final BigInteger mask = new BigInteger( "FFFFFFFFFFFFFFFF", 16 );
 		final BigInteger bi = new BigInteger( "DEAD12345678BEEF", 16 );
@@ -156,8 +163,8 @@ public class UnsignedLongTypeTest {
 
 		final UnsignedLongType l2 = new UnsignedLongType( -473194873871904l );
 
-		assertEquals(BigInteger.valueOf( -473194873871904l ).and( mask ),
-			l2.getBigInteger() );
+		assertEquals( BigInteger.valueOf( -473194873871904l ).and( mask ),
+				l2.getBigInteger() );
 	}
 
 	/**
@@ -165,7 +172,8 @@ public class UnsignedLongTypeTest {
 	 * can still return the proper long value.
 	 */
 	@Test
-	public void testSetBigInteger() {
+	public void testSetBigInteger()
+	{
 
 		final long l = -184713894790123847l;
 		final UnsignedLongType ul = new UnsignedLongType( l );
@@ -179,26 +187,30 @@ public class UnsignedLongTypeTest {
 	}
 
 	@Test
-	public void testGetMaxValue() {
-		assertEquals( (double) Long.MAX_VALUE - (double) Long.MIN_VALUE, new UnsignedLongType().getMaxValue(), 0.0 );
+	public void testGetMaxValue()
+	{
+		assertEquals( ( double ) Long.MAX_VALUE - ( double ) Long.MIN_VALUE, new UnsignedLongType().getMaxValue(), 0.0 );
 	}
 
 	@Test
-	public void testGetRealDouble() {
+	public void testGetRealDouble()
+	{
 
 		final UnsignedLongType ul = new UnsignedLongType( -1 );
 		assertEquals( ul.getMaxValue(), ul.getRealDouble(), 0.0 );
 	}
 
 	@Test
-	public void testGetRealFloat() {
+	public void testGetRealFloat()
+	{
 
 		final UnsignedLongType ul = new UnsignedLongType( -1 );
-		assertEquals( (float) ul.getMaxValue(), ul.getRealFloat(), 0.0f );
+		assertEquals( ( float ) ul.getMaxValue(), ul.getRealFloat(), 0.0f );
 	}
 
 	@Test
-	public void testSetRealDouble() {
+	public void testSetRealDouble()
+	{
 		// simple values
 		testSetRealDouble( 0, 0 );
 		testSetRealDouble( 42, 42 );
@@ -209,7 +221,7 @@ public class UnsignedLongTypeTest {
 		// max long + 1
 		testSetRealDouble( Math.pow( 2, 63 ), 1l << 63 );
 		// value smaller than "max long + 1", that can be represented by double
-		testSetRealDouble( Math.pow( 2, 63 ) - Math.pow( 2, 10 ), (1l << 63) - (1l << 10) );
+		testSetRealDouble( Math.pow( 2, 63 ) - Math.pow( 2, 10 ), ( 1l << 63 ) - ( 1l << 10 ) );
 		// max unsigned long + 1
 		testSetRealDouble( Math.pow( 2, 64 ) + 1, ( long ) -1 );
 	}
@@ -222,13 +234,15 @@ public class UnsignedLongTypeTest {
 	}
 
 	@Test
-	public void testSetMinMax() {
+	public void testSetMinMax()
+	{
 		testSetRealDouble( new UnsignedLongType().getMaxValue(), -1l );
 		testSetRealDouble( new UnsignedLongType().getMinValue(), 0 );
 	}
 
 	@Test
-	public void testSetRealFloat() {
+	public void testSetRealFloat()
+	{
 		// simple values
 		testSetRealFloat( 0, 0 );
 		testSetRealFloat( 42, 42 );
@@ -239,7 +253,7 @@ public class UnsignedLongTypeTest {
 		// max long + 1
 		testSetRealFloat( Math.pow( 2, 63 ), 1l << 63 );
 		// value smaller than "max long + 1", that can be represented by float
-		testSetRealFloat( Math.pow( 2, 63 ) - Math.pow( 2, 39 ), (1l << 63) - (1l << 39) );
+		testSetRealFloat( Math.pow( 2, 63 ) - Math.pow( 2, 39 ), ( 1l << 63 ) - ( 1l << 39 ) );
 		// max unsigned long + 1
 		testSetRealFloat( Math.pow( 2, 64 ) + 1, ( long ) -1 );
 	}
@@ -247,7 +261,7 @@ public class UnsignedLongTypeTest {
 	private void testSetRealFloat( double realValue, long longValue )
 	{
 		UnsignedLongType type = new UnsignedLongType();
-		type.setReal((float) realValue );
+		type.setReal( ( float ) realValue );
 		assertEquals( longValue, type.getLong() );
 	}
 }

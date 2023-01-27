@@ -47,7 +47,8 @@ import net.imglib2.RealPositionable;
  *
  * @author Stephan Saalfeld
  */
-public class Round< LocalizablePositionable extends Localizable & Positionable > extends AbstractPositionableTransform< LocalizablePositionable >
+public class Round< LocalizablePositionable extends Localizable & Positionable >
+		extends AbstractPositionableTransform< LocalizablePositionable >
 {
 	public Round( final LocalizablePositionable target )
 	{

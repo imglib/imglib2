@@ -45,7 +45,8 @@ public enum ColorChannelOrder
 		this.channelCount = channelCount;
 	}
 
-	public int channelCount() {
+	public int channelCount()
+	{
 		return channelCount;
 	}
 }

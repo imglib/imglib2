@@ -64,7 +64,7 @@ public class IntervalView< T > extends AbstractInterval implements RandomAccessi
 	 * TODO Javadoc
 	 */
 	protected RandomAccessible< T > fullViewRandomAccessible;
-	
+
 	/**
 	 * TODO Javadoc
 	 */
@@ -130,7 +130,7 @@ public class IntervalView< T > extends AbstractInterval implements RandomAccessi
 			fullViewRandomAccessible = TransformBuilder.getEfficientRandomAccessible( this, this );
 		return fullViewRandomAccessible.randomAccess();
 	}
-	
+
 	protected IterableInterval< T > getFullViewIterableInterval()
 	{
 		if ( fullViewIterableInterval == null )

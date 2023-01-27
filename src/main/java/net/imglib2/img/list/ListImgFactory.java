@@ -89,7 +89,6 @@ public class ListImgFactory< T > extends ImgFactory< T >
 		return new ListImgFactory<>( type );
 	}
 
-
 	/*
 	 * -----------------------------------------------------------------------
 	 *

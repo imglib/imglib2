@@ -75,13 +75,13 @@ import java.util.concurrent.TimeUnit;
 public class OutOfBoundsBorderBenchmark
 {
 
-	private final RandomAccessibleInterval<IntType> arrayImg = createImg( new ArrayImgFactory<>( new IntType() ) );
+	private final RandomAccessibleInterval< IntType > arrayImg = createImg( new ArrayImgFactory<>( new IntType() ) );
 
-	private final RandomAccessibleInterval<IntType> planarImg = createImg( new PlanarImgFactory<>( new IntType() ) );
+	private final RandomAccessibleInterval< IntType > planarImg = createImg( new PlanarImgFactory<>( new IntType() ) );
 
-	private final RandomAccessibleInterval<IntType> cellImg = createImg( new CellImgFactory<>( new IntType(), 100, 100 ) );
+	private final RandomAccessibleInterval< IntType > cellImg = createImg( new CellImgFactory<>( new IntType(), 100, 100 ) );
 
-	private static RandomAccessibleInterval<IntType> createImg( final ImgFactory<IntType> factory )
+	private static RandomAccessibleInterval< IntType > createImg( final ImgFactory< IntType > factory )
 	{
 		return Views.interval( Views.extendBorder( factory.create( 900, 900 ) ), new long[] { 0, 0 }, new long[] { 999, 999 } );
 	}
@@ -119,10 +119,10 @@ public class OutOfBoundsBorderBenchmark
 		return sum[ 0 ];
 	}
 
-	public static double sum( final RandomAccessibleInterval<? extends RealType<?>> img )
+	public static double sum( final RandomAccessibleInterval< ? extends RealType< ? > > img )
 	{
 		double sum = 0;
-		final RandomAccess<? extends RealType<?>> ra = img.randomAccess();
+		final RandomAccess< ? extends RealType< ? > > ra = img.randomAccess();
 		ra.setPosition( img.min( 1 ), 1 );
 		for ( int y = 0; y < img.dimension( 1 ); y++ )
 		{
@@ -137,10 +137,10 @@ public class OutOfBoundsBorderBenchmark
 		return sum;
 	}
 
-	public static double sum2( final RandomAccessibleInterval<? extends RealType<?>> img )
+	public static double sum2( final RandomAccessibleInterval< ? extends RealType< ? > > img )
 	{
 		double sum = 0;
-		final RandomAccess<? extends RealType<?>> ra = img.randomAccess();
+		final RandomAccess< ? extends RealType< ? > > ra = img.randomAccess();
 		ra.setPosition( img.min( 1 ), 1 );
 		for ( int y = 0; y < img.dimension( 1 ); y++ )
 		{

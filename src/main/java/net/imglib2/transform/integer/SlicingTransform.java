@@ -385,7 +385,10 @@ public class SlicingTransform extends AbstractMixedTransform implements Slicing,
 		}
 		for ( int d = 0; d < numSourceDimensions; ++d )
 		{
-			if ( !sourceMapped[ d ] ) { return false; }
+			if ( !sourceMapped[ d ] )
+			{
+				return false;
+			}
 		}
 		return true;
 	}

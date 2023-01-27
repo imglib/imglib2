@@ -83,7 +83,7 @@ public class ARGBScreenImage extends ArrayImg< ARGBType, IntArray > implements A
 	 */
 	public ARGBScreenImage( final int width, final int height, final int[] data )
 	{
-		super( new IntArray( data ), new long[]{ width, height }, new Fraction() );
+		super( new IntArray( data ), new long[] { width, height }, new Fraction() );
 		setLinkedType( new ARGBType( this ) );
 		this.data = data;
 

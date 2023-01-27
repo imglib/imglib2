@@ -162,7 +162,8 @@ public final class TaskExecutors
 	 * to the thread. The threads created, are using the given thread factory,
 	 * and the {@link TaskExecutors} are create using the given supplier.
 	 */
-	public static ThreadFactory applyTaskExecutorToThreadFactory( Supplier< TaskExecutor > taskExecutorFactory, ThreadFactory threadFactory )
+	public static ThreadFactory applyTaskExecutorToThreadFactory( Supplier< TaskExecutor > taskExecutorFactory,
+			ThreadFactory threadFactory )
 	{
 		return runnable -> threadFactory.newThread( () -> {
 			try (TaskExecutor taskExecutor = taskExecutorFactory.get())

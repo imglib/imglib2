@@ -115,7 +115,10 @@ public class BasePairBitType extends AbstractBit64Type< BasePairBitType > implem
 	}
 
 	@Override
-	public BasePairBitType duplicateTypeOnSameNativeImg() { return new BasePairBitType( img ); }
+	public BasePairBitType duplicateTypeOnSameNativeImg()
+	{
+		return new BasePairBitType( img );
+	}
 
 	private static final NativeTypeFactory< BasePairBitType, LongAccess > typeFactory = NativeTypeFactory.LONG( BasePairBitType::new );
 
@@ -149,12 +152,23 @@ public class BasePairBitType extends AbstractBit64Type< BasePairBitType > implem
 		final Base base = get();
 		switch ( base )
 		{
-			case A: set( Base.T ); break;
-			case T: set( Base.A ); break;
-			case G: set( Base.C ); break;
-			case C: set( Base.G ); break;
-			case U: set( Base.A ); break;
-			default: break;
+		case A:
+			set( Base.T );
+			break;
+		case T:
+			set( Base.A );
+			break;
+		case G:
+			set( Base.C );
+			break;
+		case C:
+			set( Base.G );
+			break;
+		case U:
+			set( Base.A );
+			break;
+		default:
+			break;
 		}
 	}
 

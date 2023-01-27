@@ -99,7 +99,7 @@ public class NearestNeighborRealRandomAccessibleStackInterpolator< T > extends A
 	{
 		this(
 				slices.toArray(
-						Cast.<RealRandomAccessible< T >[]>unchecked(
+						Cast.< RealRandomAccessible< T >[] >unchecked(
 								Array.newInstance( RealRandomAccessible.class, slices.size() ) ) ) );
 
 	}
@@ -124,13 +124,14 @@ public class NearestNeighborRealRandomAccessibleStackInterpolator< T > extends A
 
 	protected int getSliceIndex( final double position )
 	{
-		return Math.max( 0, Math.min( lastSliceIndex, ( int )Math.round( position ) ) );
+		return Math.max( 0, Math.min( lastSliceIndex, ( int ) Math.round( position ) ) );
 	}
 
 	protected RealRandomAccess< T > getOrCreateAccess( final int i )
 	{
 		final RealRandomAccess< T > access = sliceAccesses[ i ];
-		if ( access == null ) {
+		if ( access == null )
+		{
 			return sliceAccesses[ i ] = slices[ i ].realRandomAccess();
 		}
 		return access;
@@ -157,7 +158,7 @@ public class NearestNeighborRealRandomAccessibleStackInterpolator< T > extends A
 	public void localize( final float[] position )
 	{
 		for ( int d = 0; d < n; ++d )
-			position[ d ] = ( float )this.position[ d ];
+			position[ d ] = ( float ) this.position[ d ];
 	}
 
 	@Override
@@ -170,7 +171,7 @@ public class NearestNeighborRealRandomAccessibleStackInterpolator< T > extends A
 	@Override
 	public float getFloatPosition( final int d )
 	{
-		return ( float )position[ d ];
+		return ( float ) position[ d ];
 	}
 
 	@Override
@@ -202,19 +203,19 @@ public class NearestNeighborRealRandomAccessibleStackInterpolator< T > extends A
 	@Override
 	public void move( final int distance, final int d )
 	{
-		move( ( double )distance, d );
+		move( ( double ) distance, d );
 	}
 
 	@Override
 	public void move( final long distance, final int d )
 	{
-		move( ( double )distance, d );
+		move( ( double ) distance, d );
 	}
 
 	@Override
 	public void move( final float distance, final int d )
 	{
-		move( ( double )distance, d );
+		move( ( double ) distance, d );
 	}
 
 	@Override
@@ -458,19 +459,19 @@ public class NearestNeighborRealRandomAccessibleStackInterpolator< T > extends A
 	@Override
 	public void setPosition( final int pos, final int d )
 	{
-		setPosition( ( double )pos, d );
+		setPosition( ( double ) pos, d );
 	}
 
 	@Override
 	public void setPosition( final long pos, final int d )
 	{
-		setPosition( ( double )pos, d );
+		setPosition( ( double ) pos, d );
 	}
 
 	@Override
 	public void setPosition( final float pos, final int d )
 	{
-		setPosition( ( double )pos, d );
+		setPosition( ( double ) pos, d );
 	}
 
 	@Override
@@ -482,7 +483,6 @@ public class NearestNeighborRealRandomAccessibleStackInterpolator< T > extends A
 		else
 			setSlice( getSliceIndex( pos ) );
 	}
-
 
 	@Override
 	public T get()

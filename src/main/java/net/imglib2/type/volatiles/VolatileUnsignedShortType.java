@@ -54,7 +54,7 @@ public class VolatileUnsignedShortType extends AbstractVolatileNativeRealType< U
 
 	private static class WrappedUnsignedShortType extends UnsignedShortType
 	{
-		public WrappedUnsignedShortType( final NativeImg<?, ? extends ShortAccess> img )
+		public WrappedUnsignedShortType( final NativeImg< ?, ? extends ShortAccess > img )
 		{
 			super( img );
 		}
@@ -106,7 +106,7 @@ public class VolatileUnsignedShortType extends AbstractVolatileNativeRealType< U
 	public void updateContainer( final Object c )
 	{
 		final VolatileShortAccess a = img.update( c );
-		( (WrappedUnsignedShortType) t ).setAccess( a );
+		( ( WrappedUnsignedShortType ) t ).setAccess( a );
 		setValid( a.isValid() );
 	}
 
@@ -130,7 +130,8 @@ public class VolatileUnsignedShortType extends AbstractVolatileNativeRealType< U
 		return v;
 	}
 
-	private static final NativeTypeFactory< VolatileUnsignedShortType, VolatileShortAccess > typeFactory = NativeTypeFactory.SHORT( VolatileUnsignedShortType::new );
+	private static final NativeTypeFactory< VolatileUnsignedShortType, VolatileShortAccess > typeFactory =
+			NativeTypeFactory.SHORT( VolatileUnsignedShortType::new );
 
 	@Override
 	public NativeTypeFactory< VolatileUnsignedShortType, ? > getNativeTypeFactory()

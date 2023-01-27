@@ -270,7 +270,7 @@ public abstract class AbstractVolatileRealType< R extends RealType< R >, T exten
 	@Override
 	public boolean equals( final Object obj )
 	{
-		if ( ! getClass().isInstance( obj ) )
+		if ( !getClass().isInstance( obj ) )
 			return false;
 		@SuppressWarnings( "unchecked" )
 		T t = ( T ) obj;

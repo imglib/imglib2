@@ -43,7 +43,8 @@ import net.imglib2.View;
  * @author Philipp Hanslovsky
  *
  */
-abstract public class AbstractConvertedRandomAccessibleInterval< A, B > extends AbstractWrappedInterval< RandomAccessibleInterval< A > > implements RandomAccessibleInterval< B >, View
+abstract public class AbstractConvertedRandomAccessibleInterval< A, B > extends AbstractWrappedInterval< RandomAccessibleInterval< A > >
+		implements RandomAccessibleInterval< B >, View
 {
 
 	protected final RandomAccessibleInterval< A > source;

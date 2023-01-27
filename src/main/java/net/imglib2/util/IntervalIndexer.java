@@ -324,17 +324,20 @@ public class IntervalIndexer
 		return ( index / steps[ dimension ] ) % dimensions[ dimension ];
 	}
 
-	final static public int indexToPositionWithOffset( final int index, final int[] dimensions, final int[] steps, final int[] offset, final int dimension )
+	final static public int indexToPositionWithOffset( final int index, final int[] dimensions, final int[] steps, final int[] offset,
+			final int dimension )
 	{
 		return indexToPosition( index, dimensions, steps, dimension ) + offset[ dimension ];
 	}
 
-	public static long indexToPositionWithOffset( final int index, final int[] dimensions, final int[] steps, final long[] offset, final int dimension )
+	public static long indexToPositionWithOffset( final int index, final int[] dimensions, final int[] steps, final long[] offset,
+			final int dimension )
 	{
 		return indexToPosition( index, dimensions, steps, dimension ) + offset[ dimension ];
 	}
 
-	final static public long indexToPositionWithOffset( final long index, final long[] dimensions, final long[] steps, final long[] offsets, final int dimension )
+	final static public long indexToPositionWithOffset( final long index, final long[] dimensions, final long[] steps, final long[] offsets,
+			final int dimension )
 	{
 		return indexToPosition( index, dimensions, steps, dimension ) + offsets[ dimension ];
 	}

@@ -89,7 +89,6 @@ public abstract class NativeImgFactory< T extends NativeType< T > > extends ImgF
 		return create( Util.int2long( dimensions ) );
 	}
 
-
 	/*
 	 * -----------------------------------------------------------------------
 	 *
@@ -106,7 +105,7 @@ public abstract class NativeImgFactory< T extends NativeType< T > > extends ImgF
 	public abstract NativeImg< T, ? > create( long[] dimension, T type );
 
 	@Deprecated
-	public NativeImgFactory( )
+	public NativeImgFactory()
 	{
 		super();
 	}

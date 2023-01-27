@@ -39,10 +39,10 @@ package net.imglib2.util;
  * 
  * @author Stephan Preibisch
  */
-public class Fraction 
+public class Fraction
 {
 	long numerator, denominator;
-	
+
 	/**
 	 * Creates a new fraction with the respective values
 	 * 
@@ -54,26 +54,38 @@ public class Fraction
 		this.numerator = numerator;
 		this.denominator = denominator;
 	}
-	
+
 	/**
 	 * Instantiate a {@link Fraction} with a value of 1
 	 */
-	public Fraction() { this( 1, 1 ); }
-	
+	public Fraction()
+	{
+		this( 1, 1 );
+	}
+
 	/**
 	 * @return - the numerator (above the fraction bar)
 	 */
-	public long getNumerator() { return numerator; }
-	
+	public long getNumerator()
+	{
+		return numerator;
+	}
+
 	/**
 	 * @return - the denominator (below the fraction bar)
 	 */
-	public long getDenominator() { return denominator; }
-	
+	public long getDenominator()
+	{
+		return denominator;
+	}
+
 	/**
 	 * @return - an estimate of the ratio in double, i.e. numerator/denominator
 	 */
-	public double getRatio() { return (double)numerator / (double)denominator; }
+	public double getRatio()
+	{
+		return ( double ) numerator / ( double ) denominator;
+	}
 
 	/**
 	 * Inverts this fraction by exchanging numerator and denominator
@@ -84,7 +96,7 @@ public class Fraction
 		numerator = denominator;
 		denominator = tmp;
 	}
-	
+
 	public void mul( final Fraction fraction )
 	{
 		this.numerator *= fraction.getNumerator();
@@ -104,16 +116,16 @@ public class Fraction
 	 * @param value
 	 * @return
 	 */
-	public long mulCeil( final long value ) 
-	{ 
+	public long mulCeil( final long value )
+	{
 		final long tmp = value * numerator;
-		
+
 		if ( tmp % denominator != 0 )
 			return tmp / denominator + 1;
 		else
 			return tmp / denominator;
 	}
-	
+
 	@Override
 	public Fraction clone()
 	{

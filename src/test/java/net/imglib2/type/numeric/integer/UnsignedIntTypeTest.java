@@ -92,13 +92,14 @@ public class UnsignedIntTypeTest
 	 * {@code BigInteger} representation of an UnsignedIntType.
 	 */
 	@Test
-	public void testGetBigInteger() {
+	public void testGetBigInteger()
+	{
 
 		final UnsignedIntType l = new UnsignedIntType( 120345l );
 		assertEquals( BigInteger.valueOf( 120345l ), l.getBigInteger() );
 
 		final UnsignedIntType l2 = new UnsignedIntType( -1209843l );
-		assertEquals( BigInteger.valueOf( 4293757453l ) , l2.getBigInteger() );
+		assertEquals( BigInteger.valueOf( 4293757453l ), l2.getBigInteger() );
 	}
 
 	/**
@@ -107,7 +108,8 @@ public class UnsignedIntTypeTest
 	 * {@code long} value within the proper range.
 	 */
 	@Test
-	public void testSetBigInteger() {
+	public void testSetBigInteger()
+	{
 
 		final UnsignedIntType l = new UnsignedIntType( 6943 );
 

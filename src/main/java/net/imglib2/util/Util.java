@@ -332,7 +332,7 @@ public class Util
 
 		return median;
 	}
-	
+
 	public static void quicksort( final long[] data )
 	{
 		quicksort( data, 0, data.length - 1 );
@@ -542,7 +542,6 @@ public class Util
 	{
 		return ( long ) ( value + ( 0.5d * Math.signum( value ) ) );
 	}
-
 
 	/**
 	 * This method creates a gaussian kernel
@@ -821,7 +820,7 @@ public class Util
 	 *            - the {@link RandomAccessibleInterval}
 	 * @return - an instance of T
 	 */
-	final public static < T, F extends RealInterval & RealRandomAccessible< T >> T getTypeFromRealInterval( final F rai )
+	final public static < T, F extends RealInterval & RealRandomAccessible< T > > T getTypeFromRealInterval( final F rai )
 	{
 		// create RealRandomAccess
 		final RealRandomAccess< T > realRandomAccess = rai.realRandomAccess();
@@ -864,14 +863,16 @@ public class Util
 	 *            type of the factory.
 	 * @return an {@link ArrayImgFactory} or a {@link CellImgFactory}.
 	 */
-	public static < T extends NativeType< T > > ImgFactory< T > getArrayOrCellImgFactory( final Dimensions targetSize, final int targetCellSize, final T type )
+	public static < T extends NativeType< T > > ImgFactory< T > getArrayOrCellImgFactory( final Dimensions targetSize,
+			final int targetCellSize, final T type )
 	{
 		Fraction entitiesPerPixel = type.getEntitiesPerPixel();
 		final long numElements = Intervals.numElements( targetSize );
 		final long numEntities = entitiesPerPixel.mulCeil( numElements );
 		if ( numElements <= Integer.MAX_VALUE && numEntities <= MAX_ARRAY_SIZE )
 			return new ArrayImgFactory<>( type );
-		final int maxCellSize = ( int ) Math.pow( Math.min( MAX_ARRAY_SIZE / entitiesPerPixel.getRatio(), Integer.MAX_VALUE ), 1.0 / targetSize.numDimensions() );
+		final int maxCellSize = ( int ) Math.pow( Math.min( MAX_ARRAY_SIZE / entitiesPerPixel.getRatio(), Integer.MAX_VALUE ),
+				1.0 / targetSize.numDimensions() );
 		final int cellSize = Math.min( targetCellSize, maxCellSize );
 		return new CellImgFactory<>( type, cellSize );
 	}
@@ -903,8 +904,7 @@ public class Util
 					return factory.imgFactory( type );
 				}
 				catch ( IncompatibleTypeException e )
-				{
-				}
+				{}
 			}
 		}
 		if ( type instanceof NativeType )
@@ -1011,7 +1011,8 @@ public class Util
 	/**
 	 * Checks if both images have equal intervals and content.
 	 */
-	public static < T extends ValueEquals< U >, U > boolean imagesEqual( final RandomAccessibleInterval< ? extends T > a, final RandomAccessibleInterval< ? extends U > b )
+	public static < T extends ValueEquals< U >, U > boolean imagesEqual( final RandomAccessibleInterval< ? extends T > a,
+			final RandomAccessibleInterval< ? extends U > b )
 	{
 		return imagesEqual( a, b, ValueEquals::valueEquals );
 	}
@@ -1020,7 +1021,8 @@ public class Util
 	 * Checks if both images have equal intervals and content.
 	 * A predicate must be given to check if two pixels are equal.
 	 */
-	public static < T, U > boolean imagesEqual( final RandomAccessibleInterval< ? extends T > a, final RandomAccessibleInterval< ? extends U > b, final BiPredicate< T, U > pixelEquals )
+	public static < T, U > boolean imagesEqual( final RandomAccessibleInterval< ? extends T > a,
+			final RandomAccessibleInterval< ? extends U > b, final BiPredicate< T, U > pixelEquals )
 	{
 		if ( !Intervals.equals( a, b ) )
 			return false;

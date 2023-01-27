@@ -64,7 +64,8 @@ public class ImgLib2Assert
 	 * {@link ValueEquals#valueEquals(Object)}.
 	 */
 	public static < A extends ValueEquals< B >, B >
-			void assertImageEquals( final RandomAccessibleInterval< ? extends A > expected, final RandomAccessibleInterval< ? extends B > actual )
+			void assertImageEquals( final RandomAccessibleInterval< ? extends A > expected,
+					final RandomAccessibleInterval< ? extends B > actual )
 	{
 		assertImageEquals( expected, actual, ValueEquals::valueEquals );
 	}
@@ -75,7 +76,8 @@ public class ImgLib2Assert
 	 * if the values returned by {@link RealType#getRealDouble()} differ by less
 	 * than "tolerance".
 	 */
-	public static void assertImageEqualsRealType( final RandomAccessibleInterval< ? extends RealType< ? > > expected, final RandomAccessibleInterval< ? extends RealType< ? > > actual, final double tolerance )
+	public static void assertImageEqualsRealType( final RandomAccessibleInterval< ? extends RealType< ? > > expected,
+			final RandomAccessibleInterval< ? extends RealType< ? > > actual, final double tolerance )
 	{
 		assertImageEquals( expected, actual, ( a, e ) -> Math.abs( a.getRealDouble() - e.getRealDouble() ) <= tolerance );
 	}
@@ -85,7 +87,8 @@ public class ImgLib2Assert
 	 * differ. Comparision is done pixel wise. Two pixels are considered equal,
 	 * if the values returned by {@link IntegerType#getIntegerLong()} are equal.
 	 */
-	public static void assertImageEqualsIntegerType( final RandomAccessibleInterval< ? extends IntegerType< ? > > expected, final RandomAccessibleInterval< ? extends IntegerType< ? > > actual )
+	public static void assertImageEqualsIntegerType( final RandomAccessibleInterval< ? extends IntegerType< ? > > expected,
+			final RandomAccessibleInterval< ? extends IntegerType< ? > > actual )
 	{
 		assertImageEquals( expected, actual, ( a, e ) -> a.getIntegerLong() == e.getIntegerLong() );
 	}
@@ -96,7 +99,8 @@ public class ImgLib2Assert
 	 * if the give predicate returns true.
 	 */
 	public static < A, B >
-			void assertImageEquals( final RandomAccessibleInterval< ? extends A > expected, final RandomAccessibleInterval< ? extends B > actual, final BiPredicate< A, B > equals )
+			void assertImageEquals( final RandomAccessibleInterval< ? extends A > expected,
+					final RandomAccessibleInterval< ? extends B > actual, final BiPredicate< A, B > equals )
 	{
 		assertIntervalEquals( expected, actual );
 		final IntervalView< ? extends Pair< ? extends A, ? extends B > > pairs = Views.interval( Views.pair( expected, actual ), actual );

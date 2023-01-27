@@ -44,7 +44,7 @@ import net.imglib2.type.numeric.IntegerType;
  * 
  * @author Barry DeZonia
  */
-public class Integer1dBinMapper< T extends IntegerType< T >> implements
+public class Integer1dBinMapper< T extends IntegerType< T > > implements
 		BinMapper1d< T >
 {
 
@@ -85,8 +85,11 @@ public class Integer1dBinMapper< T extends IntegerType< T >> implements
 		{
 			this.maxVal = minVal + numBins - 1;
 		}
-		if ( ( bins <= 0 ) || ( tailBins && bins <= 2 ) ) { throw new IllegalArgumentException(
-				"invalid Integer1dBinMapper: no data bins specified" ); }
+		if ( ( bins <= 0 ) || ( tailBins && bins <= 2 ) )
+		{
+			throw new IllegalArgumentException(
+					"invalid Integer1dBinMapper: no data bins specified" );
+		}
 	}
 
 	// -- BinMapper methods --
@@ -214,13 +217,16 @@ public class Integer1dBinMapper< T extends IntegerType< T >> implements
 	 *            Flags per dimension for whether to include tail bins
 	 * @return An unpopulated HistogramNd
 	 */
-	public static < K extends IntegerType< K >> HistogramNd< K > histogramNd(
+	public static < K extends IntegerType< K > > HistogramNd< K > histogramNd(
 			final long[] minVals, final long[] numBins, final boolean[] tailBins )
 	{
 		if ( ( minVals.length != numBins.length ) ||
-				( minVals.length != tailBins.length ) ) { throw new IllegalArgumentException(
-				"multiDimMapper: differing input array sizes" ); }
-		final List< BinMapper1d< K >> binMappers = new ArrayList< BinMapper1d< K >>();
+				( minVals.length != tailBins.length ) )
+		{
+			throw new IllegalArgumentException(
+					"multiDimMapper: differing input array sizes" );
+		}
+		final List< BinMapper1d< K > > binMappers = new ArrayList< BinMapper1d< K > >();
 		for ( int i = 0; i < minVals.length; i++ )
 		{
 			final Integer1dBinMapper< K > mapper =

@@ -84,7 +84,8 @@ public class BiConvertedRandomAccessible< A, B, C > extends AbstractConvertedRan
 	@Override
 	public BiConvertedRandomAccess< A, B, C > randomAccess( final Interval interval )
 	{
-		return new BiConvertedRandomAccess<>( source.randomAccess( interval ), sourceB.randomAccess( interval ), converterSupplier, convertedSupplier );
+		return new BiConvertedRandomAccess<>( source.randomAccess( interval ), sourceB.randomAccess( interval ), converterSupplier,
+				convertedSupplier );
 	}
 
 	/**
@@ -106,7 +107,6 @@ public class BiConvertedRandomAccessible< A, B, C > extends AbstractConvertedRan
 	{
 		return convertedSupplier;
 	}
-
 
 	/**
 	 * Returns an instance of the {@link BiConverter}.  If the

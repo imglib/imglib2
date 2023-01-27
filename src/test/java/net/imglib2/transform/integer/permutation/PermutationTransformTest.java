@@ -96,7 +96,8 @@ public class PermutationTransformTest
 	@Test
 	public void test()
 	{
-		final ArrayImg< LongType, LongArray > img = ArrayImgs.longs( PermutationTransformTest.values, PermutationTransformTest.width, PermutationTransformTest.width );
+		final ArrayImg< LongType, LongArray > img =
+				ArrayImgs.longs( PermutationTransformTest.values, PermutationTransformTest.width, PermutationTransformTest.width );
 		final PermutationTransform t = new PermutationTransform( PermutationTransformTest.lut, 2, 2 );
 		final TransformView< LongType > bijectivePermutation = new TransformView< LongType >( img, t );
 		final TransformView< LongType > inverseBijectivePermutation = new TransformView< LongType >( bijectivePermutation, t.inverse() );
@@ -108,7 +109,8 @@ public class PermutationTransformTest
 
 		for ( int i = 0; i < 1000; ++i )
 		{
-			final long[] x = new long[] { PermutationTransformTest.rnd.nextInt( PermutationTransformTest.width ), PermutationTransformTest.rnd.nextInt( PermutationTransformTest.width ) };
+			final long[] x = new long[] { PermutationTransformTest.rnd.nextInt( PermutationTransformTest.width ),
+					PermutationTransformTest.rnd.nextInt( PermutationTransformTest.width ) };
 			reference.setPosition( x );
 			result.setPosition( x );
 			Assert.assertEquals( reference.get().get(), result.get().get() );

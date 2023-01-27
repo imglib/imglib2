@@ -48,12 +48,12 @@ import net.imglib2.view.composite.Composite;
 public class CompositeChannelConverter< T extends Type< T >, A extends Composite< T > > implements Converter< A, T >
 {
 	final protected long i;
-	
+
 	public CompositeChannelConverter( final long i )
 	{
 		this.i = i;
 	}
-	
+
 	@Override
 	public void convert( A input, T output )
 	{

@@ -58,7 +58,7 @@ public class BoolType extends AbstractIntegerType< BoolType > implements Boolean
 		this.value = value;
 	}
 
-	public < T extends BooleanType<T> >BoolType( final T type )
+	public < T extends BooleanType< T > > BoolType( final T type )
 	{
 		this( type.get() );
 	}
@@ -183,7 +183,7 @@ public class BoolType extends AbstractIntegerType< BoolType > implements Boolean
 	@Override
 	public void setBigInteger( final BigInteger b )
 	{
-		set( b.compareTo(BigInteger.ZERO) > 0 );
+		set( b.compareTo( BigInteger.ZERO ) > 0 );
 	}
 
 	@Override

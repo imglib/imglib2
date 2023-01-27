@@ -76,7 +76,8 @@ public class TransformBuilder< T >
 	 *            The interval in which access is needed.
 	 * @param randomAccessible
 	 */
-	public static < S > RandomAccessible< S > getEfficientRandomAccessible( final Interval interval, final RandomAccessible< S > randomAccessible )
+	public static < S > RandomAccessible< S > getEfficientRandomAccessible( final Interval interval,
+			final RandomAccessible< S > randomAccessible )
 	{
 		return new TransformBuilder< S >( interval, randomAccessible ).build();
 	}
@@ -315,13 +316,13 @@ public class TransformBuilder< T >
 					i.set( new TranslationTransform( translation ) );
 				}
 				// else if ( isComponentMapping( mixed ) )
-//				{
-//					// found pure component mapping
-//					// replace by a ComponentMappingTransform
-//					final int[] component = new int[ mixed.numTargetDimensions() ];
-//					mixed.getComponentMapping( component );
-//					i.set( new ComponentMappingTransform( component ) );
-//				}
+				//				{
+				//					// found pure component mapping
+				//					// replace by a ComponentMappingTransform
+				//					final int[] component = new int[ mixed.numTargetDimensions() ];
+				//					mixed.getComponentMapping( component );
+				//					i.set( new ComponentMappingTransform( component ) );
+				//				}
 				else if ( isSlicing( mixed ) )
 				{
 					// found pure slicing

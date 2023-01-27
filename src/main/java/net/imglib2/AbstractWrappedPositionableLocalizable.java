@@ -44,7 +44,8 @@ package net.imglib2;
  * @author Christian Dietz
  * @author Tobias Pietzsch
  */
-public abstract class AbstractWrappedPositionableLocalizable< P extends Positionable & Localizable > extends AbstractWrappedLocalizable< P > implements Positionable
+public abstract class AbstractWrappedPositionableLocalizable< P extends Positionable & Localizable > extends AbstractWrappedLocalizable< P >
+		implements Positionable
 {
 	protected AbstractWrappedPositionableLocalizable( final P source )
 	{

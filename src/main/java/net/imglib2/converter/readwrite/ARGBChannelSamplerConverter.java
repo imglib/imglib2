@@ -45,14 +45,14 @@ import net.imglib2.type.numeric.integer.UnsignedByteType;
  */
 public final class ARGBChannelSamplerConverter implements SamplerConverter< ARGBType, UnsignedByteType >
 {
-	static final private int[] masks = new int[]{
+	static final private int[] masks = new int[] {
 			0x00ffffff,
 			0xff00ffff,
 			0xffff00ff,
 			0xffffff00
 	};
 
-	static final private int[] shifts = new int[]{
+	static final private int[] shifts = new int[] {
 			24,
 			16,
 			8,
@@ -88,7 +88,7 @@ public final class ARGBChannelSamplerConverter implements SamplerConverter< ARGB
 		@Override
 		public byte getValue( final int index )
 		{
-			return ( byte )( ( sampler.get().get() >> shift ) & 0xff );
+			return ( byte ) ( ( sampler.get().get() >> shift ) & 0xff );
 		}
 
 		/**

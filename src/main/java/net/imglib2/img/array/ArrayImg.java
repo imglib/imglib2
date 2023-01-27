@@ -59,7 +59,8 @@ import net.imglib2.view.iteration.SubIntervalIterable;
  * @author Stephan Preibisch
  * @author Stephan Saalfeld
  */
-public class ArrayImg< T extends NativeType< T >, A extends DataAccess > extends AbstractNativeImg< T, A > implements SubIntervalIterable< T >
+public class ArrayImg< T extends NativeType< T >, A extends DataAccess > extends AbstractNativeImg< T, A >
+		implements SubIntervalIterable< T >
 {
 	final int[] steps, dim;
 

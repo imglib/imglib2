@@ -51,7 +51,7 @@ import net.imglib2.type.numeric.integer.UnsignedShortType;
  * @author Curtis Rueden
  * @author Barry DeZonia
  */
-public class HistogramPerformanceTest< T extends IntegerType< T > & NativeType< T >>
+public class HistogramPerformanceTest< T extends IntegerType< T > & NativeType< T > >
 {
 
 	private static final int[] DIMS = { 1024, 1024, 3, 5 };

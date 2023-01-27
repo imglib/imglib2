@@ -161,7 +161,7 @@ public class ConvertersTest
 		// process
 		final RandomAccessibleInterval< ARGBType > argb = Converters.mergeARGB( image, ColorChannelOrder.RGB );
 		// test
-		argb.randomAccess().get().set( new ARGBType( 0x00010203) );
+		argb.randomAccess().get().set( new ARGBType( 0x00010203 ) );
 		Assert.assertArrayEquals( new byte[] { 1, 2, 3 }, pixels );
 	}
 }

@@ -48,48 +48,54 @@ import static org.junit.Assert.assertEquals;
 /**
  * Tests {@link IterableLoopBuilder}.
  */
-public class IterableLoopBuilderTest {
+public class IterableLoopBuilderTest
+{
 
 	@Test
-	public void testSingleImage() {
+	public void testSingleImage()
+	{
 		// Test IterableLoopBuilder by setting all pixels in a single image to one.
-		Img<IntType> image = ArrayImgs.ints(2,2);
-		IterableInterval<IntType> iterableInterval = image;
-		IterableLoopBuilder.setImages(iterableInterval).forEachPixel(pixel -> pixel.setOne());
-		Img<IntType> expected = ArrayImgs.ints(new int[]{1, 1, 1, 1}, 2, 2);
-		ImgLib2Assert.assertImageEquals(expected, image);
+		Img< IntType > image = ArrayImgs.ints( 2, 2 );
+		IterableInterval< IntType > iterableInterval = image;
+		IterableLoopBuilder.setImages( iterableInterval ).forEachPixel( pixel -> pixel.setOne() );
+		Img< IntType > expected = ArrayImgs.ints( new int[] { 1, 1, 1, 1 }, 2, 2 );
+		ImgLib2Assert.assertImageEquals( expected, image );
 	}
 
 	@Test
-	public void testTwoImages() {
+	public void testTwoImages()
+	{
 		// Test IterableLoopBuilder by using it to copy the content of a tiny image.
-		Img<IntType> source = ArrayImgs.ints(new int[]{1, 2, 3, 4}, 2,2);
-		Img<IntType> target = ArrayImgs.ints(2,2);
-		IterableInterval<IntType> iterableIntervalSource = source;
-		RandomAccessible<IntType> randomAccessibleTarget = target;
-		IterableLoopBuilder.setImages(iterableIntervalSource, randomAccessibleTarget).forEachPixel((s, t) -> t.set(s));
-		ImgLib2Assert.assertImageEquals(source, target);
+		Img< IntType > source = ArrayImgs.ints( new int[] { 1, 2, 3, 4 }, 2, 2 );
+		Img< IntType > target = ArrayImgs.ints( 2, 2 );
+		IterableInterval< IntType > iterableIntervalSource = source;
+		RandomAccessible< IntType > randomAccessibleTarget = target;
+		IterableLoopBuilder.setImages( iterableIntervalSource, randomAccessibleTarget ).forEachPixel( ( s, t ) -> t.set( s ) );
+		ImgLib2Assert.assertImageEquals( source, target );
 	}
 
 	@Test
-	public void testThreeImages() {
+	public void testThreeImages()
+	{
 		// Test IterableLoopBuilder by using it to calculate the difference between to tiny images.
-		Img<IntType> target = ArrayImgs.ints(2, 2);
-		IterableInterval<IntType> targetIterable = target;
-		RandomAccessible<IntType> imageA = ArrayImgs.ints(new int[]{1, 1, 0, 0}, 2, 2);
-		RandomAccessible<IntType> imageB = ArrayImgs.ints(new int[]{0, 2, 2, 0}, 2, 2);
-		IterableLoopBuilder.setImages(targetIterable, imageA, imageB).forEachPixel((t, a, b) -> t.setInteger(a.getInteger() - b.getInteger()));
-		RandomAccessibleInterval<IntType> expected = ArrayImgs.ints(new int[]{1, -1, -2, 0}, 2, 2);
-		ImgLib2Assert.assertImageEquals(expected, target);
+		Img< IntType > target = ArrayImgs.ints( 2, 2 );
+		IterableInterval< IntType > targetIterable = target;
+		RandomAccessible< IntType > imageA = ArrayImgs.ints( new int[] { 1, 1, 0, 0 }, 2, 2 );
+		RandomAccessible< IntType > imageB = ArrayImgs.ints( new int[] { 0, 2, 2, 0 }, 2, 2 );
+		IterableLoopBuilder.setImages( targetIterable, imageA, imageB )
+				.forEachPixel( ( t, a, b ) -> t.setInteger( a.getInteger() - b.getInteger() ) );
+		RandomAccessibleInterval< IntType > expected = ArrayImgs.ints( new int[] { 1, -1, -2, 0 }, 2, 2 );
+		ImgLib2Assert.assertImageEquals( expected, target );
 	}
 
 	@Test
-	public void testMultiThreading() {
+	public void testMultiThreading()
+	{
 		// Test if IterableLoopBuilder still produces a correct result when multi-threading is enabled.
-		Img<IntType> image = ArrayImgs.ints(10, 10);
-		Parallelization.runMultiThreaded(() -> {
-			IterableLoopBuilder.setImages(image).multithreaded().forEachPixel(pixel -> pixel.setOne());
-		});
-		image.forEach(pixel -> assertEquals(1, pixel.getInteger()));
+		Img< IntType > image = ArrayImgs.ints( 10, 10 );
+		Parallelization.runMultiThreaded( () -> {
+			IterableLoopBuilder.setImages( image ).multithreaded().forEachPixel( pixel -> pixel.setOne() );
+		} );
+		image.forEach( pixel -> assertEquals( 1, pixel.getInteger() ) );
 	}
 }

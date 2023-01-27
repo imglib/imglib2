@@ -56,7 +56,7 @@ public final class Index
 	 * This is used by accessors (e.g., a {@code Cursor}) to position {@code
 	 * NativeType}s in the container.
 	 */
-	public void set( final int index)
+	public void set( final int index )
 	{
 		i = index;
 	}

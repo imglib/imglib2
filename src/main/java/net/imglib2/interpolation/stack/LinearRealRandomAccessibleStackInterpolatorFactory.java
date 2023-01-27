@@ -43,7 +43,8 @@ import net.imglib2.type.numeric.NumericType;
 /**
  *
  */
-public class LinearRealRandomAccessibleStackInterpolatorFactory< T extends NumericType< T >, F extends List< RealRandomAccessible< T > > > implements InterpolatorFactory< T, F >
+public class LinearRealRandomAccessibleStackInterpolatorFactory< T extends NumericType< T >, F extends List< RealRandomAccessible< T > > >
+		implements InterpolatorFactory< T, F >
 {
 	@Override
 	public LinearRealRandomAccessibleStackInterpolator< T > create( final F stack )

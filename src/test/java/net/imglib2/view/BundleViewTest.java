@@ -58,11 +58,11 @@ public class BundleViewTest
 		final Random rnd = new Random();
 		final long[] dimensions = new long[] { 10, 6, 5 };
 		final int[] data = new int[ 10 * 6 * 5 ];
-		Arrays.setAll( data, i -> rnd.nextInt());
-		img = ArrayImgs.ints(data, dimensions);
+		Arrays.setAll( data, i -> rnd.nextInt() );
+		img = ArrayImgs.ints( data, dimensions );
 
 		positions = new long[ 100 ][];
-		Arrays.setAll( positions, i -> new long[]{ rnd.nextInt( 11 ), rnd.nextInt( 7 ), rnd.nextInt( 6 ) } );
+		Arrays.setAll( positions, i -> new long[] { rnd.nextInt( 11 ), rnd.nextInt( 7 ), rnd.nextInt( 6 ) } );
 	}
 
 	@Test

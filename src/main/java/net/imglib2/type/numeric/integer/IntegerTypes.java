@@ -41,9 +41,11 @@ import net.imglib2.type.numeric.IntegerType;
 
 public class IntegerTypes
 {
-	private static List< ? extends IntegerType< ? > > signedTypes = Arrays.asList( new ByteType(), new ShortType(), new IntType(), new LongType() );
+	private static List< ? extends IntegerType< ? > > signedTypes =
+			Arrays.asList( new ByteType(), new ShortType(), new IntType(), new LongType() );
 
-	private static List< ? extends IntegerType< ? > > unsignedTypes = Arrays.asList( new BitType(), new UnsignedByteType(), new UnsignedShortType(), new UnsignedIntType(), new UnsignedLongType() );
+	private static List< ? extends IntegerType< ? > > unsignedTypes =
+			Arrays.asList( new BitType(), new UnsignedByteType(), new UnsignedShortType(), new UnsignedIntType(), new UnsignedLongType() );
 
 	private IntegerTypes()
 	{
@@ -85,7 +87,8 @@ public class IntegerTypes
 			throw new IllegalArgumentException( "Wrong usage: min (" + min + ") > max (" + max + ")" );
 		if ( min >= 0 ) // unsigned
 		{
-			return unsignedTypes.stream().filter( i -> min >= i.getMinValue() && max <= i.getMaxValue() ).findFirst().get().createVariable();
+			return unsignedTypes.stream().filter( i -> min >= i.getMinValue() && max <= i.getMaxValue() ).findFirst().get()
+					.createVariable();
 		}
 		return signedTypes.stream().filter( i -> min >= i.getMinValue() && max <= i.getMaxValue() ).findFirst().get().createVariable();
 	}

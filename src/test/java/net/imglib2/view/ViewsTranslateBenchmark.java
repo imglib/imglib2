@@ -74,13 +74,13 @@ import java.util.concurrent.TimeUnit;
 public class ViewsTranslateBenchmark
 {
 
-	private final RandomAccessibleInterval<IntType> arrayImg = createImg( new ArrayImgFactory<>( new IntType() ) );
+	private final RandomAccessibleInterval< IntType > arrayImg = createImg( new ArrayImgFactory<>( new IntType() ) );
 
-	private final RandomAccessibleInterval<IntType> planarImg = createImg( new PlanarImgFactory<>( new IntType() ) );
+	private final RandomAccessibleInterval< IntType > planarImg = createImg( new PlanarImgFactory<>( new IntType() ) );
 
-	private final RandomAccessibleInterval<IntType> cellImg = createImg( new CellImgFactory<>( new IntType(), 100, 100 ) );
+	private final RandomAccessibleInterval< IntType > cellImg = createImg( new CellImgFactory<>( new IntType(), 100, 100 ) );
 
-	private RandomAccessibleInterval<IntType> createImg( final ImgFactory<IntType> factory )
+	private RandomAccessibleInterval< IntType > createImg( final ImgFactory< IntType > factory )
 	{
 		return Views.translate( factory.create( 1000, 1000 ), 40, 40 );
 	}
@@ -118,10 +118,10 @@ public class ViewsTranslateBenchmark
 		return sum[ 0 ];
 	}
 
-	public static double sum( final RandomAccessibleInterval<? extends RealType<?>> img )
+	public static double sum( final RandomAccessibleInterval< ? extends RealType< ? > > img )
 	{
 		double sum = 0;
-		final RandomAccess<? extends RealType<?>> ra = img.randomAccess();
+		final RandomAccess< ? extends RealType< ? > > ra = img.randomAccess();
 		ra.setPosition( img.min( 1 ), 1 );
 		for ( int y = 0; y < img.dimension( 1 ); y++ )
 		{
@@ -136,10 +136,10 @@ public class ViewsTranslateBenchmark
 		return sum;
 	}
 
-	public static double sum2( final RandomAccessibleInterval<? extends RealType<?>> img )
+	public static double sum2( final RandomAccessibleInterval< ? extends RealType< ? > > img )
 	{
 		double sum = 0;
-		final RandomAccess<? extends RealType<?>> ra = img.randomAccess();
+		final RandomAccess< ? extends RealType< ? > > ra = img.randomAccess();
 		ra.setPosition( img.min( 1 ), 1 );
 		for ( int y = 0; y < img.dimension( 1 ); y++ )
 		{

@@ -54,17 +54,19 @@ public class RealTypeConvertersTest
 {
 
 	@Test
-	public void testGetConverter() {
+	public void testGetConverter()
+	{
 		UnsignedByteType input = new UnsignedByteType( 42 );
 		DoubleType output = new DoubleType();
-		Converter<UnsignedByteType, DoubleType> converter = RealTypeConverters.getConverter( input, output );
+		Converter< UnsignedByteType, DoubleType > converter = RealTypeConverters.getConverter( input, output );
 		converter.convert( input, output );
 		assertEquals( 42, output.getRealDouble(), 0 );
 	}
 
 	@Test
-	public void testConvert() {
-		Img<UnsignedByteType> input = ArrayImgs.unsignedBytes( new byte[] { 42 }, 1 );
+	public void testConvert()
+	{
+		Img< UnsignedByteType > input = ArrayImgs.unsignedBytes( new byte[] { 42 }, 1 );
 		RandomAccessibleInterval< FloatType > result = RealTypeConverters.convert( input, new FloatType() );
 		ImgLib2Assert.assertImageEqualsRealType( input, result, 0 );
 	}

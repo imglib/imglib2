@@ -51,7 +51,8 @@ import net.imglib2.type.numeric.RealType;
  *
  * @author Stephan Saalfeld
  */
-public class RealComposite< T extends RealType< T > > extends AbstractNumericComposite< T, RealComposite< T > > implements RealPositionable, RealLocalizable
+public class RealComposite< T extends RealType< T > > extends AbstractNumericComposite< T, RealComposite< T > >
+		implements RealPositionable, RealLocalizable
 {
 	static public class Factory< T extends RealType< T > > implements CompositeFactory< T, RealComposite< T > >
 	{

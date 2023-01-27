@@ -275,16 +275,14 @@ public class UnsignedLongType extends GenericLongType< UnsignedLongType >
 
 	static long doubleToUnsignedLong( double real )
 	{
-		double value = real < MAX_LONG_PLUS_ONE ?
-				Math.max(0, real) :
-				Math.min(-1, real - MAX_VALUE_PLUS_ONE);
+		double value = real < MAX_LONG_PLUS_ONE ? Math.max( 0, real ) : Math.min( -1, real - MAX_VALUE_PLUS_ONE );
 		return Util.round( value );
 	}
 
 	@Override
 	public void setReal( float real )
 	{
-		setReal( (double) real );
+		setReal( ( double ) real );
 	}
 
 	public void set( final BigInteger bi )
@@ -352,7 +350,7 @@ public class UnsignedLongType extends GenericLongType< UnsignedLongType >
 	public float getRealFloat()
 	{
 		long l = get();
-		return l >= 0 ? l : ((float) MAX_VALUE_PLUS_ONE + l);
+		return l >= 0 ? l : ( ( float ) MAX_VALUE_PLUS_ONE + l );
 	}
 
 	@Override
@@ -363,7 +361,7 @@ public class UnsignedLongType extends GenericLongType< UnsignedLongType >
 
 	static double unsignedLongToDouble( long l )
 	{
-		return l >= 0 ? l : (MAX_VALUE_PLUS_ONE + l);
+		return l >= 0 ? l : ( MAX_VALUE_PLUS_ONE + l );
 	}
 
 	@Override

@@ -109,7 +109,8 @@ public class SingleDimensionPermutationTransformTest
 	@Test
 	public void test()
 	{
-		final SingleDimensionPermutationTransform transform = new SingleDimensionPermutationTransform( this.lut, this.nDim, this.nDim, this.d );
+		final SingleDimensionPermutationTransform transform =
+				new SingleDimensionPermutationTransform( this.lut, this.nDim, this.nDim, this.d );
 		final SingleDimensionPermutationTransform inverse = transform.inverse();
 
 		final TransformView< IntType > transformed = new TransformView< IntType >( this.img, transform );

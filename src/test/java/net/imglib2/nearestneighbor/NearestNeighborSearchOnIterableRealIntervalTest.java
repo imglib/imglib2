@@ -90,7 +90,8 @@ public class NearestNeighborSearchOnIterableRealIntervalTest
 	public void testKNearestNeighborSearch()
 	{
 		final RealCursor< DoubleType > cursor = realPointSampleList.cursor();
-		final KNearestNeighborSearchOnIterableRealInterval< DoubleType > search1 = new KNearestNeighborSearchOnIterableRealInterval< DoubleType >( realPointSampleList, 1 );
+		final KNearestNeighborSearchOnIterableRealInterval< DoubleType > search1 =
+				new KNearestNeighborSearchOnIterableRealInterval< DoubleType >( realPointSampleList, 1 );
 
 		search1.search( new RealPoint( new double[] { 0.1, 0.2 } ) );
 		assertTrue( "Position mismatch ", positionEquals( search1.getPosition( 0 ), new RealPoint( coordinates[ 0 ] ) ) );

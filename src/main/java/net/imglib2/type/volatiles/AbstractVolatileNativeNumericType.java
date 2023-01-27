@@ -51,9 +51,10 @@ import net.imglib2.util.Fraction;
  * @author Tobias Pietzsch &lt;tobias.pietzsch@gmail.com&gt;
  * @author Stephan Saalfeld &lt;saalfelds@janelia.hhmi.org&gt;
  */
-public abstract class AbstractVolatileNativeNumericType< N extends NumericType< N > & NativeType< N >, T extends AbstractVolatileNativeNumericType< N, T > >
-	extends AbstractVolatileNumericType< N, T >
-	implements NativeType< T >
+public abstract class AbstractVolatileNativeNumericType< N extends NumericType< N > & NativeType< N >,
+		T extends AbstractVolatileNativeNumericType< N, T > >
+		extends AbstractVolatileNumericType< N, T >
+		implements NativeType< T >
 {
 	public AbstractVolatileNativeNumericType( final N t, final boolean valid )
 	{

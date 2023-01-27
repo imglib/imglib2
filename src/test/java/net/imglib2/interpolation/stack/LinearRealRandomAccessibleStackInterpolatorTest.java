@@ -86,8 +86,10 @@ public class LinearRealRandomAccessibleStackInterpolatorTest
 			stack.add( Views.interpolate( indices, new NLinearInterpolatorFactory<>() ) );
 		}
 
-		final RealRandomAccessible< DoubleType > interpolatedStack = new Interpolant<>( stack, new LinearRealRandomAccessibleStackInterpolatorFactory<>(), 3 );
-		final RealRandomAccessible< DoubleType > interpolatedRAStack = Views.interpolate( Views.stack( raStack ), new NLinearInterpolatorFactory<>() );
+		final RealRandomAccessible< DoubleType > interpolatedStack =
+				new Interpolant<>( stack, new LinearRealRandomAccessibleStackInterpolatorFactory<>(), 3 );
+		final RealRandomAccessible< DoubleType > interpolatedRAStack =
+				Views.interpolate( Views.stack( raStack ), new NLinearInterpolatorFactory<>() );
 
 		int i = 0;
 		for ( final DoubleType t : Views.flatIterable( Views.interval( Views.raster( interpolatedStack ), cropInterval ) ) )
@@ -105,8 +107,8 @@ public class LinearRealRandomAccessibleStackInterpolatorTest
 				for ( double z = 0; z < interval.dimension( 1 ); z += 0.778 )
 				{
 					stackAccess.setPosition( z, 2 );
-					stackAccess.setPosition( new double[] {x, y, z} );
-					stackRAAccess.setPosition( new double[] {x, y, z} );
+					stackAccess.setPosition( new double[] { x, y, z } );
+					stackRAAccess.setPosition( new double[] { x, y, z } );
 
 					Assert.assertEquals( stackAccess.get().getRealDouble(), stackRAAccess.get().getRealDouble(), 0.01 );
 				}

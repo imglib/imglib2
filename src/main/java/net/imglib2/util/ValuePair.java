@@ -34,7 +34,6 @@
 
 package net.imglib2.util;
 
-
 /**
  * TODO
  * 
@@ -62,7 +61,7 @@ public class ValuePair< A, B > implements Pair< A, B >
 	{
 		return b;
 	}
-	
+
 	@Override
 	public int hashCode()
 	{
@@ -74,15 +73,15 @@ public class ValuePair< A, B > implements Pair< A, B >
 	}
 
 	@Override
-	public boolean equals(Object obj)
+	public boolean equals( Object obj )
 	{
 		if ( this == obj )
 			return true;
 		if ( obj == null )
 			return false;
-		if ( !(obj instanceof Pair) )
+		if ( !( obj instanceof Pair ) )
 			return false;
-		Pair other = (Pair) obj;
+		Pair other = ( Pair ) obj;
 		if ( a == null )
 		{
 			if ( other.getA() != null )

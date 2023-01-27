@@ -513,7 +513,8 @@ public class KthElement
 	 * @param comparator
 	 *            ordering function on T
 	 */
-	public static < T > void kthElement( final ListIterator< T > i, final ListIterator< T > j, final int k, final Comparator< ? super T > comparator )
+	public static < T > void kthElement( final ListIterator< T > i, final ListIterator< T > j, final int k,
+			final Comparator< ? super T > comparator )
 	{
 		while ( true )
 		{
@@ -620,7 +621,8 @@ public class KthElement
 	 * @param comparator
 	 *            ordering function on T
 	 */
-	public static < T > void kthElement( int i, int j, final int k, final List< T > values, final int[] permutation, final Comparator< ? super T > comparator )
+	public static < T > void kthElement( int i, int j, final int k, final List< T > values, final int[] permutation,
+			final Comparator< ? super T > comparator )
 	{
 		while ( true )
 		{
@@ -665,7 +667,8 @@ public class KthElement
 	 * @param comparator
 	 *            ordering function on T
 	 */
-	public static < T > void kthElement( final int k, final List< T > values, final int[] permutation, final Comparator< ? super T > comparator )
+	public static < T > void kthElement( final int k, final List< T > values, final int[] permutation,
+			final Comparator< ? super T > comparator )
 	{
 		kthElement( 0, values.size() - 1, k, values, permutation, comparator );
 	}
@@ -697,7 +700,8 @@ public class KthElement
 	 *            elements of this array are permuted in the same way as the
 	 *            elements in the values list
 	 */
-	public static < T extends Comparable< T > > void kthElement( int i, int j, final int k, final List< T > values, final int[] permutation )
+	public static < T extends Comparable< T > > void kthElement( int i, int j, final int k, final List< T > values,
+			final int[] permutation )
 	{
 		while ( true )
 		{
@@ -780,7 +784,8 @@ public class KthElement
 	 * @param comparator
 	 *            ordering function on T
 	 */
-	public static < T > void kthElement( final ListIterator< T > i, final ListIterator< T > j, final int k, final int[] permutation, final Comparator< ? super T > comparator )
+	public static < T > void kthElement( final ListIterator< T > i, final ListIterator< T > j, final int k, final int[] permutation,
+			final Comparator< ? super T > comparator )
 	{
 		while ( true )
 		{
@@ -842,7 +847,8 @@ public class KthElement
 	 *            elements of this array are permuted in the same way as the
 	 *            elements in the values list
 	 */
-	public static < T extends Comparable< T > > void kthElement( final ListIterator< T > i, final ListIterator< T > j, final int k, final int[] permutation )
+	public static < T extends Comparable< T > > void kthElement( final ListIterator< T > i, final ListIterator< T > j, final int k,
+			final int[] permutation )
 	{
 		while ( true )
 		{

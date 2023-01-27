@@ -108,9 +108,9 @@ public class DefaultTaskExecutorTest
 		assertEquals( 6, sum.get() );
 	}
 
-
 	@Test
-	public void testExceptionHandling() {
+	public void testExceptionHandling()
+	{
 		try
 		{
 			twoThreads.runAll( Collections.singletonList( () -> throwDummyException() ) );

@@ -46,7 +46,8 @@ import net.imglib2.type.NativeType;
  * @author Stephan Preibisch
  * @author Stephan Saalfeld
  */
-public class PlanarLocalizingCursor< T extends NativeType< T > > extends AbstractLocalizingCursorInt< T > implements PlanarImg.PlanarContainerSampler
+public class PlanarLocalizingCursor< T extends NativeType< T > > extends AbstractLocalizingCursorInt< T >
+		implements PlanarImg.PlanarContainerSampler
 {
 	protected final T type;
 

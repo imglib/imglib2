@@ -271,7 +271,6 @@ public class Converters
 		return new ConvertedRandomAccessibleInterval<>( source, converter, targetSupplier );
 	}
 
-
 	/**
 	 * Create a {@link RandomAccessibleInterval} whose {@link RandomAccess
 	 * RandomAccesses} {@link RandomAccess#get()} you a converted sample.
@@ -1073,7 +1072,8 @@ public class Converters
 	 *         into and from the corresponding channels of the original
 	 *         {@link ARGBType}.
 	 */
-	final static public RandomAccessibleInterval< UnsignedByteType > argbChannels( final RandomAccessibleInterval< ARGBType > source, final int... channels )
+	final static public RandomAccessibleInterval< UnsignedByteType > argbChannels( final RandomAccessibleInterval< ARGBType > source,
+			final int... channels )
 	{
 		final ArrayList< RandomAccessibleInterval< UnsignedByteType > > hyperSlices = new ArrayList<>();
 		for ( final int channel : channels )
@@ -1091,7 +1091,8 @@ public class Converters
 	 * @param channelOrder Order of the color channels.
 	 * @return Color view to the source image that can be used for reading and writing.
 	 */
-	final static public RandomAccessible< ARGBType > mergeARGB( final RandomAccessible< UnsignedByteType > source, final ColorChannelOrder channelOrder )
+	final static public RandomAccessible< ARGBType > mergeARGB( final RandomAccessible< UnsignedByteType > source,
+			final ColorChannelOrder channelOrder )
 	{
 		return Converters.convert( Views.collapse( source ), new CompositeARGBSamplerConverter( channelOrder ) );
 	}
@@ -1105,7 +1106,8 @@ public class Converters
 	 * @param channelOrder Order of the color channels.
 	 * @return Color view to the source image that can be used for reading and writing.
 	 */
-	final static public RandomAccessibleInterval< ARGBType > mergeARGB( final RandomAccessibleInterval< UnsignedByteType > source, final ColorChannelOrder channelOrder )
+	final static public RandomAccessibleInterval< ARGBType > mergeARGB( final RandomAccessibleInterval< UnsignedByteType > source,
+			final ColorChannelOrder channelOrder )
 	{
 		final int channelAxis = source.numDimensions() - 1;
 		if ( source.min( channelAxis ) > 0 || source.max( channelAxis ) < channelOrder.channelCount() - 1 )

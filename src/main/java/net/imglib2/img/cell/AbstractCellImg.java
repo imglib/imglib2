@@ -50,10 +50,10 @@ import net.imglib2.util.Fraction;
  * @author Tobias Pietzsch
  */
 public abstract class AbstractCellImg<
-				T extends NativeType< T >,
-				A extends DataAccess,
-				C extends Cell< A >,
-				I extends RandomAccessible< C > & IterableInterval< C > >
+		T extends NativeType< T >,
+		A extends DataAccess,
+		C extends Cell< A >,
+		I extends RandomAccessible< C > & IterableInterval< C > >
 		extends AbstractNativeImg< T, A >
 {
 	protected final CellGrid grid;

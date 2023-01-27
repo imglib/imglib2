@@ -39,5 +39,6 @@ package net.imglib2.type.operators;
 public interface MulFloatingPoint
 {
 	void mul( float c );
+
 	void mul( double c );
 }

@@ -175,8 +175,8 @@ public class NLinearInterpolator< T extends NumericType< T > > extends Floor< Ra
 				baseIndex += baseIndexIncrement;
 			}
 		}
-//		printWeights();
-//		System.out.println();
+		//		printWeights();
+		//		System.out.println();
 	}
 
 	/**
@@ -258,10 +258,10 @@ public class NLinearInterpolator< T extends NumericType< T > > extends Floor< Ra
 		tmp.set( target.get() );
 		tmp.mul( weights[ code ] );
 		accumulator.add( tmp );
-//		System.out.print( "accumulating value at " + target );
-//		System.out.print( "with weights [" );
-//		printCode();
-//		System.out.printf( "] = %f" + "\n", weights[ code ] );
+		//		System.out.print( "accumulating value at " + target );
+		//		System.out.print( "with weights [" );
+		//		printCode();
+		//		System.out.printf( "] = %f" + "\n", weights[ code ] );
 	}
 
 	@SuppressWarnings( "unused" )

@@ -98,7 +98,8 @@ public class NativeARGBDoubleType extends AbstractARGBDoubleType< NativeARGBDoub
 		return new NativeARGBDoubleType( img );
 	}
 
-	private static final NativeTypeFactory< NativeARGBDoubleType, DoubleAccess > typeFactory = NativeTypeFactory.DOUBLE( NativeARGBDoubleType::new );
+	private static final NativeTypeFactory< NativeARGBDoubleType, DoubleAccess > typeFactory =
+			NativeTypeFactory.DOUBLE( NativeARGBDoubleType::new );
 
 	@Override
 	public NativeTypeFactory< NativeARGBDoubleType, DoubleAccess > getNativeTypeFactory()

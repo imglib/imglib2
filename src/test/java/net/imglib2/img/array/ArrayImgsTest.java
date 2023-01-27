@@ -474,7 +474,8 @@ public class ArrayImgsTest
 
 	}
 
-	public static < T extends NativeType< T > & IntegerType< T > > void testRange( final ArrayImg< T, ? > comp, final ArrayImg< T, ? > ref, final int start, final int stop )
+	public static < T extends NativeType< T > & IntegerType< T > > void testRange( final ArrayImg< T, ? > comp, final ArrayImg< T, ? > ref,
+			final int start, final int stop )
 	{
 		final ArrayCursor< T > c = comp.cursor();
 		final ArrayCursor< T > r = ref.cursor();

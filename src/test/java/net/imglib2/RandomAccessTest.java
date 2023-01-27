@@ -54,7 +54,7 @@ public class RandomAccessTest
 	public void testSetPositionAndGet()
 	{
 		// setup
-		final Img< IntType > image = ArrayImgs.ints( new int[]{ 1, 2, 3, 4, 5, 6 }, 3, 2 );
+		final Img< IntType > image = ArrayImgs.ints( new int[] { 1, 2, 3, 4, 5, 6 }, 3, 2 );
 		RandomAccess< IntType > randomAccess = image.randomAccess();
 		// process & test
 		assertEquals( new IntType( 4 ), randomAccess.setPositionAndGet( new Point( 0L, 1L ) ) );

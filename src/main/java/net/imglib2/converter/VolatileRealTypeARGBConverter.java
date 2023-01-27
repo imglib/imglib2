@@ -51,12 +51,12 @@ public class VolatileRealTypeARGBConverter extends RealARGBConverter< VolatileRe
 		super();
 		this.background = background;
 	}
-	
+
 	public VolatileRealTypeARGBConverter()
 	{
 		this( new ARGBType( 0xff000040 ) );
 	}
-	
+
 	public VolatileRealTypeARGBConverter( final double min, final double max, final ARGBType background )
 	{
 		super( min, max );

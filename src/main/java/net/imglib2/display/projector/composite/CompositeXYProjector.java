@@ -63,7 +63,7 @@ import net.imglib2.type.numeric.ARGBType;
 public class CompositeXYProjector< A > extends AbstractProjector2D
 {
 
-	private final ArrayList< Converter< A, ARGBType >> converters;
+	private final ArrayList< Converter< A, ARGBType > > converters;
 
 	private final int dimIndex;
 
@@ -82,7 +82,8 @@ public class CompositeXYProjector< A > extends AbstractProjector2D
 	private final RandomAccessibleInterval< A > source;
 
 	@SuppressWarnings( "unchecked" )
-	public CompositeXYProjector( final RandomAccessibleInterval< A > source, final IterableInterval< ARGBType > target, final ArrayList< Converter< A, ARGBType >> converters, final int dimIndex )
+	public CompositeXYProjector( final RandomAccessibleInterval< A > source, final IterableInterval< ARGBType > target,
+			final ArrayList< Converter< A, ARGBType > > converters, final int dimIndex )
 	{
 		super( source.numDimensions() );
 		this.source = source;
@@ -94,7 +95,10 @@ public class CompositeXYProjector< A > extends AbstractProjector2D
 		positionCount = dimIndex < 0 ? 1 : source.dimension( dimIndex );
 		positionMin = dimIndex < 0 ? 0 : source.min( dimIndex );
 		final int converterCount = converters.size();
-		if ( positionCount != converterCount ) { throw new IllegalArgumentException( "Expected " + positionCount + " converters but got " + converterCount ); }
+		if ( positionCount != converterCount )
+		{
+			throw new IllegalArgumentException( "Expected " + positionCount + " converters but got " + converterCount );
+		}
 
 		composite = new boolean[ converterCount ];
 		composite[ 0 ] = true;

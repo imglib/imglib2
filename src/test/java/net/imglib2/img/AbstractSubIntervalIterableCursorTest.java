@@ -119,7 +119,7 @@ public abstract class AbstractSubIntervalIterableCursorTest< T extends Img< IntT
 	public void testLocalizingIterationShifted()
 	{
 		Cursor< IntType > cursor = Views.interval( img, intervalShifted ).localizingCursor();
-		
+
 		testCursorIteration( cursor, intervalShifted );
 	}
 

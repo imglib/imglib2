@@ -76,7 +76,7 @@ public class JUnitTestBase
 	/**
 	 * Check whether an image is identical to a generated image
 	 */
-	protected < T extends RealType< T >> boolean match( final Img< T > image, final Function function )
+	protected < T extends RealType< T > > boolean match( final Img< T > image, final Function function )
 	{
 		final Cursor< T > cursor = image.localizingCursor();
 		final long[] pos = new long[ cursor.numDimensions() ];
@@ -93,7 +93,7 @@ public class JUnitTestBase
 	/**
 	 * Check whether an image is identical to a generated image, with fuzz
 	 */
-	protected < T extends RealType< T >> boolean match( final Img< T > image, final Function function, final float tolerance )
+	protected < T extends RealType< T > > boolean match( final Img< T > image, final Function function, final float tolerance )
 	{
 		final Cursor< T > cursor = image.localizingCursor();
 		final long[] pos = new long[ cursor.numDimensions() ];
@@ -113,7 +113,7 @@ public class JUnitTestBase
 	 * The image signature are 1st and 2nd order moments of the intensity and
 	 * the coordinates.
 	 */
-	protected < T extends RealType< T >> float[] signature( final Img< T > image )
+	protected < T extends RealType< T > > float[] signature( final Img< T > image )
 	{
 		final float[] result = new float[ ( image.numDimensions() + 1 ) * 2 ];
 		signature( image, result );
@@ -126,7 +126,7 @@ public class JUnitTestBase
 	 * The image signature are 1st and 2nd order moments of the intensity and
 	 * the coordinates.
 	 */
-	protected < T extends RealType< T >> void signature( final Img< T > image, final float[] result )
+	protected < T extends RealType< T > > void signature( final Img< T > image, final float[] result )
 	{
 		Arrays.fill( result, 0 );
 		final Cursor< T > cursor = image.localizingCursor();
@@ -167,7 +167,7 @@ public class JUnitTestBase
 	 * When it is hard/computationally expensive to calculate the values of the
 	 * expected image, we need a quick test like this one.
 	 */
-	protected < T extends RealType< T >> boolean matchSignature( final Img< T > image, final float[] signature )
+	protected < T extends RealType< T > > boolean matchSignature( final Img< T > image, final float[] signature )
 	{
 		final float[] result = signature( image );
 		return Arrays.equals( result, signature );
@@ -179,7 +179,7 @@ public class JUnitTestBase
 	 * When it is hard/computationally expensive to calculate the values of the
 	 * expected image, we need a quick test like this one.
 	 */
-	protected < T extends RealType< T >> boolean matchSignature( final Img< T > image, final float[] signature, final float tolerance )
+	protected < T extends RealType< T > > boolean matchSignature( final Img< T > image, final float[] signature, final float tolerance )
 	{
 		final float[] result = signature( image );
 		for ( int i = 0; i < signature.length; i++ )
@@ -191,7 +191,7 @@ public class JUnitTestBase
 	/**
 	 * Convenience helper to access single pixels
 	 */
-	protected < T extends RealType< T >> float get( final Img< T > image, final int[] pos )
+	protected < T extends RealType< T > > float get( final Img< T > image, final int[] pos )
 	{
 		final RandomAccess< T > cursor = image.randomAccess();
 		cursor.setPosition( pos );
@@ -202,7 +202,7 @@ public class JUnitTestBase
 	/**
 	 * Convenience helper to access single pixels
 	 */
-	protected < T extends RealType< T >> float get3D( final Img< T > image, final int x, final int y, final int z )
+	protected < T extends RealType< T > > float get3D( final Img< T > image, final int x, final int y, final int z )
 	{
 		return get( image, new int[] { x, y, z } );
 	}
@@ -210,7 +210,7 @@ public class JUnitTestBase
 	/**
 	 * Generate an image
 	 */
-	protected < T extends RealType< T > & NativeType< T >> Img< T > makeImage( final T type, final Function function, final long[] dims )
+	protected < T extends RealType< T > & NativeType< T > > Img< T > makeImage( final T type, final Function function, final long[] dims )
 	{
 		final ImgFactory< T > factory = new ArrayImgFactory<>( type );
 		final Img< T > result = factory.create( dims );

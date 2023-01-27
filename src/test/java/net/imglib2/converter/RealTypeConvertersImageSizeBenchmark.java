@@ -66,29 +66,30 @@ import java.util.HashMap;
  * Compare execution time between single threaded and multi threaded
  * execution of {@link RealTypeConverters#copyFromTo(RandomAccessible, RandomAccessibleInterval)}.
  */
-@State(Scope.Benchmark)
-public class RealTypeConvertersImageSizeBenchmark {
+@State( Scope.Benchmark )
+public class RealTypeConvertersImageSizeBenchmark
+{
 
-	@Param({ "ImageSize" })
+	@Param( { "ImageSize" } )
 	public String imageSize;
 
 	private Img< FloatType > in;
 
 	private Img< FloatType > out;
 
-	@Setup(Level.Trial)
+	@Setup( Level.Trial )
 	public void setup()
 	{
-		int size = Integer.valueOf(imageSize);
-		in = RandomImgs.seed(42).nextImage(new FloatType(), 100, size / 100);
-		out = ArrayImgs.floats(100, size / 100);
+		int size = Integer.valueOf( imageSize );
+		in = RandomImgs.seed( 42 ).nextImage( new FloatType(), 100, size / 100 );
+		out = ArrayImgs.floats( 100, size / 100 );
 	}
 
 	@Benchmark
 	public void singleThreaded()
 	{
 		Parallelization.runSingleThreaded(
-				() -> RealTypeConverters.copyFromTo(in, out)
+				() -> RealTypeConverters.copyFromTo( in, out )
 		);
 	}
 
@@ -96,45 +97,47 @@ public class RealTypeConvertersImageSizeBenchmark {
 	public void multiThreaded()
 	{
 		Parallelization.runMultiThreaded(
-				() -> RealTypeConverters.copyFromTo(in, out)
+				() -> RealTypeConverters.copyFromTo( in, out )
 		);
 	}
 
-	public static void main(final String... args) throws RunnerException
+	public static void main( final String... args ) throws RunnerException
 	{
 		String[] imageSizes = { "100", "1000", "10000", "100000", "1000000", "10000000", "100000000" };
 		String simpleName =
 				RealTypeConvertersImageSizeBenchmark.class.getName();
-		final Options opt = new OptionsBuilder().include(simpleName).forks(1)
-				.warmupIterations(5).measurementIterations(10)
-				.warmupTime(TimeValue.milliseconds(500))
-				.measurementTime(TimeValue.milliseconds(500))
-				.param("imageSize", imageSizes)
+		final Options opt = new OptionsBuilder().include( simpleName ).forks( 1 )
+				.warmupIterations( 5 ).measurementIterations( 10 )
+				.warmupTime( TimeValue.milliseconds( 500 ) )
+				.measurementTime( TimeValue.milliseconds( 500 ) )
+				.param( "imageSize", imageSizes )
 				.build();
-		Collection< RunResult > results = new Runner(opt).run();
-		HashMap< Pair< String, String >, Double > map = asMap(results);
-		for (String imageSize : imageSizes) {
-			double s = map.get(new ValuePair<>(simpleName + ".singleThreaded",
-					imageSize));
-			double m = map.get(new ValuePair<>(simpleName + ".multiThreaded",
-					imageSize));
+		Collection< RunResult > results = new Runner( opt ).run();
+		HashMap< Pair< String, String >, Double > map = asMap( results );
+		for ( String imageSize : imageSizes )
+		{
+			double s = map.get( new ValuePair<>( simpleName + ".singleThreaded",
+					imageSize ) );
+			double m = map.get( new ValuePair<>( simpleName + ".multiThreaded",
+					imageSize ) );
 			System.out.println(
 					"Multi-threading speedup: " + m / s + " for image size: " +
-							imageSize);
+							imageSize );
 		}
 	}
 
 	public static HashMap< Pair< String, String >, Double > asMap(
-			Collection< RunResult > results)
+			Collection< RunResult > results )
 	{
 		HashMap< Pair< String, String >, Double > map = new HashMap<>();
-		for (RunResult result : results) {
+		for ( RunResult result : results )
+		{
 			BenchmarkResult aggregatedResult = result.getAggregatedResult();
 			BenchmarkParams params = aggregatedResult.getParams();
 			double score = aggregatedResult.getPrimaryResult().getScore();
 			String benchmark = params.getBenchmark();
-			String size = params.getParam("imageSize");
-			map.put(new ValuePair<>(benchmark, size), score);
+			String size = params.getParam( "imageSize" );
+			map.put( new ValuePair<>( benchmark, size ), score );
 		}
 		return map;
 	}

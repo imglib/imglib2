@@ -66,7 +66,7 @@ public class HistogramNd< T > implements Img< LongType >
 
 	// -- instance variables --
 
-	private List< BinMapper1d< T >> mappers;
+	private List< BinMapper1d< T > > mappers;
 
 	private DiscreteFrequencyDistribution distrib;
 
@@ -89,7 +89,7 @@ public class HistogramNd< T > implements Img< LongType >
 	 * @param mappers
 	 *            The algorithms used to map values to bins
 	 */
-	public HistogramNd( final List< BinMapper1d< T >> mappers )
+	public HistogramNd( final List< BinMapper1d< T > > mappers )
 	{
 		this.mappers = mappers;
 		final long[] dims = new long[ mappers.size() ];
@@ -111,7 +111,7 @@ public class HistogramNd< T > implements Img< LongType >
 	 */
 	public HistogramNd( final HistogramNd< T > other )
 	{
-		final List< BinMapper1d< T >> mappersCopy = new ArrayList< BinMapper1d< T >>();
+		final List< BinMapper1d< T > > mappersCopy = new ArrayList< BinMapper1d< T > >();
 		for ( final BinMapper1d< T > m : mappers )
 		{
 			mappersCopy.add( m.copy() );
@@ -132,7 +132,7 @@ public class HistogramNd< T > implements Img< LongType >
 	 * @param mappers
 	 *            The algorithms used to map values to bins
 	 */
-	public HistogramNd( final Iterable< List< T >> data, final List< BinMapper1d< T >> mappers )
+	public HistogramNd( final Iterable< List< T > > data, final List< BinMapper1d< T > > mappers )
 	{
 		this( mappers );
 		init( data );
@@ -148,7 +148,7 @@ public class HistogramNd< T > implements Img< LongType >
 	 * @param mappers
 	 *            The algorithms used to map values to bins
 	 */
-	public HistogramNd( final List< Iterable< T >> data, final List< BinMapper1d< T >> mappers )
+	public HistogramNd( final List< Iterable< T > > data, final List< BinMapper1d< T > > mappers )
 	{
 		this( mappers );
 		init( data );
@@ -601,7 +601,10 @@ public class HistogramNd< T > implements Img< LongType >
 	{
 		for ( int i = 0; i < mappers.size(); i++ )
 		{
-			if ( isInLowerTail( i, values.get( i ) ) ) { return true; }
+			if ( isInLowerTail( i, values.get( i ) ) )
+			{
+				return true;
+			}
 		}
 		return false;
 	}
@@ -620,7 +623,10 @@ public class HistogramNd< T > implements Img< LongType >
 		if ( hasTails( dim ) )
 		{
 			final long binPos = mappers.get( dim ).map( value );
-			if ( binPos == 0 ) { return true; }
+			if ( binPos == 0 )
+			{
+				return true;
+			}
 		}
 		return false;
 	}
@@ -636,7 +642,10 @@ public class HistogramNd< T > implements Img< LongType >
 	{
 		for ( int i = 0; i < mappers.size(); i++ )
 		{
-			if ( isInUpperTail( i, values.get( i ) ) ) { return true; }
+			if ( isInUpperTail( i, values.get( i ) ) )
+			{
+				return true;
+			}
 		}
 		return false;
 	}
@@ -655,7 +664,10 @@ public class HistogramNd< T > implements Img< LongType >
 		if ( hasTails( dim ) )
 		{
 			final long binPos = mappers.get( dim ).map( value );
-			if ( binPos == mappers.get( dim ).getBinCount() - 1 ) { return true; }
+			if ( binPos == mappers.get( dim ).getBinCount() - 1 )
+			{
+				return true;
+			}
 		}
 		return false;
 	}
@@ -671,7 +683,10 @@ public class HistogramNd< T > implements Img< LongType >
 	{
 		for ( int i = 0; i < mappers.size(); i++ )
 		{
-			if ( !isInMiddle( i, values.get( i ) ) ) { return false; }
+			if ( !isInMiddle( i, values.get( i ) ) )
+			{
+				return false;
+			}
 		}
 		return true;
 	}
@@ -690,7 +705,10 @@ public class HistogramNd< T > implements Img< LongType >
 		if ( hasTails( dim ) )
 		{
 			final long binPos = mappers.get( dim ).map( value );
-			if ( ( binPos == 0 ) || ( binPos == mappers.get( dim ).getBinCount() - 1 ) ) { return false; }
+			if ( ( binPos == 0 ) || ( binPos == mappers.get( dim ).getBinCount() - 1 ) )
+			{
+				return false;
+			}
 		}
 		return true;
 	}
@@ -705,7 +723,10 @@ public class HistogramNd< T > implements Img< LongType >
 	{
 		for ( int i = 0; i < mappers.size(); i++ )
 		{
-			if ( isOutside( i, values.get( i ) ) ) { return true; }
+			if ( isOutside( i, values.get( i ) ) )
+			{
+				return true;
+			}
 		}
 		return false;
 	}
@@ -720,7 +741,10 @@ public class HistogramNd< T > implements Img< LongType >
 	public boolean isOutside( final int dim, final T value )
 	{
 		final long binPos = mappers.get( dim ).map( value );
-		if ( ( binPos == Long.MIN_VALUE ) || ( binPos == Long.MAX_VALUE ) ) { return true; }
+		if ( ( binPos == Long.MIN_VALUE ) || ( binPos == Long.MAX_VALUE ) )
+		{
+			return true;
+		}
 		return false;
 	}
 
@@ -739,7 +763,7 @@ public class HistogramNd< T > implements Img< LongType >
 	 * @param data
 	 *            The total data to count
 	 */
-	public void countData( final Iterable< List< T >> data )
+	public void countData( final Iterable< List< T > > data )
 	{
 		init( data );
 	}
@@ -751,7 +775,7 @@ public class HistogramNd< T > implements Img< LongType >
 	 * @param data
 	 *            The total data to count
 	 */
-	public void countData( final List< Iterable< T >> data )
+	public void countData( final List< Iterable< T > > data )
 	{
 		init( data );
 	}
@@ -763,7 +787,7 @@ public class HistogramNd< T > implements Img< LongType >
 	 * @param data
 	 *            The new data to count
 	 */
-	public void addData( final Iterable< List< T >> data )
+	public void addData( final Iterable< List< T > > data )
 	{
 		add( data );
 	}
@@ -775,7 +799,7 @@ public class HistogramNd< T > implements Img< LongType >
 	 * @param data
 	 *            The new data to count
 	 */
-	public void addData( final List< Iterable< T >> data )
+	public void addData( final List< Iterable< T > > data )
 	{
 		add( data );
 	}
@@ -787,7 +811,7 @@ public class HistogramNd< T > implements Img< LongType >
 	 * @param data
 	 *            The old data to uncount
 	 */
-	public void subtractData( final Iterable< List< T >> data )
+	public void subtractData( final Iterable< List< T > > data )
 	{
 		subtract( data );
 	}
@@ -799,7 +823,7 @@ public class HistogramNd< T > implements Img< LongType >
 	 * @param data
 	 *            The old data to uncount
 	 */
-	public void subtractData( final List< Iterable< T >> data )
+	public void subtractData( final List< Iterable< T > > data )
 	{
 		subtract( data );
 	}
@@ -1028,51 +1052,51 @@ public class HistogramNd< T > implements Img< LongType >
 		ignoredCount = 0;
 	}
 
-	private void init( final Iterable< List< T >> data )
+	private void init( final Iterable< List< T > > data )
 	{
 		reset();
 		add( data );
 	}
 
-	private void init( final List< Iterable< T >> data )
+	private void init( final List< Iterable< T > > data )
 	{
 		reset();
 		add( data );
 	}
 
-	private void add( final Iterable< List< T >> data )
+	private void add( final Iterable< List< T > > data )
 	{
 		modifyCounts( data, incrementer );
 	}
 
-	private void add( final List< Iterable< T >> data )
+	private void add( final List< Iterable< T > > data )
 	{
 		modifyCounts( data, incrementer );
 	}
 
-	private void subtract( final Iterable< List< T >> data )
+	private void subtract( final Iterable< List< T > > data )
 	{
 		modifyCounts( data, decrementer );
 	}
 
-	private void subtract( final List< Iterable< T >> data )
+	private void subtract( final List< Iterable< T > > data )
 	{
 		modifyCounts( data, decrementer );
 	}
 
-	private void modifyCounts( final Iterable< List< T >> data, final Counter counter )
+	private void modifyCounts( final Iterable< List< T > > data, final Counter counter )
 	{
-		final Iterator< List< T >> iter = data.iterator();
+		final Iterator< List< T > > iter = data.iterator();
 		while ( iter.hasNext() )
 		{
 			count( iter.next(), counter );
 		}
 	}
 
-	private void modifyCounts( final List< Iterable< T >> data, final Counter counter )
+	private void modifyCounts( final List< Iterable< T > > data, final Counter counter )
 	{
 		final List< T > vals = new ArrayList< T >( mappers.size() );
-		final List< Iterator< T >> iters = new ArrayList< Iterator< T >>();
+		final List< Iterator< T > > iters = new ArrayList< Iterator< T > >();
 		for ( int i = 0; i < data.size(); i++ )
 		{
 			iters.add( data.get( i ).iterator() );

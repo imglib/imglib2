@@ -135,9 +135,10 @@ public class Unsigned128BitTypeTest
 	 * {@code BigInteger} representation of an Unsigned128BitType.
 	 */
 	@Test
-	public void testGetBigInteger() {
+	public void testGetBigInteger()
+	{
 
-		final BigInteger bi = new BigInteger("CAFE123498230498CAFE", 16);
+		final BigInteger bi = new BigInteger( "CAFE123498230498CAFE", 16 );
 		final Unsigned128BitType l = new Unsigned128BitType( bi );
 		assertEquals( bi, l.getBigInteger() );
 
@@ -152,9 +153,10 @@ public class Unsigned128BitTypeTest
 	 * {@code int} value.
 	 */
 	@Test
-	public void testSetBigInteger() {
+	public void testSetBigInteger()
+	{
 
-		final BigInteger b = new BigInteger("BABE09481BEEF", 16);
+		final BigInteger b = new BigInteger( "BABE09481BEEF", 16 );
 		final Unsigned128BitType l = new Unsigned128BitType( b );
 		assertEquals( l.get(), b );
 
@@ -164,15 +166,17 @@ public class Unsigned128BitTypeTest
 	}
 
 	@Test
-	public void testGetRealDouble() {
+	public void testGetRealDouble()
+	{
 		assertEquals( 0.0, new Unsigned128BitType( 0, 0 ).getRealDouble(), 0.0 );
 		assertEquals( Math.pow( 2, 128 ), new Unsigned128BitType( -1, -1 ).getRealDouble(), 0.0 );
 	}
 
 	@Test
-	public void testGetRealFloat() {
+	public void testGetRealFloat()
+	{
 		assertEquals( 0.0, new Unsigned128BitType( 0, 0 ).getRealFloat(), 0.0 );
-		assertEquals( Math.pow( 2, 127 ), (float) Math.pow( 2, 127 ), 0.0 );
-		assertEquals( Math.pow( 2, 127 ), new Unsigned128BitType(0, 1l << 63 ).getRealFloat(), 0.0 );
+		assertEquals( Math.pow( 2, 127 ), ( float ) Math.pow( 2, 127 ), 0.0 );
+		assertEquals( Math.pow( 2, 127 ), new Unsigned128BitType( 0, 1l << 63 ).getRealFloat(), 0.0 );
 	}
 }

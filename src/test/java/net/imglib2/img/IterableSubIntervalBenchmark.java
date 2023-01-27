@@ -117,7 +117,7 @@ public class IterableSubIntervalBenchmark
 		final ArrayImg< IntType, ? > arrayImg = ArrayImgs.ints( dimensions ); // fits
 																				// the
 																				// interval
-		// doesn't fit the interval
+																				// doesn't fit the interval
 		final ArrayImg< IntType, ? > arrayImgUnOp = ArrayImgs.ints( dimensionsUnoptimized );
 
 		// fits the interval
@@ -139,7 +139,8 @@ public class IterableSubIntervalBenchmark
 	 * while optimized cursors can be used for the first image given interval
 	 * this is not possible for the 2nd one.
 	 */
-	protected static void testArrayImg( final int numRuns, final boolean printIndividualTimes, final Interval interval, final ArrayImg< IntType, ? > arrayImg, final ArrayImg< IntType, ? > arrayImgUnOp )
+	protected static void testArrayImg( final int numRuns, final boolean printIndividualTimes, final Interval interval,
+			final ArrayImg< IntType, ? > arrayImg, final ArrayImg< IntType, ? > arrayImgUnOp )
 	{
 
 		// BLOCK 1
@@ -188,7 +189,8 @@ public class IterableSubIntervalBenchmark
 	 * while optimized cursors can be used for the first image given inter this
 	 * is not possible for the 2nd one.
 	 */
-	protected static void testPlanarImg( final int numRuns, final boolean printIndividualTimes, final Interval interval, final PlanarImg< IntType, ? > planarImg, final PlanarImg< IntType, ? > planarImgUnOp )
+	protected static void testPlanarImg( final int numRuns, final boolean printIndividualTimes, final Interval interval,
+			final PlanarImg< IntType, ? > planarImg, final PlanarImg< IntType, ? > planarImgUnOp )
 	{
 
 		// BLOCK 1
@@ -241,12 +243,16 @@ public class IterableSubIntervalBenchmark
 
 		final long[] statsNorm = computeStats( valuesNorm );
 		final long[] statsOpt = computeStats( valuesOpt );
-		final long[] statsDiff = new long[] { ( statsNorm[ 0 ] - statsOpt[ 0 ] ), ( statsNorm[ 1 ] - statsOpt[ 1 ] ), ( statsNorm[ 2 ] - statsOpt[ 2 ] ) };
+		final long[] statsDiff =
+				new long[] { ( statsNorm[ 0 ] - statsOpt[ 0 ] ), ( statsNorm[ 1 ] - statsOpt[ 1 ] ), ( statsNorm[ 2 ] - statsOpt[ 2 ] ) };
 		// print
 		System.out.println( "\t| Unoptimized \t| Optimized \t| Speedup Time \t| Speedup % \t|" );
-		System.out.println( "Median\t|\t" + statsNorm[ 0 ] + "\t|\t" + statsOpt[ 0 ] + "\t| " + statsDiff[ 0 ] + "ms   \t| " + ( ( int ) ( 1000.0 / statsNorm[ 0 ] * statsDiff[ 0 ] ) / 10.0 ) + "%   \t|" );
-		System.out.println( "Best\t|\t" + statsNorm[ 1 ] + "\t|\t" + statsOpt[ 1 ] + "\t| " + statsDiff[ 1 ] + "ms   \t| " + ( ( int ) ( 1000.0 / statsNorm[ 1 ] * statsDiff[ 1 ] ) / 10.0 ) + "%   \t|" );
-		System.out.println( "Worst\t|\t" + statsNorm[ 2 ] + "\t|\t" + statsOpt[ 2 ] + "\t| " + statsDiff[ 2 ] + "ms   \t| " + ( ( int ) ( 1000.0 / statsNorm[ 2 ] * statsDiff[ 2 ] ) / 10.0 ) + "%   \t|" );
+		System.out.println( "Median\t|\t" + statsNorm[ 0 ] + "\t|\t" + statsOpt[ 0 ] + "\t| " + statsDiff[ 0 ] + "ms   \t| "
+				+ ( ( int ) ( 1000.0 / statsNorm[ 0 ] * statsDiff[ 0 ] ) / 10.0 ) + "%   \t|" );
+		System.out.println( "Best\t|\t" + statsNorm[ 1 ] + "\t|\t" + statsOpt[ 1 ] + "\t| " + statsDiff[ 1 ] + "ms   \t| "
+				+ ( ( int ) ( 1000.0 / statsNorm[ 1 ] * statsDiff[ 1 ] ) / 10.0 ) + "%   \t|" );
+		System.out.println( "Worst\t|\t" + statsNorm[ 2 ] + "\t|\t" + statsOpt[ 2 ] + "\t| " + statsDiff[ 2 ] + "ms   \t| "
+				+ ( ( int ) ( 1000.0 / statsNorm[ 2 ] * statsDiff[ 2 ] ) / 10.0 ) + "%   \t|" );
 		System.out.println();
 	}
 

@@ -55,7 +55,7 @@ public class FinalIntervalTest
 	@Test
 	public void testCtorDimensions()
 	{
-		final FinalDimensions source = new FinalDimensions(23, 45, 34);
+		final FinalDimensions source = new FinalDimensions( 23, 45, 34 );
 		final FinalInterval bounds = new FinalInterval( source );
 		assertInterval( 0, 0, 0, 22, 44, 33, 23, 45, 34, bounds );
 	}
@@ -125,7 +125,8 @@ public class FinalIntervalTest
 		assertInterval( 5, 3, 7, 17, 19, 17, 13, 17, 11, bounds );
 	}
 
-	private void assertInterval( int min0, int min1, int min2, int max0, int max1, int max2, int dim0, int dim1, int dim2, Interval interval )
+	private void assertInterval( int min0, int min1, int min2, int max0, int max1, int max2, int dim0, int dim1, int dim2,
+			Interval interval )
 	{
 		assertEquals( min0, interval.min( 0 ) );
 		assertEquals( min1, interval.min( 1 ) );

@@ -59,27 +59,29 @@ public class IntervalChunksTest
 	@Test
 	public void testSuggestCellSize()
 	{
-		assertArrayEquals( array ( 20 ), IntervalChunks.suggestChunkSize( array ( 40 ), 2 ) );
-		assertArrayEquals( array ( 5 ), IntervalChunks.suggestChunkSize( array ( 100 ), 19 ) );
-		assertArrayEquals( array ( 1 ), IntervalChunks.suggestChunkSize( array ( 10 ), 1000 ) );
-		assertArrayEquals( array ( 10, 10 ), IntervalChunks.suggestChunkSize( array ( 10, 10 ), 1 ) );
-		assertArrayEquals( array ( 10, 5 ), IntervalChunks.suggestChunkSize( array ( 10, 10 ), 2 ) );
-		assertArrayEquals( array ( 5, 1 ), IntervalChunks.suggestChunkSize( array ( 10, 10 ), 20 ) );
-		assertArrayEquals( array ( 5, 1 ), IntervalChunks.suggestChunkSize( array ( 10, 10 ), 17 ) );
+		assertArrayEquals( array( 20 ), IntervalChunks.suggestChunkSize( array( 40 ), 2 ) );
+		assertArrayEquals( array( 5 ), IntervalChunks.suggestChunkSize( array( 100 ), 19 ) );
+		assertArrayEquals( array( 1 ), IntervalChunks.suggestChunkSize( array( 10 ), 1000 ) );
+		assertArrayEquals( array( 10, 10 ), IntervalChunks.suggestChunkSize( array( 10, 10 ), 1 ) );
+		assertArrayEquals( array( 10, 5 ), IntervalChunks.suggestChunkSize( array( 10, 10 ), 2 ) );
+		assertArrayEquals( array( 5, 1 ), IntervalChunks.suggestChunkSize( array( 10, 10 ), 20 ) );
+		assertArrayEquals( array( 5, 1 ), IntervalChunks.suggestChunkSize( array( 10, 10 ), 17 ) );
 	}
 
 	@Test
-	public void testGenerateGrid() {
-		Interval total = Intervals.createMinSize( 2,3,10,10 );
-		List<Interval> chunks = IntervalChunks.generateGrid( total, array(5, 3) );
-		assertEquals(8, chunks.size());
+	public void testGenerateGrid()
+	{
+		Interval total = Intervals.createMinSize( 2, 3, 10, 10 );
+		List< Interval > chunks = IntervalChunks.generateGrid( total, array( 5, 3 ) );
+		assertEquals( 8, chunks.size() );
 		assertIntervalEquals( Intervals.createMinSize( 2, 3, 5, 3 ), chunks.get( 0 ) );
 		assertIntervalEquals( Intervals.createMinSize( 7, 3, 5, 3 ), chunks.get( 1 ) );
 		assertIntervalEquals( Intervals.createMinSize( 7, 12, 5, 1 ), chunks.get( 7 ) );
 	}
 
 	@Test
-	public void testChunkInterval() {
+	public void testChunkInterval()
+	{
 		// Test to chunk one dimensional interval of length 21 into 2 chunks.
 		Interval complete = Intervals.createMinSize( 5, 21 );
 		List< Interval > chunks = IntervalChunks.chunkInterval( complete, 2 );
@@ -88,8 +90,9 @@ public class IntervalChunksTest
 		assertIntervalEquals( Intervals.createMinSize( 25, 1 ), chunks.get( 2 ) );
 	}
 
-	private void assertArrayEquals( long[] expected, long[] actual ) {
-		if( !Arrays.equals(expected, actual))
+	private void assertArrayEquals( long[] expected, long[] actual )
+	{
+		if ( !Arrays.equals( expected, actual ) )
 			fail( "Arrays are different:\n"
 					+ "Expected :" + Arrays.toString( expected ) + "\n"
 					+ "Actual   :" + Arrays.toString( actual ) );

@@ -64,10 +64,12 @@ public class ClassCopyProvider< T >
 	 * @param constructorSignature Constructor signature to be used
 	 *                             when creating a new instance with {@link #newInstanceForKey}
 	 */
-	public ClassCopyProvider( final Class< ? extends T > clazz, final Class< T > interfaceOfClazz, final Class< ? >... constructorSignature )
+	public ClassCopyProvider( final Class< ? extends T > clazz, final Class< T > interfaceOfClazz,
+			final Class< ? >... constructorSignature )
 	{
 		this.copier = new ClassCopier<>( clazz, interfaceOfClazz );
-		this.signature = ( constructorSignature == null || constructorSignature.length == 0 ) ? assumeConstructorSignature( clazz ) : constructorSignature;
+		this.signature = ( constructorSignature == null || constructorSignature.length == 0 ) ? assumeConstructorSignature( clazz )
+				: constructorSignature;
 	}
 
 	private static Class< ? >[] assumeConstructorSignature( final Class< ? > clazz )
@@ -78,7 +80,8 @@ public class ClassCopyProvider< T >
 		if ( constructors.length == 1 )
 			return constructors[ 0 ].getParameterTypes();
 		if ( constructors.length == 0 )
-			throw new IllegalArgumentException( "ClassCopyProvider: Class and it's constructor need to be public (" + clazz.getName() + ")." );
+			throw new IllegalArgumentException(
+					"ClassCopyProvider: Class and it's constructor need to be public (" + clazz.getName() + ")." );
 		throw new IllegalArgumentException( "ClassCopyProvider: Please specify constructor signature." );
 	}
 

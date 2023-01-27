@@ -584,9 +584,9 @@ public class Intervals
 	{
 		assert intervalA.numDimensions() == intervalB.numDimensions();
 
-		if( isEmpty( intervalA ))
+		if ( isEmpty( intervalA ) )
 			return new FinalInterval( intervalB );
-		else if( isEmpty( intervalB ))
+		else if ( isEmpty( intervalB ) )
 			return new FinalInterval( intervalA );
 
 		return unionUnsafe( intervalA, intervalB );
@@ -636,9 +636,9 @@ public class Intervals
 	{
 		assert intervalA.numDimensions() == intervalB.numDimensions();
 
-		if( isEmpty( intervalA ))
+		if ( isEmpty( intervalA ) )
 			return new FinalRealInterval( intervalB );
-		else if( isEmpty( intervalB ))
+		else if ( isEmpty( intervalB ) )
 			return new FinalRealInterval( intervalA );
 
 		return unionUnsafe( intervalA, intervalB );
@@ -881,7 +881,7 @@ public class Intervals
 	 * With respect to the given tolerance.
 	 */
 	public static boolean equals( final RealInterval a, final RealInterval b,
-			final double tolerance)
+			final double tolerance )
 	{
 		if ( a.numDimensions() != b.numDimensions() )
 			return false;
@@ -1120,8 +1120,9 @@ public class Intervals
 	 * @param interval
 	 *            Interval of the returned image.
 	 */
-	public static RandomAccessibleInterval< Localizable > positions( final Interval interval ) {
-		return Localizables.randomAccessibleInterval( interval);
+	public static RandomAccessibleInterval< Localizable > positions( final Interval interval )
+	{
+		return Localizables.randomAccessibleInterval( interval );
 	}
 
 	/**

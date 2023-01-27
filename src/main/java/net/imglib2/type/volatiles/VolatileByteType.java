@@ -54,7 +54,7 @@ public class VolatileByteType extends AbstractVolatileNativeRealType< ByteType, 
 
 	private static class WrappedByteType extends ByteType
 	{
-		public WrappedByteType( final NativeImg<?, ? extends ByteAccess> img )
+		public WrappedByteType( final NativeImg< ?, ? extends ByteAccess > img )
 		{
 			super( img );
 		}
@@ -94,7 +94,7 @@ public class VolatileByteType extends AbstractVolatileNativeRealType< ByteType, 
 	// this is the constructor if you want it to be a variable
 	public VolatileByteType()
 	{
-		this( ( byte )0 );
+		this( ( byte ) 0 );
 	}
 
 	public void set( final byte value )
@@ -106,7 +106,7 @@ public class VolatileByteType extends AbstractVolatileNativeRealType< ByteType, 
 	public void updateContainer( final Object c )
 	{
 		final VolatileByteAccess a = img.update( c );
-		( (WrappedByteType) t ).setAccess( a );
+		( ( WrappedByteType ) t ).setAccess( a );
 		setValid( a.isValid() );
 	}
 
@@ -130,7 +130,8 @@ public class VolatileByteType extends AbstractVolatileNativeRealType< ByteType, 
 		return v;
 	}
 
-	private static final NativeTypeFactory< VolatileByteType, VolatileByteAccess > typeFactory = NativeTypeFactory.BYTE( VolatileByteType::new );
+	private static final NativeTypeFactory< VolatileByteType, VolatileByteAccess > typeFactory =
+			NativeTypeFactory.BYTE( VolatileByteType::new );
 
 	@Override
 	public NativeTypeFactory< VolatileByteType, ? > getNativeTypeFactory()

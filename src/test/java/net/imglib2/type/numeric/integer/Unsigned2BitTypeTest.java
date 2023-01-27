@@ -81,13 +81,14 @@ public class Unsigned2BitTypeTest
 	 * {@code BigInteger} representation of an Unsigned2BitType.
 	 */
 	@Test
-	public void testGetBigInteger() {
+	public void testGetBigInteger()
+	{
 
 		final Unsigned2BitType l = new Unsigned2BitType( 2 );
 		assertEquals( BigInteger.valueOf( 2l ), l.getBigInteger() );
 
 		final Unsigned2BitType l2 = new Unsigned2BitType( 0l );
-		assertEquals( BigInteger.ZERO , l2.getBigInteger() );
+		assertEquals( BigInteger.ZERO, l2.getBigInteger() );
 	}
 
 	/**
@@ -96,7 +97,8 @@ public class Unsigned2BitTypeTest
 	 * {@code int} value that is in the proper range.
 	 */
 	@Test
-	public void testSetBigInteger() {
+	public void testSetBigInteger()
+	{
 
 		final Unsigned2BitType l = new Unsigned2BitType( 10l );
 
@@ -136,12 +138,12 @@ public class Unsigned2BitTypeTest
 		assertTrue( i4.equals( b ) );
 	}
 
-
 	/** Tests {@link Unsigned2BitType#hashCode()}. */
 	@Test
 	public void testHashCode()
 	{
-		for (int i = 0; i < 4; i++) {
+		for ( int i = 0; i < 4; i++ )
+		{
 			final Unsigned2BitType b = new Unsigned2BitType( i );
 			assertEquals( i, b.hashCode() );
 		}

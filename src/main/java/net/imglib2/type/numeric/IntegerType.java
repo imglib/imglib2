@@ -40,7 +40,7 @@ import java.math.BigInteger;
  * TODO
  * 
  */
-public interface IntegerType< T extends IntegerType< T >> extends RealType< T >
+public interface IntegerType< T extends IntegerType< T > > extends RealType< T >
 {
 	int getInteger();
 

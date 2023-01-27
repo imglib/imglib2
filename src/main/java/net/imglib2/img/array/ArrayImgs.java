@@ -499,16 +499,19 @@ final public class ArrayImgs
 	 * Create an {@link ArrayImg}&lt;{@link UnsignedVariableBitLengthType}, {@link LongArray}&gt;.
 	 */
 	@SuppressWarnings( "unchecked" )
-	final static public ArrayImg< UnsignedVariableBitLengthType, LongArray > unsignedVariableBitLengths( final int nbits, final long... dim )
+	final static public ArrayImg< UnsignedVariableBitLengthType, LongArray > unsignedVariableBitLengths( final int nbits,
+			final long... dim )
 	{
-		return ( ArrayImg< UnsignedVariableBitLengthType, LongArray > ) new ArrayImgFactory<>( new UnsignedVariableBitLengthType( nbits ) ).create( dim );
+		return ( ArrayImg< UnsignedVariableBitLengthType, LongArray > ) new ArrayImgFactory<>( new UnsignedVariableBitLengthType( nbits ) )
+				.create( dim );
 	}
 
 	/**
 	 * Creates an {@link ArrayImg}&lt;{@link UnsignedVariableBitLengthType}, {@link LongAccess}&gt;
 	 * using a {@link LongAccess} passed as argument.
 	 */
-	final static public < A extends LongAccess > ArrayImg< UnsignedVariableBitLengthType, A > unsignedVariableBitLengths( final A access, final int nbits, final long... dim )
+	final static public < A extends LongAccess > ArrayImg< UnsignedVariableBitLengthType, A > unsignedVariableBitLengths( final A access,
+			final int nbits, final long... dim )
 	{
 		final ArrayImg< UnsignedVariableBitLengthType, A > img = new ArrayImg<>( access, dim, new Fraction( nbits, 64 ) );
 		final UnsignedVariableBitLengthType t = new UnsignedVariableBitLengthType( img, nbits );

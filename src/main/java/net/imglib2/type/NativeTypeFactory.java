@@ -112,42 +112,50 @@ public final class NativeTypeFactory< T extends NativeType< T >, A >
 		return createLinkedType.apply( img );
 	}
 
-	public static < T extends NativeType< T >, A extends BooleanAccess > NativeTypeFactory< T, A > BOOLEAN( final Function< NativeImg< T, ? extends A >, T > createLinkedType )
+	public static < T extends NativeType< T >, A extends BooleanAccess > NativeTypeFactory< T, A >
+			BOOLEAN( final Function< NativeImg< T, ? extends A >, T > createLinkedType )
 	{
 		return new NativeTypeFactory<>( PrimitiveType.BOOLEAN, createLinkedType );
 	}
 
-	public static < T extends NativeType< T >, A extends ByteAccess > NativeTypeFactory< T, A > BYTE( final Function< NativeImg< T, ? extends A >, T > createLinkedType )
+	public static < T extends NativeType< T >, A extends ByteAccess > NativeTypeFactory< T, A >
+			BYTE( final Function< NativeImg< T, ? extends A >, T > createLinkedType )
 	{
 		return new NativeTypeFactory<>( PrimitiveType.BYTE, createLinkedType );
 	}
 
-	public static < T extends NativeType< T >, A extends CharAccess > NativeTypeFactory< T, A > CHAR( final Function< NativeImg< T, ? extends A >, T > createLinkedType )
+	public static < T extends NativeType< T >, A extends CharAccess > NativeTypeFactory< T, A >
+			CHAR( final Function< NativeImg< T, ? extends A >, T > createLinkedType )
 	{
 		return new NativeTypeFactory<>( PrimitiveType.CHAR, createLinkedType );
 	}
 
-	public static < T extends NativeType< T >, A extends ShortAccess > NativeTypeFactory< T, A > SHORT( final Function< NativeImg< T, ? extends A >, T > createLinkedType )
+	public static < T extends NativeType< T >, A extends ShortAccess > NativeTypeFactory< T, A >
+			SHORT( final Function< NativeImg< T, ? extends A >, T > createLinkedType )
 	{
 		return new NativeTypeFactory<>( PrimitiveType.SHORT, createLinkedType );
 	}
 
-	public static < T extends NativeType< T >, A extends IntAccess > NativeTypeFactory< T, A > INT( final Function< NativeImg< T, ? extends A >, T > createLinkedType )
+	public static < T extends NativeType< T >, A extends IntAccess > NativeTypeFactory< T, A >
+			INT( final Function< NativeImg< T, ? extends A >, T > createLinkedType )
 	{
 		return new NativeTypeFactory<>( PrimitiveType.INT, createLinkedType );
 	}
 
-	public static < T extends NativeType< T >, A extends LongAccess > NativeTypeFactory< T, A > LONG( final Function< NativeImg< T, ? extends A >, T > createLinkedType )
+	public static < T extends NativeType< T >, A extends LongAccess > NativeTypeFactory< T, A >
+			LONG( final Function< NativeImg< T, ? extends A >, T > createLinkedType )
 	{
 		return new NativeTypeFactory<>( PrimitiveType.LONG, createLinkedType );
 	}
 
-	public static < T extends NativeType< T >, A extends FloatAccess > NativeTypeFactory< T, A > FLOAT( final Function< NativeImg< T, ? extends A >, T > createLinkedType )
+	public static < T extends NativeType< T >, A extends FloatAccess > NativeTypeFactory< T, A >
+			FLOAT( final Function< NativeImg< T, ? extends A >, T > createLinkedType )
 	{
 		return new NativeTypeFactory<>( PrimitiveType.FLOAT, createLinkedType );
 	}
 
-	public static < T extends NativeType< T >, A extends DoubleAccess > NativeTypeFactory< T, A > DOUBLE( final Function< NativeImg< T, ? extends A >, T > createLinkedType )
+	public static < T extends NativeType< T >, A extends DoubleAccess > NativeTypeFactory< T, A >
+			DOUBLE( final Function< NativeImg< T, ? extends A >, T > createLinkedType )
 	{
 		return new NativeTypeFactory<>( PrimitiveType.DOUBLE, createLinkedType );
 	}

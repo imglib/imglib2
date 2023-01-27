@@ -133,7 +133,8 @@ public class VolatileARGBType extends AbstractVolatileNativeNumericType< ARGBTyp
 		return v;
 	}
 
-	private static final NativeTypeFactory< VolatileARGBType, VolatileIntAccess > typeFactory = NativeTypeFactory.INT( VolatileARGBType::new );
+	private static final NativeTypeFactory< VolatileARGBType, VolatileIntAccess > typeFactory =
+			NativeTypeFactory.INT( VolatileARGBType::new );
 
 	@Override
 	public NativeTypeFactory< VolatileARGBType, ? > getNativeTypeFactory()

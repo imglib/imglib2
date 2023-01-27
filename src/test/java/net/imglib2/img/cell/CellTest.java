@@ -69,12 +69,12 @@ public class CellTest
 	public void testLocalIndexCalculation()
 	{
 		final long[] min = new long[] { 0, 9876543210l, 222 };
-		final Cell< FloatArray > cell = new Cell<>( new int[] {20, 8, 10}, min, new FloatArray( 1 ) );
-		final long[][] position = { {3, 4, 5}, {12, 0, 3}, {3, 2, 0} };
+		final Cell< FloatArray > cell = new Cell<>( new int[] { 20, 8, 10 }, min, new FloatArray( 1 ) );
+		final long[][] position = { { 3, 4, 5 }, { 12, 0, 3 }, { 3, 2, 0 } };
 		final int[] expectedIndex = { 883, 492, 43 };
 		for ( int i = 0; i < position.length; ++i )
 		{
-			for ( int d =0; d <min.length; ++d)
+			for ( int d = 0; d < min.length; ++d )
 				position[ i ][ d ] += min[ d ];
 			assertTrue( cell.globalPositionToIndex( position[ i ] ) == expectedIndex[ i ] );
 		}
@@ -83,7 +83,7 @@ public class CellTest
 	@Test
 	public void testGlobalPositionCalculation()
 	{
-		final Cell< FloatArray > cell = new Cell<>( new int[] {20, 8, 10}, new long[] { 0, 9876543210l, 222 }, new FloatArray( 1 ) );
+		final Cell< FloatArray > cell = new Cell<>( new int[] { 20, 8, 10 }, new long[] { 0, 9876543210l, 222 }, new FloatArray( 1 ) );
 		final int[] index = { 883, 492, 43 };
 		final long[][] expectedPosition = { { 3, 9876543214l, 227 }, { 12, 9876543210l, 225 }, { 3, 9876543212l, 222 } };
 		for ( int i = 0; i < index.length; ++i )

@@ -54,7 +54,8 @@ public class IntegerTypesTest
 		assertEquals( UnsignedShortType.class, IntegerTypes.smallestType( 0, 65535 ).getClass() );
 		assertEquals( UnsignedIntType.class, IntegerTypes.smallestType( 0, 65536 ).getClass() );
 		assertEquals( UnsignedIntType.class, IntegerTypes.smallestType( 0, ( long ) Integer.MAX_VALUE - Integer.MIN_VALUE ).getClass() );
-		assertEquals( UnsignedLongType.class, IntegerTypes.smallestType( 0, ( long ) Integer.MAX_VALUE - Integer.MIN_VALUE + 1 ).getClass() );
+		assertEquals( UnsignedLongType.class,
+				IntegerTypes.smallestType( 0, ( long ) Integer.MAX_VALUE - Integer.MIN_VALUE + 1 ).getClass() );
 
 		assertEquals( ByteType.class, IntegerTypes.smallestType( -128, 0 ).getClass() );
 		assertEquals( ShortType.class, IntegerTypes.smallestType( -129, 0 ).getClass() );

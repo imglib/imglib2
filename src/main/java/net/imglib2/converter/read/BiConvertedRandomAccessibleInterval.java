@@ -47,7 +47,8 @@ import net.imglib2.type.Type;
  * TODO
  *
  */
-public class BiConvertedRandomAccessibleInterval< A, B, C > extends AbstractWrappedInterval< RandomAccessibleInterval< A > > implements RandomAccessibleInterval< C >, View
+public class BiConvertedRandomAccessibleInterval< A, B, C > extends AbstractWrappedInterval< RandomAccessibleInterval< A > >
+		implements RandomAccessibleInterval< C >, View
 {
 	protected final RandomAccessibleInterval< B > sourceIntervalB;
 
@@ -115,7 +116,6 @@ public class BiConvertedRandomAccessibleInterval< A, B, C > extends AbstractWrap
 	{
 		return convertedSupplier;
 	}
-
 
 	/**
 	 * Returns an instance of the {@link BiConverter}.  If the

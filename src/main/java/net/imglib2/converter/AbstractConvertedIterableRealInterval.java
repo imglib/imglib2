@@ -44,7 +44,8 @@ import net.imglib2.View;
  * TODO
  * 
  */
-abstract public class AbstractConvertedIterableRealInterval< A, B > extends AbstractWrappedRealInterval< IterableRealInterval< A > > implements IterableRealInterval< B >, View
+abstract public class AbstractConvertedIterableRealInterval< A, B > extends AbstractWrappedRealInterval< IterableRealInterval< A > >
+		implements IterableRealInterval< B >, View
 {
 	public AbstractConvertedIterableRealInterval( final IterableRealInterval< A > source )
 	{

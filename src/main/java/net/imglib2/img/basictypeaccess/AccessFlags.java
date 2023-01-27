@@ -73,7 +73,7 @@ public enum AccessFlags
 	{
 		return f1 == DIRTY
 				? ( f2 == DIRTY ? flags_DIRTY : flags_DIRTY_VOLATILE )
-				: ( f2 == DIRTY ? flags_DIRTY_VOLATILE : flags_VOLATILE);
+				: ( f2 == DIRTY ? flags_DIRTY_VOLATILE : flags_VOLATILE );
 	}
 
 	public static Set< AccessFlags > setOf( final AccessFlags... flags )
@@ -98,7 +98,10 @@ public enum AccessFlags
 	}
 
 	private final static Set< AccessFlags > flags_DIRTY_VOLATILE = Collections.unmodifiableSet( EnumSet.of( DIRTY, VOLATILE ) );
+
 	private final static Set< AccessFlags > flags_DIRTY = Collections.unmodifiableSet( EnumSet.of( DIRTY ) );
+
 	private final static Set< AccessFlags > flags_VOLATILE = Collections.unmodifiableSet( EnumSet.of( VOLATILE ) );
+
 	private final static Set< AccessFlags > flags_NONE = Collections.unmodifiableSet( EnumSet.noneOf( AccessFlags.class ) );
 }

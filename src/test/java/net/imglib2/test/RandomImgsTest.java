@@ -101,7 +101,7 @@ public class RandomImgsTest
 	{
 		int expected = new Random( 42 ).nextInt();
 		Img< IntType > image = RandomImgs.seed( 42 ).randomize( ArrayImgs.ints( new int[ 1 ], 1 ) );
-		assertImageEquals( ArrayImgs.ints( new int[]{ expected }, 1 ), image );
+		assertImageEquals( ArrayImgs.ints( new int[] { expected }, 1 ), image );
 	}
 
 	@Test

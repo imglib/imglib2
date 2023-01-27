@@ -49,7 +49,8 @@ import net.imglib2.util.Intervals;
  * 
  * @author Stephan Saalfeld
  */
-final public class ExtendedRealRandomAccessibleRealInterval< T, F extends RealRandomAccessibleRealInterval< T > > implements RealRandomAccessible< T >
+final public class ExtendedRealRandomAccessibleRealInterval< T, F extends RealRandomAccessibleRealInterval< T > >
+		implements RealRandomAccessible< T >
 {
 	final protected F source;
 
@@ -78,7 +79,10 @@ final public class ExtendedRealRandomAccessibleRealInterval< T, F extends RealRa
 	{
 		assert source.numDimensions() == interval.numDimensions();
 
-		if ( Intervals.contains( source, interval ) ) { return source.realRandomAccess(); }
+		if ( Intervals.contains( source, interval ) )
+		{
+			return source.realRandomAccess();
+		}
 		return realRandomAccess();
 	}
 

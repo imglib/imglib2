@@ -76,7 +76,7 @@ public class ImgLib2AssertTest
 	@Test
 	public void testAssertImageEqualsWithPredicate()
 	{
-		ImgLib2Assert.assertImageEquals( img( 3 ), img( 5 ), ( a, e ) -> (a.getInteger() == 3) && (e.getInteger() == 5) );
+		ImgLib2Assert.assertImageEquals( img( 3 ), img( 5 ), ( a, e ) -> ( a.getInteger() == 3 ) && ( e.getInteger() == 5 ) );
 	}
 
 	@Test( expected = AssertionError.class )

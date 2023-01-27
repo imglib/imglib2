@@ -54,6 +54,7 @@ import net.imglib2.type.numeric.integer.LongType;
 public class PositionRandomAccessible implements RandomAccessible< LongType >
 {
 	private final int n;
+
 	private final int d;
 
 	public PositionRandomAccessible( final int numDimensions, final int d )

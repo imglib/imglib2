@@ -180,8 +180,7 @@ abstract public class AbstractARGBDoubleType< T extends AbstractARGBDoubleType< 
 	@Override
 	public boolean valueEquals( T t )
 	{
-		return
-				( getA() == t.getA() ) &&
+		return ( getA() == t.getA() ) &&
 				( getR() == t.getR() ) &&
 				( getG() == t.getG() ) &&
 				( getB() == t.getB() );
@@ -190,7 +189,7 @@ abstract public class AbstractARGBDoubleType< T extends AbstractARGBDoubleType< 
 	@Override
 	public boolean equals( final Object obj )
 	{
-		if ( ! getClass().isInstance( obj ) )
+		if ( !getClass().isInstance( obj ) )
 			return false;
 		@SuppressWarnings( "unchecked" )
 		T t = ( T ) obj;

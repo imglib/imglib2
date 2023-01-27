@@ -127,7 +127,6 @@ public class NtreeImgFactory< T extends NativeType< T > > extends NativeImgFacto
 		throw new IncompatibleTypeException( this, type.getClass().getCanonicalName() + " does not implement NativeType." );
 	}
 
-
 	/*
 	 * -----------------------------------------------------------------------
 	 *

@@ -64,8 +64,8 @@ public class HistogramNdTest
 
 		final List< UnsignedByteType > data1 = getData1();
 		final List< UnsignedByteType > data2 = getData2();
-		final List< Iterable< UnsignedByteType >> data =
-				new ArrayList< Iterable< UnsignedByteType >>();
+		final List< Iterable< UnsignedByteType > > data =
+				new ArrayList< Iterable< UnsignedByteType > >();
 		data.add( data1 );
 		data.add( data2 );
 
@@ -134,8 +134,8 @@ public class HistogramNdTest
 	{
 		final List< UnsignedByteType > data1 = getData1();
 		final List< UnsignedByteType > data2 = getData2();
-		final List< Iterable< UnsignedByteType >> data =
-				new ArrayList< Iterable< UnsignedByteType >>();
+		final List< Iterable< UnsignedByteType > > data =
+				new ArrayList< Iterable< UnsignedByteType > >();
 		data.add( data1 );
 		data.add( data2 );
 
@@ -205,8 +205,8 @@ public class HistogramNdTest
 
 		final List< UnsignedByteType > data1 = getData1();
 		final List< UnsignedByteType > data2 = getData2();
-		final List< Iterable< UnsignedByteType >> data =
-				new ArrayList< Iterable< UnsignedByteType >>();
+		final List< Iterable< UnsignedByteType > > data =
+				new ArrayList< Iterable< UnsignedByteType > >();
 		data.add( data1 );
 		data.add( data2 );
 
@@ -326,7 +326,7 @@ public class HistogramNdTest
 		return data;
 	}
 
-	private class RgbIterator implements Iterable< List< IntType >>
+	private class RgbIterator implements Iterable< List< IntType > >
 	{
 
 		private final Img< ARGBType > img;
@@ -337,9 +337,9 @@ public class HistogramNdTest
 		}
 
 		@Override
-		public Iterator< List< IntType >> iterator()
+		public Iterator< List< IntType > > iterator()
 		{
-			return new Iterator< List< IntType >>()
+			return new Iterator< List< IntType > >()
 			{
 
 				private Cursor< ARGBType > cursor;

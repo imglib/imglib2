@@ -85,8 +85,7 @@ import java.util.stream.LongStream;
 public class LoopBuilderVsCursorsBenchmark
 {
 
-	private static final Map< String, Supplier< RandomAccessibleInterval< DoubleType > > >
-			IMG_FACTORIES = initImageFactories();
+	private static final Map< String, Supplier< RandomAccessibleInterval< DoubleType > > > IMG_FACTORIES = initImageFactories();
 
 	/**
 	 * This {@link Map} contains methods to create different types of
@@ -98,13 +97,18 @@ public class LoopBuilderVsCursorsBenchmark
 		final long[] DIMS = { 200, 200, 100 };
 		final HashMap< String, Supplier< RandomAccessibleInterval< DoubleType > > > map = new HashMap<>();
 		map.put( "ArrayImg", () -> ArrayImgs.doubles( DIMS ) );
-		map.put( "ArrayImg_Continuous_Subset", () -> Views.interval( ArrayImgs.doubles( 200, 200, 300 ), Intervals.createMinSize( 0, 0, 99, 200, 200, 100 ) ) );
-		map.put( "ArrayImg_Subset", () -> Views.interval( ArrayImgs.doubles( 300, 300, 100 ), Intervals.createMinSize( 50, 50, 0, 200, 200, 100 ) ) );
+		map.put( "ArrayImg_Continuous_Subset",
+				() -> Views.interval( ArrayImgs.doubles( 200, 200, 300 ), Intervals.createMinSize( 0, 0, 99, 200, 200, 100 ) ) );
+		map.put( "ArrayImg_Subset",
+				() -> Views.interval( ArrayImgs.doubles( 300, 300, 100 ), Intervals.createMinSize( 50, 50, 0, 200, 200, 100 ) ) );
 		map.put( "ArrayImg_HyperSlice", () -> Views.hyperSlice( ArrayImgs.doubles( 200, 200, 100, 10 ), 3, 0 ) );
-		map.put( "ArrayImg_Translated_Zero", () -> Views.translate( Views.translate( ArrayImgs.doubles( DIMS ), 10, 10, 10 ), -10, -10, -10 ) );
+		map.put( "ArrayImg_Translated_Zero",
+				() -> Views.translate( Views.translate( ArrayImgs.doubles( DIMS ), 10, 10, 10 ), -10, -10, -10 ) );
 		map.put( "PlanarImg", () -> PlanarImgs.doubles( DIMS ) );
-		map.put( "PlanarImg_Continuous_Subset", () -> Views.interval( PlanarImgs.doubles( 200, 200, 300 ), Intervals.createMinSize( 0, 0, 99, 200, 200, 100 ) ) );
-		map.put( "PlanarImg_Subset", () -> Views.interval( PlanarImgs.doubles( 300, 300, 100 ), Intervals.createMinSize( 50, 50, 0, 200, 200, 100 ) ) );
+		map.put( "PlanarImg_Continuous_Subset",
+				() -> Views.interval( PlanarImgs.doubles( 200, 200, 300 ), Intervals.createMinSize( 0, 0, 99, 200, 200, 100 ) ) );
+		map.put( "PlanarImg_Subset",
+				() -> Views.interval( PlanarImgs.doubles( 300, 300, 100 ), Intervals.createMinSize( 50, 50, 0, 200, 200, 100 ) ) );
 		map.put( "PlanarImg_HyperSlice", () -> Views.hyperSlice( PlanarImgs.doubles( 200, 200, 100, 10 ), 3, 0 ) );
 		map.put( "PlanarImg_Translated_Zero", () -> Views.hyperSlice( PlanarImgs.doubles( 200, 200, 100, 10 ), 3, 0 ) );
 		map.put( "CellImg", () -> new CellImgFactory<>( new DoubleType(), 64, 64, 64 ).create( DIMS ) );
@@ -140,7 +144,7 @@ public class LoopBuilderVsCursorsBenchmark
 	@Setup
 	public void setup()
 	{
-		if(slowDown)
+		if ( slowDown )
 			slowDown();
 		in = IMG_FACTORIES.get( inputImage ).get();
 		out = IMG_FACTORIES.get( outputImage ).get();

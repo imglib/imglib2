@@ -52,7 +52,8 @@ import net.imglib2.util.Util;
  *
  * @author Curtis Rueden
  */
-public class NativeBoolType extends AbstractIntegerType< NativeBoolType > implements BooleanType< NativeBoolType >, NativeType< NativeBoolType >
+public class NativeBoolType extends AbstractIntegerType< NativeBoolType >
+		implements BooleanType< NativeBoolType >, NativeType< NativeBoolType >
 {
 	final Index i;
 
@@ -144,19 +145,34 @@ public class NativeBoolType extends AbstractIntegerType< NativeBoolType > implem
 	}
 
 	@Override
-	public void set( final NativeBoolType c ) { set( c.get() ); }
+	public void set( final NativeBoolType c )
+	{
+		set( c.get() );
+	}
 
 	@Override
-	public void and( final NativeBoolType c ) { set( get() && c.get() ); }
+	public void and( final NativeBoolType c )
+	{
+		set( get() && c.get() );
+	}
 
 	@Override
-	public void or( final NativeBoolType c ) { set( get() || c.get() ); }
+	public void or( final NativeBoolType c )
+	{
+		set( get() || c.get() );
+	}
 
 	@Override
-	public void xor( final NativeBoolType c ) { set( get() ^ c.get() ); }
+	public void xor( final NativeBoolType c )
+	{
+		set( get() ^ c.get() );
+	}
 
 	@Override
-	public void not() { set( !get() ); }
+	public void not()
+	{
+		set( !get() );
+	}
 
 	@Override
 	public void add( final NativeBoolType c )
@@ -201,17 +217,28 @@ public class NativeBoolType extends AbstractIntegerType< NativeBoolType > implem
 	}
 
 	@Override
-	public void setOne() { set( true ); }
+	public void setOne()
+	{
+		set( true );
+	}
 
 	@Override
-	public void setZero() { set( false ); }
+	public void setZero()
+	{
+		set( false );
+	}
 
 	@Override
-	public void inc() { not(); }
+	public void inc()
+	{
+		not();
+	}
 
 	@Override
-	public void dec() { not(); }
-
+	public void dec()
+	{
+		not();
+	}
 
 	@Override
 	public String toString()

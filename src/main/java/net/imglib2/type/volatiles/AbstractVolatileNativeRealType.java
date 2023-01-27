@@ -50,9 +50,10 @@ import net.imglib2.util.Fraction;
  *
  * @author Tobias Pietzsch &lt;tobias.pietzsch@gmail.com&gt;
  */
-public abstract class AbstractVolatileNativeRealType< R extends RealType< R > & NativeType< R >, T extends AbstractVolatileNativeRealType< R, T > >
-	extends AbstractVolatileRealType< R, T >
-	implements NativeType< T >
+public abstract class AbstractVolatileNativeRealType< R extends RealType< R > & NativeType< R >,
+		T extends AbstractVolatileNativeRealType< R, T > >
+		extends AbstractVolatileRealType< R, T >
+		implements NativeType< T >
 {
 	public AbstractVolatileNativeRealType( final R t, final boolean valid )
 	{

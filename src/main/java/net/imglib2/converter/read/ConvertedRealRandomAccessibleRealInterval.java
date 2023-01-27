@@ -47,7 +47,8 @@ import net.imglib2.type.Type;
  * TODO
  *
  */
-public class ConvertedRealRandomAccessibleRealInterval< A, B > extends AbstractWrappedRealInterval< RealRandomAccessibleRealInterval< A > > implements RealRandomAccessibleRealInterval< B >, View
+public class ConvertedRealRandomAccessibleRealInterval< A, B > extends AbstractWrappedRealInterval< RealRandomAccessibleRealInterval< A > >
+		implements RealRandomAccessibleRealInterval< B >, View
 {
 	final protected Supplier< Converter< ? super A, ? super B > > converterSupplier;
 
@@ -102,7 +103,6 @@ public class ConvertedRealRandomAccessibleRealInterval< A, B > extends AbstractW
 	{
 		return convertedSupplier;
 	}
-
 
 	/**
 	 * Returns an instance of the {@link Converter}.  If the

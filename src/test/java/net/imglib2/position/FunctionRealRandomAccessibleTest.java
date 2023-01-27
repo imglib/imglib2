@@ -44,20 +44,24 @@ import org.junit.Test;
 
 import net.imglib2.type.logic.BoolType;
 
-
-public class FunctionRealRandomAccessibleTest {
+public class FunctionRealRandomAccessibleTest
+{
 
 	@BeforeClass
-	public static void setUpBeforeClass() throws Exception {}
+	public static void setUpBeforeClass() throws Exception
+	{}
 
 	@AfterClass
-	public static void tearDownAfterClass() throws Exception {}
+	public static void tearDownAfterClass() throws Exception
+	{}
 
 	@Before
-	public void setUp() throws Exception {}
+	public void setUp() throws Exception
+	{}
 
 	@After
-	public void tearDown() throws Exception {}
+	public void tearDown() throws Exception
+	{}
 
 	@Test
 	public void test()

@@ -40,7 +40,7 @@ package net.imglib2.type;
  * @author Stephan Preibisch
  * @author Stephan Saalfeld
  */
-public abstract class AbstractNativeType< T extends AbstractNativeType< T >> implements NativeType< T >
+public abstract class AbstractNativeType< T extends AbstractNativeType< T > > implements NativeType< T >
 {
 	protected final Index i;
 

@@ -46,14 +46,16 @@ import static org.junit.Assert.assertEquals;
 public class LocalizablesTest
 {
 	@Test
-	public void testAsLongArray() {
-		Localizable input = new Point( 5,7 );
+	public void testAsLongArray()
+	{
+		Localizable input = new Point( 5, 7 );
 		long[] result = input.positionAsLongArray();
 		assertArrayEquals( new long[] { 5, 7 }, result );
 	}
 
 	@Test
-	public void testRandomAccessible() {
+	public void testRandomAccessible()
+	{
 		long[] position = { 4, 2 };
 		int n = position.length;
 		RandomAccessible< Localizable > randomAccessible = Localizables.randomAccessible( n );

@@ -39,21 +39,22 @@ import java.math.BigInteger;
 
 import org.junit.Test;
 
-
-public class LongTypeTest {
+public class LongTypeTest
+{
 
 	/**
 	 * Test which verifies {@link LongType#getBigInteger()} returns the
 	 * {@code BigInteger} representation of an LongType.
 	 */
 	@Test
-	public void testGetBigInteger() {
+	public void testGetBigInteger()
+	{
 
 		final LongType l = new LongType( 901374907l );
 		assertEquals( BigInteger.valueOf( 901374907l ), l.getBigInteger() );
 
 		final LongType l2 = new LongType( -98174938174l );
-		assertEquals( BigInteger.valueOf( -98174938174l ) , l2.getBigInteger() );
+		assertEquals( BigInteger.valueOf( -98174938174l ), l2.getBigInteger() );
 	}
 
 	/**
@@ -61,7 +62,8 @@ public class LongTypeTest {
 	 * LongTypes with a {@code BigInteger} and still return a {@code long} value.
 	 */
 	@Test
-	public void testSetBigInteger() {
+	public void testSetBigInteger()
+	{
 
 		final LongType l = new LongType( 72l );
 
@@ -73,7 +75,8 @@ public class LongTypeTest {
 	}
 
 	@Test
-	public void testSetRealFloat() {
+	public void testSetRealFloat()
+	{
 		testSetRealFloat( 0.4f, 0 );
 		testSetRealFloat( 0.6f, 1 );
 		testSetRealFloat( -0.6f, -1 );
@@ -89,7 +92,8 @@ public class LongTypeTest {
 	}
 
 	@Test
-	public void testSetMinMaxValue() {
+	public void testSetMinMaxValue()
+	{
 		testSetRealDouble( new LongType().getMaxValue(), Long.MAX_VALUE );
 		testSetRealDouble( new LongType().getMinValue(), Long.MIN_VALUE );
 	}

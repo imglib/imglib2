@@ -93,7 +93,8 @@ public final class SyncedPositionables
 		return create( Arrays.asList( positionables ) );
 	}
 
-	static class Private {
+	static class Private
+	{
 
 		public interface Forwarder extends Positionable
 		{

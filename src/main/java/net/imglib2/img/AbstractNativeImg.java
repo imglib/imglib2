@@ -48,6 +48,7 @@ public abstract class AbstractNativeImg< T extends NativeType< T >, A >
 		implements NativeImg< T, A >
 {
 	final protected Fraction entitiesPerPixel;
+
 	protected long numEntities;
 
 	protected T linkedType;

@@ -89,7 +89,8 @@ final class FastCursorRandomAccessLoops
 			new ClassCopyProvider<>( TwoCursorLoop.class, LongConsumer.class ),
 			new ClassCopyProvider<>( ThreeCursorLoop.class, LongConsumer.class ) );
 
-	private static LongConsumer createLoop( final Object action, final Cursor< ? > cursor, final List< ? extends RandomAccess< ? > > randomAccesses )
+	private static LongConsumer createLoop( final Object action, final Cursor< ? > cursor,
+			final List< ? extends RandomAccess< ? > > randomAccesses )
 	{
 		final Object[] arguments = Stream.concat( Stream.of( action, cursor ), randomAccesses.stream() ).toArray();
 		ClassCopyProvider< LongConsumer > factory = factories.get( randomAccesses.size() );
@@ -157,7 +158,8 @@ final class FastCursorRandomAccessLoops
 
 		private final RandomAccess< C > randomAccessC;
 
-		public ThreeCursorLoop( final LoopBuilder.TriConsumer< A, B, C > action, final Cursor< A > cursorA, final RandomAccess< B > randomAccessB, final RandomAccess< C > randomAccessC )
+		public ThreeCursorLoop( final LoopBuilder.TriConsumer< A, B, C > action, final Cursor< A > cursorA,
+				final RandomAccess< B > randomAccessB, final RandomAccess< C > randomAccessC )
 		{
 			this.action = action;
 			this.cursorA = cursorA;

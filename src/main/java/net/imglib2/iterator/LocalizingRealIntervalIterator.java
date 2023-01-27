@@ -97,8 +97,8 @@ public class LocalizingRealIntervalIterator extends AbstractRealInterval impleme
 	@Override
 	public boolean hasNext()
 	{
-		for( int d = 0; d < numDimensions(); d++ )
-			if( (location[ d ] + step[ d ]) <= realMax( d ))
+		for ( int d = 0; d < numDimensions(); d++ )
+			if ( ( location[ d ] + step[ d ] ) <= realMax( d ) )
 			{
 				return true;
 			}
@@ -113,44 +113,44 @@ public class LocalizingRealIntervalIterator extends AbstractRealInterval impleme
 	}
 
 	@Override
-	public void localize(float[] position)
+	public void localize( float[] position )
 	{
-		for( int d = 0; d < position.length; d++ )
-			position[ d ] = (float)location[ d ];
+		for ( int d = 0; d < position.length; d++ )
+			position[ d ] = ( float ) location[ d ];
 	}
 
 	@Override
-	public void localize(double[] position)
+	public void localize( double[] position )
 	{
 		System.arraycopy( location, 0, position, 0, position.length );
 	}
 
 	@Override
-	public float getFloatPosition(int d)
+	public float getFloatPosition( int d )
 	{
-		return (float) location[ d ];
+		return ( float ) location[ d ];
 	}
 
 	@Override
-	public double getDoublePosition(int d)
+	public double getDoublePosition( int d )
 	{
 		return location[ d ];
 	}
 
 	@Override
-	public void jumpFwd(long steps)
+	public void jumpFwd( long steps )
 	{
-		for( int i = 0; i < steps; i++ )
+		for ( int i = 0; i < steps; i++ )
 			fwd();
 	}
 
 	@Override
 	public void fwd()
 	{
-		for( int d = 0; d < numDimensions(); d++ )
+		for ( int d = 0; d < numDimensions(); d++ )
 		{
 			fwdDim( d );
-			if( location[ d ] <= realMax(d))
+			if ( location[ d ] <= realMax( d ) )
 				break;
 			else
 				location[ d ] = realMin( d );

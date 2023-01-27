@@ -67,5 +67,5 @@ abstract public class AbstractConvertedRandomAccessible< A, B > implements Rando
 
 	@Override
 	abstract public AbstractConvertedRandomAccess< A, B > randomAccess( Interval interval );
-	
+
 }

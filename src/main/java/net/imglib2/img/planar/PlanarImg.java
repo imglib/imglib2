@@ -63,7 +63,8 @@ import java.util.List;
  * @author Johannes Schindelin
  * @author Tobias Pietzsch
  */
-public class PlanarImg< T extends NativeType< T >, A extends ArrayDataAccess< A > > extends AbstractNativeImg< T, A > implements PlanarAccess< A >, SubIntervalIterable< T >
+public class PlanarImg< T extends NativeType< T >, A extends ArrayDataAccess< A > > extends AbstractNativeImg< T, A >
+		implements PlanarAccess< A >, SubIntervalIterable< T >
 {
 	final protected int numSlices;
 
@@ -82,7 +83,7 @@ public class PlanarImg< T extends NativeType< T >, A extends ArrayDataAccess< A 
 		this.dimensions = longToIntArray( dim );
 		this.sliceSteps = computeSliceSteps( dim );
 		this.numSlices = numberOfSlices( dim );
-		if(slices.size() != numSlices)
+		if ( slices.size() != numSlices )
 			throw new IllegalArgumentException();
 		this.mirror = slices;
 	}
@@ -111,7 +112,7 @@ public class PlanarImg< T extends NativeType< T >, A extends ArrayDataAccess< A 
 		int getCurrentSliceIndex();
 	}
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings( "unchecked" )
 	@Override
 	public A update( final Object c )
 	{
@@ -381,11 +382,12 @@ public class PlanarImg< T extends NativeType< T >, A extends ArrayDataAccess< A 
 		return mirror;
 	}
 
-	private static < A extends ArrayDataAccess< A > > List< A > createSlices( final A creator, final long[] dim, final Fraction entitiesPerPixel )
+	private static < A extends ArrayDataAccess< A > > List< A > createSlices( final A creator, final long[] dim,
+			final Fraction entitiesPerPixel )
 	{
 		final int numSlices = numberOfSlices( dim );
 		final List< A > mirror = new ArrayList<>( numSlices );
-		final int pixelsPerPlane = (int) (( ( dim.length > 1 ) ? dim[ 1 ] : 1 ) * dim[ 0 ]);
+		final int pixelsPerPlane = ( int ) ( ( ( dim.length > 1 ) ? dim[ 1 ] : 1 ) * dim[ 0 ] );
 		final int numEntitiesPerSlice = ( int ) entitiesPerPixel.mulCeil( pixelsPerPlane );
 		for ( int i = 0; i < numSlices; ++i )
 			mirror.add( creator.createArray( numEntitiesPerSlice ) );

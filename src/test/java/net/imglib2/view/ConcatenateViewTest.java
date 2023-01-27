@@ -63,11 +63,12 @@ public class ConcatenateViewTest
 {
 
 	@Test
-	public void testConcatenateSimple() {
+	public void testConcatenateSimple()
+	{
 		// setup
-		Img<ByteType> a = ArrayImgs.bytes( new byte[]{ 1, 2, 3, 4 }, 2, 2 );
-		Img<ByteType> b = ArrayImgs.bytes( new byte[]{ 7, 8 }, 1, 2 );
-		Img<ByteType> expected = ArrayImgs.bytes( new byte[]{ 1, 2, 7, 3, 4, 8 }, 3, 2 );
+		Img< ByteType > a = ArrayImgs.bytes( new byte[] { 1, 2, 3, 4 }, 2, 2 );
+		Img< ByteType > b = ArrayImgs.bytes( new byte[] { 7, 8 }, 1, 2 );
+		Img< ByteType > expected = ArrayImgs.bytes( new byte[] { 1, 2, 7, 3, 4, 8 }, 3, 2 );
 		// process
 		RandomAccessibleInterval< ByteType > result = Views.concatenate( 0, a, b );
 		// test

@@ -134,17 +134,15 @@ public class StackView< T > extends AbstractInterval implements RandomAccessible
 	@Override
 	public RandomAccess< T > randomAccess()
 	{
-		return stackAccessMode == StackAccessMode.MOVE_ALL_SLICE_ACCESSES ?
-				new MoveAllSlicesRA< T >( slices ) :
-				new DefaultRA< T >( slices );
+		return stackAccessMode == StackAccessMode.MOVE_ALL_SLICE_ACCESSES ? new MoveAllSlicesRA< T >( slices )
+				: new DefaultRA< T >( slices );
 	}
 
 	@Override
 	public RandomAccess< T > randomAccess( final Interval interval )
 	{
-		return stackAccessMode == StackAccessMode.MOVE_ALL_SLICE_ACCESSES ?
-				new MoveAllSlicesRA< T >( slices, interval ) :
-				new DefaultRA< T >( slices, interval );
+		return stackAccessMode == StackAccessMode.MOVE_ALL_SLICE_ACCESSES ? new MoveAllSlicesRA< T >( slices, interval )
+				: new DefaultRA< T >( slices, interval );
 	}
 
 	/**

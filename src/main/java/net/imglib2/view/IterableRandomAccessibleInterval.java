@@ -52,7 +52,8 @@ import net.imglib2.View;
  * 
  * @author Stephan Saalfeld
  */
-public class IterableRandomAccessibleInterval< T > extends AbstractWrappedInterval< RandomAccessibleInterval< T > > implements IterableInterval< T >, RandomAccessibleInterval< T >, View
+public class IterableRandomAccessibleInterval< T > extends AbstractWrappedInterval< RandomAccessibleInterval< T > >
+		implements IterableInterval< T >, RandomAccessibleInterval< T >, View
 {
 	final long size;
 

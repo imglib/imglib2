@@ -113,7 +113,6 @@ public class ConvertedIterableInterval< A, B > extends AbstractConvertedIterable
 		return convertedSupplier;
 	}
 
-
 	/**
 	 * Returns an instance of the {@link Converter}.  If the
 	 * {@link ConvertedIterableInterval} was created with a {@link Converter}

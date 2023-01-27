@@ -55,7 +55,7 @@ public class VolatileUnsignedByteType extends AbstractVolatileNativeRealType< Un
 
 	private static class WrappedUnsignedByteType extends UnsignedByteType
 	{
-		public WrappedUnsignedByteType( final NativeImg<?, ? extends ByteAccess> img )
+		public WrappedUnsignedByteType( final NativeImg< ?, ? extends ByteAccess > img )
 		{
 			super( img );
 		}
@@ -107,7 +107,7 @@ public class VolatileUnsignedByteType extends AbstractVolatileNativeRealType< Un
 	public void updateContainer( final Object c )
 	{
 		final VolatileByteAccess a = img.update( c );
-		( ( WrappedUnsignedByteType )t ).setAccess( a );
+		( ( WrappedUnsignedByteType ) t ).setAccess( a );
 		setValid( a.isValid() );
 	}
 
@@ -131,7 +131,8 @@ public class VolatileUnsignedByteType extends AbstractVolatileNativeRealType< Un
 		return v;
 	}
 
-	private static final NativeTypeFactory< VolatileUnsignedByteType, VolatileByteAccess > typeFactory = NativeTypeFactory.BYTE( VolatileUnsignedByteType::new );
+	private static final NativeTypeFactory< VolatileUnsignedByteType, VolatileByteAccess > typeFactory =
+			NativeTypeFactory.BYTE( VolatileUnsignedByteType::new );
 
 	@Override
 	public NativeTypeFactory< VolatileUnsignedByteType, ? > getNativeTypeFactory()

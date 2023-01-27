@@ -45,7 +45,8 @@ import net.imglib2.type.numeric.NumericType;
  *
  * @author Stephan Saalfeld
  */
-abstract public class AbstractNumericComposite< T extends NumericType< T >, C extends AbstractNumericComposite< T, C > > extends AbstractComposite< T > implements NumericType< C >, Iterable< T >
+abstract public class AbstractNumericComposite< T extends NumericType< T >, C extends AbstractNumericComposite< T, C > >
+		extends AbstractComposite< T > implements NumericType< C >, Iterable< T >
 {
 	final protected int length;
 

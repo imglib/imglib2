@@ -49,7 +49,7 @@ public class ConvertedIterableRealInterval< A, B > extends AbstractConvertedIter
 {
 	final protected Supplier< Converter< ? super A, ? super B > > converterSupplier;
 
-	final protected Supplier< ? extends B> convertedSupplier;
+	final protected Supplier< ? extends B > convertedSupplier;
 
 	/**
 	 * Creates a copy of b for conversion.
@@ -60,7 +60,7 @@ public class ConvertedIterableRealInterval< A, B > extends AbstractConvertedIter
 	public ConvertedIterableRealInterval(
 			final IterableRealInterval< A > source,
 			final Supplier< Converter< ? super A, ? super B > > converterSupplier,
-			final Supplier< ? extends B> convertedSupplier )
+			final Supplier< ? extends B > convertedSupplier )
 	{
 		super( source );
 		this.converterSupplier = converterSupplier;
@@ -77,7 +77,7 @@ public class ConvertedIterableRealInterval< A, B > extends AbstractConvertedIter
 	public ConvertedIterableRealInterval(
 			final IterableRealInterval< A > source,
 			final Converter< ? super A, ? super B > converter,
-			final Supplier< ? extends B> convertedSupplier )
+			final Supplier< ? extends B > convertedSupplier )
 	{
 		this( source, () -> converter, convertedSupplier );
 	}
@@ -113,7 +113,6 @@ public class ConvertedIterableRealInterval< A, B > extends AbstractConvertedIter
 	{
 		return convertedSupplier;
 	}
-
 
 	/**
 	 * Returns an instance of the {@link Converter}.  If the

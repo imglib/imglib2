@@ -54,7 +54,7 @@ public class RandomAccessibleTest
 	public void testGetAt()
 	{
 		// setup
-		final Img< IntType > image = ArrayImgs.ints( new int[]{ 1, 2, 3, 4, 5, 6 }, 3, 2 );
+		final Img< IntType > image = ArrayImgs.ints( new int[] { 1, 2, 3, 4, 5, 6 }, 3, 2 );
 		// process & test
 		assertEquals( new IntType( 4 ), image.getAt( new Point( 0L, 1L ) ) );
 		assertEquals( new IntType( 5 ), image.getAt( 1L, 1L ) );

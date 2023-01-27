@@ -77,21 +77,26 @@ import java.util.concurrent.TimeUnit;
 public class ConvertersBenchmark
 {
 
-	private final RandomAccessibleInterval<ARGBType> colors = ArrayImgs.argbs( 1000, 1000 );
+	private final RandomAccessibleInterval< ARGBType > colors = ArrayImgs.argbs( 1000, 1000 );
 
-	private final RandomAccessibleInterval<ARGBType> colorsPlanarImg = PlanarImgs.argbs( 1000, 1000 );
+	private final RandomAccessibleInterval< ARGBType > colorsPlanarImg = PlanarImgs.argbs( 1000, 1000 );
 
-	private final RandomAccessibleInterval<ARGBType> colorsCellImg = new CellImgFactory<>( new ARGBType() ).create( 1000, 1000 );
+	private final RandomAccessibleInterval< ARGBType > colorsCellImg = new CellImgFactory<>( new ARGBType() ).create( 1000, 1000 );
 
-	private final RandomAccessibleInterval<UnsignedByteType> red = Converters.convert( colors, ( i, o ) -> o.set( ARGBType.red( i.get() ) ), new UnsignedByteType() );
+	private final RandomAccessibleInterval< UnsignedByteType > red =
+			Converters.convert( colors, ( i, o ) -> o.set( ARGBType.red( i.get() ) ), new UnsignedByteType() );
 
-	private final RandomAccessibleInterval<UnsignedByteType> green = Converters.convert( colors, ( i, o ) -> o.set( ARGBType.green( i.get() ) ), new UnsignedByteType() );
+	private final RandomAccessibleInterval< UnsignedByteType > green =
+			Converters.convert( colors, ( i, o ) -> o.set( ARGBType.green( i.get() ) ), new UnsignedByteType() );
 
-	private final RandomAccessibleInterval<UnsignedByteType> blue = Converters.convert( colors, ( i, o ) -> o.set( ARGBType.blue( i.get() ) ), new UnsignedByteType() );
+	private final RandomAccessibleInterval< UnsignedByteType > blue =
+			Converters.convert( colors, ( i, o ) -> o.set( ARGBType.blue( i.get() ) ), new UnsignedByteType() );
 
-	private final RandomAccessibleInterval<UnsignedByteType> redPlanarImg = Converters.convert( colorsPlanarImg, ( i, o ) -> o.set( ARGBType.red( i.get() ) ), new UnsignedByteType() );
+	private final RandomAccessibleInterval< UnsignedByteType > redPlanarImg =
+			Converters.convert( colorsPlanarImg, ( i, o ) -> o.set( ARGBType.red( i.get() ) ), new UnsignedByteType() );
 
-	private final RandomAccessibleInterval<UnsignedByteType> redCellImg = Converters.convert( colorsCellImg, ( i, o ) -> o.set( ARGBType.red( i.get() ) ), new UnsignedByteType() );
+	private final RandomAccessibleInterval< UnsignedByteType > redCellImg =
+			Converters.convert( colorsCellImg, ( i, o ) -> o.set( ARGBType.red( i.get() ) ), new UnsignedByteType() );
 
 	@Param( value = { "false", "true" } )
 	boolean slowdown;
@@ -128,10 +133,10 @@ public class ConvertersBenchmark
 		return sum[ 0 ];
 	}
 
-	public static double sum( final RandomAccessibleInterval<? extends RealType<?>> img )
+	public static double sum( final RandomAccessibleInterval< ? extends RealType< ? > > img )
 	{
 		double sum = 0;
-		final RandomAccess<? extends RealType<?>> ra = img.randomAccess();
+		final RandomAccess< ? extends RealType< ? > > ra = img.randomAccess();
 		ra.setPosition( img.min( 1 ), 1 );
 		for ( int y = 0; y < img.dimension( 1 ); y++ )
 		{
@@ -146,10 +151,10 @@ public class ConvertersBenchmark
 		return sum;
 	}
 
-	public static double sum2( final RandomAccessibleInterval<? extends RealType<?>> img )
+	public static double sum2( final RandomAccessibleInterval< ? extends RealType< ? > > img )
 	{
 		double sum = 0;
-		final RandomAccess<? extends RealType<?>> ra = img.randomAccess();
+		final RandomAccess< ? extends RealType< ? > > ra = img.randomAccess();
 		ra.setPosition( img.min( 1 ), 1 );
 		for ( int y = 0; y < img.dimension( 1 ); y++ )
 		{

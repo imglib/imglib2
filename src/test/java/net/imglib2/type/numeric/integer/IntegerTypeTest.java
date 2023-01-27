@@ -112,33 +112,34 @@ public class IntegerTypeTest< T extends IntegerType< T > >
 	{
 		final List< BigInteger > values = new ArrayList<>();
 		final boolean isSigned = type.getMinValue() < 0;
-		final int bits = type.getBitsPerPixel() - (isSigned ? 1 : 0);
+		final int bits = type.getBitsPerPixel() - ( isSigned ? 1 : 0 );
 
 		values.addAll( powersOfTwo( bits ) );
-		if(isSigned)
+		if ( isSigned )
 			values.addAll( negate( powersOfTwo( bits ) ) );
 
 		return values;
 	}
 
 	/** Returns a list: 1, 2, 4, 8, ... , 2^(count - 1). */
-	private List< BigInteger > powersOfTwo( int count ) {
-		BigInteger value  = BigInteger.ONE;
-		List<BigInteger> results = new ArrayList<>( count );
+	private List< BigInteger > powersOfTwo( int count )
+	{
+		BigInteger value = BigInteger.ONE;
+		List< BigInteger > results = new ArrayList<>( count );
 		for ( int i = 0; i < count; i++, value.multiply( BigInteger.valueOf( 2 ) ) )
 			results.add( value );
 		return results;
 	}
 
 	/** Return a list that contains the negated values of the given list. */
-	private List< BigInteger > negate( List<BigInteger> input )
+	private List< BigInteger > negate( List< BigInteger > input )
 	{
-		return input.stream().map( BigInteger::negate ).collect(Collectors.toList());
+		return input.stream().map( BigInteger::negate ).collect( Collectors.toList() );
 	}
 
-
 	@Test
-	public void testGetAndSetBigInteger() {
+	public void testGetAndSetBigInteger()
+	{
 		T type = zero();
 		BigInteger value = toBigInteger( type.getMaxValue() * 0.9 );
 		type.setBigInteger( value );
@@ -146,7 +147,8 @@ public class IntegerTypeTest< T extends IntegerType< T > >
 	}
 
 	@Test
-	public void testToString() {
+	public void testToString()
+	{
 		for ( BigInteger value : values )
 		{
 			final T variable = zero();
@@ -155,20 +157,21 @@ public class IntegerTypeTest< T extends IntegerType< T > >
 		}
 	}
 
-
 	@Test
-	public void testGetReal() {
+	public void testGetReal()
+	{
 		for ( BigInteger value : values )
 		{
 			final T variable = zero();
 			variable.setBigInteger( value );
-			assertEquals( value.doubleValue(), variable.getRealDouble(), 0);
-			assertEquals( value.floatValue(), variable.getRealFloat(), 0);
+			assertEquals( value.doubleValue(), variable.getRealDouble(), 0 );
+			assertEquals( value.floatValue(), variable.getRealFloat(), 0 );
 		}
 	}
 
 	@Test
-	public void testSetRealDouble() {
+	public void testSetRealDouble()
+	{
 		for ( BigInteger value : values )
 		{
 			final T variable = zero();
@@ -178,7 +181,8 @@ public class IntegerTypeTest< T extends IntegerType< T > >
 	}
 
 	@Test
-	public void testSetRealFloat() {
+	public void testSetRealFloat()
+	{
 		for ( BigInteger value : values )
 		{
 			final T variable = zero();

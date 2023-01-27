@@ -735,7 +735,7 @@ public class Histogram1d< T > implements Img< LongType >
 		reset();
 
 		// record the first element
-		final Iterator<T> iter = data.iterator();
+		final Iterator< T > iter = data.iterator();
 		if ( iter.hasNext() )
 		{
 			firstValue = iter.next();
@@ -745,7 +745,7 @@ public class Histogram1d< T > implements Img< LongType >
 		// record the rest of the elements
 		while ( iter.hasNext() )
 		{
-			increment ( iter.next() );
+			increment( iter.next() );
 		}
 	}
 

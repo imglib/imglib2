@@ -91,13 +91,14 @@ public class UnsignedShortTypeTest
 	 * {@code BigInteger} representation of an UnsignedShortType.
 	 */
 	@Test
-	public void testGetBigInteger() {
+	public void testGetBigInteger()
+	{
 
 		final UnsignedShortType l = new UnsignedShortType( 1000 );
 		assertEquals( BigInteger.valueOf( 1000l ), l.getBigInteger() );
 
 		final UnsignedShortType l2 = new UnsignedShortType( 32001 );
-		assertEquals( BigInteger.valueOf( 32001l ) , l2.getBigInteger() );
+		assertEquals( BigInteger.valueOf( 32001l ), l2.getBigInteger() );
 	}
 
 	/**
@@ -106,7 +107,8 @@ public class UnsignedShortTypeTest
 	 * {@code int} value within range.
 	 */
 	@Test
-	public void testSetBigInteger() {
+	public void testSetBigInteger()
+	{
 
 		final UnsignedShortType l = new UnsignedShortType( 93 );
 

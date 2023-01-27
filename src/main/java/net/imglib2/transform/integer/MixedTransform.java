@@ -502,7 +502,10 @@ public class MixedTransform extends AbstractMixedTransform implements Concatenab
 		}
 		for ( int d = 0; d < numSourceDimensions; ++d )
 		{
-			if ( !sourceMapped[ d ] ) { return false; }
+			if ( !sourceMapped[ d ] )
+			{
+				return false;
+			}
 		}
 		return true;
 	}

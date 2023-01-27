@@ -109,7 +109,8 @@ public class IntervalIndexerTest
 		{
 			cursor.fwd();
 			cursor.localize( pos );
-			Assert.assertEquals( IntervalIndexer.positionWithOffsetToIndex( pos, dim, min ), IntervalIndexer.positionToIndexForInterval( cursor, interval ) );
+			Assert.assertEquals( IntervalIndexer.positionWithOffsetToIndex( pos, dim, min ),
+					IntervalIndexer.positionToIndexForInterval( cursor, interval ) );
 		}
 	}
 

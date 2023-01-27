@@ -91,13 +91,14 @@ public class UnsignedByteTypeTest
 	 * {@code BigInteger} representation of an UnsignedByteType.
 	 */
 	@Test
-	public void testGetBigInteger() {
+	public void testGetBigInteger()
+	{
 
 		final UnsignedByteType l = new UnsignedByteType( 255 );
 		assertEquals( BigInteger.valueOf( 255l ), l.getBigInteger() );
 
 		final UnsignedByteType l2 = new UnsignedByteType( -127 );
-		assertEquals( BigInteger.valueOf( 129l ) , l2.getBigInteger() );
+		assertEquals( BigInteger.valueOf( 129l ), l2.getBigInteger() );
 	}
 
 	/**
@@ -106,7 +107,8 @@ public class UnsignedByteTypeTest
 	 * proper {@code int} value.
 	 */
 	@Test
-	public void testSetBigInteger() {
+	public void testSetBigInteger()
+	{
 
 		final UnsignedByteType l = new UnsignedByteType( 255 );
 

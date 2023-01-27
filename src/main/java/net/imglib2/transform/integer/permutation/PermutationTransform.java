@@ -102,7 +102,8 @@ public class PermutationTransform extends AbstractPermutationTransform
 	@Override
 	public void apply( final Localizable source, final Positionable target )
 	{
-		assert source.numDimensions() >= this.numTargetDimensions && target.numDimensions() >= this.numTargetDimensions: "Dimensions do not match.";
+		assert source.numDimensions() >= this.numTargetDimensions && target.numDimensions() >= this.numTargetDimensions
+				: "Dimensions do not match.";
 
 		for ( int d = 0; d < this.numTargetDimensions; ++d )
 			target.setPosition( this.apply( source.getIntPosition( d ) ), d );
@@ -129,7 +130,8 @@ public class PermutationTransform extends AbstractPermutationTransform
 	@Override
 	public void applyInverse( final Positionable source, final Localizable target )
 	{
-		assert source.numDimensions() >= this.numSourceDimensions && target.numDimensions() >= this.numSourceDimensions: "Dimensions do not match.";
+		assert source.numDimensions() >= this.numSourceDimensions && target.numDimensions() >= this.numSourceDimensions
+				: "Dimensions do not match.";
 
 		for ( int d = 0; d < this.numSourceDimensions; ++d )
 			source.setPosition( this.applyInverse( target.getIntPosition( d ) ), d );

@@ -64,7 +64,7 @@ public class IterablePairTest
 	{
 		final List< Integer > iter1 = Arrays.asList( 3, 5, 6, 1, 2, 3 );
 		final List< String > iter2 = Arrays.asList( "dog", "cat", "mouse", "fox" );
-		final IterablePair< Integer, String > pair = new IterablePair< >( iter1, iter2 );
+		final IterablePair< Integer, String > pair = new IterablePair<>( iter1, iter2 );
 		final Iterator< Pair< Integer, String > > iterPair = pair.iterator();
 		assertNotNull( iterPair );
 		assertNextItems( iterPair, 3, "dog" );
@@ -89,7 +89,7 @@ public class IterablePairTest
 	@Test( expected = NullPointerException.class )
 	public void testNulls()
 	{
-		final IterablePair< Integer, Integer > pair = new IterablePair< >( null, null );
+		final IterablePair< Integer, Integer > pair = new IterablePair<>( null, null );
 		pair.iterator().next();
 	}
 
@@ -101,7 +101,7 @@ public class IterablePairTest
 	{
 		final List< Integer > iter1 = Collections.emptyList();
 		final List< Integer > iter2 = Collections.emptyList();
-		final IterablePair< Integer, Integer > pair = new IterablePair< >( iter1, iter2 );
+		final IterablePair< Integer, Integer > pair = new IterablePair<>( iter1, iter2 );
 		pair.iterator().next();
 	}
 
@@ -112,7 +112,7 @@ public class IterablePairTest
 	public void testSameIterable()
 	{
 		final List< Integer > iter = Arrays.asList( 3, 5, 6, 1, 2, 3 );
-		final IterablePair< Integer, Integer > pair = new IterablePair< >( iter, iter );
+		final IterablePair< Integer, Integer > pair = new IterablePair<>( iter, iter );
 		final Iterator< Pair< Integer, Integer > > iterPair = pair.iterator();
 		assertNotNull( iterPair );
 		int count = 0;

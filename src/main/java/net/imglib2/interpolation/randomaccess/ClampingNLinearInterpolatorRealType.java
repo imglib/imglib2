@@ -48,7 +48,9 @@ import net.imglib2.type.numeric.RealType;
 public class ClampingNLinearInterpolatorRealType< T extends RealType< T > > extends NLinearInterpolator< T >
 {
 	protected double acc;
+
 	protected final double clampMin;
+
 	protected final double clampMax;
 
 	protected ClampingNLinearInterpolatorRealType( final ClampingNLinearInterpolatorRealType< T > interpolator )

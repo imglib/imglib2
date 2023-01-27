@@ -53,7 +53,7 @@ final class BindActionToSamplers
 			new ClassCopyProvider<>( TriConsumerRunnable.class, Runnable.class ),
 			new ClassCopyProvider<>( FourConsumerRunnable.class, Runnable.class ),
 			new ClassCopyProvider<>( FiveConsumerRunnable.class, Runnable.class ),
-			new ClassCopyProvider<>( SixConsumerRunnable.class, Runnable.class ));
+			new ClassCopyProvider<>( SixConsumerRunnable.class, Runnable.class ) );
 
 	/**
 	 * For example.: Given a BiConsumer and two Samplers:
@@ -156,7 +156,8 @@ final class BindActionToSamplers
 
 		private final Sampler< C > samplerC;
 
-		public TriConsumerRunnable( final LoopBuilder.TriConsumer< A, B, C > action, final Sampler< A > samplerA, final Sampler< B > samplerB, final Sampler< C > samplerC )
+		public TriConsumerRunnable( final LoopBuilder.TriConsumer< A, B, C > action, final Sampler< A > samplerA,
+				final Sampler< B > samplerB, final Sampler< C > samplerC )
 		{
 			this.action = action;
 			this.samplerA = samplerA;
@@ -184,7 +185,8 @@ final class BindActionToSamplers
 
 		private final Sampler< D > samplerD;
 
-		public FourConsumerRunnable( final LoopBuilder.FourConsumer< A, B, C, D > action, final Sampler< A > samplerA, final Sampler< B > samplerB, final Sampler< C > samplerC, final Sampler< D > samplerD )
+		public FourConsumerRunnable( final LoopBuilder.FourConsumer< A, B, C, D > action, final Sampler< A > samplerA,
+				final Sampler< B > samplerB, final Sampler< C > samplerC, final Sampler< D > samplerD )
 		{
 			this.action = action;
 			this.samplerA = samplerA;
@@ -215,7 +217,8 @@ final class BindActionToSamplers
 
 		private final Sampler< E > samplerE;
 
-		public FiveConsumerRunnable( final LoopBuilder.FiveConsumer< A, B, C, D, E > action, final Sampler< A > samplerA, final Sampler< B > samplerB, final Sampler< C > samplerC, final Sampler< D > samplerD, Sampler< E > samplerE )
+		public FiveConsumerRunnable( final LoopBuilder.FiveConsumer< A, B, C, D, E > action, final Sampler< A > samplerA,
+				final Sampler< B > samplerB, final Sampler< C > samplerC, final Sampler< D > samplerD, Sampler< E > samplerE )
 		{
 			this.action = action;
 			this.samplerA = samplerA;
@@ -249,7 +252,9 @@ final class BindActionToSamplers
 
 		private final Sampler< F > samplerF;
 
-		public SixConsumerRunnable( final LoopBuilder.SixConsumer< A, B, C, D, E, F > action, final Sampler< A > samplerA, final Sampler< B > samplerB, final Sampler< C > samplerC, final Sampler< D > samplerD, final Sampler< E > samplerE, final Sampler< F > samplerF )
+		public SixConsumerRunnable( final LoopBuilder.SixConsumer< A, B, C, D, E, F > action, final Sampler< A > samplerA,
+				final Sampler< B > samplerB, final Sampler< C > samplerC, final Sampler< D > samplerD, final Sampler< E > samplerE,
+				final Sampler< F > samplerF )
 		{
 			this.action = action;
 			this.samplerA = samplerA;

@@ -143,14 +143,15 @@ public class RealTypeConverterInternalsTest
 		return value * ( 1.0 - FLOAT_PRECISION );
 	}
 
-	private void testValueConversion( double value, Converter< RealType< ? >, RealType< ? > > converter, RealType< ? > in, RealType< ? > out )
+	private void testValueConversion( double value, Converter< RealType< ? >, RealType< ? > > converter, RealType< ? > in,
+			RealType< ? > out )
 	{
 		in.setReal( value );
 		converter.convert( in, out );
 		double delta = value * FLOAT_PRECISION;
 		assertEquals( "Conversion of value: " + value +
-						" from: " + in.getClass().getSimpleName() + " (" + in + ")" +
-						" to: " + out.getClass().getSimpleName() + " (" + out + ")",
+				" from: " + in.getClass().getSimpleName() + " (" + in + ")" +
+				" to: " + out.getClass().getSimpleName() + " (" + out + ")",
 				in.getRealDouble(), out.getRealDouble(), delta );
 	}
 
@@ -189,10 +190,11 @@ public class RealTypeConverterInternalsTest
 	}
 
 	@Test
-	public void testConvertRandomAccessibleInterval() {
-		RandomAccessibleInterval<IntType> ints = ArrayImgs.ints( new int[] { 42 }, 1 );
-		RandomAccessibleInterval<UnsignedByteType> bytes = RealTypeConverters.convert( ints, new UnsignedByteType() );
-		RandomAccessibleInterval<UnsignedByteType> expected = ArrayImgs.unsignedBytes( new byte[] { 42 }, 1);
+	public void testConvertRandomAccessibleInterval()
+	{
+		RandomAccessibleInterval< IntType > ints = ArrayImgs.ints( new int[] { 42 }, 1 );
+		RandomAccessibleInterval< UnsignedByteType > bytes = RealTypeConverters.convert( ints, new UnsignedByteType() );
+		RandomAccessibleInterval< UnsignedByteType > expected = ArrayImgs.unsignedBytes( new byte[] { 42 }, 1 );
 		ImgLib2Assert.assertImageEquals( expected, bytes );
 	}
 
