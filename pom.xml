@@ -253,4 +253,18 @@ Jean-Yves Tinevez and Michael Zinsmaier.</license.copyrightOwners>
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
+    <build>
+		<pluginManagement>
+			<plugins>
+				<plugin>
+					<groupId>net.revelc.code.formatter</groupId>
+					<artifactId>formatter-maven-plugin</artifactId>
+					<version>${formatter-maven-plugin.version}</version>
+					<configuration>
+						<configFile>mastodon-coding-style.xml</configFile>
+					</configuration>
+				</plugin>
+			</plugins>
+		</pluginManagement>
+	</build>
 </project>
