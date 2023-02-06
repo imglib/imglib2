@@ -81,7 +81,7 @@ public class Cell< A > implements Interval, Serializable
 	}
 
 	/**
-	 * Get the basic type array that stores this cells pixels.
+	 * Get the basic type array that stores this cell's pixels.
 	 *
 	 * @return underlying basic type array.
 	 */
