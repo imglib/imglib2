@@ -45,7 +45,7 @@ import net.imglib2.util.Fraction;
 /**
  * A {@link AbstractCellImg} that obtains its Cells lazily when they are
  * accessed. Cells are obtained by a {@link Get} method that is provided by the
- * user. Typically this is some kind of cache.
+ * user. Typically, this is some kind of cache.
  *
  * @param <T>
  *            the pixel type
