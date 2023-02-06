@@ -34,13 +34,13 @@
 package net.imglib2.img.cell;
 
 import java.util.Arrays;
-import java.util.Iterator;
 
 import net.imglib2.Cursor;
 import net.imglib2.FinalInterval;
 import net.imglib2.FlatIterationOrder;
 import net.imglib2.Interval;
 import net.imglib2.IterableInterval;
+import net.imglib2.Localizable;
 import net.imglib2.Point;
 import net.imglib2.Positionable;
 import net.imglib2.RandomAccess;
@@ -335,6 +335,36 @@ public class CellGrid
 	{
 		for ( int d = 0; d < n; ++d )
 			cellPos.setPosition( position[ d ] / cellDimensions[ d ], d );
+	}
+
+	/**
+	 * Compute all cell-related coordinates/sizes required by CellRandomAccess.
+	 *
+	 * @param position
+	 * 			  current image position
+	 * @param cellSteps
+	 * 			  allocation steps for cell are written here.
+	 * @param cellMin
+	 *            offset of the cell in image coordinates are written here.
+	 * @param cellMax is set to the
+	 *            max of the cell in image coordinates are written here.
+	 * @return index within the cell.
+	 */
+	int getCellCoordinates( final long[] position, final int[] cellSteps, final long[] cellMin, final long[] cellMax )
+	{
+		int steps = 1;
+		int i = 0;
+		for ( int d = 0; d < n; ++d )
+		{
+			final long gridPos = position[ d ] / cellDimensions[ d ];
+			final int cellDim = ( gridPos + 1 == numCells[ d ] ) ? borderSize[ d ] : cellDimensions[ d ];
+			cellMin[ d ] = gridPos * cellDimensions[ d ];
+			cellMax[ d ] = cellMin[ d ] + cellDim - 1;
+			cellSteps[ d ] = steps;
+			i += steps * ( position[ d ] - cellMin[ d ] );
+			steps *= cellDim;
+		}
+		return i;
 	}
 
 	@Override

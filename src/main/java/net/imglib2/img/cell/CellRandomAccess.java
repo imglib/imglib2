@@ -34,6 +34,7 @@
 
 package net.imglib2.img.cell;
 
+import java.util.Arrays;
 import net.imglib2.AbstractLocalizable;
 import net.imglib2.Localizable;
 import net.imglib2.RandomAccess;
@@ -64,17 +65,16 @@ public class CellRandomAccess< T extends NativeType< T >, C extends Cell< ? > >
 
 	protected final long[] dimensions;
 
-	protected int[] currentCellSteps;
+	protected final int[] currentCellSteps;
 
-	protected long[] currentCellMin;
+	protected final long[] currentCellMin;
 
-	protected long[] currentCellMax;
+	protected final long[] currentCellMax;
 
 	protected boolean isOutOfBounds;
 
-	protected final long[] oobCellMin;
+	private boolean typeNeedsUpdate = true;
 
-	protected final long[] oobCellMax;
 
 	/**
 	 * The current index of the type. It is faster to duplicate this here than
@@ -95,13 +95,11 @@ public class CellRandomAccess< T extends NativeType< T >, C extends Cell< ? > >
 
 		cellDims = randomAccess.cellDims;
 		dimensions = randomAccess.dimensions;
-		currentCellSteps = randomAccess.currentCellSteps;
-		currentCellMin = randomAccess.currentCellMin;
-		currentCellMax = randomAccess.currentCellMax;
+		currentCellSteps = randomAccess.currentCellSteps.clone();
+		currentCellMin = randomAccess.currentCellMin.clone();
+		currentCellMax = randomAccess.currentCellMax.clone();
 
 		isOutOfBounds = randomAccess.isOutOfBounds;
-		oobCellMin = randomAccess.oobCellMin;
-		oobCellMax = randomAccess.oobCellMax;
 
 		index = randomAccess.index;
 		if ( !isOutOfBounds )
@@ -123,14 +121,11 @@ public class CellRandomAccess< T extends NativeType< T >, C extends Cell< ? > >
 		img.getCellGrid().cellDimensions( cellDims );
 		img.getCellGrid().imgDimensions( dimensions );
 
+		currentCellSteps = new int[ n ];
+		currentCellMin = new long[ n ];
+		currentCellMax = new long[ n ];
+
 		isOutOfBounds = false;
-		oobCellMin = new long[ n ];
-		oobCellMax = new long[ n ];
-		for ( int d = 0; d < n; ++d )
-		{
-			oobCellMin[ d ] = Long.MAX_VALUE;
-			oobCellMax[ d ] = Long.MIN_VALUE;
-		}
 
 		img.getCellGrid().getCellPosition( position, randomAccessOnCells );
 		updatePosition( false );
@@ -145,6 +140,11 @@ public class CellRandomAccess< T extends NativeType< T >, C extends Cell< ? > >
 	@Override
 	public T get()
 	{
+		if ( typeNeedsUpdate )
+		{
+			typeNeedsUpdate = false;
+			type.updateContainer( this );
+		}
 		return type;
 	}
 
@@ -326,7 +326,7 @@ public class CellRandomAccess< T extends NativeType< T >, C extends Cell< ? > >
 	{
 		index += ( int ) ( pos - position[ d ] ) * currentCellSteps[ d ];
 		position[ d ] = pos;
-		if ( pos < currentCellMin[ d ] || pos > currentCellMax[ d ] )
+		if ( position[ d ] < currentCellMin[ d ] || position[ d ] > currentCellMax[ d ] )
 		{
 			randomAccessOnCells.setPosition( pos / cellDims[ d ], d );
 			updatePosition( position[ d ] < 0 || position[ d ] >= dimensions[ d ] );
@@ -452,8 +452,8 @@ public class CellRandomAccess< T extends NativeType< T >, C extends Cell< ? > >
 		if ( movedOutOfBounds )
 		{
 			isOutOfBounds = true;
-			currentCellMin = oobCellMin;
-			currentCellMax = oobCellMax;
+			Arrays.fill( currentCellMin, Long.MAX_VALUE );
+			Arrays.fill( currentCellMax, Long.MIN_VALUE );
 		}
 		else
 		{
@@ -470,15 +470,8 @@ public class CellRandomAccess< T extends NativeType< T >, C extends Cell< ? > >
 				isOutOfBounds = false;
 				grid.getCellPosition( position, randomAccessOnCells );
 			}
-
-			final C cell = getCell();
-
-			currentCellSteps = cell.steps;
-			currentCellMin = cell.min;
-			currentCellMax = cell.max;
-
-			index = cell.globalPositionToIndex( position );
-			type.updateContainer( this );
+			index = grid.getCellCoordinates( position, currentCellSteps, currentCellMin, currentCellMax );
+			typeNeedsUpdate = true;
 		}
 	}
 }
