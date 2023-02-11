@@ -84,13 +84,13 @@ import net.imglib2.type.NativeTypeFactory;
  */
 public class ArrayDataAccessFactory
 {
-	public static < T extends NativeType< T >, A > A get(
+	public static < T extends NativeType< T >, A extends ArrayDataAccess< A > > A get(
 			final T type )
 	{
 		return get( type, AccessFlags.setOf() );
 	}
 
-	public static < T extends NativeType< T >, A > A get(
+	public static < T extends NativeType< T >, A extends ArrayDataAccess< A > > A get(
 			final T type,
 			final Set< AccessFlags > flags )
 	{
