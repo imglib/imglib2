@@ -69,4 +69,9 @@ public class OutOfBoundsMirrorFactory< T, F extends Interval & RandomAccessible<
 			return new OutOfBoundsMirrorSingleBoundary< T >( f );
 		return new OutOfBoundsMirrorDoubleBoundary< T >( f );
 	}
+
+	public Boundary getBoundary()
+	{
+		return boundary;
+	}
 }
