@@ -34,6 +34,7 @@
 
 package net.imglib2.transform.integer;
 
+import java.util.Arrays;
 import net.imglib2.Localizable;
 import net.imglib2.Positionable;
 import net.imglib2.concatenate.Concatenable;
@@ -505,5 +506,17 @@ public class MixedTransform extends AbstractMixedTransform implements Concatenab
 			if ( !sourceMapped[ d ] ) { return false; }
 		}
 		return true;
+	}
+
+	@Override
+	public String toString()
+	{
+		return "MixedTransform{" +
+				numSourceDimensions + "->" + numTargetDimensions +
+				", component=" + Arrays.toString( component ) +
+				", invert=" + Arrays.toString( invert ) +
+				", zero=" + Arrays.toString( zero ) +
+				", translation=" + Arrays.toString( translation ) +
+				'}';
 	}
 }
