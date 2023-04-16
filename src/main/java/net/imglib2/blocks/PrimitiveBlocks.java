@@ -61,7 +61,7 @@ import static net.imglib2.blocks.PrimitiveBlocks.OnFallback.WARN;
  * Implementations are not thread-safe in general. Use {@link #threadSafe()} to
  * obtain a thread-safe instance (implemented using {@link ThreadLocal} copies).
  * E.g.,
- * <pre{@code
+ * <pre>{@code
  * 		PrimitiveBlocks< FloatType > blocks = PrimitiveBlocks.of( view ).threadSafe();
  * }</pre>
  *
