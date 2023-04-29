@@ -13,14 +13,15 @@ import net.imglib2.type.PrimitiveType;
  * @param <T> a primitive array type
  */
 // TODO: make public? This will be reused in blk algorithms probably?
-interface TempArray< T >
+public interface TempArray< T >
 {
 	T get( final int minSize );
 
 	TempArray<T> newInstance();
 
-	static TempArray< ? > forPrimitiveType( PrimitiveType primitiveType )
+	@SuppressWarnings( { "unchecked" } )
+	static < T > TempArray< T > forPrimitiveType( PrimitiveType primitiveType )
 	{
-		return new TempArrayImpl<>( PrimitiveTypeProperties.get( primitiveType ) );
+		return ( TempArray< T > ) new TempArrayImpl<>( PrimitiveTypeProperties.get( primitiveType ) );
 	}
 }
