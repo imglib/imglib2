@@ -69,7 +69,7 @@ public enum PrimitiveType
 		this.byteCount = byteCount;
 	}
 
-	int getByteCount()
+	public int getByteCount()
 	{
 		return byteCount;
 	}
