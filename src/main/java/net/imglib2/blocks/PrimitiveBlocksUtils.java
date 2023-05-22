@@ -11,12 +11,13 @@ import net.imglib2.img.basictypeaccess.array.ArrayDataAccess;
 import net.imglib2.transform.integer.MixedTransform;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.Type;
+import net.imglib2.util.CloseableThreadLocal;
 
 class PrimitiveBlocksUtils
 {
 	static < T extends NativeType< T > > PrimitiveBlocks< T > threadSafe( final Supplier< PrimitiveBlocks< T > > supplier )
 	{
-		final ThreadLocal< PrimitiveBlocks< T > > tl = ThreadLocal.withInitial( supplier );
+		final CloseableThreadLocal< PrimitiveBlocks< T > > tl = CloseableThreadLocal.withInitial( supplier );
 		return new PrimitiveBlocks< T >()
 		{
 			@Override
