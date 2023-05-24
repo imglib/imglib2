@@ -45,8 +45,6 @@ import java.util.function.Supplier;
  * <p>We can not rely on {@link ThreadLocal#remove()} as it only removes the value for the caller
  * thread, whereas {@link #close} takes care of all threads. You should not call {@link #close}
  * until all threads are done using the instance.
- *
- * @lucene.internal
  */
 public class CloseableThreadLocal< T > implements Closeable
 {
