@@ -17,14 +17,18 @@ public class SparseRandomAccess<
     protected final RandomAccess<D> dataAccess;
     protected final RandomAccess<I> indicesAccess;
     protected final RandomAccess<I> indptrAccess;
+    protected final int leadingDim;
+    protected final int secondaryDim;
     protected final D fillValue;
 
-    public SparseRandomAccess(CompressedStorageRai<D, I> rai) {
+    public SparseRandomAccess(CompressedStorageRai<D, I> rai, int leadingDim) {
         super(rai.numDimensions());
         this.rai = rai;
         this.dataAccess = rai.data.randomAccess();
         this.indicesAccess = rai.indices.randomAccess();
         this.indptrAccess = rai.indptr.randomAccess();
+        this.leadingDim = leadingDim;
+        this.secondaryDim = 1 - leadingDim;
 
         this.fillValue = dataAccess.get().createVariable();
         this.fillValue.setZero();
@@ -34,6 +38,8 @@ public class SparseRandomAccess<
         super(ra.rai.numDimensions());
 
         this.rai = ra.rai;
+        this.leadingDim = ra.leadingDim;
+        this.secondaryDim = ra.secondaryDim;
         this.setPosition( ra );
 
         // not implementing copy() methods here had no effect since only setPosition() is used
@@ -120,7 +126,7 @@ public class SparseRandomAccess<
     public D get() {
 
         // determine range of indices to search
-        indptrAccess.setPosition(rai.ptr(position), 0);
+        indptrAccess.setPosition(position[secondaryDim], 0);
         long start = indptrAccess.get().getIntegerLong();
         indptrAccess.fwd(0);
         long end = indptrAccess.get().getIntegerLong();
@@ -134,13 +140,13 @@ public class SparseRandomAccess<
             indicesAccess.setPosition(current, 0);
             currentInd = indicesAccess.get().getIntegerLong();
 
-            if (currentInd == rai.ind(position)) {
+            if (currentInd == position[leadingDim]) {
                 dataAccess.setPosition(indicesAccess);
                 return dataAccess.get();
             }
-            if (currentInd < rai.ind(position))
+            if (currentInd < position[leadingDim])
                 start = current;
-            if (currentInd > rai.ind(position))
+            if (currentInd > position[leadingDim])
                 end = current;
         } while (current != start || (end - start) > 1L);
 

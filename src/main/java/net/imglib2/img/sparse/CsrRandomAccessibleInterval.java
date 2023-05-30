@@ -1,5 +1,6 @@
 package net.imglib2.img.sparse;
 
+import net.imglib2.RandomAccess;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.IntegerType;
@@ -19,13 +20,8 @@ public class CsrRandomAccessibleInterval <
         super(numCols, numRows, data, indices, indptr);
     }
 
-    @Override
-    protected long ind(long[] position) {
-        return position[0];
-    }
-
-    @Override
-    protected long ptr(long[] position) {
-        return position[1];
-    }
+	@Override
+	public RandomAccess<D> randomAccess() {
+		return new SparseRandomAccess<D, I>(this, 0);
+	}
 }

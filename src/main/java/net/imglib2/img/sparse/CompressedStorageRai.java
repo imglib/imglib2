@@ -37,7 +37,7 @@ abstract public class CompressedStorageRai<
             throw new IllegalArgumentException("Data, index, and indptr arrays must start from 0.");
         if (data.max(0) != indices.max(0))
             throw new IllegalArgumentException("Data and index array must be of the same size.");
-        if (indptr.max(0) != ptr(max)+1)
+        if (indptr.max(0) != max[0]+1 && indptr.max(0) != max[1]+1)
             throw new IllegalArgumentException("Indptr array does not fit number of slices.");
     }
 
@@ -116,11 +116,6 @@ abstract public class CompressedStorageRai<
     }
 
     @Override
-    public RandomAccess<D> randomAccess() {
-        return new SparseRandomAccess<D, I>(this);
-    }
-
-    @Override
     public RandomAccess<D> randomAccess(Interval interval) {
         return randomAccess();
     }
@@ -136,9 +131,4 @@ abstract public class CompressedStorageRai<
     public RandomAccessibleInterval<I> getIndexPointerArray() {
         return indptr;
     }
-
-    abstract protected long ind(long[] position);
-
-    abstract protected long ptr(long[] position);
-
 }
