@@ -1,4 +1,4 @@
-package anndata;
+package net.imglib2.img.sparse;
 
 import net.imglib2.Interval;
 import net.imglib2.RandomAccess;

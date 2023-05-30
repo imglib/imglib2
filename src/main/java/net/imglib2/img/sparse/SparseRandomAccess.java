@@ -1,9 +1,8 @@
-package anndata;
+package net.imglib2.img.sparse;
 
 import net.imglib2.AbstractLocalizable;
 import net.imglib2.Localizable;
 import net.imglib2.RandomAccess;
-import net.imglib2.Sampler;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.IntegerType;
 import net.imglib2.type.numeric.RealType;
@@ -38,17 +37,11 @@ public class SparseRandomAccess<
         this.setPosition( ra );
 
         // not implementing copy() methods here had no effect since only setPosition() is used
-        this.indicesAccess = ra.indicesAccess.copyRandomAccess();
-        this.indptrAccess = ra.indptrAccess.copyRandomAccess();
-        this.dataAccess = ra.dataAccess.copyRandomAccess();
+        this.indicesAccess = ra.indicesAccess.copy();
+        this.indptrAccess = ra.indptrAccess.copy();
+        this.dataAccess = ra.dataAccess.copy();
         this.fillValue = ra.fillValue.createVariable();
         this.fillValue.setZero();
-    }
-
-    @Override
-    public RandomAccess<D> copyRandomAccess() {
-    	
-        return new SparseRandomAccess<>(this);
     }
 
     @Override
@@ -155,7 +148,7 @@ public class SparseRandomAccess<
     }
 
     @Override
-    public Sampler<D> copy() {
-        return copyRandomAccess();
+    public RandomAccess<D> copy() {
+        return new SparseRandomAccess<>(this);
     }
 }
