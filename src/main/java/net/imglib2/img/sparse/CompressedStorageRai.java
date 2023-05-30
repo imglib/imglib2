@@ -6,14 +6,11 @@ import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.img.array.ArrayImgFactory;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.IntegerType;
-import net.imglib2.type.numeric.RealType;
+import net.imglib2.type.numeric.NumericType;
 import net.imglib2.type.numeric.integer.LongType;
 import net.imglib2.view.Views;
 
-abstract public class CompressedStorageRai<
-        D extends NativeType<D> & RealType<D>,
-        I extends NativeType<I> & IntegerType<I>>
-        implements RandomAccessibleInterval<D> {
+abstract public class CompressedStorageRai<D extends NumericType<D>, I extends IntegerType<I>> implements RandomAccessibleInterval<D> {
 
     protected final long[] max;
     protected final RandomAccessibleInterval<D> data;
@@ -41,11 +38,11 @@ abstract public class CompressedStorageRai<
             throw new IllegalArgumentException("Indptr array does not fit number of slices.");
     }
 
-    public static <T extends NativeType<T> & RealType<T>> CompressedStorageRai<T, LongType> convertToSparse(RandomAccessibleInterval<T> rai) {
+    public static <T extends NumericType<T> & NativeType<T>> CompressedStorageRai<T, LongType> convertToSparse(RandomAccessibleInterval<T> rai) {
         return convertToSparse(rai, 0); // CSR per default
     }
 
-    public static <T extends NativeType<T> & RealType<T>> CompressedStorageRai<T, LongType> convertToSparse(RandomAccessibleInterval<T> rai, int leadingDimension) {
+    public static <T extends NumericType<T> & NativeType<T>> CompressedStorageRai<T, LongType> convertToSparse(RandomAccessibleInterval<T> rai, int leadingDimension) {
         if (leadingDimension != 0 && leadingDimension != 1)
             throw new IllegalArgumentException("Leading dimension in sparse array must be 0 or 1.");
 
@@ -88,7 +85,7 @@ abstract public class CompressedStorageRai<
             : new CscRandomAccessibleInterval<>(rai.dimension(0), rai.dimension(1), data, indices, indptr);
     }
 
-    public static <T extends NativeType<T> & RealType<T>> int getNumberOfNonzeros(RandomAccessibleInterval<T> rai) {
+    public static <T extends NumericType<T>> int getNumberOfNonzeros(RandomAccessibleInterval<T> rai) {
         T zeroValue = rai.getAt(0, 0).copy();
         zeroValue.setZero();
 
