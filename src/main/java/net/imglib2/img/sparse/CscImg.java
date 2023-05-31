@@ -41,7 +41,7 @@ public class CscImg<
 
 	@Override
 	public ImgFactory<D> factory() {
-		return null;
+		return new CompressedStorageImgFactory<>(data.getAt(0), indices.getAt(0), 1);
 	}
 
 	@Override

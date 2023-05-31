@@ -5,11 +5,16 @@ import net.imglib2.FlatIterationOrder;
 import net.imglib2.Interval;
 import net.imglib2.RandomAccess;
 import net.imglib2.RandomAccessibleInterval;
+import net.imglib2.exception.IncompatibleTypeException;
 import net.imglib2.img.Img;
 import net.imglib2.img.ImgFactory;
+import net.imglib2.img.NativeImg;
+import net.imglib2.img.NativeImgFactory;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.IntegerType;
 import net.imglib2.type.numeric.NumericType;
+import net.imglib2.type.numeric.integer.LongType;
+import net.imglib2.type.numeric.real.DoubleType;
 
 public class CsrImg<
 	D extends NumericType<D> & NativeType<D>,
@@ -47,7 +52,7 @@ public class CsrImg<
 
 	@Override
 	public ImgFactory<D> factory() {
-		return null;
+		return new CompressedStorageImgFactory<>(data.getAt(0), indices.getAt(0), 0);
 	}
 
 	/**
