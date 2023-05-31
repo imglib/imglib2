@@ -1,8 +1,11 @@
 package net.imglib2.img.sparse;
 
+import net.imglib2.Cursor;
 import net.imglib2.Interval;
 import net.imglib2.RandomAccess;
 import net.imglib2.RandomAccessibleInterval;
+import net.imglib2.img.Img;
+import net.imglib2.img.ImgFactory;
 import net.imglib2.img.array.ArrayImgFactory;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.IntegerType;
@@ -10,14 +13,17 @@ import net.imglib2.type.numeric.NumericType;
 import net.imglib2.type.numeric.integer.LongType;
 import net.imglib2.view.Views;
 
-abstract public class CompressedStorageRai<D extends NumericType<D>, I extends IntegerType<I>> implements RandomAccessibleInterval<D> {
+import java.util.ArrayList;
+import java.util.List;
+
+abstract public class CompressedStorageImg<D extends NumericType<D>, I extends IntegerType<I>> implements Img<D> {
 
     protected final long[] max;
     protected final RandomAccessibleInterval<D> data;
     protected final RandomAccessibleInterval<I> indices;
     protected final RandomAccessibleInterval<I> indptr;
 
-    public CompressedStorageRai(
+    public CompressedStorageImg(
             long numCols,
             long numRows,
             RandomAccessibleInterval<D> data,
@@ -38,11 +44,11 @@ abstract public class CompressedStorageRai<D extends NumericType<D>, I extends I
             throw new IllegalArgumentException("Indptr array does not fit number of slices.");
     }
 
-    public static <T extends NumericType<T> & NativeType<T>> CompressedStorageRai<T, LongType> convertToSparse(RandomAccessibleInterval<T> rai) {
+    public static <T extends NumericType<T> & NativeType<T>> CompressedStorageImg<T, LongType> convertToSparse(RandomAccessibleInterval<T> rai) {
         return convertToSparse(rai, 0); // CSR per default
     }
 
-    public static <T extends NumericType<T> & NativeType<T>> CompressedStorageRai<T, LongType> convertToSparse(RandomAccessibleInterval<T> rai, int leadingDimension) {
+    public static <T extends NumericType<T> & NativeType<T>> CompressedStorageImg<T, LongType> convertToSparse(RandomAccessibleInterval<T> rai, int leadingDimension) {
         if (leadingDimension != 0 && leadingDimension != 1)
             throw new IllegalArgumentException("Leading dimension in sparse array must be 0 or 1.");
 
@@ -81,8 +87,8 @@ abstract public class CompressedStorageRai<D extends NumericType<D>, I extends I
             indptrAccess.get().setLong(count);
         }
 
-        return (leadingDimension == 0) ? new CsrRandomAccessibleInterval<>(rai.dimension(0), rai.dimension(1), data, indices, indptr)
-            : new CscRandomAccessibleInterval<>(rai.dimension(0), rai.dimension(1), data, indices, indptr);
+        return (leadingDimension == 0) ? new CsrImg<>(rai.dimension(0), rai.dimension(1), data, indices, indptr)
+            : new CscImg<>(rai.dimension(0), rai.dimension(1), data, indices, indptr);
     }
 
     public static <T extends NumericType<T>> int getNumberOfNonzeros(RandomAccessibleInterval<T> rai) {
@@ -127,5 +133,47 @@ abstract public class CompressedStorageRai<D extends NumericType<D>, I extends I
 
     public RandomAccessibleInterval<I> getIndexPointerArray() {
         return indptr;
+    }
+
+    @Override
+    public Cursor<D> cursor() {
+        return localizingCursor();
+    }
+
+    @Override
+    public long size() {
+        return max[0] * max[1];
+    }
+
+    /**
+     * Checks if two intervals have the same iteration space.
+     *
+     * @param a One interval
+     * @param b Other interval
+     * @return true if both intervals have compatible non-singleton dimensions, false otherwise
+     */
+    protected static boolean haveSameIterationSpace(Interval a, Interval b) {
+        List<Integer> nonSingletonDimA = nonSingletonDimensions(a);
+        List<Integer> nonSingletonDimB = nonSingletonDimensions(b);
+
+        if (nonSingletonDimA.size() != nonSingletonDimB.size())
+            return false;
+
+        for (int i = 0; i < nonSingletonDimA.size(); i++) {
+            Integer dimA = nonSingletonDimA.get(i);
+            Integer dimB = nonSingletonDimB.get(i);
+            if (a.min(dimA) != b.min(dimB) || a.max(dimA) != b.max(dimB))
+                return false;
+        }
+
+        return true;
+    }
+
+    protected static List<Integer> nonSingletonDimensions(Interval interval) {
+        List<Integer> nonSingletonDim = new ArrayList<>();
+        for (int i = 0; i < interval.numDimensions(); i++)
+            if (interval.dimension(i) > 1)
+                nonSingletonDim.add(i);
+        return nonSingletonDim;
     }
 }

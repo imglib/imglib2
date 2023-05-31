@@ -8,7 +8,7 @@ import net.imglib2.type.numeric.NumericType;
 
 public class SparseRandomAccess<D extends NumericType<D>, I extends IntegerType<I>> extends AbstractLocalizable implements RandomAccess<D> {
 
-    protected final CompressedStorageRai<D, I> rai;
+    protected final CompressedStorageImg<D, I> rai;
     protected final RandomAccess<D> dataAccess;
     protected final RandomAccess<I> indicesAccess;
     protected final RandomAccess<I> indptrAccess;
@@ -16,7 +16,7 @@ public class SparseRandomAccess<D extends NumericType<D>, I extends IntegerType<
     protected final int secondaryDim;
     protected final D fillValue;
 
-    public SparseRandomAccess(CompressedStorageRai<D, I> rai, int leadingDim) {
+    public SparseRandomAccess(CompressedStorageImg<D, I> rai, int leadingDim) {
         super(rai.numDimensions());
         this.rai = rai;
         this.dataAccess = rai.data.randomAccess();
