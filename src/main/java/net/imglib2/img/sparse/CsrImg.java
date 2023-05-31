@@ -1,32 +1,19 @@
 package net.imglib2.img.sparse;
 
 import net.imglib2.Cursor;
-import net.imglib2.FlatIterationOrder;
 import net.imglib2.Interval;
 import net.imglib2.RandomAccess;
-import net.imglib2.RandomAccessibleInterval;
-import net.imglib2.exception.IncompatibleTypeException;
 import net.imglib2.img.Img;
 import net.imglib2.img.ImgFactory;
-import net.imglib2.img.NativeImg;
-import net.imglib2.img.NativeImgFactory;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.IntegerType;
 import net.imglib2.type.numeric.NumericType;
-import net.imglib2.type.numeric.integer.LongType;
-import net.imglib2.type.numeric.real.DoubleType;
 
 public class CsrImg<
 	D extends NumericType<D> & NativeType<D>,
 	I extends IntegerType<I> & NativeType<I>> extends CompressedStorageImg<D,I> {
 
-    public CsrImg(
-    		final long numCols,
-    		final long numRows,
-    		final RandomAccessibleInterval<D> data,
-    		final RandomAccessibleInterval<I> indices,
-    		final RandomAccessibleInterval<I> indptr)
-    {
+    public CsrImg(final long numCols, final long numRows, final Img<D> data, final Img<I> indices, final Img<I> indptr) {
         super(numCols, numRows, data, indices, indptr);
     }
 
@@ -47,7 +34,10 @@ public class CsrImg<
 
 	@Override
 	public CsrImg<D,I> copy() {
-		return null;
+		Img<D> dataCopy = data.copy();
+		Img<I> indicesCopy = indices.copy();
+		Img<I> indptrCopy = indptr.copy();
+		return new CsrImg<>(dimension(0), dimension(1), dataCopy, indicesCopy, indptrCopy);
 	}
 
 	@Override

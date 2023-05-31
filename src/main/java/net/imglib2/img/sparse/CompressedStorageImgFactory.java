@@ -4,8 +4,6 @@ import net.imglib2.Dimensions;
 import net.imglib2.exception.IncompatibleTypeException;
 import net.imglib2.img.Img;
 import net.imglib2.img.ImgFactory;
-import net.imglib2.img.NativeImg;
-import net.imglib2.img.NativeImgFactory;
 import net.imglib2.img.array.ArrayImg;
 import net.imglib2.img.array.ArrayImgFactory;
 import net.imglib2.type.NativeType;
@@ -42,10 +40,8 @@ public class CompressedStorageImgFactory<
 		int secondaryDimension = 1 - leadingDimension;
 		ArrayImg<I, ?> indptr = new ArrayImgFactory<>(indexType).create(dimensions[secondaryDimension] + 1);
 
-		if (leadingDimension == 0)
-			return new CsrImg<>(dimensions[0], dimensions[1], data, indices, indptr);
-		else
-			return new CscImg<>(dimensions[0], dimensions[1], data, indices, indptr);
+		return (leadingDimension == 0) ? new CsrImg<>(dimensions[0], dimensions[1], data, indices, indptr)
+			: new CscImg<>(dimensions[0], dimensions[1], data, indices, indptr);
 	}
 
 	@Override

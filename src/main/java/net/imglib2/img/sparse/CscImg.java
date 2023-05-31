@@ -3,7 +3,6 @@ package net.imglib2.img.sparse;
 import net.imglib2.Cursor;
 import net.imglib2.Interval;
 import net.imglib2.RandomAccess;
-import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.img.Img;
 import net.imglib2.img.ImgFactory;
 import net.imglib2.type.NativeType;
@@ -14,13 +13,7 @@ public class CscImg<
 		D extends NumericType<D> & NativeType<D>,
 		I extends IntegerType<I> & NativeType<I>> extends CompressedStorageImg<D,I> {
 
-    public CscImg(
-    		final long numCols,
-    		final long numRows,
-    		final RandomAccessibleInterval<D> data,
-    		final RandomAccessibleInterval<I> indices,
-    		final RandomAccessibleInterval<I> indptr)
-	{
+    public CscImg(final long numCols, final long numRows, final Img<D> data, final Img<I> indices, final Img<I> indptr) {
         super(numCols, numRows, data, indices, indptr);
     }
 
@@ -36,7 +29,10 @@ public class CscImg<
 
 	@Override
 	public CscImg<D,I> copy() {
-		return null;
+		Img<D> dataCopy = data.copy();
+		Img<I> indicesCopy = indices.copy();
+		Img<I> indptrCopy = indptr.copy();
+		return new CscImg<>(dimension(0), dimension(1), dataCopy, indicesCopy, indptrCopy);
 	}
 
 	@Override

@@ -3,14 +3,12 @@ package net.imglib2.img.sparse;
 import net.imglib2.Cursor;
 import net.imglib2.Interval;
 import net.imglib2.RandomAccess;
-import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.img.Img;
 import net.imglib2.img.array.ArrayImgFactory;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.IntegerType;
 import net.imglib2.type.numeric.NumericType;
 import net.imglib2.type.numeric.integer.LongType;
-import net.imglib2.view.Views;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,23 +18,19 @@ abstract public class CompressedStorageImg<
         I extends IntegerType<I> & NativeType<I>> implements Img<D> {
 
     protected final long[] max;
-    protected final RandomAccessibleInterval<D> data;
-    protected final RandomAccessibleInterval<I> indices;
-    protected final RandomAccessibleInterval<I> indptr;
+    protected final Img<D> data;
+    protected final Img<I> indices;
+    protected final Img<I> indptr;
 
-    public CompressedStorageImg(
-            long numCols,
-            long numRows,
-            RandomAccessibleInterval<D> data,
-            RandomAccessibleInterval<I> indices,
-            RandomAccessibleInterval<I> indptr) {
+    public CompressedStorageImg(long numCols, long numRows, Img<D> data, Img<I> indices, Img<I> indptr) {
+
         this.data = data;
         this.indices = indices;
         this.indptr = indptr;
         this.max = new long[]{numCols-1, numRows-1};
 
         if (data.numDimensions() != 1 || indices.numDimensions() != 1 || indptr.numDimensions() != 1)
-            throw new IllegalArgumentException("Data, index, and indptr RandomAccessibleInterval must be one dimensional.");
+            throw new IllegalArgumentException("Data, index, and indptr Img must be one dimensional.");
         if (data.min(0) != 0 || indices.min(0) != 0 || indptr.min(0) != 0)
             throw new IllegalArgumentException("Data, index, and indptr arrays must start from 0.");
         if (data.max(0) != indices.max(0))
@@ -45,35 +39,35 @@ abstract public class CompressedStorageImg<
             throw new IllegalArgumentException("Indptr array does not fit number of slices.");
     }
 
-    public static <T extends NumericType<T> & NativeType<T>> CompressedStorageImg<T, LongType> convertToSparse(RandomAccessibleInterval<T> rai) {
-        return convertToSparse(rai, 0); // CSR per default
+    public static <T extends NumericType<T> & NativeType<T>> CompressedStorageImg<T, LongType> convertToSparse(Img<T> img) {
+        return convertToSparse(img, 0); // CSR per default
     }
 
-    public static <T extends NumericType<T> & NativeType<T>> CompressedStorageImg<T, LongType> convertToSparse(RandomAccessibleInterval<T> rai, int leadingDimension) {
+    public static <T extends NumericType<T> & NativeType<T>> CompressedStorageImg<T, LongType> convertToSparse(Img<T> img, int leadingDimension) {
         if (leadingDimension != 0 && leadingDimension != 1)
             throw new IllegalArgumentException("Leading dimension in sparse array must be 0 or 1.");
 
-        T zeroValue = rai.getAt(0, 0).copy();
+        T zeroValue = img.getAt(0, 0).copy();
         zeroValue.setZero();
 
-        int nnz = getNumberOfNonzeros(rai);
+        int nnz = getNumberOfNonzeros(img);
         int ptrDimension = 1 - leadingDimension;
-        RandomAccessibleInterval<T> data = new ArrayImgFactory<>(zeroValue).create(nnz);
-        RandomAccessibleInterval<LongType> indices = new ArrayImgFactory<>(new LongType()).create(nnz);
-        RandomAccessibleInterval<LongType> indptr = new ArrayImgFactory<>(new LongType()).create(rai.dimension(ptrDimension) + 1);
+        Img<T> data = new ArrayImgFactory<>(zeroValue).create(nnz);
+        Img<LongType> indices = new ArrayImgFactory<>(new LongType()).create(nnz);
+        Img<LongType> indptr = new ArrayImgFactory<>(new LongType()).create(img.dimension(ptrDimension) + 1);
 
         long count = 0;
         T actualValue;
-        RandomAccess<T> ra = rai.randomAccess();
+        RandomAccess<T> ra = img.randomAccess();
         RandomAccess<T> dataAccess = data.randomAccess();
         RandomAccess<LongType> indicesAccess = indices.randomAccess();
         RandomAccess<LongType> indptrAccess = indptr.randomAccess();
         indptrAccess.setPosition(0,0);
         indptrAccess.get().setLong(0L);
 
-        for (long j = 0; j < rai.dimension(ptrDimension); j++) {
+        for (long j = 0; j < img.dimension(ptrDimension); j++) {
             ra.setPosition(j, ptrDimension);
-            for (long i = 0; i < rai.dimension(leadingDimension); i++) {
+            for (long i = 0; i < img.dimension(leadingDimension); i++) {
                 ra.setPosition(i, leadingDimension);
                 actualValue = ra.get();
                 if (!actualValue.valueEquals(zeroValue)) {
@@ -88,17 +82,16 @@ abstract public class CompressedStorageImg<
             indptrAccess.get().setLong(count);
         }
 
-        return (leadingDimension == 0) ? new CsrImg<>(rai.dimension(0), rai.dimension(1), data, indices, indptr)
-            : new CscImg<>(rai.dimension(0), rai.dimension(1), data, indices, indptr);
+        return (leadingDimension == 0) ? new CsrImg<>(img.dimension(0), img.dimension(1), data, indices, indptr)
+            : new CscImg<>(img.dimension(0), img.dimension(1), data, indices, indptr);
     }
 
-    public static <T extends NumericType<T>> int getNumberOfNonzeros(RandomAccessibleInterval<T> rai) {
-        T zeroValue = rai.getAt(0, 0).copy();
+    public static <T extends NumericType<T>> int getNumberOfNonzeros(Img<T> img) {
+        T zeroValue = img.getAt(0, 0).copy();
         zeroValue.setZero();
 
         int nnz = 0;
-        Iterable<T> iterable = Views.iterable(rai);
-        for (T pixel : iterable)
+        for (T pixel : img)
             if (!pixel.valueEquals(zeroValue))
                 ++nnz;
         return nnz;
@@ -124,15 +117,15 @@ abstract public class CompressedStorageImg<
         return randomAccess();
     }
 
-    public RandomAccessibleInterval<D> getDataArray() {
+    public Img<D> getDataArray() {
         return data;
     }
 
-    public RandomAccessibleInterval<I> getIndicesArray() {
+    public Img<I> getIndicesArray() {
         return indices;
     }
 
-    public RandomAccessibleInterval<I> getIndexPointerArray() {
+    public Img<I> getIndexPointerArray() {
         return indptr;
     }
 
