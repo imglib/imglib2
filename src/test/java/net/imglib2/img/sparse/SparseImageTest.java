@@ -39,7 +39,7 @@ public class SparseImageTest {
 		SparseCSRImg<DoubleType, LongType> csr = setupCsr();
 		SparseCSRImg<DoubleType, LongType> csr2 = csr.copy();
 		SparseCSCImg<DoubleType, LongType> csc = setupCsc();
-		
+
 		assertEquals(csr.iterationOrder(), csr.iterationOrder());
 		assertEquals(csr.iterationOrder(), csr2.iterationOrder());
 		assertNotEquals(csr.iterationOrder(), csc.iterationOrder());

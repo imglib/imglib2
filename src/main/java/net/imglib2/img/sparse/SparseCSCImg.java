@@ -24,7 +24,7 @@ public class SparseCSCImg<
 
 	@Override
 	public Cursor<D> localizingCursor() {
-		return null;
+		return new SparseLocalizingCursor<>(this, 1, data.firstElement());
 	}
 
 	@Override
