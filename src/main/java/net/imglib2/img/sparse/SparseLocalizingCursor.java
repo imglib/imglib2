@@ -42,7 +42,7 @@ public class SparseLocalizingCursor<T extends NumericType<T> & NativeType<T>> ex
 			throw new IllegalArgumentException("Only 2D images are supported");
 
 		this.img = img;
-		max = new long[]{img.dimension(0), img.dimension(1)};
+		max = new long[]{img.dimension(0)-1, img.dimension(1)-1};
 		this.leadingDim = leadingDimension;
 		this.secondaryDim = 1 - leadingDimension;
 
@@ -54,7 +54,7 @@ public class SparseLocalizingCursor<T extends NumericType<T> & NativeType<T>> ex
 		indptrAccess.setPosition(0, 0);
 
 		this.fillValue = fillValue.copy();
-		fillValue.setZero();
+		this.fillValue.setZero();
 
 	}
 
@@ -85,7 +85,7 @@ public class SparseLocalizingCursor<T extends NumericType<T> & NativeType<T>> ex
 
 		// ... and check if it is a hit
 		isHit = indicesCursor.get().getIntegerLong() == position[leadingDim]
-				&& indptrAccess.get().getIntegerLong() == position[secondaryDim];
+				&& indptrAccess.getLongPosition(0) == position[secondaryDim];
 	}
 
 	protected void advanceToNextNonzeroElement() {
@@ -93,10 +93,11 @@ public class SparseLocalizingCursor<T extends NumericType<T> & NativeType<T>> ex
 			dataCursor.fwd();
 			indicesCursor.fwd();
 		}
-		long currentUpperBound = indicesCursor.getLongPosition(0);
-		while (indptrAccess.getLongPosition(0) == currentUpperBound) {
+		long currentIndexPosition = indicesCursor.getLongPosition(0);
+		indptrAccess.fwd(0);
+		while (indptrAccess.get().getIntegerLong() <= currentIndexPosition)
 			indptrAccess.fwd(0);
-		}
+		indptrAccess.bck(0);
 	}
 
 	@Override
