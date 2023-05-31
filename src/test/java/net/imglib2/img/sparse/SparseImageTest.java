@@ -21,11 +21,11 @@ import static org.junit.Assert.assertTrue;
 
 public class SparseImageTest {
 
-	protected static Map<String, CompressedStorageImg<DoubleType, LongType>> sparseImgs;
+	protected static Map<String, SparseImg<DoubleType, LongType>> sparseImgs;
 
 	@Test
 	public void CsrSetupIsCorrect() {
-		CsrImg<DoubleType, LongType> csr = setupCsr();
+		SparseCSRImg<DoubleType, LongType> csr = setupCsr();
 		assertEquals(2, csr.numDimensions());
 		assertArrayEquals(new long[]{0, 0}, csr.minAsLongArray());
 		assertArrayEquals(new long[]{9, 8}, csr.maxAsLongArray());
@@ -33,9 +33,9 @@ public class SparseImageTest {
 
 	@Test
 	public void equalityTestIsCorrect() {
-		CsrImg<DoubleType, LongType> csr = setupCsr();
-		CsrImg<DoubleType, LongType> csr2 = csr.copy();
-		CscImg<DoubleType, LongType> csc = setupCsc();
+		SparseCSRImg<DoubleType, LongType> csr = setupCsr();
+		SparseCSRImg<DoubleType, LongType> csr2 = csr.copy();
+		SparseCSCImg<DoubleType, LongType> csc = setupCsc();
 		assertTrue(csr.equals(csr));
 	}
 
@@ -52,37 +52,37 @@ public class SparseImageTest {
 
 	@Test
 	public void sparseHasCorrectNumberOfNonzeros() {
-		for (Map.Entry<String, CompressedStorageImg<DoubleType, LongType>> entry : sparseImgs.entrySet()) {
-			assertEquals("Mismatch for " + entry.getKey(), 5, CompressedStorageImg.getNumberOfNonzeros(entry.getValue()));
+		for (Map.Entry<String, SparseImg<DoubleType, LongType>> entry : sparseImgs.entrySet()) {
+			assertEquals("Mismatch for " + entry.getKey(), 5, SparseImg.getNumberOfNonzeros(entry.getValue()));
 		}
 	}
 
 	@Test
 	public void conversionToSparseIsCorrect() {
-		for (CompressedStorageImg<DoubleType, LongType> sparse : sparseImgs.values()) {
-			assertEquals(5, CompressedStorageImg.getNumberOfNonzeros(sparse));
-			CompressedStorageImg<DoubleType, LongType> newCsr = CompressedStorageImg.convertToSparse(sparse, 0);
-			assertTrue(newCsr instanceof CsrImg);
+		for (SparseImg<DoubleType, LongType> sparse : sparseImgs.values()) {
+			assertEquals(5, SparseImg.getNumberOfNonzeros(sparse));
+			SparseImg<DoubleType, LongType> newCsr = SparseImg.convertToSparse(sparse, 0);
+			assertTrue(newCsr instanceof SparseCSRImg);
 			assert2DRaiEquals(sparse, newCsr);
-			CompressedStorageImg<DoubleType, LongType> newCsc = CompressedStorageImg.convertToSparse(sparse, 1);
-			assertTrue(newCsc instanceof CscImg);
+			SparseImg<DoubleType, LongType> newCsc = SparseImg.convertToSparse(sparse, 1);
+			assertTrue(newCsc instanceof SparseCSCImg);
 			assert2DRaiEquals(sparse, newCsc);
 		}
 	}
 
 	@Test
 	public void CscIsCsrTransposed() {
-		CsrImg<DoubleType, LongType> csr = setupCsr();
-		CscImg<DoubleType, LongType> csc = setupCsc();
+		SparseCSRImg<DoubleType, LongType> csr = setupCsr();
+		SparseCSCImg<DoubleType, LongType> csc = setupCsc();
 		assert2DRaiEquals(csr, Views.permute(csc, 0, 1));
 	}
 
-	protected CsrImg<DoubleType, LongType> setupCsr() {
-		return (CsrImg<DoubleType, LongType>) sparseImgs.get("CSR");
+	protected SparseCSRImg<DoubleType, LongType> setupCsr() {
+		return (SparseCSRImg<DoubleType, LongType>) sparseImgs.get("CSR");
 	}
 
-	protected CscImg<DoubleType, LongType> setupCsc() {
-		return (CscImg<DoubleType, LongType>) sparseImgs.get("CSC");
+	protected SparseCSCImg<DoubleType, LongType> setupCsc() {
+		return (SparseCSCImg<DoubleType, LongType>) sparseImgs.get("CSC");
 	}
 
 	@BeforeClass
@@ -92,8 +92,8 @@ public class SparseImageTest {
 		Img<LongType> indptr = ArrayImgs.longs(new long[]{0L, 1L, 2L, 3L, 3L, 3L, 3L, 3L, 3L, 5L}, 10);
 
 		sparseImgs = new HashMap<>();
-		sparseImgs.put("CSR", new CsrImg<>(10, 9, data, indices, indptr));
-		sparseImgs.put("CSC", new CscImg<>(9, 10, data, indices, indptr));
+		sparseImgs.put("CSR", new SparseCSRImg<>(10, 9, data, indices, indptr));
+		sparseImgs.put("CSC", new SparseCSCImg<>(9, 10, data, indices, indptr));
 	}
 
 	protected static <T extends Type<T>> void assert2DRaiEquals(RandomAccessibleInterval<T> expected, RandomAccessibleInterval<T> actual) {

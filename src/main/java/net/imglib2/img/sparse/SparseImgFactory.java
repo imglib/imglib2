@@ -11,11 +11,11 @@ import net.imglib2.type.numeric.IntegerType;
 import net.imglib2.type.numeric.NumericType;
 
 /**
- * Factory for {@link CompressedStorageImg}s.
+ * Factory for {@link SparseImg}s.
  * @param <D> type of data
  * @param <I> type of indices
  */
-public class CompressedStorageImgFactory<
+public class SparseImgFactory<
 		D extends NumericType<D> & NativeType<D>,
 		I extends IntegerType<I> & NativeType<I>> extends ImgFactory<D> {
 
@@ -23,14 +23,14 @@ public class CompressedStorageImgFactory<
 	protected final I indexType;
 
 
-	protected CompressedStorageImgFactory(D type, I indexType, int leadingDimension) {
+	protected SparseImgFactory(D type, I indexType, int leadingDimension) {
 		super(type);
 		this.leadingDimension = leadingDimension;
 		this.indexType = indexType;
 	}
 
 	@Override
-	public CompressedStorageImg<D, I> create(long... dimensions) {
+	public SparseImg<D, I> create(long... dimensions) {
 		if (dimensions.length != 2)
 			throw new IllegalArgumentException("Only 2D images are supported");
 
@@ -40,15 +40,15 @@ public class CompressedStorageImgFactory<
 		int secondaryDimension = 1 - leadingDimension;
 		ArrayImg<I, ?> indptr = new ArrayImgFactory<>(indexType).create(dimensions[secondaryDimension] + 1);
 
-		return (leadingDimension == 0) ? new CsrImg<>(dimensions[0], dimensions[1], data, indices, indptr)
-			: new CscImg<>(dimensions[0], dimensions[1], data, indices, indptr);
+		return (leadingDimension == 0) ? new SparseCSRImg<>(dimensions[0], dimensions[1], data, indices, indptr)
+			: new SparseCSCImg<>(dimensions[0], dimensions[1], data, indices, indptr);
 	}
 
 	@Override
 	@SuppressWarnings({"unchecked", "rawtypes"})
 	public <S> ImgFactory<S> imgFactory(S type) throws IncompatibleTypeException {
 		if (type instanceof NumericType && type instanceof NativeType)
-			return new CompressedStorageImgFactory<>((NumericType & NativeType) type, indexType, leadingDimension);
+			return new SparseImgFactory<>((NumericType & NativeType) type, indexType, leadingDimension);
 		else
 			throw new IncompatibleTypeException(this, type.getClass().getCanonicalName() + " does not implement NumericType & NativeType.");
 	}

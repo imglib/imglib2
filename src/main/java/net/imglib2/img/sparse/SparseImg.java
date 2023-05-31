@@ -13,7 +13,7 @@ import net.imglib2.type.numeric.integer.LongType;
 import java.util.ArrayList;
 import java.util.List;
 
-abstract public class CompressedStorageImg<
+abstract public class SparseImg<
         D extends NumericType<D> & NativeType<D>,
         I extends IntegerType<I> & NativeType<I>> implements Img<D> {
 
@@ -22,7 +22,7 @@ abstract public class CompressedStorageImg<
     protected final Img<I> indices;
     protected final Img<I> indptr;
 
-    public CompressedStorageImg(long numCols, long numRows, Img<D> data, Img<I> indices, Img<I> indptr) {
+    public SparseImg(long numCols, long numRows, Img<D> data, Img<I> indices, Img<I> indptr) {
 
         this.data = data;
         this.indices = indices;
@@ -39,11 +39,11 @@ abstract public class CompressedStorageImg<
             throw new IllegalArgumentException("Indptr array does not fit number of slices.");
     }
 
-    public static <T extends NumericType<T> & NativeType<T>> CompressedStorageImg<T, LongType> convertToSparse(Img<T> img) {
+    public static <T extends NumericType<T> & NativeType<T>> SparseImg<T, LongType> convertToSparse(Img<T> img) {
         return convertToSparse(img, 0); // CSR per default
     }
 
-    public static <T extends NumericType<T> & NativeType<T>> CompressedStorageImg<T, LongType> convertToSparse(Img<T> img, int leadingDimension) {
+    public static <T extends NumericType<T> & NativeType<T>> SparseImg<T, LongType> convertToSparse(Img<T> img, int leadingDimension) {
         if (leadingDimension != 0 && leadingDimension != 1)
             throw new IllegalArgumentException("Leading dimension in sparse array must be 0 or 1.");
 
@@ -82,8 +82,8 @@ abstract public class CompressedStorageImg<
             indptrAccess.get().setLong(count);
         }
 
-        return (leadingDimension == 0) ? new CsrImg<>(img.dimension(0), img.dimension(1), data, indices, indptr)
-            : new CscImg<>(img.dimension(0), img.dimension(1), data, indices, indptr);
+        return (leadingDimension == 0) ? new SparseCSRImg<>(img.dimension(0), img.dimension(1), data, indices, indptr)
+            : new SparseCSCImg<>(img.dimension(0), img.dimension(1), data, indices, indptr);
     }
 
     public static <T extends NumericType<T>> int getNumberOfNonzeros(Img<T> img) {

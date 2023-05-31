@@ -9,11 +9,11 @@ import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.IntegerType;
 import net.imglib2.type.numeric.NumericType;
 
-public class CsrImg<
+public class SparseCSRImg<
 	D extends NumericType<D> & NativeType<D>,
-	I extends IntegerType<I> & NativeType<I>> extends CompressedStorageImg<D,I> {
+	I extends IntegerType<I> & NativeType<I>> extends SparseImg<D,I> {
 
-    public CsrImg(final long numCols, final long numRows, final Img<D> data, final Img<I> indices, final Img<I> indptr) {
+    public SparseCSRImg(final long numCols, final long numRows, final Img<D> data, final Img<I> indices, final Img<I> indptr) {
         super(numCols, numRows, data, indices, indptr);
     }
 
@@ -33,16 +33,16 @@ public class CsrImg<
 	}
 
 	@Override
-	public CsrImg<D,I> copy() {
+	public SparseCSRImg<D,I> copy() {
 		Img<D> dataCopy = data.copy();
 		Img<I> indicesCopy = indices.copy();
 		Img<I> indptrCopy = indptr.copy();
-		return new CsrImg<>(dimension(0), dimension(1), dataCopy, indicesCopy, indptrCopy);
+		return new SparseCSRImg<>(dimension(0), dimension(1), dataCopy, indicesCopy, indptrCopy);
 	}
 
 	@Override
 	public ImgFactory<D> factory() {
-		return new CompressedStorageImgFactory<>(data.getAt(0), indices.getAt(0), 0);
+		return new SparseImgFactory<>(data.getAt(0), indices.getAt(0), 0);
 	}
 
 	/**
@@ -64,7 +64,7 @@ public class CsrImg<
 			if (!(obj instanceof RowMajorIterationOrder2D))
 				return false;
 
-			return CompressedStorageImg.haveSameIterationSpace(interval, ((RowMajorIterationOrder2D) obj).interval);
+			return SparseImg.haveSameIterationSpace(interval, ((RowMajorIterationOrder2D) obj).interval);
 		}
 	}
 }

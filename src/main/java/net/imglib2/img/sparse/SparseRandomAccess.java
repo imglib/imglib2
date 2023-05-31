@@ -11,7 +11,7 @@ public class SparseRandomAccess<
         D extends NumericType<D> & NativeType<D>,
         I extends IntegerType<I> & NativeType<I>> extends AbstractLocalizable implements RandomAccess<D> {
 
-    protected final CompressedStorageImg<D, I> rai;
+    protected final SparseImg<D, I> rai;
     protected final RandomAccess<D> dataAccess;
     protected final RandomAccess<I> indicesAccess;
     protected final RandomAccess<I> indptrAccess;
@@ -19,7 +19,7 @@ public class SparseRandomAccess<
     protected final int secondaryDim;
     protected final D fillValue;
 
-    public SparseRandomAccess(CompressedStorageImg<D, I> rai, int leadingDim) {
+    public SparseRandomAccess(SparseImg<D, I> rai, int leadingDim) {
         super(rai.numDimensions());
         this.rai = rai;
         this.dataAccess = rai.data.randomAccess();
