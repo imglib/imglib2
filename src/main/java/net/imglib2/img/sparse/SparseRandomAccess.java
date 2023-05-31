@@ -3,10 +3,13 @@ package net.imglib2.img.sparse;
 import net.imglib2.AbstractLocalizable;
 import net.imglib2.Localizable;
 import net.imglib2.RandomAccess;
+import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.IntegerType;
 import net.imglib2.type.numeric.NumericType;
 
-public class SparseRandomAccess<D extends NumericType<D>, I extends IntegerType<I>> extends AbstractLocalizable implements RandomAccess<D> {
+public class SparseRandomAccess<
+        D extends NumericType<D> & NativeType<D>,
+        I extends IntegerType<I> & NativeType<I>> extends AbstractLocalizable implements RandomAccess<D> {
 
     protected final CompressedStorageImg<D, I> rai;
     protected final RandomAccess<D> dataAccess;

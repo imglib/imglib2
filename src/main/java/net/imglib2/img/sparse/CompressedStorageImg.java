@@ -5,7 +5,6 @@ import net.imglib2.Interval;
 import net.imglib2.RandomAccess;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.img.Img;
-import net.imglib2.img.ImgFactory;
 import net.imglib2.img.array.ArrayImgFactory;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.IntegerType;
@@ -16,7 +15,9 @@ import net.imglib2.view.Views;
 import java.util.ArrayList;
 import java.util.List;
 
-abstract public class CompressedStorageImg<D extends NumericType<D>, I extends IntegerType<I>> implements Img<D> {
+abstract public class CompressedStorageImg<
+        D extends NumericType<D> & NativeType<D>,
+        I extends IntegerType<I> & NativeType<I>> implements Img<D> {
 
     protected final long[] max;
     protected final RandomAccessibleInterval<D> data;

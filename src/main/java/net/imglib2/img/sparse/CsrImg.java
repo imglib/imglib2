@@ -7,10 +7,13 @@ import net.imglib2.RandomAccess;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.img.Img;
 import net.imglib2.img.ImgFactory;
+import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.IntegerType;
 import net.imglib2.type.numeric.NumericType;
 
-public class CsrImg<D extends NumericType<D>, I extends IntegerType<I>> extends CompressedStorageImg<D,I> {
+public class CsrImg<
+	D extends NumericType<D> & NativeType<D>,
+	I extends IntegerType<I> & NativeType<I>> extends CompressedStorageImg<D,I> {
 
     public CsrImg(
     		final long numCols,
