@@ -58,7 +58,7 @@ public class KDTreeTest
 {
 	protected static boolean testNearestNeighbor( final int numDimensions, final int numPoints, final int numTests, final float min, final float max )
 	{
-		final ArrayList< RealPoint > points = new ArrayList< RealPoint >();
+		final ArrayList< RealPoint > points = new ArrayList<>();
 		final Random rnd = new Random( 435435435 );
 
 		final float[] p = new float[ numDimensions ];
@@ -75,13 +75,13 @@ public class KDTreeTest
 		}
 
 		long start = System.currentTimeMillis();
-		final KDTree< RealPoint > kdTree = new KDTree< RealPoint >( points, points );
-		final NearestNeighborSearchOnKDTree< RealPoint > kd = new NearestNeighborSearchOnKDTree< RealPoint >( kdTree );
+		final KDTree< RealPoint > kdTree = new KDTree<>( points, points );
+		final NearestNeighborSearchOnKDTree< RealPoint > kd = new NearestNeighborSearchOnKDTree<>( kdTree );
 		final long kdSetupTime = System.currentTimeMillis() - start;
 		System.out.println( "kdtree setup took: " + ( kdSetupTime ) + " ms." );
 
 		start = System.currentTimeMillis();
-		final ArrayList< RealPoint > testpoints = new ArrayList< RealPoint >();
+		final ArrayList< RealPoint > testpoints = new ArrayList<>();
 		for ( int i = 0; i < numTests; ++i )
 		{
 			for ( int d = 0; d < numDimensions; ++d )
@@ -163,7 +163,7 @@ public class KDTreeTest
 
 	protected static boolean testKNearestNeighbor( final int neighbors, final int numDimensions, final int numPoints, final int numTests, final float min, final float max )
 	{
-		final ArrayList< RealPoint > points = new ArrayList< RealPoint >();
+		final ArrayList< RealPoint > points = new ArrayList<>();
 		final Random rnd = new Random( 435435435 );
 
 		final float[] p = new float[ numDimensions ];
@@ -180,13 +180,13 @@ public class KDTreeTest
 		}
 
 		long start = System.currentTimeMillis();
-		final KDTree< RealPoint > kdTree = new KDTree< RealPoint >( points, points );
-		final KNearestNeighborSearchOnKDTree< RealPoint > kd = new KNearestNeighborSearchOnKDTree< RealPoint >( kdTree, neighbors );
+		final KDTree< RealPoint > kdTree = new KDTree<>( points, points );
+		final KNearestNeighborSearchOnKDTree< RealPoint > kd = new KNearestNeighborSearchOnKDTree<>( kdTree, neighbors );
 		final long kdSetupTime = System.currentTimeMillis() - start;
 		System.out.println( "kdtree setup took: " + ( kdSetupTime ) + " ms." );
 
 		start = System.currentTimeMillis();
-		final ArrayList< RealPoint > testpoints = new ArrayList< RealPoint >();
+		final ArrayList< RealPoint > testpoints = new ArrayList<>();
 		for ( int i = 0; i < numTests; ++i )
 		{
 			for ( int d = 0; d < numDimensions; ++d )
@@ -287,7 +287,7 @@ public class KDTreeTest
 
 	protected static boolean testRadiusNeighbor( final int numDimensions, final int numPoints, final int numTests, final float min, final float max )
 	{
-		final ArrayList< RealPoint > points = new ArrayList< RealPoint >();
+		final ArrayList< RealPoint > points = new ArrayList<>();
 		final Random rnd = new Random( 435435435 );
 
 		final float[] p = new float[ numDimensions ];
@@ -306,13 +306,13 @@ public class KDTreeTest
 		final double radius = rnd.nextDouble() * size / 10;
 
 		long start = System.currentTimeMillis();
-		final KDTree< RealPoint > kdTree = new KDTree< RealPoint >( points, points );
-		final RadiusNeighborSearchOnKDTree< RealPoint > kd = new RadiusNeighborSearchOnKDTree< RealPoint >( kdTree );
+		final KDTree< RealPoint > kdTree = new KDTree<>( points, points );
+		final RadiusNeighborSearchOnKDTree< RealPoint > kd = new RadiusNeighborSearchOnKDTree<>( kdTree );
 		final long kdSetupTime = System.currentTimeMillis() - start;
 		System.out.println( "kdtree setup took: " + ( kdSetupTime ) + " ms." );
 
 		start = System.currentTimeMillis();
-		final ArrayList< RealPoint > testpoints = new ArrayList< RealPoint >();
+		final ArrayList< RealPoint > testpoints = new ArrayList<>();
 		for ( int i = 0; i < numTests; ++i )
 		{
 			for ( int d = 0; d < numDimensions; ++d )
@@ -384,7 +384,7 @@ public class KDTreeTest
 
 	private static ArrayList< ValuePair< RealPoint, Double > > findNeighborsRadiusExhaustive( final ArrayList< RealPoint > points, final RealPoint t, final double radius, final boolean sortResults )
 	{
-		final ArrayList< ValuePair< RealPoint, Double > > withinRadius = new ArrayList< ValuePair< RealPoint, Double > >();
+		final ArrayList< ValuePair< RealPoint, Double > > withinRadius = new ArrayList<>();
 
 		final int n = t.numDimensions();
 		final float[] tpos = new float[ n ];
@@ -400,7 +400,7 @@ public class KDTreeTest
 			dist = Math.sqrt( dist );
 
 			if ( dist <= radius )
-				withinRadius.add( new ValuePair< RealPoint, Double >( p, dist ) );
+				withinRadius.add( new ValuePair<>( p, dist ) );
 		}
 
 		if ( sortResults )
