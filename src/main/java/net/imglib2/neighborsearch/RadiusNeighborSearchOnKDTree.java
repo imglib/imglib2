@@ -35,124 +35,90 @@
 package net.imglib2.neighborsearch;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-
-import net.imglib2.KDTree;
-import net.imglib2.KDTreeNode;
+import java.util.List;
 import net.imglib2.RealLocalizable;
 import net.imglib2.Sampler;
-import net.imglib2.util.ValuePair;
+import net.imglib2.KDTree;
+import net.imglib2.KDTreeNode;
+import net.imglib2.kdtree.RadiusNeighborSearchImpl;
 
 /**
  * Implementation of {@link RadiusNeighborSearch} search for kd-trees.
- * 
+ *
  * @author Tobias Pietzsch
  */
 public class RadiusNeighborSearchOnKDTree< T > implements RadiusNeighborSearch< T >
 {
-	protected KDTree< T > tree;
+	private final KDTree< T > tree;
 
-	protected final int n;
+	private final RadiusNeighborSearchImpl impl;
 
-	protected final double[] pos;
-
-	protected ArrayList< ValuePair< KDTreeNode< T >, Double > > resultPoints;
+	private final List< KDTreeNode< T > > matches;
 
 	public RadiusNeighborSearchOnKDTree( final KDTree< T > tree )
 	{
 		this.tree = tree;
-		this.n = tree.numDimensions();
-		this.pos = new double[ n ];
-		this.resultPoints = new ArrayList< ValuePair< KDTreeNode< T >, Double > >();
+		impl = new RadiusNeighborSearchImpl( tree.impl() );
+		matches = new ArrayList<>();
+	}
+
+	private RadiusNeighborSearchOnKDTree( final RadiusNeighborSearchOnKDTree< T > other )
+	{
+		tree = other.tree;
+		impl = other.impl.copy();
+		matches = new ArrayList<>();
+		for ( final KDTreeNode< T > match : other.matches )
+			matches.add( tree.createNode().setNodeIndex( match.nodeIndex() ) );
 	}
 
 	@Override
 	public void search( final RealLocalizable reference, final double radius, final boolean sortResults )
 	{
-		assert radius >= 0;
-		reference.localize( pos );
-		resultPoints.clear();
-		searchNode( tree.getRoot(), radius * radius );
-		if ( sortResults )
-		{
-			Collections.sort( resultPoints, new Comparator< ValuePair< KDTreeNode< T >, Double > >()
-			{
-				@Override
-				public int compare( final ValuePair< KDTreeNode< T >, Double > o1, final ValuePair< KDTreeNode< T >, Double > o2 )
-				{
-					return Double.compare( o1.b, o2.b );
-				}
-			} );
-		}
+		impl.search( reference, radius, sortResults );
+		fillMatches( 0, impl.numNeighbors() - 1 );
+	}
+
+	private void fillMatches( final int first, final int last )
+	{
+		while ( matches.size() < last + 1 )
+			matches.add( tree.createNode() );
+		for ( int i = 0; i <= last; ++i )
+			matches.get( i ).setNodeIndex( impl.bestIndex( i ) );
 	}
 
 	@Override
 	public int numDimensions()
 	{
-		return n;
-	}
-
-	protected void searchNode( final KDTreeNode< T > current, final double squRadius )
-	{
-		// consider the current node
-		final double squDistance = current.squDistanceTo( pos );
-		if ( squDistance <= squRadius )
-		{
-			resultPoints.add( new ValuePair< KDTreeNode< T >, Double >( current, squDistance ) );
-		}
-
-		final double axisDiff = pos[ current.getSplitDimension() ] - current.getSplitCoordinate();
-		final double axisSquDistance = axisDiff * axisDiff;
-		final boolean leftIsNearBranch = axisDiff < 0;
-
-		// search the near branch
-		final KDTreeNode< T > nearChild = leftIsNearBranch ? current.left : current.right;
-		final KDTreeNode< T > awayChild = leftIsNearBranch ? current.right : current.left;
-		if ( nearChild != null )
-			searchNode( nearChild, squRadius );
-
-		// search the away branch - maybe
-		if ( ( axisSquDistance <= squRadius ) && ( awayChild != null ) )
-			searchNode( awayChild, squRadius );
+		return tree.numDimensions();
 	}
 
 	@Override
 	public int numNeighbors()
 	{
-		return resultPoints.size();
+		return impl.numNeighbors();
 	}
 
 	@Override
 	public Sampler< T > getSampler( final int i )
 	{
-		return resultPoints.get( i ).a;
+		return matches.get( i );
 	}
 
 	@Override
 	public RealLocalizable getPosition( final int i )
 	{
-		return resultPoints.get( i ).a;
+		return matches.get( i );
 	}
 
 	@Override
 	public double getSquareDistance( final int i )
 	{
-		return resultPoints.get( i ).b;
-	}
-
-	@Override
-	public double getDistance( final int i )
-	{
-		return Math.sqrt( resultPoints.get( i ).b );
+		return impl.bestSquDistance( i );
 	}
 
 	@Override
 	public RadiusNeighborSearchOnKDTree< T > copy()
 	{
-		final RadiusNeighborSearchOnKDTree< T > copy = new RadiusNeighborSearchOnKDTree<>( tree );
-		System.arraycopy( pos, 0, copy.pos, 0, pos.length );
-		copy.resultPoints.addAll( resultPoints );
-		return copy;
+		return new RadiusNeighborSearchOnKDTree<>( this );
 	}
 }
