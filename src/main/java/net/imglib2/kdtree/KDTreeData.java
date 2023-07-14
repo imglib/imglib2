@@ -210,7 +210,7 @@ public class KDTreeData< T >
 
 	/**
 	 * Get positions of points in the tree as a flat {@code double[]} where
-	 * @code positions[d + i*n]} is dimension {@code d} of the {@code i}-th
+	 * {@code positions[d + i*n]} is dimension {@code d} of the {@code i}-th
 	 * point, with {@code n} the number of dimensions.
 	 * <p>
 	 * For serialisation and usage by the tree.
