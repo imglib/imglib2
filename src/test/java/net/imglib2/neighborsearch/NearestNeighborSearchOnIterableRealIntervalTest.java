@@ -32,7 +32,7 @@
  * #L%
  */
 
-package net.imglib2.nearestneighbor;
+package net.imglib2.neighborsearch;
 
 import static org.junit.Assert.assertTrue;
 import net.imglib2.RealCursor;
