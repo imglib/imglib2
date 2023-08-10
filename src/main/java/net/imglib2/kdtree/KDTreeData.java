@@ -59,11 +59,7 @@ public class KDTreeData< T >
 	private final double[][] positions;
 	private final double[] flatPositions;
 
-	private final List< T > valuesList;
-	private final RandomAccessibleInterval< T > valuesImg;
-	private final Supplier< IntFunction< T > > valuesSupplier;
-
-	private final T type;
+	private final KDTreeValues<T> values;
 
 	private volatile RealInterval boundingBox;
 
@@ -76,12 +72,7 @@ public class KDTreeData< T >
 		this.positions = positions;
 		flatPositions = null;
 
-		valuesList = values;
-		valuesImg = null;
-		final IntFunction< T > v = values::get;
-		valuesSupplier = () -> v;
-
-		type = KDTreeUtils.getType( values );
+		this.values = new KDTreeValuesList<>(values);
 	}
 
 	public KDTreeData( double[][] positions, List< T > values, RealInterval boundingBox )
@@ -99,14 +90,7 @@ public class KDTreeData< T >
 		this.positions = positions;
 		flatPositions = null;
 
-		valuesList = null;
-		valuesImg = values;
-		valuesSupplier = () -> {
-			final RandomAccess<T> ra = valuesImg.randomAccess();
-			return i -> ra.setPositionAndGet(i);
-		};
-
-		type = Util.getTypeFromInterval( values );
+		this.values = new KDTreeValuesImg<>(values);
 	}
 
 	public KDTreeData( double[][] positions, RandomAccessibleInterval< T > values, RealInterval boundingBox )
@@ -124,12 +108,7 @@ public class KDTreeData< T >
 		this.positions = null;
 		flatPositions = positions;
 
-		valuesList = values;
-		valuesImg = null;
-		final IntFunction< T > v = values::get;
-		valuesSupplier = () -> v;
-
-		type = KDTreeUtils.getType( values );
+		this.values = new KDTreeValuesList<>(values);
 	}
 
 	public KDTreeData( double[] positions, List< T > values, RealInterval boundingBox )
@@ -147,14 +126,7 @@ public class KDTreeData< T >
 		this.positions = null;
 		flatPositions = positions;
 
-		valuesList = null;
-		valuesImg = values;
-		valuesSupplier = () -> {
-			final RandomAccess<T> ra = valuesImg.randomAccess();
-			return i -> ra.setPositionAndGet(i);
-		};
-
-		type = Util.getTypeFromInterval( values );
+		this.values = new KDTreeValuesImg<>(values);
 	}
 
 	public KDTreeData( double[] positions, RandomAccessibleInterval< T > values, RealInterval boundingBox )
@@ -166,7 +138,7 @@ public class KDTreeData< T >
 	// TODO could also be Class<T> instead? What is more useful?
 	public T type()
 	{
-		return type;
+		return values.type();
 	}
 
 	/**
@@ -191,9 +163,7 @@ public class KDTreeData< T >
 	 */
 	public RandomAccessibleInterval< T > values()
 	{
-		return valuesImg != null
-				? valuesImg
-				: ListImg.wrap( valuesList, size() );
+		return values.values();
 	}
 
 	/**
@@ -205,7 +175,7 @@ public class KDTreeData< T >
 	 */
 	public Supplier< IntFunction< T > > valuesSupplier()
 	{
-		return valuesSupplier;
+		return values.valuesSupplier();
 	}
 
 	/**
