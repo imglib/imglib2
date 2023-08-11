@@ -41,37 +41,18 @@ import static net.imglib2.kdtree.KDTreeUtils.rightChildIndex;
  * without dependent reads. And iff the calculated child index is less
  * than the number of nodes, the child exists.
  */
-public abstract class KDTreeImpl
+public class KDTreeImpl
 {
 	final int numDimensions;
 
 	private final int numPoints;
 
-	// TODO: make this final
-	protected KDTreePositions positions;
+	protected final KDTreePositions positions;
 
-	static class Nested extends KDTreeImpl
-	{
-		Nested( final double[][] positions )
-		{
-			super( positions.length, positions[ 0 ].length );
-			this.positions = new KDTreePositions.Nested(positions);
-		}
-	}
-
-	static class Flat extends KDTreeImpl
-	{
-		Flat( final double[] positions, final int numDimensions )
-		{
-			super( numDimensions, positions.length / numDimensions );
-			this.positions = new KDTreePositions.Flat(positions, numDimensions);
-		}
-	}
-
-	KDTreeImpl( final int numDimensions, final int numPoints )
-	{
-		this.numDimensions = numDimensions;
-		this.numPoints = numPoints;
+	public KDTreeImpl(final KDTreePositions positions) {
+		this.numDimensions = positions.numDimensions;
+		this.numPoints = positions.numPoints;
+		this.positions = positions;
 	}
 
 	/**
@@ -204,15 +185,5 @@ public abstract class KDTreeImpl
 	public int depth()
 	{
 		return 32 - Integer.numberOfLeadingZeros( numPoints );
-	}
-
-	public static KDTreeImpl create( final double[][] positions )
-	{
-		return new Nested( positions );
-	}
-
-	public static KDTreeImpl create( final double[] positions, final int numDimensions )
-	{
-		return new Flat( positions, numDimensions );
 	}
 }

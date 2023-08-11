@@ -3,62 +3,36 @@ package net.imglib2.kdtree;
 import java.util.List;
 import java.util.function.IntFunction;
 import java.util.function.Supplier;
-import net.imglib2.FinalRealInterval;
-import net.imglib2.RandomAccess;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.RealInterval;
 import net.imglib2.RealLocalizable;
 import net.imglib2.img.Img;
-import net.imglib2.img.list.ListImg;
 import net.imglib2.type.NativeType;
-import net.imglib2.util.Util;
 
-import static net.imglib2.kdtree.KDTreeData.PositionsLayout.FLAT;
 
 /**
  * Stores the KDTree data, that is, positions and values.
  * <p>
- * Positions are stored in either {@code FLAT} or {@code NESTED} {@link
- * PositionsLayout layout}. With {@code NESTED} layout, positions are stored as
- * a nested {@code double[][]} array where {@code positions[d][i]} is dimension
- * {@code d} of the {@code i}-th point. With {@code FLAT} layout, positions are
- * stored as a flat {@code double[]} array, where {@code positions[d + i*n]} is
- * dimension {@code d} of the {@code i}-th point, with {@code n} the number of
- * dimensions.
+ * Positions are stored as {@link KDTreePositions} as either
+ * {@link KDTreePositions.Flat} or {@link KDTreePositions.Nested}.
  * <p>
- * Values (of type {@code T}) are stored as either a 1D {@code
- * RandomAccessibleInterval<T>}, or a {@code List<T>}. Individual values can be
- * accessed by {@link #valuesSupplier()}{@code .get().apply(i)}. {@code
- * valueSupplier().get()} returns a reusable {@code IntFunction<T>}. Here {@code
- * T} maybe a proxy that is reused in subsequent {@code apply(i)}.
+ * Values (of type {@code T}) are stored as {@link KDTreeValues} either a
+ * 1D {@code RandomAccessibleInterval<T>} in {@link KDTreeValuesImg}, or
+ * a {@code List<T>} in {@link KDTreeValuesList}.
  * <p>
  * {@link #values()} returns all values as a 1D {@code
- * RandomAccessibleInterval<T>}. (If data is stored as {@code List<T>}, it is
- * wrapped into a {@code ListImg}.)
- * <p>
- * {@link #positions()} returns positions in nested {@code double[][]} (which is
- * created if internal storage is {@code FLAT}). {@link #flatPositions()}
- * returns flat {@code double[]} if internal storage is {@code FLAT}, otherwise
- * {@code null}.
+ * RandomAccessibleInterval<T>}. (If data is stored as {@link
+ * KDTreeValuesList}, it is wrapped into a {@code ListImg}.)
  *
  * @param <T>
  * 		the type of values stored in the tree.
  */
 public class KDTreeData< T >
 {
-	public enum PositionsLayout
-	{
-		FLAT,
-		NESTED
-	}
-
 	private final int numDimensions;
 	private final int numPoints;
 
-	private final PositionsLayout layout;
-	private final double[][] positions;
-	private final double[] flatPositions;
-	private final KDTreePositions newPositions;
+	public final KDTreePositions positions;
 
 	private final KDTreeValues<T> values;
 
@@ -68,12 +42,7 @@ public class KDTreeData< T >
 	{
 		numPoints = values.size();
 		numDimensions = positions.length;
-
-		layout = PositionsLayout.NESTED;
-		this.positions = positions;
-		flatPositions = null;
-		newPositions = new KDTreePositions.Nested(positions);
-
+		this.positions = new KDTreePositions.Nested(positions);
 		this.values = new KDTreeValuesList<>(values);
 	}
 
@@ -87,12 +56,7 @@ public class KDTreeData< T >
 	{
 		numPoints = ( int ) values.dimension( 0 );
 		numDimensions = positions.length;
-
-		layout = PositionsLayout.NESTED;
-		this.positions = positions;
-		flatPositions = null;
-		newPositions = new KDTreePositions.Nested(positions);
-
+		this.positions = new KDTreePositions.Nested(positions);
 		this.values = new KDTreeValuesImg<>(values);
 	}
 
@@ -106,12 +70,7 @@ public class KDTreeData< T >
 	{
 		numPoints = values.size();
 		numDimensions = positions.length / numPoints;
-
-		layout = FLAT;
-		this.positions = null;
-		flatPositions = positions;
-		newPositions = new KDTreePositions.Flat(positions, numDimensions);
-
+		this.positions = new KDTreePositions.Flat(positions, numDimensions);
 		this.values = new KDTreeValuesList<>(values);
 	}
 
@@ -125,12 +84,7 @@ public class KDTreeData< T >
 	{
 		numPoints = ( int ) values.dimension( 0 );
 		numDimensions = positions.length / numPoints;
-
-		layout = FLAT;
-		this.positions = null;
-		flatPositions = positions;
-		newPositions = new KDTreePositions.Flat(positions, numDimensions);
-
+		this.positions = new KDTreePositions.Flat(positions, numDimensions);
 		this.values = new KDTreeValuesImg<>(values);
 	}
 
@@ -146,19 +100,9 @@ public class KDTreeData< T >
 		return values.type();
 	}
 
-	/**
-	 * Get positions of points in the tree as a nested {@code double[][]} array
-	 * where {@code positions[d][i]} is dimension {@code d} of the {@code i}-th
-	 * point.
-	 * <p>
-	 * For serialisation and usage by the tree.
-	 * <p>
-	 * Internal storage may be flattened into single {@code double[]} array. In
-	 * this case, the nested {@code double[][]} array is created here.
-	 */
-	public double[][] positions()
+	public KDTreePositions positions()
 	{
-		return layout == FLAT ? KDTreeUtils.unflatten( flatPositions, numDimensions ) : positions;
+		return positions;
 	}
 
 	/**
@@ -184,37 +128,6 @@ public class KDTreeData< T >
 	}
 
 	/**
-	 * Get positions of points in the tree as a flat {@code double[]} where
-	 * {@code positions[d + i*n]} is dimension {@code d} of the {@code i}-th
-	 * point, with {@code n} the number of dimensions.
-	 * <p>
-	 * For serialisation and usage by the tree.
-	 * <p>
-	 * Internal storage may be a {@code NESTED} {@code double[][]} array. In
-	 * this case, {@code flatPositions()} returns {@code null}.
-	 */
-	public double[] flatPositions()
-	{
-		return flatPositions;
-	}
-
-	/**
-	 * Get the internal layout of positions.
-	 * <p>
-	 * Positions are stored in either {@code FLAT} or {@code NESTED} {@link
-	 * PositionsLayout layout}. With {@code NESTED} layout, positions are stored
-	 * as a nested {@code double[][]} array where {@code positions[d][i]} is
-	 * dimension {@code d} of the {@code i}-th point. With {@code FLAT} layout,
-	 * positions are stored as a flat {@code double[]} array, where {@code
-	 * positions[d + i*n]} is dimension {@code d} of the {@code i}-th point,
-	 * with {@code n} the number of dimensions.
-	 */
-	public PositionsLayout layout()
-	{
-		return layout;
-	}
-
-	/**
 	 * @return dimensionality of points in the tree
 	 */
 	public int numDimensions()
@@ -232,20 +145,7 @@ public class KDTreeData< T >
 
 	public RealInterval boundingBox()
 	{
-		if ( boundingBox == null )
-			boundingBox = createBoundingBox();
-		return boundingBox;
-	}
-
-	private RealInterval createBoundingBox()
-	{
-		final double[] min = new double[ numDimensions ];
-		final double[] max = new double[ numDimensions ];
-		if ( layout == FLAT )
-			KDTreeUtils.computeMinMax( flatPositions, min, max );
-		else
-			KDTreeUtils.computeMinMax( positions, min, max );
-		return FinalRealInterval.wrap( min, max );
+		return (boundingBox != null) ? boundingBox : positions.boundingBox();
 	}
 
 	/**
