@@ -58,6 +58,7 @@ public class KDTreeData< T >
 	private final PositionsLayout layout;
 	private final double[][] positions;
 	private final double[] flatPositions;
+	private final KDTreePositions newPositions;
 
 	private final KDTreeValues<T> values;
 
@@ -71,6 +72,7 @@ public class KDTreeData< T >
 		layout = PositionsLayout.NESTED;
 		this.positions = positions;
 		flatPositions = null;
+		newPositions = new KDTreePositions.Nested(positions);
 
 		this.values = new KDTreeValuesList<>(values);
 	}
@@ -89,6 +91,7 @@ public class KDTreeData< T >
 		layout = PositionsLayout.NESTED;
 		this.positions = positions;
 		flatPositions = null;
+		newPositions = new KDTreePositions.Nested(positions);
 
 		this.values = new KDTreeValuesImg<>(values);
 	}
@@ -107,6 +110,7 @@ public class KDTreeData< T >
 		layout = FLAT;
 		this.positions = null;
 		flatPositions = positions;
+		newPositions = new KDTreePositions.Flat(positions, numDimensions);
 
 		this.values = new KDTreeValuesList<>(values);
 	}
@@ -125,6 +129,7 @@ public class KDTreeData< T >
 		layout = FLAT;
 		this.positions = null;
 		flatPositions = positions;
+		newPositions = new KDTreePositions.Flat(positions, numDimensions);
 
 		this.values = new KDTreeValuesImg<>(values);
 	}
