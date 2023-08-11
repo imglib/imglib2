@@ -47,37 +47,24 @@ public abstract class KDTreeImpl
 
 	private final int numPoints;
 
+	// TODO: make this final
+	protected KDTreePositions positions;
+
 	static class Nested extends KDTreeImpl
 	{
-		private final double[][] positions;
-
 		Nested( final double[][] positions )
 		{
 			super( positions.length, positions[ 0 ].length );
-			this.positions = positions;
-		}
-
-		@Override
-		public double getDoublePosition( final int i, final int d )
-		{
-			return positions[ d ][ i ];
+			this.positions = new KDTreePositions.Nested(positions);
 		}
 	}
 
 	static class Flat extends KDTreeImpl
 	{
-		private final double[] positions;
-
 		Flat( final double[] positions, final int numDimensions )
 		{
 			super( numDimensions, positions.length / numDimensions );
-			this.positions = positions;
-		}
-
-		@Override
-		public double getDoublePosition( final int i, final int d )
-		{
-			return positions[ numDimensions * i + d ];
+			this.positions = new KDTreePositions.Flat(positions, numDimensions);
 		}
 	}
 
@@ -158,7 +145,9 @@ public abstract class KDTreeImpl
 		return ( 31 - Integer.numberOfLeadingZeros( i + 1 ) ) % numDimensions;
 	}
 
-	public abstract double getDoublePosition( final int i, final int d );
+	public double getDoublePosition(final int i, final int d) {
+		return positions.get(i, d);
+	}
 
 	/**
 	 * Compute the squared distance from node {@code i} to {@code pos}.
@@ -168,7 +157,7 @@ public abstract class KDTreeImpl
 		float sum = 0;
 		for ( int d = 0; d < numDimensions; ++d )
 		{
-			final float diff = pos[ d ] - ( float ) getDoublePosition( i, d );
+			final float diff = pos[ d ] - ( float ) positions.get(i, d);
 			sum += diff * diff;
 		}
 		return sum;
@@ -182,7 +171,7 @@ public abstract class KDTreeImpl
 		double sum = 0;
 		for ( int d = 0; d < numDimensions; ++d )
 		{
-			final double diff = pos[ d ] - getDoublePosition( i, d );
+			final double diff = pos[ d ] - positions.get(i, d);
 			sum += diff * diff;
 		}
 		return sum;
@@ -196,7 +185,7 @@ public abstract class KDTreeImpl
 		double sum = 0;
 		for ( int d = 0; d < numDimensions; ++d )
 		{
-			final double diff = pos.getDoublePosition( d ) - getDoublePosition( i, d );
+			final double diff = pos.getDoublePosition( d ) - positions.get(i, d);
 			sum += diff * diff;
 		}
 		return sum;
