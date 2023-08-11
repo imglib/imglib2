@@ -27,6 +27,7 @@ public class KDTreeValuesList<T> extends KDTreeValues<T> {
 	/**
 	 * @return number of values in the tree
 	 */
+	@Override
 	public int size() {
 		return values.size();
 	}
@@ -34,6 +35,7 @@ public class KDTreeValuesList<T> extends KDTreeValues<T> {
 	/**
 	 * Get the values as a 1D {@code RandomAccessibleInterval}, for serialization.
 	 */
+	@Override
 	public RandomAccessibleInterval<T> values() {
 		return ListImg.wrap(values, values.size());
 	}
@@ -45,6 +47,7 @@ public class KDTreeValuesList<T> extends KDTreeValues<T> {
 	 * apply(i)}} every {@link Supplier#get()} creates a new instance of the
 	 * {@code IntFunction<T>}.
 	 */
+	@Override
 	public Supplier<IntFunction<T>> valuesSupplier() {
 		return valuesSupplier;
 	}
