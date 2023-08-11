@@ -105,6 +105,18 @@ public class KDTreeData< T >
 		return positions;
 	}
 
+	public double[] getFlatPositions() {
+		return positions.getFlatPositions();
+	}
+
+	public double[][] getNestedPositions() {
+		return positions.getNestedPositions();
+	}
+
+	public boolean positionsIsFlatArray() {
+		return (positions instanceof KDTreePositions.Flat);
+	}
+
 	/**
 	 * Get the values as a 1D {@code RandomAccessibleInterval}, for
 	 * serialization. (If the underlying storage is a {@code List<T>}, it will
