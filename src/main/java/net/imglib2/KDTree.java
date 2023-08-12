@@ -1,14 +1,11 @@
 package net.imglib2;
 
 import java.util.List;
-import java.util.function.IntFunction;
-import java.util.function.Supplier;
+
 import net.imglib2.converter.AbstractConvertedIterableRealInterval;
 import net.imglib2.converter.AbstractConvertedRealCursor;
 import net.imglib2.kdtree.KDTreeData;
 import net.imglib2.kdtree.KDTreeImpl;
-
-import static net.imglib2.kdtree.KDTreeData.PositionsLayout.FLAT;
 
 public class KDTree< T > implements EuclideanSpace, IterableRealInterval< T >
 {
@@ -132,9 +129,7 @@ public class KDTree< T > implements EuclideanSpace, IterableRealInterval< T >
 	public KDTree( final KDTreeData< T > data )
 	{
 		treeData = data;
-		impl = ( data.layout() == FLAT )
-				? KDTreeImpl.create( data.flatPositions(), data.numDimensions() )
-				: KDTreeImpl.create( data.positions() );
+		impl = new KDTreeImpl(treeData.positions);
 	}
 
 	/**

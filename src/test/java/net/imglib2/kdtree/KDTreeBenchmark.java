@@ -61,7 +61,7 @@ public class KDTreeBenchmark
 		final double[][] points = KDTreeUtils.initPositions( n, numDataVertices, dataVertices );
 		final int[] tree = KDTreeUtils.makeTree( points );
 		final double[][] treePoints = KDTreeUtils.reorder( points, tree );
-		final KDTreeImpl impl = new KDTreeImpl.Nested( treePoints );
+		final KDTreeImpl impl = new KDTreeImpl(new KDTreePositions.Nested(treePoints));
 		final NearestNeighborSearchImpl search = new NearestNeighborSearchImpl( impl );
 		for ( RealPoint testVertex : testVertices )
 			search.search( testVertex );
