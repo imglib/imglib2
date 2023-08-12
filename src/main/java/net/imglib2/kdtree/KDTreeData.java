@@ -17,12 +17,12 @@ import net.imglib2.type.NativeType;
  * {@link KDTreePositions.Flat} or {@link KDTreePositions.Nested}.
  * <p>
  * Values (of type {@code T}) are stored as {@link KDTreeValues} either a
- * 1D {@code RandomAccessibleInterval<T>} in {@link KDTreeValuesImg}, or
- * a {@code List<T>} in {@link KDTreeValuesList}.
+ * 1D {@code RandomAccessibleInterval<T>} in {@link KDTreeValues.ImgValues}, or
+ * a {@code List<T>} in {@link KDTreeValues.ListValues}.
  * <p>
  * {@link #values()} returns all values as a 1D {@code
  * RandomAccessibleInterval<T>}. (If data is stored as {@link
- * KDTreeValuesList}, it is wrapped into a {@code ListImg}.)
+ * KDTreeValues.ListValues}, it is wrapped into a {@code ListImg}.)
  *
  * @param <T>
  * 		the type of values stored in the tree.
@@ -43,7 +43,7 @@ public class KDTreeData< T >
 		numPoints = values.size();
 		numDimensions = positions.length;
 		this.positions = new KDTreePositions.Nested(positions);
-		this.values = new KDTreeValuesList<>(values);
+		this.values = new KDTreeValues.ListValues<>(values);
 	}
 
 	public KDTreeData( double[][] positions, List< T > values, RealInterval boundingBox )
@@ -57,7 +57,7 @@ public class KDTreeData< T >
 		numPoints = ( int ) values.dimension( 0 );
 		numDimensions = positions.length;
 		this.positions = new KDTreePositions.Nested(positions);
-		this.values = new KDTreeValuesImg<>(values);
+		this.values = new KDTreeValues.ImgValues<>(values);
 	}
 
 	public KDTreeData( double[][] positions, RandomAccessibleInterval< T > values, RealInterval boundingBox )
@@ -71,7 +71,7 @@ public class KDTreeData< T >
 		numPoints = values.size();
 		numDimensions = positions.length / numPoints;
 		this.positions = new KDTreePositions.Flat(positions, numDimensions);
-		this.values = new KDTreeValuesList<>(values);
+		this.values = new KDTreeValues.ListValues<>(values);
 	}
 
 	public KDTreeData( double[] positions, List< T > values, RealInterval boundingBox )
@@ -85,7 +85,7 @@ public class KDTreeData< T >
 		numPoints = ( int ) values.dimension( 0 );
 		numDimensions = positions.length / numPoints;
 		this.positions = new KDTreePositions.Flat(positions, numDimensions);
-		this.values = new KDTreeValuesImg<>(values);
+		this.values = new KDTreeValues.ImgValues<>(values);
 	}
 
 	public KDTreeData( double[] positions, RandomAccessibleInterval< T > values, RealInterval boundingBox )
