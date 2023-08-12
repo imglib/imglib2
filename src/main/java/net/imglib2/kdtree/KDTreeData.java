@@ -1,6 +1,5 @@
 package net.imglib2.kdtree;
 
-import java.util.List;
 import java.util.function.IntFunction;
 import java.util.function.Supplier;
 import net.imglib2.RandomAccessibleInterval;
@@ -38,59 +37,15 @@ public class KDTreeData< T >
 
 	private volatile RealInterval boundingBox;
 
-	public KDTreeData( double[][] positions, List< T > values )
-	{
-		numPoints = values.size();
-		numDimensions = positions.length;
-		this.positions = new KDTreePositions.Nested(positions);
-		this.values = new KDTreeValues.ListValues<>(values);
+	public KDTreeData(KDTreePositions positions, KDTreeValues<T> values) {
+		numPoints = positions.numPoints();
+		numDimensions = positions.numDimensions();
+		this.positions = positions;
+		this.values = values;
 	}
 
-	public KDTreeData( double[][] positions, List< T > values, RealInterval boundingBox )
-	{
-		this( positions, values );
-		this.boundingBox = boundingBox;
-	}
-
-	public KDTreeData( double[][] positions, RandomAccessibleInterval< T > values )
-	{
-		numPoints = ( int ) values.dimension( 0 );
-		numDimensions = positions.length;
-		this.positions = new KDTreePositions.Nested(positions);
-		this.values = new KDTreeValues.ImgValues<>(values);
-	}
-
-	public KDTreeData( double[][] positions, RandomAccessibleInterval< T > values, RealInterval boundingBox )
-	{
-		this( positions, values );
-		this.boundingBox = boundingBox;
-	}
-
-	public KDTreeData( double[] positions, List< T > values )
-	{
-		numPoints = values.size();
-		numDimensions = positions.length / numPoints;
-		this.positions = new KDTreePositions.Flat(positions, numDimensions);
-		this.values = new KDTreeValues.ListValues<>(values);
-	}
-
-	public KDTreeData( double[] positions, List< T > values, RealInterval boundingBox )
-	{
-		this( positions, values );
-		this.boundingBox = boundingBox;
-	}
-
-	public KDTreeData( double[] positions, RandomAccessibleInterval< T > values )
-	{
-		numPoints = ( int ) values.dimension( 0 );
-		numDimensions = positions.length / numPoints;
-		this.positions = new KDTreePositions.Flat(positions, numDimensions);
-		this.values = new KDTreeValues.ImgValues<>(values);
-	}
-
-	public KDTreeData( double[] positions, RandomAccessibleInterval< T > values, RealInterval boundingBox )
-	{
-		this( positions, values );
+	public KDTreeData(KDTreePositions positions, KDTreeValues<T> values, RealInterval boundingBox) {
+		this(positions, values);
 		this.boundingBox = boundingBox;
 	}
 
@@ -98,11 +53,6 @@ public class KDTreeData< T >
 	public T type()
 	{
 		return values.type();
-	}
-
-	public KDTreePositions positions()
-	{
-		return positions;
 	}
 
 	public double[] getFlatPositions() {
@@ -188,23 +138,17 @@ public class KDTreeData< T >
 		final int[] tree = KDTreeUtils.makeTree( points );
 		final int[] invtree = KDTreeUtils.invert( tree );
 
-		final boolean useFlatLayout = ( long ) numDimensions * numPoints <= KDTreeUtils.MAX_ARRAY_SIZE;
-		if ( storeValuesAsNativeImg && KDTreeUtils.getType( values ) instanceof NativeType )
-		{
-			@SuppressWarnings( "unchecked" )
-			final Img< T > treeValues = ( Img< T > ) KDTreeUtils.orderValuesImg( invtree, ( Iterable ) values );
-			if ( useFlatLayout )
-				return new KDTreeData<>(KDTreeUtils.reorderToFlatLayout( points, tree ), treeValues);
-			else
-				return new KDTreeData<>(KDTreeUtils.reorder( points, tree ), treeValues);
-		}
-		else
-		{
-			final List< T > treeValues = KDTreeUtils.orderValuesList( invtree, values );
-			if ( useFlatLayout )
-				return new KDTreeData<>(KDTreeUtils.reorderToFlatLayout( points, tree ), treeValues);
-			else
-				return new KDTreeData<>(KDTreeUtils.reorder( points, tree ), treeValues);
-		}
+		final boolean storeAsImg = (storeValuesAsNativeImg && KDTreeUtils.getType(values) instanceof NativeType);
+		@SuppressWarnings("unchecked")
+		final KDTreeValues<T> treeValues = (storeAsImg)
+				? new KDTreeValues.ImgValues<>((Img<T>)  KDTreeUtils.orderValuesImg(invtree, (Iterable) values))
+				: new KDTreeValues.ListValues<>(KDTreeUtils.orderValuesList(invtree, values));
+
+		final boolean useFlatLayout = (long) numDimensions * numPoints <= KDTreeUtils.MAX_ARRAY_SIZE;
+		final KDTreePositions treePositions = (useFlatLayout)
+				? new KDTreePositions.Flat(KDTreeUtils.reorderToFlatLayout(points, tree), numDimensions)
+				: new KDTreePositions.Nested(KDTreeUtils.reorder(points, tree));
+
+		return new KDTreeData<>(treePositions, treeValues);
 	}
 }

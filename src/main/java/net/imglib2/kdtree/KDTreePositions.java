@@ -135,6 +135,10 @@ public abstract class KDTreePositions {
 		return numDimensions;
 	}
 
+	public int numPoints() {
+		return numPoints;
+	}
+
 	public int size() {
 		return numPoints;
 	}
