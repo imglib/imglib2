@@ -34,6 +34,11 @@
 
 package net.imglib2;
 
+import java.util.Spliterator;
+import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
+import net.imglib2.stream.RealCursorSpliterator;
+
 /**
  * <p>
  * <em>f</em>:R<sup><em>n</em></sup>&isin;[0,<em>s</em>]&rarr;T
@@ -131,5 +136,21 @@ public interface IterableRealInterval< T > extends RealInterval, Iterable< T >
 	default java.util.Iterator< T > iterator() // TODO: fix places where it is not necessary to implement this anymore
 	{
 		return cursor();
+	}
+
+	default Stream< T > stream()
+	{
+		return StreamSupport.stream( spliterator(), false );
+	}
+
+	default Stream< T > parallelStream()
+	{
+		return StreamSupport.stream( spliterator(), true );
+	}
+
+	@Override
+	default Spliterator< T > spliterator()
+	{
+		return new RealCursorSpliterator<>( cursor(),0, size(), Spliterator.ORDERED | Spliterator.NONNULL );
 	}
 }
