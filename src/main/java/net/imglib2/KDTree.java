@@ -2,7 +2,7 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2022 Tobias Pietzsch, Stephan Preibisch, Stephan Saalfeld,
+ * Copyright (C) 2009 - 2023 Tobias Pietzsch, Stephan Preibisch, Stephan Saalfeld,
  * John Bogovic, Albert Cardona, Barry DeZonia, Christian Dietz, Jan Funke,
  * Aivar Grislis, Jonathan Hale, Grant Harris, Stefan Helfrich, Mark Hiner,
  * Martin Horn, Steffen Jaensch, Lee Kamentsky, Larry Lindsey, Melissa Linkert,
@@ -75,7 +75,7 @@ public class KDTree< T > implements EuclideanSpace, IterableRealInterval< T >
 	final protected double[] max;
 
 	/**
-	 * A KDTreeNode that stores it's value as a reference.
+	 * A KDTreeNode that stores its value as a reference.
 	 */
 	protected final static class ValueNode< T > extends KDTreeNode< T >
 	{
@@ -125,7 +125,7 @@ public class KDTree< T > implements EuclideanSpace, IterableRealInterval< T >
 	}
 
 	/**
-	 * A KDTreeNode that stores it's value as a Sampler.
+	 * A KDTreeNode that stores its value as a Sampler.
 	 */
 	protected static final class SamplerNode< T > extends KDTreeNode< T >
 	{
@@ -257,7 +257,7 @@ public class KDTree< T > implements EuclideanSpace, IterableRealInterval< T >
 		while ( cursor.hasNext() )
 		{
 			cursor.next();
-			values.add( cursor.copyCursor() );
+			values.add( cursor.copy() );
 		}
 		root = makeSamplerNode( values, 0, values.size() - 1, 0 );
 	}
@@ -668,13 +668,6 @@ public class KDTree< T > implements EuclideanSpace, IterableRealInterval< T >
 		}
 
 		@Override
-		public void jumpFwd( final long steps )
-		{
-			for ( long i = 0; i < steps; ++i )
-				fwd();
-		}
-
-		@Override
 		public void fwd()
 		{
 			if ( nodes.isEmpty() )
@@ -702,32 +695,6 @@ public class KDTree< T > implements EuclideanSpace, IterableRealInterval< T >
 		{
 			return !nodes.isEmpty();
 		}
-
-		@Override
-		public T next()
-		{
-			fwd();
-			return get();
-		}
-
-		@Override
-		public void remove()
-		{
-			// NB: no action.
-		}
-
-		@Override
-		public KDTreeCursor copyCursor()
-		{
-			return copy();
-		}
-
-	}
-
-	@Override
-	public KDTreeCursor iterator()
-	{
-		return new KDTreeCursor( this );
 	}
 
 	@Override
@@ -740,11 +707,5 @@ public class KDTree< T > implements EuclideanSpace, IterableRealInterval< T >
 	public KDTreeCursor localizingCursor()
 	{
 		return new KDTreeCursor( this );
-	}
-
-	@Override
-	public T firstElement()
-	{
-		return iterator().next();
 	}
 }

@@ -2,7 +2,7 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2022 Tobias Pietzsch, Stephan Preibisch, Stephan Saalfeld,
+ * Copyright (C) 2009 - 2023 Tobias Pietzsch, Stephan Preibisch, Stephan Saalfeld,
  * John Bogovic, Albert Cardona, Barry DeZonia, Christian Dietz, Jan Funke,
  * Aivar Grislis, Jonathan Hale, Grant Harris, Stefan Helfrich, Mark Hiner,
  * Martin Horn, Steffen Jaensch, Lee Kamentsky, Larry Lindsey, Melissa Linkert,
@@ -62,9 +62,9 @@ public interface RealRandomAccessible< T > extends EuclideanSpace
 	 *
 	 * @return random access sampler
 	 */
-	public RealRandomAccess< T > realRandomAccess();
+	RealRandomAccess< T > realRandomAccess();
 
-	public RealRandomAccess< T > realRandomAccess( RealInterval interval );
+	RealRandomAccess< T > realRandomAccess( RealInterval interval );
 
 	/**
 	 * Convenience method to query a {@link RealRandomAccessible} for the value at a
@@ -76,10 +76,10 @@ public interface RealRandomAccessible< T > extends EuclideanSpace
 	 * <p>
 	 * This method is a short cut for {@code realRandomAccess().setPositionAndGet( position );}
 	 *
-	 * @param position
+	 * @param position, length must be &ge; {@link #numDimensions()}
 	 * @return value of the the {@link RandomAccessible} at {@code position}.
 	 */
-	default T getAt( float... position )
+	default T getAt( final float... position )
 	{
 		return realRandomAccess().setPositionAndGet( position );
 	}
@@ -94,10 +94,10 @@ public interface RealRandomAccessible< T > extends EuclideanSpace
 	 * <p>
 	 * This method is a short cut for {@code realRandomAccess().setPositionAndGet( position );}
 	 *
-	 * @param position
+	 * @param position, length must be &ge; {@link #numDimensions()}
 	 * @return value of the the {@link RandomAccessible} at {@code position}.
 	 */
-	default T getAt( double... position )
+	default T getAt( final double... position )
 	{
 		return realRandomAccess().setPositionAndGet( position );
 	}
@@ -112,10 +112,10 @@ public interface RealRandomAccessible< T > extends EuclideanSpace
 	 * <p>
 	 * This method is a short cut for {@code realRandomAccess().setPositionAndGet( position );}
 	 *
-	 * @param position
+	 * @param position, {@link RealLocalizable#numDimensions()} must be &ge; {@link #numDimensions()}
 	 * @return value of the the {@link RandomAccessible} at {@code position}.
 	 */
-	default T getAt( RealLocalizable position )
+	default T getAt( final RealLocalizable position )
 	{
 		return realRandomAccess().setPositionAndGet( position );
 	}

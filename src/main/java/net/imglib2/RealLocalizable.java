@@ -2,7 +2,7 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2022 Tobias Pietzsch, Stephan Preibisch, Stephan Saalfeld,
+ * Copyright (C) 2009 - 2023 Tobias Pietzsch, Stephan Preibisch, Stephan Saalfeld,
  * John Bogovic, Albert Cardona, Barry DeZonia, Christian Dietz, Jan Funke,
  * Aivar Grislis, Jonathan Hale, Grant Harris, Stefan Helfrich, Mark Hiner,
  * Martin Horn, Steffen Jaensch, Lee Kamentsky, Larry Lindsey, Melissa Linkert,
@@ -48,7 +48,7 @@ public interface RealLocalizable extends EuclideanSpace
 	 * Write the current position into the passed array.
 	 *
 	 * @param position
-	 *            receives current position
+	 *            receives current position, length must be &ge; {@link #numDimensions()}
 	 */
 	default void localize( final float[] position )
 	{
@@ -61,7 +61,7 @@ public interface RealLocalizable extends EuclideanSpace
 	 * Write the current position into the passed array.
 	 *
 	 * @param position
-	 *            receives current position
+	 *            receives current position, length must be &ge; {@link #numDimensions()}
 	 */
 	default void localize( final double[] position )
 	{
@@ -71,7 +71,7 @@ public interface RealLocalizable extends EuclideanSpace
 	}
 
 	/**
-	 * Write the current position into the passed {@link RealPositionable}.
+	 * Write the current position into the passed {@link Positionable}.
 	 *
 	 * Note for developers: This default implementation forwards to
 	 * {@link RealPositionable#setPosition(RealLocalizable)}, so don't do the
@@ -79,10 +79,19 @@ public interface RealLocalizable extends EuclideanSpace
 	 *
 	 * @param position
 	 *            receives current position
+	 *            {@link RealPositionable#numDimensions()} must be &ge;
+	 *            {@link #numDimensions()}
 	 */
 	default void localize( final RealPositionable position )
 	{
-		position.setPosition( this );
+		if ( position.numDimensions() == numDimensions() )
+			position.setPosition( this );
+		else
+		{
+			final int n = numDimensions();
+			for ( int d = 0; d < n; ++d )
+				position.setPosition( getDoublePosition( d ), d );
+		}
 	}
 
 	/**
@@ -137,5 +146,5 @@ public interface RealLocalizable extends EuclideanSpace
 	 *            dimension
 	 * @return dimension of current position
 	 */
-	public double getDoublePosition( int d );
+	double getDoublePosition( int d );
 }

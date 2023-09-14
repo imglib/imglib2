@@ -2,7 +2,7 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2022 Tobias Pietzsch, Stephan Preibisch, Stephan Saalfeld,
+ * Copyright (C) 2009 - 2023 Tobias Pietzsch, Stephan Preibisch, Stephan Saalfeld,
  * John Bogovic, Albert Cardona, Barry DeZonia, Christian Dietz, Jan Funke,
  * Aivar Grislis, Jonathan Hale, Grant Harris, Stefan Helfrich, Mark Hiner,
  * Martin Horn, Steffen Jaensch, Lee Kamentsky, Larry Lindsey, Melissa Linkert,
@@ -82,9 +82,9 @@ public abstract class AbstractListImg< T > extends AbstractImg< T >
 		IntervalIndexer.createAllocationSteps( this.dim, step );
 	}
 
-	protected abstract T get( final int index );
+	protected abstract T get( int index );
 
-	protected abstract void set( final int index, final T value );
+	protected abstract void set( int index, T value );
 
 	@Override
 	public ListCursor< T > cursor()

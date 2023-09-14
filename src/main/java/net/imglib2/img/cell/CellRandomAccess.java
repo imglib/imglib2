@@ -2,7 +2,7 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2022 Tobias Pietzsch, Stephan Preibisch, Stephan Saalfeld,
+ * Copyright (C) 2009 - 2023 Tobias Pietzsch, Stephan Preibisch, Stephan Saalfeld,
  * John Bogovic, Albert Cardona, Barry DeZonia, Christian Dietz, Jan Funke,
  * Aivar Grislis, Jonathan Hale, Grant Harris, Stefan Helfrich, Mark Hiner,
  * Martin Horn, Steffen Jaensch, Lee Kamentsky, Larry Lindsey, Melissa Linkert,
@@ -11,13 +11,13 @@
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- *
+ * 
  * 1. Redistributions of source code must retain the above copyright notice,
  *    this list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  *    this list of conditions and the following disclaimer in the documentation
  *    and/or other materials provided with the distribution.
- *
+ * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -34,6 +34,7 @@
 
 package net.imglib2.img.cell;
 
+import java.util.Arrays;
 import net.imglib2.AbstractLocalizable;
 import net.imglib2.Localizable;
 import net.imglib2.RandomAccess;
@@ -64,23 +65,15 @@ public class CellRandomAccess< T extends NativeType< T >, C extends Cell< ? > >
 
 	protected final long[] dimensions;
 
-	protected int[] currentCellSteps;
+	protected final int[] currentCellSteps;
 
-	protected long[] currentCellMin;
+	protected final long[] currentCellMin;
 
-	protected long[] currentCellMax;
+	protected final long[] currentCellMax;
 
 	protected boolean isOutOfBounds;
 
-	protected final long[] oobCellMin;
-
-	protected final long[] oobCellMax;
-
-	/**
-	 * The current index of the type. It is faster to duplicate this here than
-	 * to access it through type.getIndex().
-	 */
-	protected int index;
+	private boolean typeNeedsUpdate;
 
 	protected CellRandomAccess( final CellRandomAccess< T, C > randomAccess )
 	{
@@ -95,18 +88,14 @@ public class CellRandomAccess< T extends NativeType< T >, C extends Cell< ? > >
 
 		cellDims = randomAccess.cellDims;
 		dimensions = randomAccess.dimensions;
-		currentCellSteps = randomAccess.currentCellSteps;
-		currentCellMin = randomAccess.currentCellMin;
-		currentCellMax = randomAccess.currentCellMax;
+		currentCellSteps = randomAccess.currentCellSteps.clone();
+		currentCellMin = randomAccess.currentCellMin.clone();
+		currentCellMax = randomAccess.currentCellMax.clone();
 
 		isOutOfBounds = randomAccess.isOutOfBounds;
-		oobCellMin = randomAccess.oobCellMin;
-		oobCellMax = randomAccess.oobCellMax;
 
-		index = randomAccess.index;
-		if ( !isOutOfBounds )
-			type.updateContainer( this );
-		typeIndex.set( index );
+		typeIndex.set( randomAccess.typeIndex.get() );
+		typeNeedsUpdate = true;
 	}
 
 	public CellRandomAccess( final AbstractCellImg< T, ?, C, ? > img )
@@ -123,14 +112,11 @@ public class CellRandomAccess< T extends NativeType< T >, C extends Cell< ? > >
 		img.getCellGrid().cellDimensions( cellDims );
 		img.getCellGrid().imgDimensions( dimensions );
 
+		currentCellSteps = new int[ n ];
+		currentCellMin = new long[ n ];
+		currentCellMax = new long[ n ];
+
 		isOutOfBounds = false;
-		oobCellMin = new long[ n ];
-		oobCellMax = new long[ n ];
-		for ( int d = 0; d < n; ++d )
-		{
-			oobCellMin[ d ] = Long.MAX_VALUE;
-			oobCellMax[ d ] = Long.MIN_VALUE;
-		}
 
 		img.getCellGrid().getCellPosition( position, randomAccessOnCells );
 		updatePosition( false );
@@ -145,6 +131,11 @@ public class CellRandomAccess< T extends NativeType< T >, C extends Cell< ? > >
 	@Override
 	public T get()
 	{
+		if ( typeNeedsUpdate )
+		{
+			typeNeedsUpdate = false;
+			type.updateContainer( this );
+		}
 		return type;
 	}
 
@@ -157,51 +148,47 @@ public class CellRandomAccess< T extends NativeType< T >, C extends Cell< ? > >
 	@Override
 	public void fwd( final int d )
 	{
-		index += currentCellSteps[ d ];
+		typeIndex.inc( currentCellSteps[ d ] );
 		if ( ++position[ d ] > currentCellMax[ d ] )
 		{
 			randomAccessOnCells.fwd( d );
 			updatePosition( position[ d ] >= dimensions[ d ] );
 		}
-		typeIndex.set( index );
 	}
 
 	@Override
 	public void bck( final int d )
 	{
-		index -= currentCellSteps[ d ];
+		typeIndex.dec( currentCellSteps[ d ] );
 		if ( --position[ d ] < currentCellMin[ d ] )
 		{
 			randomAccessOnCells.bck( d );
 			updatePosition( position[ d ] < 0 );
 		}
-		typeIndex.set( index );
 	}
 
 	@Override
 	public void move( final int distance, final int d )
 	{
-		index += distance * currentCellSteps[ d ];
+		typeIndex.inc( distance * currentCellSteps[ d ] );
 		position[ d ] += distance;
 		if ( position[ d ] < currentCellMin[ d ] || position[ d ] > currentCellMax[ d ] )
 		{
 			randomAccessOnCells.setPosition( position[ d ] / cellDims[ d ], d );
 			updatePosition( position[ d ] < 0 || position[ d ] >= dimensions[ d ] );
 		}
-		typeIndex.set( index );
 	}
 
 	@Override
 	public void move( final long distance, final int d )
 	{
-		index += ( int ) distance * currentCellSteps[ d ];
+		typeIndex.inc( ( int ) distance * currentCellSteps[ d ] );
 		position[ d ] += distance;
 		if ( position[ d ] < currentCellMin[ d ] || position[ d ] > currentCellMax[ d ] )
 		{
 			randomAccessOnCells.setPosition( position[ d ] / cellDims[ d ], d );
 			updatePosition( position[ d ] < 0 || position[ d ] >= dimensions[ d ] );
 		}
-		typeIndex.set( index );
 	}
 
 	@Override
@@ -212,7 +199,7 @@ public class CellRandomAccess< T extends NativeType< T >, C extends Cell< ? > >
 			final long pos = localizable.getLongPosition( d );
 			if ( pos != 0 )
 			{
-				index += ( int ) pos * currentCellSteps[ d ];
+				typeIndex.inc( ( int ) pos * currentCellSteps[ d ] );
 				position[ d ] += pos;
 				if ( position[ d ] < currentCellMin[ d ] || position[ d ] > currentCellMax[ d ] )
 				{
@@ -237,7 +224,6 @@ public class CellRandomAccess< T extends NativeType< T >, C extends Cell< ? > >
 				}
 			}
 		}
-		typeIndex.set( index );
 	}
 
 	@Override
@@ -247,7 +233,7 @@ public class CellRandomAccess< T extends NativeType< T >, C extends Cell< ? > >
 		{
 			if ( distance[ d ] != 0 )
 			{
-				index += distance[ d ] * currentCellSteps[ d ];
+				typeIndex.inc( distance[ d ] * currentCellSteps[ d ] );
 				position[ d ] += distance[ d ];
 				if ( position[ d ] < currentCellMin[ d ] || position[ d ] > currentCellMax[ d ] )
 				{
@@ -271,7 +257,6 @@ public class CellRandomAccess< T extends NativeType< T >, C extends Cell< ? > >
 				}
 			}
 		}
-		typeIndex.set( index );
 	}
 
 	@Override
@@ -281,7 +266,7 @@ public class CellRandomAccess< T extends NativeType< T >, C extends Cell< ? > >
 		{
 			if ( distance[ d ] != 0 )
 			{
-				index += ( int ) distance[ d ] * currentCellSteps[ d ];
+				typeIndex.inc( ( int ) distance[ d ] * currentCellSteps[ d ] );
 				position[ d ] += distance[ d ];
 				if ( position[ d ] < currentCellMin[ d ] || position[ d ] > currentCellMax[ d ] )
 				{
@@ -305,33 +290,30 @@ public class CellRandomAccess< T extends NativeType< T >, C extends Cell< ? > >
 				}
 			}
 		}
-		typeIndex.set( index );
 	}
 
 	@Override
 	public void setPosition( final int pos, final int d )
 	{
-		index += ( int ) ( pos - position[ d ] ) * currentCellSteps[ d ];
+		typeIndex.inc( ( int ) ( pos - position[ d ] ) * currentCellSteps[ d ] );
 		position[ d ] = pos;
 		if ( pos < currentCellMin[ d ] || pos > currentCellMax[ d ] )
 		{
 			randomAccessOnCells.setPosition( pos / cellDims[ d ], d );
 			updatePosition( position[ d ] < 0 || position[ d ] >= dimensions[ d ] );
 		}
-		typeIndex.set( index );
 	}
 
 	@Override
 	public void setPosition( final long pos, final int d )
 	{
-		index += ( int ) ( pos - position[ d ] ) * currentCellSteps[ d ];
+		typeIndex.inc( ( int ) ( pos - position[ d ] ) * currentCellSteps[ d ] );
 		position[ d ] = pos;
-		if ( pos < currentCellMin[ d ] || pos > currentCellMax[ d ] )
+		if ( position[ d ] < currentCellMin[ d ] || position[ d ] > currentCellMax[ d ] )
 		{
 			randomAccessOnCells.setPosition( pos / cellDims[ d ], d );
 			updatePosition( position[ d ] < 0 || position[ d ] >= dimensions[ d ] );
 		}
-		typeIndex.set( index );
 	}
 
 	@Override
@@ -342,7 +324,7 @@ public class CellRandomAccess< T extends NativeType< T >, C extends Cell< ? > >
 			final long pos = localizable.getLongPosition( d );
 			if ( pos != position[ d ] )
 			{
-				index += ( int ) ( pos - position[ d ] ) * currentCellSteps[ d ];
+				typeIndex.inc( ( int ) ( pos - position[ d ] ) * currentCellSteps[ d ] );
 				position[ d ] = pos;
 				if ( position[ d ] < currentCellMin[ d ] || position[ d ] > currentCellMax[ d ] )
 				{
@@ -367,7 +349,6 @@ public class CellRandomAccess< T extends NativeType< T >, C extends Cell< ? > >
 				}
 			}
 		}
-		typeIndex.set( index );
 	}
 
 	@Override
@@ -377,7 +358,7 @@ public class CellRandomAccess< T extends NativeType< T >, C extends Cell< ? > >
 		{
 			if ( pos[ d ] != position[ d ] )
 			{
-				index += ( int ) ( pos[ d ] - position[ d ] ) * currentCellSteps[ d ];
+				typeIndex.inc( ( int ) ( pos[ d ] - position[ d ] ) * currentCellSteps[ d ] );
 				if ( pos[ d ] < currentCellMin[ d ] || pos[ d ] > currentCellMax[ d ] )
 				{
 					setPos2( pos, d );
@@ -386,7 +367,6 @@ public class CellRandomAccess< T extends NativeType< T >, C extends Cell< ? > >
 				position[ d ] = pos[ d ];
 			}
 		}
-		typeIndex.set( index );
 	}
 
 	private void setPos2( final int[] pos, final int d0 )
@@ -414,7 +394,7 @@ public class CellRandomAccess< T extends NativeType< T >, C extends Cell< ? > >
 		{
 			if ( pos[ d ] != position[ d ] )
 			{
-				index += ( int ) ( pos[ d ] - position[ d ] ) * currentCellSteps[ d ];
+				typeIndex.inc( ( int ) ( pos[ d ] - position[ d ] ) * currentCellSteps[ d ] );
 				position[ d ] = pos[ d ];
 				if ( position[ d ] < currentCellMin[ d ] || position[ d ] > currentCellMax[ d ] )
 				{
@@ -438,7 +418,6 @@ public class CellRandomAccess< T extends NativeType< T >, C extends Cell< ? > >
 				}
 			}
 		}
-		typeIndex.set( index );
 	}
 
 	/**
@@ -452,8 +431,8 @@ public class CellRandomAccess< T extends NativeType< T >, C extends Cell< ? > >
 		if ( movedOutOfBounds )
 		{
 			isOutOfBounds = true;
-			currentCellMin = oobCellMin;
-			currentCellMax = oobCellMax;
+			Arrays.fill( currentCellMin, Long.MAX_VALUE );
+			Arrays.fill( currentCellMax, Long.MIN_VALUE );
 		}
 		else
 		{
@@ -470,15 +449,8 @@ public class CellRandomAccess< T extends NativeType< T >, C extends Cell< ? > >
 				isOutOfBounds = false;
 				grid.getCellPosition( position, randomAccessOnCells );
 			}
-
-			final C cell = getCell();
-
-			currentCellSteps = cell.steps;
-			currentCellMin = cell.min;
-			currentCellMax = cell.max;
-
-			index = cell.globalPositionToIndex( position );
-			type.updateContainer( this );
+			typeIndex.set( grid.getCellCoordinates( position, currentCellSteps, currentCellMin, currentCellMax ) );
+			typeNeedsUpdate = true;
 		}
 	}
 }

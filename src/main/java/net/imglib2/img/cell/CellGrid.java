@@ -2,7 +2,7 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2022 Tobias Pietzsch, Stephan Preibisch, Stephan Saalfeld,
+ * Copyright (C) 2009 - 2023 Tobias Pietzsch, Stephan Preibisch, Stephan Saalfeld,
  * John Bogovic, Albert Cardona, Barry DeZonia, Christian Dietz, Jan Funke,
  * Aivar Grislis, Jonathan Hale, Grant Harris, Stefan Helfrich, Mark Hiner,
  * Martin Horn, Steffen Jaensch, Lee Kamentsky, Larry Lindsey, Melissa Linkert,
@@ -11,13 +11,13 @@
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- *
+ * 
  * 1. Redistributions of source code must retain the above copyright notice,
  *    this list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  *    this list of conditions and the following disclaimer in the documentation
  *    and/or other materials provided with the distribution.
- *
+ * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -34,13 +34,13 @@
 package net.imglib2.img.cell;
 
 import java.util.Arrays;
-import java.util.Iterator;
 
 import net.imglib2.Cursor;
 import net.imglib2.FinalInterval;
 import net.imglib2.FlatIterationOrder;
 import net.imglib2.Interval;
 import net.imglib2.IterableInterval;
+import net.imglib2.Localizable;
 import net.imglib2.Point;
 import net.imglib2.Positionable;
 import net.imglib2.RandomAccess;
@@ -337,6 +337,36 @@ public class CellGrid
 			cellPos.setPosition( position[ d ] / cellDimensions[ d ], d );
 	}
 
+	/**
+	 * Compute all cell-related coordinates/sizes required by CellRandomAccess.
+	 *
+	 * @param position
+	 * 			  current image position
+	 * @param cellSteps
+	 * 			  allocation steps for cell are written here.
+	 * @param cellMin
+	 *            offset of the cell in image coordinates are written here.
+	 * @param cellMax is set to the
+	 *            max of the cell in image coordinates are written here.
+	 * @return index within the cell.
+	 */
+	int getCellCoordinates( final long[] position, final int[] cellSteps, final long[] cellMin, final long[] cellMax )
+	{
+		int steps = 1;
+		int i = 0;
+		for ( int d = 0; d < n; ++d )
+		{
+			final long gridPos = position[ d ] / cellDimensions[ d ];
+			final int cellDim = ( gridPos + 1 == numCells[ d ] ) ? borderSize[ d ] : cellDimensions[ d ];
+			cellMin[ d ] = gridPos * cellDimensions[ d ];
+			cellMax[ d ] = cellMin[ d ] + cellDim - 1;
+			cellSteps[ d ] = steps;
+			i += steps * ( position[ d ] - cellMin[ d ] );
+			steps *= cellDim;
+		}
+		return i;
+	}
+
 	@Override
 	public int hashCode()
 	{
@@ -448,21 +478,9 @@ public class CellGrid
 		}
 
 		@Override
-		public Interval firstElement()
-		{
-			return cursor().next();
-		}
-
-		@Override
 		public FlatIterationOrder iterationOrder()
 		{
 			return new FlatIterationOrder( this );
-		}
-
-		@Override
-		public Iterator< Interval > iterator()
-		{
-			return cursor();
 		}
 	}
 

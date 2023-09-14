@@ -2,7 +2,7 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2022 Tobias Pietzsch, Stephan Preibisch, Stephan Saalfeld,
+ * Copyright (C) 2009 - 2023 Tobias Pietzsch, Stephan Preibisch, Stephan Saalfeld,
  * John Bogovic, Albert Cardona, Barry DeZonia, Christian Dietz, Jan Funke,
  * Aivar Grislis, Jonathan Hale, Grant Harris, Stefan Helfrich, Mark Hiner,
  * Martin Horn, Steffen Jaensch, Lee Kamentsky, Larry Lindsey, Melissa Linkert,
@@ -67,7 +67,7 @@ public interface RadiusNeighborSearch< T > extends EuclideanSpace
 	 *            whether the results should be ordered by ascending distances
 	 *            to reference.
 	 */
-	public void search( final RealLocalizable reference, final double radius, final boolean sortResults );
+	void search( RealLocalizable reference, double radius, boolean sortResults );
 
 	/**
 	 * Get the number of points found within radius after a
@@ -76,7 +76,7 @@ public interface RadiusNeighborSearch< T > extends EuclideanSpace
 	 * @return the number of points found within radius after a
 	 *         {@link #search(RealLocalizable, double, boolean)}.
 	 */
-	public int numNeighbors();
+	int numNeighbors();
 
 	/**
 	 * Access the data of the <em>i</em><sup>th</sup> neighbor within radius. If
@@ -85,14 +85,14 @@ public interface RadiusNeighborSearch< T > extends EuclideanSpace
 	 * {@link Sampler} that guarantees write access if the underlying data set
 	 * is writable.
 	 */
-	public Sampler< T > getSampler( final int i );
+	Sampler< T > getSampler( int i );
 
 	/**
 	 * Access the position of the <em>i</em><sup>th</sup> neighbor within
 	 * radius. If {@code sortResults} was set to true, neighbors are ordered by
 	 * square Euclidean distance to the reference.
 	 */
-	public RealLocalizable getPosition( final int i );
+	RealLocalizable getPosition( int i );
 
 	/**
 	 * Access the square Euclidean distance between the reference location as
@@ -100,11 +100,11 @@ public interface RadiusNeighborSearch< T > extends EuclideanSpace
 	 * {@code sortResults} was set to true, neighbors are ordered by square
 	 * Euclidean distance to the reference.
 	 */
-	public double getSquareDistance( final int i );
+	double getSquareDistance( int i );
 
 	/**
 	 * Access the Euclidean distance between the reference location as used for
 	 * the last search and the <em>i</em><sup>th</sup> neighbor.
 	 */
-	public double getDistance( final int i );
+	double getDistance( int i );
 }

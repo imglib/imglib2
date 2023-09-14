@@ -2,7 +2,7 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2022 Tobias Pietzsch, Stephan Preibisch, Stephan Saalfeld,
+ * Copyright (C) 2009 - 2023 Tobias Pietzsch, Stephan Preibisch, Stephan Saalfeld,
  * John Bogovic, Albert Cardona, Barry DeZonia, Christian Dietz, Jan Funke,
  * Aivar Grislis, Jonathan Hale, Grant Harris, Stefan Helfrich, Mark Hiner,
  * Martin Horn, Steffen Jaensch, Lee Kamentsky, Larry Lindsey, Melissa Linkert,
@@ -62,12 +62,6 @@ public class PointSampleList< T > extends AbstractInterval implements IterableIn
 			copy.sample = sample;
 
 			return copy;
-		}
-
-		@Override
-		final public Cursor< T > copyCursor()
-		{
-			return copy();
 		}
 
 		@Override
@@ -166,12 +160,6 @@ public class PointSampleList< T > extends AbstractInterval implements IterableIn
 			fwd();
 			return sample;
 		}
-
-		@Override
-		public void remove()
-		{
-			/* Not yet implemented */
-		}
 	}
 
 	final protected ArrayList< Point > coordinates = new ArrayList< Point >();
@@ -230,12 +218,6 @@ public class PointSampleList< T > extends AbstractInterval implements IterableIn
 	}
 
 	@Override
-	public T firstElement()
-	{
-		return samples.get( 0 );
-	}
-
-	@Override
 	public Cursor< T > localizingCursor()
 	{
 		return new PointSampleListCursor();
@@ -245,11 +227,5 @@ public class PointSampleList< T > extends AbstractInterval implements IterableIn
 	public long size()
 	{
 		return samples.size();
-	}
-
-	@Override
-	public Iterator< T > iterator()
-	{
-		return cursor();
 	}
 }

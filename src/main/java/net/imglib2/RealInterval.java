@@ -2,7 +2,7 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2022 Tobias Pietzsch, Stephan Preibisch, Stephan Saalfeld,
+ * Copyright (C) 2009 - 2023 Tobias Pietzsch, Stephan Preibisch, Stephan Saalfeld,
  * John Bogovic, Albert Cardona, Barry DeZonia, Christian Dietz, Jan Funke,
  * Aivar Grislis, Jonathan Hale, Grant Harris, Stefan Helfrich, Mark Hiner,
  * Martin Horn, Steffen Jaensch, Lee Kamentsky, Larry Lindsey, Melissa Linkert,
@@ -60,7 +60,7 @@ public interface RealInterval extends EuclideanSpace
 	 *            dimension
 	 * @return minimum in dimension d.
 	 */
-	public double realMin( int d );
+	double realMin( int d );
 
 	/**
 	 * Write the minimum of each dimension into double[].
@@ -93,7 +93,7 @@ public interface RealInterval extends EuclideanSpace
 	 *            dimension
 	 * @return maximum in dimension d.
 	 */
-	public double realMax( final int d );
+	double realMax( int d );
 
 	/**
 	 * Write the maximum of each dimension into double[].

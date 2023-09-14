@@ -2,7 +2,7 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2022 Tobias Pietzsch, Stephan Preibisch, Stephan Saalfeld,
+ * Copyright (C) 2009 - 2023 Tobias Pietzsch, Stephan Preibisch, Stephan Saalfeld,
  * John Bogovic, Albert Cardona, Barry DeZonia, Christian Dietz, Jan Funke,
  * Aivar Grislis, Jonathan Hale, Grant Harris, Stefan Helfrich, Mark Hiner,
  * Martin Horn, Steffen Jaensch, Lee Kamentsky, Larry Lindsey, Melissa Linkert,
@@ -60,11 +60,11 @@ public interface Img< T >
 	 * 
 	 * @return a factory for Imgs of the same kind as this one.
 	 */
-	public ImgFactory< T > factory();
+	ImgFactory< T > factory();
 
 	/**
 	 * @return - A copy of the current {@link Img} instance, all pixels are
 	 *         duplicated
 	 */
-	public Img< T > copy();
+	Img< T > copy();
 }

@@ -2,7 +2,7 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2022 Tobias Pietzsch, Stephan Preibisch, Stephan Saalfeld,
+ * Copyright (C) 2009 - 2023 Tobias Pietzsch, Stephan Preibisch, Stephan Saalfeld,
  * John Bogovic, Albert Cardona, Barry DeZonia, Christian Dietz, Jan Funke,
  * Aivar Grislis, Jonathan Hale, Grant Harris, Stefan Helfrich, Mark Hiner,
  * Martin Horn, Steffen Jaensch, Lee Kamentsky, Larry Lindsey, Melissa Linkert,
@@ -56,14 +56,14 @@ public interface Transform
 	 * 
 	 * @return the dimension of the source vector.
 	 */
-	public int numSourceDimensions();
+	int numSourceDimensions();
 
 	/**
 	 * Returns <em>m</em>, the dimension of the target vector.
 	 * 
 	 * @return the dimension of the target vector.
 	 */
-	public int numTargetDimensions();
+	int numTargetDimensions();
 
 	/**
 	 * Apply the {@link Transform} to a source vector to obtain a target vector.
@@ -73,7 +73,7 @@ public interface Transform
 	 * @param target
 	 *            set this to the target coordinates.
 	 */
-	public void apply( final long[] source, final long[] target );
+	void apply( long[] source, long[] target );
 
 	/**
 	 * Apply the {@link Transform} to a source vector to obtain a target vector.
@@ -83,7 +83,7 @@ public interface Transform
 	 * @param target
 	 *            set this to the target coordinates.
 	 */
-	public void apply( final int[] source, final int[] target );
+	void apply( int[] source, int[] target );
 
 	/**
 	 * Apply the {@link Transform} to a source {@link Localizable} to obtain a
@@ -94,5 +94,5 @@ public interface Transform
 	 * @param target
 	 *            set this to the target coordinates.
 	 */
-	public void apply( final Localizable source, final Positionable target );
+	void apply( Localizable source, Positionable target );
 }

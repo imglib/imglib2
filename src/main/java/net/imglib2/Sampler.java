@@ -2,7 +2,7 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2022 Tobias Pietzsch, Stephan Preibisch, Stephan Saalfeld,
+ * Copyright (C) 2009 - 2023 Tobias Pietzsch, Stephan Preibisch, Stephan Saalfeld,
  * John Bogovic, Albert Cardona, Barry DeZonia, Christian Dietz, Jan Funke,
  * Aivar Grislis, Jonathan Hale, Grant Harris, Stefan Helfrich, Mark Hiner,
  * Martin Horn, Steffen Jaensch, Lee Kamentsky, Larry Lindsey, Melissa Linkert,
@@ -59,7 +59,7 @@ public interface Sampler< T >
 	 * Access the actual <em>T</em> instance providing access to a pixel,
 	 * sub-pixel or integral region value the {@link Sampler} points at.
 	 */
-	public T get();
+	T get();
 
 	/**
 	 * @return - A new {@link Sampler} in the same state accessing the same
@@ -72,5 +72,5 @@ public interface Sampler< T >
 	 *         value, not necessarily the same instance (this is the case for an
 	 *         {@link ArrayCursor} for example)
 	 */
-	public Sampler< T > copy();
+	Sampler< T > copy();
 }

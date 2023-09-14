@@ -2,7 +2,7 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2022 Tobias Pietzsch, Stephan Preibisch, Stephan Saalfeld,
+ * Copyright (C) 2009 - 2023 Tobias Pietzsch, Stephan Preibisch, Stephan Saalfeld,
  * John Bogovic, Albert Cardona, Barry DeZonia, Christian Dietz, Jan Funke,
  * Aivar Grislis, Jonathan Hale, Grant Harris, Stefan Helfrich, Mark Hiner,
  * Martin Horn, Steffen Jaensch, Lee Kamentsky, Larry Lindsey, Melissa Linkert,
@@ -59,7 +59,7 @@ public interface BufferAccess< A > extends VolatileAccess, ArrayDataAccess< A >
 	 * @return true if the Buffer is direct.
 	 * @see Buffer#isDirect()
 	 */
-	public boolean isDirect();
+	boolean isDirect();
 
 	/**
 	 * Determine if data can be read only and not written
@@ -67,14 +67,15 @@ public interface BufferAccess< A > extends VolatileAccess, ArrayDataAccess< A >
 	 * @return
 	 * @see Buffer#isReadOnly()
 	 */
-	public boolean isReadOnly();
+	boolean isReadOnly();
 
 	/**
-	 * Number of bytes for this type
+	 * Get number of bytes for one entity in this {@code BufferAccess}.
+	 * This usually retrieves a static field.
 	 *
-	 * @return
+	 * @return number of bytes
 	 */
-	public int getNumBytesPerEntity();
+	int getNumBytesPerEntity();
 
 	/**
 	 * Create a new instance from a ByteBuffer
@@ -83,6 +84,6 @@ public interface BufferAccess< A > extends VolatileAccess, ArrayDataAccess< A >
 	 * @param isValid
 	 * @return
 	 */
-	public A newInstance( ByteBuffer buffer, boolean isValid );
+	A newInstance( ByteBuffer buffer, boolean isValid );
 
 }

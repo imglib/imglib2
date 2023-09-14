@@ -2,7 +2,7 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2022 Tobias Pietzsch, Stephan Preibisch, Stephan Saalfeld,
+ * Copyright (C) 2009 - 2023 Tobias Pietzsch, Stephan Preibisch, Stephan Saalfeld,
  * John Bogovic, Albert Cardona, Barry DeZonia, Christian Dietz, Jan Funke,
  * Aivar Grislis, Jonathan Hale, Grant Harris, Stefan Helfrich, Mark Hiner,
  * Martin Horn, Steffen Jaensch, Lee Kamentsky, Larry Lindsey, Melissa Linkert,
@@ -47,22 +47,28 @@ public interface Iterator
 {
 	/**
 	 * Move steps &times; forward.
-	 * 
+	 * <p>
+	 * Highly recommended to override this with a more efficient version.
+	 *
 	 * @param steps
 	 *            number of steps to move forward
 	 */
-	public void jumpFwd( long steps );
+	default void jumpFwd( long steps )
+	{
+		for ( long j = 0; j < steps; ++j )
+			fwd();
+	};
 
 	/**
 	 * Move forward.
 	 */
-	public void fwd();
+	void fwd();
 
 	/**
 	 * Reset the {@link Iterator}, that is put it to where it would be if newly
 	 * created.
 	 */
-	public void reset();
+	void reset();
 
 	/**
 	 * Returns true if another step forward is possible.
@@ -70,5 +76,5 @@ public interface Iterator
 	 * @return true, if there is another step forward is possible, otherwise
 	 *         false
 	 */
-	public boolean hasNext();
+	boolean hasNext();
 }

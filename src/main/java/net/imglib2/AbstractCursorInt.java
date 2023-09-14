@@ -2,7 +2,7 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2022 Tobias Pietzsch, Stephan Preibisch, Stephan Saalfeld,
+ * Copyright (C) 2009 - 2023 Tobias Pietzsch, Stephan Preibisch, Stephan Saalfeld,
  * John Bogovic, Albert Cardona, Barry DeZonia, Christian Dietz, Jan Funke,
  * Aivar Grislis, Jonathan Hale, Grant Harris, Stefan Helfrich, Mark Hiner,
  * Martin Horn, Steffen Jaensch, Lee Kamentsky, Larry Lindsey, Melissa Linkert,
@@ -74,31 +74,6 @@ public abstract class AbstractCursorInt< T > extends AbstractEuclideanSpace impl
 	}
 
 	@Override
-	public void remove()
-	{
-		// NB: no action.
-	}
-
-	@Override
-	public T next()
-	{
-		fwd();
-		return get();
-	}
-
-	/**
-	 * Highly recommended to override this with a more efficient version.
-	 * 
-	 * @param steps
-	 */
-	@Override
-	public void jumpFwd( final long steps )
-	{
-		for ( long j = 0; j < steps; ++j )
-			fwd();
-	}
-
-	@Override
 	public void localize( final float[] pos )
 	{
 		localize( this.tmp );
@@ -149,7 +124,4 @@ public abstract class AbstractCursorInt< T > extends AbstractEuclideanSpace impl
 
 	@Override
 	abstract public AbstractCursorInt< T > copy();
-
-	@Override
-	abstract public AbstractCursorInt< T > copyCursor();
 }

@@ -2,7 +2,7 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2022 Tobias Pietzsch, Stephan Preibisch, Stephan Saalfeld,
+ * Copyright (C) 2009 - 2023 Tobias Pietzsch, Stephan Preibisch, Stephan Saalfeld,
  * John Bogovic, Albert Cardona, Barry DeZonia, Christian Dietz, Jan Funke,
  * Aivar Grislis, Jonathan Hale, Grant Harris, Stefan Helfrich, Mark Hiner,
  * Martin Horn, Steffen Jaensch, Lee Kamentsky, Larry Lindsey, Melissa Linkert,
@@ -112,7 +112,7 @@ public class KNearestNeighborSearchOnIterableRealInterval< T > implements KNeare
 			int i = k - 1;
 			if ( squareDistances[ i ] > squareDistance )
 			{
-				final RealCursor< T > candidate = cursor.copyCursor();
+				final RealCursor< T > candidate = cursor.copy();
 
 				for ( int j = i - 1; i > 0 && squareDistances[ j ] > squareDistance; --i, --j )
 				{

@@ -2,7 +2,7 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2022 Tobias Pietzsch, Stephan Preibisch, Stephan Saalfeld,
+ * Copyright (C) 2009 - 2023 Tobias Pietzsch, Stephan Preibisch, Stephan Saalfeld,
  * John Bogovic, Albert Cardona, Barry DeZonia, Christian Dietz, Jan Funke,
  * Aivar Grislis, Jonathan Hale, Grant Harris, Stefan Helfrich, Mark Hiner,
  * Martin Horn, Steffen Jaensch, Lee Kamentsky, Larry Lindsey, Melissa Linkert,
@@ -66,5 +66,5 @@ abstract public class AbstractConvertedRealRandomAccessible< A, B > implements R
 	abstract public AbstractConvertedRealRandomAccess< A, B > realRandomAccess();
 
 	@Override
-	abstract public AbstractConvertedRealRandomAccess< A, B > realRandomAccess( final RealInterval interval );
+	abstract public AbstractConvertedRealRandomAccess< A, B > realRandomAccess( RealInterval interval );
 }

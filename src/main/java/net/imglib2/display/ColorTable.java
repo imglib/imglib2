@@ -2,7 +2,7 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2022 Tobias Pietzsch, Stephan Preibisch, Stephan Saalfeld,
+ * Copyright (C) 2009 - 2023 Tobias Pietzsch, Stephan Preibisch, Stephan Saalfeld,
  * John Bogovic, Albert Cardona, Barry DeZonia, Christian Dietz, Jan Funke,
  * Aivar Grislis, Jonathan Hale, Grant Harris, Stefan Helfrich, Mark Hiner,
  * Martin Horn, Steffen Jaensch, Lee Kamentsky, Larry Lindsey, Melissa Linkert,
@@ -40,26 +40,26 @@ package net.imglib2.display;
 public interface ColorTable
 {
 	// TODO ARG What about C,M,Y,K?
-	public static final int RED = 0;
+	int RED = 0;
 
-	public static final int GREEN = 1;
+	int GREEN = 1;
 
-	public static final int BLUE = 2;
+	int BLUE = 2;
 
-	public static final int ALPHA = 3;
+	int ALPHA = 3;
 
-	public int lookupARGB( double min, double max, double value );
+	int lookupARGB( double min, double max, double value );
 
 	/**
 	 * Gets the number of color components in the table (typically 3 for RGB or
 	 * 4 for RGBA).
 	 */
-	public int getComponentCount();
+	int getComponentCount();
 
 	/**
 	 * Gets the number of elements for each color component in the table.
 	 */
-	public int getLength();
+	int getLength();
 
 	/**
 	 * Gets an individual value from the color table.
@@ -70,7 +70,7 @@ public interface ColorTable
 	 *            The index into the color table.
 	 * @return The value of the table at the specified position.
 	 */
-	public int get( final int comp, final int bin );
+	int get( int comp, int bin );
 
 	/**
 	 * Gets an individual value from a color table with given number of bins.
@@ -83,5 +83,5 @@ public interface ColorTable
 	 *            The index into the color table.
 	 * @return The value of the table at the specified position.
 	 */
-	public int getResampled( final int comp, final int bins, final int bin );
+	int getResampled( int comp, int bins, int bin );
 }

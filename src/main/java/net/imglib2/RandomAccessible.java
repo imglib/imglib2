@@ -2,7 +2,7 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2022 Tobias Pietzsch, Stephan Preibisch, Stephan Saalfeld,
+ * Copyright (C) 2009 - 2023 Tobias Pietzsch, Stephan Preibisch, Stephan Saalfeld,
  * John Bogovic, Albert Cardona, Barry DeZonia, Christian Dietz, Jan Funke,
  * Aivar Grislis, Jonathan Hale, Grant Harris, Stefan Helfrich, Mark Hiner,
  * Martin Horn, Steffen Jaensch, Lee Kamentsky, Larry Lindsey, Melissa Linkert,
@@ -107,7 +107,7 @@ public interface RandomAccessible< T > extends EuclideanSpace
 	 *
 	 * @return random access sampler
 	 */
-	public RandomAccess< T > randomAccess();
+	RandomAccess< T > randomAccess();
 
 	/**
 	 * Create a random access sampler for integer coordinates.
@@ -125,7 +125,7 @@ public interface RandomAccessible< T > extends EuclideanSpace
 	 *
 	 * @return random access sampler
 	 */
-	public RandomAccess< T > randomAccess( Interval interval );
+	RandomAccess< T > randomAccess( Interval interval );
 
 	/**
 	 * Convenience method to query a {@link RandomAccessible} for the value at a
@@ -137,10 +137,10 @@ public interface RandomAccessible< T > extends EuclideanSpace
 	 * <p>
 	 * This method is a short cut for {@code randomAccess().setPositionAndGet( position );}
 	 *
-	 * @param position
+	 * @param position, length must be &ge; {@link #numDimensions()}
 	 * @return value of the the {@link RandomAccessible} at {@code position}.
 	 */
-	default T getAt( long... position )
+	default T getAt( final long... position )
 	{
 		return randomAccess().setPositionAndGet( position );
 	}
@@ -155,10 +155,10 @@ public interface RandomAccessible< T > extends EuclideanSpace
 	 * <p>
 	 * This method is a short cut for {@code randomAccess().setPositionAndGet( position );}
 	 *
-	 * @param position
+	 * @param position, length must be &ge; {@link #numDimensions()}
 	 * @return value of the the {@link RandomAccessible} at {@code position}.
 	 */
-	default T getAt( int... position )
+	default T getAt( final int... position )
 	{
 		return randomAccess().setPositionAndGet( position );
 	}
@@ -173,10 +173,10 @@ public interface RandomAccessible< T > extends EuclideanSpace
 	 * <p>
 	 * This method is a short cut for {@code randomAccess().setPositionAndGet( position );}
 	 *
-	 * @param position
+	 * @param position, {@link Localizable#numDimensions()} must be &ge; {@link #numDimensions()}
 	 * @return value of the the {@link RandomAccessible} at {@code position}.
 	 */
-	default T getAt( Localizable position )
+	default T getAt( final Localizable position )
 	{
 		return randomAccess().setPositionAndGet( position );
 	}

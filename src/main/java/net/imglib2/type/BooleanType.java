@@ -2,7 +2,7 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2022 Tobias Pietzsch, Stephan Preibisch, Stephan Saalfeld,
+ * Copyright (C) 2009 - 2023 Tobias Pietzsch, Stephan Preibisch, Stephan Saalfeld,
  * John Bogovic, Albert Cardona, Barry DeZonia, Christian Dietz, Jan Funke,
  * Aivar Grislis, Jonathan Hale, Grant Harris, Stefan Helfrich, Mark Hiner,
  * Martin Horn, Steffen Jaensch, Lee Kamentsky, Larry Lindsey, Melissa Linkert,
@@ -44,16 +44,16 @@ import net.imglib2.type.numeric.RealType;
  */
 public interface BooleanType< T extends BooleanType< T > > extends Type< T >, RealType< T >
 {
-	public boolean get();
+	boolean get();
 
-	public void set( boolean value );
+	void set( boolean value );
 
-	public void and( T c );
+	void and( T c );
 
-	public void or( T c );
+	void or( T c );
 
-	public void xor( T c );
+	void xor( T c );
 
-	public void not();
+	void not();
 
 }

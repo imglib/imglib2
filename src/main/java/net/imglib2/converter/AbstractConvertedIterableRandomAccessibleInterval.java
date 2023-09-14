@@ -2,7 +2,7 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2022 Tobias Pietzsch, Stephan Preibisch, Stephan Saalfeld,
+ * Copyright (C) 2009 - 2023 Tobias Pietzsch, Stephan Preibisch, Stephan Saalfeld,
  * John Bogovic, Albert Cardona, Barry DeZonia, Christian Dietz, Jan Funke,
  * Aivar Grislis, Jonathan Hale, Grant Harris, Stefan Helfrich, Mark Hiner,
  * Martin Horn, Steffen Jaensch, Lee Kamentsky, Larry Lindsey, Melissa Linkert,
@@ -58,7 +58,7 @@ abstract public class AbstractConvertedIterableRandomAccessibleInterval< A, B, S
 	abstract public AbstractConvertedRandomAccess< A, B > randomAccess();
 
 	@Override
-	abstract public AbstractConvertedRandomAccess< A, B > randomAccess( final Interval interval );
+	abstract public AbstractConvertedRandomAccess< A, B > randomAccess( Interval interval );
 
 	@Override
 	public long size()
@@ -70,18 +70,6 @@ abstract public class AbstractConvertedIterableRandomAccessibleInterval< A, B, S
 	public Object iterationOrder()
 	{
 		return sourceInterval.iterationOrder();
-	}
-
-	@Override
-	public Iterator< B > iterator()
-	{
-		return cursor();
-	}
-
-	@Override
-	public B firstElement()
-	{
-		return cursor().next();
 	}
 
 	@Override

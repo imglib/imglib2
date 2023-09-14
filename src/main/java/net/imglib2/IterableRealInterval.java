@@ -2,7 +2,7 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2022 Tobias Pietzsch, Stephan Preibisch, Stephan Saalfeld,
+ * Copyright (C) 2009 - 2023 Tobias Pietzsch, Stephan Preibisch, Stephan Saalfeld,
  * John Bogovic, Albert Cardona, Barry DeZonia, Christian Dietz, Jan Funke,
  * Aivar Grislis, Jonathan Hale, Grant Harris, Stefan Helfrich, Mark Hiner,
  * Martin Horn, Steffen Jaensch, Lee Kamentsky, Larry Lindsey, Melissa Linkert,
@@ -68,7 +68,7 @@ public interface IterableRealInterval< T > extends RealInterval, Iterable< T >
 	 *
 	 * @return fast iterating iterator
 	 */
-	public RealCursor< T > cursor();
+	RealCursor< T > cursor();
 
 	/**
 	 * <p>
@@ -83,7 +83,7 @@ public interface IterableRealInterval< T > extends RealInterval, Iterable< T >
 	 *
 	 * @return fast localizing iterator
 	 */
-	public RealCursor< T > localizingCursor();
+	RealCursor< T > localizingCursor();
 
 	/**
 	 * <p>
@@ -93,12 +93,12 @@ public interface IterableRealInterval< T > extends RealInterval, Iterable< T >
 	 *
 	 * @return number of elements
 	 */
-	public long size();
+	long size();
 
 	/**
 	 * Get the first element of this {@link IterableRealInterval}. This is a
 	 * shortcut for <code>cursor().next()</code>.
-	 *
+	 * <p>
 	 * This can be used to create a new variable of type T using
 	 * <code>firstElement().createVariable()</code>, which is useful in generic
 	 * methods to store temporary results, e.g., a running sum over pixels in
@@ -106,7 +106,10 @@ public interface IterableRealInterval< T > extends RealInterval, Iterable< T >
 	 *
 	 * @return the first element in iteration order.
 	 */
-	public T firstElement();
+	default T firstElement() // TODO: fix places where it is not necessary to implement this anymore
+	{
+		return iterator().next();
+	}
 
 	/**
 	 * Returns the iteration order of this {@link IterableRealInterval}. If the
@@ -122,5 +125,11 @@ public interface IterableRealInterval< T > extends RealInterval, Iterable< T >
 	 *
 	 * @return the iteration order of this {@link IterableRealInterval}.
 	 */
-	public Object iterationOrder();
+	Object iterationOrder();
+
+	@Override
+	default java.util.Iterator< T > iterator() // TODO: fix places where it is not necessary to implement this anymore
+	{
+		return cursor();
+	}
 }

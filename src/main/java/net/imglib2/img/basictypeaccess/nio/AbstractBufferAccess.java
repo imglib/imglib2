@@ -2,7 +2,7 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2022 Tobias Pietzsch, Stephan Preibisch, Stephan Saalfeld,
+ * Copyright (C) 2009 - 2023 Tobias Pietzsch, Stephan Preibisch, Stephan Saalfeld,
  * John Bogovic, Albert Cardona, Barry DeZonia, Christian Dietz, Jan Funke,
  * Aivar Grislis, Jonathan Hale, Grant Harris, Stefan Helfrich, Mark Hiner,
  * Martin Horn, Steffen Jaensch, Lee Kamentsky, Larry Lindsey, Melissa Linkert,
@@ -205,14 +205,6 @@ public abstract class AbstractBufferAccess< A extends AbstractBufferAccess< A, B
 	/*
 	 * Abstract methods
 	 */
-
-	/**
-	 * Get number of bytes for a specific primitive type.
-	 *
-	 * This usually retrieves a static field.
-	 */
-	@Override
-	public abstract int getNumBytesPerEntity();
 
 	/**
 	 * Create a new instance of this class given a Buffer of the same type.

@@ -2,7 +2,7 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2022 Tobias Pietzsch, Stephan Preibisch, Stephan Saalfeld,
+ * Copyright (C) 2009 - 2023 Tobias Pietzsch, Stephan Preibisch, Stephan Saalfeld,
  * John Bogovic, Albert Cardona, Barry DeZonia, Christian Dietz, Jan Funke,
  * Aivar Grislis, Jonathan Hale, Grant Harris, Stefan Helfrich, Mark Hiner,
  * Martin Horn, Steffen Jaensch, Lee Kamentsky, Larry Lindsey, Melissa Linkert,
@@ -34,6 +34,7 @@
 
 package net.imglib2.transform.integer;
 
+import java.util.Arrays;
 import net.imglib2.Localizable;
 import net.imglib2.Positionable;
 import net.imglib2.concatenate.Concatenable;
@@ -505,5 +506,17 @@ public class MixedTransform extends AbstractMixedTransform implements Concatenab
 			if ( !sourceMapped[ d ] ) { return false; }
 		}
 		return true;
+	}
+
+	@Override
+	public String toString()
+	{
+		return "MixedTransform{" +
+				numSourceDimensions + "->" + numTargetDimensions +
+				", component=" + Arrays.toString( component ) +
+				", invert=" + Arrays.toString( invert ) +
+				", zero=" + Arrays.toString( zero ) +
+				", translation=" + Arrays.toString( translation ) +
+				'}';
 	}
 }

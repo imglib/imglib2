@@ -2,7 +2,7 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2022 Tobias Pietzsch, Stephan Preibisch, Stephan Saalfeld,
+ * Copyright (C) 2009 - 2023 Tobias Pietzsch, Stephan Preibisch, Stephan Saalfeld,
  * John Bogovic, Albert Cardona, Barry DeZonia, Christian Dietz, Jan Funke,
  * Aivar Grislis, Jonathan Hale, Grant Harris, Stefan Helfrich, Mark Hiner,
  * Martin Horn, Steffen Jaensch, Lee Kamentsky, Larry Lindsey, Melissa Linkert,
@@ -33,6 +33,9 @@
  */
 
 package net.imglib2;
+
+import java.util.NoSuchElementException;
+import java.util.function.Consumer;
 
 /**
  * A RealCursor iterates over a set of RealLocalizable elements, for example
@@ -83,7 +86,29 @@ public interface RealCursor< T > extends RealLocalizable, Sampler< T >, Iterator
 	// we must avoid doing so for now. For details, see:
 	// http://bugs.sun.com/view_bug.do?bug_id=6656332
 	// The bug is fixed in JDK7.
-	public RealCursor< T > copyCursor();
-//@Override
-//public RealCursor< T > copy();
+	/**
+	 * @deprecated Use {@link #copy()} instead
+	 */
+	@Deprecated
+	default RealCursor< T > copyCursor()
+	{
+		return copy();
+	}
+
+	@Override
+	RealCursor< T > copy();
+
+	/**
+	 * Default implementation, calls {@link #fwd()} then {@link #get()}.
+	 * <p>
+	 * Note, that {@code hasNext()} is not checked before {@code fwd()}.
+	 * If such a check is desired it should be implemented in {@code fwd()}
+	 * (throwing {@code NoSuchElementException}).
+	 */
+	@Override
+	default T next()
+	{
+		fwd();
+		return get();
+	}
 }

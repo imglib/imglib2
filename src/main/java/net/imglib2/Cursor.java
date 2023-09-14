@@ -2,7 +2,7 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2022 Tobias Pietzsch, Stephan Preibisch, Stephan Saalfeld,
+ * Copyright (C) 2009 - 2023 Tobias Pietzsch, Stephan Preibisch, Stephan Saalfeld,
  * John Bogovic, Albert Cardona, Barry DeZonia, Christian Dietz, Jan Funke,
  * Aivar Grislis, Jonathan Hale, Grant Harris, Stefan Helfrich, Mark Hiner,
  * Martin Horn, Steffen Jaensch, Lee Kamentsky, Larry Lindsey, Melissa Linkert,
@@ -83,8 +83,16 @@ public interface Cursor< T > extends RealCursor< T >, Localizable
 	// we must avoid doing so for now. For details, see:
 	// http://bugs.sun.com/view_bug.do?bug_id=6656332
 	// The bug is fixed in JDK7.
+	/**
+	 * @deprecated Use {@link #copy()} instead
+	 */
+	@Deprecated
 	@Override
-	public Cursor< T > copyCursor();
-//	@Override
-//	public Cursor< T > copy();
+	default Cursor< T > copyCursor()
+	{
+		return copy();
+	}
+
+	@Override
+	Cursor< T > copy();
 }

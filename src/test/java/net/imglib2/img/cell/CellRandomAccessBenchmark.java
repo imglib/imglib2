@@ -2,7 +2,7 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2022 Tobias Pietzsch, Stephan Preibisch, Stephan Saalfeld,
+ * Copyright (C) 2009 - 2023 Tobias Pietzsch, Stephan Preibisch, Stephan Saalfeld,
  * John Bogovic, Albert Cardona, Barry DeZonia, Christian Dietz, Jan Funke,
  * Aivar Grislis, Jonathan Hale, Grant Harris, Stefan Helfrich, Mark Hiner,
  * Martin Horn, Steffen Jaensch, Lee Kamentsky, Larry Lindsey, Melissa Linkert,
@@ -42,6 +42,7 @@ import net.imglib2.img.Img;
 import net.imglib2.type.numeric.integer.IntType;
 import net.imglib2.util.BenchmarkHelper;
 import net.imglib2.util.IntervalIndexer;
+import net.imglib2.view.IterableRandomAccessibleInterval;
 
 /**
  * TODO
@@ -102,6 +103,19 @@ public class CellRandomAccessBenchmark
 		}
 	}
 
+	/**
+	 * Fill intImg (a CellContainer with 40x40x40 cells) with data using flat
+	 * array iteration order.
+	 */
+	public void fillImage2()
+	{
+		final Cursor< IntType > c = new IterableRandomAccessibleInterval<>( intImg ).cursor();
+		for ( int i = 0; i < numValues; ++i )
+		{
+			c.next().set( intData[ i ] );
+		}
+	}
+
 	public void copyWithSourceIteration( final Img< IntType > srcImg, final Img< IntType > dstImg )
 	{
 		final long[] pos = new long[ dimensions.length ];
@@ -122,50 +136,21 @@ public class CellRandomAccessBenchmark
 		randomAccessBenchmark.createSourceData();
 
 		System.out.println( "benchmarking fill" );
-		BenchmarkHelper.benchmarkAndPrint( 50, true, new Runnable()
-		{
-			@Override
-			public void run()
-			{
-				randomAccessBenchmark.fillImage();
-			}
-		} );
-		randomAccessBenchmark.intData = null;
+		BenchmarkHelper.benchmarkAndPrint( 20, false, randomAccessBenchmark::fillImage );
+
+		System.out.println( "benchmarking fill 2" );
+		BenchmarkHelper.benchmarkAndPrint( 20, false, randomAccessBenchmark::fillImage2 );
 
 		randomAccessBenchmark.intImgCopy = new CellImgFactory<>( new IntType(), 32 ).create( randomAccessBenchmark.dimensions );
 		System.out.println( "benchmarking copy to smaller" );
-		BenchmarkHelper.benchmarkAndPrint( 20, false, new Runnable()
-		{
-			@Override
-			public void run()
-			{
-				randomAccessBenchmark.copyWithSourceIteration( randomAccessBenchmark.intImg, randomAccessBenchmark.intImgCopy );
-			}
-		} );
-		randomAccessBenchmark.intImgCopy = null;
+		BenchmarkHelper.benchmarkAndPrint( 20, false, () -> randomAccessBenchmark.copyWithSourceIteration( randomAccessBenchmark.intImg, randomAccessBenchmark.intImgCopy ) );
 
 		randomAccessBenchmark.intImgCopy = new CellImgFactory<>( new IntType(), 50 ).create( randomAccessBenchmark.dimensions );
 		System.out.println( "benchmarking copy to larger" );
-		BenchmarkHelper.benchmarkAndPrint( 20, false, new Runnable()
-		{
-			@Override
-			public void run()
-			{
-				randomAccessBenchmark.copyWithSourceIteration( randomAccessBenchmark.intImg, randomAccessBenchmark.intImgCopy );
-			}
-		} );
-		randomAccessBenchmark.intImgCopy = null;
+		BenchmarkHelper.benchmarkAndPrint( 20, false, () -> randomAccessBenchmark.copyWithSourceIteration( randomAccessBenchmark.intImg, randomAccessBenchmark.intImgCopy ) );
 
 		randomAccessBenchmark.intImgCopy = new CellImgFactory<>( new IntType(), 32, 64, 16 ).create( randomAccessBenchmark.dimensions );
 		System.out.println( "benchmarking copy to mixed" );
-		BenchmarkHelper.benchmarkAndPrint( 20, false, new Runnable()
-		{
-			@Override
-			public void run()
-			{
-				randomAccessBenchmark.copyWithSourceIteration( randomAccessBenchmark.intImg, randomAccessBenchmark.intImgCopy );
-			}
-		} );
-		randomAccessBenchmark.intImgCopy = null;
+		BenchmarkHelper.benchmarkAndPrint( 20, false, () -> randomAccessBenchmark.copyWithSourceIteration( randomAccessBenchmark.intImg, randomAccessBenchmark.intImgCopy ) );
 	}
 }
