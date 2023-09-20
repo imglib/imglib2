@@ -8,9 +8,8 @@ import org.junit.Test;
 import net.imglib2.RealRandomAccess;
 import net.imglib2.RealRandomAccessible;
 import net.imglib2.position.FunctionRealRandomAccessible;
-import net.imglib2.type.numeric.integer.IntType;
 import net.imglib2.type.numeric.real.DoubleType;
-import net.imglib2.util.ConstantUtils;
+import net.imglib2.view.StackView.StackAccessMode;
 
 public class RealStackCompositeTest
 {
@@ -48,46 +47,57 @@ public class RealStackCompositeTest
 	@Test
 	public final void test1d()
 	{
-		RealStackCompositeView<DoubleType> rimg = new RealStackCompositeView<>( sources );
+		test1dHelper("default", new RealStackCompositeView<>(sources));
+		test1dHelper("moveAll", new RealStackCompositeView<>(sources, StackAccessMode.MOVE_ALL_SLICE_ACCESSES));
+	}
+
+	protected final void test1dHelper( String accessMode, RealStackCompositeView<DoubleType> rimg )
+	{
 		assertEquals( "ndims", 1, rimg.numDimensions() );
 
-		RealRandomAccess<Composite<DoubleType>> access = rimg.realRandomAccess();
+		final RealRandomAccess<Composite<DoubleType>> access = rimg.realRandomAccess();
 		for( int i = 0; i < N; i++ )
-			assertEquals( 0, access.get().get( i ).get(), EPS );
+			assertEquals( accessMode, 0, access.get().get( i ).get(), EPS );
 
 		// test setPosition
 		double p = 10;
 		access.setPosition( p, 0 );
 		for( int i = 0; i < N; i++ )
-			assertEquals( i * p, access.get().get( i ).get(), EPS );
+			assertEquals( accessMode, i * p, access.get().get( i ).get(), EPS );
+
+		// test setPosition 2
+		p = 4;
+		access.setPosition( p, 0 );
+		for( int i = 0; i < N; i++ )
+			assertEquals( accessMode, i * p, access.get().get( i ).get(), EPS );
 
 		// test fwd
 		p++;
 		access.fwd( 0 );
 		for( int i = 0; i < N; i++ )
-			assertEquals( i * p, access.get().get( i ).get(), EPS );
+			assertEquals( accessMode, i * p, access.get().get( i ).get(), EPS );
 
 		// test move
 		p -= 2;
 		access.move( -2, 0 );
 		for( int i = 0; i < N; i++ )
-			assertEquals( i * p, access.get().get( i ).get(), EPS );
+			assertEquals( accessMode, i * p, access.get().get( i ).get(), EPS );
 
 	}
 
 	@Test
 	public final void test2d()
 	{
-		RealStackCompositeView<DoubleType> rimg = new RealStackCompositeView<>( sources2 );
+		final RealStackCompositeView<DoubleType> rimg = new RealStackCompositeView<>( sources2 );
 		assertEquals( "ndims", 2, rimg.numDimensions() );
 
-		RealRandomAccess<Composite<DoubleType>> access = rimg.realRandomAccess();
+		final RealRandomAccess<Composite<DoubleType>> access = rimg.realRandomAccess();
 		for( int i = 0; i < N; i++ )
 			assertEquals( 0, access.get().get( i ).get(), EPS );
 
 		double x = 10;
 		double y = 2;
-		double[] pa = new double[]{x,y};
+		final double[] pa = new double[]{x,y};
 
 		// test setPosition
 		access.setPosition( x, 0 );
