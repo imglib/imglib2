@@ -34,6 +34,10 @@
 
 package net.imglib2;
 
+import java.util.Spliterator;
+import net.imglib2.stream.CursorSpliterator;
+import net.imglib2.stream.LocalizableSpliterator;
+
 /**
  * An {@link IterableRealInterval} whose elements are located at integer
  * coordinates.
@@ -59,4 +63,10 @@ public interface IterableInterval< T > extends IterableRealInterval< T >, Interv
 
 	@Override
 	Cursor< T > localizingCursor();
+
+	@Override
+	default LocalizableSpliterator< T > spliterator()
+	{
+		return new CursorSpliterator<>( cursor(),0, size(), Spliterator.ORDERED | Spliterator.NONNULL );
+	}
 }

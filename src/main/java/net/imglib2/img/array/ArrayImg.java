@@ -235,11 +235,11 @@ public class ArrayImg< T extends NativeType< T >, A extends DataAccess > extends
 		return new FlatIterationOrder( interval );
 	}
 
-	@Override
-	public Spliterator< T > spliterator()
-	{
-		return new ArraySpliterator<>( this, 0, ( int ) size() );
-	}
+//	@Override
+//	public Spliterator< T > spliterator()
+//	{
+//		return new ArraySpliterator<>( this, 0, ( int ) size() );
+//	}
 
 	/**
 	 * Deprecated constructor for binary compatibility when A was not bounded by
