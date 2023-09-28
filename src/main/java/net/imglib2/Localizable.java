@@ -96,6 +96,12 @@ public interface Localizable extends RealLocalizable
 		}
 	}
 
+	@Override
+	default void localize( final RealPositionable position )
+	{
+		localize( ( Positionable ) position );
+	}
+
 	/**
 	 * Return the current position in a given dimension.
 	 *
