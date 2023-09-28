@@ -38,6 +38,7 @@ import java.util.Spliterator;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 import net.imglib2.stream.RealCursorSpliterator;
+import net.imglib2.stream.RealLocalizableSpliterator;
 
 /**
  * <p>
@@ -149,7 +150,7 @@ public interface IterableRealInterval< T > extends RealInterval, Iterable< T >
 	}
 
 	@Override
-	default Spliterator< T > spliterator()
+	default RealLocalizableSpliterator< T > spliterator()
 	{
 		return new RealCursorSpliterator<>( cursor(),0, size(), Spliterator.ORDERED | Spliterator.NONNULL );
 	}

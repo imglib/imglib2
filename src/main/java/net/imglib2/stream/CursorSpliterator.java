@@ -2,7 +2,9 @@ package net.imglib2.stream;
 
 import java.util.Spliterator;
 import java.util.function.Consumer;
-import net.imglib2.RealCursor;
+import net.imglib2.Cursor;
+import net.imglib2.Point;
+import net.imglib2.Positionable;
 import net.imglib2.RealPoint;
 import net.imglib2.RealPositionable;
 
@@ -11,12 +13,12 @@ import net.imglib2.RealPositionable;
  *
  * @param <T> the type of elements returned by this Spliterator, and the pixel type of the underlying cursor.
  */
-public class RealCursorSpliterator< T > implements RealLocalizableSpliterator< T >
+public class CursorSpliterator< T > implements LocalizableSpliterator< T >
 {
 	/**
 	 * The underlying cursor, positioned such that {@code cursor.next()} yields the element at {@code index}.
 	 */
-	private final RealCursor< T > cursor;
+	private final Cursor< T > cursor;
 
 	/**
 	 * The current index, modified on advance/split.
@@ -45,7 +47,7 @@ public class RealCursorSpliterator< T > implements RealLocalizableSpliterator< T
 	 * @param additionalCharacteristics
 	 * 		additional characteristics besides {@code SIZED | SUBSIZED}
 	 */
-	public RealCursorSpliterator( RealCursor< T > cursor, long origin, long fence, int additionalCharacteristics )
+	public CursorSpliterator( Cursor< T > cursor, long origin, long fence, int additionalCharacteristics )
 	{
 		this.cursor = cursor;
 		this.index = origin;
@@ -80,14 +82,14 @@ public class RealCursorSpliterator< T > implements RealLocalizableSpliterator< T
 	}
 
 	@Override
-	public RealCursorSpliterator< T > trySplit()
+	public CursorSpliterator< T > trySplit()
 	{
 		long lo = index, mid = ( lo + fence ) >>> 1;
 		if ( lo >= mid )
 			return null;
 		else
 		{
-			final RealCursorSpliterator< T > prefix = new RealCursorSpliterator<>( cursor.copy(), lo, mid, characteristics );
+			final CursorSpliterator< T > prefix = new CursorSpliterator<>( cursor.copy(), lo, mid, characteristics );
 			cursor.jumpFwd( mid - lo );
 			index = mid;
 			return prefix;
@@ -117,9 +119,9 @@ public class RealCursorSpliterator< T > implements RealLocalizableSpliterator< T
 	}
 
 	@Override
-	public RealCursorSpliterator< T > copy()
+	public CursorSpliterator< T > copy()
 	{
-		return new RealCursorSpliterator<>( cursor.copy(), index, fence, characteristics );
+		return new CursorSpliterator<>( cursor.copy(), index, fence, characteristics );
 	}
 
 
@@ -172,5 +174,51 @@ public class RealCursorSpliterator< T > implements RealLocalizableSpliterator< T
 	public double getDoublePosition( final int d )
 	{
 		return cursor.getDoublePosition( d );
+	}
+
+
+	// -----------------------------------------------------------
+	//   Localizable
+
+	@Override
+	public void localize( final int[] position )
+	{
+		cursor.localize( position );
+	}
+
+	@Override
+	public void localize( final long[] position )
+	{
+		cursor.localize( position );
+	}
+
+	@Override
+	public void localize( final Positionable position )
+	{
+		cursor.localize( position );
+	}
+
+	@Override
+	public int getIntPosition( final int d )
+	{
+		return cursor.getIntPosition( d );
+	}
+
+	@Override
+	public long[] positionAsLongArray()
+	{
+		return cursor.positionAsLongArray();
+	}
+
+	@Override
+	public Point positionAsPoint()
+	{
+		return cursor.positionAsPoint();
+	}
+
+	@Override
+	public long getLongPosition( final int d )
+	{
+		return cursor.getLongPosition( d );
 	}
 }
