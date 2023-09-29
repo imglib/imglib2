@@ -34,29 +34,33 @@
 
 package net.imglib2.img.array;
 
-import java.util.Spliterator;
 import java.util.function.Consumer;
+import net.imglib2.Positionable;
+import net.imglib2.RealPositionable;
+import net.imglib2.stream.LocalizableSpliterator;
 import net.imglib2.type.Index;
 import net.imglib2.type.NativeType;
+import net.imglib2.util.IntervalIndexer;
 
-public class ArraySpliterator< T extends NativeType< T > > implements Spliterator< T >
+class ArraySpliterator< T extends NativeType< T > > implements LocalizableSpliterator< T >
 {
 	private final ArrayImg< T, ? > img;
 
 	private final T type;
 
-	private final Index typeIndex;
+	private final Index index;
 
 	private final int fence;  // one past last index
 
-	ArraySpliterator( final ArrayImg< T, ? > img, int origin, int fence )
+	ArraySpliterator( ArrayImg< T, ? > img, int origin, int fence )
 	{
 		this.img = img;
 		type = img.createLinkedType();
-		type.updateContainer( this );
-		typeIndex = type.index();
-		typeIndex.set( origin );
+		index = type.index();
 		this.fence = fence;
+
+		type.updateContainer( this );
+		index.set( origin - 1 );
 	}
 
 	@Override
@@ -64,25 +68,50 @@ public class ArraySpliterator< T extends NativeType< T > > implements Spliterato
 	{
 		if ( action == null )
 			throw new NullPointerException();
-		if ( typeIndex.get() < fence )
+		if ( index.get() < fence - 1 )
 		{
+			index.inc();
 			action.accept( type );
-			typeIndex.inc();
 			return true;
 		}
 		return false;
 	}
 
 	@Override
+	public boolean tryAdvance()
+	{
+		if ( index.get() < fence - 1 )
+		{
+			index.inc();
+			return true;
+		}
+		return false;
+	}
+
+	@Override
+	public void forEachRemaining( final Consumer< ? super T > action )
+	{
+		if ( action == null )
+			throw new NullPointerException();
+
+		final int len = fence - index.get() - 1;
+		for ( int i = 0; i < len; i++ )
+		{
+			index.inc();
+			action.accept( type );
+		}
+	}
+
+	@Override
 	public ArraySpliterator< T > trySplit()
 	{
-		int lo = typeIndex.get(), mid = ( lo + fence ) >>> 1;
+		int lo = index.get() + 1, mid = ( lo + fence ) >>> 1;
 		if ( lo >= mid )
 			return null;
 		else
 		{
 			final ArraySpliterator< T > prefix = new ArraySpliterator<>( img, lo, mid );
-			typeIndex.set( mid );
+			index.set( mid - 1 );
 			return prefix;
 		}
 	}
@@ -90,12 +119,98 @@ public class ArraySpliterator< T extends NativeType< T > > implements Spliterato
 	@Override
 	public long estimateSize()
 	{
-		return fence - typeIndex.get();
+		return fence - index.get() - 1;
 	}
 
 	@Override
 	public int characteristics()
 	{
 		return IMMUTABLE | NONNULL | ORDERED | SIZED | SUBSIZED;
+	}
+
+	@Override
+	public ArraySpliterator< T > copy()
+	{
+		return new ArraySpliterator<>( img, index.get() + 1, fence );
+	}
+
+	@Override
+	public T get()
+	{
+		return type;
+	}
+
+
+
+	// -----------------------------------------------------------
+	//   Localizable
+
+	@Override
+	public int numDimensions()
+	{
+		return img.numDimensions();
+	}
+
+	@Override
+	public void localize( final int[] position )
+	{
+		IntervalIndexer.indexToPosition( index.get(), img.dim, position );
+	}
+
+	@Override
+	public void localize( final float[] position )
+	{
+		IntervalIndexer.indexToPosition( index.get(), img.dim, position );
+	}
+
+	@Override
+	public void localize( final double[] position )
+	{
+		IntervalIndexer.indexToPosition( index.get(), img.dim, position );
+	}
+
+	@Override
+	public void localize( final long[] position )
+	{
+		IntervalIndexer.indexToPosition( index.get(), img.dim, position );
+	}
+
+	@Override
+	public void localize( final Positionable position )
+	{
+		IntervalIndexer.indexToPosition( index.get(), img.dim, position );
+	}
+
+	@Override
+	public void localize( final RealPositionable position )
+	{
+		IntervalIndexer.indexToPosition( index.get(), img.dim, position );
+	}
+
+	@Override
+	public int getIntPosition( final int d )
+	{
+		if ( d == 0 )
+			return index.get() % img.dim[ 0 ];
+		else
+			return IntervalIndexer.indexToPosition( index.get(), img.dim, img.steps, d );
+	}
+
+	@Override
+	public long getLongPosition( final int d )
+	{
+		return getIntPosition( d );
+	}
+
+	@Override
+	public float getFloatPosition( final int d )
+	{
+		return getIntPosition( d );
+	}
+
+	@Override
+	public double getDoublePosition( final int d )
+	{
+		return getIntPosition( d );
 	}
 }
