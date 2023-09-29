@@ -34,13 +34,13 @@
 
 package net.imglib2.img.array;
 
-import java.util.Spliterator;
 import net.imglib2.Cursor;
 import net.imglib2.FlatIterationOrder;
 import net.imglib2.Interval;
 import net.imglib2.img.AbstractNativeImg;
 import net.imglib2.img.Img;
 import net.imglib2.img.basictypeaccess.DataAccess;
+import net.imglib2.stream.LocalizableSpliterator;
 import net.imglib2.type.NativeType;
 import net.imglib2.util.Fraction;
 import net.imglib2.util.IntervalIndexer;
@@ -235,11 +235,11 @@ public class ArrayImg< T extends NativeType< T >, A extends DataAccess > extends
 		return new FlatIterationOrder( interval );
 	}
 
-//	@Override
-//	public Spliterator< T > spliterator()
-//	{
-//		return new ArraySpliterator<>( this, 0, ( int ) size() );
-//	}
+	@Override
+	public LocalizableSpliterator< T > spliterator()
+	{
+		return new ArraySpliterator<>( this, 0, ( int ) size() );
+	}
 
 	/**
 	 * Deprecated constructor for binary compatibility when A was not bounded by

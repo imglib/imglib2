@@ -149,6 +149,18 @@ public class IntervalIndexer
 		position[ maxDim ] = index;
 	}
 
+	final static public void indexToPosition( int index, final int[] dimensions, final Positionable position )
+	{
+		final int maxDim = dimensions.length - 1;
+		for ( int d = 0; d < maxDim; ++d )
+		{
+			final int j = index / dimensions[ d ];
+			position.setPosition( index - j * dimensions[ d ], d );
+			index = j;
+		}
+		position.setPosition( index, maxDim );
+	}
+
 	final static public void indexToPosition( long index, final long[] dimensions, final long[] position )
 	{
 		final int maxDim = dimensions.length - 1;
