@@ -108,4 +108,13 @@ public class ImgStreamTest
 		final long actualCount = img.parallelStream().filter( BooleanType::get ).count();
 		Assert.assertEquals( expectedCount, actualCount );
 	}
+
+	@Test
+	public void testEstimateSize()
+	{
+		final LocalizableSpliterator< BitType > spliterator = img.spliterator();
+		final long actualSize = spliterator.estimateSize();
+		final long expectedSize = img.size();
+		Assert.assertEquals( expectedSize, actualSize );
+	}
 }
