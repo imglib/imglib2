@@ -44,6 +44,7 @@ import net.imglib2.img.basictypeaccess.array.ArrayDataAccess;
 import net.imglib2.type.NativeType;
 import net.imglib2.util.Fraction;
 import net.imglib2.util.Intervals;
+import net.imglib2.util.Util;
 import net.imglib2.view.iteration.SubIntervalIterable;
 
 import java.util.ArrayList;
@@ -79,7 +80,7 @@ public class PlanarImg< T extends NativeType< T >, A extends ArrayDataAccess< A 
 	public PlanarImg( final List< A > slices, final long[] dim, final Fraction entitiesPerPixel )
 	{
 		super( dim, entitiesPerPixel );
-		this.dimensions = longToIntArray( dim );
+		this.dimensions = Util.long2int( dim );
 		this.sliceSteps = computeSliceSteps( dim );
 		this.numSlices = numberOfSlices( dim );
 		if(slices.size() != numSlices)
@@ -351,14 +352,6 @@ public class PlanarImg< T extends NativeType< T >, A extends ArrayDataAccess< A 
 	}
 
 	// -- Helper methods --
-
-	private static int[] longToIntArray( final long[] dim )
-	{
-		final int[] dimensions = new int[ dim.length ];
-		for ( int d = 0; d < dim.length; ++d )
-			dimensions[ d ] = ( int ) dim[ d ];
-		return dimensions;
-	}
 
 	private static int[] computeSliceSteps( final long[] dimensions )
 	{
