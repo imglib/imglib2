@@ -54,6 +54,8 @@ public class CellCursor< T extends NativeType< T >, C extends Cell< ? > >
 
 	protected final Cursor< C > cursorOnCells;
 
+	private final CellGrid grid;
+
 	protected int lastIndexInCell;
 
 	/**
@@ -67,16 +69,19 @@ public class CellCursor< T extends NativeType< T >, C extends Cell< ? > >
 	 */
 	protected boolean isNotLastCell;
 
+
+
 	protected CellCursor( final CellCursor< T, C > cursor )
 	{
 		super( cursor.numDimensions() );
 
-		this.type = cursor.type.duplicateTypeOnSameNativeImg();
+		type = cursor.type.duplicateTypeOnSameNativeImg();
 		i = type.index();
-		this.cursorOnCells = cursor.cursorOnCells.copy();
-		isNotLastCell = cursor.isNotLastCell;
+		cursorOnCells = cursor.cursorOnCells.copy();
+		grid = cursor.grid;
 		lastIndexInCell = cursor.lastIndexInCell;
 		typeIndex = cursor.typeIndex;
+		isNotLastCell = cursor.isNotLastCell;
 
 		type.updateContainer( this );
 		i.set( typeIndex );
@@ -86,9 +91,10 @@ public class CellCursor< T extends NativeType< T >, C extends Cell< ? > >
 	{
 		super( img.numDimensions() );
 
-		this.type = img.createLinkedType();
+		type = img.createLinkedType();
 		i = type.index();
-		this.cursorOnCells = img.getCells().cursor();
+		cursorOnCells = img.getCells().cursor();
+		grid = img.getCellGrid();
 
 		reset();
 	}
@@ -117,20 +123,39 @@ public class CellCursor< T extends NativeType< T >, C extends Cell< ? > >
 		return ( typeIndex < lastIndexInCell ) || isNotLastCell;
 	}
 
+	private final long[] tmpIndices = new long[ 2 ];
+
 	@Override
 	public void jumpFwd( final long steps )
 	{
-		long newIndex = typeIndex + steps;
-		while ( newIndex > lastIndexInCell )
+		// TODO: The following assumes flat iteration order of img.getCells()
+		//       Add a fallback (to the previous code) if that isn't the case
+
+		final long newIndex = typeIndex + steps;
+		if ( newIndex <= lastIndexInCell )
 		{
-			newIndex -= lastIndexInCell + 1;
-			cursorOnCells.fwd();
+			typeIndex = ( int ) newIndex;
+			i.set( typeIndex );
+		}
+		else
+		{
+			grid.getIndicesFromGridPosition( cursorOnCells, tmpIndices );
+			final long gridIndexOfCurrentCell = tmpIndices[ 0 ];
+			final long indexOfFirstPixelInCurrentCell = tmpIndices[ 1 ];
+
+			grid.getCellAndPixelIndices( newIndex + indexOfFirstPixelInCurrentCell, tmpIndices );
+			final long gridIndexOfNewCell = tmpIndices[ 0 ];
+			final int indexInNewCell = ( int ) tmpIndices[ 1 ];
+
+			final long cellSteps = gridIndexOfNewCell - gridIndexOfCurrentCell;
+			cursorOnCells.jumpFwd( cellSteps );
 			isNotLastCell = cursorOnCells.hasNext();
 			lastIndexInCell = ( int ) ( getCell().size() - 1 );
+
+			typeIndex = indexInNewCell;
+			i.set( typeIndex );
+			type.updateContainer( this );
 		}
-		typeIndex = ( int ) newIndex;
-		i.set( typeIndex );
-		type.updateContainer( this );
 	}
 
 	@Override
