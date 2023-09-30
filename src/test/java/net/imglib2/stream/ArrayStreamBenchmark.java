@@ -1,8 +1,11 @@
 package net.imglib2.stream;
 
+import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
+import java.util.Spliterator;
 import java.util.concurrent.TimeUnit;
+import java.util.function.Consumer;
 import java.util.stream.IntStream;
 import net.imglib2.img.Img;
 import net.imglib2.img.array.ArrayImgs;
@@ -29,19 +32,19 @@ import org.openjdk.jmh.runner.options.OptionsBuilder;
 @BenchmarkMode( Mode.AverageTime )
 @OutputTimeUnit( TimeUnit.MILLISECONDS )
 @Fork( 1 )
-public class StreamBenchmark
+public class ArrayStreamBenchmark
 {
 	private final int[] values;
 
 	private final Img< IntType > img;
 
-	public StreamBenchmark()
+	public ArrayStreamBenchmark()
 	{
 		final long[] dimensions = { 2000, 2000 };
 		values = new int[ ( int ) Intervals.numElements( dimensions ) ];
 		img = ArrayImgs.ints( values, dimensions );
 		Random random = new Random( 1L );
-		img.forEach( t -> t.set( random.nextInt(256 ) ) );
+		img.forEach( t -> t.set( random.nextInt( 256 ) ) );
 	}
 
 	@Benchmark
@@ -68,6 +71,61 @@ public class StreamBenchmark
 	{
 //		return img.parallelStream().mapToInt( IntType::get ).filter( value -> value > 127 ).count();
 		return img.parallelStream().unordered().filter( t -> t.get() > 127 ).count();
+	}
+
+	static class Count implements Consumer< IntType >
+	{
+		private long count;
+
+		@Override
+		public void accept( final IntType t )
+		{
+			if ( t.get() > 127 )
+				++count;
+		}
+
+		public long get()
+		{
+			return count;
+		}
+	}
+
+	@Benchmark
+	public long benchmarkSpliterator()
+	{
+		final Count count = new Count();
+		final Spliterator< IntType > spl = img.spliterator();
+		spl.forEachRemaining( count );
+		return count.get();
+	}
+
+	@Benchmark
+	public long benchmarkIterator()
+	{
+		final Count count = new Count();
+		final Iterator< IntType > it = img.iterator();
+		while( it.hasNext() )
+		{
+			count.accept( it.next() );
+		}
+		return count.get();
+	}
+
+	@Benchmark
+	public long benchmarkIterator2()
+	{
+		final Count count = new Count();
+		final Iterator< IntType > it = img.iterator();
+		countIt( it, count );
+		return count.get();
+	}
+
+	static void countIt( Iterator< IntType > it, Count count )
+	{
+		while( it.hasNext() )
+		{
+			count.accept( it.next() );
+		}
 	}
 
 	@Benchmark
@@ -110,7 +168,9 @@ public class StreamBenchmark
 
 	public static void main( String... args ) throws RunnerException
 	{
-		Options options = new OptionsBuilder().include( StreamBenchmark.class.getSimpleName() ).build();
+		Options options = new OptionsBuilder()
+				.include( ArrayStreamBenchmark.class.getSimpleName() )
+				.build();
 		new Runner( options ).run();
 	}
 }
