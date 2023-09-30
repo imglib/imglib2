@@ -41,6 +41,7 @@ import net.imglib2.img.AbstractNativeImg;
 import net.imglib2.img.NativeImg;
 import net.imglib2.img.basictypeaccess.PlanarAccess;
 import net.imglib2.img.basictypeaccess.array.ArrayDataAccess;
+import net.imglib2.stream.LocalizableSpliterator;
 import net.imglib2.type.NativeType;
 import net.imglib2.util.Fraction;
 import net.imglib2.util.Intervals;
@@ -68,6 +69,8 @@ public class PlanarImg< T extends NativeType< T >, A extends ArrayDataAccess< A 
 {
 	final protected int numSlices;
 
+	final int elementsPerSlice;
+
 	/*
 	 * duplicate of long[] dimension as an int array.
 	 */
@@ -83,6 +86,7 @@ public class PlanarImg< T extends NativeType< T >, A extends ArrayDataAccess< A 
 		this.dimensions = Util.long2int( dim );
 		this.sliceSteps = computeSliceSteps( dim );
 		this.numSlices = numberOfSlices( dim );
+		this.elementsPerSlice = elementsPerSlice( dim );
 		if(slices.size() != numSlices)
 			throw new IllegalArgumentException();
 		this.mirror = slices;
@@ -308,6 +312,12 @@ public class PlanarImg< T extends NativeType< T >, A extends ArrayDataAccess< A 
 		return new PlanarPlaneSubsetCursor< T >( this, interval );
 	}
 
+	@Override
+	public LocalizableSpliterator< T > spliterator()
+	{
+		return new PlanarSpliterator<>( this, 0, size() );
+	}
+
 	private boolean correspondsToPlane( final Interval interval )
 	{
 		// check if interval describes one plane
@@ -338,6 +348,17 @@ public class PlanarImg< T extends NativeType< T >, A extends ArrayDataAccess< A 
 		assert ( supportsOptimizedCursor( interval ) );
 
 		return new PlanarPlaneSubsetLocalizingCursor< T >( this, interval );
+	}
+
+	/**
+	 * What is the size of one plane in a PlanarImg with the given dimensions?
+	 */
+	public static int elementsPerSlice( final long[] dimensions )
+	{
+		int size = ( int ) dimensions[ 0 ];
+		if ( dimensions.length > 1 )
+			size *= ( int ) dimensions[ 1 ];
+		return size;
 	}
 
 	/**
