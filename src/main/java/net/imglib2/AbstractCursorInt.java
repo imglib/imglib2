@@ -98,6 +98,20 @@ public abstract class AbstractCursorInt< T > extends AbstractEuclideanSpace impl
 	}
 
 	@Override
+	public void localize( final Positionable position )
+	{
+		localize( tmp );
+		position.setPosition( tmp );
+	}
+
+	@Override
+	public void localize( final RealPositionable position )
+	{
+		localize( tmp );
+		position.setPosition( tmp );
+	}
+
+	@Override
 	public float getFloatPosition( final int d )
 	{
 		return getIntPosition( d );
