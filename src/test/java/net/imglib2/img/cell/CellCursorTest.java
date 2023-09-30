@@ -127,7 +127,7 @@ public class CellCursorTest
 	@Test
 	public void testJmpWithCursor()
 	{
-		final int steps = 43;
+		final int steps = 279;
 		final Cursor< IntType > cursor1 = intImg.cursor();
 		for ( int i = 0; i < steps; ++i )
 			cursor1.fwd();
