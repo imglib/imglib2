@@ -151,16 +151,24 @@ public class PlanarLocalizingCursor< T extends NativeType< T > > extends Abstrac
 			index = 0;
 			++sliceIndex;
 			type.updateContainer( this );
+			position[ 0 ] = 0;
+			position[ 1 ] = 0;
+			for ( int d = 2; d < n; ++d )
+			{
+				if ( ++position[ d ] > max[ d ] )
+					position[ d ] = 0;
+				else
+					break;
+			}
+		} else {
+			if ( ++position[ 0 ] > max[ 0 ] )
+			{
+				position[ 0 ] = 0;
+				++position[ 1 ];
+			}
 		}
 		typeIndex.set( index );
 
-		for ( int d = 0; d < n; ++d )
-		{
-			if ( ++position[ d ] > max[ d ] )
-				position[ d ] = 0;
-			else
-				break;
-		}
 	}
 
 	@Override
