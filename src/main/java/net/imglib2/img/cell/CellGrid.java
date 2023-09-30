@@ -62,6 +62,8 @@ public class CellGrid
 
 	private final long[] dimensions;
 
+	private final long[] steps;
+
 	private final int[] cellDimensions;
 
 	private final long[] numCells;
@@ -85,6 +87,9 @@ public class CellGrid
 		this.dimensions = dimensions.clone();
 		this.cellDimensions = cellDimensions.clone();
 
+		steps = new long[ n ];
+		IntervalIndexer.createAllocationSteps( dimensions, steps );
+
 		numCells = new long[ n ];
 		borderSize = new int[ n ];
 		for ( int d = 0; d < n; ++d )
@@ -92,7 +97,9 @@ public class CellGrid
 			numCells[ d ] = ( dimensions[ d ] - 1 ) / cellDimensions[ d ] + 1;
 			borderSize[ d ] = ( int ) ( dimensions[ d ] - ( numCells[ d ] - 1 ) * cellDimensions[ d ] );
 		}
+
 		hashcode = 31 * Arrays.hashCode( dimensions ) + Arrays.hashCode( cellDimensions );
+
 
 		cellIntervals = new CellIntervals();
 	}
@@ -101,6 +108,7 @@ public class CellGrid
 	{
 		n = grid.n;
 		dimensions = grid.dimensions.clone();
+		steps = grid.steps.clone();
 		cellDimensions = grid.cellDimensions.clone();
 		numCells = grid.numCells.clone();
 		borderSize = grid.borderSize.clone();
@@ -310,6 +318,19 @@ public class CellGrid
 	}
 
 	/**
+	 * From the position of a cell in the grid, compute the flattened index of
+	 * the cell in the grid.
+	 *
+	 * @param cellGridPosition
+	 *            grid coordinates of the cell
+	 * @return flattened grid coordinates of the cell.
+	 */
+	public long getCellGridIndexFlat( final long[] cellGridPosition )
+	{
+		return IntervalIndexer.positionToIndex( cellGridPosition, numCells );
+	}
+
+	/**
 	 * Get the grid position of the cell containing the element at {@code position}.
 	 *
 	 * @param position
@@ -335,6 +356,161 @@ public class CellGrid
 	{
 		for ( int d = 0; d < n; ++d )
 			cellPos.setPosition( position[ d ] / cellDimensions[ d ], d );
+	}
+
+	/**
+	 * From a global {@code index} (in {@code CellIterationOrder}, with flat
+	 * iteration order of the cells), compute the flattened grid index of the
+	 * cell containing {@code index}, and the flattened pixel index within the
+	 * cell.
+	 *
+	 * @param index
+	 *            pixel index in flat iteration order
+	 * @param indices
+	 *            array with 2 elements, which will be set to the flattened
+	 *            cell index ({@code indices[0]}), and the flattened pixel index
+	 *            within the cell ({@code indices[1]}).
+	 */
+	void getCellAndPixelIndices( long index, long[] indices )
+	{
+		// find cell index
+		long cellIndex = 0;
+		long pcdims = 1;
+		for ( int d = n - 1; d >= 0; --d )
+		{
+			final long psize = steps[ d ] * cellDimensions[ d ] * pcdims;
+			final long pos = index / psize;
+			index -= pos * psize;
+			cellIndex = cellIndex * numCells[ d ] + pos;
+			pcdims *= getCellDimension( d, pos );
+		}
+		indices[ 0 ] = cellIndex;
+		indices[ 1 ] = index;
+	}
+
+	/**
+	 * From the grid coordinates of a cell, compute the grid index of the cell,
+	 * and the global index of the first pixel in the cell.
+	 *
+	 * @param cellGridPosition
+	 *            grid coordinates of a cell
+	 * @param indices
+	 *            array with 2 elements, which will be set to the grid index of
+	 *            the cell ({@code indices[0]}), and the global pixel index of
+	 *            the first pixel in the cell ({@code indices[1]}).
+	 */
+	void getIndicesFromGridPosition( final long[] cellGridPosition, long[] indices )
+	{
+		long cellIndex = 0;
+		long index = 0;
+		long pcdims = 1;
+		for ( int d = n - 1; d >= 0; --d )
+		{
+			final long gridpos = cellGridPosition[ d ];
+			index += steps[ d ] * cellDimensions[ d ] * gridpos * pcdims;
+			pcdims *= getCellDimension( d, gridpos );
+			cellIndex = cellIndex * numCells[ d ] + gridpos;
+		}
+		indices[ 0 ] = cellIndex;
+		indices[ 1 ] = index;
+	}
+
+	/**
+	 * From the grid coordinates of a cell, compute the grid index of the cell,
+	 * and the global index of the first pixel in the cell.
+	 *
+	 * @param cellGridPosition
+	 *            grid coordinates of a cell
+	 * @param indices
+	 *            array with 2 elements, which will be set to the grid index of
+	 *            the cell ({@code indices[0]}), and the global pixel index of
+	 *            the first pixel in the cell ({@code indices[1]}).
+	 */
+	void getIndicesFromGridPosition( final Localizable cellGridPosition, long[] indices )
+	{
+		long cellIndex = 0;
+		long index = 0;
+		long pcdims = 1;
+		for ( int d = n - 1; d >= 0; --d )
+		{
+			final long gridpos = cellGridPosition.getLongPosition( d );
+			index += steps[ d ] * cellDimensions[ d ] * gridpos * pcdims;
+			pcdims *= getCellDimension( d, gridpos );
+			cellIndex = cellIndex * numCells[ d ] + gridpos;
+		}
+		indices[ 0 ] = cellIndex;
+		indices[ 1 ] = index;
+	}
+
+	/**
+	 * Get the global index of the first pixel in the cell with the given {@code
+	 * cellGridIndex}.
+	 *
+	 * @param cellGridIndex
+	 *            grid index of a cell
+	 * @return global index of the first pixel in the cell
+	 */
+	long indexOfFirstPixelInCell( final long cellGridIndex )
+	{
+		return indexOfFirstPixelInCell( cellGridIndex, new long[ n ] );
+	}
+
+	/**
+	 * Get the global index of the first pixel in the cell with the given {@code
+	 * cellGridIndex}.
+	 *
+	 * @param cellGridIndex
+	 *            grid index of a cell
+	 * @param tmp
+	 *            temporary array used to store the gird coordinates of the cell
+	 * @return global index of the first pixel in the cell
+	 */
+	long indexOfFirstPixelInCell( final long cellGridIndex, final long[] tmp )
+	{
+		IntervalIndexer.indexToPosition( cellGridIndex, numCells, tmp );
+		return indexOfFirstPixelInCell( tmp );
+	}
+
+	/**
+	 * Get the global index of the first pixel in the cell with the given grid
+	 * coordinates.
+	 *
+	 * @param cellGridPosition
+	 *            grid coordinates of a cell
+	 * @return global index of the first pixel in the cell
+	 */
+	long indexOfFirstPixelInCell( final long[] cellGridPosition )
+	{
+		long index = 0;
+		long pcdims = 1;
+		for ( int d = n - 1; d >= 0; --d )
+		{
+			final long gridpos = cellGridPosition[ d ];
+			index += steps[ d ] * cellDimensions[ d ] * gridpos * pcdims;
+			pcdims *= getCellDimension( d, gridpos );
+		}
+		return index;
+	}
+
+	/**
+	 * Get the global index of the first pixel in the cell with the given grid
+	 * coordinates.
+	 *
+	 * @param cellGridPosition
+	 *            grid coordinates of a cell
+	 * @return global index of the first pixel in the cell
+	 */
+	long indexOfFirstPixelInCell( final Localizable cellGridPosition )
+	{
+		long index = 0;
+		long pcdims = 1;
+		for ( int d = n - 1; d >= 0; --d )
+		{
+			final long gridpos = cellGridPosition.getLongPosition( d );
+			index += steps[ d ] * cellDimensions[ d ] * gridpos * pcdims;
+			pcdims *= getCellDimension( d, gridpos );
+		}
+		return index;
 	}
 
 	/**

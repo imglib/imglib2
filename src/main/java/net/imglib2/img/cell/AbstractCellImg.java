@@ -39,6 +39,7 @@ import net.imglib2.RandomAccessible;
 import net.imglib2.img.AbstractNativeImg;
 import net.imglib2.img.Img;
 import net.imglib2.img.basictypeaccess.DataAccess;
+import net.imglib2.stream.LocalizableSpliterator;
 import net.imglib2.type.NativeType;
 import net.imglib2.util.Fraction;
 
@@ -91,6 +92,12 @@ public abstract class AbstractCellImg<
 	public CellCursor< T, C > cursor()
 	{
 		return new CellCursor<>( this );
+	}
+
+	@Override
+	public LocalizableSpliterator< T > spliterator()
+	{
+		return new CellSpliterator<>( this, 0, size() );
 	}
 
 	@Override
