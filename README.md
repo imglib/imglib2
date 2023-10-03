@@ -56,6 +56,7 @@ Applications
 Resources
 ---------
 
+* [ImgLib2-Blog: news and tutorials](https://imglib.github.io/imglib2-blog)
 * [ImgLib2 source code on GitHub](https://github.com/imglib/imglib2)
 * [Documentation on how to use ImgLib2](http://imglib2.net/)
 * [ImgLib2 Examples](http://imagej.net/ImgLib2_Examples)
