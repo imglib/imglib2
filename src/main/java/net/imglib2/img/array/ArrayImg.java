@@ -241,6 +241,12 @@ public class ArrayImg< T extends NativeType< T >, A extends DataAccess > extends
 		return new ArraySpliterator<>( this, 0, ( int ) size() );
 	}
 
+	@Override
+	public LocalizableSpliterator< T > localizingSpliterator()
+	{
+		return new ArrayLocalizingSpliterator<>( this, 0, ( int ) size() );
+	}
+
 	/**
 	 * Deprecated constructor for binary compatibility when A was not bounded by
 	 * DataAccess
