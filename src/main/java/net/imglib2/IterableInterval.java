@@ -69,4 +69,10 @@ public interface IterableInterval< T > extends IterableRealInterval< T >, Interv
 	{
 		return new CursorSpliterator<>( cursor(),0, size(), Spliterator.ORDERED | Spliterator.NONNULL );
 	}
+
+	@Override
+	default LocalizableSpliterator< T > localizingSpliterator()
+	{
+		return new CursorSpliterator<>( localizingCursor(), 0, size(), Spliterator.ORDERED | Spliterator.NONNULL );
+	}
 }
