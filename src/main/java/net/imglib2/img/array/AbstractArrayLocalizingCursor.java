@@ -181,11 +181,7 @@ public abstract class AbstractArrayLocalizingCursor< T extends NativeType< T > >
 		 * loop. We have tested that and it does not provide improved speed when
 		 * done in the above version of the code. Below, it plays a role.
 		 */
-		if ( ++position[ 0 ] <= max[ 0 ] )
-		{
-			return;
-		}
-		else
+		if ( ++position[ 0 ] > max[ 0 ] )
 		{
 			position[ 0 ] = 0;
 
@@ -196,8 +192,6 @@ public abstract class AbstractArrayLocalizingCursor< T extends NativeType< T > >
 				else
 					position[ d ] = 0;
 			}
-
-			return;
 		}
 	}
 
