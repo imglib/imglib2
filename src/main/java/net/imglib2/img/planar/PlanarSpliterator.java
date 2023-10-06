@@ -182,7 +182,7 @@ class PlanarSpliterator< T extends NativeType< T > > implements LocalizableSplit
 		else
 		{
 			final PlanarSpliterator< T > prefix = new PlanarSpliterator<>( img, lo, mid );
-			slice = ( int ) ( ( mid - 1 ) / elementsPerSlice );
+			slice = ( int ) ( mid / elementsPerSlice );
 			index.set( ( int ) ( mid - 1 - slice * elementsPerSlice ) );
 			type.updateContainer( this );
 			return prefix;
