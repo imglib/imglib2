@@ -154,4 +154,9 @@ public interface IterableRealInterval< T > extends RealInterval, Iterable< T >
 	{
 		return new RealCursorSpliterator<>( cursor(),0, size(), Spliterator.ORDERED | Spliterator.NONNULL );
 	}
+
+	default RealLocalizableSpliterator< T > localizingSpliterator()
+	{
+		return new RealCursorSpliterator<>( localizingCursor(), 0, size(), Spliterator.ORDERED | Spliterator.NONNULL );
+	}
 }
