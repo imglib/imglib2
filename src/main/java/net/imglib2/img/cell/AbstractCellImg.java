@@ -101,6 +101,13 @@ public abstract class AbstractCellImg<
 	}
 
 	@Override
+	public LocalizableSpliterator< T > localizingSpliterator()
+	{
+		// TODO: Implement CellLocalizingSpliterator
+		return spliterator();
+	}
+
+	@Override
 	public CellLocalizingCursor< T, C > localizingCursor()
 	{
 		return new CellLocalizingCursor<>( this );

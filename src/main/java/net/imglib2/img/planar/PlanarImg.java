@@ -318,6 +318,13 @@ public class PlanarImg< T extends NativeType< T >, A extends ArrayDataAccess< A 
 		return new PlanarSpliterator<>( this, 0, size() );
 	}
 
+	@Override
+	public LocalizableSpliterator< T > localizingSpliterator()
+	{
+		// TODO: Implement PlanarLocalizingSpliterator
+		return spliterator();
+	}
+
 	private boolean correspondsToPlane( final Interval interval )
 	{
 		// check if interval describes one plane
