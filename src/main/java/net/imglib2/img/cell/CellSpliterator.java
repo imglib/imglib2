@@ -119,27 +119,16 @@ class CellSpliterator< T extends NativeType< T >, C extends Cell< ? > > implemen
 		type.updateContainer( currentCell );
 	}
 
-
 	@Override
 	public boolean tryAdvance( final Consumer< ? super T > action )
 	{
 		if ( action == null )
 			throw new NullPointerException();
 
-		if ( tryAdvance() )
-		{
-			action.accept( type );
-			return true;
-		}
-		return false;
-	}
-
-	@Override
-	public boolean tryAdvance()
-	{
 		if ( index.get() < lastIndexInCurrentCell )
 		{
 			index.inc();
+			action.accept( type );
 			return true;
 		}
 		else if ( currentCell.index() < lastCell )
@@ -147,6 +136,7 @@ class CellSpliterator< T extends NativeType< T >, C extends Cell< ? > > implemen
 			currentCell.fwd();
 			cellUpdated();
 			index.set( 0 );
+			action.accept( type );
 			return true;
 		}
 		else

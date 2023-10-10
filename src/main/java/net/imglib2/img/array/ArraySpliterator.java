@@ -78,17 +78,6 @@ class ArraySpliterator< T extends NativeType< T > > implements LocalizableSplite
 	}
 
 	@Override
-	public boolean tryAdvance()
-	{
-		if ( index.get() < fence - 1 )
-		{
-			index.inc();
-			return true;
-		}
-		return false;
-	}
-
-	@Override
 	public void forEachRemaining( final Consumer< ? super T > action )
 	{
 		if ( action == null )

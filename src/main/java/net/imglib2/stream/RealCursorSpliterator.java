@@ -68,18 +68,6 @@ public class RealCursorSpliterator< T > implements RealLocalizableSpliterator< T
 	}
 
 	@Override
-	public boolean tryAdvance()
-	{
-		if ( index >= 0 && index < fence )
-		{
-			++index;
-			cursor.fwd();
-			return true;
-		}
-		return false;
-	}
-
-	@Override
 	public RealCursorSpliterator< T > trySplit()
 	{
 		long lo = index, mid = ( lo + fence ) >>> 1;

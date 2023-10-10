@@ -29,19 +29,13 @@ class RealLocalizableSamplerWrapper< T > implements Spliterator< RealLocalizable
 	@Override
 	public void forEachRemaining( final Consumer< ? super RealLocalizableSampler< T > > action )
 	{
-		delegate.forEachRemaining( () -> action.accept( this ) );
+		delegate.forEachRemaining( t -> action.accept( this ) );
 	}
 
 	@Override
 	public boolean tryAdvance( final Consumer< ? super RealLocalizableSampler< T > > action )
 	{
-		if ( delegate.tryAdvance() )
-		{
-			action.accept( this );
-			return true;
-		}
-		else
-			return false;
+		return delegate.tryAdvance( t -> action.accept( this ) );
 	}
 
 	@Override

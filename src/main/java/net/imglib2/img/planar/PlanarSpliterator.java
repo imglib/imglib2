@@ -113,17 +113,6 @@ class PlanarSpliterator< T extends NativeType< T > > implements LocalizableSplit
 		if ( action == null )
 			throw new NullPointerException();
 
-		if ( tryAdvance() )
-		{
-			action.accept( type );
-			return true;
-		}
-		return false;
-	}
-
-	@Override
-	public boolean tryAdvance()
-	{
 		if ( slice >= lastSlice && index.get() >= lastIndexInLastSlice )
 			return false;
 
@@ -138,6 +127,7 @@ class PlanarSpliterator< T extends NativeType< T > > implements LocalizableSplit
 			type.updateContainer( this );
 		}
 
+		action.accept( type );
 		return true;
 	}
 

@@ -6,13 +6,6 @@ import net.imglib2.Sampler;
 
 public interface RealLocalizableSpliterator< T > extends Spliterator< T >, RealLocalizable, Sampler< T >
 {
-	boolean tryAdvance();
-
-	default void forEachRemaining( final Runnable action )
-	{
-		forEachRemaining( t -> action.run() );
-	}
-
 	@Override
 	RealLocalizableSpliterator< T > trySplit();
 
