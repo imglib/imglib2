@@ -70,18 +70,6 @@ public class CursorSpliterator< T > implements LocalizableSpliterator< T >
 	}
 
 	@Override
-	public boolean tryAdvance()
-	{
-		if ( index >= 0 && index < fence )
-		{
-			++index;
-			cursor.fwd();
-			return true;
-		}
-		return false;
-	}
-
-	@Override
 	public CursorSpliterator< T > trySplit()
 	{
 		long lo = index, mid = ( lo + fence ) >>> 1;

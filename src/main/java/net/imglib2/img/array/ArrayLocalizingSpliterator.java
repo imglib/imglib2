@@ -80,17 +80,6 @@ class ArrayLocalizingSpliterator< T extends NativeType< T > > extends AbstractLo
 		return false;
 	}
 
-	@Override
-	public boolean tryAdvance()
-	{
-		if ( index.get() < fence - 1 )
-		{
-			fwd();
-			return true;
-		}
-		return false;
-	}
-
 	private void fwd()
 	{
 		index.inc();
