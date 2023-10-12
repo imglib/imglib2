@@ -43,6 +43,7 @@ import net.imglib2.IterableInterval;
 import net.imglib2.RandomAccess;
 import net.imglib2.RandomAccessible;
 import net.imglib2.RandomAccessibleInterval;
+import net.imglib2.StreamifiedView;
 import net.imglib2.View;
 import net.imglib2.view.iteration.IterableTransformBuilder;
 
@@ -53,7 +54,7 @@ import net.imglib2.view.iteration.IterableTransformBuilder;
  * created through the {@link Views#interval(RandomAccessible, Interval)} method
  * instead.
  */
-public class IntervalView< T > extends AbstractInterval implements RandomAccessibleInterval< T >, IterableInterval< T >, View
+public class IntervalView< T > extends AbstractInterval implements RandomAccessibleInterval< T >, IterableInterval< T >, View, StreamifiedView<T>
 {
 	/**
 	 * The source {@link RandomAccessible}.
@@ -172,5 +173,20 @@ public class IntervalView< T > extends AbstractInterval implements RandomAccessi
 	public Cursor< T > localizingCursor()
 	{
 		return getFullViewIterableInterval().localizingCursor();
+	}
+
+	@Override
+	public StreamifiedView<T> expandValue(T value, long... border) {
+		return Views.expandValue(this, value, border);
+	}
+
+	@Override
+	public StreamifiedView<T> permute(int from, int to) {
+		return Views.permute(this, from, to);
+	}
+
+	@Override
+	public StreamifiedView<T> translate(long... translation) {
+		return Views.translate(this, translation);
 	}
 }
