@@ -13,17 +13,7 @@ public class RaiWrapper<T> implements StreamifiedView<T> {
 	}
 
 	@Override
-	public StreamifiedView<T> expandValue(final T value, long... border) {
-		return Views.expandValue(rai, value, border);
-	}
-
-	@Override
-	public StreamifiedView<T> permute(final int from, final int to) {
-		return Views.permute(rai, from, to);
-	}
-
-	@Override
-	public StreamifiedView<T> translate(long... translation) {
-		return Views.translate(rai, translation);
+	public RandomAccessibleInterval<T> getGenericRai() {
+		return rai;
 	}
 }

@@ -176,17 +176,7 @@ public class IntervalView< T > extends AbstractInterval implements RandomAccessi
 	}
 
 	@Override
-	public StreamifiedView<T> expandValue(T value, long... border) {
-		return Views.expandValue(this, value, border);
-	}
-
-	@Override
-	public StreamifiedView<T> permute(int from, int to) {
-		return Views.permute(this, from, to);
-	}
-
-	@Override
-	public StreamifiedView<T> translate(long... translation) {
-		return Views.translate(this, translation);
+	public RandomAccessibleInterval<T> getGenericRai() {
+		return this;
 	}
 }
