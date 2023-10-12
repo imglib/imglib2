@@ -11,13 +11,13 @@
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice,
  *    this list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  *    this list of conditions and the following disclaimer in the documentation
  *    and/or other materials provided with the distribution.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -44,6 +44,7 @@ import net.imglib2.IterableInterval;
 import net.imglib2.RandomAccess;
 import net.imglib2.RandomAccessible;
 import net.imglib2.RandomAccessibleInterval;
+import net.imglib2.StreamifiedView;
 import net.imglib2.View;
 import net.imglib2.stream.LocalizableSpliterator;
 import net.imglib2.view.iteration.IterableTransformBuilder;
@@ -55,7 +56,7 @@ import net.imglib2.view.iteration.IterableTransformBuilder;
  * created through the {@link Views#interval(RandomAccessible, Interval)} method
  * instead.
  */
-public class IntervalView< T > extends AbstractInterval implements RandomAccessibleInterval< T >, View
+public class IntervalView< T > extends AbstractInterval implements RandomAccessibleInterval< T >, View, StreamifiedView<T>
 {
 	/**
 	 * The source {@link RandomAccessible}.
@@ -66,7 +67,7 @@ public class IntervalView< T > extends AbstractInterval implements RandomAccessi
 	 * TODO Javadoc
 	 */
 	protected RandomAccessible< T > fullViewRandomAccessible;
-	
+
 	/**
 	 * TODO Javadoc
 	 */
@@ -76,7 +77,7 @@ public class IntervalView< T > extends AbstractInterval implements RandomAccessi
 	 * Create a view that defines an interval on a source. It is the callers
 	 * responsibility to ensure that the source is defined in the specified
 	 * interval.
-	 * 
+	 *
 	 * @see Views#interval(RandomAccessible, Interval)
 	 */
 	public IntervalView( final RandomAccessible< T > source, final Interval interval )
@@ -92,9 +93,9 @@ public class IntervalView< T > extends AbstractInterval implements RandomAccessi
 	 * Create a view that defines an interval on a source. It is the callers
 	 * responsibility to ensure that the source is defined in the specified
 	 * interval.
-	 * 
+	 *
 	 * @see Views#interval(RandomAccessible, Interval)
-	 * 
+	 *
 	 * @param min
 	 *            minimum coordinate of the interval.
 	 * @param max
@@ -107,7 +108,7 @@ public class IntervalView< T > extends AbstractInterval implements RandomAccessi
 
 	/**
 	 * Gets the underlying source {@link RandomAccessible}.
-	 * 
+	 *
 	 * @return the source {@link RandomAccessible}.
 	 */
 	public RandomAccessible< T > getSource()
@@ -128,7 +129,7 @@ public class IntervalView< T > extends AbstractInterval implements RandomAccessi
 			fullViewRandomAccessible = TransformBuilder.getEfficientRandomAccessible( this, this );
 		return fullViewRandomAccessible.randomAccess();
 	}
-	
+
 	protected IterableInterval< T > getFullViewIterableInterval()
 	{
 		if ( fullViewIterableInterval == null )
@@ -189,5 +190,10 @@ public class IntervalView< T > extends AbstractInterval implements RandomAccessi
 	{
 		// source may have an optimized implementation for getType
 		return source.getType();
+	}
+
+	@Override
+	public RandomAccessibleInterval<T> getGenericRai() {
+		return this;
 	}
 }
