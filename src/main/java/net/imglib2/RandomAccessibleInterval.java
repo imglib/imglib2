@@ -34,6 +34,8 @@
 
 package net.imglib2;
 
+import net.imglib2.streamifiedview.RaiWrapper;
+
 /**
  * <p>
  * <em>f</em>:{x&isin;Z<sup><em>n</em></sup>|[min,max]&rarr;T}
@@ -60,4 +62,8 @@ package net.imglib2;
  * @author Stephan Saalfeld
  */
 public interface RandomAccessibleInterval< T > extends RandomAccessible< T >, Interval
-{}
+{
+	default StreamifiedView<T> view() {
+		return new RaiWrapper<>(this);
+	}
+}
