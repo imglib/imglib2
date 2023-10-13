@@ -2,7 +2,6 @@ package net.imglib2.streamifiedview;
 
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.StreamifiedView;
-import net.imglib2.view.Views;
 
 public class RaiWrapper<T> implements StreamifiedView<T> {
 
