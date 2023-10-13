@@ -36,7 +36,7 @@ package net.imglib2;
 
 import net.imglib2.util.Intervals;
 import net.imglib2.view.RandomAccessibleIntervalCursor;
-import net.imglib2.streamifiedview.RaiWrapper;
+import net.imglib2.streamifiedview.RaiView;
 
 /**
  * <p>
@@ -100,7 +100,8 @@ public interface RandomAccessibleInterval< T > extends RandomAccessible< T >, It
 		return new FlatIterationOrder( this );
 	}
 
-	default StreamifiedView<T> view() {
-		return new RaiWrapper<>(this);
+	default RaiView< T > view()
+	{
+		return RaiView.wrap( this );
 	}
 }

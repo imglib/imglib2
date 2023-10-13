@@ -44,7 +44,6 @@ import net.imglib2.IterableInterval;
 import net.imglib2.RandomAccess;
 import net.imglib2.RandomAccessible;
 import net.imglib2.RandomAccessibleInterval;
-import net.imglib2.StreamifiedView;
 import net.imglib2.View;
 import net.imglib2.stream.LocalizableSpliterator;
 import net.imglib2.view.iteration.IterableTransformBuilder;
@@ -56,7 +55,7 @@ import net.imglib2.view.iteration.IterableTransformBuilder;
  * created through the {@link Views#interval(RandomAccessible, Interval)} method
  * instead.
  */
-public class IntervalView< T > extends AbstractInterval implements RandomAccessibleInterval< T >, View, StreamifiedView<T>
+public class IntervalView< T > extends AbstractInterval implements RandomAccessibleInterval< T >, View
 {
 	/**
 	 * The source {@link RandomAccessible}.
@@ -190,10 +189,5 @@ public class IntervalView< T > extends AbstractInterval implements RandomAccessi
 	{
 		// source may have an optimized implementation for getType
 		return source.getType();
-	}
-
-	@Override
-	public RandomAccessibleInterval<T> getGenericRai() {
-		return this;
 	}
 }

@@ -1,18 +1,20 @@
 package net.imglib2.streamifiedview;
 
+import net.imglib2.Cursor;
 import net.imglib2.RandomAccessibleInterval;
-import net.imglib2.StreamifiedView;
 
-public class RaiWrapper<T> implements StreamifiedView<T> {
+class RaiWrapper< T > implements RaiView< T >
+{
+	private final RandomAccessibleInterval< T > delegate;
 
-	private final RandomAccessibleInterval<T> rai;
-
-	public RaiWrapper(final RandomAccessibleInterval<T> rai) {
-		this.rai = rai;
+	RaiWrapper( final RandomAccessibleInterval< T > delegate )
+	{
+		this.delegate = delegate;
 	}
 
 	@Override
-	public RandomAccessibleInterval<T> getGenericRai() {
-		return rai;
+	public RandomAccessibleInterval< T > delegate()
+	{
+		return delegate;
 	}
 }
