@@ -11,13 +11,13 @@
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice,
  *    this list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  *    this list of conditions and the following disclaimer in the documentation
  *    and/or other materials provided with the distribution.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -34,7 +34,7 @@
 
 package net.imglib2;
 
-import net.imglib2.streamifiedview.RaiWrapper;
+import net.imglib2.streamifiedview.RaiView;
 
 /**
  * <p>
@@ -63,7 +63,8 @@ import net.imglib2.streamifiedview.RaiWrapper;
  */
 public interface RandomAccessibleInterval< T > extends RandomAccessible< T >, Interval
 {
-	default StreamifiedView<T> view() {
-		return new RaiWrapper<>(this);
+	default RaiView< T > view()
+	{
+		return RaiView.wrap( this );
 	}
 }
