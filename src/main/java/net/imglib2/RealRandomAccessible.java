@@ -121,14 +121,20 @@ public interface RealRandomAccessible< T > extends EuclideanSpace
 	}
 
 	/**
+	 * Get an instance of {@code T}.
+	 * <p>
+	 * It should not be assumed that the returned {@code T} instance is an
+	 * independent copy. In particular, repeated calls to {@code getType()} may
+	 * return the same instance.
+	 * <p>
+	 * The default implementation queries the value at the default coordinate of
+	 * {@link RealRandomAccessible#realRandomAccess()}. Derived classes
+	 * may choose different implementations for improved performance.
 	 *
-	 * Gets an instance of T from the {@link RealRandomAccessible}.
-	 * By default, this queries the value at the default coordinate of {@link RealRandomAccessible#realRandomAccess()} ()}
-	 * but individual classes may choose different implementations for improved performance.
-	 *
-	 * @return - an instance of T
+	 * @return an instance of {@code T}
 	 */
-	default T getType() {
+	default T getType()
+	{
 		return realRandomAccess().get();
 	}
 }
