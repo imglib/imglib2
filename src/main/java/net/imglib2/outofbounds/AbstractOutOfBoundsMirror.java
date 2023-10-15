@@ -163,6 +163,12 @@ public abstract class AbstractOutOfBoundsMirror< T > implements OutOfBounds< T >
 	}
 
 	@Override
+	public T getType()
+	{
+		return outOfBoundsRandomAccess.getType();
+	}
+
+	@Override
 	abstract public AbstractOutOfBoundsMirror< T > copy();
 
 	/* Localizable */

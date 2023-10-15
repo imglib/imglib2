@@ -104,6 +104,12 @@ public class PlanarRandomAccess< T extends NativeType< T > > extends AbstractLoc
 	}
 
 	@Override
+	public T getType()
+	{
+		return type;
+	}
+
+	@Override
 	public PlanarRandomAccess< T > copy()
 	{
 		return new PlanarRandomAccess< T >( this );

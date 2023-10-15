@@ -476,6 +476,12 @@ public class Grid
 			return interval;
 		}
 
+		@Override
+		public Interval getType()
+		{
+			return interval;
+		}
+
 		CellIntervalsRA()
 		{
 			super( Grid.this.n );

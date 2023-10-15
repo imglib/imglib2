@@ -195,6 +195,12 @@ public class RandomAccessibleOnRealRandomAccessible< T > extends AbstractEuclide
 		}
 
 		@Override
+		public T getType()
+		{
+			return sourceAccess.getType();
+		}
+
+		@Override
 		public RandomAccessOnRealRandomAccessible copy()
 		{
 			return new RandomAccessOnRealRandomAccessible( sourceAccess.copy() );

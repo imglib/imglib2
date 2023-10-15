@@ -142,6 +142,12 @@ public class PlanarPlaneSubsetCursor< T extends NativeType< T >> extends
 		return type;
 	}
 
+	@Override
+	public T getType()
+	{
+		return type;
+	}
+
 	/**
 	 * {@inheritDoc}
 	 */

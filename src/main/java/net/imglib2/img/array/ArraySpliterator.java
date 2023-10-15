@@ -135,6 +135,11 @@ class ArraySpliterator< T extends NativeType< T > > implements LocalizableSplite
 		return type;
 	}
 
+	@Override
+	public T getType()
+	{
+		return type;
+	}
 
 
 	// -----------------------------------------------------------

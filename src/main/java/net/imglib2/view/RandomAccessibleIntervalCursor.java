@@ -97,6 +97,12 @@ public final class RandomAccessibleIntervalCursor< T > extends AbstractInterval 
 	}
 
 	@Override
+	public T getType()
+	{
+		return randomAccess.getType();
+	}
+
+	@Override
 	public void jumpFwd( final long steps )
 	{
 		index += steps;

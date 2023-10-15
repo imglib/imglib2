@@ -209,6 +209,11 @@ class PlanarSpliterator< T extends NativeType< T > > implements LocalizableSplit
 		return type;
 	}
 
+	@Override
+	public T getType()
+	{
+		return type;
+	}
 
 
 

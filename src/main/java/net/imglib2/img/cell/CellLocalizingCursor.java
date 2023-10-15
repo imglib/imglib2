@@ -117,6 +117,12 @@ public class CellLocalizingCursor< T extends NativeType< T >, C extends Cell< ? 
 	}
 
 	@Override
+	public T getType()
+	{
+		return type;
+	}
+
+	@Override
 	public CellLocalizingCursor< T, C > copy()
 	{
 		return new CellLocalizingCursor<>( this );

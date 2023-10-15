@@ -106,6 +106,12 @@ public class BiConvertedRealCursor< A, B, C > extends AbstractConvertedRealCurso
 	}
 
 	@Override
+	public C getType()
+	{
+		return converted;
+	}
+
+	@Override
 	public void jumpFwd( final long steps )
 	{
 		source.jumpFwd( steps );

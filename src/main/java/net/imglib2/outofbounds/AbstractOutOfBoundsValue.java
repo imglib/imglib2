@@ -90,6 +90,12 @@ public abstract class AbstractOutOfBoundsValue< T > extends AbstractLocalizable 
 		dimIsOutOfBounds = new boolean[ n ];
 	}
 
+	@Override
+	public T getType()
+	{
+		return sampler.getType();
+	}
+
 	final private void checkOutOfBounds()
 	{
 		for ( int d = 0; d < n; ++d )

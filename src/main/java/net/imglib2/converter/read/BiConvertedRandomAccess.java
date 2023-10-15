@@ -173,6 +173,12 @@ final public class BiConvertedRandomAccess< A, B, C > extends AbstractConvertedR
 	}
 
 	@Override
+	public C getType()
+	{
+		return converted;
+	}
+
+	@Override
 	public BiConvertedRandomAccess< A, B, C > copy()
 	{
 		return new BiConvertedRandomAccess<>(

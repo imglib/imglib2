@@ -311,6 +311,12 @@ public class FullSourceMapSlicingRandomAccess< T > extends AbstractEuclideanSpac
 	}
 
 	@Override
+	public T getType()
+	{
+		return s.getType();
+	}
+
+	@Override
 	public FullSourceMapSlicingRandomAccess< T > copy()
 	{
 		return new FullSourceMapSlicingRandomAccess< T >( this );

@@ -277,6 +277,12 @@ public class InterleaveView< T > implements RandomAccessible< T >, View
 		}
 
 		@Override
+		public T getType()
+		{
+			return composite.get( 0 ); // TODO GET-TYPE: should we add Composite.getType() ?
+		}
+
+		@Override
 		public InterleaveRandomAccess copy()
 		{
 			return new InterleaveRandomAccess( this );

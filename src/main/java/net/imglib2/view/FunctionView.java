@@ -60,6 +60,12 @@ class FunctionView< A, B > implements RandomAccessible< B >
 		}
 
 		@Override
+		public B getType()
+		{
+			return get(); // TODO GET-TYPE: It looks like there is no good solution here.
+		}
+
+		@Override
 		public FunctionRandomAccess copy()
 		{
 			return new FunctionRandomAccess( this.source );

@@ -96,6 +96,12 @@ public final class ConvertedRandomAccess< A, B > extends AbstractConvertedRandom
 	}
 
 	@Override
+	public B getType()
+	{
+		return converted;
+	}
+
+	@Override
 	public ConvertedRandomAccess< A, B > copy()
 	{
 		return new ConvertedRandomAccess<>(

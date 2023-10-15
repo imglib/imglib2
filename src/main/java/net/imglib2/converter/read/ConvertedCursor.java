@@ -94,6 +94,12 @@ public class ConvertedCursor< A, B > extends AbstractConvertedCursor< A, B >
 	}
 
 	@Override
+	public B getType()
+	{
+		return converted;
+	}
+
+	@Override
 	public ConvertedCursor< A, B > copy()
 	{
 		return new ConvertedCursor< A, B >( ( Cursor< A > ) source.copy(), converterSupplier, convertedSupplier );

@@ -63,6 +63,12 @@ public class NearestNeighborSearchInterpolator< T > extends RealPoint implements
 	}
 
 	@Override
+	public T getType()
+	{
+		return search.getSampler().getType(); // TODO GET-TYPE: getSampler() might return null, it would be better if NearestNeighborSearch<T> had getType()
+	}
+
+	@Override
 	public NearestNeighborSearchInterpolator< T > copy()
 	{
 		return new NearestNeighborSearchInterpolator< T >( search.copy() );

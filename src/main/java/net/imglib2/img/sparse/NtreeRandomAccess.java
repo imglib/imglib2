@@ -126,6 +126,12 @@ public final class NtreeRandomAccess< T extends NativeType< T > > implements Pos
 	}
 
 	@Override
+	public T getType()
+	{
+		return type;
+	}
+
+	@Override
 	public NtreeRandomAccess< T > copy()
 	{
 		return new NtreeRandomAccess<>( this );

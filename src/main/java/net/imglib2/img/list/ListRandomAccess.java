@@ -81,6 +81,12 @@ public class ListRandomAccess< T > extends AbstractLocalizableInt implements Ran
 		return img.get( i );
 	}
 
+	@Override
+	public T getType()
+	{
+		return img.getType();
+	}
+
 	public void set( final T t )
 	{
 		img.set( i, t );

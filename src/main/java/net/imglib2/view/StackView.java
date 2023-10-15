@@ -441,6 +441,12 @@ public class StackView< T > extends AbstractInterval implements RandomAccessible
 		}
 
 		@Override
+		public T getType()
+		{
+			return sliceAccess.getType();
+		}
+
+		@Override
 		public DefaultRA< T > copy()
 		{
 			return new DefaultRA< T >( this );
@@ -713,6 +719,12 @@ public class StackView< T > extends AbstractInterval implements RandomAccessible
 		public T get()
 		{
 			return sliceAccesses[ slice ].get();
+		}
+
+		@Override
+		public T getType()
+		{
+			return sliceAccesses[ 0 ].getType();
 		}
 
 		@Override

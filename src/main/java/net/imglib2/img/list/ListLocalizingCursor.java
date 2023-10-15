@@ -129,6 +129,12 @@ final public class ListLocalizingCursor< T > extends AbstractLocalizingCursorInt
 		return img.get( i );
 	}
 
+	@Override
+	public T getType()
+	{
+		return img.getType();
+	}
+
 	public void set( final T t )
 	{
 		img.set( i, t );

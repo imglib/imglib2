@@ -138,6 +138,12 @@ public class OutOfBoundsBorder< T > extends AbstractLocalizable implements OutOf
 	}
 
 	@Override
+	public T getType()
+	{
+		return outOfBoundsRandomAccess.getType();
+	}
+
+	@Override
 	final public OutOfBoundsBorder< T > copy()
 	{
 		return new OutOfBoundsBorder< T >( this );

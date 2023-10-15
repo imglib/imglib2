@@ -222,6 +222,12 @@ class CellSpliterator< T extends NativeType< T >, C extends Cell< ? > > implemen
 	}
 
 	@Override
+	public T getType()
+	{
+		return type;
+	}
+
+	@Override
 	public String toString()
 	{
 		long lo = globalIndex( currentCell.index(), index.get() ) + 1;

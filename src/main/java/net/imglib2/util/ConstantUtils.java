@@ -71,6 +71,12 @@ public class ConstantUtils
 				}
 
 				@Override
+				public T getType()
+				{
+					return constant;
+				}
+
+				@Override
 				public ConstantRandomAccess copy()
 				{
 					return new ConstantRandomAccess();
@@ -126,6 +132,12 @@ public class ConstantUtils
 
 				@Override
 				public T get()
+				{
+					return constant;
+				}
+
+				@Override
+				public T getType()
 				{
 					return constant;
 				}

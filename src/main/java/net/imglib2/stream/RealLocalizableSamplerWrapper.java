@@ -69,6 +69,12 @@ class RealLocalizableSamplerWrapper< T > implements Spliterator< RealLocalizable
 	}
 
 	@Override
+	public T getType()
+	{
+		return delegate.getType();
+	}
+
+	@Override
 	public RealLocalizableSamplerWrapper< T > copy()
 	{
 		return new RealLocalizableSamplerWrapper<>( delegate.copy() );

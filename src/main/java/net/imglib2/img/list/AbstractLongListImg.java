@@ -98,6 +98,12 @@ public abstract class AbstractLongListImg< T > extends AbstractImg< T >
 			return AbstractLongListImg.this.get( i );
 		}
 
+		@Override
+		public T getType()
+		{
+			return AbstractLongListImg.this.getType();
+		}
+
 		public void set( final T t )
 		{
 			AbstractLongListImg.this.set( i, t );
@@ -223,6 +229,12 @@ public abstract class AbstractLongListImg< T > extends AbstractImg< T >
 			return AbstractLongListImg.this.get( i );
 		}
 
+		@Override
+		public T getType()
+		{
+			return AbstractLongListImg.this.getType();
+		}
+
 		public void set( final T t )
 		{
 			AbstractLongListImg.this.set( i, t );
@@ -260,6 +272,12 @@ public abstract class AbstractLongListImg< T > extends AbstractImg< T >
 		public T get()
 		{
 			return AbstractLongListImg.this.get( i );
+		}
+
+		@Override
+		public T getType()
+		{
+			return AbstractLongListImg.this.getType();
 		}
 
 		public void set( final T t )
@@ -385,6 +403,8 @@ public abstract class AbstractLongListImg< T > extends AbstractImg< T >
 	}
 
 	protected abstract T get( long index );
+
+	protected abstract T getType(); // TODO GET-TYPE: This should eventually @Override RandomAccessible.getType().
 
 	protected abstract void set( long index, T value );
 

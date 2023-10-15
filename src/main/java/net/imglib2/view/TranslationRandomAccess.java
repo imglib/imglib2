@@ -224,6 +224,12 @@ public final class TranslationRandomAccess< T > extends AbstractEuclideanSpace i
 	}
 
 	@Override
+	public T getType()
+	{
+		return s.getType();
+	}
+
+	@Override
 	public TranslationRandomAccess< T > copy()
 	{
 		return new TranslationRandomAccess< T >( this );

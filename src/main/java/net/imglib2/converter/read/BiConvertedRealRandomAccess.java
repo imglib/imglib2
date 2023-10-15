@@ -89,6 +89,12 @@ final public class BiConvertedRealRandomAccess< A, B, C > extends AbstractConver
 	}
 
 	@Override
+	public C getType()
+	{
+		return converted;
+	}
+
+	@Override
 	public void fwd( final int d )
 	{
 		source.fwd( d );

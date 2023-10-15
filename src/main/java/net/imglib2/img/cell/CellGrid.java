@@ -685,6 +685,12 @@ public class CellGrid
 			return interval;
 		}
 
+		@Override
+		public Interval getType()
+		{
+			return interval;
+		}
+
 		CellIntervalsRA()
 		{
 			super( CellGrid.this.n );

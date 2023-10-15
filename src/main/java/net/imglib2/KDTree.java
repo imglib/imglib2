@@ -112,6 +112,12 @@ public class KDTree< T > implements EuclideanSpace, IterableRealInterval< T >
 		}
 
 		@Override
+		public T getType()
+		{
+			return value;
+		}
+
+		@Override
 		public ValueNode< T > copy()
 		{
 			return new ValueNode< T >( this );
@@ -159,6 +165,12 @@ public class KDTree< T > implements EuclideanSpace, IterableRealInterval< T >
 		public T get()
 		{
 			return sampler.get();
+		}
+
+		@Override
+		public T getType()
+		{
+			return sampler.getType();
 		}
 
 		@Override
@@ -252,7 +264,7 @@ public class KDTree< T > implements EuclideanSpace, IterableRealInterval< T >
 		interval.realMin( this.min );
 		this.max = new double[ n ];
 		interval.realMax( this.max );
-		final ArrayList< RealCursor< T > > values = new ArrayList< RealCursor< T > >( ( int ) interval.size() );
+		final ArrayList< RealCursor< T > > values = new ArrayList<>( ( int ) interval.size() );
 		final RealCursor< T > cursor = interval.localizingCursor();
 		while ( cursor.hasNext() )
 		{
@@ -532,6 +544,12 @@ public class KDTree< T > implements EuclideanSpace, IterableRealInterval< T >
 		return root;
 	}
 
+//	@Override TODO GET-TYPE: add @Override when RAI.getType() is present
+	public T getType()
+	{
+		return root.getType();
+	}
+
 	@Override
 	public T getType()
 	{
@@ -665,6 +683,12 @@ public class KDTree< T > implements EuclideanSpace, IterableRealInterval< T >
 		public T get()
 		{
 			return currentNode.get();
+		}
+
+		@Override
+		public T getType()
+		{
+			return tree.getType();
 		}
 
 		@Override

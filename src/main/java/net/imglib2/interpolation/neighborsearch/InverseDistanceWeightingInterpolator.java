@@ -121,6 +121,12 @@ public class InverseDistanceWeightingInterpolator< T extends RealType< T > > ext
 		return value;
 	}
 
+	@Override
+	public T getType()
+	{
+		return value;
+	}
+
 	protected double computeWeight( final double squareDistance )
 	{
 		return 1.0 / Math.pow( squareDistance, p2 );

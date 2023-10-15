@@ -184,9 +184,15 @@ public final class TransformRandomAccess< T > extends AbstractLocalizable implem
 	@Override
 	public T get()
 	{
-        transformToSource.apply( position, tmp );
-        source.setPosition( tmp );
+		transformToSource.apply( position, tmp );
+		source.setPosition( tmp );
 		return source.get();
+	}
+
+	@Override
+	public T getType()
+	{
+		return source.getType();
 	}
 
 	@Override

@@ -75,6 +75,12 @@ public final class WriteConvertedRandomAccess< A, B > extends AbstractConvertedR
 	}
 
 	@Override
+	public B getType()
+	{
+		return converted;
+	}
+
+	@Override
 	public WriteConvertedRandomAccess< A, B > copy()
 	{
 		return new WriteConvertedRandomAccess<>( source.copy(), converterSupplier );

@@ -140,6 +140,12 @@ public class CursorSpliterator< T > implements LocalizableSpliterator< T >
 	}
 
 	@Override
+	public T getType()
+	{
+		return cursor.getType();
+	}
+
+	@Override
 	public CursorSpliterator< T > copy()
 	{
 		return new CursorSpliterator<>( cursor.copy(), index, fence, characteristics );

@@ -208,6 +208,12 @@ public class LanczosInterpolator< T extends RealType< T > > extends FloorOffset<
 		return interpolatedValue;
 	}
 
+	@Override
+	public T getType()
+	{
+		return interpolatedValue;
+	}
+
 	private static final double lanczos( final double x, final double a )
 	{
 		if ( x == 0 )

@@ -97,6 +97,12 @@ public class ArrayRandomAccess< T extends NativeType< T > > extends AbstractLoca
 	}
 
 	@Override
+	public T getType()
+	{
+		return type;
+	}
+
+	@Override
 	public void fwd( final int d )
 	{
 		typeIndex.inc( img.steps[ d ] );

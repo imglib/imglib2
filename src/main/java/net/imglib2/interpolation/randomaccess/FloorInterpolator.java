@@ -80,6 +80,12 @@ public class FloorInterpolator< T > extends Floor< RandomAccess< T > > implement
 	}
 
 	@Override
+	public T getType()
+	{
+		return get();
+	}
+
+	@Override
 	public FloorInterpolator< T > copy()
 	{
 		return new FloorInterpolator< T >( this );
