@@ -112,6 +112,23 @@ public interface IterableRealInterval< T > extends RealInterval, Iterable< T >
 	}
 
 	/**
+	 * Get an instance of {@code T}.
+	 * <p>
+	 * It should not be assumed that the returned {@code T} instance is an
+	 * independent copy. In particular, repeated calls to {@code getType()} may
+	 * return the same instance.
+	 * <p>
+	 * The default implementation returns {@link #firstElement()}. Derived
+	 * classes may choose different implementations for improved performance.
+	 *
+	 * @return an instance of {@code T}
+	 */
+	default T getType()
+	{
+		return firstElement();
+	}
+
+	/**
 	 * Returns the iteration order of this {@link IterableRealInterval}. If the
 	 * returned object equals ({@link Object#equals(Object)}) the iteration
 	 * order of another {@link IterableRealInterval} <em>f</em> then they can be
