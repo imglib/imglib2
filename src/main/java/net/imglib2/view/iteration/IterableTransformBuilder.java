@@ -145,6 +145,12 @@ public class IterableTransformBuilder< T > extends TransformBuilder< T >
 		{
 			return iterableSource.localizingCursor( interval );
 		}
+
+		@Override
+		public T getType()
+		{
+			return iterableSource.getType();
+		}
 	}
 
 	/**
@@ -194,6 +200,12 @@ public class IterableTransformBuilder< T > extends TransformBuilder< T >
 		public Cursor< T > localizingCursor()
 		{
 			return new SlicingCursor< T >( iterableSource.localizingCursor( sourceInterval ), transformToSource );
+		}
+
+		@Override
+		public T getType()
+		{
+			return iterableSource.getType();
 		}
 	}
 

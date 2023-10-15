@@ -183,6 +183,12 @@ public class KDTree< T > implements EuclideanSpace, IterableRealInterval< T >
 	}
 
 	@Override
+	public T getType()
+	{
+		return treeData.getType();
+	}
+
+	@Override
 	public int numDimensions()
 	{
 		return impl.numDimensions();
