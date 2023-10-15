@@ -213,6 +213,12 @@ public class RealPointSampleList< T > implements IterableRealInterval< T >
 	}
 
 	@Override
+	public T getType()
+	{
+		return samples.get( 0 );
+	}
+
+	@Override
 	public double realMax( final int d )
 	{
 		return max[ d ];

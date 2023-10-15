@@ -35,6 +35,7 @@ package net.imglib2.view.iteration;
 
 import net.imglib2.Cursor;
 import net.imglib2.Interval;
+import net.imglib2.IterableInterval;
 import net.imglib2.IterableRealInterval;
 
 /**
@@ -43,7 +44,7 @@ import net.imglib2.IterableRealInterval;
  * 
  * @author Tobias Pietzsch
  */
-public interface SubIntervalIterable< T >
+public interface SubIntervalIterable< T > extends IterableInterval< T >
 {
 	/**
 	 * Determine whether a {@link Cursor} can be created that iterates the given
