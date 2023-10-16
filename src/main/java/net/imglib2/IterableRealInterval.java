@@ -60,7 +60,7 @@ import net.imglib2.stream.Streams;
  *
  * @author Stephan Saalfeld
  */
-public interface IterableRealInterval< T > extends RealInterval, Iterable< T >
+public interface IterableRealInterval< T > extends RealInterval, Iterable< T >, Typed< T >
 {
 	/**
 	 * <p>
@@ -118,22 +118,15 @@ public interface IterableRealInterval< T > extends RealInterval, Iterable< T >
 		return iterator().next();
 	}
 
-	/**
-	 * Get an instance of {@code T}.
-	 * <p>
-	 * It should not be assumed that the returned {@code T} instance is an
-	 * independent copy. In particular, repeated calls to {@code getType()} may
-	 * return the same instance.
-	 * <p>
-	 * The default implementation returns {@link #firstElement()}. Derived
-	 * classes may choose different implementations for improved performance.
-	 *
-	 * @return an instance of {@code T}
+	/*
+	 * NB: We cannot have a default implementation here because of
+	 * https://bugs.openjdk.org/browse/JDK-7120669
 	 */
-	default T getType()
-	{
-		return firstElement();
-	}
+//	@Override
+//	default T getType()
+//	{
+//		return firstElement();
+//	}
 
 	/**
 	 * Returns the iteration order of this {@link IterableRealInterval}. If the
