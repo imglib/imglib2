@@ -53,7 +53,7 @@ import net.imglib2.util.IntervalIndexer;
 public class NLinearInterpolator< T extends NumericType< T > > extends Floor< RandomAccess< T > > implements RealRandomAccess< T >
 {
 	/**
-	 * Index into {@link weights} array.
+	 * Index into {@link #weights} array.
 	 *
 	 * <p>
 	 * To visit the pixels that contribute to an interpolated value, we move in
@@ -121,7 +121,7 @@ public class NLinearInterpolator< T extends NumericType< T > > extends Floor< Ra
 	}
 
 	/**
-	 * Fill the {@link weights} array.
+	 * Fill the {@link #weights} array.
 	 *
 	 * <p>
 	 * Let <em>w_d</em> denote the fraction of a pixel at which the sample
