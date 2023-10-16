@@ -94,6 +94,12 @@ public class SelectiveSampler< T > implements ProjectedSampler< T >
 	}
 
 	@Override
+	public T getType()
+	{
+		return m_source.getType();
+	}
+
+	@Override
 	public Sampler< T > copy()
 	{
 		m_source.setPosition( m_selectedIndex, m_projectionDimension );

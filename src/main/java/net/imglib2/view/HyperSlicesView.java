@@ -79,6 +79,12 @@ public class HyperSlicesView< T > implements RandomAccessible< HyperSlice< T > >
 		}
 
 		@Override
+		public HyperSlice< T > getType()
+		{
+			return new HyperSlice< T >( source, accessAxes, new long[ source.numDimensions() ] );
+		}
+
+		@Override
 		public HyperSlicesViewRandomAccess copy()
 		{
 			final HyperSlicesViewRandomAccess copy = new HyperSlicesViewRandomAccess();

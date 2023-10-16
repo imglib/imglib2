@@ -108,6 +108,12 @@ public class PlanarCursor< T extends NativeType< T > > extends AbstractCursorInt
 	}
 
 	@Override
+	public T getType()
+	{
+		return type;
+	}
+
+	@Override
 	public PlanarCursor< T > copy()
 	{
 		return new PlanarCursor< T >( this );

@@ -151,6 +151,12 @@ public abstract class AbstractArrayLocalizingCursor< T extends NativeType< T > >
 		return type;
 	}
 
+	@Override
+	public T getType()
+	{
+		return type;
+	}
+
 	/**
 	 * {@inheritDoc}
 	 */

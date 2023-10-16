@@ -129,6 +129,12 @@ public abstract class AbstractArrayCursor< T extends NativeType< T > > extends A
 	}
 
 	@Override
+	public T getType()
+	{
+		return type;
+	}
+
+	@Override
 	public boolean hasNext()
 	{
 		return typeIndex.get() < lastIndex;

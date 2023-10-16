@@ -209,6 +209,12 @@ public class NLinearInterpolator< T extends NumericType< T > > extends Floor< Ra
 	}
 
 	@Override
+	public T getType()
+	{
+		return accumulator;
+	}
+
+	@Override
 	public NLinearInterpolator< T > copy()
 	{
 		return new NLinearInterpolator< T >( this );

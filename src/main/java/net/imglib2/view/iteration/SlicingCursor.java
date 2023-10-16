@@ -197,6 +197,12 @@ public class SlicingCursor< T > extends AbstractEuclideanSpace implements Cursor
 		return s.get();
 	}
 
+	@Override
+	public T getType()
+	{
+		return s.getType();
+	}
+
 	/**
 	 * {@inheritDoc}
 	 */

@@ -161,6 +161,12 @@ public class OutOfBoundsPeriodic< T > extends AbstractLocalizable implements Out
 	}
 
 	@Override
+	public T getType()
+	{
+		return outOfBoundsRandomAccess.getType();
+	}
+
+	@Override
 	final public OutOfBoundsPeriodic< T > copy()
 	{
 		return new OutOfBoundsPeriodic< T >( this );

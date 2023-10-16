@@ -227,6 +227,12 @@ public class Localizables
 		}
 
 		@Override
+		public Localizable getType()
+		{
+			return this;
+		}
+
+		@Override
 		public RandomAccess< Localizable > copy()
 		{
 			return new LocationRandomAccess( this );
@@ -270,6 +276,12 @@ public class Localizables
 
 		@Override
 		public RealLocationRealRandomAccess get()
+		{
+			return this;
+		}
+
+		@Override
+		public RealLocalizable getType()
 		{
 			return this;
 		}

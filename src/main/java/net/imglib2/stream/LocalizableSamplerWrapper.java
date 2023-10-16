@@ -70,6 +70,12 @@ class LocalizableSamplerWrapper< T > implements Spliterator< LocalizableSampler<
 	}
 
 	@Override
+	public T getType()
+	{
+		return delegate.getType();
+	}
+
+	@Override
 	public LocalizableSamplerWrapper< T > copy()
 	{
 		return new LocalizableSamplerWrapper<>( delegate.copy() );

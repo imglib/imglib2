@@ -90,6 +90,12 @@ final public class ConvertedRealRandomAccess< A, B > extends AbstractConvertedRe
 	}
 
 	@Override
+	public B getType()
+	{
+		return converted;
+	}
+
+	@Override
 	public ConvertedRealRandomAccess< A, B > copy()
 	{
 		return new ConvertedRealRandomAccess< A, B >( source.copy(), converterSupplier, convertedSupplier );

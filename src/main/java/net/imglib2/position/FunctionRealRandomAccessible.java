@@ -85,6 +85,12 @@ public class FunctionRealRandomAccessible< T > extends AbstractFunctionEuclidean
 		}
 
 		@Override
+		public T getType()
+		{
+			return t;
+		}
+
+		@Override
 		public RealFunctionRealRandomAccess copy()
 		{
 			return new RealFunctionRealRandomAccess();

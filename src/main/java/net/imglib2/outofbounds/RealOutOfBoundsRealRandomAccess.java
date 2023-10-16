@@ -92,6 +92,12 @@ public final class RealOutOfBoundsRealRandomAccess< T > extends AbstractEuclidea
 	}
 
 	@Override
+	public T getType()
+	{
+		return outOfBounds.getType();
+	}
+
+	@Override
 	public RealOutOfBoundsRealRandomAccess< T > copy()
 	{
 		return new RealOutOfBoundsRealRandomAccess< T >( this );

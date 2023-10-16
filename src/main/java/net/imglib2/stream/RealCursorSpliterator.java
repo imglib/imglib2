@@ -138,6 +138,12 @@ public class RealCursorSpliterator< T > implements RealLocalizableSpliterator< T
 	}
 
 	@Override
+	public T getType()
+	{
+		return cursor.getType();
+	}
+
+	@Override
 	public RealCursorSpliterator< T > copy()
 	{
 		return new RealCursorSpliterator<>( cursor.copy(), index, fence, characteristics );

@@ -89,6 +89,12 @@ public class IntervalSampler< T > implements ProjectedSampler< T >
 	}
 
 	@Override
+	public T getType()
+	{
+		return m_source.getType();
+	}
+
+	@Override
 	public Sampler< T > copy()
 	{
 		return m_source.copy();

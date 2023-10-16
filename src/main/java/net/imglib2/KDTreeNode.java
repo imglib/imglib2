@@ -152,6 +152,12 @@ public class KDTreeNode< T > implements RealLocalizable, Sampler< T >
 	}
 
 	@Override
+	public T getType()
+	{
+		return tree.getType();
+	}
+
+	@Override
 	public KDTreeNode< T > copy()
 	{
 		final KDTreeNode< T > copy = new KDTreeNode<>( tree );

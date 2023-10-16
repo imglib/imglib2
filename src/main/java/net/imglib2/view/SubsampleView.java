@@ -226,6 +226,12 @@ public class SubsampleView< T > implements RandomAccessible< T >, View
 		}
 
 		@Override
+		public T getType()
+		{
+			return sourceRandomAccess.getType();
+		}
+
+		@Override
 		public SubsampleRandomAccess copy()
 		{
 			return new SubsampleRandomAccess( sourceRandomAccess.copy() );

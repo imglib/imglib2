@@ -87,6 +87,12 @@ public class AbstractConvertedRandomAccessibleIntervalTest
 					}
 
 					@Override
+					public DoubleType getType()
+					{
+						return t;
+					}
+
+					@Override
 					public AbstractConvertedRandomAccess< DoubleType, DoubleType > copy()
 					{
 						return null;

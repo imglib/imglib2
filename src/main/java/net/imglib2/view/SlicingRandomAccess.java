@@ -299,6 +299,12 @@ public class SlicingRandomAccess< T > extends AbstractLocalizable implements Ran
 	}
 
 	@Override
+	public T getType()
+	{
+		return s.getType();
+	}
+
+	@Override
 	public SlicingRandomAccess< T > copy()
 	{
 		return new SlicingRandomAccess< T >( this );

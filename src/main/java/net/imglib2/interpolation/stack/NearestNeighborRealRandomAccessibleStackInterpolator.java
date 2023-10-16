@@ -491,6 +491,12 @@ public class NearestNeighborRealRandomAccessibleStackInterpolator< T > extends A
 	}
 
 	@Override
+	public T getType()
+	{
+		return sliceAccesses[ 0 ].getType();
+	}
+
+	@Override
 	public NearestNeighborRealRandomAccessibleStackInterpolator< T > copy()
 	{
 		return new NearestNeighborRealRandomAccessibleStackInterpolator< T >( this );

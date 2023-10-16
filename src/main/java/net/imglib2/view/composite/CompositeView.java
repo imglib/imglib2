@@ -216,6 +216,12 @@ public class CompositeView< T, C extends Composite< T > > implements RandomAcces
 		}
 
 		@Override
+		public C getType()
+		{
+			return composite;
+		}
+
+		@Override
 		public CompositeRandomAccess copy()
 		{
 			return new CompositeRandomAccess( this );
