@@ -73,4 +73,10 @@ public interface Sampler< T >
 	 *         {@link ArrayCursor} for example)
 	 */
 	Sampler< T > copy();
+
+	T getType();
+//	default T getType()
+//	{
+//		return get();
+//	}
 }
