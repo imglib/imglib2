@@ -276,6 +276,12 @@ public class PointSample< T > extends AbstractLocalizable implements RandomAcces
 	}
 
 	@Override
+	public T getType()
+	{
+		return get();
+	}
+
+	@Override
 	public PointSample< T > copy()
 	{
 		return new PointSample<>( sampleSupplier, position, true );

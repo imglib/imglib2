@@ -365,6 +365,12 @@ public final class MixedRandomAccess< T > extends AbstractLocalizable implements
 	}
 
 	@Override
+	public T getType()
+	{
+		return s.getType();
+	}
+
+	@Override
 	public MixedRandomAccess< T > copy()
 	{
 		return new MixedRandomAccess< T >( this );

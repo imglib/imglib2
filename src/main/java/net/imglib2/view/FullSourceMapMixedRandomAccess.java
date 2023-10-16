@@ -369,6 +369,12 @@ public final class FullSourceMapMixedRandomAccess< T > extends AbstractEuclidean
 	}
 
 	@Override
+	public T getType()
+	{
+		return s.getType();
+	}
+
+	@Override
 	public FullSourceMapMixedRandomAccess< T > copy()
 	{
 		return new FullSourceMapMixedRandomAccess< T >( this );

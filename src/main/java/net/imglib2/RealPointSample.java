@@ -334,6 +334,12 @@ public class RealPointSample< T > extends AbstractRealLocalizable implements Rea
 	}
 
 	@Override
+	public T getType()
+	{
+		return get();
+	}
+
+	@Override
 	public RealPointSample< T > copy()
 	{
 		return new RealPointSample<>( sampleSupplier, position, true );

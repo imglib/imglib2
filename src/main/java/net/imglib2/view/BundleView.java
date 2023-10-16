@@ -74,6 +74,12 @@ class BundleView< T > implements RandomAccessible< RandomAccess< T > >
 		}
 
 		@Override
+		public RandomAccess< T > getType()
+		{
+			return source;
+		}
+
+		@Override
 		public BundleRandomAccess copy()
 		{
 			return new BundleRandomAccess( source.copy() );

@@ -178,4 +178,10 @@ class ArrayLocalizingSpliterator< T extends NativeType< T > > extends AbstractLo
 	{
 		return type;
 	}
+
+	@Override
+	public T getType()
+	{
+		return type;
+	}
 }

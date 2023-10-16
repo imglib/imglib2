@@ -140,6 +140,12 @@ public class CellRandomAccess< T extends NativeType< T >, C extends Cell< ? > >
 	}
 
 	@Override
+	public T getType()
+	{
+		return type;
+	}
+
+	@Override
 	public CellRandomAccess< T, C > copy()
 	{
 		return new CellRandomAccess<>( this );

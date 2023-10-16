@@ -220,6 +220,12 @@ public class RandomAccessiblePair< A, B > implements RandomAccessible< Pair< A, 
 		}
 
 		@Override
+		public RandomAccess getType()
+		{
+			return this;
+		}
+
+		@Override
 		public RandomAccess copy()
 		{
 			final RandomAccess copy = new RandomAccess();

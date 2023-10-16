@@ -126,6 +126,12 @@ public class PlanarLocalizingCursor< T extends NativeType< T > > extends Abstrac
 	}
 
 	@Override
+	public T getType()
+	{
+		return type;
+	}
+
+	@Override
 	public PlanarLocalizingCursor< T > copy()
 	{
 		return new PlanarLocalizingCursor< T >( this );

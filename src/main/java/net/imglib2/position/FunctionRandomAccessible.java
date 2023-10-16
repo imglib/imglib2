@@ -86,6 +86,12 @@ public class FunctionRandomAccessible< T > extends AbstractFunctionEuclideanSpac
 		}
 
 		@Override
+		public T getType()
+		{
+			return t;
+		}
+
+		@Override
 		public FunctionRandomAccess copy()
 		{
 			return new FunctionRandomAccess();

@@ -136,6 +136,12 @@ public class KDTree< T > implements EuclideanSpace, IterableRealInterval< T >
 				{
 					return new Cursor( source.copy() );
 				}
+
+				@Override
+				public RealLocalizable getType()
+				{
+					return source;
+				}
 			}
 
 			@Override
@@ -236,6 +242,12 @@ public class KDTree< T > implements EuclideanSpace, IterableRealInterval< T >
 		public boolean hasNext()
 		{
 			return nodeIndex() < impl.size() - 1;
+		}
+
+		@Override
+		public T getType()
+		{
+			return treeData.getType();
 		}
 
 		@Override

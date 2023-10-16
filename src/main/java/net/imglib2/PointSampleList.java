@@ -125,6 +125,12 @@ public class PointSampleList< T > extends AbstractInterval implements IterableIn
 		}
 
 		@Override
+		public T getType()
+		{
+			return sample;
+		}
+
+		@Override
 		public void fwd()
 		{
 			++index;

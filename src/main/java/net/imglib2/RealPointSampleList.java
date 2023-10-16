@@ -100,6 +100,12 @@ public class RealPointSampleList< T > implements IterableRealInterval< T >
 		}
 
 		@Override
+		public T getType()
+		{
+			return sample;
+		}
+
+		@Override
 		public void fwd()
 		{
 			++index;

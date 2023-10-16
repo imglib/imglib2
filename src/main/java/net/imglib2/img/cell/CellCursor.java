@@ -112,6 +112,12 @@ public class CellCursor< T extends NativeType< T >, C extends Cell< ? > >
 	}
 
 	@Override
+	public T getType()
+	{
+		return type;
+	}
+
+	@Override
 	public CellCursor< T, C > copy()
 	{
 		return new CellCursor<>( this );

@@ -242,6 +242,12 @@ public class HyperSlice< T > implements RandomAccessible< T >
 		}
 
 		@Override
+		public T getType()
+		{
+			return sourceAccess.getType();
+		}
+
+		@Override
 		public HyperSliceRandomAccess copy()
 		{
 			return new HyperSliceRandomAccess();

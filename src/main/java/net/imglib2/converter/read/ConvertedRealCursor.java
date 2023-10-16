@@ -98,6 +98,12 @@ public class ConvertedRealCursor< A, B > extends AbstractConvertedRealCursor< A,
 	}
 
 	@Override
+	public B getType()
+	{
+		return converted;
+	}
+
+	@Override
 	public ConvertedRealCursor< A, B > copy()
 	{
 		return new ConvertedRealCursor< A, B >( ( RealCursor< A > ) source.copy(), converterSupplier, convertedSupplier );
