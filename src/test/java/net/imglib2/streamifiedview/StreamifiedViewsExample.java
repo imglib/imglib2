@@ -3,6 +3,8 @@ package net.imglib2.streamifiedview;
 import net.imglib2.Cursor;
 import net.imglib2.RandomAccess;
 import net.imglib2.RandomAccessibleInterval;
+import net.imglib2.img.Img;
+import net.imglib2.img.array.ArrayImg;
 import net.imglib2.img.array.ArrayImgs;
 import net.imglib2.interpolation.randomaccess.NLinearInterpolatorFactory;
 import net.imglib2.type.numeric.integer.IntType;
@@ -23,5 +25,9 @@ public class StreamifiedViewsExample
 		Cursor< IntType > cursor = img.view()
 				.interval( img )
 				.cursor();
+
+		ArrayImg<IntType, ?> persistentView = img.view()
+				.interval(img)
+				.toArrayImg();
 	}
 }

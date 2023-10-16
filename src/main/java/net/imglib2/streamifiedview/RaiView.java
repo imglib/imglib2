@@ -5,6 +5,11 @@ import net.imglib2.Interval;
 import net.imglib2.IterableInterval;
 import net.imglib2.RandomAccess;
 import net.imglib2.RandomAccessibleInterval;
+import net.imglib2.img.Img;
+import net.imglib2.img.array.ArrayImg;
+import net.imglib2.img.array.ArrayImgFactory;
+import net.imglib2.loops.LoopBuilder;
+import net.imglib2.type.NativeType;
 import net.imglib2.view.Views;
 
 /**
@@ -101,5 +106,28 @@ public interface RaiView< T > extends RaView< T >, RandomAccessibleInterval< T >
 	default Object iterationOrder()
 	{
 		return Views.iterable( delegate() ).iterationOrder();
+	}
+
+	/**
+	 * @return an {@link ArrayImg} containing a persistent copy of the data in this {@link RaiView}.
+	 * @throws ClassCastException if the type of this {@link RaiView} is not a {@link NativeType}.
+	 */
+	// the following method ensures that T is a NativeType
+	@SuppressWarnings({"unchecked", "rawtypes"})
+	default <S extends NativeType<S>> ArrayImg<S, ?> toArrayImg() {
+		final long[] dims = dimensionsAsLongArray();
+		final T type = firstElement();
+
+		if (type instanceof NativeType) {
+			final NativeType<S> nativeType = (NativeType<S>) type;
+			ArrayImgFactory<S> factory = new ArrayImgFactory(nativeType);
+			ArrayImg<S, ?> outputImg = factory.create(dims);
+			final RandomAccessibleInterval<S> inputRai = (RandomAccessibleInterval<S>) this;
+			LoopBuilder.setImages(inputRai, outputImg).forEachPixel((in, out) -> out.set(in));
+			return outputImg;
+		} else {
+			throw new ClassCastException("Cannot create ArrayImg from type " + type.getClass().getCanonicalName() +
+												 ". Need an implementation of NativeType.");
+		}
 	}
 }
