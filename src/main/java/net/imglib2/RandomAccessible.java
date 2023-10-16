@@ -62,7 +62,7 @@ import net.imglib2.view.Views;
  * @author Stephan Saalfeld
  * @author Tobias Pietzsch
  */
-public interface RandomAccessible< T > extends EuclideanSpace
+public interface RandomAccessible< T > extends EuclideanSpace, Typed< T >
 {
 	/**
 	 * Create a random access sampler for integer coordinates.
