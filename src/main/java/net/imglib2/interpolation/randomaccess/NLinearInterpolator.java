@@ -214,7 +214,7 @@ public class NLinearInterpolator< T extends NumericType< T > > extends Floor< Ra
 		return new NLinearInterpolator< T >( this );
 	}
 
-	final private void graycodeFwdRecursive( final int dimension )
+	private void graycodeFwdRecursive( final int dimension )
 	{
 		if ( dimension == 0 )
 		{
@@ -232,7 +232,7 @@ public class NLinearInterpolator< T extends NumericType< T > > extends Floor< Ra
 		}
 	}
 
-	final private void graycodeBckRecursive( final int dimension )
+	private void graycodeBckRecursive( final int dimension )
 	{
 		if ( dimension == 0 )
 		{
@@ -253,7 +253,7 @@ public class NLinearInterpolator< T extends NumericType< T > > extends Floor< Ra
 	/**
 	 * multiply current target value with current weight and add to accumulator.
 	 */
-	final private void accumulate()
+	private void accumulate()
 	{
 		tmp.set( target.get() );
 		tmp.mul( weights[ code ] );
@@ -265,14 +265,14 @@ public class NLinearInterpolator< T extends NumericType< T > > extends Floor< Ra
 	}
 
 	@SuppressWarnings( "unused" )
-	final private void printWeights()
+	private void printWeights()
 	{
 		for ( int i = 0; i < weights.length; ++i )
 			System.out.printf( "weights [ %2d ] = %f\n", i, weights[ i ] );
 	}
 
 	@SuppressWarnings( "unused" )
-	final private void printCode()
+	private void printCode()
 	{
 		final int maxbits = 4;
 		final String binary = Integer.toBinaryString( code );
