@@ -313,4 +313,10 @@ public class InflateView< T > implements RandomAccessible< T >, View
 	{
 		return randomAccess();
 	}
+
+	@Override
+	public T getType()
+	{
+		return source.getType().get( 0 );
+	}
 }

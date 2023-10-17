@@ -64,7 +64,7 @@ import net.imglib2.util.Intervals;
  */
 public interface RandomAccessibleInterval< T > extends RandomAccessible< T >, Interval
 {
-	/**
+	/*
 	 * Get an instance of {@code T}.
 	 * <p>
 	 * It should not be assumed that the returned {@code T} instance is an
@@ -77,8 +77,9 @@ public interface RandomAccessibleInterval< T > extends RandomAccessible< T >, In
 	 *
 	 * @return an instance of {@code T}
 	 */
-	default T getType()
-	{
-		return getAt( Intervals.minAsLongArray( this ) );
-	}
+//	@Override
+//	default T getType()
+//	{
+//		return getAt( Intervals.minAsLongArray( this ) );
+//	}
 }

@@ -80,11 +80,8 @@ public abstract class AbstractNativeImg< T extends NativeType< T >, A >
 	}
 
 	@Override
-	public T getType() {
-		try {
-			return linkedType.createVariable();
-		} catch ( final NullPointerException e ) {
-			return super.getType();
-		}
+	public T getType()
+	{
+		return linkedType;
 	}
 }

@@ -11,13 +11,13 @@
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice,
  *    this list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  *    this list of conditions and the following disclaimer in the documentation
  *    and/or other materials provided with the distribution.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -46,7 +46,7 @@ import net.imglib2.type.Type;
  * pixel is stored as an individual object, so {@link ListImg} should only be
  * used for images with relatively few pixels. In principle, the number of
  * entities stored is limited to {@link Integer#MAX_VALUE}.
- * 
+ *
  * @param <T>
  *            The value type of the pixels. You can us {@link Type}s or
  *            arbitrary {@link Object}s. If you use non-{@link Type} pixels,
@@ -55,18 +55,21 @@ import net.imglib2.type.Type;
  *            {@link ListCursor#set(Object)} and
  *            {@link ListRandomAccess#set(Object)} methods to alter the
  *            underlying {@link ArrayList}.
- * 
+ *
  * @author Stephan Preibisch
  * @author Stephan Saalfeld
  * @author Tobias Pietzsch
  */
 public class ListImg< T > extends AbstractListImg< T >
 {
-	final private List< T > pixels;
+	private final List< T > pixels;
+
+	private final T type;
 
 	public ListImg( final long[] dim, final T type )
 	{
 		super( dim );
+		this.type = type;
 		pixels = new ArrayList< T >( ( int ) numPixels );
 
 		if ( type instanceof Type< ? > )
@@ -84,20 +87,31 @@ public class ListImg< T > extends AbstractListImg< T >
 		}
 	}
 
-	public ListImg( final Collection< T > collection, final long... dim )
+	public ListImg( final T type, final Collection< T > collection, final long... dim )
 	{
 		super( dim );
 
 		assert numPixels == collection.size() : "Dimensions do not match number of pixels.";
 
-		pixels = new ArrayList< T >( ( int ) numPixels );
-		pixels.addAll( collection );
+		this.type = type;
+		pixels = new ArrayList<>( collection );
+	}
+
+	public ListImg( final Collection< T > collection, final long... dim )
+	{
+		this( collection.iterator().next(), collection, dim );
 	}
 
 	@Override
 	protected T get( final int index )
 	{
 		return pixels.get( index );
+	}
+
+	@Override
+	public T getType()
+	{
+		return type;
 	}
 
 	@Override
@@ -108,7 +122,7 @@ public class ListImg< T > extends AbstractListImg< T >
 
 	private static < A extends Type< A > > ListImg< A > copyWithType( final ListImg< A > img )
 	{
-		final ListImg< A > copy = new ListImg< A >( img.dimension, img.firstElement().createVariable() );
+		final ListImg< A > copy = new ListImg<>( img.dimension, img.type );
 
 		final ListCursor< A > source = img.cursor();
 		final ListCursor< A > target = copy.cursor();
@@ -123,19 +137,18 @@ public class ListImg< T > extends AbstractListImg< T >
 	@Override
 	public ListImg< T > copy()
 	{
-		final T type = firstElement();
 		if ( type instanceof Type< ? > )
 		{
 			final ListImg< ? > copy = copyWithType( ( ListImg< Type > ) this );
 			return ( ListImg< T > ) copy;
 		}
-		return new ListImg< T >( this.pixels, dimension );
+		return new ListImg<>( this.type, this.pixels, dimension );
 	}
 
 	private ListImg( final List< T > pixels, final boolean dummy, final long... dim )
 	{
 		super( dim );
-
+		this.type = pixels.isEmpty() ? null : pixels.get( 0 );
 		assert numPixels == pixels.size() : "Dimensions do not match number of pixels.";
 		this.pixels = pixels;
 	}

@@ -290,6 +290,12 @@ public class InterleaveView< T > implements RandomAccessible< T >, View
 	}
 
 	@Override
+	public T getType()
+	{
+		return source.getType().get( 0 );
+	}
+
+	@Override
 	public int numDimensions()
 	{
 		return n;
