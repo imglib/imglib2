@@ -65,7 +65,7 @@ public class LazyCellImg< T extends NativeType< T >, A extends DataAccess >
 
 	public LazyCellImg( final CellGrid grid, final T type, final Get< Cell< A > > get )
 	{
-		super( grid, new LazyCells<>( grid.getGridDimensions(), get ), type.getEntitiesPerPixel() );
+		super( grid, new LazyCells<>( grid.getGridDimensions(), get, typeCell() ), type.getEntitiesPerPixel() );
 
 		@SuppressWarnings( "unchecked" )
 		final NativeTypeFactory< T, ? super A > typeFactory = ( NativeTypeFactory< T, ? super A > ) type.getNativeTypeFactory();
@@ -74,7 +74,15 @@ public class LazyCellImg< T extends NativeType< T >, A extends DataAccess >
 
 	public LazyCellImg( final CellGrid grid, final Fraction entitiesPerPixel, final Get< Cell< A > > get )
 	{
-		super( grid, new LazyCells<>( grid.getGridDimensions(), get ), entitiesPerPixel );
+		super( grid, new LazyCells<>( grid.getGridDimensions(), get, typeCell() ), entitiesPerPixel );
+	}
+
+	/**
+	 * Create a dummy Cell instance to be returned by {@code LazyCells.getType()}.
+	 */
+	private static < A > Cell< A > typeCell()
+	{
+		return new Cell<>( new int[] { 0 }, new long[] { 0 }, null );
 	}
 
 	@Override
@@ -89,20 +97,29 @@ public class LazyCellImg< T extends NativeType< T >, A extends DataAccess >
 		throw new UnsupportedOperationException( "not implemented yet" );
 	}
 
-	public static final class LazyCells< T > extends AbstractLongListImg< T >
+	public static final class LazyCells< T extends Cell< ? > > extends AbstractLongListImg< T >
 	{
 		private final Get< T > get;
 
-		public LazyCells( final long[] dimensions, final Get< T > get )
+		private final T type;
+
+		public LazyCells( final long[] dimensions, final Get< T > get, final T type )
 		{
 			super( dimensions );
 			this.get = get;
+			this.type = type;
 		}
 
 		@Override
 		protected T get( final long index )
 		{
 			return get.get( index );
+		}
+
+		@Override
+		public T getType()
+		{
+			return type;
 		}
 
 		@Override

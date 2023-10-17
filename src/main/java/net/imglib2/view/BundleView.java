@@ -102,4 +102,10 @@ class BundleView< T > implements RandomAccessible< RandomAccess< T > >
 	{
 		return new BundleRandomAccess( source.randomAccess( interval ) );
 	}
+
+	@Override
+	public RandomAccess< T > getType()
+	{
+		return source.randomAccess();
+	}
 }
