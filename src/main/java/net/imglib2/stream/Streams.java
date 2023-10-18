@@ -91,4 +91,24 @@ public class Streams
 	{
 		return StreamSupport.stream( new LocalizableSamplerWrapper<>( interval.localizingSpliterator() ), false );
 	}
+
+
+
+	public static < T > Stream< RealLocalizableSampler< T > > localizing_( IterableRealInterval< T > interval )
+	{
+		return new SamplerStream<>( localizing_( interval ) );
+	}
+	public static < T > Stream< RealLocalizableSampler< T > > localizable_( IterableRealInterval< T > interval )
+	{
+		return new SamplerStream<>( localizable( interval ) );
+	}
+	public static < T > Stream< LocalizableSampler< T > > localizable_( IterableInterval< T > interval )
+	{
+		return new SamplerStream<>( localizable( interval ) );
+	}
+	public static < T > Stream< LocalizableSampler< T > > localizing_( IterableInterval< T > interval )
+	{
+		return new SamplerStream<>( localizing( interval ) );
+	}
+
 }
