@@ -64,12 +64,36 @@ public interface IterableInterval< T > extends IterableRealInterval< T >, Interv
 	@Override
 	Cursor< T > localizingCursor();
 
+	/**
+	 * Creates a {@link LocalizableSpliterator} over the elements of this {@code
+	 * IterableInterval}. The returned {@code Spliterator} iterates with optimal
+	 * speed without calculating the location at each iteration step.
+	 * Localization is performed on demand.
+	 *
+	 * @implSpec
+	 * The default implementation wraps a {@code Cursor} on the interval. The
+	 * created {@code Spliterator} reports {@link Spliterator#SIZED}, {@link
+	 * Spliterator#SUBSIZED},  {@link Spliterator#ORDERED} and {@link
+	 * Spliterator#NONNULL}.
+	 */
 	@Override
 	default LocalizableSpliterator< T > spliterator()
 	{
 		return new CursorSpliterator<>( cursor(),0, size(), Spliterator.ORDERED | Spliterator.NONNULL );
 	}
 
+	/**
+	 * Creates a {@link LocalizableSpliterator} over the elements of this {@code
+	 * IterableInterval}. The returned {@code Spliterator} calculates its
+	 * location at each iteration step. That is, localization is performed with
+	 * optimal speed.
+	 *
+	 * @implSpec
+	 * The default implementation wraps a {@link #localizingCursor() localizing}
+	 * {@code Cursor} on the interval. The created {@code Spliterator} reports
+	 * {@link Spliterator#SIZED}, {@link Spliterator#SUBSIZED},  {@link
+	 * Spliterator#ORDERED} and {@link Spliterator#NONNULL}.
+	 */
 	@Override
 	default LocalizableSpliterator< T > localizingSpliterator()
 	{

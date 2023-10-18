@@ -41,6 +41,12 @@ import net.imglib2.type.Index;
 import net.imglib2.type.NativeType;
 import net.imglib2.util.IntervalIndexer;
 
+/**
+ * LocalizableSpliterator for ArrayImg.
+ * Keeps track of location on every step.
+ *
+ * @param <T> pixel type
+ */
 class ArrayLocalizingSpliterator< T extends NativeType< T > > extends AbstractLocalizableInt implements LocalizableSpliterator< T >
 {
 	private final ArrayImg< T, ? > img;

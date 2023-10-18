@@ -43,7 +43,10 @@ import net.imglib2.type.Index;
 import net.imglib2.type.NativeType;
 
 /**
- * Spliterator for {@link CellImg}.
+ * LocalizableSpliterator for {@link CellImg}.
+ * Localizes on demand.
+ *
+ * @param <T> pixel type
  */
 class CellSpliterator< T extends NativeType< T >, C extends Cell< ? > > implements LocalizableSpliterator< T >
 {

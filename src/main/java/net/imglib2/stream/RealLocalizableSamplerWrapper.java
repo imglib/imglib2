@@ -5,10 +5,25 @@ import java.util.function.Consumer;
 import net.imglib2.RealLocalizableSampler;
 import net.imglib2.RealPositionable;
 
+/**
+ * Wraps {@link RealLocalizableSpliterator} as {@code Spliterator<RealLocalizableSampler<T>>}.
+ * <p>
+ * Concretely, it implements {@code RealLocalizableSampler}, forwarding all methods
+ * to the wrapped {@code RealLocalizableSpliterator}. And passes itself as a proxy
+ * to the {@code Consumer} in {@link #tryAdvance} and {@link #forEachRemaining}.
+ *
+ * @param <T> pixel type
+ */
 class RealLocalizableSamplerWrapper< T > implements Spliterator< RealLocalizableSampler< T > >, RealLocalizableSampler< T >
 {
 	private final RealLocalizableSpliterator< T > delegate;
 
+	/**
+	 * Wrap the given {@code delegate} as {@code Spliterator<RealLocalizableSampler<T>>}.
+	 *
+	 * @param delegate
+	 * 		spliterator to wrap
+	 */
 	RealLocalizableSamplerWrapper( final RealLocalizableSpliterator< T > delegate )
 	{
 		this.delegate = delegate;

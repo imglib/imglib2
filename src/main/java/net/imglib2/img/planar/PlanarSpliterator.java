@@ -41,6 +41,12 @@ import net.imglib2.stream.LocalizableSpliterator;
 import net.imglib2.type.Index;
 import net.imglib2.type.NativeType;
 
+/**
+ * LocalizableSpliterator for {@link PlanarImg}.
+ * Localizes on demand.
+ *
+ * @param <T> pixel type
+ */
 class PlanarSpliterator< T extends NativeType< T > > implements LocalizableSpliterator< T >, PlanarImg.PlanarContainerSampler
 {
 	private final PlanarImg< T, ? > img;
