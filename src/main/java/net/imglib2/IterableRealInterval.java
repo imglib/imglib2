@@ -39,6 +39,7 @@ import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 import net.imglib2.stream.RealCursorSpliterator;
 import net.imglib2.stream.RealLocalizableSpliterator;
+import net.imglib2.stream.Streams;
 
 /**
  * <p>
@@ -139,22 +140,70 @@ public interface IterableRealInterval< T > extends RealInterval, Iterable< T >
 		return cursor();
 	}
 
+	/**
+	 * Returns a sequential {@code Stream} over the elements of this {@code
+	 * IterableRealInterval}.
+	 * <p>
+	 * Note that the returned {@code Stream} gives access only to the values
+	 * of the elements, not their locations. To obtain a {@code Stream} that
+	 * includes locations, see {@link Streams#localizable}.
+	 *
+	 * @implSpec
+	 * The default implementation creates a sequential {@code Stream} from the
+	 * interval's {@link #spliterator()}.
+	 */
 	default Stream< T > stream()
 	{
 		return StreamSupport.stream( spliterator(), false );
 	}
 
+	/**
+	 * Returns a parallel {@code Stream} over the elements of this {@code
+	 * IterableRealInterval}.
+	 * <p>
+	 * Note that the returned {@code Stream} gives access only to the values
+	 * of the elements, not their locations. To obtain a {@code Stream} that
+	 * includes locations, see {@link Streams#localizable}.
+	 *
+	 * @implSpec
+	 * The default implementation creates a parallel {@code Stream} from the
+	 * interval's {@link #spliterator()}.
+	 */
 	default Stream< T > parallelStream()
 	{
 		return StreamSupport.stream( spliterator(), true );
 	}
 
+	/**
+	 * Creates a {@link RealLocalizableSpliterator} over the elements of this
+	 * {@code IterableRealInterval}. The returned {@code Spliterator} iterates
+	 * with optimal speed without calculating the location at each iteration
+	 * step. Localization is performed on demand.
+	 *
+	 * @implSpec
+	 * The default implementation wraps a {@code RealCursor} on the interval.
+	 * The created {@code Spliterator} reports {@link Spliterator#SIZED}, {@link
+	 * Spliterator#SUBSIZED},  {@link Spliterator#ORDERED} and {@link
+	 * Spliterator#NONNULL}.
+	 */
 	@Override
 	default RealLocalizableSpliterator< T > spliterator()
 	{
 		return new RealCursorSpliterator<>( cursor(),0, size(), Spliterator.ORDERED | Spliterator.NONNULL );
 	}
 
+	/**
+	 * Creates a {@link RealLocalizableSpliterator} over the elements of this
+	 * {@code IterableRealInterval}. The returned {@code Spliterator} calculates
+	 * its location at each iteration step. That is, localization is performed
+	 * with optimal speed.
+	 *
+	 * @implSpec
+	 * The default implementation wraps a {@link #localizingCursor() localizing}
+	 * {@code RealCursor} on the interval. The created {@code Spliterator}
+	 * reports {@link Spliterator#SIZED}, {@link Spliterator#SUBSIZED},  {@link
+	 * Spliterator#ORDERED} and {@link Spliterator#NONNULL}.
+	 */
 	default RealLocalizableSpliterator< T > localizingSpliterator()
 	{
 		return new RealCursorSpliterator<>( localizingCursor(), 0, size(), Spliterator.ORDERED | Spliterator.NONNULL );

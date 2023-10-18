@@ -6,10 +6,25 @@ import net.imglib2.LocalizableSampler;
 import net.imglib2.Positionable;
 import net.imglib2.RealPositionable;
 
+/**
+ * Wraps {@link LocalizableSpliterator} as {@code Spliterator<LocalizableSampler<T>>}.
+ * <p>
+ * Concretely, it implements {@code LocalizableSampler}, forwarding all methods
+ * to the wrapped {@code LocalizableSpliterator}. And passes itself as a proxy
+ * to the {@code Consumer} in {@link #tryAdvance} and {@link #forEachRemaining}.
+ *
+ * @param <T> pixel type
+ */
 class LocalizableSamplerWrapper< T > implements Spliterator< LocalizableSampler< T > >, LocalizableSampler< T >
 {
 	private final LocalizableSpliterator< T > delegate;
 
+	/**
+	 * Wrap the given {@code delegate} as {@code Spliterator<LocalizableSampler<T>>}.
+	 *
+	 * @param delegate
+	 * 		spliterator to wrap
+	 */
 	LocalizableSamplerWrapper( final LocalizableSpliterator< T > delegate )
 	{
 		this.delegate = delegate;
