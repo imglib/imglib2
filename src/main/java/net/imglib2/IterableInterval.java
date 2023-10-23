@@ -69,8 +69,7 @@ public interface IterableInterval< T > extends IterableRealInterval< T >, Interv
 	 * IterableInterval}. The returned {@code Spliterator} iterates with optimal
 	 * speed without calculating the location at each iteration step.
 	 * Localization is performed on demand.
-	 *
-	 * @implSpec
+	 * <p>
 	 * The default implementation wraps a {@code Cursor} on the interval. The
 	 * created {@code Spliterator} reports {@link Spliterator#SIZED}, {@link
 	 * Spliterator#SUBSIZED},  {@link Spliterator#ORDERED} and {@link
@@ -87,8 +86,7 @@ public interface IterableInterval< T > extends IterableRealInterval< T >, Interv
 	 * IterableInterval}. The returned {@code Spliterator} calculates its
 	 * location at each iteration step. That is, localization is performed with
 	 * optimal speed.
-	 *
-	 * @implSpec
+	 * <p>
 	 * The default implementation wraps a {@link #localizingCursor() localizing}
 	 * {@code Cursor} on the interval. The created {@code Spliterator} reports
 	 * {@link Spliterator#SIZED}, {@link Spliterator#SUBSIZED},  {@link

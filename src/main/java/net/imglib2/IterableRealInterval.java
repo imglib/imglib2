@@ -147,8 +147,7 @@ public interface IterableRealInterval< T > extends RealInterval, Iterable< T >
 	 * Note that the returned {@code Stream} gives access only to the values
 	 * of the elements, not their locations. To obtain a {@code Stream} that
 	 * includes locations, see {@link Streams#localizable}.
-	 *
-	 * @implSpec
+	 * <p>
 	 * The default implementation creates a sequential {@code Stream} from the
 	 * interval's {@link #spliterator()}.
 	 */
@@ -164,8 +163,7 @@ public interface IterableRealInterval< T > extends RealInterval, Iterable< T >
 	 * Note that the returned {@code Stream} gives access only to the values
 	 * of the elements, not their locations. To obtain a {@code Stream} that
 	 * includes locations, see {@link Streams#localizable}.
-	 *
-	 * @implSpec
+	 * <p>
 	 * The default implementation creates a parallel {@code Stream} from the
 	 * interval's {@link #spliterator()}.
 	 */
@@ -179,8 +177,7 @@ public interface IterableRealInterval< T > extends RealInterval, Iterable< T >
 	 * {@code IterableRealInterval}. The returned {@code Spliterator} iterates
 	 * with optimal speed without calculating the location at each iteration
 	 * step. Localization is performed on demand.
-	 *
-	 * @implSpec
+	 * <p>
 	 * The default implementation wraps a {@code RealCursor} on the interval.
 	 * The created {@code Spliterator} reports {@link Spliterator#SIZED}, {@link
 	 * Spliterator#SUBSIZED},  {@link Spliterator#ORDERED} and {@link
@@ -197,8 +194,7 @@ public interface IterableRealInterval< T > extends RealInterval, Iterable< T >
 	 * {@code IterableRealInterval}. The returned {@code Spliterator} calculates
 	 * its location at each iteration step. That is, localization is performed
 	 * with optimal speed.
-	 *
-	 * @implSpec
+	 * <p>
 	 * The default implementation wraps a {@link #localizingCursor() localizing}
 	 * {@code RealCursor} on the interval. The created {@code Spliterator}
 	 * reports {@link Spliterator#SIZED}, {@link Spliterator#SUBSIZED},  {@link
