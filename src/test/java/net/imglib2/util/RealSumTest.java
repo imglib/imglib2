@@ -137,4 +137,17 @@ public class RealSumTest
 			Assert.assertEquals( sum, stream.length, 0.0001 );
 		}
 	}
+
+	/**
+	 * Test method for {@link net.imglib2.util.RealSum#add(double)}.
+	 */
+	@Test
+	public void testDoubleHard() {
+		final double[] values = new double[]{1.0, 1.0e100, 1.0, -1.0e100};
+		final RealSum sum = new RealSum();
+		for (double value : values) {
+			sum.add(value);
+		}
+		Assert.assertEquals(2.0, sum.getSum(), 0.0001);
+	}
 }
