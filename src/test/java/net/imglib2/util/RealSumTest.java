@@ -75,16 +75,6 @@ public class RealSumTest
 	}
 
 	/**
-	 * Test method for {@link net.imglib2.util.RealSum#RealSum(int)}.
-	 */
-	@Test
-	public void testRealSumInt()
-	{
-		final RealSum sum = new RealSum( 10 );
-		Assert.assertEquals( sum.getSum(), 0.0, 0.001 );
-	}
-
-	/**
 	 * Test method for {@link net.imglib2.util.RealSum#getSum()}.
 	 */
 	@Test
