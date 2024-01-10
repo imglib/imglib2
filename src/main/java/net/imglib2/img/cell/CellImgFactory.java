@@ -137,13 +137,14 @@ public class CellImgFactory< T extends NativeType< T > > extends NativeImgFactor
 		final long[] cellGridPosition = new long[ n ];
 		final long[] cellMin = new long[ n ];
 		final int[] cellDims = new int[ n ];
+		final A access = ArrayDataAccessFactory.get( typeFactory );
 		final ListLocalizingCursor< Cell< A > > cellCursor = cells.localizingCursor();
 		while ( cellCursor.hasNext() )
 		{
 			cellCursor.fwd();
 			cellCursor.localize( cellGridPosition );
 			grid.getCellDimensions( cellGridPosition, cellMin, cellDims );
-			final A data = ArrayDataAccessFactory.get( typeFactory ).createArray( ( int ) entitiesPerPixel.mulCeil( Intervals.numElements( cellDims ) ) );
+			final A data = access.createArray( ( int ) entitiesPerPixel.mulCeil( Intervals.numElements( cellDims ) ) );
 			cellCursor.set( new Cell<>( cellDims, cellMin, data ) );
 		}
 
