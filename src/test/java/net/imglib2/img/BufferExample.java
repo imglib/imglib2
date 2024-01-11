@@ -4,13 +4,11 @@ import java.nio.ByteBuffer;
 import java.util.Random;
 import java.util.Set;
 import net.imglib2.Dimensions;
-import net.imglib2.RandomAccessibleInterval;
-import net.imglib2.blocks.PrimitiveBlocks;
 import net.imglib2.img.array.ArrayImg;
 import net.imglib2.img.array.ArrayImgFactory;
-import net.imglib2.img.array.ArrayImgs;
 import net.imglib2.img.basictypeaccess.AccessFlags;
 import net.imglib2.img.basictypeaccess.array.ArrayDataAccess;
+import net.imglib2.img.basictypeaccess.nio.BufferAccess;
 import net.imglib2.img.basictypeaccess.nio.ByteBufferAccess;
 import net.imglib2.img.basictypeaccess.nio.CharBufferAccess;
 import net.imglib2.img.basictypeaccess.nio.DoubleBufferAccess;
@@ -56,14 +54,33 @@ public class BufferExample
 		final int[] size = { 3, 3 };
 		final int[] dest = new int[ ( int ) Intervals.numElements( size ) ];
 
-		PrimitiveBlocks.of( intsWithArray ).copy( srcPos, dest, size );
-		System.out.println( "dest:\n" + toString( ArrayImgs.ints( dest, size[ 0 ], size[ 1 ] ) ) );
+//		PrimitiveBlocks.of( intsWithArray ).copy( srcPos, dest, size );
+//		System.out.println( "dest:\n" + toString( ArrayImgs.ints( dest, size[ 0 ], size[ 1 ] ) ) );
+//
+//		PrimitiveBlocks.of( intsWithBuffer ).copy( srcPos, dest, size );
+//		System.out.println( "dest:\n" + toString( ArrayImgs.ints( dest, size[ 0 ], size[ 1 ] ) ) );
 
-
-		PrimitiveBlocks.of( intsWithBuffer ).copy( srcPos, dest, size );
-		System.out.println( "dest:\n" + toString( ArrayImgs.ints( dest, size[ 0 ], size[ 1 ] ) ) );
+		System.out.println( "isBufferBacked( intsWithArray ) = " + isBufferBacked( intsWithArray ) );
+		System.out.println( "isBufferBacked( intsWithBuffer ) = " + isBufferBacked( intsWithBuffer ) );
 	}
 
+
+	static < T extends NativeType< T >, A > boolean isBufferBacked( NativeImg< T, A > img )
+	{
+		return getDataAccess( img ) instanceof BufferAccess;
+	}
+
+	/*
+	 * TODO: There should be a better way to get straight to a DataAccess instance.
+	 *       This is similar to the getType() problem.
+	 *       For now, this will work.
+	 *       Make an issue about getDataAccess() ...
+	 */
+
+	static < T extends NativeType< T >, A > A getDataAccess( NativeImg< T, A > img )
+	{
+		return img.update( img.cursor() );
+	}
 
 	static String toString( Img< IntType > img )
 	{
@@ -82,13 +99,6 @@ public class BufferExample
 				sb.append( "\n" );
 		}
 		return sb.toString();
-	}
-
-	private static < T extends NativeType< T >, A extends ArrayDataAccess< A > > ArrayImg< T, A > create(
-			final long[] dimensions,
-			final T type )
-	{
-		return null;
 	}
 
 	/*
