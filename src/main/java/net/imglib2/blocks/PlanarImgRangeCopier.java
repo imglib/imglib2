@@ -11,13 +11,13 @@
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice,
  *    this list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  *    this list of conditions and the following disclaimer in the documentation
  *    and/or other materials provided with the distribution.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -44,14 +44,14 @@ import static net.imglib2.blocks.Ranges.Direction.CONSTANT;
  *
  * @param <T> a primitive array type, e.g., {@code byte[]}.
  */
-class PlanarImgRangeCopier< T > implements RangeCopier< T >
+class PlanarImgRangeCopier< S, T > implements RangeCopier< T >
 {
 	private final int n;
-	private final SliceAccess< T > sliceAccess;
+	private final SliceAccess< S > sliceAccess;
 	private final int[] srcDims;
 	private final Ranges findRanges;
-	private final MemCopy< T > memCopy;
-	private final T oob;
+	private final MemCopy< S, T > memCopy;
+	private final S oob;
 
 	private final List< Ranges.Range >[] rangesPerDimension;
 	private final Ranges.Range[] ranges;
@@ -66,8 +66,8 @@ class PlanarImgRangeCopier< T > implements RangeCopier< T >
 	public PlanarImgRangeCopier(
 			final PlanarImg< ?, ? > planarImg,
 			final Ranges findRanges,
-			final MemCopy< T > memCopy,
-			final T oob )
+			final MemCopy< S, T > memCopy,
+			final S oob )
 	{
 		n = planarImg.numDimensions();
 		sliceAccess = new SliceAccess<>( planarImg );
@@ -94,7 +94,7 @@ class PlanarImgRangeCopier< T > implements RangeCopier< T >
 	}
 
 	// creates an independent copy of {@code other}
-	private PlanarImgRangeCopier( PlanarImgRangeCopier< T > copier )
+	private PlanarImgRangeCopier( PlanarImgRangeCopier< S, T > copier )
 	{
 		n = copier.n;
 		sliceAccess = copier.sliceAccess.copy();
@@ -113,7 +113,7 @@ class PlanarImgRangeCopier< T > implements RangeCopier< T >
 	}
 
 	@Override
-	public PlanarImgRangeCopier< T > newInstance()
+	public PlanarImgRangeCopier< S, T > newInstance()
 	{
 		return new PlanarImgRangeCopier<>( this );
 	}
@@ -217,7 +217,7 @@ class PlanarImgRangeCopier< T > implements RangeCopier< T >
 
 		final int dOffset = doffsets[ 0 ];
 
-		final T src = sliceAccess.getCurrentStorageArray();
+		final S src = sliceAccess.getCurrentStorageArray();
 		if ( n > 1 )
 			copyRangesRecursively( src, sOffset, dest, dOffset, n - 1 );
 		else
@@ -228,7 +228,7 @@ class PlanarImgRangeCopier< T > implements RangeCopier< T >
 		}
 	}
 
-	private void copyRangesRecursively( final T src, final int srcPos, final T dest, final int destPos, final int d )
+	private void copyRangesRecursively( final S src, final int srcPos, final T dest, final int destPos, final int d )
 	{
 		final int length = lengths[ d ];
 		final int cstep = csteps[ d ];
@@ -307,7 +307,7 @@ class PlanarImgRangeCopier< T > implements RangeCopier< T >
 
 		public T getCurrentStorageArray()
 		{
-			return ( T ) ( ( ( ArrayDataAccess< ? > ) planarImg.update( this ) ).getCurrentStorageArray() );
+			return ( T ) planarImg.update( this ).getCurrentStorageArray();
 		}
 
 		@Override
