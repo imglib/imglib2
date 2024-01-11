@@ -11,13 +11,13 @@
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice,
  *    this list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  *    this list of conditions and the following disclaimer in the documentation
  *    and/or other materials provided with the distribution.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -48,15 +48,15 @@ import static net.imglib2.blocks.Ranges.Direction.CONSTANT;
  *
  * @param <T> a primitive array type, e.g., {@code byte[]}.
  */
-class CellImgRangeCopier< T > implements RangeCopier< T >
+class CellImgRangeCopier< S, T > implements RangeCopier< T >
 {
 	private final int n;
 	private final CellGrid cellGrid;
 	private final RandomAccess< ? extends Cell< ? > > cellAccess;
 	private final long[] srcDims;
 	private final Ranges findRanges;
-	private final MemCopy< T > memCopy;
-	private final T oob;
+	private final MemCopy< S, T > memCopy;
+	private final S oob;
 
 	private final List< Ranges.Range >[] rangesPerDimension;
 	private final Ranges.Range[] ranges;
@@ -70,8 +70,8 @@ class CellImgRangeCopier< T > implements RangeCopier< T >
 	public CellImgRangeCopier(
 			final AbstractCellImg< ?, ?, ?, ? > cellImg,
 			final Ranges findRanges,
-			final MemCopy< T > memCopy,
-			final T oob )
+			final MemCopy< S, T > memCopy,
+			final S oob )
 	{
 		n = cellImg.numDimensions();
 		cellGrid = cellImg.getCellGrid();
@@ -93,7 +93,7 @@ class CellImgRangeCopier< T > implements RangeCopier< T >
 	}
 
 	// creates an independent copy of {@code other}
-	private CellImgRangeCopier( CellImgRangeCopier< T > copier )
+	private CellImgRangeCopier( CellImgRangeCopier< S, T > copier )
 	{
 		n = copier.n;
 		cellGrid = copier.cellGrid;
@@ -113,7 +113,7 @@ class CellImgRangeCopier< T > implements RangeCopier< T >
 	}
 
 	@Override
-	public CellImgRangeCopier< T > newInstance()
+	public CellImgRangeCopier< S, T > newInstance()
 	{
 		return new CellImgRangeCopier<>( this );
 	}
@@ -218,7 +218,7 @@ class CellImgRangeCopier< T > implements RangeCopier< T >
 
 		final int dOffset = doffsets[ 0 ];
 
-		final T src = ( T ) ( ( ( ArrayDataAccess< ? > ) cellAccess.get().getData() ).getCurrentStorageArray() );
+		final S src = ( S ) ( ( ArrayDataAccess< ? > ) cellAccess.get().getData() ).getCurrentStorageArray();
 		if ( n > 1 )
 			copyRangesRecursively( src, sOffset, dest, dOffset, n - 1 );
 		else
@@ -229,7 +229,7 @@ class CellImgRangeCopier< T > implements RangeCopier< T >
 		}
 	}
 
-	private void copyRangesRecursively( final T src, final int srcPos, final T dest, final int destPos, final int d )
+	private void copyRangesRecursively( final S src, final int srcPos, final T dest, final int destPos, final int d )
 	{
 		final int length = lengths[ d ];
 		final int cstep = csteps[ d ];
