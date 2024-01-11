@@ -11,13 +11,13 @@
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice,
  *    this list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  *    this list of conditions and the following disclaimer in the documentation
  *    and/or other materials provided with the distribution.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -40,7 +40,7 @@ import net.imglib2.type.PrimitiveType;
 // low-level copying methods
 // implementations for all primitive types
 // T is a primitive array type
-interface MemCopy< T >
+interface MemCopy< S, T >
 {
 	/**
 	 * Copy {@code length} components from the {@code src} array to the {@code
@@ -49,7 +49,7 @@ interface MemCopy< T >
 	 * destPos} through {@code destPos+length-1}, respectively, of the
 	 * destination array.
 	 */
-	void copyForward( T src, int srcPos, T dest, int destPos, int length );
+	void copyForward( S src, int srcPos, T dest, int destPos, int length );
 
 	/**
 	 * Copy {@code length} components from the {@code src} array to the {@code
@@ -58,19 +58,19 @@ interface MemCopy< T >
 	 * positions {@code destPos} through {@code destPos+length-1}, respectively,
 	 * of the destination array.
 	 */
-	void copyReverse( T src, int srcPos, T dest, int destPos, int length );
+	void copyReverse( S src, int srcPos, T dest, int destPos, int length );
 
 	/**
 	 * Copy component at position {@code srcPos} in the {@code src} array
 	 * ({@code length} times) into positions {@code destPos} through {@code
 	 * destPos+length-1} of the destination array.
 	 */
-	void copyValue( T src, int srcPos, T dest, int destPos, int length );
+	void copyValue( S src, int srcPos, T dest, int destPos, int length );
 
 	/**
 	 * TODO javadoc
 	 */
-	void copyStrided( T src, int srcPos, T dest, int destPos, int destStride, int length );
+	void copyStrided( S src, int srcPos, T dest, int destPos, int destStride, int length );
 
 	/**
 	 * Copy {@code numLines} stretches of {@code lineLength} elements.
@@ -93,7 +93,7 @@ interface MemCopy< T >
 			final int lineDir,
 			final int lineLength,
 			final int numLines,
-			final T src,
+			final S src,
 			final int srcPos,
 			final int srcStep,
 			final T dest,
@@ -121,7 +121,7 @@ interface MemCopy< T >
 	MemCopyFloat FLOAT = new MemCopyFloat();
 	MemCopyDouble DOUBLE = new MemCopyDouble();
 
-	static MemCopy< ? > forPrimitiveType( final PrimitiveType primitiveType )
+	static MemCopy< ?, ? > forPrimitiveType( final PrimitiveType primitiveType )
 	{
 		switch ( primitiveType )
 		{
@@ -147,7 +147,7 @@ interface MemCopy< T >
 		}
 	}
 
-	class MemCopyBoolean implements MemCopy< boolean[] >
+	class MemCopyBoolean implements MemCopy< boolean[], boolean[] >
 	{
 		@Override
 		public void copyForward( final boolean[] src, final int srcPos, final boolean[] dest, final int destPos, final int length )
@@ -193,7 +193,7 @@ interface MemCopy< T >
 		}
 	}
 
-	class MemCopyByte implements MemCopy< byte[] >
+	class MemCopyByte implements MemCopy< byte[], byte[] >
 	{
 		@Override
 		public void copyForward( final byte[] src, final int srcPos, final byte[] dest, final int destPos, final int length )
@@ -239,7 +239,7 @@ interface MemCopy< T >
 		}
 	}
 
-	class MemCopyShort implements MemCopy< short[] >
+	class MemCopyShort implements MemCopy< short[], short[] >
 	{
 		@Override
 		public void copyForward( final short[] src, final int srcPos, final short[] dest, final int destPos, final int length )
@@ -286,7 +286,7 @@ interface MemCopy< T >
 		}
 	}
 
-	class MemCopyChar implements MemCopy< char[] >
+	class MemCopyChar implements MemCopy< char[], char[] >
 	{
 		@Override
 		public void copyForward( final char[] src, final int srcPos, final char[] dest, final int destPos, final int length )
@@ -332,7 +332,7 @@ interface MemCopy< T >
 		}
 	}
 
-	class MemCopyInt implements MemCopy< int[] >
+	class MemCopyInt implements MemCopy< int[], int[] >
 	{
 		@Override
 		public void copyForward( final int[] src, final int srcPos, final int[] dest, final int destPos, final int length )
@@ -378,7 +378,7 @@ interface MemCopy< T >
 		}
 	}
 
-	class MemCopyLong implements MemCopy< long[] >
+	class MemCopyLong implements MemCopy< long[], long[] >
 	{
 		@Override
 		public void copyForward( final long[] src, final int srcPos, final long[] dest, final int destPos, final int length )
@@ -424,7 +424,7 @@ interface MemCopy< T >
 		}
 	}
 
-	class MemCopyFloat implements MemCopy< float[] >
+	class MemCopyFloat implements MemCopy< float[], float[] >
 	{
 		@Override
 		public void copyForward( final float[] src, final int srcPos, final float[] dest, final int destPos, final int length )
@@ -470,7 +470,7 @@ interface MemCopy< T >
 		}
 	}
 
-	class MemCopyDouble implements MemCopy< double[] >
+	class MemCopyDouble implements MemCopy< double[], double[] >
 	{
 		@Override
 		public void copyForward( final double[] src, final int srcPos, final double[] dest, final int destPos, final int length )
