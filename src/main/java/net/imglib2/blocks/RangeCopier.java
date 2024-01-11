@@ -44,7 +44,7 @@ import net.imglib2.img.planar.PlanarImg;
  * into a primitive array.
  * <p>
  * The static {@link RangeCopier#create} method will pick the correct
- * implementation for a given {@NativeImg}.
+ * implementation for a given {@link NativeImg}.
  *
  * @param <T> a primitive array type, e.g., {@code byte[]}.
  */
