@@ -11,13 +11,13 @@
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice,
  *    this list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  *    this list of conditions and the following disclaimer in the documentation
  *    and/or other materials provided with the distribution.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -73,18 +73,18 @@ interface RangeCopier< T >
 	 */
 	RangeCopier< T > newInstance();
 
-	static < T > RangeCopier< T > create(
+	static < S, T > RangeCopier< T > create(
 			final NativeImg< ?, ? > img,
 			final Ranges findRanges,
-			final MemCopy< T > memCopy,
-			final T oob )
+			final MemCopy< S, T > memCopy,
+			final S oob )
 	{
 		if ( img instanceof AbstractCellImg )
 			return new CellImgRangeCopier<>( ( AbstractCellImg< ?, ?, ? extends Cell< ? >, ? > ) img, findRanges, memCopy, oob );
 		else if ( img instanceof PlanarImg )
 			return new PlanarImgRangeCopier<>( ( PlanarImg< ?, ? > ) img, findRanges, memCopy, oob );
 		else if ( img instanceof ArrayImg )
-			return new ArrayImgRangeCopier<>( ( ArrayImg<?, ?> ) img, findRanges, memCopy, oob );
+			return new ArrayImgRangeCopier<>( ( ArrayImg< ?, ? > ) img, findRanges, memCopy, oob );
 		else
 			throw new IllegalArgumentException();
 	}

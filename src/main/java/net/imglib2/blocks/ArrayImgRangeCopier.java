@@ -11,13 +11,13 @@
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice,
  *    this list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  *    this list of conditions and the following disclaimer in the documentation
  *    and/or other materials provided with the distribution.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -44,13 +44,13 @@ import static net.imglib2.blocks.Ranges.Direction.CONSTANT;
  *
  * @param <T> a primitive array type, e.g., {@code byte[]}.
  */
-class ArrayImgRangeCopier< T > implements RangeCopier< T >
+class ArrayImgRangeCopier< S, T > implements RangeCopier< T >
 {
 	private final int n;
 	private final int[] srcDims;
 	private final Ranges findRanges;
-	private final MemCopy< T > memCopy;
-	private final T oob;
+	private final MemCopy< S, T > memCopy;
+	private final S oob;
 
 	private final List< Ranges.Range >[] rangesPerDimension;
 	private final Ranges.Range[] ranges;
@@ -60,13 +60,13 @@ class ArrayImgRangeCopier< T > implements RangeCopier< T >
 	private final int[] csteps;
 	private final int[] lengths;
 
-	private final T src;
+	private final S src;
 
 	public ArrayImgRangeCopier(
 			final ArrayImg< ?, ? > arrayImg,
 			final Ranges findRanges,
-			final MemCopy< T > memCopy,
-			final T oob )
+			final MemCopy< S, T > memCopy,
+			final S oob )
 	{
 		n = arrayImg.numDimensions();
 
@@ -86,11 +86,11 @@ class ArrayImgRangeCopier< T > implements RangeCopier< T >
 		csteps = new int[ n ];
 		lengths = new int[ n ];
 
-		src = ( T ) ( ( ( ArrayDataAccess< ? > ) arrayImg.update( null ) ).getCurrentStorageArray() );
+		src = ( S ) ( ( ArrayDataAccess< ? > ) arrayImg.update( null ) ).getCurrentStorageArray();
 	}
 
 	// creates an independent copy of {@code other}
-	private ArrayImgRangeCopier( ArrayImgRangeCopier< T > copier )
+	private ArrayImgRangeCopier( ArrayImgRangeCopier< S, T > copier )
 	{
 		n = copier.n;
 		srcDims = copier.srcDims.clone();
@@ -108,7 +108,7 @@ class ArrayImgRangeCopier< T > implements RangeCopier< T >
 	}
 
 	@Override
-	public ArrayImgRangeCopier< T > newInstance()
+	public ArrayImgRangeCopier< S, T > newInstance()
 	{
 		return new ArrayImgRangeCopier<>( this );
 	}
@@ -220,7 +220,7 @@ class ArrayImgRangeCopier< T > implements RangeCopier< T >
 		}
 	}
 
-	private void copyRangesRecursively( final T src, final int srcPos, final T dest, final int destPos, final int d )
+	private void copyRangesRecursively( final S src, final int srcPos, final T dest, final int destPos, final int d )
 	{
 		final int length = lengths[ d ];
 		final int cstep = csteps[ d ];
