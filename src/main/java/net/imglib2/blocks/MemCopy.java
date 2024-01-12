@@ -33,7 +33,10 @@
  */
 package net.imglib2.blocks;
 
+import java.nio.IntBuffer;
 import java.util.Arrays;
+import net.imglib2.img.basictypeaccess.array.ArrayDataAccess;
+import net.imglib2.img.basictypeaccess.nio.BufferAccess;
 import net.imglib2.type.PrimitiveType;
 
 // TODO javadoc
@@ -68,7 +71,12 @@ interface MemCopy< S, T >
 	void copyValue( S src, int srcPos, T dest, int destPos, int length );
 
 	/**
-	 * TODO javadoc
+	 * Copy {@code length} components from the {@code src} array to the {@code
+	 * dest} array. The components at positions {@code srcPos} through {@code
+	 * srcPos+length-1} in the source array are copied into positions {@code
+	 * destPos}, {@code destPos+destStride}, {@code destPos + 2*destStride},
+	 * etc., through {@code destPos+(length-1)*destStride} of the destination
+	 * array.
 	 */
 	void copyStrided( S src, int srcPos, T dest, int destPos, int destStride, int length );
 
@@ -515,4 +523,99 @@ interface MemCopy< S, T >
 					copyValue( src, srcPos + i * srcStep, dest, destPos + i * destStep, lineLength );
 		}
 	}
+
+
+	/*
+	 * -----------------------------------------------------------------------
+	 *
+	 * EXPERIMENTAL: Copying from Buffers into primitive arrays
+	 *
+	 * -----------------------------------------------------------------------
+	 */
+
+	MemCopy BUFFER_TO_ARRAY_BOOLEAN = null;
+	MemCopy BUFFER_TO_ARRAY_BYTE = null;
+	MemCopy BUFFER_TO_ARRAY_CHAR = null;
+	MemCopy BUFFER_TO_ARRAY_SHORT = null;
+	MemCopyBufferInt BUFFER_TO_ARRAY_INT = new MemCopyBufferInt();
+	MemCopy BUFFER_TO_ARRAY_LONG = null;
+	MemCopy BUFFER_TO_ARRAY_FLOAT = null;
+	MemCopy BUFFER_TO_ARRAY_DOUBLE = null;
+
+	static MemCopy< ?, ? > forPrimitiveType( final PrimitiveType primitiveType, final ArrayDataAccess< ? > sourceAccessType )
+	{
+		boolean fromBuffer = sourceAccessType instanceof BufferAccess;
+		switch ( primitiveType )
+		{
+		case BOOLEAN:
+			return fromBuffer ? BUFFER_TO_ARRAY_BOOLEAN : BOOLEAN;
+		case BYTE:
+			return fromBuffer ? BUFFER_TO_ARRAY_BYTE : BYTE;
+		case CHAR:
+			return fromBuffer ? BUFFER_TO_ARRAY_CHAR : CHAR;
+		case SHORT:
+			return fromBuffer ? BUFFER_TO_ARRAY_SHORT : SHORT;
+		case INT:
+			return fromBuffer ? BUFFER_TO_ARRAY_INT : INT;
+		case LONG:
+			return fromBuffer ? BUFFER_TO_ARRAY_LONG : LONG;
+		case FLOAT:
+			return fromBuffer ? BUFFER_TO_ARRAY_FLOAT : FLOAT;
+		case DOUBLE:
+			return fromBuffer ? BUFFER_TO_ARRAY_DOUBLE : DOUBLE;
+		default:
+		case UNDEFINED:
+			throw new IllegalArgumentException();
+		}
+	}
+
+
+	class MemCopyBufferInt implements MemCopy< IntBuffer, int[] >
+	{
+		@Override
+		public void copyForward( final IntBuffer src, final int srcPos, final int[] dest, final int destPos, final int length )
+		{
+			src.position(srcPos);
+			src.get( dest, destPos, length );
+		}
+
+		@Override
+		public void copyReverse( final IntBuffer src, final int srcPos, final int[] dest, final int destPos, final int length )
+		{
+			for ( int i = 0; i < length; ++i )
+				dest[ destPos + i ] = src.get( srcPos - i );
+		}
+
+		@Override
+		public void copyValue( final IntBuffer src, final int srcPos, final int[] dest, final int destPos, final int length )
+		{
+			final int val = src.get( srcPos );
+			Arrays.fill( dest, destPos, destPos + length, val );
+		}
+
+		@Override
+		public void copyStrided( final IntBuffer src, final int srcPos, final int[] dest, final int destPos, final int destStride, final int length )
+		{
+			if ( destStride == 1 )
+				copyForward( src, srcPos, dest, destPos, length );
+			else
+				for ( int i = 0; i < length; ++i )
+					dest[ destPos + i * destStride ] = src.get( srcPos + i );
+		}
+
+		@Override
+		public void copyLines( final int lineDir, final int lineLength, final int numLines, final IntBuffer src, final int srcPos, final int srcStep, final int[] dest, final int destPos, final int destStep )
+		{
+			if ( lineDir == 1 )
+				for ( int i = 0; i < numLines; ++i )
+					copyForward( src, srcPos + i * srcStep, dest, destPos + i * destStep, lineLength );
+			else if ( lineDir == -1 )
+				for ( int i = 0; i < numLines; ++i )
+					copyReverse( src, srcPos + i * srcStep, dest, destPos + i * destStep, lineLength );
+			else // cstep0 == 0
+				for ( int i = 0; i < numLines; ++i )
+					copyValue( src, srcPos + i * srcStep, dest, destPos + i * destStep, lineLength );
+		}
+	}
+
 }
