@@ -4,8 +4,10 @@ import java.nio.ByteBuffer;
 import java.util.Random;
 import java.util.Set;
 import net.imglib2.Dimensions;
+import net.imglib2.blocks.PrimitiveBlocks;
 import net.imglib2.img.array.ArrayImg;
 import net.imglib2.img.array.ArrayImgFactory;
+import net.imglib2.img.array.ArrayImgs;
 import net.imglib2.img.basictypeaccess.AccessFlags;
 import net.imglib2.img.basictypeaccess.array.ArrayDataAccess;
 import net.imglib2.img.basictypeaccess.nio.BufferAccess;
@@ -54,11 +56,11 @@ public class BufferExample
 		final int[] size = { 3, 3 };
 		final int[] dest = new int[ ( int ) Intervals.numElements( size ) ];
 
-//		PrimitiveBlocks.of( intsWithArray ).copy( srcPos, dest, size );
-//		System.out.println( "dest:\n" + toString( ArrayImgs.ints( dest, size[ 0 ], size[ 1 ] ) ) );
-//
-//		PrimitiveBlocks.of( intsWithBuffer ).copy( srcPos, dest, size );
-//		System.out.println( "dest:\n" + toString( ArrayImgs.ints( dest, size[ 0 ], size[ 1 ] ) ) );
+		PrimitiveBlocks.of( intsWithArray ).copy( srcPos, dest, size );
+		System.out.println( "dest:\n" + toString( ArrayImgs.ints( dest, size[ 0 ], size[ 1 ] ) ) );
+
+		PrimitiveBlocks.of( intsWithBuffer ).copy( srcPos, dest, size );
+		System.out.println( "dest:\n" + toString( ArrayImgs.ints( dest, size[ 0 ], size[ 1 ] ) ) );
 
 		System.out.println( "isBufferBacked( intsWithArray ) = " + isBufferBacked( intsWithArray ) );
 		System.out.println( "isBufferBacked( intsWithBuffer ) = " + isBufferBacked( intsWithBuffer ) );
