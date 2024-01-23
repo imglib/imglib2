@@ -37,6 +37,7 @@ package net.imglib2.img.cell;
 import java.io.Serializable;
 
 import net.imglib2.Interval;
+import net.imglib2.img.cell.CellGrid.CellDimensionsAndSteps;
 import net.imglib2.util.IntervalIndexer;
 import net.imglib2.util.Intervals;
 
@@ -63,6 +64,12 @@ public class Cell< A > implements Interval, Serializable
 
 	private final A data;
 
+	/**
+	 * Create a new {@code Cell}.
+	 * <p>
+	 * The arguments are not copied. Therefore, {@code dimensions} and {@code
+	 * min} arrays may be modified and re-used to create other {@code Cell}s.
+	 */
 	public Cell( final int[] dimensions, final long[] min, final A data )
 	{
 		this.n = dimensions.length;
@@ -75,8 +82,32 @@ public class Cell< A > implements Interval, Serializable
 		for ( int d = 0; d < n; ++d )
 			max[ d ] = min[ d ] + dimensions[ d ] - 1;
 
-		numPixels = ( int ) Intervals.numElements( dimensions );
+		this.numPixels = ( int ) Intervals.numElements( dimensions );
+		this.data = data;
+	}
 
+	/**
+	 * Create a new {@code Cell}.
+	 * <p>
+	 * Note that the arguments are not copied. So for example, the {@code min}
+	 * array should not be modified and re-used to create other {@code Cell}s.
+	 *
+	 * @param dims dimensions, steps, and numPixels of the cell
+	 * @param min min coordinate of the cell
+	 * @param data pixel storage
+	 */
+	public Cell( final CellDimensionsAndSteps dims, final long[] min, final A data )
+	{
+		this.n = dims.dimensions().length;
+		this.dimensions = dims.dimensions();
+		this.steps = dims.steps();
+		this.min = min;
+
+		max = new long[ n ];
+		for ( int d = 0; d < n; ++d )
+			max[ d ] = min[ d ] + dimensions[ d ] - 1;
+
+		this.numPixels = dims.numPixels();
 		this.data = data;
 	}
 

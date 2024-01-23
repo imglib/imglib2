@@ -73,6 +73,42 @@ public class CellGrid
 	private final int hashcode;
 
 	/**
+	 * Pre-computed dimensions[], steps[], and numPixels for each distinct cell type (inner, X border, Y border, XY border, etc).
+	 * Indexed by flattened cell type index, where cell type is arranges in a {@code 2^n} grid with the inner cell at (0,...,0) etc.
+	 */
+	private final CellDimensionsAndSteps[] cellDimensionsAndSteps;
+
+	public static class CellDimensionsAndSteps
+	{
+		final int[] dimensions;
+		final int[] steps;
+		final int numPixels;
+
+		CellDimensionsAndSteps( int[] dimensions )
+		{
+			this.dimensions = dimensions;
+			steps = new int[ dimensions.length ];
+			IntervalIndexer.createAllocationSteps( dimensions, steps );
+			numPixels = ( int ) Intervals.numElements( dimensions );
+		}
+
+		public int[] dimensions()
+		{
+			return dimensions;
+		}
+
+		public int[] steps()
+		{
+			return steps;
+		}
+
+		public int numPixels()
+		{
+			return numPixels;
+		}
+	}
+
+	/**
 	 * @param dimensions
 	 * 		the dimensions of the image (in pixels, not in cells).
 	 * @param cellDimensions
@@ -100,20 +136,25 @@ public class CellGrid
 
 		hashcode = 31 * Arrays.hashCode( dimensions ) + Arrays.hashCode( cellDimensions );
 
-
 		cellIntervals = new CellIntervals();
+
+		final int numCellTypes = 1 << n;
+		cellDimensionsAndSteps = new CellDimensionsAndSteps[ numCellTypes ];
+		for ( int i = 0; i < numCellTypes; i++ )
+		{
+			final int[] cellDims = new int[ n ];
+			for ( int d = 0; d < n; ++d )
+			{
+				final boolean border = ( i >> d & 1 ) != 0;
+				cellDims[ d ] = border ? borderSize[ d ] : cellDimensions[ d ];
+			}
+			cellDimensionsAndSteps[ i ] = new CellDimensionsAndSteps( cellDims );
+		}
 	}
 
 	public CellGrid( final CellGrid grid )
 	{
-		n = grid.n;
-		dimensions = grid.dimensions.clone();
-		steps = grid.steps.clone();
-		cellDimensions = grid.cellDimensions.clone();
-		numCells = grid.numCells.clone();
-		borderSize = grid.borderSize.clone();
-		hashcode = grid.hashcode;
-		cellIntervals = new CellIntervals();
+		this( grid.dimensions, grid.cellDimensions );
 	}
 
 	public int numDimensions()
@@ -257,6 +298,66 @@ public class CellGrid
 			cellDims[ d ] = ( ( cellGridPosition[ d ] + 1 == numCells[ d ] ) ? borderSize[ d ] : cellDimensions[ d ] );
 			cellMin[ d ] = cellGridPosition[ d ] * cellDimensions[ d ];
 		}
+	}
+
+	/**
+	 * From the index of a cell in the grid, compute the image position of the
+	 * first pixel of the cell (the offset of the cell in image coordinates) and
+	 * the dimensions of the cell. The dimensions will be the standard
+	 * {@link #cellDimensions} unless the cell is at the border of the image in
+	 * which case it might be truncated.
+	 * <p>
+	 * Note, that this method assumes that the cell grid has flat iteration
+	 * order. It this is not the case, use
+	 * {@link #getCellDimensions(long[], long[], int[])}.
+	 * </p>
+	 *
+	 * @param index
+	 * 		flattened grid coordinates of the cell.
+	 * @param cellMin
+	 * 		offset of the cell in image coordinates are written here.
+	 *
+	 * @return the dimensions of the cell and derived {@link IntervalIndexer#createAllocationSteps strides} and number of pixels.
+	 */
+	public CellDimensionsAndSteps getCellDimensions( long index, final long[] cellMin )
+	{
+		int i = 0;
+		for ( int d = 0; d < n; ++d )
+		{
+			final long j = index / numCells[ d ];
+			final long gridPos = index - j * numCells[ d ];
+			cellMin[ d ] = gridPos * cellDimensions[ d ];
+			if ( gridPos + 1 == numCells[ d ] )
+				i |= 1 << d;
+			index = j;
+		}
+		return cellDimensionsAndSteps[ i ];
+	}
+
+	/**
+	 * From the position of a cell in the grid, compute the image position of
+	 * the first pixel of the cell (the offset of the cell in image coordinates)
+	 * and the dimensions of the cell. The dimensions will be the standard
+	 * {@link #cellDimensions} unless the cell is at the border of the image in
+	 * which case it might be truncated.
+	 *
+	 * @param cellGridPosition
+	 * 		grid coordinates of the cell.
+	 * @param cellMin
+	 * 		offset of the cell in image coordinates are written here.
+	 *
+	 * @return the dimensions of the cell and derived {@link IntervalIndexer#createAllocationSteps strides} and number of pixels.
+	 */
+	public CellDimensionsAndSteps getCellDimensions( final long[] cellGridPosition, final long[] cellMin )
+	{
+		int i = 0;
+		for ( int d = 0; d < n; ++d )
+		{
+			if ( cellGridPosition[ d ] + 1 == numCells[ d ] )
+				i |= 1 << d;
+			cellMin[ d ] = cellGridPosition[ d ] * cellDimensions[ d ];
+		}
+		return cellDimensionsAndSteps[ i ];
 	}
 
 	public void getCellInterval( final long[] cellGridPosition, final long[] cellMin, final long[] cellMax )
