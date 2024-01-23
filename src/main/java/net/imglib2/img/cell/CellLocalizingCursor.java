@@ -79,7 +79,7 @@ public class CellLocalizingCursor< T extends NativeType< T >, C extends Cell< ? 
 		typeIndex = type.index();
 		this.cursorOnCells = cursor.cursorOnCells.copy();
 		this.currentCellMin = cursor.currentCellMin;
-		this.currentCellMax = cursor.currentCellMax;
+		this.currentCellMax = cursor.currentCellMax.clone();
 
 		isNotLastCell = cursor.isNotLastCell;
 		lastIndexInCell = cursor.lastIndexInCell;
@@ -99,7 +99,7 @@ public class CellLocalizingCursor< T extends NativeType< T >, C extends Cell< ? 
 		typeIndex = type.index();
 		this.cursorOnCells = img.getCells().cursor();
 		this.currentCellMin = null;
-		this.currentCellMax = null;
+		this.currentCellMax = new long[ n ];
 
 		reset();
 	}
@@ -142,7 +142,7 @@ public class CellLocalizingCursor< T extends NativeType< T >, C extends Cell< ? 
 
 		final C cell = getCell();
 		currentCellMin = cell.min;
-		currentCellMax = cell.max;
+		cell.max( currentCellMax );
 
 		index = ( int ) newIndex;
 		cell.indexToGlobalPosition( index, position );
@@ -191,7 +191,7 @@ public class CellLocalizingCursor< T extends NativeType< T >, C extends Cell< ? 
 
 		lastIndexInCell = ( int ) ( cell.size() - 1 );
 		currentCellMin = cell.min;
-		currentCellMax = cell.max;
+		cell.max( currentCellMax );
 
 		position[ 0 ] = currentCellMin[ 0 ] - 1;
 		for ( int d = 1; d < n; ++d )

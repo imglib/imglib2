@@ -40,6 +40,7 @@ import net.imglib2.img.ImgFactory;
 import net.imglib2.img.NativeImgFactory;
 import net.imglib2.img.basictypeaccess.ArrayDataAccessFactory;
 import net.imglib2.img.basictypeaccess.array.ArrayDataAccess;
+import net.imglib2.img.cell.CellGrid.CellDimensionsAndSteps;
 import net.imglib2.img.list.ListImg;
 import net.imglib2.img.list.ListLocalizingCursor;
 import net.imglib2.type.NativeType;
@@ -135,17 +136,16 @@ public class CellImgFactory< T extends NativeType< T > > extends NativeImgFactor
 		final ListImg< Cell< A > > cells = new ListImg<>( gridDimensions, cellType );
 
 		final long[] cellGridPosition = new long[ n ];
-		final long[] cellMin = new long[ n ];
-		final int[] cellDims = new int[ n ];
 		final A access = ArrayDataAccessFactory.get( typeFactory );
 		final ListLocalizingCursor< Cell< A > > cellCursor = cells.localizingCursor();
 		while ( cellCursor.hasNext() )
 		{
 			cellCursor.fwd();
 			cellCursor.localize( cellGridPosition );
-			grid.getCellDimensions( cellGridPosition, cellMin, cellDims );
-			final A data = access.createArray( ( int ) entitiesPerPixel.mulCeil( Intervals.numElements( cellDims ) ) );
-			cellCursor.set( new Cell<>( cellDims, cellMin, data ) );
+			final long[] cellMin = new long[ n ];
+			final CellDimensionsAndSteps dimsAndSteps = grid.getCellDimensions( cellGridPosition, cellMin );
+			final A data = access.createArray( ( int ) entitiesPerPixel.mulCeil( dimsAndSteps.numPixels() ) );
+			cellCursor.set( new Cell<>( dimsAndSteps, cellMin, data ) );
 		}
 
 		final CellImg< T, A > img = new CellImg<>( this, grid, cells, entitiesPerPixel );
