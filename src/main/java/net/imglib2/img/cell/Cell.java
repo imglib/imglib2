@@ -58,8 +58,6 @@ public class Cell< A > implements Interval, Serializable
 
 	protected final long[] min;
 
-	protected final long[] max;
-
 	private final int numPixels;
 
 	private final A data;
@@ -77,11 +75,6 @@ public class Cell< A > implements Interval, Serializable
 		this.steps = new int[ n ];
 		IntervalIndexer.createAllocationSteps( dimensions, steps );
 		this.min = min.clone();
-
-		max = new long[ n ];
-		for ( int d = 0; d < n; ++d )
-			max[ d ] = min[ d ] + dimensions[ d ] - 1;
-
 		this.numPixels = ( int ) Intervals.numElements( dimensions );
 		this.data = data;
 	}
@@ -102,11 +95,6 @@ public class Cell< A > implements Interval, Serializable
 		this.dimensions = dims.dimensions();
 		this.steps = dims.steps();
 		this.min = min;
-
-		max = new long[ n ];
-		for ( int d = 0; d < n; ++d )
-			max[ d ] = min[ d ] + dimensions[ d ] - 1;
-
 		this.numPixels = dims.numPixels();
 		this.data = data;
 	}
@@ -180,7 +168,7 @@ public class Cell< A > implements Interval, Serializable
 	@Override
 	public long max( final int d )
 	{
-		return max[ d ];
+		return min[ d ] + dimensions[ d ] - 1;
 	}
 
 	/**
