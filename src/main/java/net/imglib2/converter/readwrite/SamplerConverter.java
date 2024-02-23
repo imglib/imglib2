@@ -50,7 +50,7 @@ import net.imglib2.Sampler;
  * @param <A> The type of values accessed by the {@link Sampler}.
  * @param <B> The type of the value returned by this {@link SamplerConverter}.
  */
-public interface SamplerConverter<A, B> {
-
-	B convert(Sampler<? extends A> sampler);
+public interface SamplerConverter< A, B >
+{
+	B convert( Sampler< ? extends A > sampler );
 }
