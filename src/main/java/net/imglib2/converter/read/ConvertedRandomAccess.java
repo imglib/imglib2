@@ -44,15 +44,15 @@ import net.imglib2.converter.Converter;
  * TODO
  *
  */
-final public class ConvertedRandomAccess< A, B > extends AbstractConvertedRandomAccess< A, B >
+public final class ConvertedRandomAccess< A, B > extends AbstractConvertedRandomAccess< A, B >
 {
-	final protected Supplier< Converter< ? super A, ? super B > > converterSupplier;
+	private final Supplier< Converter< ? super A, ? super B > > converterSupplier;
 
-	final protected Converter< ? super A, ? super B > converter;
+	private final Converter< ? super A, ? super B > converter;
 
-	final protected Supplier< ? extends B > convertedSupplier;
+	private final Supplier< ? extends B > convertedSupplier;
 
-	final protected B converted;
+	private final B converted;
 
 	/**
 	 * Creates a copy of b for conversion that can be accessed through
@@ -98,7 +98,7 @@ final public class ConvertedRandomAccess< A, B > extends AbstractConvertedRandom
 	@Override
 	public ConvertedRandomAccess< A, B > copy()
 	{
-		return new ConvertedRandomAccess< A, B >(
+		return new ConvertedRandomAccess<>(
 				source.copy(),
 				converterSupplier,
 				convertedSupplier );
