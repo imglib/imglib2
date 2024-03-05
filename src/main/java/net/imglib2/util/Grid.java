@@ -97,8 +97,8 @@ public class Grid
 	 * 		offset of the grid on the min border. Cell on the min border of the
 	 * 		image will be cut off according to offset. For example, if {@code
 	 * 		cellDimensions={10,10}} and {@code offset={5,0}} then the first cell
-	 * 		will have dimensions {@code {5,10}} (summing {@code dimensions} is
-	 * 		larger than {@code {10,10}}.
+	 * 		will have dimensions {@code {5,10}} (assuming that {@code dimensions}
+	 * 		is larger than {@code {10,10}}).
 	 */
 	public Grid(
 			final long[] dimensions,
