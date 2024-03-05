@@ -58,6 +58,7 @@ import net.imglib2.type.numeric.RealType;
 import net.imglib2.type.operators.ValueEquals;
 import net.imglib2.view.Views;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.function.BiPredicate;
 import java.util.stream.StreamSupport;
@@ -101,10 +102,7 @@ public class Util
 	public static double[] getArrayFromValue( final double value, final int numDimensions )
 	{
 		final double[] values = new double[ numDimensions ];
-
-		for ( int d = 0; d < numDimensions; ++d )
-			values[ d ] = value;
-
+		Arrays.fill( values, value );
 		return values;
 	}
 
@@ -112,10 +110,7 @@ public class Util
 	public static float[] getArrayFromValue( final float value, final int numDimensions )
 	{
 		final float[] values = new float[ numDimensions ];
-
-		for ( int d = 0; d < numDimensions; ++d )
-			values[ d ] = value;
-
+		Arrays.fill( values, value );
 		return values;
 	}
 
@@ -123,10 +118,7 @@ public class Util
 	public static int[] getArrayFromValue( final int value, final int numDimensions )
 	{
 		final int[] values = new int[ numDimensions ];
-
-		for ( int d = 0; d < numDimensions; ++d )
-			values[ d ] = value;
-
+		Arrays.fill( values, value );
 		return values;
 	}
 
@@ -134,10 +126,7 @@ public class Util
 	public static long[] getArrayFromValue( final long value, final int numDimensions )
 	{
 		final long[] values = new long[ numDimensions ];
-
-		for ( int d = 0; d < numDimensions; ++d )
-			values[ d ] = value;
-
+		Arrays.fill( values, value );
 		return values;
 	}
 
