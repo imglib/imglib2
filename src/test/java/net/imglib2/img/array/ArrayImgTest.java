@@ -41,7 +41,10 @@ import static org.junit.Assume.assumeTrue;
 
 import net.imglib2.Cursor;
 import net.imglib2.img.Img;
+import net.imglib2.stream.Streams;
+import net.imglib2.test.ImgLib2Assert;
 import net.imglib2.type.numeric.integer.Unsigned2BitType;
+import net.imglib2.type.numeric.integer.UnsignedByteType;
 import net.imglib2.type.numeric.real.FloatType;
 import net.imglib2.util.ImgTestHelper;
 import net.imglib2.util.Util;
@@ -96,5 +99,23 @@ public class ArrayImgTest
 	public void testArrayImgInvalidDimensions()
 	{
 		ImgTestHelper.assertInvalidDims( new ArrayImgFactory<>( new FloatType() ) );
+	}
+
+	@Test
+	public void testConstructor()
+	{
+		Img< UnsignedByteType > actual = new ArrayImg<>( new UnsignedByteType(), 5, 4, 3 );
+		Streams.localizing( actual ).forEach(
+				s -> s.get().set(
+						s.getIntPosition( 0 ) * s.getIntPosition( 1 ) * s.getIntPosition( 2 ) )
+		);
+
+		Img< UnsignedByteType > expected = new ArrayImgFactory<>( new UnsignedByteType() ).create( 5, 4, 3 );
+		Streams.localizing( expected ).forEach(
+				s -> s.get().set(
+						s.getIntPosition( 0 ) * s.getIntPosition( 1 ) * s.getIntPosition( 2 ) )
+		);
+
+		ImgLib2Assert.assertImageEquals( expected, actual );
 	}
 }

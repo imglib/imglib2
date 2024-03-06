@@ -34,17 +34,23 @@
 
 package net.imglib2.img.array;
 
+import static net.imglib2.img.array.ArrayImgFactory.numEntitiesRangeCheck;
+
 import net.imglib2.Cursor;
+import net.imglib2.Dimensions;
 import net.imglib2.FlatIterationOrder;
 import net.imglib2.Interval;
 import net.imglib2.img.AbstractNativeImg;
 import net.imglib2.img.Img;
+import net.imglib2.img.basictypeaccess.ArrayDataAccessFactory;
 import net.imglib2.img.basictypeaccess.DataAccess;
 import net.imglib2.stream.LocalizableSpliterator;
 import net.imglib2.type.NativeType;
+import net.imglib2.type.NativeTypeFactory;
 import net.imglib2.util.Fraction;
 import net.imglib2.util.IntervalIndexer;
 import net.imglib2.util.Intervals;
+import net.imglib2.util.Util;
 import net.imglib2.view.iteration.SubIntervalIterable;
 
 /**
@@ -67,15 +73,37 @@ public class ArrayImg< T extends NativeType< T >, A extends DataAccess > extends
 	// the DataAccess created by the ArrayContainerFactory
 	final private A data;
 
-	// TODO check for the size of numPixels being < Integer.MAX_VALUE?
-	// TODO Type is suddenly not necessary anymore
+	/**
+	 * Create a new {@code ArrayImg} of the given pixel {@code type} and {@code
+	 * dimensions}.
+	 *
+	 * @param type
+	 * 		pixel type
+	 * @param dimensions
+	 * 		image dimensions
+	 */
+	public ArrayImg( final T type, final long... dimensions )
+	{
+		super( Dimensions.verify( dimensions ), type.getEntitiesPerPixel() );
+
+		this.dim = Util.long2int( dimensions );
+		this.steps = new int[ n ];
+		IntervalIndexer.createAllocationSteps( this.dim, this.steps );
+
+		@SuppressWarnings( { "unchecked" } )
+		final NativeTypeFactory< T, A > typeFactory = ( NativeTypeFactory< T, A > ) type.getNativeTypeFactory();
+		final int numEntities = numEntitiesRangeCheck( dimension, entitiesPerPixel );
+		this.data = ArrayDataAccessFactory.get( typeFactory ).createArray( numEntities );
+
+		setLinkedType( typeFactory.createLinkedType( this ) );
+	}
+
 	public ArrayImg( final A data, final long[] dim, final Fraction entitiesPerPixel )
 	{
 		super( dim, entitiesPerPixel );
-		this.dim = new int[ n ];
-		for ( int d = 0; d < n; ++d )
-			this.dim[ d ] = ( int ) dim[ d ];
+		numEntitiesRangeCheck( dimension, entitiesPerPixel );
 
+		this.dim = Util.long2int( dim );
 		this.steps = new int[ n ];
 		IntervalIndexer.createAllocationSteps( this.dim, this.steps );
 		this.data = data;
