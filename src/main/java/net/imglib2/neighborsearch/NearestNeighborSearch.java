@@ -81,7 +81,10 @@ public interface NearestNeighborSearch< T > extends EuclideanSpace
 	 * the last search and the nearest neighbor, ordered by square Euclidean
 	 * distance.
 	 */
-	double getDistance();
+	default double getDistance()
+	{
+		return Math.sqrt( getSquareDistance() );
+	}
 
 	/**
 	 * Create a copy.

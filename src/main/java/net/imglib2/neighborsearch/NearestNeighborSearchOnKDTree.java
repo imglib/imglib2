@@ -34,10 +34,11 @@
 
 package net.imglib2.neighborsearch;
 
-import net.imglib2.KDTree;
-import net.imglib2.KDTreeNode;
 import net.imglib2.RealLocalizable;
 import net.imglib2.Sampler;
+import net.imglib2.KDTree;
+import net.imglib2.KDTreeNode;
+import net.imglib2.kdtree.NearestNeighborSearchImpl;
 
 /**
  * Implementation of {@link NearestNeighborSearch} search for kd-trees.
@@ -47,60 +48,38 @@ import net.imglib2.Sampler;
  */
 public class NearestNeighborSearchOnKDTree< T > implements NearestNeighborSearch< T >
 {
-	protected KDTree< T > tree;
+	private final KDTree< T > tree;
 
-	protected final int n;
+	private final NearestNeighborSearchImpl impl;
 
-	protected final double[] pos;
-
-	protected KDTreeNode< T > bestPoint;
-
-	protected double bestSquDistance;
+	private final KDTreeNode< T > bestPoint;
 
 	public NearestNeighborSearchOnKDTree( final KDTree< T > tree )
 	{
-		n = tree.numDimensions();
-		pos = new double[ n ];
 		this.tree = tree;
+		impl = new NearestNeighborSearchImpl( tree.impl() );
+		bestPoint = tree.createNode();
+	}
+
+	private NearestNeighborSearchOnKDTree( final NearestNeighborSearchOnKDTree< T > nn )
+	{
+		tree = nn.tree;
+		impl = nn.impl.copy();
+		bestPoint = tree.createNode();
+		bestPoint.setNodeIndex( nn.impl.bestIndex() );
 	}
 
 	@Override
 	public int numDimensions()
 	{
-		return n;
+		return tree.numDimensions();
 	}
 
 	@Override
 	public void search( final RealLocalizable p )
 	{
-		p.localize( pos );
-		bestSquDistance = Double.MAX_VALUE;
-		searchNode( tree.getRoot() );
-	}
-
-	protected void searchNode( final KDTreeNode< T > current )
-	{
-		// consider the current node
-		final double distance = current.squDistanceTo( pos );
-		if ( distance < bestSquDistance )
-		{
-			bestSquDistance = distance;
-			bestPoint = current;
-		}
-
-		final double axisDiff = pos[ current.getSplitDimension() ] - current.getSplitCoordinate();
-		final double axisSquDistance = axisDiff * axisDiff;
-		final boolean leftIsNearBranch = axisDiff < 0;
-
-		// search the near branch
-		final KDTreeNode< T > nearChild = leftIsNearBranch ? current.left : current.right;
-		final KDTreeNode< T > awayChild = leftIsNearBranch ? current.right : current.left;
-		if ( nearChild != null )
-			searchNode( nearChild );
-
-		// search the away branch - maybe
-		if ( ( axisSquDistance <= bestSquDistance ) && ( awayChild != null ) )
-			searchNode( awayChild );
+		impl.search( p );
+		bestPoint.setNodeIndex( impl.bestIndex() );
 	}
 
 	@Override
@@ -118,22 +97,12 @@ public class NearestNeighborSearchOnKDTree< T > implements NearestNeighborSearch
 	@Override
 	public double getSquareDistance()
 	{
-		return bestSquDistance;
-	}
-
-	@Override
-	public double getDistance()
-	{
-		return Math.sqrt( bestSquDistance );
+		return impl.bestSquDistance();
 	}
 
 	@Override
 	public NearestNeighborSearchOnKDTree< T > copy()
 	{
-		final NearestNeighborSearchOnKDTree< T > copy = new NearestNeighborSearchOnKDTree< T >( tree );
-		System.arraycopy( pos, 0, copy.pos, 0, pos.length );
-		copy.bestPoint = bestPoint;
-		copy.bestSquDistance = bestSquDistance;
-		return copy;
+		return new NearestNeighborSearchOnKDTree<>( this );
 	}
 }

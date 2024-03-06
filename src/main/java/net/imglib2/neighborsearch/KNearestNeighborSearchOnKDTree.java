@@ -34,10 +34,12 @@
 
 package net.imglib2.neighborsearch;
 
-import net.imglib2.KDTree;
-import net.imglib2.KDTreeNode;
+import java.util.Arrays;
 import net.imglib2.RealLocalizable;
 import net.imglib2.Sampler;
+import net.imglib2.KDTree;
+import net.imglib2.KDTreeNode;
+import net.imglib2.kdtree.KNearestNeighborSearchImpl;
 
 /**
  * Implementation of {@link KNearestNeighborSearch} search for kd-trees.
@@ -46,35 +48,38 @@ import net.imglib2.Sampler;
  */
 public class KNearestNeighborSearchOnKDTree< T > implements KNearestNeighborSearch< T >
 {
-	protected KDTree< T > tree;
+	private final KDTree< T > tree;
 
-	protected final int n;
+	private final int k;
 
-	protected final double[] pos;
+	private final KNearestNeighborSearchImpl impl;
 
-	protected final int k;
-
-	protected KDTreeNode< T >[] bestPoints;
-
-	protected double[] bestSquDistances;
+	private final KDTreeNode< T >[] matches;
 
 	@SuppressWarnings( "unchecked" )
 	public KNearestNeighborSearchOnKDTree( final KDTree< T > tree, final int k )
 	{
 		this.tree = tree;
-		this.n = tree.numDimensions();
-		this.pos = new double[ n ];
 		this.k = k;
-		this.bestPoints = new KDTreeNode[ k ];
-		this.bestSquDistances = new double[ k ];
-		for ( int i = 0; i < k; ++i )
-			bestSquDistances[ i ] = Double.MAX_VALUE;
+		impl = new KNearestNeighborSearchImpl( tree.impl(), k );
+		matches = new KDTreeNode[ k ];
+		Arrays.setAll( matches, i -> tree.createNode() );
+	}
+
+	@SuppressWarnings( "unchecked" )
+	private KNearestNeighborSearchOnKDTree( final KNearestNeighborSearchOnKDTree< T > knn )
+	{
+		tree = knn.tree;
+		k = knn.k;
+		impl = knn.impl.copy();
+		matches = new KDTreeNode[ k ];
+		Arrays.setAll( matches, i -> tree.createNode().setNodeIndex( impl.bestIndex( i ) ) );
 	}
 
 	@Override
 	public int numDimensions()
 	{
-		return n;
+		return tree.numDimensions();
 	}
 
 	@Override
@@ -84,67 +89,35 @@ public class KNearestNeighborSearchOnKDTree< T > implements KNearestNeighborSear
 	}
 
 	@Override
-	public void search( final RealLocalizable reference )
+	public void search( final RealLocalizable p )
 	{
-		reference.localize( pos );
-		for ( int i = 0; i < k; ++i )
-			bestSquDistances[ i ] = Double.MAX_VALUE;
-		searchNode( tree.getRoot() );
-	}
-
-	protected void searchNode( final KDTreeNode< T > current )
-	{
-		// consider the current node
-		final double squDistance = current.squDistanceTo( pos );
-		if ( squDistance < bestSquDistances[ k - 1 ] )
-		{
-			int i = k - 1;
-			for ( int j = i - 1; i > 0 && squDistance < bestSquDistances[ j ]; --i, --j )
-			{
-				bestSquDistances[ i ] = bestSquDistances[ j ];
-				bestPoints[ i ] = bestPoints[ j ];
-			}
-			bestSquDistances[ i ] = squDistance;
-			bestPoints[ i ] = current;
-		}
-
-		final double axisDiff = pos[ current.getSplitDimension() ] - current.getSplitCoordinate();
-		final double axisSquDistance = axisDiff * axisDiff;
-		final boolean leftIsNearBranch = axisDiff < 0;
-
-		// search the near branch
-		final KDTreeNode< T > nearChild = leftIsNearBranch ? current.left : current.right;
-		final KDTreeNode< T > awayChild = leftIsNearBranch ? current.right : current.left;
-		if ( nearChild != null )
-			searchNode( nearChild );
-
-		// search the away branch - maybe
-		if ( ( axisSquDistance <= bestSquDistances[ k - 1 ] ) && ( awayChild != null ) )
-			searchNode( awayChild );
+		impl.search( p );
+		for ( int i = 0; i < k; i++ )
+			matches[ i ].setNodeIndex( impl.bestIndex( i ) );
 	}
 
 	@Override
 	public Sampler< T > getSampler( final int i )
 	{
-		return bestPoints[ i ];
+		return matches[ i ];
 	}
 
 	@Override
 	public RealLocalizable getPosition( final int i )
 	{
-		return bestPoints[ i ];
+		return matches[ i ];
 	}
 
 	@Override
 	public double getSquareDistance( final int i )
 	{
-		return bestSquDistances[ i ];
+		return impl.bestSquDistance( i );
 	}
 
 	@Override
-	public double getDistance( final int i )
+	public KNearestNeighborSearchOnKDTree< T > copy()
 	{
-		return Math.sqrt( bestSquDistances[ i ] );
+		return new KNearestNeighborSearchOnKDTree<>( this );
 	}
 
 	/* NearestNeighborSearch */
@@ -171,18 +144,5 @@ public class KNearestNeighborSearchOnKDTree< T > implements KNearestNeighborSear
 	public double getDistance()
 	{
 		return getDistance( 0 );
-	}
-
-	@Override
-	public KNearestNeighborSearchOnKDTree< T > copy()
-	{
-		final KNearestNeighborSearchOnKDTree< T > copy = new KNearestNeighborSearchOnKDTree< T >( tree, k );
-		System.arraycopy( pos, 0, copy.pos, 0, pos.length );
-		for ( int i = 0; i < k; ++i )
-		{
-			copy.bestPoints[ i ] = bestPoints[ i ];
-			copy.bestSquDistances[ i ] = bestSquDistances[ i ];
-		}
-		return copy;
 	}
 }
