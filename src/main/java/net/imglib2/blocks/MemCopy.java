@@ -11,13 +11,13 @@
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice,
  *    this list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  *    this list of conditions and the following disclaimer in the documentation
  *    and/or other materials provided with the distribution.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -33,14 +33,23 @@
  */
 package net.imglib2.blocks;
 
+import java.nio.ByteBuffer;
+import java.nio.CharBuffer;
+import java.nio.DoubleBuffer;
+import java.nio.FloatBuffer;
+import java.nio.IntBuffer;
+import java.nio.LongBuffer;
+import java.nio.ShortBuffer;
 import java.util.Arrays;
+import net.imglib2.img.basictypeaccess.array.ArrayDataAccess;
+import net.imglib2.img.basictypeaccess.nio.BufferAccess;
 import net.imglib2.type.PrimitiveType;
 
 // TODO javadoc
 // low-level copying methods
 // implementations for all primitive types
 // T is a primitive array type
-interface MemCopy< T >
+interface MemCopy< S, T >
 {
 	/**
 	 * Copy {@code length} components from the {@code src} array to the {@code
@@ -49,7 +58,7 @@ interface MemCopy< T >
 	 * destPos} through {@code destPos+length-1}, respectively, of the
 	 * destination array.
 	 */
-	void copyForward( T src, int srcPos, T dest, int destPos, int length );
+	void copyForward( S src, int srcPos, T dest, int destPos, int length );
 
 	/**
 	 * Copy {@code length} components from the {@code src} array to the {@code
@@ -58,19 +67,24 @@ interface MemCopy< T >
 	 * positions {@code destPos} through {@code destPos+length-1}, respectively,
 	 * of the destination array.
 	 */
-	void copyReverse( T src, int srcPos, T dest, int destPos, int length );
+	void copyReverse( S src, int srcPos, T dest, int destPos, int length );
 
 	/**
 	 * Copy component at position {@code srcPos} in the {@code src} array
 	 * ({@code length} times) into positions {@code destPos} through {@code
 	 * destPos+length-1} of the destination array.
 	 */
-	void copyValue( T src, int srcPos, T dest, int destPos, int length );
+	void copyValue( S src, int srcPos, T dest, int destPos, int length );
 
 	/**
-	 * TODO javadoc
+	 * Copy {@code length} components from the {@code src} array to the {@code
+	 * dest} array. The components at positions {@code srcPos} through {@code
+	 * srcPos+length-1} in the source array are copied into positions {@code
+	 * destPos}, {@code destPos+destStride}, {@code destPos + 2*destStride},
+	 * etc., through {@code destPos+(length-1)*destStride} of the destination
+	 * array.
 	 */
-	void copyStrided( T src, int srcPos, T dest, int destPos, int destStride, int length );
+	void copyStrided( S src, int srcPos, T dest, int destPos, int destStride, int length );
 
 	/**
 	 * Copy {@code numLines} stretches of {@code lineLength} elements.
@@ -93,7 +107,7 @@ interface MemCopy< T >
 			final int lineDir,
 			final int lineLength,
 			final int numLines,
-			final T src,
+			final S src,
 			final int srcPos,
 			final int srcStep,
 			final T dest,
@@ -121,7 +135,7 @@ interface MemCopy< T >
 	MemCopyFloat FLOAT = new MemCopyFloat();
 	MemCopyDouble DOUBLE = new MemCopyDouble();
 
-	static MemCopy< ? > forPrimitiveType( final PrimitiveType primitiveType )
+	static MemCopy< ?, ? > forPrimitiveType( final PrimitiveType primitiveType )
 	{
 		switch ( primitiveType )
 		{
@@ -147,7 +161,7 @@ interface MemCopy< T >
 		}
 	}
 
-	class MemCopyBoolean implements MemCopy< boolean[] >
+	class MemCopyBoolean implements MemCopy< boolean[], boolean[] >
 	{
 		@Override
 		public void copyForward( final boolean[] src, final int srcPos, final boolean[] dest, final int destPos, final int length )
@@ -193,7 +207,7 @@ interface MemCopy< T >
 		}
 	}
 
-	class MemCopyByte implements MemCopy< byte[] >
+	class MemCopyByte implements MemCopy< byte[], byte[] >
 	{
 		@Override
 		public void copyForward( final byte[] src, final int srcPos, final byte[] dest, final int destPos, final int length )
@@ -239,7 +253,7 @@ interface MemCopy< T >
 		}
 	}
 
-	class MemCopyShort implements MemCopy< short[] >
+	class MemCopyShort implements MemCopy< short[], short[] >
 	{
 		@Override
 		public void copyForward( final short[] src, final int srcPos, final short[] dest, final int destPos, final int length )
@@ -286,7 +300,7 @@ interface MemCopy< T >
 		}
 	}
 
-	class MemCopyChar implements MemCopy< char[] >
+	class MemCopyChar implements MemCopy< char[], char[] >
 	{
 		@Override
 		public void copyForward( final char[] src, final int srcPos, final char[] dest, final int destPos, final int length )
@@ -332,7 +346,7 @@ interface MemCopy< T >
 		}
 	}
 
-	class MemCopyInt implements MemCopy< int[] >
+	class MemCopyInt implements MemCopy< int[], int[] >
 	{
 		@Override
 		public void copyForward( final int[] src, final int srcPos, final int[] dest, final int destPos, final int length )
@@ -378,7 +392,7 @@ interface MemCopy< T >
 		}
 	}
 
-	class MemCopyLong implements MemCopy< long[] >
+	class MemCopyLong implements MemCopy< long[], long[] >
 	{
 		@Override
 		public void copyForward( final long[] src, final int srcPos, final long[] dest, final int destPos, final int length )
@@ -424,7 +438,7 @@ interface MemCopy< T >
 		}
 	}
 
-	class MemCopyFloat implements MemCopy< float[] >
+	class MemCopyFloat implements MemCopy< float[], float[] >
 	{
 		@Override
 		public void copyForward( final float[] src, final int srcPos, final float[] dest, final int destPos, final int length )
@@ -470,7 +484,7 @@ interface MemCopy< T >
 		}
 	}
 
-	class MemCopyDouble implements MemCopy< double[] >
+	class MemCopyDouble implements MemCopy< double[], double[] >
 	{
 		@Override
 		public void copyForward( final double[] src, final int srcPos, final double[] dest, final int destPos, final int length )
@@ -503,6 +517,389 @@ interface MemCopy< T >
 
 		@Override
 		public void copyLines( final int lineDir, final int lineLength, final int numLines, final double[] src, final int srcPos, final int srcStep, final double[] dest, final int destPos, final int destStep )
+		{
+			if ( lineDir == 1 )
+				for ( int i = 0; i < numLines; ++i )
+					copyForward( src, srcPos + i * srcStep, dest, destPos + i * destStep, lineLength );
+			else if ( lineDir == -1 )
+				for ( int i = 0; i < numLines; ++i )
+					copyReverse( src, srcPos + i * srcStep, dest, destPos + i * destStep, lineLength );
+			else // cstep0 == 0
+				for ( int i = 0; i < numLines; ++i )
+					copyValue( src, srcPos + i * srcStep, dest, destPos + i * destStep, lineLength );
+		}
+	}
+
+
+	/*
+	 * -----------------------------------------------------------------------
+	 *
+	 * EXPERIMENTAL: Copying from Buffers into primitive arrays
+	 *
+	 * -----------------------------------------------------------------------
+	 */
+
+	MemCopyBufferByte BUFFER_TO_ARRAY_BYTE = new MemCopyBufferByte();
+	MemCopyBufferChar BUFFER_TO_ARRAY_CHAR = new MemCopyBufferChar();
+	MemCopyBufferShort BUFFER_TO_ARRAY_SHORT = new MemCopyBufferShort();
+	MemCopyBufferInt BUFFER_TO_ARRAY_INT = new MemCopyBufferInt();
+	MemCopyBufferLong BUFFER_TO_ARRAY_LONG = new MemCopyBufferLong();
+	MemCopyBufferFloat BUFFER_TO_ARRAY_FLOAT = new MemCopyBufferFloat();
+	MemCopyBufferDouble BUFFER_TO_ARRAY_DOUBLE = new MemCopyBufferDouble();
+
+	static MemCopy< ?, ? > forPrimitiveType( final PrimitiveType primitiveType, final ArrayDataAccess< ? > sourceAccessType )
+	{
+		boolean fromBuffer = sourceAccessType instanceof BufferAccess;
+		switch ( primitiveType )
+		{
+		case BOOLEAN:
+			if ( fromBuffer )
+				throw new IllegalArgumentException( "No BufferAccess implementation for PrimitiveType.BOOLEAN" );
+			else
+				return BOOLEAN;
+		case BYTE:
+			return fromBuffer ? BUFFER_TO_ARRAY_BYTE : BYTE;
+		case CHAR:
+			return fromBuffer ? BUFFER_TO_ARRAY_CHAR : CHAR;
+		case SHORT:
+			return fromBuffer ? BUFFER_TO_ARRAY_SHORT : SHORT;
+		case INT:
+			return fromBuffer ? BUFFER_TO_ARRAY_INT : INT;
+		case LONG:
+			return fromBuffer ? BUFFER_TO_ARRAY_LONG : LONG;
+		case FLOAT:
+			return fromBuffer ? BUFFER_TO_ARRAY_FLOAT : FLOAT;
+		case DOUBLE:
+			return fromBuffer ? BUFFER_TO_ARRAY_DOUBLE : DOUBLE;
+		default:
+		case UNDEFINED:
+			throw new IllegalArgumentException();
+		}
+	}
+
+	class MemCopyBufferByte implements MemCopy< ByteBuffer, byte[] >
+	{
+		@Override
+		public void copyForward( final ByteBuffer src, final int srcPos, final byte[] dest, final int destPos, final int length )
+		{
+			src.position(srcPos);
+			src.get( dest, destPos, length );
+		}
+
+		@Override
+		public void copyReverse( final ByteBuffer src, final int srcPos, final byte[] dest, final int destPos, final int length )
+		{
+			for ( int i = 0; i < length; ++i )
+				dest[ destPos + i ] = src.get( srcPos - i );
+		}
+
+		@Override
+		public void copyValue( final ByteBuffer src, final int srcPos, final byte[] dest, final int destPos, final int length )
+		{
+			final byte val = src.get( srcPos );
+			Arrays.fill( dest, destPos, destPos + length, val );
+		}
+
+		@Override
+		public void copyStrided( final ByteBuffer src, final int srcPos, final byte[] dest, final int destPos, final int destStride, final int length )
+		{
+			if ( destStride == 1 )
+				copyForward( src, srcPos, dest, destPos, length );
+			else
+				for ( int i = 0; i < length; ++i )
+					dest[ destPos + i * destStride ] = src.get( srcPos + i );
+		}
+
+		@Override
+		public void copyLines( final int lineDir, final int lineLength, final int numLines, final ByteBuffer src, final int srcPos, final int srcStep, final byte[] dest, final int destPos, final int destStep )
+		{
+			if ( lineDir == 1 )
+				for ( int i = 0; i < numLines; ++i )
+					copyForward( src, srcPos + i * srcStep, dest, destPos + i * destStep, lineLength );
+			else if ( lineDir == -1 )
+				for ( int i = 0; i < numLines; ++i )
+					copyReverse( src, srcPos + i * srcStep, dest, destPos + i * destStep, lineLength );
+			else // cstep0 == 0
+				for ( int i = 0; i < numLines; ++i )
+					copyValue( src, srcPos + i * srcStep, dest, destPos + i * destStep, lineLength );
+		}
+	}
+
+	class MemCopyBufferChar implements MemCopy< CharBuffer, char[] >
+	{
+		@Override
+		public void copyForward( final CharBuffer src, final int srcPos, final char[] dest, final int destPos, final int length )
+		{
+			src.position(srcPos);
+			src.get( dest, destPos, length );
+		}
+
+		@Override
+		public void copyReverse( final CharBuffer src, final int srcPos, final char[] dest, final int destPos, final int length )
+		{
+			for ( int i = 0; i < length; ++i )
+				dest[ destPos + i ] = src.get( srcPos - i );
+		}
+
+		@Override
+		public void copyValue( final CharBuffer src, final int srcPos, final char[] dest, final int destPos, final int length )
+		{
+			final char val = src.get( srcPos );
+			Arrays.fill( dest, destPos, destPos + length, val );
+		}
+
+		@Override
+		public void copyStrided( final CharBuffer src, final int srcPos, final char[] dest, final int destPos, final int destStride, final int length )
+		{
+			if ( destStride == 1 )
+				copyForward( src, srcPos, dest, destPos, length );
+			else
+				for ( int i = 0; i < length; ++i )
+					dest[ destPos + i * destStride ] = src.get( srcPos + i );
+		}
+
+		@Override
+		public void copyLines( final int lineDir, final int lineLength, final int numLines, final CharBuffer src, final int srcPos, final int srcStep, final char[] dest, final int destPos, final int destStep )
+		{
+			if ( lineDir == 1 )
+				for ( int i = 0; i < numLines; ++i )
+					copyForward( src, srcPos + i * srcStep, dest, destPos + i * destStep, lineLength );
+			else if ( lineDir == -1 )
+				for ( int i = 0; i < numLines; ++i )
+					copyReverse( src, srcPos + i * srcStep, dest, destPos + i * destStep, lineLength );
+			else // cstep0 == 0
+				for ( int i = 0; i < numLines; ++i )
+					copyValue( src, srcPos + i * srcStep, dest, destPos + i * destStep, lineLength );
+		}
+	}
+
+	class MemCopyBufferShort implements MemCopy< ShortBuffer, short[] >
+	{
+		@Override
+		public void copyForward( final ShortBuffer src, final int srcPos, final short[] dest, final int destPos, final int length )
+		{
+			src.position(srcPos);
+			src.get( dest, destPos, length );
+		}
+
+		@Override
+		public void copyReverse( final ShortBuffer src, final int srcPos, final short[] dest, final int destPos, final int length )
+		{
+			for ( int i = 0; i < length; ++i )
+				dest[ destPos + i ] = src.get( srcPos - i );
+		}
+
+		@Override
+		public void copyValue( final ShortBuffer src, final int srcPos, final short[] dest, final int destPos, final int length )
+		{
+			final short val = src.get( srcPos );
+			Arrays.fill( dest, destPos, destPos + length, val );
+		}
+
+		@Override
+		public void copyStrided( final ShortBuffer src, final int srcPos, final short[] dest, final int destPos, final int destStride, final int length )
+		{
+			if ( destStride == 1 )
+				copyForward( src, srcPos, dest, destPos, length );
+			else
+				for ( int i = 0; i < length; ++i )
+					dest[ destPos + i * destStride ] = src.get( srcPos + i );
+		}
+
+		@Override
+		public void copyLines( final int lineDir, final int lineLength, final int numLines, final ShortBuffer src, final int srcPos, final int srcStep, final short[] dest, final int destPos, final int destStep )
+		{
+			if ( lineDir == 1 )
+				for ( int i = 0; i < numLines; ++i )
+					copyForward( src, srcPos + i * srcStep, dest, destPos + i * destStep, lineLength );
+			else if ( lineDir == -1 )
+				for ( int i = 0; i < numLines; ++i )
+					copyReverse( src, srcPos + i * srcStep, dest, destPos + i * destStep, lineLength );
+			else // cstep0 == 0
+				for ( int i = 0; i < numLines; ++i )
+					copyValue( src, srcPos + i * srcStep, dest, destPos + i * destStep, lineLength );
+		}
+	}
+
+	class MemCopyBufferInt implements MemCopy< IntBuffer, int[] >
+	{
+		@Override
+		public void copyForward( final IntBuffer src, final int srcPos, final int[] dest, final int destPos, final int length )
+		{
+			src.position(srcPos);
+			src.get( dest, destPos, length );
+		}
+
+		@Override
+		public void copyReverse( final IntBuffer src, final int srcPos, final int[] dest, final int destPos, final int length )
+		{
+			for ( int i = 0; i < length; ++i )
+				dest[ destPos + i ] = src.get( srcPos - i );
+		}
+
+		@Override
+		public void copyValue( final IntBuffer src, final int srcPos, final int[] dest, final int destPos, final int length )
+		{
+			final int val = src.get( srcPos );
+			Arrays.fill( dest, destPos, destPos + length, val );
+		}
+
+		@Override
+		public void copyStrided( final IntBuffer src, final int srcPos, final int[] dest, final int destPos, final int destStride, final int length )
+		{
+			if ( destStride == 1 )
+				copyForward( src, srcPos, dest, destPos, length );
+			else
+				for ( int i = 0; i < length; ++i )
+					dest[ destPos + i * destStride ] = src.get( srcPos + i );
+		}
+
+		@Override
+		public void copyLines( final int lineDir, final int lineLength, final int numLines, final IntBuffer src, final int srcPos, final int srcStep, final int[] dest, final int destPos, final int destStep )
+		{
+			if ( lineDir == 1 )
+				for ( int i = 0; i < numLines; ++i )
+					copyForward( src, srcPos + i * srcStep, dest, destPos + i * destStep, lineLength );
+			else if ( lineDir == -1 )
+				for ( int i = 0; i < numLines; ++i )
+					copyReverse( src, srcPos + i * srcStep, dest, destPos + i * destStep, lineLength );
+			else // cstep0 == 0
+				for ( int i = 0; i < numLines; ++i )
+					copyValue( src, srcPos + i * srcStep, dest, destPos + i * destStep, lineLength );
+		}
+	}
+
+	class MemCopyBufferLong implements MemCopy< LongBuffer, long[] >
+	{
+		@Override
+		public void copyForward( final LongBuffer src, final int srcPos, final long[] dest, final int destPos, final int length )
+		{
+			src.position(srcPos);
+			src.get( dest, destPos, length );
+		}
+
+		@Override
+		public void copyReverse( final LongBuffer src, final int srcPos, final long[] dest, final int destPos, final int length )
+		{
+			for ( int i = 0; i < length; ++i )
+				dest[ destPos + i ] = src.get( srcPos - i );
+		}
+
+		@Override
+		public void copyValue( final LongBuffer src, final int srcPos, final long[] dest, final int destPos, final int length )
+		{
+			final long val = src.get( srcPos );
+			Arrays.fill( dest, destPos, destPos + length, val );
+		}
+
+		@Override
+		public void copyStrided( final LongBuffer src, final int srcPos, final long[] dest, final int destPos, final int destStride, final int length )
+		{
+			if ( destStride == 1 )
+				copyForward( src, srcPos, dest, destPos, length );
+			else
+				for ( int i = 0; i < length; ++i )
+					dest[ destPos + i * destStride ] = src.get( srcPos + i );
+		}
+
+		@Override
+		public void copyLines( final int lineDir, final int lineLength, final int numLines, final LongBuffer src, final int srcPos, final int srcStep, final long[] dest, final int destPos, final int destStep )
+		{
+			if ( lineDir == 1 )
+				for ( int i = 0; i < numLines; ++i )
+					copyForward( src, srcPos + i * srcStep, dest, destPos + i * destStep, lineLength );
+			else if ( lineDir == -1 )
+				for ( int i = 0; i < numLines; ++i )
+					copyReverse( src, srcPos + i * srcStep, dest, destPos + i * destStep, lineLength );
+			else // cstep0 == 0
+				for ( int i = 0; i < numLines; ++i )
+					copyValue( src, srcPos + i * srcStep, dest, destPos + i * destStep, lineLength );
+		}
+	}
+
+	class MemCopyBufferFloat implements MemCopy< FloatBuffer, float[] >
+	{
+		@Override
+		public void copyForward( final FloatBuffer src, final int srcPos, final float[] dest, final int destPos, final int length )
+		{
+			src.position(srcPos);
+			src.get( dest, destPos, length );
+		}
+
+		@Override
+		public void copyReverse( final FloatBuffer src, final int srcPos, final float[] dest, final int destPos, final int length )
+		{
+			for ( int i = 0; i < length; ++i )
+				dest[ destPos + i ] = src.get( srcPos - i );
+		}
+
+		@Override
+		public void copyValue( final FloatBuffer src, final int srcPos, final float[] dest, final int destPos, final int length )
+		{
+			final float val = src.get( srcPos );
+			Arrays.fill( dest, destPos, destPos + length, val );
+		}
+
+		@Override
+		public void copyStrided( final FloatBuffer src, final int srcPos, final float[] dest, final int destPos, final int destStride, final int length )
+		{
+			if ( destStride == 1 )
+				copyForward( src, srcPos, dest, destPos, length );
+			else
+				for ( int i = 0; i < length; ++i )
+					dest[ destPos + i * destStride ] = src.get( srcPos + i );
+		}
+
+		@Override
+		public void copyLines( final int lineDir, final int lineLength, final int numLines, final FloatBuffer src, final int srcPos, final int srcStep, final float[] dest, final int destPos, final int destStep )
+		{
+			if ( lineDir == 1 )
+				for ( int i = 0; i < numLines; ++i )
+					copyForward( src, srcPos + i * srcStep, dest, destPos + i * destStep, lineLength );
+			else if ( lineDir == -1 )
+				for ( int i = 0; i < numLines; ++i )
+					copyReverse( src, srcPos + i * srcStep, dest, destPos + i * destStep, lineLength );
+			else // cstep0 == 0
+				for ( int i = 0; i < numLines; ++i )
+					copyValue( src, srcPos + i * srcStep, dest, destPos + i * destStep, lineLength );
+		}
+	}
+
+	class MemCopyBufferDouble implements MemCopy< DoubleBuffer, double[] >
+	{
+		@Override
+		public void copyForward( final DoubleBuffer src, final int srcPos, final double[] dest, final int destPos, final int length )
+		{
+			src.position(srcPos);
+			src.get( dest, destPos, length );
+		}
+
+		@Override
+		public void copyReverse( final DoubleBuffer src, final int srcPos, final double[] dest, final int destPos, final int length )
+		{
+			for ( int i = 0; i < length; ++i )
+				dest[ destPos + i ] = src.get( srcPos - i );
+		}
+
+		@Override
+		public void copyValue( final DoubleBuffer src, final int srcPos, final double[] dest, final int destPos, final int length )
+		{
+			final double val = src.get( srcPos );
+			Arrays.fill( dest, destPos, destPos + length, val );
+		}
+
+		@Override
+		public void copyStrided( final DoubleBuffer src, final int srcPos, final double[] dest, final int destPos, final int destStride, final int length )
+		{
+			if ( destStride == 1 )
+				copyForward( src, srcPos, dest, destPos, length );
+			else
+				for ( int i = 0; i < length; ++i )
+					dest[ destPos + i * destStride ] = src.get( srcPos + i );
+		}
+
+		@Override
+		public void copyLines( final int lineDir, final int lineLength, final int numLines, final DoubleBuffer src, final int srcPos, final int srcStep, final double[] dest, final int destPos, final int destStep )
 		{
 			if ( lineDir == 1 )
 				for ( int i = 0; i < numLines; ++i )

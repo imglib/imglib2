@@ -11,13 +11,13 @@
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice,
  *    this list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  *    this list of conditions and the following disclaimer in the documentation
  *    and/or other materials provided with the distribution.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -37,6 +37,7 @@ import java.util.function.Supplier;
 import net.imglib2.RandomAccessible;
 import net.imglib2.converter.Converter;
 import net.imglib2.img.NativeImg;
+import net.imglib2.img.basictypeaccess.array.ArrayDataAccess;
 import net.imglib2.transform.integer.MixedTransform;
 import net.imglib2.type.NativeType;
 import net.imglib2.view.TransformBuilder;
@@ -132,6 +133,22 @@ class ViewProperties< T extends NativeType< T >, R extends NativeType< R > >
 	public R getRootType()
 	{
 		return rootType;
+	}
+
+	public ArrayDataAccess< ? > getRootAccessType()
+	{
+		return ( ArrayDataAccess< ? > ) getDataAccess( root );
+	}
+
+	/*
+	 * TODO: There should be a better way to get straight to a DataAccess instance.
+	 *       This is similar to the getType() problem.
+	 *       For now, this will work.
+	 *       Make an issue about getDataAccess() ...
+	 */
+	private static < A > A getDataAccess( NativeImg< ?, A > img )
+	{
+		return img.update( img.cursor() );
 	}
 
 	public Extension getExtension()
