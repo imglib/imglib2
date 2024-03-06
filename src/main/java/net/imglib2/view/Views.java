@@ -82,6 +82,7 @@ import net.imglib2.view.composite.InflateView;
 import net.imglib2.view.composite.InterleaveView;
 import net.imglib2.view.composite.NumericComposite;
 import net.imglib2.view.composite.RealComposite;
+import net.imglib2.view.composite.RealStackCompositeView;
 
 /**
  * Create light-weight views into {@link RandomAccessible RandomAccessibles}.
@@ -1135,6 +1136,36 @@ public class Views
 	public static < T > RandomAccessibleInterval< T > stack( final StackAccessMode stackAccessMode, final RandomAccessibleInterval< T >... hyperslices )
 	{
 		return new StackView<>( Arrays.asList( hyperslices ), stackAccessMode );
+	}
+
+	/**
+	 * Form a {@link RealRandomAccessible} of {@link Composite}s from <em>n</em>
+	 * {@link RealRandomAccessible}s.
+	 * 
+	 * @param stackAccessMode
+	 *            describes how a {@link RealRandomAccess} on the output
+	 *            {@link RealRandonAccessible} maps position changes into 
+	 *            position changes of the underlying {@link RealRandomAccess}es.
+	 * @param components
+	 *            a list of <em>n</em>-dimensional {@link RealRandomAccessible}s 
+	 * @return
+	 */
+	public static < T > RealRandomAccessible<Composite<T>> realComposite( final StackAccessMode stackAccessMode, final RealRandomAccessible< T >... components)
+	{
+		return new RealStackCompositeView<T>( components, stackAccessMode );
+	}
+
+	/**
+	 * Form a {@link RealRandomAccessible} of {@link Composite}s from <em>n</em>
+	 * {@link RealRandomAccessible}s.
+	 * 
+	 * @param components
+	 *            a list of <em>n</em>-dimensional {@link RealRandomAccessible}s 
+	 * @return
+	 */
+	public static < T > RealRandomAccessible<Composite<T>> realComposite( final RealRandomAccessible< T >... components)
+	{
+		return new RealStackCompositeView<T>( components );
 	}
 
 	/**
