@@ -37,7 +37,6 @@ import java.util.EnumMap;
 import java.util.function.Function;
 import java.util.function.IntFunction;
 import java.util.function.ToIntFunction;
-import net.imglib2.img.basictypeaccess.array.ArrayDataAccess;
 import net.imglib2.img.basictypeaccess.array.BooleanArray;
 import net.imglib2.img.basictypeaccess.array.ByteArray;
 import net.imglib2.img.basictypeaccess.array.CharArray;
@@ -61,7 +60,7 @@ import static net.imglib2.type.PrimitiveType.SHORT;
  * @param <P> a primitive array type, e.g., {@code byte[]}.
  * @param <A> the corresponding {@code ArrayDataAccess} type.
  */
-class PrimitiveTypeProperties< P, A extends ArrayDataAccess< A > >
+class PrimitiveTypeProperties< P, A >
 {
 	final Class< P > primitiveArrayClass;
 
