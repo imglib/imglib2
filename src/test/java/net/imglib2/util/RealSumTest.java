@@ -92,13 +92,10 @@ public class RealSumTest
 	@Test
 	public void testAdd()
 	{
-		for ( int t = 0; t < 20; ++t )
-		{
-			final RealSum sum = new RealSum();
-			for ( int i = 0; i < stream.length; ++i )
-				sum.add( 1 );
-			Assert.assertEquals( sum.getSum(), stream.length, 0.0001 );
-		}
+		final RealSum sum = new RealSum();
+		for ( int i = 0; i < stream.length; ++i )
+			sum.add( 1 );
+		Assert.assertEquals( sum.getSum(), stream.length, 0.0001 );
 	}
 
 	/**
