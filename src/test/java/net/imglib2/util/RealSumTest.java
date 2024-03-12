@@ -87,18 +87,6 @@ public class RealSumTest
 	}
 
 	/**
-	 * Test method for {@link net.imglib2.util.RealSum#getSum()}.
-	 */
-	@Test
-	public void testDoubleSum()
-	{
-		double sum = 0;
-		for ( int i = 0; i < stream.length; ++i )
-			sum += stream[ i ];
-		Assert.assertEquals( sum, referenceSum.doubleValue(), 0.01 );
-	}
-
-	/**
 	 * Test method for {@link net.imglib2.util.RealSum#add(double)}.
 	 */
 	@Test
@@ -110,21 +98,6 @@ public class RealSumTest
 			for ( int i = 0; i < stream.length; ++i )
 				sum.add( 1 );
 			Assert.assertEquals( sum.getSum(), stream.length, 0.0001 );
-		}
-	}
-
-	/**
-	 * Test method for {@link net.imglib2.util.RealSum#add(double)}.
-	 */
-	@Test
-	public void testDoubleAdd()
-	{
-		for ( int t = 0; t < 20; ++t )
-		{
-			double sum = 0;
-			for ( int i = 0; i < stream.length; ++i )
-				sum += 1;
-			Assert.assertEquals( sum, stream.length, 0.0001 );
 		}
 	}
 
