@@ -34,58 +34,61 @@
 
 package net.imglib2.util;
 
+import org.openjdk.jmh.annotations.Benchmark;
+import org.openjdk.jmh.annotations.Scope;
+import org.openjdk.jmh.annotations.State;
+import org.openjdk.jmh.infra.Blackhole;
+import org.openjdk.jmh.runner.Runner;
+import org.openjdk.jmh.runner.RunnerException;
+import org.openjdk.jmh.runner.options.Options;
+import org.openjdk.jmh.runner.options.OptionsBuilder;
+import org.openjdk.jmh.runner.options.TimeValue;
+
+import java.util.stream.DoubleStream;
+
 /**
- * {@link RealSum} implements a method to reduce numerical instabilities when
- * summing up a very large number of double precision numbers. Numerical
- * problems occur when a small number is added to an already very large sum. In
- * such case, the reduced accuracy of the very large number may lead to the
- * small number being entirely ignored. The method here is Neumaier's
- * improvement of the Kahan summation algorithm.
- * See <a href="https://en.wikipedia.org/wiki/Kahan_summation_algorithm">this
- * Wikipedia article</a> for details.
- *
- * @author Michael Innerberger, Stephan Saalfeld
+ * Benchmark for {@link RealSum}, comparing it with naive double summation.
+ * 
+ * @author Michael Innerberger
  */
-public class RealSum {
-	private double sum = 0.0;
-	private double compensation = 0.0;
-
-	/**
-	 * Create a new {@link RealSum} initialized to zero.
-	 */
-	public RealSum() {}
-
-	/**
-	 * Create a new {@link RealSum} initialized to zero. This constructor
-	 * was used in a previous version of {@link RealSum} and is kept for
-	 * backwards compatibility.
-	 *
-	 * @param capacity unused
-	 */
-	@Deprecated
-	public RealSum(final int capacity) {
-		this();
-	}
-
-	/**
-	 * Get the current sum.
-	 */
-	public double getSum() {
-		return sum + compensation;
-	}
-
-	/**
-	 * Add an element to the sum.
-	 *
-	 * @param value the summand to be added
-	 */
-	public void add(double value) {
-		double t = sum + value;
-		if (Math.abs(sum) >= Math.abs(value)) {
-			compensation += (sum - t) + value;
-		} else {
-			compensation += (value - t) + sum;
+public class RealSumBenchmark {
+	@Benchmark
+	public static void sumNaive(Blackhole blackhole, RandomValues values) {
+		double sum = 0.0;
+		for (double d : values.get()) {
+			sum += d;
 		}
-		sum = t;
+		blackhole.consume(sum);
+	}
+
+	@Benchmark
+	public static void sumRealSum(Blackhole blackhole, RandomValues values) {
+		RealSum sum = new RealSum();
+		for (double d : values.get()) {
+			sum.add(d);
+		}
+		blackhole.consume(sum.getSum());
+	}
+
+	@State(Scope.Benchmark)
+	public static class RandomValues {
+		final int N = 10_000_000;
+		final double[] values = DoubleStream.generate(Math::random).limit(N).toArray();
+
+		public double[] get() {
+			return values;
+		}
+	}
+
+	public static void main(String[] args) throws RunnerException {
+		Options opt = new OptionsBuilder()
+				.include(RealSumBenchmark.class.getSimpleName())
+				.forks(0)
+				.warmupIterations(4)
+				.measurementIterations(8)
+				.warmupTime(TimeValue.milliseconds(100))
+				.measurementTime(TimeValue.milliseconds(100))
+				.build();
+		new Runner(opt).run();
 	}
 }

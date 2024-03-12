@@ -75,16 +75,6 @@ public class RealSumTest
 	}
 
 	/**
-	 * Test method for {@link net.imglib2.util.RealSum#RealSum(int)}.
-	 */
-	@Test
-	public void testRealSumInt()
-	{
-		final RealSum sum = new RealSum( 10 );
-		Assert.assertEquals( sum.getSum(), 0.0, 0.001 );
-	}
-
-	/**
 	 * Test method for {@link net.imglib2.util.RealSum#getSum()}.
 	 */
 	@Test
@@ -97,44 +87,28 @@ public class RealSumTest
 	}
 
 	/**
-	 * Test method for {@link net.imglib2.util.RealSum#getSum()}.
-	 */
-	@Test
-	public void testDoubleSum()
-	{
-		double sum = 0;
-		for ( int i = 0; i < stream.length; ++i )
-			sum += stream[ i ];
-		Assert.assertEquals( sum, referenceSum.doubleValue(), 0.01 );
-	}
-
-	/**
 	 * Test method for {@link net.imglib2.util.RealSum#add(double)}.
 	 */
 	@Test
 	public void testAdd()
 	{
-		for ( int t = 0; t < 20; ++t )
-		{
-			final RealSum sum = new RealSum();
-			for ( int i = 0; i < stream.length; ++i )
-				sum.add( 1 );
-			Assert.assertEquals( sum.getSum(), stream.length, 0.0001 );
-		}
+		final RealSum sum = new RealSum();
+		for ( int i = 0; i < stream.length; ++i )
+			sum.add( 1 );
+		Assert.assertEquals( sum.getSum(), stream.length, 0.0001 );
 	}
 
 	/**
-	 * Test method for {@link net.imglib2.util.RealSum#add(double)}.
+	 * Test method for {@link net.imglib2.util.RealSum#add(double)} on a hard
+	 * example that fails for naive double summation.
 	 */
 	@Test
-	public void testDoubleAdd()
-	{
-		for ( int t = 0; t < 20; ++t )
-		{
-			double sum = 0;
-			for ( int i = 0; i < stream.length; ++i )
-				sum += 1;
-			Assert.assertEquals( sum, stream.length, 0.0001 );
+	public void testHardExample() {
+		final double[] values = new double[]{1.0, 1.0e100, 1.0, -1.0e100};
+		final RealSum sum = new RealSum();
+		for (double value : values) {
+			sum.add(value);
 		}
+		Assert.assertEquals(2.0, sum.getSum(), 0.0001);
 	}
 }
