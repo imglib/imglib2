@@ -99,10 +99,11 @@ public class RealSumTest
 	}
 
 	/**
-	 * Test method for {@link net.imglib2.util.RealSum#add(double)}.
+	 * Test method for {@link net.imglib2.util.RealSum#add(double)} on a hard
+	 * example that fails for naive double summation.
 	 */
 	@Test
-	public void testDoubleHard() {
+	public void testHardExample() {
 		final double[] values = new double[]{1.0, 1.0e100, 1.0, -1.0e100};
 		final RealSum sum = new RealSum();
 		for (double value : values) {
