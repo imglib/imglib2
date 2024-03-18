@@ -66,7 +66,7 @@ public interface SubArrayCopy
 	}
 }
 
-class SubArrayCopyImpl<S,T>  implements SubArrayCopy
+class SubArrayCopyImpl< S, T > implements SubArrayCopy
 {
 	private final int[] steps_src;
 
