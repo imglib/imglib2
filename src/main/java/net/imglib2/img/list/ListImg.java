@@ -61,11 +61,14 @@ import net.imglib2.type.Type;
  */
 public class ListImg< T > extends AbstractListImg< T >
 {
-	final private ArrayList< T > pixels;
+	private final ArrayList< T > pixels;
+
+	private final T type;
 
 	public ListImg( final long[] dim, final T type )
 	{
 		super( dim );
+		this.type = type;
 		pixels = new ArrayList< T >( ( int ) numPixels );
 
 		if ( type instanceof Type< ? > )
@@ -83,20 +86,31 @@ public class ListImg< T > extends AbstractListImg< T >
 		}
 	}
 
-	public ListImg( final Collection< T > collection, final long... dim )
+	public ListImg( final T type, final Collection< T > collection, final long... dim )
 	{
 		super( dim );
-		
+
 		assert numPixels == collection.size() : "Dimensions do not match number of pixels.";
-		
-		pixels = new ArrayList< T >( ( int ) numPixels );
-		pixels.addAll( collection );
+
+		this.type = type;
+		pixels = new ArrayList<>( collection );
+	}
+
+	public ListImg( final Collection< T > collection, final long... dim )
+	{
+		this( collection.iterator().next(), collection, dim );
 	}
 
 	@Override
 	protected T get( final int index )
 	{
 		return pixels.get( index );
+	}
+
+	@Override
+	public T getType()
+	{
+		return type;
 	}
 
 	@Override
@@ -107,7 +121,7 @@ public class ListImg< T > extends AbstractListImg< T >
 
 	private static < A extends Type< A > > ListImg< A > copyWithType( final ListImg< A > img )
 	{
-		final ListImg< A > copy = new ListImg< A >( img.dimension, img.firstElement().createVariable() );
+		final ListImg< A > copy = new ListImg<>( img.dimension, img.type );
 
 		final ListCursor< A > source = img.cursor();
 		final ListCursor< A > target = copy.cursor();
@@ -122,12 +136,11 @@ public class ListImg< T > extends AbstractListImg< T >
 	@Override
 	public ListImg< T > copy()
 	{
-		final T type = firstElement();
 		if ( type instanceof Type< ? > )
 		{
 			final ListImg< ? > copy = copyWithType( ( ListImg< Type > ) this );
 			return ( ListImg< T > ) copy;
 		}
-		return new ListImg< T >( this.pixels, dimension );
+		return new ListImg<>( this.type, this.pixels, dimension );
 	}
 }

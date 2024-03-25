@@ -49,42 +49,69 @@ public class WriteConvertedIterableRandomAccessibleInterval< A, B, S extends Ran
 {
 	private final Supplier< SamplerConverter< ? super A, B > > converterSupplier;
 
+	private final Supplier< B > typeSupplier;
+
 	public WriteConvertedIterableRandomAccessibleInterval(
 			final S source,
 			final Supplier< SamplerConverter< ? super A, B > > converterSupplier )
 	{
 		super( source );
 		this.converterSupplier = converterSupplier;
+		this.typeSupplier = () -> cursor().next();
 	}
 
 	public WriteConvertedIterableRandomAccessibleInterval(
 			final S source,
-			final SamplerConverter< ? super A, B > converter )
+			final Supplier< SamplerConverter< ? super A, B > > converterSupplier,
+			final Supplier< B > typeSupplier )
+	{
+		super( source );
+		this.converterSupplier = converterSupplier;
+		this.typeSupplier = typeSupplier;
+	}
+
+	public WriteConvertedIterableRandomAccessibleInterval(
+			final S source,
+			final SamplerConverter< ? super A, B > converter)
 	{
 		this( source, () -> converter );
+	}
+
+	public WriteConvertedIterableRandomAccessibleInterval(
+			final S source,
+			final SamplerConverter< ? super A, B > converter,
+			final B type )
+	{
+		this( source, () -> converter, () -> type );
 	}
 
 	@Override
 	public WriteConvertedRandomAccess< A, B > randomAccess()
 	{
-		return new WriteConvertedRandomAccess< A, B >( sourceInterval.randomAccess(), converterSupplier );
+		return new WriteConvertedRandomAccess<>( sourceInterval.randomAccess(), converterSupplier );
 	}
 
 	@Override
 	public WriteConvertedRandomAccess< A, B > randomAccess( final Interval interval )
 	{
-		return new WriteConvertedRandomAccess< A, B >( sourceInterval.randomAccess( interval ), converterSupplier );
+		return new WriteConvertedRandomAccess<>( sourceInterval.randomAccess( interval ), converterSupplier );
 	}
 
 	@Override
 	public WriteConvertedCursor< A, B > cursor()
 	{
-		return new WriteConvertedCursor< A, B >( sourceInterval.cursor(), converterSupplier );
+		return new WriteConvertedCursor<>( sourceInterval.cursor(), converterSupplier );
 	}
 
 	@Override
 	public WriteConvertedCursor< A, B > localizingCursor()
 	{
-		return new WriteConvertedCursor< A, B >( sourceInterval.localizingCursor(), converterSupplier );
+		return new WriteConvertedCursor<>( sourceInterval.localizingCursor(), converterSupplier );
+	}
+
+	@Override
+	public B getType()
+	{
+		return typeSupplier.get();
 	}
 }

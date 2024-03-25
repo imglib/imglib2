@@ -247,4 +247,10 @@ public class CompositeView< T, C extends Composite< T > > implements RandomAcces
 		return randomAccess();
 	}
 
+	@Override
+	public C getType()
+	{
+		return randomAccess().get(); // TODO GET-TYPE: should be .getType() when that is available
+	}
+
 }

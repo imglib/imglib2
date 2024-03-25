@@ -759,6 +759,12 @@ public class CellGrid
 		{
 			return new FlatIterationOrder( this );
 		}
+
+		@Override
+		public Interval getType()
+		{
+			return new FinalInterval();
+		}
 	}
 
 	private final CellIntervals cellIntervals;

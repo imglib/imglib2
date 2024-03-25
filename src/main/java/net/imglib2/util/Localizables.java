@@ -197,6 +197,12 @@ public class Localizables
 		{
 			return randomAccess();
 		}
+
+		@Override
+		public Localizable getType()
+		{
+			return randomAccess();
+		}
 	}
 
 	/**

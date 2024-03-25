@@ -89,4 +89,10 @@ class FunctionView< A, B > implements RandomAccessible< B >
 	{
 		return new FunctionRandomAccess( source.randomAccess( interval ) );
 	}
+
+	@Override
+	public B getType()
+	{
+		return randomAccess().get(); // TODO GET-TYPE: should be getType();
+	}
 }

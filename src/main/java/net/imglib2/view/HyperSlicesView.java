@@ -123,5 +123,9 @@ public class HyperSlicesView< T > implements RandomAccessible< HyperSlice< T > >
 		return randomAccess();
 	}
 
-
+	@Override
+	public HyperSlice< T > getType()
+	{
+		return randomAccess().get(); // TODO GET-TYPE: should be getType();
+	}
 }

@@ -100,6 +100,11 @@ public class AbstractConvertedRandomAccessibleIntervalTest
 				return randomAccess();
 			}
 
+			@Override
+			public DoubleType getType()
+			{
+				return new DoubleType();
+			}
 		};
 
 		for ( final Cursor< Pair< DoubleType, DoubleType > > c = Views.interval( Views.pair( data, converted ), data ).cursor(); c.hasNext(); )
