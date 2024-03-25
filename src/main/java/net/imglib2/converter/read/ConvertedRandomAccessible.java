@@ -73,13 +73,13 @@ public class ConvertedRandomAccessible< A, B > extends AbstractConvertedRandomAc
 	@Override
 	public ConvertedRandomAccess< A, B > randomAccess()
 	{
-		return new ConvertedRandomAccess< A, B >( source.randomAccess(), converterSupplier, convertedSupplier );
+		return new ConvertedRandomAccess<>( source.randomAccess(), converterSupplier, convertedSupplier );
 	}
 
 	@Override
 	public ConvertedRandomAccess< A, B > randomAccess( final Interval interval )
 	{
-		return new ConvertedRandomAccess< A, B >( source.randomAccess( interval ), converterSupplier, convertedSupplier );
+		return new ConvertedRandomAccess<>( source.randomAccess( interval ), converterSupplier, convertedSupplier );
 	}
 
 	/**

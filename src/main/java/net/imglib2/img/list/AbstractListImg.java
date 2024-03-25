@@ -89,19 +89,19 @@ public abstract class AbstractListImg< T > extends AbstractImg< T >
 	@Override
 	public ListCursor< T > cursor()
 	{
-		return new ListCursor< T >( this );
+		return new ListCursor<>( this );
 	}
 
 	@Override
 	public ListLocalizingCursor< T > localizingCursor()
 	{
-		return new ListLocalizingCursor< T >( this );
+		return new ListLocalizingCursor<>( this );
 	}
 
 	@Override
 	public ListRandomAccess< T > randomAccess()
 	{
-		return new ListRandomAccess< T >( this );
+		return new ListRandomAccess<>( this );
 	}
 
 	@Override

@@ -75,7 +75,7 @@ public class HyperSlicesView< T > implements RandomAccessible< HyperSlice< T > >
 			for ( int d = 0; d < numDimensions; ++d )
 				position[ accessAxes[ d ] ] = getLongPosition( d );
 
-			return new HyperSlice< T >( source, accessAxes, position );
+			return new HyperSlice<>( source, accessAxes, position );
 		}
 
 		@Override
