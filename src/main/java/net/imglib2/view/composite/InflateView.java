@@ -40,10 +40,9 @@ import net.imglib2.RandomAccessible;
 import net.imglib2.View;
 
 /**
- * {@link InflateView} collapses the trailing dimension of a
- * {@link RandomAccessible} of T into a {@link Composite} of T. The results is
- * an (<em>n</em>-1)-dimensional {@link RandomAccessible} of {@link Composite}
- * of T.
+ * {@link InflateView} expands the composite elements of a {@link
+ * RandomAccessible} of {@link Composite} of T into the trailing dimension of an
+ * (<em>n</em>+1)-dimensional {@link RandomAccessible} of T.
  *
  * @author Stephan Saalfeld
  */
