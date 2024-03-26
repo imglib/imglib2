@@ -124,7 +124,8 @@ public class MixedTransformView< T > implements TransformedRandomAccessible< T >
 	}
 
 	@Override
-	public T getType() {
+	public T getType()
+	{
 		// source may have an optimized implementation for getType
 		return source.getType();
 	}

@@ -309,9 +309,9 @@ public class HyperSlice< T > implements RandomAccessible< T >
 	}
 
 	@Override
-	public T getType() {
+	public T getType()
+	{
 		// source may have an optimized implementation for getType
 		return source.getType();
 	}
-
 }

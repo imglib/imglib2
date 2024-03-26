@@ -57,9 +57,9 @@ public class RandomAccessibleOnRealRandomAccessible< T > extends AbstractEuclide
 {
 	final protected RealRandomAccessible< T > source;
 
-	final protected class RandomAccessOnRealRandomAccessible implements RandomAccess< T >
+	private final class RandomAccessOnRealRandomAccessible implements RandomAccess< T >
 	{
-		final protected RealRandomAccess< T > sourceAccess;
+		private final RealRandomAccess< T > sourceAccess;
 
 		public RandomAccessOnRealRandomAccessible( final RealRandomAccess< T > sourceAccess )
 		{
@@ -237,7 +237,8 @@ public class RandomAccessibleOnRealRandomAccessible< T > extends AbstractEuclide
 	}
 
 	@Override
-	public T getType() {
+	public T getType()
+	{
 		// source may have an optimized implementation for getType
 		return source.getType();
 	}

@@ -390,7 +390,8 @@ public class TransformBuilder< T >
 			}
 
 			@Override
-			public T getType() {
+			public T getType()
+			{
 				return s.getType();
 			}
 		};
@@ -424,7 +425,8 @@ public class TransformBuilder< T >
 			}
 
 			@Override
-			public T getType() {
+			public T getType()
+			{
 				return s.getType();
 			}
 		};
@@ -453,7 +455,8 @@ public class TransformBuilder< T >
 			}
 
 			@Override
-			public T getType() {
+			public T getType()
+			{
 				return s.getType();
 			}
 		};
@@ -487,7 +490,8 @@ public class TransformBuilder< T >
 			}
 
 			@Override
-			public T getType() {
+			public T getType()
+			{
 				return s.getType();
 			}
 		};

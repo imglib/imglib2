@@ -95,7 +95,8 @@ final public class ExtendedRandomAccessibleInterval< T, F extends RandomAccessib
 	}
 
 	@Override
-	public T getType() {
+	public T getType()
+	{
 		// source may have an optimized implementation for getType
 		return source.getType();
 	}

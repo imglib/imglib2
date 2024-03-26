@@ -93,7 +93,8 @@ final public class ExtendedRealRandomAccessibleRealInterval< T, F extends RealRa
 	}
 
 	@Override
-	public T getType() {
+	public T getType()
+	{
 		// source may have an optimized implementation for getType
 		return source.getType();
 	}
