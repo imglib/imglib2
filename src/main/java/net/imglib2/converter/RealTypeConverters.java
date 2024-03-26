@@ -44,7 +44,6 @@ import net.imglib2.type.numeric.integer.LongType;
 import net.imglib2.type.numeric.integer.UnsignedByteType;
 import net.imglib2.type.numeric.real.FloatType;
 import net.imglib2.util.Intervals;
-import net.imglib2.util.Util;
 import net.imglib2.view.IntervalView;
 import net.imglib2.view.Views;
 
@@ -74,8 +73,8 @@ public final class RealTypeConverters
 	)
 	{
 		IntervalView< ? extends RealType< ? > > sourceInterval = Views.interval( source, destination );
-		RealType< ? > s = Util.getTypeFromInterval( sourceInterval );
-		RealType< ? > d = Util.getTypeFromInterval( destination );
+		RealType< ? > s = sourceInterval.getType();
+		RealType< ? > d = destination.getType();
 		Converter< RealType< ? >, RealType< ? > > copy = getConverter( s, d );
 		boolean useMultiThreading = Intervals.numElements(destination) >= 20_000;
 		LoopBuilder.setImages( sourceInterval, destination ).multiThreaded( useMultiThreading ).forEachPixel( copy::convert );
@@ -102,7 +101,7 @@ public final class RealTypeConverters
 			RandomAccessibleInterval< ? extends RealType< ? > > image,
 			T pixelType )
 	{
-		RealType< ? > in = Util.getTypeFromInterval( image );
+		RealType< ? > in = image.getType();
 		Converter< RealType< ? >, T > converter = getConverter( in, pixelType );
 		return Converters.convert( image, converter, pixelType );
 	}

@@ -176,7 +176,7 @@ public class ImgView< T extends Type< T > > extends IterableRandomAccessibleInte
 			return ( Img< T > ) accessible;
 		else
 		{
-			final T type = Util.getTypeFromInterval( accessible );
+			final T type = accessible.getType();
 			final ImgFactory< T > factory = Util.getSuitableImgFactory( accessible, type );
 			return wrap( accessible, factory );
 		}

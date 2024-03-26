@@ -223,7 +223,7 @@ public class Views
 	 */
 	public static < T extends RealType< T >, F extends RandomAccessibleInterval< T > > ExtendedRandomAccessibleInterval< T, F > extendValue( final F source, final float value )
 	{
-		final T extension = Util.getTypeFromInterval( source ).createVariable();
+		final T extension = source.getType().createVariable();
 		extension.setReal( value );
 		return Views.extendValue( source, extension );
 	}
@@ -242,7 +242,7 @@ public class Views
 	 */
 	public static < T extends RealType< T >, F extends RandomAccessibleInterval< T > > ExtendedRandomAccessibleInterval< T, F > extendValue( final F source, final double value )
 	{
-		final T extension = Util.getTypeFromInterval( source ).createVariable();
+		final T extension = source.getType().createVariable();
 		extension.setReal( value );
 		return Views.extendValue( source, extension );
 	}
@@ -261,7 +261,7 @@ public class Views
 	 */
 	public static < T extends IntegerType< T >, F extends RandomAccessibleInterval< T > > ExtendedRandomAccessibleInterval< T, F > extendValue( final F source, final int value )
 	{
-		final T extension = Util.getTypeFromInterval( source ).createVariable();
+		final T extension = source.getType().createVariable();
 		extension.setInteger( value );
 		return Views.extendValue( source, extension );
 	}
@@ -280,7 +280,7 @@ public class Views
 	 */
 	public static < T extends IntegerType< T >, F extends RandomAccessibleInterval< T > > ExtendedRandomAccessibleInterval< T, F > extendValue( final F source, final long value )
 	{
-		final T extension = Util.getTypeFromInterval( source ).createVariable();
+		final T extension = source.getType().createVariable();
 		extension.setInteger( value );
 		return Views.extendValue( source, extension );
 	}
@@ -299,7 +299,7 @@ public class Views
 	 */
 	public static < T extends BooleanType< T >, F extends RandomAccessibleInterval< T > > ExtendedRandomAccessibleInterval< T, F > extendValue( final F source, final boolean value )
 	{
-		final T extension = Util.getTypeFromInterval( source ).createVariable();
+		final T extension = source.getType().createVariable();
 		extension.set( value );
 		return Views.extendValue( source, extension );
 	}
@@ -316,7 +316,7 @@ public class Views
 	 */
 	public static < T extends NumericType< T >, F extends RandomAccessibleInterval< T > > ExtendedRandomAccessibleInterval< T, F > extendZero( final F source )
 	{
-		final T zero = Util.getTypeFromInterval( source ).createVariable();
+		final T zero = source.getType().createVariable();
 		zero.setZero();
 		return new ExtendedRandomAccessibleInterval<>( source, new OutOfBoundsConstantValueFactory<>( zero ) );
 	}
@@ -337,7 +337,7 @@ public class Views
 	 */
 	public static < T extends RealType< T >, F extends RandomAccessibleInterval< T > > ExtendedRandomAccessibleInterval< T, F > extendRandom( final F source, final double min, final double max )
 	{
-		return new ExtendedRandomAccessibleInterval<>( source, new OutOfBoundsRandomValueFactory<>( Util.getTypeFromInterval( source ), min, max ) );
+		return new ExtendedRandomAccessibleInterval<>( source, new OutOfBoundsRandomValueFactory<>( source.getType(), min, max ) );
 	}
 
 	/**
@@ -838,9 +838,9 @@ public class Views
 	@SuppressWarnings( "unchecked" )
 	public static < T > IterableInterval< T > iterable( final RandomAccessibleInterval< T > randomAccessibleInterval )
 	{
-		if ( IterableInterval.class.isInstance( randomAccessibleInterval ) )
+		if ( randomAccessibleInterval instanceof IterableInterval )
 		{
-			final Class< ? > raiType = Util.getTypeFromInterval( randomAccessibleInterval ).getClass();
+			final Class< ? > raiType = randomAccessibleInterval.getType().getClass();
 			final Iterator< ? > iter = ( ( IterableInterval< ? > ) randomAccessibleInterval ).iterator();
 			final Object o = iter.hasNext() ? iter.next() : null;
 			if ( raiType.isInstance( o ) )
@@ -863,9 +863,9 @@ public class Views
 	@SuppressWarnings( "unchecked" )
 	public static < T > IterableInterval< T > flatIterable( final RandomAccessibleInterval< T > randomAccessibleInterval )
 	{
-		if ( IterableInterval.class.isInstance( randomAccessibleInterval ) && FlatIterationOrder.class.isInstance( ( ( IterableInterval< T > ) randomAccessibleInterval ).iterationOrder() ) )
+		if ( randomAccessibleInterval instanceof IterableInterval && ( ( IterableInterval< T > ) randomAccessibleInterval ).iterationOrder() instanceof FlatIterationOrder )
 		{
-			final Class< ? > raiType = Util.getTypeFromInterval( randomAccessibleInterval ).getClass();
+			final Class< ? > raiType = randomAccessibleInterval.getType().getClass();
 			final Iterator< ? > iter = ( ( IterableInterval< ? > ) randomAccessibleInterval ).iterator();
 			final Object o = iter.hasNext() ? iter.next() : null;
 			if ( raiType.isInstance( o ) )
@@ -1473,7 +1473,7 @@ public class Views
 	 */
 	public static < T extends RealType< T > > IntervalView< T > expandValue( final RandomAccessibleInterval< T > source, final float value, final long... border )
 	{
-		final T extension = Util.getTypeFromInterval( source ).createVariable();
+		final T extension = source.getType().createVariable();
 		extension.setReal( value );
 		return Views.expandValue( source, extension, border );
 	}
@@ -1491,7 +1491,7 @@ public class Views
 	 */
 	public static < T extends RealType< T > > IntervalView< T > expandValue( final RandomAccessibleInterval< T > source, final double value, final long... border )
 	{
-		final T extension = Util.getTypeFromInterval( source ).createVariable();
+		final T extension = source.getType().createVariable();
 		extension.setReal( value );
 		return Views.expandValue( source, extension, border );
 	}
@@ -1509,7 +1509,7 @@ public class Views
 	 */
 	public static < T extends IntegerType< T > > IntervalView< T > expandValue( final RandomAccessibleInterval< T > source, final int value, final long... border )
 	{
-		final T extension = Util.getTypeFromInterval( source ).createVariable();
+		final T extension = source.getType().createVariable();
 		extension.setInteger( value );
 		return Views.expandValue( source, extension, border );
 	}
@@ -1527,7 +1527,7 @@ public class Views
 	 */
 	public static < T extends IntegerType< T > > IntervalView< T > expandValue( final RandomAccessibleInterval< T > source, final long value, final long... border )
 	{
-		final T extension = Util.getTypeFromInterval( source ).createVariable();
+		final T extension = source.getType().createVariable();
 		extension.setInteger( value );
 		return Views.expandValue( source, extension, border );
 	}
@@ -1545,7 +1545,7 @@ public class Views
 	 */
 	public static < T extends BooleanType< T > > IntervalView< T > expandValue( final RandomAccessibleInterval< T > source, final boolean value, final long... border )
 	{
-		final T extension = Util.getTypeFromInterval( source ).createVariable();
+		final T extension = source.getType().createVariable();
 		extension.set( value );
 		return Views.expandValue( source, extension, border );
 	}

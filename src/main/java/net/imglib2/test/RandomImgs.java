@@ -54,7 +54,6 @@ import net.imglib2.type.numeric.integer.UnsignedVariableBitLengthType;
 import net.imglib2.type.numeric.real.DoubleType;
 import net.imglib2.type.numeric.real.FloatType;
 import net.imglib2.util.Intervals;
-import net.imglib2.util.Util;
 import net.imglib2.view.Views;
 
 import java.util.Random;
@@ -105,7 +104,7 @@ public class RandomImgs
 	public < I extends RandomAccessibleInterval< T >, T >
 	I randomize( final I image )
 	{
-		final T type = Util.getTypeFromInterval( image );
+		final T type = image.getType();
 		Views.iterable( image ).forEach( randomSetter( type ) );
 		return image;
 	}
