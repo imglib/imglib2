@@ -113,6 +113,11 @@ public class ConvertedIterableInterval< A, B > extends AbstractConvertedIterable
 		return convertedSupplier;
 	}
 
+	@Override
+	public B getType()
+	{
+		return convertedSupplier.get();
+	}
 
 	/**
 	 * Returns an instance of the {@link Converter}.  If the

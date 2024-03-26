@@ -38,7 +38,6 @@ import java.util.function.Supplier;
 
 import net.imglib2.Interval;
 import net.imglib2.RandomAccessible;
-import net.imglib2.Sampler;
 import net.imglib2.converter.AbstractConvertedRandomAccessible;
 
 /**
@@ -77,29 +76,8 @@ public class WriteConvertedRandomAccessible< A, B > extends AbstractConvertedRan
 	}
 
 	@Override
-	public B getType() {
-		return converterSupplier.get().convert( ( Sampler< ? extends A > ) new ConstantSampler( getSource().getType() ) );
-	}
-
-	private static class ConstantSampler< T > implements Sampler< T >
+	public B getType()
 	{
-
-		private final T t;
-
-		public ConstantSampler( T t ) {
-			this.t = t;
-		}
-
-		@Override
-		public T get()
-		{
-			return t;
-		}
-
-		@Override
-		public Sampler< T > copy()
-		{
-			return new ConstantSampler<>( t );
-		}
+		return TypeUtils.getConvertedType( getSource().getType(), converterSupplier );
 	}
 }

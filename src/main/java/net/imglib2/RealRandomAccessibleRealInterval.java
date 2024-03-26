@@ -76,8 +76,9 @@ public interface RealRandomAccessibleRealInterval< T > extends RealRandomAccessi
 	 *
 	 * @return an instance of {@code T}
 	 */
-	default T getType()
-	{
-		return getAt( Intervals.minAsDoubleArray( this ) );
-	}
+//	@Override
+//	default T getType()
+//	{
+//		return getAt( Intervals.minAsDoubleArray( this ) );
+//	}
 }

@@ -69,9 +69,9 @@ abstract public class AbstractConvertedIterableRealInterval< A, B > extends Abst
 	@Override
 	abstract public AbstractConvertedRealCursor< A, B > localizingCursor();
 
-	@Override
-	public B getType()
-	{
-		return firstElement(); // TODO GET-TYPE: Probably cursor().getType() is better? Or something else entirely?
-	}
+//	@Override
+//	public B getType()
+//	{
+//		return firstElement(); // TODO GET-TYPE: Probably cursor().getType() is better? Or something else entirely?
+//	}
 }

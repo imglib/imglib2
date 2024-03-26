@@ -53,7 +53,7 @@ import net.imglib2.type.NativeType;
  * @author Stephan Preibisch
  * @author Stephan Saalfeld
  */
-public interface Sampler< T >
+public interface Sampler< T > extends Typed< T >
 {
 	/**
 	 * Access the actual <em>T</em> instance providing access to a pixel,
@@ -74,8 +74,7 @@ public interface Sampler< T >
 	 */
 	Sampler< T > copy();
 
-	T getType();
-//	default T getType()
+//	@Override default T getType() // TODO GET-TYPE: do we want a default implementation here?
 //	{
 //		return get();
 //	}

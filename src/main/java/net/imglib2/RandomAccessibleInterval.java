@@ -77,6 +77,7 @@ public interface RandomAccessibleInterval< T > extends RandomAccessible< T >, In
 	 *
 	 * @return an instance of {@code T}
 	 */
+//	@Override
 //	default T getType()
 //	{
 //		return getAt( Intervals.minAsLongArray( this ) );

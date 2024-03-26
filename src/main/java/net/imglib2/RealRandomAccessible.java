@@ -55,7 +55,7 @@ package net.imglib2;
  *
  * @author Stephan Saalfeld
  */
-public interface RealRandomAccessible< T > extends EuclideanSpace
+public interface RealRandomAccessible< T > extends EuclideanSpace, Typed< T >
 {
 	/**
 	 * Create a random access sampler for real coordinates.
@@ -133,8 +133,9 @@ public interface RealRandomAccessible< T > extends EuclideanSpace
 	 *
 	 * @return an instance of {@code T}
 	 */
-	default T getType()
-	{
-		return realRandomAccess().get();
-	}
+//	@Override
+//	default T getType()
+//	{
+//		return realRandomAccess().get();
+//	}
 }

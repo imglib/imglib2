@@ -404,8 +404,6 @@ public abstract class AbstractLongListImg< T > extends AbstractImg< T >
 
 	protected abstract T get( long index );
 
-	protected abstract T getType(); // TODO GET-TYPE: This should eventually @Override RandomAccessible.getType().
-
 	protected abstract void set( long index, T value );
 
 	@Override

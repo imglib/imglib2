@@ -109,6 +109,12 @@ final public class Interpolant< T, F > implements RealRandomAccessible< T >, Vie
 		return source;
 	}
 
+	@Override
+	public T getType()
+	{
+		return realRandomAccess().getType(); // TODO: this could be better, if InterpolatorFactory would implement getType()
+	}
+
 	/**
 	 * @return {@link InterpolatorFactory} used for interpolation
 	 */

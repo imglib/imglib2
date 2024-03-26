@@ -194,6 +194,7 @@ public interface RandomAccessible< T > extends EuclideanSpace, Typed< T >
 	 *
 	 * @return an instance of {@code T}
 	 */
+//	@Override
 //	default T getType()
 //	{
 //		return randomAccess().get();

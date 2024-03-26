@@ -70,8 +70,6 @@ public class ListImg< T > extends AbstractListImg< T >
 		super( dim );
 		this.type = type;
 		pixels = new ArrayList< T >( ( int ) numPixels );
-		this.type = type;
-
 		if ( type instanceof Type< ? > )
 		{
 			final Type< ? > t = ( Type< ? > ) type;
@@ -90,10 +88,8 @@ public class ListImg< T > extends AbstractListImg< T >
 	public ListImg( final T type, final Collection< T > collection, final long... dim )
 	{
 		super( dim );
-		this.type = null;
-
+		this.type = type;
 		assert numPixels == collection.size() : "Dimensions do not match number of pixels.";
-
 		pixels = new ArrayList<>( collection );
 	}
 
