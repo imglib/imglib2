@@ -56,7 +56,7 @@ public class ClampingNLinearInterpolatorFactory< T extends NumericType< T > > im
 	@Override
 	public RealRandomAccess< T > create( final RandomAccessible< T > randomAccessible )
 	{
-		final T type = randomAccessible.randomAccess().get();
+		final T type = randomAccessible.getType();
 		if ( type instanceof RealType )
 		{
 			if ( type instanceof Volatile )
@@ -64,11 +64,11 @@ public class ClampingNLinearInterpolatorFactory< T extends NumericType< T > > im
 			else
 				return new ClampingNLinearInterpolatorRealType( randomAccessible );
 		}
-		else if ( ARGBType.class.isInstance( type ) )
+		else if ( type instanceof ARGBType )
 		{
 			return ( RealRandomAccess ) new NLinearInterpolatorARGB( ( RandomAccessible ) randomAccessible );
 		}
-		else if ( VolatileARGBType.class.isInstance( type ) )
+		else if ( type instanceof VolatileARGBType )
 		{
 			return ( RealRandomAccess ) new ClampingNLinearInterpolatorVolatileARGB< VolatileARGBType >( ( RandomAccessible ) randomAccessible );
 		}

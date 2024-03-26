@@ -77,6 +77,6 @@ public class WriteConvertedCursor< A, B > extends AbstractConvertedCursor< A, B 
 	@Override
 	public WriteConvertedCursor< A, B > copy()
 	{
-		return new WriteConvertedCursor< A, B >( ( Cursor< A > ) source.copy(), converterSupplier );
+		return new WriteConvertedCursor<>( source.copy(), converterSupplier );
 	}
 }

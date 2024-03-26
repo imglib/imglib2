@@ -77,6 +77,6 @@ public class WriteConvertedRealCursor< A, B > extends AbstractConvertedRealCurso
 	@Override
 	public WriteConvertedRealCursor< A, B > copy()
 	{
-		return new WriteConvertedRealCursor< A, B >( ( RealCursor< A > ) source.copy(), converterSupplier );
+		return new WriteConvertedRealCursor<>( source.copy(), converterSupplier );
 	}
 }

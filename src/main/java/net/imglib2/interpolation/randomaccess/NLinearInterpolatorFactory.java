@@ -54,13 +54,13 @@ public class NLinearInterpolatorFactory< T extends NumericType< T > > implements
 		switch ( randomAccessible.numDimensions() )
 		{
 		case 1:
-			return new NLinearInterpolator1D< T >( randomAccessible );
+			return new NLinearInterpolator1D<>( randomAccessible );
 		case 2:
-			return new NLinearInterpolator2D< T >( randomAccessible );
+			return new NLinearInterpolator2D<>( randomAccessible );
 //		case 3:
-//			return new NLinearInterpolator3D< T >( randomAccessible );
+//			return new NLinearInterpolator3D<>( randomAccessible );
 		default:
-			return new NLinearInterpolator< T >( randomAccessible );
+			return new NLinearInterpolator<>( randomAccessible );
 		}
 	}
 

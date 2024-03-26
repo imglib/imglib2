@@ -51,7 +51,7 @@ public class NearestNeighborInterpolatorFactory< T > implements InterpolatorFact
 	@Override
 	public NearestNeighborInterpolator< T > create( final RandomAccessible< T > randomAccessible )
 	{
-		return new NearestNeighborInterpolator< T >( randomAccessible );
+		return new NearestNeighborInterpolator<>( randomAccessible );
 	}
 
 	/**
