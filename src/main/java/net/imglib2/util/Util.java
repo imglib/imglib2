@@ -796,20 +796,9 @@ public class Util
 	 * @return - an instance of T
 	 */
 	@Deprecated
-	final public static < T, F extends Interval & RandomAccessible< T > > T getTypeFromInterval( final F rai )
+	public static < T, F extends Interval & RandomAccessible< T > > T getTypeFromInterval( final F rai )
 	{
-		if (rai instanceof RandomAccessibleInterval)
-			return ((RandomAccessibleInterval<T>) rai).getType();
-		// TODO can we remove generic parameter F and use
-		//      RandomAccessible<T> rai instead?
-		//      This would be a breaking change, though.
-		// create RandomAccess
-		final RandomAccess< T > randomAccess = rai.randomAccess();
-
-		// place it at the first pixel
-		rai.min( randomAccess );
-
-		return randomAccess.get();
+		return rai.getType();
 	}
 
 	/**
@@ -822,15 +811,10 @@ public class Util
 	 *            - the {@link RandomAccessibleInterval}
 	 * @return - an instance of T
 	 */
-	final public static < T, F extends RealInterval & RealRandomAccessible< T >> T getTypeFromRealInterval( final F rai )
+	@Deprecated
+	public static < T, F extends RealInterval & RealRandomAccessible< T >> T getTypeFromRealInterval( final F rai )
 	{
-		// create RealRandomAccess
-		final RealRandomAccess< T > realRandomAccess = rai.realRandomAccess();
-
-		// place it at the first pixel
-		rai.realMin( realRandomAccess );
-
-		return realRandomAccess.get();
+		return rai.getType();
 	}
 
 	/**

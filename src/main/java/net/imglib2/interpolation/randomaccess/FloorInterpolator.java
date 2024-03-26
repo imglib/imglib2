@@ -82,7 +82,7 @@ public class FloorInterpolator< T > extends Floor< RandomAccess< T > > implement
 	@Override
 	public T getType()
 	{
-		return get();
+		return target.getType();
 	}
 
 	@Override
