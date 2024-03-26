@@ -34,6 +34,8 @@
 
 package net.imglib2;
 
+import net.imglib2.util.Intervals;
+
 /**
  * <p>
  * <em>f</em>:{x&isin;Z<sup><em>n</em></sup>|[min,max]&rarr;T}
@@ -58,6 +60,25 @@ package net.imglib2;
  * </p>
  *
  * @author Stephan Saalfeld
+ * @author Philipp Hanslovsky
  */
 public interface RandomAccessibleInterval< T > extends RandomAccessible< T >, Interval
-{}
+{
+	/**
+	 * Get an instance of {@code T}.
+	 * <p>
+	 * It should not be assumed that the returned {@code T} instance is an
+	 * independent copy. In particular, repeated calls to {@code getType()} may
+	 * return the same instance.
+	 * <p>
+	 * The default implementation queries the value at the min coordinate of
+	 * this interval. Derived classes may choose different implementations for
+	 * improved performance.
+	 *
+	 * @return an instance of {@code T}
+	 */
+	default T getType()
+	{
+		return getAt( Intervals.minAsLongArray( this ) );
+	}
+}

@@ -37,6 +37,7 @@ import net.imglib2.Interval;
 import net.imglib2.Localizable;
 import net.imglib2.RandomAccessible;
 import net.imglib2.util.Pair;
+import net.imglib2.util.ValuePair;
 
 /**
  * A {@link RandomAccessible} over two independent
@@ -251,5 +252,11 @@ public class RandomAccessiblePair< A, B > implements RandomAccessible< Pair< A, 
 	public RandomAccess randomAccess( final Interval interval )
 	{
 		return new RandomAccess();
+	}
+
+	@Override
+	public Pair<A, B> getType() {
+		// sources may have an optimized implementation for getType
+		return new ValuePair<>( sourceA.getType(), sourceB.getType() );
 	}
 }

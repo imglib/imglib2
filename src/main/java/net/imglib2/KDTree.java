@@ -533,6 +533,12 @@ public class KDTree< T > implements EuclideanSpace, IterableRealInterval< T >
 	}
 
 	@Override
+	public T getType()
+	{
+		return root.get(); // TODO GET-TYPE: Use root.getType() when Sampler.getType() is available
+	}
+
+	@Override
 	public int numDimensions()
 	{
 		return n;

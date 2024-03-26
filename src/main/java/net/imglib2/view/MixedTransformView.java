@@ -122,4 +122,10 @@ public class MixedTransformView< T > implements TransformedRandomAccessible< T >
 			fullViewRandomAccessible = TransformBuilder.getEfficientRandomAccessible( null, this );
 		return fullViewRandomAccessible.randomAccess();
 	}
+
+	@Override
+	public T getType() {
+		// source may have an optimized implementation for getType
+		return source.getType();
+	}
 }

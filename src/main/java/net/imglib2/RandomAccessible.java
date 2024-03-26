@@ -62,7 +62,7 @@ import net.imglib2.view.Views;
  * @author Stephan Saalfeld
  * @author Tobias Pietzsch
  */
-public interface RandomAccessible< T > extends EuclideanSpace
+public interface RandomAccessible< T > extends EuclideanSpace, Typed< T >
 {
 	/**
 	 * Create a random access sampler for integer coordinates.
@@ -179,5 +179,23 @@ public interface RandomAccessible< T > extends EuclideanSpace
 	default T getAt( final Localizable position )
 	{
 		return randomAccess().setPositionAndGet( position );
+	}
+
+	/**
+	 * Get an instance of {@code T}.
+	 * <p>
+	 * It should not be assumed that the returned {@code T} instance is an
+	 * independent copy. In particular, repeated calls to {@code getType()} may
+	 * return the same instance.
+	 * <p>
+	 * The default implementation queries the value at the default coordinate of
+	 * {@link RandomAccessible#randomAccess()}. Derived classes may choose
+	 * different implementations for improved performance.
+	 *
+	 * @return an instance of {@code T}
+	 */
+	default T getType()
+	{
+		return randomAccess().get();
 	}
 }

@@ -550,6 +550,12 @@ public class Grid
 		{
 			return new FlatIterationOrder( this );
 		}
+
+		@Override
+		public Interval getType()
+		{
+			return firstElement();
+		}
 	}
 
 	private final CellIntervals cellIntervals;

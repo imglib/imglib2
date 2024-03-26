@@ -106,4 +106,10 @@ public class IterableRandomAccessibleInterval< T > extends AbstractWrappedInterv
 	{
 		return sourceInterval.randomAccess( i );
 	}
+
+	@Override
+	public T getType() {
+		// source may have an optimized implementation for getType
+		return sourceInterval.getType();
+	}
 }

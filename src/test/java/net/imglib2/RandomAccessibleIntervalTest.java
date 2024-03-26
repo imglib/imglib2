@@ -2,7 +2,7 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2023 Tobias Pietzsch, Stephan Preibisch, Stephan Saalfeld,
+ * Copyright (C) 2009 - 2022 Tobias Pietzsch, Stephan Preibisch, Stephan Saalfeld,
  * John Bogovic, Albert Cardona, Barry DeZonia, Christian Dietz, Jan Funke,
  * Aivar Grislis, Jonathan Hale, Grant Harris, Stefan Helfrich, Mark Hiner,
  * Martin Horn, Steffen Jaensch, Lee Kamentsky, Larry Lindsey, Melissa Linkert,
@@ -31,60 +31,29 @@
  * POSSIBILITY OF SUCH DAMAGE.
  * #L%
  */
-package net.imglib2.view.iteration;
 
-import net.imglib2.Cursor;
-import net.imglib2.Interval;
-import net.imglib2.IterableInterval;
-import net.imglib2.IterableRealInterval;
+package net.imglib2;
+
+import net.imglib2.img.array.ArrayImgs;
+import net.imglib2.type.numeric.integer.ByteType;
+import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
 
 /**
- * Implementing this interface enables the implementor to return optimized
- * {@link Cursor}s for certain {@link Interval}s
- * 
- * @author Tobias Pietzsch
+ * Tests {@link RandomAccessibleInterval}.
+ *
+ * @author Philipp Hanslovsky
  */
-public interface SubIntervalIterable< T > extends IterableInterval< T >
+public class RandomAccessibleIntervalTest
 {
-	/**
-	 * Determine whether a {@link Cursor} can be created that iterates the given
-	 * {@link Interval}.
-	 * 
-	 * @param interval
-	 *            to be checked
-	 * 
-	 * @return true if a {@link Cursor} can be optimized given the
-	 *         {@link Interval}
-	 */
-	boolean supportsOptimizedCursor( Interval interval );
 
-	/**
-	 * Returns the iteration order given the interval.
-	 * 
-	 * @param interval
-	 *            {@link Interval} over which to iterate
-	 * 
-	 * @return the iteration order object @see {@link IterableRealInterval}
-	 */
-	Object subIntervalIterationOrder( Interval interval );
-
-	/**
-	 * Create a {@link Cursor} to iterate over the given {@link Interval}.
-	 * 
-	 * @param interval
-	 *            {@link Interval} over which to iterate
-	 * 
-	 * @return {@link Cursor}
-	 */
-	Cursor< T > cursor( Interval interval );
-
-	/**
-	 * Create a {@link Cursor} to iterate over the given {@link Interval}.
-	 * 
-	 * @param interval
-	 *            {@link Interval} over which to iterate
-	 * 
-	 * @return {@link Cursor}
-	 */
-	Cursor< T > localizingCursor( Interval interval );
+	@Test
+	public void testGetType()
+	{
+		// setup
+		final RandomAccessibleInterval< ? > rai = ArrayImgs.bytes( 1 );
+		// process & test
+		assertEquals( ByteType.class, rai.getType().getClass() );
+	}
 }

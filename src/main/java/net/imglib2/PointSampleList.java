@@ -228,4 +228,10 @@ public class PointSampleList< T > extends AbstractInterval implements IterableIn
 	{
 		return samples.size();
 	}
+
+	@Override
+	public T getType()
+	{
+		return samples.get( 0 );
+	}
 }

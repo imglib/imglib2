@@ -42,6 +42,7 @@ import net.imglib2.util.Fraction;
  * 
  * @author Stephan Preibisch
  * @author Stephan Saalfeld
+ * @author Philipp Hanslovsky
  */
 public abstract class AbstractNativeImg< T extends NativeType< T >, A >
 		extends AbstractImg< T >
@@ -75,6 +76,15 @@ public abstract class AbstractNativeImg< T extends NativeType< T >, A >
 		catch ( final NullPointerException e )
 		{
 			return null;
+		}
+	}
+
+	@Override
+	public T getType() {
+		try {
+			return linkedType.createVariable();
+		} catch ( final NullPointerException e ) {
+			return super.getType();
 		}
 	}
 }
