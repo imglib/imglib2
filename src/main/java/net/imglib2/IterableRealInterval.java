@@ -122,11 +122,11 @@ public interface IterableRealInterval< T > extends RealInterval, Iterable< T >, 
 	 * NB: We cannot have a default implementation here because of
 	 * https://bugs.openjdk.org/browse/JDK-7120669
 	 */
-//	@Override
-//	default T getType()
-//	{
-//		return firstElement();
-//	}
+	@Override
+	default T getType()
+	{
+		return firstElement();
+	}
 
 	/**
 	 * Returns the iteration order of this {@link IterableRealInterval}. If the

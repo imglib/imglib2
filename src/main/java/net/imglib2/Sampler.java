@@ -74,8 +74,9 @@ public interface Sampler< T > extends Typed< T >
 	 */
 	Sampler< T > copy();
 
-//	@Override default T getType() // TODO GET-TYPE: do we want a default implementation here?
-//	{
-//		return get();
-//	}
+	@Override
+	default T getType()
+	{
+		return get();
+	}
 }
