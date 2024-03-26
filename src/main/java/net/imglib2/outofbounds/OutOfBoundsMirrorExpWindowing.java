@@ -81,7 +81,7 @@ public class OutOfBoundsMirrorExpWindowing< T extends NumericType< T > > extends
 		 * Sun javac fails to infer return types, so make it explicit, see
 		 * https://bugs.eclipse.org/bugs/show_bug.cgi?id=98379
 		 */
-		this.type = Util.< T, F >getTypeFromInterval( f ).createVariable();
+		this.type = f.getType().createVariable();
 		this.fadeOutDistance = fadeOutDistance;
 		this.exponent = exponent;
 		this.max = new long[ n ];

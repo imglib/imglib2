@@ -57,7 +57,6 @@ import net.imglib2.type.numeric.integer.UnsignedVariableBitLengthType;
 import net.imglib2.type.numeric.real.DoubleType;
 import net.imglib2.type.numeric.real.FloatType;
 import net.imglib2.util.Intervals;
-import net.imglib2.util.Util;
 import net.imglib2.view.Views;
 import org.junit.Test;
 
@@ -139,7 +138,7 @@ public class RandomImgsTest
 
 	private < T extends IntegerType< T > & NativeType< T > > void testIsRandomImageIntegerType( RandomAccessibleInterval< T > image )
 	{
-		T type = Util.getTypeFromInterval( image );
+		T type = image.getType();
 		double min = type.getMinValue();
 		double max = type.getMaxValue();
 		double actualMin = fold( Double.POSITIVE_INFINITY, Math::min, Views.iterable( image ) );
