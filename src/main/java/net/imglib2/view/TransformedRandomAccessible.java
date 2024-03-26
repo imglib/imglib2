@@ -70,7 +70,8 @@ public interface TransformedRandomAccessible< T > extends RandomAccessible< T >,
 	 */
 	Transform getTransformToSource();
 
-	default T getType() {
+	default T getType()
+	{
 		// source may have an optimized implementation for getType
 		return getSource().getType();
 	}

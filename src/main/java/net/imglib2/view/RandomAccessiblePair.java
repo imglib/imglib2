@@ -261,7 +261,8 @@ public class RandomAccessiblePair< A, B > implements RandomAccessible< Pair< A, 
 	}
 
 	@Override
-	public Pair<A, B> getType() {
+	public Pair< A, B > getType()
+	{
 		// sources may have an optimized implementation for getType
 		return new ValuePair<>( sourceA.getType(), sourceB.getType() );
 	}

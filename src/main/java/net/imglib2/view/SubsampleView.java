@@ -286,7 +286,8 @@ public class SubsampleView< T > implements RandomAccessible< T >, View
 	}
 
 	@Override
-	public T getType() {
+	public T getType()
+	{
 		// source may have an optimized implementation for getType
 		return source.getType();
 	}

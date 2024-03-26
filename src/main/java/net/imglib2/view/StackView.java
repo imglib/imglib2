@@ -148,8 +148,9 @@ public class StackView< T > extends AbstractInterval implements RandomAccessible
 	}
 
 	@Override
-	public T getType() {
-		return slices.length > 0 ? slices[0].getType() : null;
+	public T getType()
+	{
+		return slices.length > 0 ? slices[ 0 ].getType() : null;
 	}
 
 	/**
