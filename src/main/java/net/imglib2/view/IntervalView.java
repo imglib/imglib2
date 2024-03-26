@@ -175,7 +175,8 @@ public class IntervalView< T > extends AbstractInterval implements RandomAccessi
 	}
 
 	@Override
-	public T getType() {
+	public T getType()
+	{
 		// source may have an optimized implementation for getType
 		return source.getType();
 	}
