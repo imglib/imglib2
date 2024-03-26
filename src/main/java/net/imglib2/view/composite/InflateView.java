@@ -285,7 +285,7 @@ public class InflateView< T > implements RandomAccessible< T >, View
 		@Override
 		public T getType()
 		{
-			return composite.get( 0 ); // TODO GET-TYPE: should we add Composite.getType() ?
+			return composite.get( 0 );
 		}
 
 		@Override
