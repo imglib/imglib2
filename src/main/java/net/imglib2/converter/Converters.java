@@ -101,7 +101,7 @@ public class Converters
 	 *         RandomAccesses} perform on-the-fly value conversion using the
 	 *         provided converter.
 	 */
-	final static public < A, B extends Type< B > > RandomAccessible< B > convert(
+	public static < A, B extends Type< B > > RandomAccessible< B > convert(
 			final RandomAccessible< A > source,
 			final Converter< ? super A, ? super B > converter,
 			final B b )
@@ -128,7 +128,7 @@ public class Converters
 	 *         provided converter.
 	 */
 	@SuppressWarnings( "unchecked" )
-	final static public < A, B > RandomAccessible< B > convert2(
+	public static < A, B > RandomAccessible< B > convert2(
 			final RandomAccessible< A > source,
 			final Converter< ? super A, ? super B > converter,
 			final Supplier< B > targetSupplier )
@@ -151,7 +151,7 @@ public class Converters
 	 *         RandomAccesses} perform on-the-fly value conversion using the
 	 *         provided converter.
 	 */
-	final static public < A, B extends Type< B > > RandomAccessible< B > convert(
+	public static < A, B extends Type< B > > RandomAccessible< B > convert(
 			final RandomAccessible< A > source,
 			final Supplier< Converter< ? super A, ? super B > > converterSupplier,
 			final B b )
@@ -177,7 +177,7 @@ public class Converters
 	 *         RandomAccesses} perform on-the-fly value conversion using the
 	 *         provided converter.
 	 */
-	final static public < A, B > RandomAccessible< B > convert2(
+	public static < A, B > RandomAccessible< B > convert2(
 			final RandomAccessible< A > source,
 			final Supplier< Converter< ? super A, ? super B > > converterSupplier,
 			final Supplier< B > targetSupplier )
@@ -196,7 +196,7 @@ public class Converters
 	 *         RandomAccesses} perform on-the-fly value conversion using the
 	 *         provided converter.
 	 */
-	final static public < A, B extends Type< B > > WriteConvertedRandomAccessible< A, B > convert(
+	public static < A, B extends Type< B > > WriteConvertedRandomAccessible< A, B > convert(
 			final RandomAccessible< A > source,
 			final SamplerConverter< ? super A, B > converter )
 	{
@@ -214,7 +214,7 @@ public class Converters
 	 *         RandomAccesses} perform on-the-fly value conversion using the
 	 *         provided converter.
 	 */
-	final static public < A, B extends Type< B > > WriteConvertedRandomAccessible< A, B > convert(
+	public static < A, B extends Type< B > > WriteConvertedRandomAccessible< A, B > convert(
 			final RandomAccessible< A > source,
 			final Supplier< SamplerConverter< ? super A, B > > converterSupplier )
 	{
@@ -234,7 +234,7 @@ public class Converters
 	 *         {@link RandomAccess RandomAccesses} perform on-the-fly value
 	 *         conversion using the provided converter.
 	 */
-	final static public < A, B extends Type< B > > RandomAccessibleInterval< B > convert(
+	public static < A, B extends Type< B > > RandomAccessibleInterval< B > convert(
 			final RandomAccessibleInterval< A > source,
 			final Converter< ? super A, ? super B > converter,
 			final B b )
@@ -261,7 +261,7 @@ public class Converters
 	 *         conversion using the provided converter.
 	 */
 	@SuppressWarnings( "unchecked" )
-	final static public < A, B > RandomAccessibleInterval< B > convert2(
+	public static < A, B > RandomAccessibleInterval< B > convert2(
 			final RandomAccessibleInterval< A > source,
 			final Converter< ? super A, ? super B > converter,
 			final Supplier< B > targetSupplier )
@@ -285,7 +285,7 @@ public class Converters
 	 *         {@link RandomAccess RandomAccesses} perform on-the-fly value
 	 *         conversion using the provided converter.
 	 */
-	final static public < A, B extends Type< B > > RandomAccessibleInterval< B > convert(
+	public static < A, B extends Type< B > > RandomAccessibleInterval< B > convert(
 			final RandomAccessibleInterval< A > source,
 			final Supplier< Converter< ? super A, ? super B > > converterSupplier,
 			final B b )
@@ -311,7 +311,7 @@ public class Converters
 	 *         {@link RandomAccess RandomAccesses} perform on-the-fly value
 	 *         conversion using the provided converter.
 	 */
-	final static public < A, B > RandomAccessibleInterval< B > convert2(
+	public static < A, B > RandomAccessibleInterval< B > convert2(
 			final RandomAccessibleInterval< A > source,
 			final Supplier< Converter< ? super A, ? super B > > converterSupplier,
 			final Supplier< B > targetSupplier )
@@ -338,7 +338,7 @@ public class Converters
 	 *         {@link RandomAccess RandomAccesses} perform on-the-fly value
 	 *         conversion using the provided converter.
 	 */
-	final static public < A, B extends Type< B > > RandomAccessibleInterval< B > convertRAI(
+	public static < A, B extends Type< B > > RandomAccessibleInterval< B > convertRAI(
 			final RandomAccessibleInterval< A > source,
 			final Converter< ? super A, ? super B > converter,
 			final B b )
@@ -370,7 +370,7 @@ public class Converters
 	 *         {@link RandomAccess RandomAccesses} perform on-the-fly value
 	 *         conversion using the provided converter.
 	 */
-	final static public < A, B > RandomAccessibleInterval< B > convertRAI2(
+	public static < A, B > RandomAccessibleInterval< B > convertRAI2(
 			final RandomAccessibleInterval< A > source,
 			final Converter< ? super A, ? super B > converter,
 			final Supplier< B > targetSupplier )
@@ -397,7 +397,7 @@ public class Converters
 	 *         {@link RandomAccess RandomAccesses} perform on-the-fly value
 	 *         conversion using the provided converter.
 	 */
-	final static public < A, B extends Type< B > > RandomAccessibleInterval< B > convertRAI(
+	public static < A, B extends Type< B > > RandomAccessibleInterval< B > convertRAI(
 			final RandomAccessibleInterval< A > source,
 			final Supplier< Converter< ? super A, ? super B > > converterSupplier,
 			final B b )
@@ -429,7 +429,7 @@ public class Converters
 	 *         {@link RandomAccess RandomAccesses} perform on-the-fly value
 	 *         conversion using the provided converter.
 	 */
-	final static public < A, B > RandomAccessibleInterval< B > convertRAI2(
+	public static < A, B > RandomAccessibleInterval< B > convertRAI2(
 			final RandomAccessibleInterval< A > source,
 			final Supplier< Converter< ? super A, ? super B > > converterSupplier,
 			final Supplier< B > targetSupplier )
@@ -448,7 +448,7 @@ public class Converters
 	 *         {@link RandomAccess RandomAccesses} perform on-the-fly value
 	 *         conversion using the provided converter.
 	 */
-	final static public < A, B extends Type< B > > WriteConvertedRandomAccessibleInterval< A, B > convert(
+	public static < A, B extends Type< B > > WriteConvertedRandomAccessibleInterval< A, B > convert(
 			final RandomAccessibleInterval< A > source,
 			final SamplerConverter< ? super A, B > converter )
 	{
@@ -466,7 +466,7 @@ public class Converters
 	 *         {@link RandomAccess RandomAccesses} perform on-the-fly value
 	 *         conversion using the provided converter.
 	 */
-	final static public < A, B extends Type< B > > WriteConvertedRandomAccessibleInterval< A, B > convert(
+	public static < A, B extends Type< B > > WriteConvertedRandomAccessibleInterval< A, B > convert(
 			final RandomAccessibleInterval< A > source,
 			final Supplier< SamplerConverter< ? super A, B > > converterSupplier )
 	{
@@ -490,7 +490,7 @@ public class Converters
 	 *         {@link RandomAccess RandomAccesses} perform on-the-fly value
 	 *         conversion using the provided converter.
 	 */
-	final static public < A, B extends Type< B > > WriteConvertedRandomAccessibleInterval< A, B > convertRAI(
+	public static < A, B extends Type< B > > WriteConvertedRandomAccessibleInterval< A, B > convertRAI(
 			final RandomAccessibleInterval< A > source,
 			final SamplerConverter< ? super A, B > converter )
 	{
@@ -509,7 +509,7 @@ public class Converters
 	 * @return a converted {@link IterableRealInterval} whose {@link RealCursor RealCursors}
 	 *         perform on-the-fly value conversion using the provided converter.
 	 */
-	final static public < A, B extends Type< B > > IterableRealInterval< B > convert(
+	public static < A, B extends Type< B > > IterableRealInterval< B > convert(
 			final IterableRealInterval< A > source,
 			final Converter< ? super A, ? super B > converter,
 			final B b )
@@ -535,7 +535,7 @@ public class Converters
 	 *         perform on-the-fly value conversion using the provided converter.
 	 */
 	@SuppressWarnings( "unchecked" )
-	final static public < A, B > IterableRealInterval< B > convert2(
+	public static < A, B > IterableRealInterval< B > convert2(
 			final IterableRealInterval< A > source,
 			final Converter< ? super A, ? super B > converter,
 			final Supplier< B > targetSupplier )
@@ -557,7 +557,7 @@ public class Converters
 	 * @return a converted {@link IterableRealInterval} whose {@link RealCursor RealCursors}
 	 *         perform on-the-fly value conversion using the provided converter.
 	 */
-	final static public < A, B extends Type< B > > IterableRealInterval< B > convert(
+	public static < A, B extends Type< B > > IterableRealInterval< B > convert(
 			final IterableRealInterval< A > source,
 			final Supplier< Converter< ? super A, ? super B > > converterSupplier,
 			final B b )
@@ -582,7 +582,7 @@ public class Converters
 	 * @return a converted {@link IterableRealInterval} whose {@link RealCursor RealCursors}
 	 *         perform on-the-fly value conversion using the provided converter.
 	 */
-	final static public < A, B > IterableRealInterval< B > convert2(
+	public static < A, B > IterableRealInterval< B > convert2(
 			final IterableRealInterval< A > source,
 			final Supplier< Converter< ? super A, ? super B > > converterSupplier,
 			final Supplier< B > targetSupplier )
@@ -607,7 +607,7 @@ public class Converters
 	 *         {@link RandomAccess RandomAccesses} perform on-the-fly value
 	 *         conversion using the provided converter.
 	 */
-	final static public < A, B extends Type< B > > WriteConvertedRandomAccessibleInterval< A, B > convertRAI(
+	public static < A, B extends Type< B > > WriteConvertedRandomAccessibleInterval< A, B > convertRAI(
 			final RandomAccessibleInterval< A > source,
 			final Supplier< SamplerConverter< ? super A, B > > converterSupplier )
 	{
@@ -626,7 +626,7 @@ public class Converters
 	 * @return a converted {@link IterableInterval} whose {@link Cursor Cursors}
 	 *         perform on-the-fly value conversion using the provided converter.
 	 */
-	final static public < A, B extends Type< B > > IterableInterval< B > convert(
+	public static < A, B extends Type< B > > IterableInterval< B > convert(
 			final IterableInterval< A > source,
 			final Converter< ? super A, ? super B > converter,
 			final B b )
@@ -652,7 +652,7 @@ public class Converters
 	 *         perform on-the-fly value conversion using the provided converter.
 	 */
 	@SuppressWarnings( "unchecked" )
-	final static public < A, B > IterableInterval< B > convert2(
+	public static < A, B > IterableInterval< B > convert2(
 			final IterableInterval< A > source,
 			final Converter< ? super A, ? super B > converter,
 			final Supplier< B > targetSupplier )
@@ -674,7 +674,7 @@ public class Converters
 	 * @return a converted {@link IterableInterval} whose {@link Cursor Cursors}
 	 *         perform on-the-fly value conversion using the provided converter.
 	 */
-	final static public < A, B extends Type< B > > IterableInterval< B > convert(
+	public static < A, B extends Type< B > > IterableInterval< B > convert(
 			final IterableInterval< A > source,
 			final Supplier< Converter< ? super A, ? super B > > converterSupplier,
 			final B b )
@@ -699,7 +699,7 @@ public class Converters
 	 * @return a converted {@link IterableInterval} whose {@link Cursor Cursors}
 	 *         perform on-the-fly value conversion using the provided converter.
 	 */
-	final static public < A, B > IterableInterval< B > convert2(
+	public static < A, B > IterableInterval< B > convert2(
 			final IterableInterval< A > source,
 			final Supplier< Converter< ? super A, ? super B > > converterSupplier,
 			final Supplier< B > targetSupplier )
@@ -717,7 +717,7 @@ public class Converters
 	 * @return a converted {@link IterableInterval} whose {@link Cursor Cursors}
 	 *         perform on-the-fly value conversion using the provided converter.
 	 */
-	final static public < A, B extends Type< B > > WriteConvertedIterableInterval< A, B > convert(
+	public static < A, B extends Type< B > > WriteConvertedIterableInterval< A, B > convert(
 			final IterableInterval< A > source,
 			final SamplerConverter< ? super A, B > converter )
 	{
@@ -734,7 +734,7 @@ public class Converters
 	 * @return a converted {@link IterableRealInterval} whose {@link RealCursor RealCursors}
 	 *         perform on-the-fly value conversion using the provided converter.
 	 */
-	final static public < A, B extends Type< B > > WriteConvertedIterableRealInterval< A, B > convert(
+	public static < A, B extends Type< B > > WriteConvertedIterableRealInterval< A, B > convert(
 			final IterableRealInterval< A > source,
 			final SamplerConverter< ? super A, B > converter )
 	{
@@ -751,7 +751,7 @@ public class Converters
 	 * @return a converted {@link IterableInterval} whose {@link Cursor Cursors}
 	 *         perform on-the-fly value conversion using the provided converter.
 	 */
-	final static public < A, B extends Type< B > > WriteConvertedIterableInterval< A, B > convert(
+	public static < A, B extends Type< B > > WriteConvertedIterableInterval< A, B > convert(
 			final IterableInterval< A > source,
 			final Supplier< SamplerConverter< ? super A, B > > converterSupplier )
 	{
@@ -770,7 +770,7 @@ public class Converters
 	 *         {@link Sampler Samplers} perform on-the-fly value conversion
 	 *         using the provided converter.
 	 */
-	final static public < A, B extends Type< B >, S extends RandomAccessible< A > & IterableInterval< A > >
+	public static < A, B extends Type< B >, S extends RandomAccessible< A > & IterableInterval< A > >
 			WriteConvertedIterableRandomAccessibleInterval< A, B, S > convertRandomAccessibleIterableInterval(
 					final S source,
 					final SamplerConverter< ? super A, B > converter )
@@ -790,7 +790,7 @@ public class Converters
 	 *         {@link Sampler Samplers} perform on-the-fly value conversion
 	 *         using the provided converter.
 	 */
-	final static public < A, B extends Type< B >, S extends RandomAccessible< A > & IterableInterval< A > >
+	public static < A, B extends Type< B >, S extends RandomAccessible< A > & IterableInterval< A > >
 			WriteConvertedIterableRandomAccessibleInterval< A, B, S > convertRandomAccessibleIterableInterval(
 					final S source,
 					final Supplier< SamplerConverter< ? super A, B > > converterSupplier )
@@ -811,7 +811,7 @@ public class Converters
 	 *         {@link RealRandomAccess RealRandomAccesses} perform on-the-fly value
 	 *         conversion using the provided converter.
 	 */
-	final static public < A, B extends Type< B > > RealRandomAccessibleRealInterval< B > convert(
+	public static < A, B extends Type< B > > RealRandomAccessibleRealInterval< B > convert(
 			final RealRandomAccessibleRealInterval< A > source,
 			final Converter< ? super A, ? super B > converter,
 			final B b )
@@ -838,7 +838,7 @@ public class Converters
 	 *         conversion using the provided converter.
 	 */
 	@SuppressWarnings( "unchecked" )
-	final static public < A, B > RealRandomAccessibleRealInterval< B > convert2(
+	public static < A, B > RealRandomAccessibleRealInterval< B > convert2(
 			final RealRandomAccessibleRealInterval< A > source,
 			final Converter< ? super A, ? super B > converter,
 			final Supplier< B > targetSupplier )
@@ -861,7 +861,7 @@ public class Converters
 	 *         {@link RealRandomAccess RealRandomAccesses} perform on-the-fly value
 	 *         conversion using the provided converter.
 	 */
-	final static public < A, B extends Type< B > > RealRandomAccessibleRealInterval< B > convert(
+	public static < A, B extends Type< B > > RealRandomAccessibleRealInterval< B > convert(
 			final RealRandomAccessibleRealInterval< A > source,
 			final Supplier< Converter< ? super A, ? super B > > converterSupplier,
 			final B b )
@@ -887,7 +887,7 @@ public class Converters
 	 *         {@link RealRandomAccess RealRandomAccesses} perform on-the-fly value
 	 *         conversion using the provided converter.
 	 */
-	final static public < A, B > RealRandomAccessibleRealInterval< B > convert2(
+	public static < A, B > RealRandomAccessibleRealInterval< B > convert2(
 			final RealRandomAccessibleRealInterval< A > source,
 			final Supplier< Converter< ? super A, ? super B > > converterSupplier,
 			final Supplier< B > targetSupplier )
@@ -908,7 +908,7 @@ public class Converters
 	 *         RealRandomAccesses} perform on-the-fly value conversion using the
 	 *         provided converter.
 	 */
-	final static public < A, B extends Type< B > > RealRandomAccessible< B > convert(
+	public static < A, B extends Type< B > > RealRandomAccessible< B > convert(
 			final RealRandomAccessible< A > source,
 			final Converter< ? super A, ? super B > converter,
 			final B b )
@@ -935,7 +935,7 @@ public class Converters
 	 *         provided converter.
 	 */
 	@SuppressWarnings( "unchecked" )
-	final static public < A, B > RealRandomAccessible< B > convert2(
+	public static < A, B > RealRandomAccessible< B > convert2(
 			final RealRandomAccessible< A > source,
 			final Converter< ? super A, ? super B > converter,
 			final Supplier< B > targetSupplier )
@@ -958,7 +958,7 @@ public class Converters
 	 *         RealRandomAccesses} perform on-the-fly value conversion using the
 	 *         provided converter.
 	 */
-	final static public < A, B extends Type< B > > RealRandomAccessible< B > convert(
+	public static < A, B extends Type< B > > RealRandomAccessible< B > convert(
 			final RealRandomAccessible< A > source,
 			final Supplier< Converter< ? super A, ? super B > > converterSupplier,
 			final B b )
@@ -984,7 +984,7 @@ public class Converters
 	 *         RealRandomAccesses} perform on-the-fly value conversion using the
 	 *         provided converter.
 	 */
-	final static public < A, B > RealRandomAccessible< B > convert2(
+	public static < A, B > RealRandomAccessible< B > convert2(
 			final RealRandomAccessible< A > source,
 			final Supplier< Converter< ? super A, ? super B > > converterSupplier,
 			final Supplier< B > targetSupplier )
@@ -1005,7 +1005,7 @@ public class Converters
 	 *         {@link Sampler Samplers} perform on-the-fly value conversion
 	 *         into and from one channel of the original {@link ARGBType}.
 	 */
-	final static public WriteConvertedRandomAccessibleInterval< ARGBType, UnsignedByteType > argbChannel(
+	public static WriteConvertedRandomAccessibleInterval< ARGBType, UnsignedByteType > argbChannel(
 			final RandomAccessibleInterval< ARGBType > source,
 			final int channel )
 	{
@@ -1027,7 +1027,7 @@ public class Converters
 	 *         {@link Sampler Samplers} perform on-the-fly value conversion
 	 *         into and from one channel of the original {@link ARGBType}.
 	 */
-	final static public WriteConvertedRandomAccessible< ARGBType, UnsignedByteType > argbChannel(
+	public static WriteConvertedRandomAccessible< ARGBType, UnsignedByteType > argbChannel(
 			final RandomAccessible< ARGBType > source,
 			final int channel )
 	{
@@ -1049,7 +1049,7 @@ public class Converters
 	 *         into and from the corresponding channels of the original
 	 *         {@link ARGBType}.
 	 */
-	final static public RandomAccessibleInterval< UnsignedByteType > argbChannels( final RandomAccessibleInterval< ARGBType > source )
+	public static RandomAccessibleInterval< UnsignedByteType > argbChannels( final RandomAccessibleInterval< ARGBType > source )
 	{
 		return Views.stack(
 				argbChannel( source, 0 ),
@@ -1073,7 +1073,7 @@ public class Converters
 	 *         into and from the corresponding channels of the original
 	 *         {@link ARGBType}.
 	 */
-	final static public RandomAccessibleInterval< UnsignedByteType > argbChannels( final RandomAccessibleInterval< ARGBType > source, final int... channels )
+	public static RandomAccessibleInterval< UnsignedByteType > argbChannels( final RandomAccessibleInterval< ARGBType > source, final int... channels )
 	{
 		final ArrayList< RandomAccessibleInterval< UnsignedByteType > > hyperSlices = new ArrayList<>();
 		for ( final int channel : channels )
@@ -1091,7 +1091,7 @@ public class Converters
 	 * @param channelOrder Order of the color channels.
 	 * @return Color view to the source image that can be used for reading and writing.
 	 */
-	final static public RandomAccessible< ARGBType > mergeARGB( final RandomAccessible< UnsignedByteType > source, final ColorChannelOrder channelOrder )
+	public static RandomAccessible< ARGBType > mergeARGB( final RandomAccessible< UnsignedByteType > source, final ColorChannelOrder channelOrder )
 	{
 		return Converters.convert( Views.collapse( source ), new CompositeARGBSamplerConverter( channelOrder ) );
 	}
@@ -1105,7 +1105,7 @@ public class Converters
 	 * @param channelOrder Order of the color channels.
 	 * @return Color view to the source image that can be used for reading and writing.
 	 */
-	final static public RandomAccessibleInterval< ARGBType > mergeARGB( final RandomAccessibleInterval< UnsignedByteType > source, final ColorChannelOrder channelOrder )
+	public static RandomAccessibleInterval< ARGBType > mergeARGB( final RandomAccessibleInterval< UnsignedByteType > source, final ColorChannelOrder channelOrder )
 	{
 		final int channelAxis = source.numDimensions() - 1;
 		if ( source.min( channelAxis ) > 0 || source.max( channelAxis ) < channelOrder.channelCount() - 1 )
@@ -1124,7 +1124,7 @@ public class Converters
 	 * @param targetType
 	 * @return
 	 */
-	final static public < A extends RealType< A >, B extends Type< B > > RandomAccessibleInterval< B > composeReal(
+	public static < A extends RealType< A >, B extends Type< B > > RandomAccessibleInterval< B > composeReal(
 			final List< RandomAccessibleInterval< A > > components,
 			final Converter< RealComposite< A >, B > composer,
 			final B targetType )
@@ -1151,7 +1151,7 @@ public class Converters
 	 * @param targetSupplier
 	 * @return
 	 */
-	final static public < A extends RealType< A >, B > RandomAccessibleInterval< B > composeReal2(
+	public static < A extends RealType< A >, B > RandomAccessibleInterval< B > composeReal2(
 			final List< RandomAccessibleInterval< A > > components,
 			final Converter< RealComposite< A >, B > composer,
 			final Supplier< B > targetSupplier )
@@ -1173,7 +1173,7 @@ public class Converters
 	 * @param targetType
 	 * @return
 	 */
-	final static public < A extends NumericType< A >, B extends Type< B > > RandomAccessibleInterval< B > composeNumeric(
+	public static < A extends NumericType< A >, B extends Type< B > > RandomAccessibleInterval< B > composeNumeric(
 			final List< RandomAccessibleInterval< A > > components,
 			final Converter< NumericComposite< A >, B > composer,
 			final B targetType )
@@ -1200,7 +1200,7 @@ public class Converters
 	 * @param targetSupplier
 	 * @return
 	 */
-	final static public < A extends NumericType< A >, B > RandomAccessibleInterval< B > composeNumeric2(
+	public static < A extends NumericType< A >, B > RandomAccessibleInterval< B > composeNumeric2(
 			final List< RandomAccessibleInterval< A > > components,
 			final Converter< NumericComposite< A >, B > composer,
 			final Supplier< B > targetSupplier )
@@ -1222,7 +1222,7 @@ public class Converters
 	 * @param targetType
 	 * @return
 	 */
-	final static public < A, B extends Type< B > > RandomAccessibleInterval< B > compose(
+	public static < A, B extends Type< B > > RandomAccessibleInterval< B > compose(
 			final List< RandomAccessibleInterval< A > > components,
 			final Converter< Composite< A >, B > composer,
 			final B targetType )
@@ -1249,7 +1249,7 @@ public class Converters
 	 * @param targetSupplier
 	 * @return
 	 */
-	final static public < A, B extends Type< B > > RandomAccessibleInterval< B > compose2(
+	public static < A, B extends Type< B > > RandomAccessibleInterval< B > compose2(
 			final List< RandomAccessibleInterval< A > > components,
 			final Converter< Composite< A >, B > composer,
 			final Supplier< B > targetSupplier )
@@ -1276,7 +1276,7 @@ public class Converters
 	 *         RandomAccesses} perform on-the-fly value conversion using the
 	 *         provided converter.
 	 */
-	final static public < A, B, C extends Type< C > > RandomAccessible< C > convert(
+	public static < A, B, C extends Type< C > > RandomAccessible< C > convert(
 			final RandomAccessible< A > sourceA,
 			final RandomAccessible< B > sourceB,
 			final BiConverter< ? super A, ? super B, ? super C > converter,
@@ -1306,7 +1306,7 @@ public class Converters
 	 *         RandomAccesses} perform on-the-fly value conversion using the
 	 *         provided converter.
 	 */
-	final static public < A, B, C > RandomAccessible< C > convert2(
+	public static < A, B, C > RandomAccessible< C > convert2(
 			final RandomAccessible< A > sourceA,
 			final RandomAccessible< B > sourceB,
 			final BiConverter< ? super A, ? super B, ? super C > converter,
@@ -1331,7 +1331,7 @@ public class Converters
 	 *         RandomAccesses} perform on-the-fly value conversion using the
 	 *         provided converter.
 	 */
-	final static public < A, B, C extends Type< C > > RandomAccessible< C > convert(
+	public static < A, B, C extends Type< C > > RandomAccessible< C > convert(
 			final RandomAccessible< A > sourceA,
 			final RandomAccessible< B > sourceB,
 			final Supplier< BiConverter< ? super A, ? super B, ? super C > > converterSupplier,
@@ -1361,7 +1361,7 @@ public class Converters
 	 *         RandomAccesses} perform on-the-fly value conversion using the
 	 *         provided converter.
 	 */
-	final static public < A, B, C > RandomAccessible< C > convert2(
+	public static < A, B, C > RandomAccessible< C > convert2(
 			final RandomAccessible< A > sourceA,
 			final RandomAccessible< B > sourceB,
 			final Supplier< BiConverter< ? super A, ? super B, ? super C > > converterSupplier,
@@ -1386,7 +1386,7 @@ public class Converters
 	 *         {@link RandomAccess RandomAccesses} perform on-the-fly value
 	 *         conversion using the provided {@link BiConverter}.
 	 */
-	final static public < A, B, C extends Type< C > > RandomAccessibleInterval< C > convert(
+	public static < A, B, C extends Type< C > > RandomAccessibleInterval< C > convert(
 			final RandomAccessibleInterval< A > sourceA,
 			final RandomAccessibleInterval< B > sourceB,
 			final BiConverter< ? super A, ? super B, ? super C > converter,
@@ -1416,7 +1416,7 @@ public class Converters
 	 *         {@link RandomAccess RandomAccesses} perform on-the-fly value
 	 *         conversion using the provided {@link BiConverter}.
 	 */
-	final static public < A, B, C > RandomAccessibleInterval< C > convert2(
+	public static < A, B, C > RandomAccessibleInterval< C > convert2(
 			final RandomAccessibleInterval< A > sourceA,
 			final RandomAccessibleInterval< B > sourceB,
 			final BiConverter< ? super A, ? super B, ? super C > converter,
@@ -1441,7 +1441,7 @@ public class Converters
 	 *         {@link RandomAccess RandomAccesses} perform on-the-fly value
 	 *         conversion using the provided {@link BiConverter}.
 	 */
-	final static public < A, B, C extends Type< C > > RandomAccessibleInterval< C > convert(
+	public static < A, B, C extends Type< C > > RandomAccessibleInterval< C > convert(
 			final RandomAccessibleInterval< A > sourceA,
 			final RandomAccessibleInterval< B > sourceB,
 			final Supplier< BiConverter< ? super A, ? super B, ? super C > > converterSupplier,
@@ -1471,7 +1471,7 @@ public class Converters
 	 *         {@link RandomAccess RandomAccesses} perform on-the-fly value
 	 *         conversion using the provided {@link BiConverter}.
 	 */
-	final static public < A, B, C > RandomAccessibleInterval< C > convert2(
+	public static < A, B, C > RandomAccessibleInterval< C > convert2(
 			final RandomAccessibleInterval< A > sourceA,
 			final RandomAccessibleInterval< B > sourceB,
 			final Supplier< BiConverter< ? super A, ? super B, ? super C > > converterSupplier,
@@ -1502,7 +1502,7 @@ public class Converters
 	 *         {@link RandomAccess RandomAccesses} perform on-the-fly value
 	 *         conversion using the provided converter.
 	 */
-	final static public < A, B, C extends Type< C > > RandomAccessibleInterval< C > convertRAI(
+	public static < A, B, C extends Type< C > > RandomAccessibleInterval< C > convertRAI(
 			final RandomAccessibleInterval< A > sourceA,
 			final RandomAccessibleInterval< B > sourceB,
 			final BiConverter< ? super A, ? super B, ? super C > converter,
@@ -1538,7 +1538,7 @@ public class Converters
 	 *         {@link RandomAccess RandomAccesses} perform on-the-fly value
 	 *         conversion using the provided converter.
 	 */
-	final static public < A, B, C > RandomAccessibleInterval< C > convertRAI2(
+	public static < A, B, C > RandomAccessibleInterval< C > convertRAI2(
 			final RandomAccessibleInterval< A > sourceA,
 			final RandomAccessibleInterval< B > sourceB,
 			final BiConverter< ? super A, ? super B, ? super C > converter,
@@ -1569,7 +1569,7 @@ public class Converters
 	 *         {@link RandomAccess RandomAccesses} perform on-the-fly value
 	 *         conversion using the provided converter.
 	 */
-	final static public < A, B, C extends Type< C > > RandomAccessibleInterval< C > convertRAI(
+	public static < A, B, C extends Type< C > > RandomAccessibleInterval< C > convertRAI(
 			final RandomAccessibleInterval< A > sourceA,
 			final RandomAccessibleInterval< B > sourceB,
 			final Supplier< BiConverter< ? super A, ? super B, ? super C > > converterSupplier,
@@ -1605,7 +1605,7 @@ public class Converters
 	 *         {@link RandomAccess RandomAccesses} perform on-the-fly value
 	 *         conversion using the provided converter.
 	 */
-	final static public < A, B, C > RandomAccessibleInterval< C > convertRAI2(
+	public static < A, B, C > RandomAccessibleInterval< C > convertRAI2(
 			final RandomAccessibleInterval< A > sourceA,
 			final RandomAccessibleInterval< B > sourceB,
 			final Supplier< BiConverter< ? super A, ? super B, ? super C > > converterSupplier,
@@ -1629,7 +1629,7 @@ public class Converters
 	 * @return a converted {@link IterableInterval} whose {@link Cursor Cursors}
 	 *         perform on-the-fly value conversion using the provided converter.
 	 */
-	final static public < A, B, C extends Type< C > > IterableInterval< C > convert(
+	public static < A, B, C extends Type< C > > IterableInterval< C > convert(
 			final IterableInterval< A > sourceA,
 			final IterableInterval< B > sourceB,
 			final BiConverter< ? super A, ? super B, ? super C > converter,
@@ -1658,7 +1658,7 @@ public class Converters
 	 * @return a converted {@link IterableInterval} whose {@link Cursor Cursors}
 	 *         perform on-the-fly value conversion using the provided converter.
 	 */
-	final static public < A, B, C > IterableInterval< C > convert2(
+	public static < A, B, C > IterableInterval< C > convert2(
 			final IterableInterval< A > sourceA,
 			final IterableInterval< B > sourceB,
 			final BiConverter< ? super A, ? super B, ? super C > converter,
@@ -1682,7 +1682,7 @@ public class Converters
 	 * @return a converted {@link IterableInterval} whose {@link Cursor Cursors}
 	 *         perform on-the-fly value conversion using the provided converter.
 	 */
-	final static public < A, B, C extends Type< C > > IterableInterval< C > convert(
+	public static < A, B, C extends Type< C > > IterableInterval< C > convert(
 			final IterableInterval< A > sourceA,
 			final IterableInterval< B > sourceB,
 			final Supplier< BiConverter< ? super A, ? super B, ? super C > > converterSupplier,
@@ -1711,7 +1711,7 @@ public class Converters
 	 * @return a converted {@link IterableInterval} whose {@link Cursor Cursors}
 	 *         perform on-the-fly value conversion using the provided converter.
 	 */
-	final static public < A, B, C > IterableInterval< C > convert2(
+	public static < A, B, C > IterableInterval< C > convert2(
 			final IterableInterval< A > sourceA,
 			final IterableInterval< B > sourceB,
 			final Supplier< BiConverter< ? super A, ? super B, ? super C > > converterSupplier,
@@ -1735,7 +1735,7 @@ public class Converters
 	 * @return a converted {@link IterableRealInterval} whose {@link RealCursor RealCursors}
 	 *         perform on-the-fly value conversion using the provided converter.
 	 */
-	final static public < A, B, C extends Type< C > > IterableRealInterval< C > convert(
+	public static < A, B, C extends Type< C > > IterableRealInterval< C > convert(
 			final IterableRealInterval< A > sourceA,
 			final IterableRealInterval< B > sourceB,
 			final BiConverter< ? super A, ? super B, ? super C > converter,
@@ -1764,7 +1764,7 @@ public class Converters
 	 * @return a converted {@link IterableRealInterval} whose {@link RealCursor RealCursors}
 	 *         perform on-the-fly value conversion using the provided converter.
 	 */
-	final static public < A, B, C > IterableRealInterval< C > convert2(
+	public static < A, B, C > IterableRealInterval< C > convert2(
 			final IterableRealInterval< A > sourceA,
 			final IterableRealInterval< B > sourceB,
 			final BiConverter< ? super A, ? super B, ? super C > converter,
@@ -1788,7 +1788,7 @@ public class Converters
 	 * @return a converted {@link IterableRealInterval} whose {@link RealCursor RealCursors}
 	 *         perform on-the-fly value conversion using the provided converter.
 	 */
-	final static public < A, B, C extends Type< C > > IterableRealInterval< C > convert(
+	public static < A, B, C extends Type< C > > IterableRealInterval< C > convert(
 			final IterableRealInterval< A > sourceA,
 			final IterableRealInterval< B > sourceB,
 			final Supplier< BiConverter< ? super A, ? super B, ? super C > > converterSupplier,
@@ -1817,7 +1817,7 @@ public class Converters
 	 * @return a converted {@link IterableRealInterval} whose {@link RealCursor RealCursors}
 	 *         perform on-the-fly value conversion using the provided converter.
 	 */
-	final static public < A, B, C > IterableRealInterval< C > convert2(
+	public static < A, B, C > IterableRealInterval< C > convert2(
 			final IterableRealInterval< A > sourceA,
 			final IterableRealInterval< B > sourceB,
 			final Supplier< BiConverter< ? super A, ? super B, ? super C > > converterSupplier,
@@ -1842,7 +1842,7 @@ public class Converters
 	 *         {@link RealRandomAccess RealRandomAccesses} perform on-the-fly value
 	 *         conversion using the provided converter.
 	 */
-	final static public < A, B, C extends Type< C > > RealRandomAccessibleRealInterval< C > convert(
+	public static < A, B, C extends Type< C > > RealRandomAccessibleRealInterval< C > convert(
 			final RealRandomAccessibleRealInterval< A > sourceA,
 			final RealRandomAccessibleRealInterval< B > sourceB,
 			final BiConverter< ? super A, ? super B, ? super C > converter,
@@ -1872,7 +1872,7 @@ public class Converters
 	 *         {@link RealRandomAccess RealRandomAccesses} perform on-the-fly value
 	 *         conversion using the provided converter.
 	 */
-	final static public < A, B, C > RealRandomAccessibleRealInterval< C > convert2(
+	public static < A, B, C > RealRandomAccessibleRealInterval< C > convert2(
 			final RealRandomAccessibleRealInterval< A > sourceA,
 			final RealRandomAccessibleRealInterval< B > sourceB,
 			final BiConverter< ? super A, ? super B, ? super C > converter,
@@ -1897,7 +1897,7 @@ public class Converters
 	 *         {@link RealRandomAccess RealRandomAccesses} perform on-the-fly value
 	 *         conversion using the provided converter.
 	 */
-	final static public < A, B, C extends Type< C > > RealRandomAccessibleRealInterval< C > convert(
+	public static < A, B, C extends Type< C > > RealRandomAccessibleRealInterval< C > convert(
 			final RealRandomAccessibleRealInterval< A > sourceA,
 			final RealRandomAccessibleRealInterval< B > sourceB,
 			final Supplier< BiConverter< ? super A, ? super B, ? super C > > converterSupplier,
@@ -1927,7 +1927,7 @@ public class Converters
 	 *         {@link RealRandomAccess RealRandomAccesses} perform on-the-fly value
 	 *         conversion using the provided converter.
 	 */
-	final static public < A, B, C > RealRandomAccessibleRealInterval< C > convert2(
+	public static < A, B, C > RealRandomAccessibleRealInterval< C > convert2(
 			final RealRandomAccessibleRealInterval< A > sourceA,
 			final RealRandomAccessibleRealInterval< B > sourceB,
 			final Supplier< BiConverter< ? super A, ? super B, ? super C > > converterSupplier,
@@ -1952,7 +1952,7 @@ public class Converters
 	 *         RealRandomAccesses} perform on-the-fly value conversion using the
 	 *         provided converter.
 	 */
-	final static public < A, B, C extends Type< C > > RealRandomAccessible< C > convert(
+	public static < A, B, C extends Type< C > > RealRandomAccessible< C > convert(
 			final RealRandomAccessible< A > sourceA,
 			final RealRandomAccessible< B > sourceB,
 			final BiConverter< ? super A, ? super B, ? super C > converter,
@@ -1982,7 +1982,7 @@ public class Converters
 	 *         RealRandomAccesses} perform on-the-fly value conversion using the
 	 *         provided converter.
 	 */
-	final static public < A, B, C > RealRandomAccessible< C > convert2(
+	public static < A, B, C > RealRandomAccessible< C > convert2(
 			final RealRandomAccessible< A > sourceA,
 			final RealRandomAccessible< B > sourceB,
 			final BiConverter< ? super A, ? super B, ? super C > converter,
@@ -2007,7 +2007,7 @@ public class Converters
 	 *         RealRandomAccesses} perform on-the-fly value conversion using the
 	 *         provided converter.
 	 */
-	final static public < A, B, C extends Type< C > > RealRandomAccessible< C > convert(
+	public static < A, B, C extends Type< C > > RealRandomAccessible< C > convert(
 			final RealRandomAccessible< A > sourceA,
 			final RealRandomAccessible< B > sourceB,
 			final Supplier< BiConverter< ? super A, ? super B, ? super C > > converterSupplier,
@@ -2037,7 +2037,7 @@ public class Converters
 	 *         RealRandomAccesses} perform on-the-fly value conversion using the
 	 *         provided converter.
 	 */
-	final static public < A, B, C > RealRandomAccessible< C > convert2(
+	public static < A, B, C > RealRandomAccessible< C > convert2(
 			final RealRandomAccessible< A > sourceA,
 			final RealRandomAccessible< B > sourceB,
 			final Supplier< BiConverter< ? super A, ? super B, ? super C > > converterSupplier,
