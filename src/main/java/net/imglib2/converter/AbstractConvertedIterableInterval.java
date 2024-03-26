@@ -68,10 +68,4 @@ abstract public class AbstractConvertedIterableInterval< A, B > extends Abstract
 
 	@Override
 	abstract public AbstractConvertedCursor< A, B > localizingCursor();
-
-//	@Override
-//	public B getType()
-//	{
-//		return firstElement(); // TODO GET-TYPE: Probably cursor().getType() is better? Or something else entirely?
-//	}
 }

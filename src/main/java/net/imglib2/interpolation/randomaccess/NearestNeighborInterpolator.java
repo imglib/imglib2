@@ -85,7 +85,7 @@ public class NearestNeighborInterpolator< T > extends Round< RandomAccess< T > >
 	@Override
 	public T getType()
 	{
-		return get();
+		return target.getType();
 	}
 
 	@Override

@@ -96,7 +96,8 @@ public class ConstantUtils
 			}
 
 			@Override
-			public T getType() {
+			public T getType()
+			{
 				return constant;
 			}
 		};
