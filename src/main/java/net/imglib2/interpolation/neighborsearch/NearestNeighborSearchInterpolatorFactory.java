@@ -57,7 +57,7 @@ public class NearestNeighborSearchInterpolatorFactory< T > implements Interpolat
 	@Override
 	public NearestNeighborSearchInterpolator< T > create( final NearestNeighborSearch< T > search )
 	{
-		return new NearestNeighborSearchInterpolator< T >( search.copy() );
+		return new NearestNeighborSearchInterpolator<>( search.copy() );
 	}
 
 	/**

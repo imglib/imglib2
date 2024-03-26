@@ -69,7 +69,7 @@ public class InverseDistanceWeightingInterpolatorFactory< T extends RealType< T 
 	@Override
 	public InverseDistanceWeightingInterpolator< T > create( final KNearestNeighborSearch< T > search )
 	{
-		return new InverseDistanceWeightingInterpolator< T >( search.copy(), p );
+		return new InverseDistanceWeightingInterpolator<>( search.copy(), p );
 	}
 
 	/**
