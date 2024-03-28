@@ -120,18 +120,9 @@ public interface RealRandomAccessible< T > extends EuclideanSpace, Typed< T >
 		return realRandomAccess().setPositionAndGet( position );
 	}
 
-	/**
-	 * Get an instance of {@code T}.
-	 * <p>
-	 * It should not be assumed that the returned {@code T} instance is an
-	 * independent copy. In particular, repeated calls to {@code getType()} may
-	 * return the same instance.
-	 * <p>
-	 * The default implementation queries the value at the default coordinate of
-	 * {@link RealRandomAccessible#realRandomAccess()}. Derived classes
-	 * may choose different implementations for improved performance.
-	 *
-	 * @return an instance of {@code T}
+	/*
+	 * NB: We cannot have a default implementation here because of
+	 * https://bugs.openjdk.org/browse/JDK-7120669
 	 */
 //	@Override
 //	default T getType()
