@@ -44,7 +44,7 @@ public class KDTree< T > implements EuclideanSpace, IterableRealInterval< T >
 	 */
 	public < L extends RealLocalizable > KDTree( final List< T > values, final List< L > positions )
 	{
-		this( verifySize(values, positions), values, positions );
+		this( verifySize( values, positions ), values, positions );
 	}
 
 	private static int verifySize( final List< ? > values, final List< ? > positions )
@@ -61,7 +61,7 @@ public class KDTree< T > implements EuclideanSpace, IterableRealInterval< T >
 	 * {@link IterableRealInterval}.
 	 *
 	 * @param interval
-	 *            elements in the tree are obtained by iterating this
+	 * 		elements in the tree are obtained by iterating this
 	 */
 	public KDTree( final IterableRealInterval< T > interval )
 	{
@@ -129,7 +129,7 @@ public class KDTree< T > implements EuclideanSpace, IterableRealInterval< T >
 	public KDTree( final KDTreeData< T > data )
 	{
 		treeData = data;
-		impl = new KDTreeImpl(treeData.positions);
+		impl = new KDTreeImpl( treeData.positions() );
 	}
 
 	/**
@@ -137,8 +137,7 @@ public class KDTree< T > implements EuclideanSpace, IterableRealInterval< T >
 	 *
 	 * @return the root node.
 	 *
-	 * @deprecated
-	 * {@link KDTreeNode} is now a re-usable proxy (like {@code NativeType}).
+	 * @deprecated {@link KDTreeNode} is now a re-usable proxy (like {@code NativeType}).
 	 * To work with existing code, {@link KDTreeNode#left()}, {@link
 	 * KDTreeNode#right()}, {@link KDTree#getRoot()} etc create new objects in each
 	 * call, instead of re-using existing proxies.
@@ -253,7 +252,8 @@ public class KDTree< T > implements EuclideanSpace, IterableRealInterval< T >
 	 * {@link KDTreeNode#setNodeIndex(int)} can be used to point the proxy to a
 	 * particular node in the tree.
 	 */
-	public KDTreeNode< T > createNode() {
+	public KDTreeNode< T > createNode()
+	{
 		return new KDTreeNode<>( this );
 	}
 
