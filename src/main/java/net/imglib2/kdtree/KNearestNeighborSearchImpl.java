@@ -121,5 +121,4 @@ public class KNearestNeighborSearchImpl
 		System.arraycopy( bestSquDistance, 0, copy.bestSquDistance, 0, bestSquDistance.length );
 		return copy;
 	}
-
 }

@@ -24,7 +24,7 @@ import static net.imglib2.kdtree.KDTreeUtils.rightChildIndex;
  *   / \   /
  *  7   8 9
  * </pre>
- *
+ * <p>
  * never like this:
  * <pre>
  *            0
@@ -35,7 +35,7 @@ import static net.imglib2.kdtree.KDTreeUtils.rightChildIndex;
  *   /         /     /
  *  7         8     9
  * </pre>
- *
+ * <p>
  * By choosing pivots in this way, the tree structure is fully
  * determined. For every node index, the child indices can be calculated
  * without dependent reads. And iff the calculated child index is less
@@ -49,7 +49,8 @@ public class KDTreeImpl
 
 	protected final KDTreePositions positions;
 
-	public KDTreeImpl(final KDTreePositions positions) {
+	public KDTreeImpl( final KDTreePositions positions )
+	{
 		this.numDimensions = positions.numDimensions;
 		this.numPoints = positions.numPoints;
 		this.positions = positions;
@@ -126,8 +127,9 @@ public class KDTreeImpl
 		return ( 31 - Integer.numberOfLeadingZeros( i + 1 ) ) % numDimensions;
 	}
 
-	public double getDoublePosition(final int i, final int d) {
-		return positions.get(i, d);
+	public double getDoublePosition( final int i, final int d )
+	{
+		return positions.get( i, d );
 	}
 
 	/**
@@ -138,7 +140,7 @@ public class KDTreeImpl
 		float sum = 0;
 		for ( int d = 0; d < numDimensions; ++d )
 		{
-			final float diff = pos[ d ] - ( float ) positions.get(i, d);
+			final float diff = pos[ d ] - ( float ) positions.get( i, d );
 			sum += diff * diff;
 		}
 		return sum;
@@ -152,7 +154,7 @@ public class KDTreeImpl
 		double sum = 0;
 		for ( int d = 0; d < numDimensions; ++d )
 		{
-			final double diff = pos[ d ] - positions.get(i, d);
+			final double diff = pos[ d ] - positions.get( i, d );
 			sum += diff * diff;
 		}
 		return sum;
@@ -166,7 +168,7 @@ public class KDTreeImpl
 		double sum = 0;
 		for ( int d = 0; d < numDimensions; ++d )
 		{
-			final double diff = pos.getDoublePosition( d ) - positions.get(i, d);
+			final double diff = pos.getDoublePosition( d ) - positions.get( i, d );
 			sum += diff * diff;
 		}
 		return sum;
