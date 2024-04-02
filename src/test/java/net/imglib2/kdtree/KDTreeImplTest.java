@@ -52,7 +52,7 @@ public class KDTreeImplTest {
 		final double[][] points = KDTreeUtils.initPositions( n, numDataVertices, dataVertices );
 		final int[] tree = KDTreeUtils.makeTree( points );
 		final double[][] treePoints = KDTreeUtils.reorder( points, tree );
-		final KDTreeImpl impl = new KDTreeImpl(new KDTreePositions.Nested(treePoints));
+		final KDTreeImpl impl = new KDTreeImpl( KDTreePositions.createNested( treePoints ) );
 		final NearestNeighborSearchImpl search = new NearestNeighborSearchImpl( impl );
 
 		for ( RealPoint testVertex : testVertices )
@@ -75,7 +75,7 @@ public class KDTreeImplTest {
 		final double[][] points = KDTreeUtils.initPositions( n, numDataVertices, dataVertices );
 		final int[] tree = KDTreeUtils.makeTree( points );
 		final double[][] treePoints = KDTreeUtils.reorder( points, tree );
-		final KDTreeImpl impl = new KDTreeImpl(new KDTreePositions.Nested(treePoints));
+		final KDTreeImpl impl = new KDTreeImpl( KDTreePositions.createNested( treePoints ) );
 		final KNearestNeighborSearchImpl search = new KNearestNeighborSearchImpl( impl, k );
 
 		for ( RealPoint testVertex : testVertices )
@@ -99,7 +99,7 @@ public class KDTreeImplTest {
 		final double[][] points = KDTreeUtils.initPositions( n, numDataVertices, dataVertices );
 		final int[] tree = KDTreeUtils.makeTree( points );
 		final double[][] treePoints = KDTreeUtils.reorder( points, tree );
-		final KDTreeImpl impl = new KDTreeImpl(new KDTreePositions.Nested(treePoints));
+		final KDTreeImpl impl = new KDTreeImpl( KDTreePositions.createNested( treePoints ) );
 		final RadiusNeighborSearchImpl search = new RadiusNeighborSearchImpl( impl );
 
 		for ( RealPoint testVertex : testVertices )
@@ -121,8 +121,7 @@ public class KDTreeImplTest {
 
 	private int[] findNearestNeighborsExhaustive( final RealLocalizable point, final int k )
 	{
-		final List< RealPoint > sorted = new ArrayList<>();
-		sorted.addAll( dataVertices );
+		final List< RealPoint > sorted = new ArrayList<>( dataVertices );
 		sorted.sort( Comparator.comparing( p -> distance( point, p ) ) );
 		final int[] neighbors = new int[ k ];
 		Arrays.setAll(neighbors, i -> dataVertices.indexOf( sorted.get( i ) ) );
