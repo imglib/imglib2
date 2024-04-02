@@ -114,6 +114,11 @@ public class ConvertedIterableRealInterval< A, B > extends AbstractConvertedIter
 		return convertedSupplier;
 	}
 
+	@Override
+	public B getType()
+	{
+		return convertedSupplier.get();
+	}
 
 	/**
 	 * Returns an instance of the {@link Converter}.  If the

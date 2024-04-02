@@ -115,6 +115,11 @@ public class BiConvertedRealRandomAccessible< A, B, C > extends AbstractConverte
 		return convertedSupplier;
 	}
 
+	@Override
+	public C getType()
+	{
+		return convertedSupplier.get();
+	}
 
 	/**
 	 * Returns an instance of the {@link BiConverter}.  If the
