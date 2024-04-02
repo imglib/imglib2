@@ -117,7 +117,6 @@ public class KDTree< T > implements EuclideanSpace, IterableRealInterval< T >
 	{
 		return new AbstractConvertedIterableRealInterval< A, RealLocalizable >( sourceInterval )
 		{
-
 			class Cursor extends AbstractConvertedRealCursor< A, RealLocalizable >
 			{
 				Cursor( final RealCursor< A > source )
@@ -142,6 +141,12 @@ public class KDTree< T > implements EuclideanSpace, IterableRealInterval< T >
 				{
 					return source;
 				}
+			}
+
+			@Override
+			public RealLocalizable getType()
+			{
+				return firstElement();
 			}
 
 			@Override

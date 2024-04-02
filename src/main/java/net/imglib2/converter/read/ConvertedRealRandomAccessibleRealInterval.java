@@ -103,6 +103,11 @@ public class ConvertedRealRandomAccessibleRealInterval< A, B > extends AbstractW
 		return convertedSupplier;
 	}
 
+	@Override
+	public B getType()
+	{
+		return convertedSupplier.get();
+	}
 
 	/**
 	 * Returns an instance of the {@link Converter}.  If the

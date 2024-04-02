@@ -73,4 +73,10 @@ public class WriteConvertedIterableRealInterval< A, B > extends AbstractConverte
 	{
 		return new WriteConvertedRealCursor< A, B >( sourceInterval.localizingCursor(), converterSupplier );
 	}
+
+	@Override
+	public B getType()
+	{
+		return TypeUtils.getConvertedType( getSource().getType(), converterSupplier );
+	}
 }

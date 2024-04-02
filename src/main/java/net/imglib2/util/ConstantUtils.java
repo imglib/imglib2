@@ -150,6 +150,12 @@ public class ConstantUtils
 			}
 
 			@Override
+			public T getType()
+			{
+				return constant;
+			}
+
+			@Override
 			public ConstantRealRandomAccess realRandomAccess()
 			{
 				return new ConstantRealRandomAccess();

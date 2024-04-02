@@ -137,6 +137,11 @@ public class BiConvertedIterableInterval< A, B, C > extends AbstractConvertedIte
 		return convertedSupplier;
 	}
 
+	@Override
+	public C getType()
+	{
+		return convertedSupplier.get();
+	}
 
 	/**
 	 * Returns an instance of the {@link BiConverter}.  If the

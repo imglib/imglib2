@@ -102,6 +102,11 @@ public class ConvertedRealRandomAccessible< A, B > extends AbstractConvertedReal
 		return convertedSupplier;
 	}
 
+	@Override
+	public B getType()
+	{
+		return convertedSupplier.get();
+	}
 
 	/**
 	 * Returns an instance of the {@link Converter}.  If the

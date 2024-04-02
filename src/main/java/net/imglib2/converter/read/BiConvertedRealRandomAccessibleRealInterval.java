@@ -116,6 +116,11 @@ public class BiConvertedRealRandomAccessibleRealInterval< A, B, C > extends Abst
 		return convertedSupplier;
 	}
 
+	@Override
+	public C getType()
+	{
+		return convertedSupplier.get();
+	}
 
 	/**
 	 * Returns an instance of the {@link BiConverter}.  If the
