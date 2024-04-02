@@ -1,70 +1,94 @@
 package net.imglib2.kdtree;
 
+import java.util.List;
 import java.util.function.IntFunction;
 import java.util.function.Supplier;
+
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.RealInterval;
 import net.imglib2.RealLocalizable;
 import net.imglib2.img.Img;
+import net.imglib2.img.list.ListImg;
 import net.imglib2.type.NativeType;
+import net.imglib2.util.Util;
 
+import net.imglib2.kdtree.KDTreePositions.PositionsLayout;
 
 /**
  * Stores the KDTree data, that is, positions and values.
  * <p>
- * Positions are stored as {@link KDTreePositions} as either
- * {@link KDTreePositions.Flat} or {@link KDTreePositions.Nested}.
+ * Positions are stored in either {@code FLAT} or {@code NESTED} {@link
+ * PositionsLayout layout}. With {@code NESTED} layout, positions are stored as
+ * a nested {@code double[][]} array where {@code positions[d][i]} is dimension
+ * {@code d} of the {@code i}-th point. With {@code FLAT} layout, positions are
+ * stored as a flat {@code double[]} array, where {@code positions[d + i*n]} is
+ * dimension {@code d} of the {@code i}-th point, with {@code n} the number of
+ * dimensions.
  * <p>
- * Values (of type {@code T}) are stored as {@link KDTreeValues} either a
- * 1D {@code RandomAccessibleInterval<T>} in {@link KDTreeValues.ImgValues}, or
- * a {@code List<T>} in {@link KDTreeValues.ListValues}.
+ * Values (of type {@code T}) are stored as either a 1D {@code
+ * RandomAccessibleInterval<T>}, or a {@code List<T>}. Individual values can be
+ * accessed by {@link #valuesSupplier()}{@code .get().apply(i)}. {@code
+ * valueSupplier().get()} returns a reusable {@code IntFunction<T>}. Here {@code
+ * T} maybe a proxy that is reused in subsequent {@code apply(i)}.
  * <p>
  * {@link #values()} returns all values as a 1D {@code
- * RandomAccessibleInterval<T>}. (If data is stored as {@link
- * KDTreeValues.ListValues}, it is wrapped into a {@code ListImg}.)
+ * RandomAccessibleInterval<T>}. (If data is stored as {@code List<T>}, it is
+ * wrapped into a {@code ListImg}.)
  *
  * @param <T>
  * 		the type of values stored in the tree.
  */
 public class KDTreeData< T >
 {
-	private final int numDimensions;
-	private final int numPoints;
+	private final KDTreePositions positions;
 
-	public final KDTreePositions positions;
+	private final RandomAccessibleInterval< T > valuesImg;
+	private final Supplier< IntFunction< T > > valuesSupplier;
 
-	private final KDTreeValues<T> values;
+	private final T type;
 
 	private volatile RealInterval boundingBox;
 
-	public KDTreeData(KDTreePositions positions, KDTreeValues<T> values) {
-		numPoints = positions.numPoints();
-		numDimensions = positions.numDimensions();
+	public KDTreeData( final KDTreePositions positions, final List< T > values )
+	{
 		this.positions = positions;
-		this.values = values;
+
+		valuesImg = ListImg.wrap( values, positions().numPoints() );
+		valuesSupplier = () -> values::get;
+
+		type = KDTreeUtils.getType( values );
 	}
 
-	public KDTreeData(KDTreePositions positions, KDTreeValues<T> values, RealInterval boundingBox) {
-		this(positions, values);
+	public KDTreeData( final KDTreePositions positions, final List< T > values, final RealInterval boundingBox )
+	{
+		this( positions, values );
 		this.boundingBox = boundingBox;
 	}
 
-	// TODO could also be Class<T> instead? What is more useful?
-	public T type()
+	public KDTreeData( final KDTreePositions positions, final RandomAccessibleInterval< T > values )
 	{
-		return values.type();
+		this.positions = positions;
+
+		valuesImg = values;
+		valuesSupplier = () -> valuesImg.randomAccess()::setPositionAndGet;
+
+		type = Util.getTypeFromInterval( values );
 	}
 
-	public double[] getFlatPositions() {
-		return positions.getFlatPositions();
+	public KDTreeData( final KDTreePositions positions, final RandomAccessibleInterval< T > values, final RealInterval boundingBox )
+	{
+		this( positions, values );
+		this.boundingBox = boundingBox;
 	}
 
-	public double[][] getNestedPositions() {
-		return positions.getNestedPositions();
+	public KDTreePositions positions()
+	{
+		return positions;
 	}
 
-	public boolean positionsIsFlatArray() {
-		return (positions instanceof KDTreePositions.Flat);
+	public T getType()
+	{
+		return type;
 	}
 
 	/**
@@ -74,40 +98,26 @@ public class KDTreeData< T >
 	 */
 	public RandomAccessibleInterval< T > values()
 	{
-		return values.values();
+		return valuesImg;
 	}
 
 	/**
 	 * Get a {@code Supplier} that return {@code IntFunction<T>} to provide
-	 * values for a given node indices.. If the returned {@code IntFunction<T>}
+	 * values for a given node indices. If the returned {@code IntFunction<T>}
 	 * is stateful ({@code T} maybe a proxy that is reused in subsequent {@code
 	 * apply(i)}} every {@link Supplier#get()} creates a new instance of the
 	 * {@code IntFunction<T>}.
 	 */
 	public Supplier< IntFunction< T > > valuesSupplier()
 	{
-		return values.valuesSupplier();
-	}
-
-	/**
-	 * @return dimensionality of points in the tree
-	 */
-	public int numDimensions()
-	{
-		return numDimensions;
-	}
-
-	/**
-	 * @return number of points in the tree
-	 */
-	public int size()
-	{
-		return numPoints;
+		return valuesSupplier;
 	}
 
 	public RealInterval boundingBox()
 	{
-		return (boundingBox != null) ? boundingBox : positions.boundingBox();
+		if ( boundingBox == null )
+			boundingBox = positions().createBoundingBox();
+		return boundingBox;
 	}
 
 	/**
@@ -138,17 +148,22 @@ public class KDTreeData< T >
 		final int[] tree = KDTreeUtils.makeTree( points );
 		final int[] invtree = KDTreeUtils.invert( tree );
 
-		final boolean storeAsImg = (storeValuesAsNativeImg && KDTreeUtils.getType(values) instanceof NativeType);
-		@SuppressWarnings("unchecked")
-		final KDTreeValues<T> treeValues = (storeAsImg)
-				? new KDTreeValues.ImgValues<>((Img<T>)  KDTreeUtils.orderValuesImg(invtree, (Iterable) values))
-				: new KDTreeValues.ListValues<>(KDTreeUtils.orderValuesList(invtree, values));
-
 		final boolean useFlatLayout = (long) numDimensions * numPoints <= KDTreeUtils.MAX_ARRAY_SIZE;
-		final KDTreePositions treePositions = (useFlatLayout)
-				? new KDTreePositions.Flat(KDTreeUtils.reorderToFlatLayout(points, tree), numDimensions)
-				: new KDTreePositions.Nested(KDTreeUtils.reorder(points, tree));
+		final KDTreePositions treePositions = ( useFlatLayout )
+				? KDTreePositions.createFlat( KDTreeUtils.reorderToFlatLayout( points, tree ), numDimensions )
+				: KDTreePositions.createNested( KDTreeUtils.reorder( points, tree ) );
 
-		return new KDTreeData<>(treePositions, treeValues);
+		final boolean storeAsImg = ( storeValuesAsNativeImg && KDTreeUtils.getType( values ) instanceof NativeType );
+		if ( storeAsImg )
+		{
+			@SuppressWarnings( "unchecked" )
+			final Img< T > treeValues = ( Img< T > ) KDTreeUtils.orderValuesImg( invtree, ( Iterable ) values );
+			return new KDTreeData<>( treePositions, treeValues );
+		}
+		else
+		{
+			final List< T > treeValues = KDTreeUtils.orderValuesList( invtree, values );
+			return new KDTreeData<>( treePositions, treeValues );
+		}
 	}
 }

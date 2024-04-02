@@ -43,11 +43,11 @@ import static net.imglib2.kdtree.KDTreeUtils.rightChildIndex;
  */
 public class KDTreeImpl
 {
-	final int numDimensions;
+	private final int numDimensions;
 
 	private final int numPoints;
 
-	protected final KDTreePositions positions;
+	private final KDTreePositions positions;
 
 	public KDTreeImpl( final KDTreePositions positions )
 	{
