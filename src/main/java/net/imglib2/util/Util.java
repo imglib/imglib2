@@ -796,7 +796,8 @@ public class Util
 	@Deprecated
 	public static < T, F extends Interval & RandomAccessible< T > > T getTypeFromInterval( final F rai )
 	{
-		return rai.getType();
+		final T type = rai.getType();
+		return type instanceof Type ? ( T ) ( ( Type ) type ).createVariable() : type;
 	}
 
 	/**
@@ -810,9 +811,10 @@ public class Util
 	 * @return - an instance of T
 	 */
 	@Deprecated
-	public static < T, F extends RealInterval & RealRandomAccessible< T >> T getTypeFromRealInterval( final F rai )
+	public static < T, F extends RealInterval & RealRandomAccessible< T > > T getTypeFromRealInterval( final F rai )
 	{
-		return rai.getType();
+		final T type = rai.getType();
+		return type instanceof Type ? ( T ) ( ( Type ) type ).createVariable() : type;
 	}
 
 	/**
