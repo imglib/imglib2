@@ -106,7 +106,7 @@ public class Converters
 			final Converter< ? super A, ? super B > converter,
 			final B b )
 	{
-		return convert2( source, converter, () -> b.copy() );
+		return convert2( source, converter, () -> b.createVariable() );
 	}
 
 	/**
@@ -156,7 +156,7 @@ public class Converters
 			final Supplier< Converter< ? super A, ? super B > > converterSupplier,
 			final B b )
 	{
-		return convert2( source, converterSupplier, () -> b.copy() );
+		return convert2( source, converterSupplier, () -> b.createVariable() );
 	}
 
 	/**
@@ -239,7 +239,7 @@ public class Converters
 			final Converter< ? super A, ? super B > converter,
 			final B b )
 	{
-		return convert2( source, converter, () -> b.copy() );
+		return convert2( source, converter, () -> b.createVariable() );
 	}
 
 	/**
@@ -290,7 +290,7 @@ public class Converters
 			final Supplier< Converter< ? super A, ? super B > > converterSupplier,
 			final B b )
 	{
-		return convert2( source, converterSupplier, () -> b.copy() );
+		return convert2( source, converterSupplier, () -> b.createVariable() );
 	}
 
 	/**
@@ -514,7 +514,7 @@ public class Converters
 			final Converter< ? super A, ? super B > converter,
 			final B b )
 	{
-		return convert2( source, converter, () -> b.copy() );
+		return convert2( source, converter, () -> b.createVariable() );
 	}
 
 	/**
@@ -562,7 +562,7 @@ public class Converters
 			final Supplier< Converter< ? super A, ? super B > > converterSupplier,
 			final B b )
 	{
-		return convert2( source, converterSupplier, () -> b.copy() );
+		return convert2( source, converterSupplier, () -> b.createVariable() );
 	}
 
 	/**
@@ -631,7 +631,7 @@ public class Converters
 			final Converter< ? super A, ? super B > converter,
 			final B b )
 	{
-		return convert2( source, converter, () -> b.copy() );
+		return convert2( source, converter, () -> b.createVariable() );
 	}
 
 	/**
@@ -679,7 +679,7 @@ public class Converters
 			final Supplier< Converter< ? super A, ? super B > > converterSupplier,
 			final B b )
 	{
-		return convert2( source, converterSupplier, () -> b.copy() );
+		return convert2( source, converterSupplier, () -> b.createVariable() );
 	}
 
 	/**
@@ -816,7 +816,7 @@ public class Converters
 			final Converter< ? super A, ? super B > converter,
 			final B b )
 	{
-		return convert2( source, converter, () -> b.copy() );
+		return convert2( source, converter, () -> b.createVariable() );
 	}
 
 	/**
@@ -866,7 +866,7 @@ public class Converters
 			final Supplier< Converter< ? super A, ? super B > > converterSupplier,
 			final B b )
 	{
-		return convert2( source, converterSupplier, () -> b.copy() );
+		return convert2( source, converterSupplier, () -> b.createVariable() );
 	}
 
 	/**
@@ -913,7 +913,7 @@ public class Converters
 			final Converter< ? super A, ? super B > converter,
 			final B b )
 	{
-		return convert2( source, converter, () -> b.copy() );
+		return convert2( source, converter, () -> b.createVariable() );
 	}
 
 	/**
@@ -963,7 +963,7 @@ public class Converters
 			final Supplier< Converter< ? super A, ? super B > > converterSupplier,
 			final B b )
 	{
-		return convert2( source, converterSupplier, () -> b.copy() );
+		return convert2( source, converterSupplier, () -> b.createVariable() );
 	}
 
 	/**
@@ -1132,7 +1132,7 @@ public class Converters
 		return composeReal2(
 				components,
 				composer,
-				() -> targetType.copy() );
+				() -> targetType.createVariable() );
 	}
 
 	/**
@@ -1181,7 +1181,7 @@ public class Converters
 		return composeNumeric2(
 				components,
 				composer,
-				() -> targetType.copy() );
+				() -> targetType.createVariable() );
 	}
 
 	/**
@@ -1230,7 +1230,7 @@ public class Converters
 		return compose2(
 				components,
 				composer,
-				() -> targetType.copy() );
+				() -> targetType.createVariable() );
 	}
 
 	/**
@@ -1282,7 +1282,7 @@ public class Converters
 			final BiConverter< ? super A, ? super B, ? super C > converter,
 			final C c )
 	{
-		return convert2( sourceA, sourceB, converter, () -> c.copy() );
+		return convert2( sourceA, sourceB, converter, () -> c.createVariable() );
 	}
 
 	/**
@@ -1337,7 +1337,7 @@ public class Converters
 			final Supplier< BiConverter< ? super A, ? super B, ? super C > > converterSupplier,
 			final C c )
 	{
-		return convert2( sourceA, sourceB, converterSupplier, () -> c.copy() );
+		return convert2( sourceA, sourceB, converterSupplier, () -> c.createVariable() );
 	}
 
 	/**
@@ -1392,7 +1392,7 @@ public class Converters
 			final BiConverter< ? super A, ? super B, ? super C > converter,
 			final C c )
 	{
-		return convert2( sourceA, sourceB, converter, () -> c.copy() );
+		return convert2( sourceA, sourceB, converter, () -> c.createVariable() );
 	}
 
 	/**
@@ -1447,7 +1447,7 @@ public class Converters
 			final Supplier< BiConverter< ? super A, ? super B, ? super C > > converterSupplier,
 			final C c )
 	{
-		return convert2( sourceA, sourceB, converterSupplier, () -> c.copy() );
+		return convert2( sourceA, sourceB, converterSupplier, () -> c.createVariable() );
 	}
 
 	/**
@@ -1635,7 +1635,7 @@ public class Converters
 			final BiConverter< ? super A, ? super B, ? super C > converter,
 			final C c )
 	{
-		return convert2( sourceA, sourceB, converter, () -> c.copy() );
+		return convert2( sourceA, sourceB, converter, () -> c.createVariable() );
 	}
 
 	/**
@@ -1688,7 +1688,7 @@ public class Converters
 			final Supplier< BiConverter< ? super A, ? super B, ? super C > > converterSupplier,
 			final C c )
 	{
-		return convert2( sourceA, sourceB, converterSupplier, () -> c.copy() );
+		return convert2( sourceA, sourceB, converterSupplier, () -> c.createVariable() );
 	}
 
 	/**
@@ -1741,7 +1741,7 @@ public class Converters
 			final BiConverter< ? super A, ? super B, ? super C > converter,
 			final C c )
 	{
-		return convert2( sourceA, sourceB, converter, () -> c.copy() );
+		return convert2( sourceA, sourceB, converter, () -> c.createVariable() );
 	}
 
 	/**
@@ -1794,7 +1794,7 @@ public class Converters
 			final Supplier< BiConverter< ? super A, ? super B, ? super C > > converterSupplier,
 			final C c )
 	{
-		return convert2( sourceA, sourceB, converterSupplier, () -> c.copy() );
+		return convert2( sourceA, sourceB, converterSupplier, () -> c.createVariable() );
 	}
 
 	/**
@@ -1848,7 +1848,7 @@ public class Converters
 			final BiConverter< ? super A, ? super B, ? super C > converter,
 			final C c )
 	{
-		return convert2( sourceA, sourceB, converter, () -> c.copy() );
+		return convert2( sourceA, sourceB, converter, () -> c.createVariable() );
 	}
 
 	/**
@@ -1903,7 +1903,7 @@ public class Converters
 			final Supplier< BiConverter< ? super A, ? super B, ? super C > > converterSupplier,
 			final C c )
 	{
-		return convert2( sourceA, sourceB, converterSupplier, () -> c.copy() );
+		return convert2( sourceA, sourceB, converterSupplier, () -> c.createVariable() );
 	}
 
 	/**
@@ -1958,7 +1958,7 @@ public class Converters
 			final BiConverter< ? super A, ? super B, ? super C > converter,
 			final C c )
 	{
-		return convert2( sourceA, sourceB, converter, () -> c.copy() );
+		return convert2( sourceA, sourceB, converter, () -> c.createVariable() );
 	}
 
 	/**
@@ -2013,7 +2013,7 @@ public class Converters
 			final Supplier< BiConverter< ? super A, ? super B, ? super C > > converterSupplier,
 			final C c )
 	{
-		return convert2( sourceA, sourceB, converterSupplier, () -> c.copy() );
+		return convert2( sourceA, sourceB, converterSupplier, () -> c.createVariable() );
 	}
 
 	/**

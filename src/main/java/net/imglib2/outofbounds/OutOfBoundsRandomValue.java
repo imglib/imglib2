@@ -60,7 +60,7 @@ public class OutOfBoundsRandomValue< T extends RealType< T > > extends AbstractO
 	{
 		super( outOfBounds );
 
-		this.value = outOfBounds.value.copy();
+		this.value = outOfBounds.value.createVariable();
 		this.minValue = outOfBounds.minValue;
 		this.maxValue = outOfBounds.maxValue;
 		this.range = outOfBounds.range;

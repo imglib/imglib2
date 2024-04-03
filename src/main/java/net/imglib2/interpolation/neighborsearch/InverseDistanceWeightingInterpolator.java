@@ -84,7 +84,7 @@ public class InverseDistanceWeightingInterpolator< T extends RealType< T > > ext
 		p2 = p / 2.0;
 
 		search.search( this );
-		this.value = search.getSampler( 0 ).get().copy();
+		this.value = search.getSampler( 0 ).getType().createVariable();
 		this.numNeighbors = search.getK();
 	}
 
