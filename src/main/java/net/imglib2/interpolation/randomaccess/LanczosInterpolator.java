@@ -232,6 +232,6 @@ public class LanczosInterpolator< T extends RealType< T > > extends FloorOffset<
 	@Override
 	public RealRandomAccess< T > copy()
 	{
-		return copy();
+		return new LanczosInterpolator<>( this );
 	}
 }
