@@ -37,7 +37,9 @@ package net.imglib2.converter.read;
 import java.util.function.Supplier;
 
 import net.imglib2.AbstractWrappedInterval;
+import net.imglib2.Cursor;
 import net.imglib2.Interval;
+import net.imglib2.IterableInterval;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.View;
 import net.imglib2.converter.BiConverter;
@@ -116,7 +118,6 @@ public class BiConvertedRandomAccessibleInterval< A, B, C > extends AbstractWrap
 		return convertedSupplier;
 	}
 
-
 	/**
 	 * Returns an instance of the {@link BiConverter}.  If the
 	 * {@link BiConvertedRandomAccessibleInterval} was created with a {@link BiConverter}
@@ -147,4 +148,35 @@ public class BiConvertedRandomAccessibleInterval< A, B, C > extends AbstractWrap
 	{
 		return convertedSupplier.get();
 	}
+
+	@Override
+	public BiConvertedCursor< A, B, C > cursor()
+	{
+		return new BiConvertedCursor<>( sourceInterval.cursor(), sourceIntervalB.cursor(), converterSupplier, convertedSupplier );
+	}
+
+	/**
+	 * Creates a localizing {@link Cursor} for sourceA only because this will
+	 * be used for localization.  Make sure that sourceA is the
+	 * {@link IterableInterval} that creates the {@link Cursor} that localizes
+	 * more efficiently.
+	 */
+	@Override
+	public BiConvertedCursor< A, B, C > localizingCursor()
+	{
+		return new BiConvertedCursor<>( sourceInterval.localizingCursor(), sourceIntervalB.cursor(), converterSupplier, convertedSupplier );
+	}
+
+	@Override
+	public long size()
+	{
+		return sourceInterval.size();
+	}
+
+	@Override
+	public Object iterationOrder()
+	{
+		return sourceInterval.iterationOrder();
+	}
+
 }
