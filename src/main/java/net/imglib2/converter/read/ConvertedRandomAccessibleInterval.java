@@ -37,6 +37,7 @@ package net.imglib2.converter.read;
 import java.util.function.Supplier;
 
 import net.imglib2.AbstractWrappedInterval;
+import net.imglib2.Cursor;
 import net.imglib2.Interval;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.View;
@@ -133,5 +134,29 @@ public class ConvertedRandomAccessibleInterval< A, B > extends AbstractWrappedIn
 	public B getType()
 	{
 		return convertedSupplier.get();
+	}
+
+	@Override
+	public Cursor< B > cursor()
+	{
+		return new ConvertedCursor<>( sourceInterval.cursor(), converterSupplier, convertedSupplier );
+	}
+
+	@Override
+	public Cursor< B > localizingCursor()
+	{
+		return new ConvertedCursor<>( sourceInterval.localizingCursor(), converterSupplier, convertedSupplier );
+	}
+
+	@Override
+	public long size()
+	{
+		return sourceInterval.size();
+	}
+
+	@Override
+	public Object iterationOrder()
+	{
+		return sourceInterval.iterationOrder();
 	}
 }
