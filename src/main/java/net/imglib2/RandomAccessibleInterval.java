@@ -11,13 +11,13 @@
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice,
  *    this list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  *    this list of conditions and the following disclaimer in the documentation
  *    and/or other materials provided with the distribution.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -35,6 +35,7 @@
 package net.imglib2;
 
 import net.imglib2.util.Intervals;
+import net.imglib2.view.RandomAccessibleIntervalCursor;
 
 /**
  * <p>
@@ -62,7 +63,7 @@ import net.imglib2.util.Intervals;
  * @author Stephan Saalfeld
  * @author Philipp Hanslovsky
  */
-public interface RandomAccessibleInterval< T > extends RandomAccessible< T >, Interval
+public interface RandomAccessibleInterval< T > extends RandomAccessible< T >, IterableInterval< T >
 {
 	/*
 	 * NB: We cannot have a default implementation here because of
@@ -73,4 +74,28 @@ public interface RandomAccessibleInterval< T > extends RandomAccessible< T >, In
 //	{
 //		return getAt( Intervals.minAsLongArray( this ) );
 //	}
+
+	@Override
+	default Cursor< T > cursor()
+	{
+		return new RandomAccessibleIntervalCursor<>( this );
+	}
+
+	@Override
+	default Cursor< T > localizingCursor()
+	{
+		return cursor();
+	}
+
+	@Override
+	default long size()
+	{
+		return Intervals.numElements( this );
+	}
+
+	@Override
+	default Object iterationOrder()
+	{
+		return new FlatIterationOrder( this );
+	}
 }
