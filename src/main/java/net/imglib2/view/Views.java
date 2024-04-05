@@ -845,28 +845,22 @@ public class Views
 	}
 
 	/**
-	 * Return an {@link IterableInterval} having {@link FlatIterationOrder}. If
-	 * the passed {@link RandomAccessibleInterval} is already an
-	 * {@link IterableInterval} with {@link FlatIterationOrder} then it is
-	 * returned directly (this is the case for {@link ArrayImg}). If not, then
-	 * an {@link IterableRandomAccessibleInterval} is created.
+	 * Return an {@link RandomAccessibleInterval} having {@link
+	 * FlatIterationOrder}. If the passed {@link RandomAccessibleInterval}
+	 * already has {@link FlatIterationOrder} then it is returned directly (this
+	 * is the case for {@link ArrayImg}). If not, then an {@link
+	 * IterableRandomAccessibleInterval} is created.
 	 *
 	 * @param randomAccessibleInterval
 	 *            the source
 	 * @return an {@link IterableInterval} with {@link FlatIterationOrder}
 	 */
-	@SuppressWarnings( "unchecked" )
-	public static < T > IterableInterval< T > flatIterable( final RandomAccessibleInterval< T > randomAccessibleInterval )
+	public static < T > RandomAccessibleInterval< T > flatIterable( final RandomAccessibleInterval< T > randomAccessibleInterval )
 	{
-		if ( randomAccessibleInterval instanceof IterableInterval && ( ( IterableInterval< T > ) randomAccessibleInterval ).iterationOrder() instanceof FlatIterationOrder )
-		{
-			final Class< ? > raiType = randomAccessibleInterval.getType().getClass();
-			final Iterator< ? > iter = ( ( IterableInterval< ? > ) randomAccessibleInterval ).iterator();
-			final Object o = iter.hasNext() ? iter.next() : null;
-			if ( raiType.isInstance( o ) )
-				return ( IterableInterval< T > ) randomAccessibleInterval;
-		}
-		return new IterableRandomAccessibleInterval<>( randomAccessibleInterval );
+		if ( randomAccessibleInterval.iterationOrder() instanceof FlatIterationOrder )
+			return randomAccessibleInterval;
+		else
+			return new IterableRandomAccessibleInterval<>( randomAccessibleInterval );
 	}
 
 	/**
