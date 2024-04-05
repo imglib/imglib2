@@ -36,12 +36,11 @@ package net.imglib2.converter.read;
 
 import java.util.function.Supplier;
 
-import net.imglib2.AbstractWrappedInterval;
 import net.imglib2.Cursor;
 import net.imglib2.Interval;
 import net.imglib2.IterableInterval;
 import net.imglib2.RandomAccessibleInterval;
-import net.imglib2.View;
+import net.imglib2.converter.AbstractConvertedRandomAccessibleInterval;
 import net.imglib2.converter.BiConverter;
 import net.imglib2.type.Type;
 
@@ -49,7 +48,7 @@ import net.imglib2.type.Type;
  * TODO
  *
  */
-public class BiConvertedRandomAccessibleInterval< A, B, C > extends AbstractWrappedInterval< RandomAccessibleInterval< A > > implements RandomAccessibleInterval< C >, View
+public class BiConvertedRandomAccessibleInterval< A, B, C > extends AbstractConvertedRandomAccessibleInterval< A, C >
 {
 	protected final RandomAccessibleInterval< B > sourceIntervalB;
 
@@ -166,17 +165,4 @@ public class BiConvertedRandomAccessibleInterval< A, B, C > extends AbstractWrap
 	{
 		return new BiConvertedCursor<>( sourceInterval.localizingCursor(), sourceIntervalB.cursor(), converterSupplier, convertedSupplier );
 	}
-
-	@Override
-	public long size()
-	{
-		return sourceInterval.size();
-	}
-
-	@Override
-	public Object iterationOrder()
-	{
-		return sourceInterval.iterationOrder();
-	}
-
 }

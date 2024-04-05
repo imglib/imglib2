@@ -45,20 +45,15 @@ import net.imglib2.View;
 
 /**
  * TODO
- * 
+ *
  */
-abstract public class AbstractConvertedIterableRandomAccessibleInterval< A, B, S extends RandomAccessible< A > & IterableInterval< A > > extends AbstractWrappedInterval< S > implements IterableInterval< B >, RandomAccessibleInterval< B >, View
+abstract public class AbstractConvertedIterableRandomAccessibleInterval< A, B, S extends IterableInterval< A > >
+		extends AbstractWrappedInterval< S > implements RandomAccessibleInterval< B >, View
 {
 	public AbstractConvertedIterableRandomAccessibleInterval( final S source )
 	{
 		super( source );
 	}
-
-	@Override
-	abstract public AbstractConvertedRandomAccess< A, B > randomAccess();
-
-	@Override
-	abstract public AbstractConvertedRandomAccess< A, B > randomAccess( Interval interval );
 
 	@Override
 	public long size()
@@ -72,9 +67,4 @@ abstract public class AbstractConvertedIterableRandomAccessibleInterval< A, B, S
 		return sourceInterval.iterationOrder();
 	}
 
-	@Override
-	abstract public AbstractConvertedCursor< A, B > cursor();
-
-	@Override
-	abstract public AbstractConvertedCursor< A, B > localizingCursor();
 }

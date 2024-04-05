@@ -34,15 +34,13 @@
 
 package net.imglib2.converter;
 
-import java.util.Iterator;
-
 import net.imglib2.AbstractWrappedInterval;
 import net.imglib2.IterableInterval;
 import net.imglib2.View;
 
 /**
  * TODO
- * 
+ *
  */
 abstract public class AbstractConvertedIterableInterval< A, B > extends AbstractWrappedInterval< IterableInterval< A > > implements IterableInterval< B >, View
 {
@@ -62,10 +60,4 @@ abstract public class AbstractConvertedIterableInterval< A, B > extends Abstract
 	{
 		return sourceInterval.iterationOrder();
 	}
-
-	@Override
-	abstract public AbstractConvertedCursor< A, B > cursor();
-
-	@Override
-	abstract public AbstractConvertedCursor< A, B > localizingCursor();
 }

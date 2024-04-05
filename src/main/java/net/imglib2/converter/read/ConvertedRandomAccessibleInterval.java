@@ -36,11 +36,10 @@ package net.imglib2.converter.read;
 
 import java.util.function.Supplier;
 
-import net.imglib2.AbstractWrappedInterval;
 import net.imglib2.Cursor;
 import net.imglib2.Interval;
 import net.imglib2.RandomAccessibleInterval;
-import net.imglib2.View;
+import net.imglib2.converter.AbstractConvertedRandomAccessibleInterval;
 import net.imglib2.converter.Converter;
 import net.imglib2.type.Type;
 
@@ -48,7 +47,7 @@ import net.imglib2.type.Type;
  * TODO
  *
  */
-public class ConvertedRandomAccessibleInterval< A, B > extends AbstractWrappedInterval< RandomAccessibleInterval< A > > implements RandomAccessibleInterval< B >, View
+public class ConvertedRandomAccessibleInterval< A, B > extends AbstractConvertedRandomAccessibleInterval< A, B >
 {
 	final protected Supplier< Converter< ? super A, ? super B > > converterSupplier;
 
@@ -75,13 +74,13 @@ public class ConvertedRandomAccessibleInterval< A, B > extends AbstractWrappedIn
 	@Override
 	public ConvertedRandomAccess< A, B > randomAccess()
 	{
-		return new ConvertedRandomAccess< A, B >( sourceInterval.randomAccess(), converterSupplier, convertedSupplier );
+		return new ConvertedRandomAccess<>( sourceInterval.randomAccess(), converterSupplier, convertedSupplier );
 	}
 
 	@Override
 	public ConvertedRandomAccess< A, B > randomAccess( final Interval interval )
 	{
-		return new ConvertedRandomAccess< A, B >( sourceInterval.randomAccess( interval ), converterSupplier, convertedSupplier );
+		return new ConvertedRandomAccess<>( sourceInterval.randomAccess( interval ), converterSupplier, convertedSupplier );
 	}
 
 	/**
@@ -146,17 +145,5 @@ public class ConvertedRandomAccessibleInterval< A, B > extends AbstractWrappedIn
 	public Cursor< B > localizingCursor()
 	{
 		return new ConvertedCursor<>( sourceInterval.localizingCursor(), converterSupplier, convertedSupplier );
-	}
-
-	@Override
-	public long size()
-	{
-		return sourceInterval.size();
-	}
-
-	@Override
-	public Object iterationOrder()
-	{
-		return sourceInterval.iterationOrder();
 	}
 }

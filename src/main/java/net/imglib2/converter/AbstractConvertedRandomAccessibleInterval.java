@@ -45,19 +45,20 @@ import net.imglib2.View;
  */
 abstract public class AbstractConvertedRandomAccessibleInterval< A, B > extends AbstractWrappedInterval< RandomAccessibleInterval< A > > implements RandomAccessibleInterval< B >, View
 {
-
-	protected final RandomAccessibleInterval< A > source;
-
 	public AbstractConvertedRandomAccessibleInterval( final RandomAccessibleInterval< A > source )
 	{
 		super( source );
-		this.source = source;
 	}
 
 	@Override
-	abstract public AbstractConvertedRandomAccess< A, B > randomAccess();
+	public long size()
+	{
+		return sourceInterval.size();
+	}
 
 	@Override
-	abstract public AbstractConvertedRandomAccess< A, B > randomAccess( Interval interval );
-
+	public Object iterationOrder()
+	{
+		return sourceInterval.iterationOrder();
+	}
 }
