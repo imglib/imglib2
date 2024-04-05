@@ -45,6 +45,7 @@ import net.imglib2.converter.AbstractConvertedIterableRandomAccessibleInterval;
  * TODO
  *
  */
+// TODO: Deprecate this? Every RandomAccessibleInterval is now a IterableInterval. So, does this add anything over WriteConvertedRandomAccessibleInterval?
 public class WriteConvertedIterableRandomAccessibleInterval< A, B, S extends RandomAccessible< A > & IterableInterval< A > > extends AbstractConvertedIterableRandomAccessibleInterval< A, B, S >
 {
 	private final Supplier< SamplerConverter< ? super A, B > > converterSupplier;
