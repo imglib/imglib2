@@ -831,22 +831,17 @@ public class Views
 	 * then it is returned directly (this is the case for {@link Img}). If not,
 	 * then an {@link IterableRandomAccessibleInterval} is created.
 	 *
+	 * @deprecated Because {@code RandomAccessibleInterval} extends {@code
+	 * IterableInterval} now, this is no longer necessary.
+	 *
 	 * @param randomAccessibleInterval
 	 *            the source
 	 * @return an {@link IterableInterval}
 	 */
-	@SuppressWarnings( "unchecked" )
+	@Deprecated
 	public static < T > IterableInterval< T > iterable( final RandomAccessibleInterval< T > randomAccessibleInterval )
 	{
-		if ( randomAccessibleInterval instanceof IterableInterval )
-		{
-			final Class< ? > raiType = randomAccessibleInterval.getType().getClass();
-			final Iterator< ? > iter = ( ( IterableInterval< ? > ) randomAccessibleInterval ).iterator();
-			final Object o = iter.hasNext() ? iter.next() : null;
-			if ( raiType.isInstance( o ) )
-				return ( IterableInterval< T > ) randomAccessibleInterval;
-		}
-		return new IterableRandomAccessibleInterval<>( randomAccessibleInterval );
+		return randomAccessibleInterval;
 	}
 
 	/**
