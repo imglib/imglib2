@@ -1055,16 +1055,7 @@ public class Util
 	 */
 	public static double[] asDoubleArray( final RandomAccessibleInterval< ? extends RealType< ? > > rai )
 	{
-		return asDoubleArray( Views.flatIterable( rai ) );
-	}
-
-	/**
-	 * Returns the pixels of an image of RealType as array of doubles.
-	 * The pixels are sorted in flat iteration order.
-	 */
-	public static double[] asDoubleArray( final Img< ? extends RealType< ? > > image )
-	{
-		return asDoubleArray( ( RandomAccessibleInterval< ? extends RealType< ? > > ) image );
+		return Views.flatIterable( rai ).stream().mapToDouble( RealType::getRealDouble ).toArray();
 	}
 
 	/**
