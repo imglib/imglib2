@@ -34,28 +34,23 @@
 
 package net.imglib2.view;
 
-import java.util.Iterator;
-
 import net.imglib2.AbstractWrappedInterval;
 import net.imglib2.Cursor;
 import net.imglib2.FlatIterationOrder;
 import net.imglib2.Interval;
-import net.imglib2.IterableInterval;
 import net.imglib2.RandomAccess;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.View;
 
 /**
- * Generates {@link Cursor Cursors} that iterate a
- * {@link RandomAccessibleInterval} in flat order, that is: row by row, plane by
- * plane, cube by cube, ...
- * 
+ * Generates {@link Cursor Cursors} that iterate a {@link
+ * RandomAccessibleInterval} in {@code FlatIterationOrder}, that is: row by row,
+ * plane by plane, cube by cube, ...
+ *
  * @author Stephan Saalfeld
  */
-public class IterableRandomAccessibleInterval< T > extends AbstractWrappedInterval< RandomAccessibleInterval< T > > implements IterableInterval< T >, RandomAccessibleInterval< T >, View
+public class IterableRandomAccessibleInterval< T > extends AbstractWrappedInterval< RandomAccessibleInterval< T > > implements RandomAccessibleInterval< T >, View
 {
-	final long size;
-
 	public static < T > IterableRandomAccessibleInterval< T > create( final RandomAccessibleInterval< T > interval )
 	{
 		return new IterableRandomAccessibleInterval< T >( interval );
@@ -64,17 +59,12 @@ public class IterableRandomAccessibleInterval< T > extends AbstractWrappedInterv
 	public IterableRandomAccessibleInterval( final RandomAccessibleInterval< T > interval )
 	{
 		super( interval );
-		final int n = numDimensions();
-		long s = interval.dimension( 0 );
-		for ( int d = 1; d < n; ++d )
-			s *= interval.dimension( d );
-		size = s;
 	}
 
 	@Override
 	public long size()
 	{
-		return size;
+		return sourceInterval.size();
 	}
 
 	@Override
