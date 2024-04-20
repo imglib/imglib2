@@ -186,7 +186,10 @@ public class NativeARGBDoubleType extends AbstractARGBDoubleType< NativeARGBDoub
 	@Override
 	public NativeARGBDoubleType copy()
 	{
-		return new NativeARGBDoubleType( getA(), getR(), getG(), getB() );
+		if ( dataAccess != null )
+			return new NativeARGBDoubleType( getA(), getR(), getG(), getB() );
+		else
+			return createVariable();
 	}
 
 	@Override

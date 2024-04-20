@@ -269,7 +269,7 @@ public class NativeBoolType extends AbstractIntegerType< NativeBoolType > implem
 	@Override
 	public NativeBoolType copy()
 	{
-		return new NativeBoolType( get() );
+		return new NativeBoolType( dataAccess != null ? get() : false );
 	}
 
 	@Override

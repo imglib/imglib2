@@ -309,7 +309,7 @@ public class BitType extends AbstractIntegerType< BitType > implements BooleanTy
 	@Override
 	public BitType copy()
 	{
-		return new BitType( get() );
+		return new BitType( dataAccess != null ? get() : false );
 	}
 
 	@Override

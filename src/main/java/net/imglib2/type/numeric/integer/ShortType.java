@@ -153,6 +153,6 @@ public class ShortType extends GenericShortType< ShortType >
 	@Override
 	public ShortType copy()
 	{
-		return new ShortType( getShort() );
+		return new ShortType( dataAccess != null ? get() : 0 );
 	}
 }

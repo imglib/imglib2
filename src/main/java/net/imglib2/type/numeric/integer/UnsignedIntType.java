@@ -248,7 +248,7 @@ public class UnsignedIntType extends GenericIntType< UnsignedIntType >
 	@Override
 	public UnsignedIntType copy()
 	{
-		return new UnsignedIntType( get() );
+		return new UnsignedIntType( dataAccess != null ? get() : 0 );
 	}
 
 	@Override

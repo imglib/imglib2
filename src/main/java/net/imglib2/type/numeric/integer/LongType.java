@@ -161,6 +161,6 @@ public class LongType extends GenericLongType< LongType >
 	@Override
 	public LongType copy()
 	{
-		return new LongType( get() );
+		return new LongType( dataAccess != null ? get() : 0 );
 	}
 }

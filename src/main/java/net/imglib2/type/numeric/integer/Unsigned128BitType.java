@@ -308,8 +308,11 @@ public class Unsigned128BitType extends AbstractIntegerType< Unsigned128BitType 
 	public Unsigned128BitType copy()
 	{
 		final Unsigned128BitType copy = new Unsigned128BitType();
-		final int k = i.get() * 2;
-		copy.set( dataAccess.getValue( k ), dataAccess.getValue( k + 1 ) );
+		if ( dataAccess != null )
+		{
+			final int k = i.get() * 2;
+			copy.set( dataAccess.getValue( k ), dataAccess.getValue( k + 1 ) );
+		}
 		return copy;
 	}
 

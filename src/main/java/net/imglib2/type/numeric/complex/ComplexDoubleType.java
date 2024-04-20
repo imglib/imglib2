@@ -187,7 +187,10 @@ public class ComplexDoubleType extends AbstractComplexType< ComplexDoubleType > 
 	@Override
 	public ComplexDoubleType copy()
 	{
-		return new ComplexDoubleType( getRealFloat(), getImaginaryFloat() );
+		if ( dataAccess != null )
+			return new ComplexDoubleType( getRealFloat(), getImaginaryFloat() );
+		else
+			return createVariable();
 	}
 
 	@Override

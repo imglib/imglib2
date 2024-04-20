@@ -171,6 +171,6 @@ public class Unsigned12BitType extends AbstractIntegerBitType< Unsigned12BitType
 	@Override
 	public Unsigned12BitType copy()
 	{
-		return new Unsigned12BitType( get() );
+		return new Unsigned12BitType( dataAccess != null ? get() : 0 );
 	}
 }

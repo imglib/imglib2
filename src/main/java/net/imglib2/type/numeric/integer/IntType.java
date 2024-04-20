@@ -153,6 +153,6 @@ public class IntType extends GenericIntType< IntType >
 	@Override
 	public IntType copy()
 	{
-		return new IntType( getInt() );
+		return new IntType( dataAccess != null ? get() : 0 );
 	}
 }
