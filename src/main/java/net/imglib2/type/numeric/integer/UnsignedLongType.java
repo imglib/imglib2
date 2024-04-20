@@ -345,7 +345,7 @@ public class UnsignedLongType extends GenericLongType< UnsignedLongType >
 	@Override
 	public UnsignedLongType copy()
 	{
-		return new UnsignedLongType( get() );
+		return new UnsignedLongType( dataAccess != null ? get() : 0 );
 	}
 
 	@Override

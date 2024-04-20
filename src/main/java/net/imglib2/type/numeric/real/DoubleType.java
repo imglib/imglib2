@@ -178,7 +178,7 @@ public class DoubleType extends AbstractRealType< DoubleType > implements Native
 	@Override
 	public DoubleType copy()
 	{
-		return new DoubleType( get() );
+		return new DoubleType( dataAccess != null ? get() : 0 );
 	}
 
 	@Override

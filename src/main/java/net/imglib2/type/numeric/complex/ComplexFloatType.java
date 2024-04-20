@@ -240,7 +240,10 @@ public class ComplexFloatType extends AbstractComplexType< ComplexFloatType > im
 	@Override
 	public ComplexFloatType copy()
 	{
-		return new ComplexFloatType( getRealFloat(), getImaginaryFloat() );
+		if ( dataAccess != null )
+			return new ComplexFloatType( getRealFloat(), getImaginaryFloat() );
+		else
+			return createVariable();
 	}
 
 	@Override

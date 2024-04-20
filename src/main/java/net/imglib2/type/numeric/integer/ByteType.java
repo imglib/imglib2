@@ -153,6 +153,6 @@ public class ByteType extends GenericByteType< ByteType >
 	@Override
 	public ByteType copy()
 	{
-		return new ByteType( getByte() );
+		return new ByteType( dataAccess != null ? get() : 0 );
 	}
 }

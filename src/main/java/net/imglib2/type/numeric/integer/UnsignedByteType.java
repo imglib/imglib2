@@ -213,7 +213,7 @@ public class UnsignedByteType extends GenericByteType< UnsignedByteType >
 	@Override
 	public UnsignedByteType copy()
 	{
-		return new UnsignedByteType( get() );
+		return new UnsignedByteType( dataAccess != null ? get() : 0 );
 	}
 
 	@Override

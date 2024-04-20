@@ -247,7 +247,7 @@ public class FloatType extends AbstractRealType< FloatType > implements NativeTy
 	@Override
 	public FloatType copy()
 	{
-		return new FloatType( get() );
+		return new FloatType( dataAccess != null ? get() : 0 );
 	}
 
 	@Override

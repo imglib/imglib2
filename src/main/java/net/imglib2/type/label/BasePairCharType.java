@@ -184,7 +184,10 @@ public class BasePairCharType extends AbstractNativeType< BasePairCharType > imp
 	@Override
 	public BasePairCharType copy()
 	{
-		return new BasePairCharType( get() );
+		if ( dataAccess != null )
+			return new BasePairCharType( get() );
+		else
+			return createVariable();
 	}
 
 	@Override

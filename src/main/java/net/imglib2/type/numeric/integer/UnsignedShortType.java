@@ -222,7 +222,7 @@ public class UnsignedShortType extends GenericShortType< UnsignedShortType >
 	@Override
 	public UnsignedShortType copy()
 	{
-		return new UnsignedShortType( get() );
+		return new UnsignedShortType( dataAccess != null ? get() : 0 );
 	}
 
 	@Override

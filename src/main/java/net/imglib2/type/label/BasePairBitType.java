@@ -179,7 +179,10 @@ public class BasePairBitType extends AbstractBit64Type< BasePairBitType > implem
 	@Override
 	public BasePairBitType copy()
 	{
-		return new BasePairBitType( this.get() );
+		if ( dataAccess != null )
+			return new BasePairBitType( this.get() );
+		else
+			return createVariable();
 	}
 
 	@Override

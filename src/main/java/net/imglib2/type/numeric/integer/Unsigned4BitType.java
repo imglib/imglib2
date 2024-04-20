@@ -132,6 +132,6 @@ public class Unsigned4BitType extends AbstractIntegerBitType< Unsigned4BitType >
 	@Override
 	public Unsigned4BitType copy()
 	{
-		return new Unsigned4BitType( get() );
+		return new Unsigned4BitType( dataAccess != null ? get() : 0 );
 	}
 }

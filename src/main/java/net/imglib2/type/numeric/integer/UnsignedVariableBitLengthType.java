@@ -121,7 +121,10 @@ public class UnsignedVariableBitLengthType extends AbstractBit64Type< UnsignedVa
 	@Override
 	public UnsignedVariableBitLengthType copy()
 	{
-		return new UnsignedVariableBitLengthType( getBits(), nBits );
+		if ( dataAccess != null )
+			return new UnsignedVariableBitLengthType( getBits(), nBits );
+		else
+			return createVariable();
 	}
 
 	/** @see UnsignedLongType#divide(long, long) */

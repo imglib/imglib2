@@ -254,7 +254,7 @@ public class ARGBType extends AbstractNativeType< ARGBType > implements NumericT
 	@Override
 	public ARGBType copy()
 	{
-		return new ARGBType( get() );
+		return new ARGBType( dataAccess != null ? get() : 0 );
 	}
 
 	@Override
