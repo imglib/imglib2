@@ -35,15 +35,11 @@ package net.imglib2.blocks;
 
 import java.util.Arrays;
 import java.util.function.Supplier;
-import net.imglib2.Interval;
-import net.imglib2.Point;
-import net.imglib2.RandomAccessible;
 import net.imglib2.img.array.ArrayImg;
 import net.imglib2.img.array.ArrayImgFactory;
 import net.imglib2.img.basictypeaccess.array.ArrayDataAccess;
 import net.imglib2.transform.integer.MixedTransform;
 import net.imglib2.type.NativeType;
-import net.imglib2.type.Type;
 import net.imglib2.util.CloseableThreadLocal;
 
 class PrimitiveBlocksUtils
@@ -84,15 +80,6 @@ class PrimitiveBlocksUtils
 		}
 		else
 			return null;
-	}
-
-	// TODO replace with ra.getType() when that is available in imglib2 core
-	static < T extends Type< T > > T getType( RandomAccessible< T > ra )
-	{
-		final Point p = new Point( ra.numDimensions() );
-		if ( ra instanceof Interval )
-			( ( Interval ) ra ).min( p );
-		return ra.getAt( p ).createVariable();
 	}
 
 	/**
