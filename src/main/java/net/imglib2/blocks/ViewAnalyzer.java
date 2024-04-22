@@ -54,12 +54,11 @@ import net.imglib2.transform.integer.BoundingBox;
 import net.imglib2.transform.integer.MixedTransform;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.Type;
+import net.imglib2.util.Cast;
 import net.imglib2.util.Intervals;
 import net.imglib2.view.ExtendedRandomAccessibleInterval;
 import net.imglib2.view.IntervalView;
 import net.imglib2.view.MixedTransformView;
-
-import static net.imglib2.blocks.PrimitiveBlocksUtils.getType;
 
 class ViewAnalyzer
 {
@@ -90,7 +89,7 @@ class ViewAnalyzer
 	 */
 	private < T extends Type< T > > boolean checkViewTypeSupported()
 	{
-		final T type = getType( ( RandomAccessible< T > ) ra );
+		final T type = Cast.unchecked( ra.getType() );
 		if ( type instanceof NativeType
 				&& ( ( NativeType ) type ).getEntitiesPerPixel().getRatio() == 1 )
 		{
@@ -589,16 +588,16 @@ class ViewAnalyzer
 
 	private < T extends NativeType< T >, R extends NativeType< R > > ViewProperties< T, R > getViewProperties()
 	{
-		final T viewType = getType( ( RandomAccessible< T > ) ra );
-		final NativeImg< R, ? > root = ( NativeImg< R, ? > ) nodes.get( nodes.size() - 1 ).view();
+		final T viewType = Cast.unchecked( ra.getType() );
+		final NativeImg< R, ? > root = Cast.unchecked( nodes.get( nodes.size() - 1 ).view() );
 		final R rootType = root.createLinkedType();
 		return new ViewProperties<>( viewType, root, rootType, oobExtension, transform, permuteInvertTransform, converterSupplier );
 	}
 
 	private < T extends NativeType< T > > FallbackProperties< T > getFallbackProperties()
 	{
-		final RandomAccessible< T > view = ( RandomAccessible< T > ) ra;
-		return new FallbackProperties<>( getType( view ), view );
+		final RandomAccessible< T > view = Cast.unchecked( ra );
+		return new FallbackProperties<>( view.getType(), view );
 	}
 
 	public static < T extends NativeType< T >, R extends NativeType< R > > ViewPropertiesOrError< T, R > getViewProperties( RandomAccessible< T > view )
