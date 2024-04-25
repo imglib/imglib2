@@ -11,13 +11,13 @@
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice,
  *    this list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  *    this list of conditions and the following disclaimer in the documentation
  *    and/or other materials provided with the distribution.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -33,13 +33,16 @@
  */
 package net.imglib2.blocks;
 
+import static net.imglib2.blocks.PrimitiveBlocksUtils.extractOobValue;
+
+import java.util.function.Supplier;
+
 import net.imglib2.transform.integer.MixedTransform;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.PrimitiveType;
 import net.imglib2.util.Cast;
+import net.imglib2.util.CloseableThreadLocal;
 import net.imglib2.util.Intervals;
-
-import static net.imglib2.blocks.PrimitiveBlocksUtils.extractOobValue;
 
 class ViewPrimitiveBlocks< T extends NativeType< T >, R extends NativeType< R > > implements PrimitiveBlocks< T >
 {
@@ -57,6 +60,8 @@ class ViewPrimitiveBlocks< T extends NativeType< T >, R extends NativeType< R > 
 	private final PermuteInvert permuteInvert;
 
 	private final Convert convert;
+
+	private Supplier< PrimitiveBlocks< T > > threadSafeSupplier;
 
 	public ViewPrimitiveBlocks( final ViewProperties< T, R > props )
 	{
@@ -156,10 +161,38 @@ class ViewPrimitiveBlocks< T extends NativeType< T >, R extends NativeType< R > 
 	@Override
 	public PrimitiveBlocks< T > threadSafe()
 	{
-		return PrimitiveBlocksUtils.threadSafe( this::newInstance );
+		if ( threadSafeSupplier == null )
+			threadSafeSupplier = CloseableThreadLocal.withInitial( this::independentCopy )::get;
+		return new PrimitiveBlocks< T >()
+		{
+			@Override
+			public T getType()
+			{
+				return props.getViewType();
+			}
+
+			@Override
+			public void copy( final long[] srcPos, final Object dest, final int[] size )
+			{
+				threadSafeSupplier.get().copy( srcPos, dest, size );
+			}
+
+			@Override
+			public PrimitiveBlocks< T > independentCopy()
+			{
+				return ViewPrimitiveBlocks.this.independentCopy().threadSafe();
+			}
+
+			@Override
+			public PrimitiveBlocks< T > threadSafe()
+			{
+				return this;
+			}
+		};
 	}
 
-	ViewPrimitiveBlocks< T, R > newInstance()
+	@Override
+	public PrimitiveBlocks< T > independentCopy()
 	{
 		return new ViewPrimitiveBlocks<>( this );
 	}

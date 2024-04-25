@@ -34,41 +34,15 @@
 package net.imglib2.blocks;
 
 import java.util.Arrays;
-import java.util.function.Supplier;
+
 import net.imglib2.img.array.ArrayImg;
 import net.imglib2.img.array.ArrayImgFactory;
 import net.imglib2.img.basictypeaccess.array.ArrayDataAccess;
 import net.imglib2.transform.integer.MixedTransform;
 import net.imglib2.type.NativeType;
-import net.imglib2.util.CloseableThreadLocal;
 
 class PrimitiveBlocksUtils
 {
-	static < T extends NativeType< T > > PrimitiveBlocks< T > threadSafe( final Supplier< PrimitiveBlocks< T > > supplier )
-	{
-		final CloseableThreadLocal< PrimitiveBlocks< T > > tl = CloseableThreadLocal.withInitial( supplier );
-		return new PrimitiveBlocks< T >()
-		{
-			@Override
-			public T getType()
-			{
-				return tl.get().getType();
-			}
-
-			@Override
-			public void copy( final long[] srcPos, final Object dest, final int[] size )
-			{
-				tl.get().copy( srcPos, dest, size );
-			}
-
-			@Override
-			public PrimitiveBlocks< T > threadSafe()
-			{
-				return this;
-			}
-		};
-	}
-
 	static < T extends NativeType< T > > Object extractOobValue( final T type, final Extension extension )
 	{
 		if ( extension.type() == Extension.Type.CONSTANT )
