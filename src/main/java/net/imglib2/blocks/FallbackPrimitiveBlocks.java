@@ -40,6 +40,7 @@ import net.imglib2.img.basictypeaccess.array.ArrayDataAccess;
 import net.imglib2.loops.LoopBuilder;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.NativeTypeFactory;
+import net.imglib2.util.Cast;
 import net.imglib2.util.Util;
 import net.imglib2.view.Views;
 
@@ -66,8 +67,8 @@ class FallbackPrimitiveBlocks< T extends NativeType< T >, A extends ArrayDataAcc
 		if ( type.getEntitiesPerPixel().getRatio() != 1 )
 			throw new IllegalArgumentException( "Types with entitiesPerPixel != 1 are not supported" );
 
-		nativeTypeFactory = ( NativeTypeFactory< T, A > ) type.getNativeTypeFactory();
-		primitiveTypeProperties = ( PrimitiveTypeProperties< ?, A > ) PrimitiveTypeProperties.get( nativeTypeFactory.getPrimitiveType() );
+		nativeTypeFactory = Cast.unchecked( type.getNativeTypeFactory() );
+		primitiveTypeProperties = Cast.unchecked( PrimitiveTypeProperties.get( nativeTypeFactory.getPrimitiveType() ) );
 	}
 
 	@Override
@@ -83,6 +84,13 @@ class FallbackPrimitiveBlocks< T extends NativeType< T >, A extends ArrayDataAcc
 		img.setLinkedType( nativeTypeFactory.createLinkedType( img ) );
 		final FinalInterval interval = FinalInterval.createMinSize( srcPos, Util.int2long( size ) );
 		LoopBuilder.setImages( Views.interval( source, interval ), img ).forEachPixel( ( a, b ) -> b.set( a ) );
+	}
+
+	@Override
+	public PrimitiveBlocks< T > independentCopy()
+	{
+		// NB FallbackPrimitiveBlocks is stateless
+		return this;
 	}
 
 	@Override

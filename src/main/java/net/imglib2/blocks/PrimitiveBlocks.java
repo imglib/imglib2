@@ -33,12 +33,12 @@
  */
 package net.imglib2.blocks;
 
+import static net.imglib2.blocks.PrimitiveBlocks.OnFallback.FAIL;
+import static net.imglib2.blocks.PrimitiveBlocks.OnFallback.WARN;
+
 import net.imglib2.RandomAccessible;
 import net.imglib2.type.NativeType;
 import net.imglib2.util.Util;
-
-import static net.imglib2.blocks.PrimitiveBlocks.OnFallback.FAIL;
-import static net.imglib2.blocks.PrimitiveBlocks.OnFallback.WARN;
 
 
 /**
@@ -77,7 +77,7 @@ import static net.imglib2.blocks.PrimitiveBlocks.OnFallback.WARN;
  * If a source {@code RandomAccessible} cannot be understood, {@link
  * PrimitiveBlocks#of(RandomAccessible) PrimitiveBlocks.of} will return a
  * fall-back implementation (based on {@code LoopBuilder}).
- *
+ * <p>
  * With the optional {@link OnFallback OnFallback} argument to {@link
  * PrimitiveBlocks#of(RandomAccessible, OnFallback) PrimitiveBlocks.of} it can
  * be configured, whether
@@ -144,6 +144,8 @@ public interface PrimitiveBlocks< T extends NativeType< T > >
 	 */
 	PrimitiveBlocks< T > threadSafe();
 
+	PrimitiveBlocks< T > independentCopy();
+
 	enum OnFallback
 	{
 		ACCEPT,
@@ -197,11 +199,11 @@ public interface PrimitiveBlocks< T extends NativeType< T > >
 	 * @return a {@code PrimitiveBlocks} accessor for {@code ra}.
 	 * @param <T> pixel type
 	 */
-	static < T extends NativeType< T >, R extends NativeType< R > > PrimitiveBlocks< T > of(
+	static < T extends NativeType< T > > PrimitiveBlocks< T > of(
 			RandomAccessible< T > ra,
 			OnFallback onFallback )
 	{
-		final ViewPropertiesOrError< T, R > props = ViewAnalyzer.getViewProperties( ra );
+		final ViewPropertiesOrError< T, ? > props = ViewAnalyzer.getViewProperties( ra );
 		if ( props.isFullySupported() )
 		{
 			return new ViewPrimitiveBlocks<>( props.getViewProperties() );
