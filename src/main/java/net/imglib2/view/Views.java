@@ -109,7 +109,7 @@ public class Views
 	 *            source
 	 * @return
 	 */
-	public static < T, F extends EuclideanSpace > RealRandomAccessible< T > interpolate( final F source, final InterpolatorFactory< T, F > factory )
+	public static < T, F extends EuclideanSpace > RealRandomAccessible< T > interpolate( final F source, final InterpolatorFactory< T, ? super F > factory )
 	{
 		return new Interpolant<>( source, factory, source.numDimensions() );
 	}

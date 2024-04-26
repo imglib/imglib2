@@ -53,7 +53,7 @@ final public class Interpolant< T, F > implements RealRandomAccessible< T >, Vie
 
 	protected final int n;
 
-	final InterpolatorFactory< T, F > factory;
+	final InterpolatorFactory< T, ? super F > factory;
 
 	/**
 	 *
@@ -79,7 +79,7 @@ final public class Interpolant< T, F > implements RealRandomAccessible< T >, Vie
 	 * @param factory
 	 * @param n
 	 */
-	public Interpolant( final F source, final InterpolatorFactory< T, F > factory, final int n )
+	public Interpolant( final F source, final InterpolatorFactory< T, ? super F > factory, final int n )
 	{
 		this.source = source;
 		this.factory = factory;
@@ -118,7 +118,7 @@ final public class Interpolant< T, F > implements RealRandomAccessible< T >, Vie
 	/**
 	 * @return {@link InterpolatorFactory} used for interpolation
 	 */
-	public InterpolatorFactory< T, F > getInterpolatorFactory()
+	public InterpolatorFactory< T, ? super F > getInterpolatorFactory()
 	{
 		return factory;
 	}
