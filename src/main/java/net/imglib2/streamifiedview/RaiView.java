@@ -10,8 +10,9 @@ import net.imglib2.view.Views;
 /**
  * First attempt at an interface which basically copies java's stream syntax to imglib2-views.
  *
+ * @author Tobias Pietzsch
  * @author Michael Innerberger
- * @see net.imglib2.view.Views
+ * @see Views
  */
 public interface RaiView< T > extends RaView< T >, RandomAccessibleInterval< T >, IterableInterval< T >
 {
