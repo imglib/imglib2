@@ -32,7 +32,7 @@ public interface RraView< T > extends RealRandomAccessible< T >
 		return delegate().getType();
 	}
 
-	// TODO: Delegate all methods of RandomAccessible, also those that
+	// TODO: Delegate all methods of RealRandomAccessible, also those that
 	//       have a default implementations ...
 
 	@Override

@@ -14,7 +14,7 @@ import net.imglib2.view.Views;
  * @author Michael Innerberger
  * @see Views
  */
-public interface RaiView< T > extends RaView< T >, RandomAccessibleInterval< T >, IterableInterval< T >
+public interface RaiView< T > extends RaView< T >, RandomAccessibleInterval< T >
 {
 	default RaiView< T > expandValue( final T value, long... border )
 	{
