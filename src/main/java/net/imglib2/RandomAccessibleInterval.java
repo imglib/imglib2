@@ -117,6 +117,7 @@ public interface RandomAccessibleInterval< T > extends RandomAccessible< T >, It
 	 * @return gateway for creating light-weight {@link net.imglib2.view.Views
 	 *         views} into this {@code RandomAccessibleInterval}.
 	 */
+	@Override
 	default RaiView< T > view()
 	{
 		return RaiView.wrap( this );
