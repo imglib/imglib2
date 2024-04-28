@@ -50,6 +50,7 @@ import net.imglib2.img.WrappedImg;
 import net.imglib2.img.array.ArrayImg;
 import net.imglib2.img.cell.AbstractCellImg;
 import net.imglib2.img.planar.PlanarImg;
+import net.imglib2.streamifiedview.RaView;
 import net.imglib2.transform.integer.BoundingBox;
 import net.imglib2.transform.integer.MixedTransform;
 import net.imglib2.type.NativeType;
@@ -135,6 +136,12 @@ class ViewAnalyzer
 				final ImgView< ? > view = ( ImgView< ? > ) source;
 				nodes.add( new DefaultViewNode( ViewNode.ViewType.IDENTITY, view ) );
 				source = view.getSource();
+			}
+			else if ( source instanceof RaView )
+			{
+				final RaView< ?, ? > view = ( RaView< ?, ? > ) source;
+				nodes.add( new DefaultViewNode( ViewNode.ViewType.IDENTITY, view ) );
+				source = view.delegate();
 			}
 			// INTERVAL,
 			else if ( source instanceof IntervalView )
