@@ -7,7 +7,30 @@ import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.view.Views;
 
 /**
- * First attempt at an interface which basically copies java's stream syntax to imglib2-views.
+ * Gateway for creating light-weight views on a {@code RandomAccessibleInterval}.
+ * <p>
+ * A view is itself a {@code RandomAccessible} or {@code
+ * RandomAccessibleInterval} whose accessors transform coordinates and/or
+ * values on-the-fly without copying the underlying data. Consecutive
+ * transformations are concatenated and simplified to provide optimally
+ * efficient accessors.
+ * <p>
+ * The {@code RaiView} gateway implements {@code RandomAccessibleInterval},
+ * forwarding all methods to its {@link #delegate}. Additionally, it provides
+ * methods analogous to the {@code static} {@link Views} methods that operate on
+ * its {@link #delegate} and return {@code RaiView}, {@code RaView}, or {@code
+ * RraView} wrappers.
+ * <p>
+ * This provides a fluent interface for conveniently chaining {@code Views}
+ * methods. For example
+ * <pre>
+ * {@code RandomAccessibleInterval< IntType > view =
+ *                img.view()
+ *                   .permute( 0, 1 )
+ *                   .extendBorder()
+ *                   .interval( interval );
+ * }
+ * </pre>
  *
  * @author Tobias Pietzsch
  * @author Michael Innerberger
