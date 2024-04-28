@@ -34,6 +34,8 @@
 
 package net.imglib2;
 
+import net.imglib2.streamifiedview.RraView;
+
 /**
  * <p>
  * <em>f:R<sup>n</sup>&rarr;T</em>
@@ -118,6 +120,28 @@ public interface RealRandomAccessible< T > extends EuclideanSpace, Typed< T >
 	default T getAt( final RealLocalizable position )
 	{
 		return realRandomAccess().setPositionAndGet( position );
+	}
+
+	/**
+	 * Provides a gateway for creating light-weight {@link net.imglib2.view.Views
+	 * views} into this {@code RealRandomAccessible}.
+	 * <p>
+	 * A view is itself a {@code RealRandomAccessible} or {@code
+	 * RandomAccessible} whose accessors transform coordinates and/or
+	 * values on-the-fly without copying the underlying data. Consecutive
+	 * transformations are concatenated and simplified to provide optimally
+	 * efficient accessors.
+	 * <p>
+	 * Note, that accessors provided by a view are read/write. Changing pixels
+	 * in a view changes the underlying image data. (Value converters are an
+	 * exception.)
+	 *
+	 * @return gateway for creating light-weight views into this {@code
+	 *         RealRandomAccessible}.
+	 */
+	default RraView< T > view()
+	{
+		return RraView.wrap( this );
 	}
 
 	/*
