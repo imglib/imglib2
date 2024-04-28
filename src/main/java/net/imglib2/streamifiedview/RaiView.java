@@ -1,7 +1,5 @@
 package net.imglib2.streamifiedview;
 
-import java.util.function.Function;
-
 import net.imglib2.Cursor;
 import net.imglib2.Interval;
 import net.imglib2.RandomAccess;

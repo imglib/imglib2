@@ -8,8 +8,6 @@ import net.imglib2.RandomAccess;
 import net.imglib2.RandomAccessible;
 import net.imglib2.converter.Converter;
 import net.imglib2.converter.Converters;
-import net.imglib2.converter.TypeIdentity;
-import net.imglib2.converter.read.ConvertedRandomAccessible;
 import net.imglib2.interpolation.InterpolatorFactory;
 import net.imglib2.view.Views;
 
