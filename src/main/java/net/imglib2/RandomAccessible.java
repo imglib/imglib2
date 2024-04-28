@@ -34,6 +34,7 @@
 
 package net.imglib2;
 
+import net.imglib2.streamifiedview.RaView;
 import net.imglib2.view.Views;
 
 /**
@@ -179,6 +180,11 @@ public interface RandomAccessible< T > extends EuclideanSpace, Typed< T >
 	default T getAt( final Localizable position )
 	{
 		return randomAccess().setPositionAndGet( position );
+	}
+
+	default RaView< T, ? > view()
+	{
+		return RaView.wrap( this );
 	}
 
 	/*
