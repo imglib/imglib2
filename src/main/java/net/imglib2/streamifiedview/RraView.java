@@ -35,6 +35,12 @@ public interface RraView< T > extends RealRandomAccessible< T >
 	}
 
 	@Override
+	default RraView< T > view()
+	{
+		return this;
+	}
+
+	@Override
 	default T getType()
 	{
 		return delegate().getType();
