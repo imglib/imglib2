@@ -100,6 +100,23 @@ public interface RandomAccessibleInterval< T > extends RandomAccessible< T >, It
 		return new FlatIterationOrder( this );
 	}
 
+	/**
+	 * Provides a gateway for creating light-weight {@link net.imglib2.view.Views
+	 * views} into this {@code RandomAccessibleInterval}.
+	 * <p>
+	 * A view is itself a {@code RandomAccessibleInterval} or {@code
+	 * RandomAccessible} whose accessors transform coordinates and/or values
+	 * on-the-fly without copying the underlying data. Consecutive
+	 * transformations are concatenated and simplified to provide optimally
+	 * efficient accessors.
+	 * <p>
+	 * Note, that accessors provided by a view are read/write. Changing pixels
+	 * in a view changes the underlying image data. (Value converters are an
+	 * exception.)
+	 *
+	 * @return gateway for creating light-weight {@link net.imglib2.view.Views
+	 *         views} into this {@code RandomAccessibleInterval}.
+	 */
 	default RaiView< T > view()
 	{
 		return RaiView.wrap( this );
