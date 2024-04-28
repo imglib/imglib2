@@ -36,7 +36,6 @@ package net.imglib2.view;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Iterator;
 import java.util.List;
 
 import net.imglib2.EuclideanSpace;
@@ -85,7 +84,7 @@ import net.imglib2.view.composite.RealComposite;
 
 /**
  * Create light-weight views into {@link RandomAccessible RandomAccessibles}.
- *
+ * <p>
  * A view is itself a {@link RandomAccessible} or
  * {@link RandomAccessibleInterval} that provides {@link RandomAccess accessors}
  * that transform coordinates on-the-fly without copying the underlying data.
