@@ -136,10 +136,10 @@ public interface RandomAccessible< T > extends EuclideanSpace, Typed< T >
 	 * loops, or called many times!!! Use {@link #randomAccess()} when efficiency
 	 * is important.
 	 * <p>
-	 * This method is a short cut for {@code randomAccess().setPositionAndGet( position );}
+	 * This method is a short-cut for {@code randomAccess().setPositionAndGet( position );}
 	 *
 	 * @param position, length must be &ge; {@link #numDimensions()}
-	 * @return value of the the {@link RandomAccessible} at {@code position}.
+	 * @return value of the {@link RandomAccessible} at {@code position}.
 	 */
 	default T getAt( final long... position )
 	{
@@ -154,10 +154,10 @@ public interface RandomAccessible< T > extends EuclideanSpace, Typed< T >
 	 * loops, or called many times!!! Use {@link #randomAccess()} when efficiency
 	 * is important.
 	 * <p>
-	 * This method is a short cut for {@code randomAccess().setPositionAndGet( position );}
+	 * This method is a short-cut for {@code randomAccess().setPositionAndGet( position );}
 	 *
 	 * @param position, length must be &ge; {@link #numDimensions()}
-	 * @return value of the the {@link RandomAccessible} at {@code position}.
+	 * @return value of the {@link RandomAccessible} at {@code position}.
 	 */
 	default T getAt( final int... position )
 	{
@@ -172,16 +172,33 @@ public interface RandomAccessible< T > extends EuclideanSpace, Typed< T >
 	 * loops, or called many times!!! Use {@link #randomAccess()} when efficiency
 	 * is important.
 	 * <p>
-	 * This method is a short cut for {@code randomAccess().setPositionAndGet( position );}
+	 * This method is a short-cut for {@code randomAccess().setPositionAndGet( position );}
 	 *
 	 * @param position, {@link Localizable#numDimensions()} must be &ge; {@link #numDimensions()}
-	 * @return value of the the {@link RandomAccessible} at {@code position}.
+	 * @return value of the {@link RandomAccessible} at {@code position}.
 	 */
 	default T getAt( final Localizable position )
 	{
 		return randomAccess().setPositionAndGet( position );
 	}
 
+	/**
+	 * Provides a gateway for creating light-weight {@link net.imglib2.view.Views
+	 * views} into this {@code RandomAccessible}.
+	 * <p>
+	 * A view is itself a {@code RandomAccessible} or {@code
+	 * RandomAccessibleInterval} whose accessors transform coordinates and/or
+	 * values on-the-fly without copying the underlying data. Consecutive
+	 * transformations are concatenated and simplified to provide optimally
+	 * efficient accessors.
+	 * <p>
+	 * Note, that accessors provided by a view are read/write. Changing pixels
+	 * in a view changes the underlying image data. (Value converters are an
+	 * exception.)
+	 *
+	 * @return gateway for creating light-weight {@link net.imglib2.view.Views
+	 *         views} into this {@code RandomAccessible}.
+	 */
 	default RaView< T, ? > view()
 	{
 		return RaView.wrap( this );
