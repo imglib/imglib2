@@ -52,20 +52,6 @@ public interface RaiView< T > extends RaView< T, RaiView< T > >, RandomAccessibl
 		return RaView.wrap( Views.extendBorder( delegate() ) );
 	}
 
-	// TODO: here we have a problem. We would like to override this
-	//   from
-	//	    default < U > U apply( Function< ? super RaView< T >, U > function )
-	//   to
-	//	    default < U > U apply( Function< ? super RaiView< T >, U > function ).
-	//   That is: broaden the allowed range of the Function argument to also allow RaiView (a subclass of RaView)
-	//   Can recursive generics solve that?
-
-	// TODO: rename? transform()? apply()? map()?
-//	default < U > U apply( Function< ? super RaView< T >, U > function )
-//	{
-//		return function.apply( this );
-//	}
-
 	@Override
 	RandomAccessibleInterval< T > delegate();
 
