@@ -75,6 +75,12 @@ public interface RaiView< T > extends RaView< T, RaiView< T > >, RandomAccessibl
 	}
 
 	@Override
+	default RaiView< T > view()
+	{
+		return this;
+	}
+
+	@Override
 	default T getType()
 	{
 		return delegate().getType();

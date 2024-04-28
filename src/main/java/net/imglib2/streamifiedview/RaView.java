@@ -52,6 +52,12 @@ public interface RaView< T, V extends RaView< T, V > > extends RandomAccessible<
 	}
 
 	@Override
+	default RaView< T, ? > view()
+	{
+		return this;
+	}
+
+	@Override
 	default T getType()
 	{
 		return delegate().getType();
