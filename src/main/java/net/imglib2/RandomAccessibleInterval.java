@@ -36,7 +36,7 @@ package net.imglib2;
 
 import net.imglib2.util.Intervals;
 import net.imglib2.view.RandomAccessibleIntervalCursor;
-import net.imglib2.streamifiedview.RaiView;
+import net.imglib2.view.fluent.RaiView;
 
 /**
  * <p>

@@ -1,4 +1,4 @@
-package net.imglib2.streamifiedview;
+package net.imglib2.view.fluent;
 
 import net.imglib2.RandomAccessible;
 

@@ -1,6 +1,5 @@
-package net.imglib2.streamifiedview;
+package net.imglib2.view.fluent;
 
-import net.imglib2.Cursor;
 import net.imglib2.RandomAccessibleInterval;
 
 class RaiWrapper< T > implements RaiView< T >

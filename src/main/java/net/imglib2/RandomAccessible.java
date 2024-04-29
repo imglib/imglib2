@@ -34,7 +34,7 @@
 
 package net.imglib2;
 
-import net.imglib2.streamifiedview.RaView;
+import net.imglib2.view.fluent.RaView;
 import net.imglib2.view.Views;
 
 /**
