@@ -50,7 +50,7 @@ import net.imglib2.img.WrappedImg;
 import net.imglib2.img.array.ArrayImg;
 import net.imglib2.img.cell.AbstractCellImg;
 import net.imglib2.img.planar.PlanarImg;
-import net.imglib2.streamifiedview.RaView;
+import net.imglib2.view.fluent.RaView;
 import net.imglib2.transform.integer.BoundingBox;
 import net.imglib2.transform.integer.MixedTransform;
 import net.imglib2.type.NativeType;

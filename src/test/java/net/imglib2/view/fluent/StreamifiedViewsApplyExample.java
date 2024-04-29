@@ -1,4 +1,4 @@
-package net.imglib2.streamifiedview;
+package net.imglib2.view.fluent;
 
 import java.util.function.Function;
 
