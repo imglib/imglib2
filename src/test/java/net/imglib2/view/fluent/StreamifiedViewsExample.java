@@ -14,7 +14,7 @@ public class StreamifiedViewsExample
 		RandomAccessibleInterval< IntType > img = ArrayImgs.ints( 100, 100 );
 
 		RandomAccess< IntType > access = img.view()
-				.extendBorder()
+				.extend( Extensions.border() )
 				.interpolate( new NLinearInterpolatorFactory<>() )
 				.raster()
 				.interval( img )

@@ -2,12 +2,9 @@ package net.imglib2.view.fluent;
 
 import java.util.function.Function;
 
-import net.imglib2.RandomAccess;
-import net.imglib2.RandomAccessible;
 import net.imglib2.RealInterval;
 import net.imglib2.RealRandomAccess;
 import net.imglib2.RealRandomAccessible;
-import net.imglib2.view.RandomAccessibleOnRealRandomAccessible;
 import net.imglib2.view.Views;
 
 /**
@@ -86,7 +83,7 @@ public interface RraView< T > extends RealRandomAccessible< T >
 	// -- RandomAccessible ----------------------------------------------------
 
 	@Override
-	default RraView< T > view()
+	default RraView< T > realView()
 	{
 		return this;
 	}

@@ -16,12 +16,12 @@ public class StreamifiedViewsApplyExample
 		final Function< RandomAccessible< ? >, String > fnRa = ra -> "accepts RandomAccessible";
 		final Function< RandomAccessibleInterval< ? >, String > fnRai = rai -> "accepts RandomAccessibleInterval";
 
-		img.view().permute( 0, 1 ).extendBorder().apply( fnRa );
+		img.view().permute( 0, 1 ).extend( Extensions.border() ).apply( fnRa );
 		img.view().permute( 0, 1 ).apply( fnRa );
-//		img.view().permute( 0, 1 ).extendBorder().apply( fnRai ); // doesn't compile
+//		img.view().permute( 0, 1 ).extend( Extensions.border() ).apply( fnRai ); // doesn't compile
 		img.view().permute( 0, 1 ).apply( fnRai );
 
-		img.view().permute( 0, 1 ).extendBorder().apply( v -> {
+		img.view().permute( 0, 1 ).extend( Extensions.border() ).apply( v -> {
 			RandomAccessible< ? > ra = v.delegate();
 			return "lambda";
 		} );
