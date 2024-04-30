@@ -139,7 +139,7 @@ public interface RealRandomAccessible< T > extends EuclideanSpace, Typed< T >
 	 * @return gateway for creating light-weight views into this {@code
 	 *         RealRandomAccessible}.
 	 */
-	default RraView< T > view()
+	default RraView< T > realView()
 	{
 		return RraView.wrap( this );
 	}

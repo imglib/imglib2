@@ -4,7 +4,9 @@ import net.imglib2.Cursor;
 import net.imglib2.FlatIterationOrder;
 import net.imglib2.Interval;
 import net.imglib2.RandomAccess;
+import net.imglib2.RandomAccessible;
 import net.imglib2.RandomAccessibleInterval;
+import net.imglib2.outofbounds.OutOfBoundsFactory;
 import net.imglib2.view.IterableRandomAccessibleInterval;
 import net.imglib2.view.Views;
 
@@ -104,42 +106,190 @@ public interface RaiView< T > extends RaView< T, RaiView< T > >, RandomAccessibl
 		return wrap( Views.addDimension( delegate(), minOfNewDim, maxOfNewDim ) );
 	}
 
-
-
-	// done until here
-	//////////////////
-
-
-
-	default RaiView< T > expandValue( final T value, long... border )
-	{
-		return wrap( Views.expandValue( delegate(), value, border ) );
-	}
-
-	default RaiView< T > permute( final int from, final int to )
-	{
-		return wrap( Views.permute( delegate(), from, to ) );
-	}
-
+	/**
+	 * Create a view that is translated by the given {@code translation} vector.
+	 * <p>
+	 * The pixel at coordinates <em>x</em> in this {@code RandomAccessible} has
+	 * coordinates <em>(x + translation)</em> in the resulting view.
+	 *
+	 * @param translation
+	 * 		translation vector
+	 *
+	 * @return a translated view
+	 */
+	@Override
 	default RaiView< T > translate( long... translation )
 	{
 		return wrap( Views.translate( delegate(), translation ) );
 	}
 
-	default RaiView< T >  zeroMin()
+	/**
+	 * Create a view that is translated by the inverse of the given {@code
+	 * translation} vector.
+	 * <p>
+	 * The pixel at coordinates <em>x</em> in this {@code RandomAccessible} has
+	 * coordinates <em>(x - translation)</em> in the resulting view.
+	 *
+	 * @param translation
+	 * 		translation vector
+	 *
+	 * @return an inverse-translated view
+	 */
+	@Override
+	default RaiView< T > translateInverse( long... translation )
+	{
+		return wrap( Views.translateInverse( delegate(), translation ) );
+	}
+
+	/**
+	 * Create a translated view such that the min (upper left) corner is at the
+	 * origin.
+	 *
+	 * @return a view that is translated to the origin
+	 */
+	default RaiView< T > zeroMin()
 	{
 		return wrap( Views.zeroMin( delegate() ) );
 	}
 
+	/**
+	 * Sample only every <em>step<sub>d</sub></em><sup>th</sup> value of a
+	 * source {@link RandomAccessible}. This is effectively an integer scaling
+	 * transformation.
+	 * <p>
+	 * The provided {@code steps} vector is expanded or truncated to the
+	 * dimensionality of this {@code RandomAccessible}. When expanding ({@code
+	 * steps.length < this.numDimensions()}), the last element is repeated.
+	 *
+	 * @param steps
+	 *            the subsampling step sizes
+	 *
+	 * @return a subsampled view
+	 */
+	@Override
+	default RaiView< T > subsample( final long... steps )
+	{
+		return wrap( Views.subsample( delegate(), ViewUtils.getSubsampleSteps( steps, numDimensions() ) ) );
+	}
+
+	/**
+	 * Create a view rotated 90 degrees, mapping {@code fromAxis} to {@code
+	 * toAxis}.
+	 * <p>
+	 * For example, {@code fromAxis=0, toAxis=1} means that the {@code X} axis
+	 * of this {@code RandomAccessibleInterval} is mapped to the {@code Y} axis
+	 * of the rotated view. Correspondingly, the {@code Y} axis is mapped to
+	 * {@code -X}. All other axes remain unchanged. This corresponds to a 90
+	 * degree clock-wise rotation of this {@code RandomAccessibleInterval} in
+	 * the {@code XY} plane.
+	 * <p>
+	 * Note that if this {@code RandomAccessibleInterval} has its min coordinate
+	 * at the origin, the min coordinate of the rotated view will not be at the
+	 * origin. To align the min coordinate of the rotated view with the origin,
+	 * use {@link #zeroMin()}.
+	 *
+	 * @param fromAxis
+	 * 		axis index
+	 * @param toAxis
+	 * 		axis index that {@code fromAxis} should be rotated to
+	 *
+	 * @return a view rotated 90 degrees
+	 */
+	@Override
 	default RaiView< T > rotate( int fromAxis, int toAxis )
 	{
 		return wrap( Views.rotate( delegate(), fromAxis, toAxis ) );
 	}
 
-	default RaView< T, ? > extendBorder()
+	/**
+	 * Create a view with permuted axes where the specified {@code fromAxis} to
+	 * {@code toAxis} are swapped (while all other axes remain unchanged).
+	 *
+	 * @param fromAxis
+	 * 		axis index
+	 * @param toAxis
+	 * 		axis index that {@code fromAxis} should be swapped with
+	 *
+	 * @return a view with permuted axes
+	 */
+	@Override
+	default RaiView< T > permute( int fromAxis, int toAxis )
 	{
-		return RaView.wrap( Views.extendBorder( delegate() ) );
+		return wrap( Views.permute( delegate(), fromAxis, toAxis ) );
 	}
+
+	/**
+	 * Create view with permuted axes where the specified {@code fromAxis} is
+	 * moved to index {@code toAxis} while the order of other axes is preserved.
+	 * <p>
+	 * For example, if {@code fromAxis=2, toAxis=4} and the axis order of this
+	 * {@code RandomAccessibleInterval} is {@code XYCZT}, the resulting view
+	 * will have the axis order {@code XYZTC}.
+	 *
+	 * @param fromAxis
+	 * 		axis index
+	 * @param toAxis
+	 * 		axis index that {@code fromAxis} should be moved to
+	 *
+	 * @return a view with permuted axes
+	 */
+	@Override
+	default RaiView< T > moveAxis( int fromAxis, int toAxis )
+	{
+		return wrap( Views.moveAxis( delegate(), fromAxis, toAxis ) );
+	}
+
+	/**
+	 * Invert the {@code axis} with the given index.
+	 * <p>
+	 * For example, if {@code axis=1}, then coordinate {@code (x,y)} in the
+	 * resulting view corresponds to coordinate {@code (x,-y)} in this {@code
+	 * RandomAccessibleInterval}.
+	 * <p>
+	 * Note that the interval boundaries of the view are modified accordingly.
+	 * If this {@code RandomAccessibleInterval} is a {@code 10x10} image with
+	 * interval {@code (0,0)..(9,9)}, the interval of the view is {@code
+	 * (0,-9)..(9,0)}
+	 *
+	 * @param axis
+	 * 		the axis to invert
+	 *
+	 * @return a view with {@code axis} inverted
+	 */
+	@Override
+	default RaiView< T > invertAxis( int axis )
+	{
+		return wrap( Views.invertAxis( delegate(), axis ) );
+	}
+
+	/**
+	 * TODO
+	 * TODO
+	 * TODO
+	 * TODO
+	 * TODO
+	 */
+	default RaView< T, ? > extend( OutOfBoundsFactory< T, ? super RaiView< T > > factory )
+	{
+		return RaView.wrap( Views.extend( this, factory ) );
+	}
+
+	/**
+	 * TODO
+	 * TODO
+	 * TODO
+	 * TODO
+	 * TODO
+	 */
+	default RaView< T, ? > expand( OutOfBoundsFactory< T, ? super RaiView< T > > factory, long... border )
+	{
+		return RaView.wrap( Views.extend( this, factory ) );
+	}
+
+
+	// done until here
+	//////////////////
+
 
 
 
