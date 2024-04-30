@@ -6,6 +6,7 @@ import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.img.array.ArrayImgs;
 import net.imglib2.interpolation.randomaccess.NLinearInterpolatorFactory;
 import net.imglib2.type.numeric.integer.IntType;
+import net.imglib2.view.fluent.RaiView.Extension;
 
 public class StreamifiedViewsExample
 {
@@ -14,7 +15,7 @@ public class StreamifiedViewsExample
 		RandomAccessibleInterval< IntType > img = ArrayImgs.ints( 100, 100 );
 
 		RandomAccess< IntType > access = img.view()
-				.extend( Extensions.border() )
+				.extend( Extension.border() )
 				.interpolate( new NLinearInterpolatorFactory<>() )
 				.raster()
 				.interval( img )

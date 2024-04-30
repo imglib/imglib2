@@ -6,7 +6,15 @@ import net.imglib2.Interval;
 import net.imglib2.RandomAccess;
 import net.imglib2.RandomAccessible;
 import net.imglib2.RandomAccessibleInterval;
+import net.imglib2.outofbounds.OutOfBoundsBorderFactory;
+import net.imglib2.outofbounds.OutOfBoundsConstantValueFactory;
 import net.imglib2.outofbounds.OutOfBoundsFactory;
+import net.imglib2.outofbounds.OutOfBoundsMirrorFactory;
+import net.imglib2.outofbounds.OutOfBoundsPeriodicFactory;
+import net.imglib2.outofbounds.OutOfBoundsZeroFactory;
+import net.imglib2.type.Type;
+import net.imglib2.type.numeric.integer.UnsignedByteType;
+import net.imglib2.type.operators.SetZero;
 import net.imglib2.view.IterableRandomAccessibleInterval;
 import net.imglib2.view.Views;
 
@@ -269,9 +277,44 @@ public interface RaiView< T > extends RaView< T, RaiView< T > >, RandomAccessibl
 	 * TODO
 	 * TODO
 	 */
-	default RaView< T, ? > extend( OutOfBoundsFactory< T, ? super RaiView< T > > factory )
+	class Extension< T >
 	{
-		return RaView.wrap( Views.extend( this, factory ) );
+		final OutOfBoundsFactory< T, RaiView< T > > factory;
+
+		private Extension( OutOfBoundsFactory< T, RaiView< T > > factory )
+		{
+			this.factory = factory;
+		}
+
+		public static < T > Extension< T > border()
+		{
+			return new Extension<>(new OutOfBoundsBorderFactory<>() );
+		}
+
+		public static < T extends Type< T > & SetZero > Extension< T > zero()
+		{
+			return new Extension<>( new OutOfBoundsZeroFactory< T, RaiView< T > >() );
+		}
+
+		public static < T > Extension< T > value( T value )
+		{
+			return new Extension<>(new OutOfBoundsConstantValueFactory<>( value ) );
+		}
+
+		public static < T > Extension< T > mirrorSingle()
+		{
+			return new Extension<>(new OutOfBoundsMirrorFactory<>( OutOfBoundsMirrorFactory.Boundary.SINGLE ) );
+		}
+
+		public static < T > Extension< T > mirrorDouble()
+		{
+			return new Extension<>(new OutOfBoundsMirrorFactory<>( OutOfBoundsMirrorFactory.Boundary.DOUBLE ) );
+		}
+
+		public static < T > Extension< T > periodic()
+		{
+			return new Extension<>(new OutOfBoundsPeriodicFactory<>() );
+		}
 	}
 
 	/**
@@ -281,9 +324,21 @@ public interface RaiView< T > extends RaView< T, RaiView< T > >, RandomAccessibl
 	 * TODO
 	 * TODO
 	 */
-	default RaView< T, ? > expand( OutOfBoundsFactory< T, ? super RaiView< T > > factory, long... border )
+	default RaView< T, ? > extend( Extension< T > extension )
 	{
-		return RaView.wrap( Views.extend( this, factory ) );
+		return RaView.wrap( Views.extend( this, extension.factory ) );
+	}
+
+	/**
+	 * TODO
+	 * TODO
+	 * TODO
+	 * TODO
+	 * TODO
+	 */
+	default RaView< T, ? > expand( Extension< T > extension, long... border )
+	{
+		return RaView.wrap( Views.expand( this, extension.factory, border ) );
 	}
 
 
