@@ -1,10 +1,13 @@
 package net.imglib2.view.fluent;
 
 import java.util.function.Function;
+import java.util.function.Supplier;
 
 import net.imglib2.RealInterval;
 import net.imglib2.RealRandomAccess;
 import net.imglib2.RealRandomAccessible;
+import net.imglib2.converter.Converter;
+import net.imglib2.converter.Converters;
 import net.imglib2.view.Views;
 
 /**
@@ -57,6 +60,57 @@ public interface RraView< T > extends RealRandomAccessible< T >
 	default RaView< T, ? > raster()
 	{
 		return RaView.wrap( Views.raster( delegate() ) );
+	}
+
+	/**
+	 * Create a view of this {@code RealRandomAccessible} converted to pixel
+	 * type {@code U}.
+	 * <p>
+	 * Pixel values {@code T} are converted to {@code U} using the given {@code
+	 * converter}. A {@code Converter} is equivalent to a {@code BiConsumer<T,
+	 * U>} that reads a value from its first argument and writes a converted
+	 * value to its second argument.
+	 *
+	 * @param converter
+	 * 		converts pixel values from {@code T} to {@code U}
+	 * @param targetSupplier
+	 * 		creates instances of {@code U} for storing converted values
+	 * @param <U>
+	 * 		target pixel type
+	 *
+	 * @return a converted view
+	 */
+	default < U > RraView< U > convert(
+			final Converter< ? super T, ? super U > converter,
+			final Supplier< U > targetSupplier )
+	{
+		return wrap( Converters.convert2( delegate(), converter, targetSupplier ) );
+	}
+
+	/**
+	 * Create a view of this {@code RealRandomAccessible} converted to pixel
+	 * type {@code U}.
+	 * <p>
+	 * Pixel values {@code T} are converted to {@code U} using {@code
+	 * Converter}s created by the given {@code converterSupplier}. A {@code
+	 * Converter} is equivalent to a {@code BiConsumer<T, U>} that reads a value
+	 * from its first argument and writes a converted value to its second
+	 * argument.
+	 *
+	 * @param converterSupplier
+	 * 		converts pixel values from {@code T} to {@code U}
+	 * @param targetSupplier
+	 * 		creates instances of {@code U} for storing converted values
+	 * @param <U>
+	 * 		target pixel type
+	 *
+	 * @return a converted view
+	 */
+	default < U > RraView< U > convert(
+			final Supplier< Converter< ? super T, ? super U > > converterSupplier,
+			final Supplier< U > targetSupplier )
+	{
+		return wrap( Converters.convert2( delegate(), converterSupplier, targetSupplier ) );
 	}
 
 	// done until here

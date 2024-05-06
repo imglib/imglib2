@@ -156,7 +156,7 @@ public interface RaView< T, V extends RaView< T, V > > extends RandomAccessible<
 	 * steps.length < this.numDimensions()}), the last element is repeated.
 	 *
 	 * @param steps
-	 *            the subsampling step sizes
+	 * 		the subsampling step sizes
 	 *
 	 * @return a subsampled view
 	 */
@@ -205,7 +205,7 @@ public interface RaView< T, V extends RaView< T, V > > extends RandomAccessible<
 	}
 
 	/**
-	 * Create view with permuted axes where the specified {@code fromAxis} is
+	 * Create a view with permuted axes where the specified {@code fromAxis} is
 	 * moved to index {@code toAxis} while the order of other axes is preserved.
 	 * <p>
 	 * For example, if {@code fromAxis=2, toAxis=4} and the axis order of this
@@ -302,7 +302,7 @@ public interface RaView< T, V extends RaView< T, V > > extends RandomAccessible<
 	}
 
 	/**
-	 * Returns a {@link RealRandomAccessible} view of this {@code RandomAccessible}
+	 * Create a {@link RealRandomAccessible} view of this {@code RandomAccessible}
 	 * using interpolation with the given {@code interpolation} method.
 	 * <p>
 	 * {@link Interpolation} can be created by one of its static factory
@@ -317,7 +317,7 @@ public interface RaView< T, V extends RaView< T, V > > extends RandomAccessible<
 	 * </pre>
 	 *
 	 * @param interpolation
-	 *            the {@link Interpolation} method
+	 * 		the {@link Interpolation} method
 	 *
 	 * @return an interpolated view
 	 */
@@ -326,22 +326,62 @@ public interface RaView< T, V extends RaView< T, V > > extends RandomAccessible<
 		return RraView.wrap( Views.interpolate( delegate(), interpolation.factory ) );
 	}
 
-
-
-	// done until here
-	//////////////////
-
-
-
-
-
-
+	/**
+	 * Create a view of this {@code RandomAccessible} converted to pixel type
+	 * {@code U}.
+	 * <p>
+	 * Pixel values {@code T} are converted to {@code U} using the given {@code
+	 * converter}. A {@code Converter} is equivalent to a {@code BiConsumer<T,
+	 * U>} that reads a value from its first argument and writes a converted
+	 * value to its second argument.
+	 *
+	 * @param converter
+	 * 		converts pixel values from {@code T} to {@code U}
+	 * @param targetSupplier
+	 * 		creates instances of {@code U} for storing converted values
+	 * @param <U>
+	 * 		target pixel type
+	 *
+	 * @return a converted view
+	 */
 	default < U > RaView< U, ? > convert(
 			final Converter< ? super T, ? super U > converter,
 			final Supplier< U > targetSupplier )
 	{
 		return wrap( Converters.convert2( delegate(), converter, targetSupplier ) );
 	}
+
+	/**
+	 * Create a view of this {@code RandomAccessible} converted to pixel type
+	 * {@code U}.
+	 * <p>
+	 * Pixel values {@code T} are converted to {@code U} using {@code
+	 * Converter}s created by the given {@code converterSupplier}. A {@code
+	 * Converter} is equivalent to a {@code BiConsumer<T, U>} that reads a value
+	 * from its first argument and writes a converted value to its second
+	 * argument.
+	 *
+	 * @param converterSupplier
+	 * 		converts pixel values from {@code T} to {@code U}
+	 * @param targetSupplier
+	 * 		creates instances of {@code U} for storing converted values
+	 * @param <U>
+	 * 		target pixel type
+	 *
+	 * @return a converted view
+	 */
+	default < U > RaView< U, ? > convert(
+			final Supplier< Converter< ? super T, ? super U > > converterSupplier,
+			final Supplier< U > targetSupplier )
+	{
+		return wrap( Converters.convert2( delegate(), converterSupplier, targetSupplier ) );
+	}
+
+
+	// done until here
+	//////////////////
+
+
 
 	default < U > U apply( Function< ? super V, U > function )
 	{
