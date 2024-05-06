@@ -1,11 +1,15 @@
 package net.imglib2.view.fluent;
 
+import java.util.function.Supplier;
+
 import net.imglib2.Cursor;
 import net.imglib2.FlatIterationOrder;
 import net.imglib2.Interval;
 import net.imglib2.RandomAccess;
 import net.imglib2.RandomAccessible;
 import net.imglib2.RandomAccessibleInterval;
+import net.imglib2.converter.Converter;
+import net.imglib2.converter.Converters;
 import net.imglib2.outofbounds.OutOfBoundsBorderFactory;
 import net.imglib2.outofbounds.OutOfBoundsConstantValueFactory;
 import net.imglib2.outofbounds.OutOfBoundsFactory;
@@ -420,6 +424,59 @@ public interface RaiView< T > extends RaView< T, RaiView< T > >, RandomAccessibl
 	default RaiView< T > expand( Extension< T > extension, long... border )
 	{
 		return RaiView.wrap( Views.expand( this, extension.factory, Util.expandArray( border, numDimensions() ) ) );
+	}
+
+	/**
+	 * Create a view of this {@code RandomAccessibleInterval} converted to pixel
+	 * type {@code U}.
+	 * <p>
+	 * Pixel values {@code T} are converted to {@code U} using the given {@code
+	 * converter}. A {@code Converter} is equivalent to a {@code BiConsumer<T,
+	 * U>} that reads a value from its first argument and writes a converted
+	 * value to its second argument.
+	 *
+	 * @param converter
+	 * 		converts pixel values from {@code T} to {@code U}
+	 * @param targetSupplier
+	 * 		creates instances of {@code U} for storing converted values
+	 * @param <U>
+	 * 		target pixel type
+	 *
+	 * @return a converted view
+	 */
+	@Override
+	default < U > RaiView< U > convert(
+			final Converter< ? super T, ? super U > converter,
+			final Supplier< U > targetSupplier )
+	{
+		return wrap( Converters.convert2( delegate(), converter, targetSupplier ) );
+	}
+
+	/**
+	 * Create a view of this {@code RandomAccessibleInterval} converted to pixel
+	 * type {@code U}.
+	 * <p>
+	 * Pixel values {@code T} are converted to {@code U} using {@code
+	 * Converter}s created by the given {@code converterSupplier}. A {@code
+	 * Converter} is equivalent to a {@code BiConsumer<T, U>} that reads a value
+	 * from its first argument and writes a converted value to its second
+	 * argument.
+	 *
+	 * @param converterSupplier
+	 * 		converts pixel values from {@code T} to {@code U}
+	 * @param targetSupplier
+	 * 		creates instances of {@code U} for storing converted values
+	 * @param <U>
+	 * 		target pixel type
+	 *
+	 * @return a converted view
+	 */
+	@Override
+	default < U > RaiView< U > convert(
+			final Supplier< Converter< ? super T, ? super U > > converterSupplier,
+			final Supplier< U > targetSupplier )
+	{
+		return wrap( Converters.convert2( delegate(), converterSupplier, targetSupplier ) );
 	}
 
 	// done until here
