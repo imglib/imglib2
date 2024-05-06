@@ -52,7 +52,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * A {@link NativeImg} that stores data in an list of primitive arrays, one per
+ * A {@link NativeImg} that stores data in a list of primitive arrays, one per
  * image plane.
  * <p>
  * The {@link PlanarImg} provides access to the underlying data arrays via the
