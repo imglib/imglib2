@@ -85,15 +85,10 @@ public class CellImgFactory< T extends NativeType< T > > extends NativeImgFactor
 	 */
 	public static int[] getCellDimensions( final int[] defaultCellDimensions, final int n, final Fraction entitiesPerPixel ) throws IllegalArgumentException
 	{
-		final int[] cellDimensions = new int[ n ];
-		final int max = defaultCellDimensions.length - 1;
-		for ( int i = 0; i < n; i++ )
-			cellDimensions[ i ] = defaultCellDimensions[ ( i < max ) ? i : max ];
-
+		final int[] cellDimensions = Util.expandArray( defaultCellDimensions, n );
 		final long numEntities = entitiesPerPixel.mulCeil( Intervals.numElements( cellDimensions ) );
 		if ( numEntities > Integer.MAX_VALUE )
 			throw new IllegalArgumentException( "Number of entities in cell too large. Use smaller cell size." );
-
 		return cellDimensions;
 	}
 
