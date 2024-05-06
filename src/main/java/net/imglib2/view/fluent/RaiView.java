@@ -4,8 +4,6 @@ import java.util.function.Supplier;
 
 import net.imglib2.Cursor;
 import net.imglib2.FlatIterationOrder;
-import net.imglib2.Interval;
-import net.imglib2.RandomAccess;
 import net.imglib2.RandomAccessible;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.converter.Converter;
@@ -496,12 +494,6 @@ public interface RaiView< T > extends RaView< T, RaiView< T > >, RandomAccessibl
 	}
 
 	@Override
-	default int numDimensions()
-	{
-		return delegate().numDimensions();
-	}
-
-	@Override
 	default long min( final int d )
 	{
 		return delegate().min( d );
@@ -517,18 +509,6 @@ public interface RaiView< T > extends RaView< T, RaiView< T > >, RandomAccessibl
 	default long dimension( final int d )
 	{
 		return delegate().dimension( d );
-	}
-
-	@Override
-	default RandomAccess< T > randomAccess()
-	{
-		return delegate().randomAccess();
-	}
-
-	@Override
-	default RandomAccess< T > randomAccess( final Interval interval )
-	{
-		return delegate().randomAccess(interval);
 	}
 
 	@Override
