@@ -177,7 +177,7 @@ public interface RaiView< T > extends RaView< T, RaiView< T > >, RandomAccessibl
 	@Override
 	default RaiView< T > subsample( final long... steps )
 	{
-		return wrap( Views.subsample( delegate(), ViewUtils.getSubsampleSteps( steps, numDimensions() ) ) );
+		return wrap( Views.subsample( delegate(), ViewUtils.expand( steps, numDimensions() ) ) );
 	}
 
 	/**
@@ -336,11 +336,10 @@ public interface RaiView< T > extends RaView< T, RaiView< T > >, RandomAccessibl
 	 * TODO
 	 * TODO
 	 */
-	default RaView< T, ? > expand( Extension< T > extension, long... border )
+	default RaiView< T > expand( Extension< T > extension, long... border )
 	{
-		return RaView.wrap( Views.expand( this, extension.factory, border ) );
+		return RaiView.wrap( Views.expand( this, extension.factory, ViewUtils.expand( border, numDimensions() ) ) );
 	}
-
 
 	// done until here
 	//////////////////
