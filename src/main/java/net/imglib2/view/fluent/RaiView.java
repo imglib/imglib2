@@ -13,7 +13,6 @@ import net.imglib2.outofbounds.OutOfBoundsMirrorFactory;
 import net.imglib2.outofbounds.OutOfBoundsPeriodicFactory;
 import net.imglib2.outofbounds.OutOfBoundsZeroFactory;
 import net.imglib2.type.Type;
-import net.imglib2.type.numeric.integer.UnsignedByteType;
 import net.imglib2.type.operators.SetZero;
 import net.imglib2.view.IterableRandomAccessibleInterval;
 import net.imglib2.view.Views;
@@ -271,11 +270,21 @@ public interface RaiView< T > extends RaView< T, RaiView< T > >, RandomAccessibl
 	}
 
 	/**
-	 * TODO
-	 * TODO
-	 * TODO
-	 * TODO
-	 * TODO
+	 * Extension method to use with {@link #extend} and {@link #expand}. {@code
+	 * Extension} instances can be created using static methods {@link #border},
+	 * {@link #value}, {@link #mirrorSingle}, etc.
+	 * <p>
+	 * Usage example:
+	 * <pre>
+	 * {@code
+	 * RandomAccessible<IntType> extended =
+	 *                img.view()
+	 *                   .extend(Extension.border());
+	 * }
+	 * </pre>
+	 *
+	 * @param <T>
+	 *     pixel type ot the {@code RandomAccessible} to be extended
 	 */
 	class Extension< T >
 	{
@@ -286,31 +295,65 @@ public interface RaiView< T > extends RaView< T, RaiView< T > >, RandomAccessibl
 			this.factory = factory;
 		}
 
+		/**
+		 * Create {@code Extension} using {@link OutOfBoundsBorderFactory}.
+		 * <p>
+		 * Out-of-bounds pixels are created by repeating border pixels.
+		 */
 		public static < T > Extension< T > border()
 		{
 			return new Extension<>(new OutOfBoundsBorderFactory<>() );
 		}
 
+		/**
+		 * Create {@code Extension} using {@link OutOfBoundsZeroFactory}.
+		 * <p>
+		 * All out-of-bounds pixels have value zero.
+		 */
 		public static < T extends Type< T > & SetZero > Extension< T > zero()
 		{
 			return new Extension<>( new OutOfBoundsZeroFactory< T, RaiView< T > >() );
 		}
 
+		/**
+		 * Create {@code Extension} using {@link OutOfBoundsConstantValueFactory}.
+		 * <p>
+		 * All out-of-bounds pixels have the provided {@code value}.
+		 */
 		public static < T > Extension< T > value( T value )
 		{
 			return new Extension<>(new OutOfBoundsConstantValueFactory<>( value ) );
 		}
 
+		/**
+		 * Create {@code Extension} using {@link OutOfBoundsMirrorFactory}.
+		 * <p>
+		 * Out-of-bounds pixels are created by mirroring, where boundary pixels
+		 * are not repeated. Note that this requires that all dimensions of the
+		 * source must be &gt; 1.
+		 */
 		public static < T > Extension< T > mirrorSingle()
 		{
 			return new Extension<>(new OutOfBoundsMirrorFactory<>( OutOfBoundsMirrorFactory.Boundary.SINGLE ) );
 		}
 
+		/**
+		 * Create {@code Extension} using {@link OutOfBoundsMirrorFactory}.
+		 * <p>
+		 * Out-of-bounds pixels are created by mirroring, where boundary pixels
+		 * are repeated.
+		 */
 		public static < T > Extension< T > mirrorDouble()
 		{
 			return new Extension<>(new OutOfBoundsMirrorFactory<>( OutOfBoundsMirrorFactory.Boundary.DOUBLE ) );
 		}
 
+		/**
+		 * Create {@code Extension} using {@link OutOfBoundsPeriodicFactory}.
+		 * <p>
+		 * Out-of-bounds pixels are created by periodically repeating the source
+		 * image.
+		 */
 		public static < T > Extension< T > periodic()
 		{
 			return new Extension<>(new OutOfBoundsPeriodicFactory<>() );
@@ -318,11 +361,24 @@ public interface RaiView< T > extends RaView< T, RaiView< T > >, RandomAccessibl
 	}
 
 	/**
-	 * TODO
-	 * TODO
-	 * TODO
-	 * TODO
-	 * TODO
+	 * Create an unbounded {@link RandomAccessible} view of this {@code
+	 * RandomAccessibleInterval} using out-of-bounds extension with the given
+	 * {@code extension} method.
+	 * <p>
+	 * {@link Extension} can be created by one of its static factory methods.
+	 * For example
+	 * <pre>
+	 * {@code
+	 * RandomAccessible<IntType> extended =
+	 *                img.view()
+	 *                   .extend(Extension.border());
+	 * }
+	 * </pre>
+	 *
+	 * @param extension
+	 *            the out-of-bounds strategy to use
+	 *
+	 * @return an extended (unbounded) view
 	 */
 	default RaView< T, ? > extend( Extension< T > extension )
 	{
@@ -330,11 +386,35 @@ public interface RaiView< T > extends RaView< T, RaiView< T > >, RandomAccessibl
 	}
 
 	/**
-	 * TODO
-	 * TODO
-	 * TODO
-	 * TODO
-	 * TODO
+	 * Create an expanded view of this {@code RandomAccessibleInterval} that
+	 * using out-of-bounds extension with the given {@code extension} method.
+	 * <p>
+	 * The provided {@code border} vector is expanded or truncated to the
+	 * dimensionality of this {@code RandomAccessibleInterval}. When expanding
+	 * ({@code border.length < this.numDimensions()}), the last element is
+	 * repeated.
+	 * <p>
+	 * For example
+	 * <pre>
+	 * {@code
+	 * // expand by 10 pixels in every dimension
+	 * RandomAccessibleInterval<IntType> expanded =
+	 *                img.view()
+	 *                   .expand(Extension.border(), 5);
+	 *
+     * // expand by 5 pixels in X and Y, don't expand higher dimensions
+	 * RandomAccessibleInterval<IntType> expanded =
+	 *                img.view()
+	 *                   .expand(Extension.border(), 5, 5, 0);
+	 * }
+	 * </pre>
+	 *
+	 * @param extension
+	 *            the out-of-bounds strategy to use
+	 * @param border
+	 *            the border to add to the image
+	 *
+	 * @return an expanded view
 	 */
 	default RaiView< T > expand( Extension< T > extension, long... border )
 	{
