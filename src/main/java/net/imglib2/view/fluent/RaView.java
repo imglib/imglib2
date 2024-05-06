@@ -169,7 +169,7 @@ public interface RaView< T, V extends RaView< T, V > > extends RandomAccessible<
 	 */
 	default RaView< T, ? > subsample( final long... steps )
 	{
-		return wrap( Views.subsample( delegate(), ViewUtils.getSubsampleSteps( steps, numDimensions() ) ) );
+		return wrap( Views.subsample( delegate(), ViewUtils.expand( steps, numDimensions() ) ) );
 	}
 
 	/**

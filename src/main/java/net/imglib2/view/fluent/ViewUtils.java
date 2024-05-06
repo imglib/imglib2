@@ -5,16 +5,16 @@ import java.util.Arrays;
 class ViewUtils
 {
 	/**
-	 * Expand or truncate the provided array of {@code steps}  to length {@code
-	 * n}. If {@code steps.length < n}, the last step is repeated. That is, the
-	 * remaining elements are filled with {@code steps[steps.length - 1]}.
+	 * Expand or truncate the provided array of {@code values}  to length {@code
+	 * n}. If {@code values.length < n}, the last value is repeated. That is, the
+	 * remaining elements are filled with {@code values[values.length - 1]}.
 	 */
-	static long[] getSubsampleSteps( final long[] steps, final int n )
+	static long[] expand( final long[] values, final int n )
 	{
-		final long[] fullSteps = ( steps.length == n ) ? steps : Arrays.copyOf( steps, n );
-		if ( steps.length < n )
-			Arrays.fill( fullSteps, steps.length, n, steps[ steps.length - 1 ] );
-		return fullSteps;
+		final long[] expandedValues = ( values.length == n ) ? values : Arrays.copyOf( values, n );
+		if ( values.length < n )
+			Arrays.fill( expandedValues, values.length, n, values[ values.length - 1 ] );
+		return expandedValues;
 	}
 
 
