@@ -27,11 +27,10 @@ import net.imglib2.view.Views;
  * This provides a fluent API for conveniently chaining {@code Views} methods.
  * For example
  * <pre>
- * {@code RandomAccessibleInterval< IntType > view =
+ * {@code RealRandomAccessible< IntType > view =
  *                img.view()
- *                   .permute( 0, 1 )
- *                   .extendBorder()
- *                   .interval( interval );
+ *                   .extend( Extension.border() )
+ *                   .interpolate( Interpolation.nLinear() );
  * }
  * </pre>
  *

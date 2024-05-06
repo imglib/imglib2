@@ -38,11 +38,11 @@ import net.imglib2.view.Views;
  * This provides a fluent API for conveniently chaining {@code Views} methods.
  * For example
  * <pre>
- * {@code RandomAccessibleInterval< IntType > view =
+ * {@code RandomAccessible< IntType > view =
  *                img.view()
+ *                   .extend( Extension.mirrorSingle() )
  *                   .permute( 0, 1 )
- *                   .extendBorder()
- *                   .interval( interval );
+ *                   .translate( 10, 10 );
  * }
  * </pre>
  *
@@ -309,7 +309,7 @@ public interface RaView< T, V extends RaView< T, V > > extends RandomAccessible<
 	 * methods. For example
 	 * <pre>
 	 * {@code
-	 * RealRandomAccessible<IntType> interpolated =
+	 * RealRandomAccessible< IntType > interpolated =
 	 *                img.view()
 	 *                   .extend( Extension.zero() )
 	 *                   .interpolate( Interpolation.lanczos() );
