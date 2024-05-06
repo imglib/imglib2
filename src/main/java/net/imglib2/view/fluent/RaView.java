@@ -18,6 +18,7 @@ import net.imglib2.interpolation.randomaccess.NearestNeighborInterpolatorFactory
 import net.imglib2.type.numeric.NumericType;
 import net.imglib2.type.numeric.RealType;
 import net.imglib2.util.Intervals;
+import net.imglib2.util.Util;
 import net.imglib2.view.Views;
 
 /**
@@ -161,7 +162,7 @@ public interface RaView< T, V extends RaView< T, V > > extends RandomAccessible<
 	 */
 	default RaView< T, ? > subsample( final long... steps )
 	{
-		return wrap( Views.subsample( delegate(), ViewUtils.expand( steps, numDimensions() ) ) );
+		return wrap( Views.subsample( delegate(), Util.expandArray( steps, numDimensions() ) ) );
 	}
 
 	/**

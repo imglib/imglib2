@@ -14,6 +14,7 @@ import net.imglib2.outofbounds.OutOfBoundsPeriodicFactory;
 import net.imglib2.outofbounds.OutOfBoundsZeroFactory;
 import net.imglib2.type.Type;
 import net.imglib2.type.operators.SetZero;
+import net.imglib2.util.Util;
 import net.imglib2.view.IterableRandomAccessibleInterval;
 import net.imglib2.view.Views;
 
@@ -176,7 +177,7 @@ public interface RaiView< T > extends RaView< T, RaiView< T > >, RandomAccessibl
 	@Override
 	default RaiView< T > subsample( final long... steps )
 	{
-		return wrap( Views.subsample( delegate(), ViewUtils.expand( steps, numDimensions() ) ) );
+		return wrap( Views.subsample( delegate(), Util.expandArray( steps, numDimensions() ) ) );
 	}
 
 	/**
@@ -418,7 +419,7 @@ public interface RaiView< T > extends RaView< T, RaiView< T > >, RandomAccessibl
 	 */
 	default RaiView< T > expand( Extension< T > extension, long... border )
 	{
-		return RaiView.wrap( Views.expand( this, extension.factory, ViewUtils.expand( border, numDimensions() ) ) );
+		return RaiView.wrap( Views.expand( this, extension.factory, Util.expandArray( border, numDimensions() ) ) );
 	}
 
 	// done until here
