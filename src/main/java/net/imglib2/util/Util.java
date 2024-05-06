@@ -831,6 +831,24 @@ public class Util
 	}
 
 	/**
+	 * Cast {@code value} to {@code int}, checking for overflow.
+	 *
+	 * @param value
+	 * 		value to cast to {@code int}
+	 *
+	 * @return {@code value} cast to {@code int}
+	 *
+	 * @throws IllegalArgumentException
+	 * 		if {@code value > Integer.MAX_VALUE}
+	 */
+	public static int safeInt( final long value )
+	{
+		if ( value > Integer.MAX_VALUE )
+			throw new IllegalArgumentException( "value too large" );
+		return ( int ) value;
+	}
+
+	/**
 	 *
 	 * This method has been deprecated.
 	 * Use {@link RandomAccessibleInterval#getType()} instead.
