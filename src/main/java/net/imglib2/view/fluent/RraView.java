@@ -112,16 +112,7 @@ public interface RraView< T > extends RealRandomAccessible< T >
 		return wrap( Converters.convert2( delegate(), converterSupplier, targetSupplier ) );
 	}
 
-	// done until here
-	//////////////////
-
-
-
-
-
-
-
-
+	// TODO: javadoc
 	// TODO: rename? transform()? apply()? map()?
 	default < U > U apply( Function< ? super RraView< T >, U > function )
 	{
@@ -129,11 +120,7 @@ public interface RraView< T > extends RealRandomAccessible< T >
 	}
 
 
-
-
-
-
-	// -- RandomAccessible ----------------------------------------------------
+	// -- RealRandomAccessible ------------------------------------------------
 
 	@Override
 	default RraView< T > realView()
@@ -146,9 +133,6 @@ public interface RraView< T > extends RealRandomAccessible< T >
 	{
 		return delegate().getType();
 	}
-
-	// TODO: Delegate all methods of RealRandomAccessible, also those that
-	//       have a default implementations ...
 
 	@Override
 	default int numDimensions()

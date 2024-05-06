@@ -16,6 +16,7 @@ import net.imglib2.outofbounds.OutOfBoundsFactory;
 import net.imglib2.outofbounds.OutOfBoundsMirrorFactory;
 import net.imglib2.outofbounds.OutOfBoundsPeriodicFactory;
 import net.imglib2.outofbounds.OutOfBoundsZeroFactory;
+import net.imglib2.stream.LocalizableSpliterator;
 import net.imglib2.type.Type;
 import net.imglib2.type.operators.SetZero;
 import net.imglib2.util.Util;
@@ -479,17 +480,8 @@ public interface RaiView< T > extends RaView< T, RaiView< T > >, RandomAccessibl
 		return wrap( Converters.convert2( delegate(), converterSupplier, targetSupplier ) );
 	}
 
-	// done until here
-	//////////////////
 
-
-
-
-
-
-
-
-	// -- RandomAccessible ----------------------------------------------------
+	// -- RandomAccessibleInterval --------------------------------------------
 
 	@Override
 	default RaiView< T > view()
@@ -502,9 +494,6 @@ public interface RaiView< T > extends RaView< T, RaiView< T > >, RandomAccessibl
 	{
 		return delegate().getType();
 	}
-
-	// TODO: Delegate all methods of RandomAccessibleInterval, also those that
-	//       have a default implementations ...
 
 	@Override
 	default int numDimensions()
@@ -522,6 +511,12 @@ public interface RaiView< T > extends RaView< T, RaiView< T > >, RandomAccessibl
 	default long max( final int d )
 	{
 		return delegate().max( d );
+	}
+
+	@Override
+	default long dimension( final int d )
+	{
+		return delegate().dimension( d );
 	}
 
 	@Override
@@ -546,6 +541,18 @@ public interface RaiView< T > extends RaView< T, RaiView< T > >, RandomAccessibl
 	default Cursor< T > localizingCursor()
 	{
 		return delegate().localizingCursor();
+	}
+
+	@Override
+	default LocalizableSpliterator< T > spliterator()
+	{
+		return delegate().spliterator();
+	}
+
+	@Override
+	default LocalizableSpliterator< T > localizingSpliterator()
+	{
+		return delegate().localizingSpliterator();
 	}
 
 	@Override
