@@ -377,20 +377,12 @@ public interface RaView< T, V extends RaView< T, V > > extends RandomAccessible<
 		return wrap( Converters.convert2( delegate(), converterSupplier, targetSupplier ) );
 	}
 
-
-	// done until here
-	//////////////////
-
-
-
+	// TODO: javadoc
+	// TODO: rename? transform()? apply()? map()?
 	default < U > U apply( Function< ? super V, U > function )
 	{
 		return function.apply( ( V ) this );
 	}
-
-
-
-
 
 
 	// -- RandomAccessible ----------------------------------------------------
@@ -406,9 +398,6 @@ public interface RaView< T, V extends RaView< T, V > > extends RandomAccessible<
 	{
 		return delegate().getType();
 	}
-
-	// TODO: Delegate all methods of RandomAccessible, also those that
-	//       have a default implementations ...
 
 	@Override
 	default int numDimensions()
