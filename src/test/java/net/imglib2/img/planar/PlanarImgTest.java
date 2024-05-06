@@ -35,7 +35,12 @@
 package net.imglib2.img.planar;
 
 import static org.junit.Assert.assertTrue;
+
+import net.imglib2.img.Img;
 import net.imglib2.img.array.ArrayImgFactory;
+import net.imglib2.stream.Streams;
+import net.imglib2.test.ImgLib2Assert;
+import net.imglib2.type.numeric.integer.UnsignedByteType;
 import net.imglib2.type.numeric.real.FloatType;
 import net.imglib2.util.ImgTestHelper;
 import net.imglib2.util.Util;
@@ -44,7 +49,7 @@ import org.junit.Test;
 
 /**
  * Unit tests for {@link PlanarImg}.
- * 
+ *
  * @author Stephan Preibisch
  * @author Stephan Saalfeld
  * @author Curtis Rueden
@@ -71,4 +76,23 @@ public class PlanarImgTest
 	public void testPlanarImgInvalidDimensions() {
 		ImgTestHelper.assertInvalidDims( new PlanarImgFactory<>( new FloatType() ) );
 	}
+
+	@Test
+	public void testConstructor()
+	{
+		Img< UnsignedByteType > actual = new PlanarImg<>( new UnsignedByteType(), 5, 4, 3 );
+		Streams.localizing( actual ).forEach(
+				s -> s.get().set(
+						s.getIntPosition( 0 ) * s.getIntPosition( 1 ) * s.getIntPosition( 2 ) )
+		);
+
+		Img< UnsignedByteType > expected = new PlanarImgFactory<>( new UnsignedByteType() ).create( 5, 4, 3 );
+		Streams.localizing( expected ).forEach(
+				s -> s.get().set(
+						s.getIntPosition( 0 ) * s.getIntPosition( 1 ) * s.getIntPosition( 2 ) )
+		);
+
+		ImgLib2Assert.assertImageEquals( expected, actual );
+	}
+
 }

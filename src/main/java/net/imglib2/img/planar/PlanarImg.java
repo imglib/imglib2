@@ -35,14 +35,17 @@
 package net.imglib2.img.planar;
 
 import net.imglib2.Cursor;
+import net.imglib2.Dimensions;
 import net.imglib2.FlatIterationOrder;
 import net.imglib2.Interval;
 import net.imglib2.img.AbstractNativeImg;
 import net.imglib2.img.NativeImg;
+import net.imglib2.img.basictypeaccess.ArrayDataAccessFactory;
 import net.imglib2.img.basictypeaccess.PlanarAccess;
 import net.imglib2.img.basictypeaccess.array.ArrayDataAccess;
 import net.imglib2.stream.LocalizableSpliterator;
 import net.imglib2.type.NativeType;
+import net.imglib2.type.NativeTypeFactory;
 import net.imglib2.util.Fraction;
 import net.imglib2.util.Intervals;
 import net.imglib2.util.Util;
@@ -80,6 +83,32 @@ public class PlanarImg< T extends NativeType< T >, A extends ArrayDataAccess< A 
 
 	final protected List< A > mirror;
 
+	/**
+	 * Create a new {@code PlanarImg} of the given pixel {@code type} and {@code
+	 * dimensions}.
+	 *
+	 * @param type
+	 * 		pixel type
+	 * @param dimensions
+	 * 		image dimensions
+	 */
+	public PlanarImg( final T type, final long... dimensions )
+	{
+		super( Dimensions.verify( dimensions ), type.getEntitiesPerPixel() );
+
+		this.dimensions = Util.long2int( dimensions );
+		this.sliceSteps = computeSliceSteps( dimensions );
+		this.numSlices = numberOfSlices( dimensions );
+		this.elementsPerSlice = elementsPerSlice( dimensions );
+
+		@SuppressWarnings( { "unchecked" } )
+		final NativeTypeFactory< T, A > typeFactory = ( NativeTypeFactory< T, A > ) type.getNativeTypeFactory();
+		final A creator = ArrayDataAccessFactory.get( typeFactory );
+		this.mirror = createSlices( creator, dimensions, entitiesPerPixel );
+
+		setLinkedType( typeFactory.createLinkedType( this ) );
+	}
+
 	public PlanarImg( final List< A > slices, final long[] dim, final Fraction entitiesPerPixel )
 	{
 		super( dim, entitiesPerPixel );
@@ -87,7 +116,7 @@ public class PlanarImg< T extends NativeType< T >, A extends ArrayDataAccess< A 
 		this.sliceSteps = computeSliceSteps( dim );
 		this.numSlices = numberOfSlices( dim );
 		this.elementsPerSlice = elementsPerSlice( dim );
-		if(slices.size() != numSlices)
+		if ( slices.size() != numSlices )
 			throw new IllegalArgumentException();
 		this.mirror = slices;
 	}
@@ -406,8 +435,8 @@ public class PlanarImg< T extends NativeType< T >, A extends ArrayDataAccess< A 
 	{
 		final int numSlices = numberOfSlices( dim );
 		final List< A > mirror = new ArrayList<>( numSlices );
-		final int pixelsPerPlane = (int) (( ( dim.length > 1 ) ? dim[ 1 ] : 1 ) * dim[ 0 ]);
-		final int numEntitiesPerSlice = ( int ) entitiesPerPixel.mulCeil( pixelsPerPlane );
+		final int pixelsPerPlane = Util.safeInt( ( ( dim.length > 1 ) ? dim[ 1 ] : 1 ) * dim[ 0 ] );
+		final int numEntitiesPerSlice = Util.safeInt( entitiesPerPixel.mulCeil( pixelsPerPlane ) );
 		for ( int i = 0; i < numSlices; ++i )
 			mirror.add( creator.createArray( numEntitiesPerSlice ) );
 		return mirror;
