@@ -11,6 +11,12 @@ import net.imglib2.RealRandomAccessible;
 import net.imglib2.converter.Converter;
 import net.imglib2.converter.Converters;
 import net.imglib2.interpolation.InterpolatorFactory;
+import net.imglib2.interpolation.randomaccess.ClampingNLinearInterpolatorFactory;
+import net.imglib2.interpolation.randomaccess.LanczosInterpolatorFactory;
+import net.imglib2.interpolation.randomaccess.NLinearInterpolatorFactory;
+import net.imglib2.interpolation.randomaccess.NearestNeighborInterpolatorFactory;
+import net.imglib2.type.numeric.NumericType;
+import net.imglib2.type.numeric.RealType;
 import net.imglib2.util.Intervals;
 import net.imglib2.view.Views;
 
@@ -104,20 +110,6 @@ public interface RaView< T, V extends RaView< T, V > > extends RandomAccessible<
 	default RaView< T, ? > addDimension()
 	{
 		return wrap( Views.addDimension( delegate() ) );
-	}
-
-	/**
-	 * Returns a {@link RealRandomAccessible} view of this {@code RandomAccessibleInterval}
-	 * using interpolation with the given method.
-	 *
-	 * @param factory
-	 *            the {@link InterpolatorFactory} to provide interpolators
-	 *
-	 * @return an interpolated view
-	 */
-	default RraView< T > interpolate( final InterpolatorFactory< T, ? super RandomAccessible< T > > factory )
-	{
-		return RraView.wrap( Views.interpolate( delegate(), factory ) );
 	}
 
 	/**
@@ -247,6 +239,92 @@ public interface RaView< T, V extends RaView< T, V > > extends RandomAccessible<
 	{
 		return wrap( Views.invertAxis( delegate(), axis ) );
 	}
+
+	/**
+	 * Interpolation method to use with {@link #interpolate}. {@code
+	 * Interpolation} instances can be created using {@link #nearestNeighbor},
+	 * {@link #nLinear}, {@link #clampingNLinear}, or {@link #lanczos}.
+	 * <p>
+	 * Usage example:
+	 * <pre>
+	 * {@code
+	 * RealRandomAccessible<IntType> interpolated =
+	 *                img.view()
+	 *                   .extend( Extension.zero() )
+	 *                   .interpolate( Interpolation.lanczos() );
+	 * }
+	 * </pre>
+	 *
+	 * @param <T>
+	 *     pixel type ot the {@code RandomAccessible} to be interpolated
+	 */
+	class Interpolation< T >
+	{
+		final InterpolatorFactory< T, ? super RandomAccessible< T > > factory;
+
+		private Interpolation( InterpolatorFactory< T, ? super RandomAccessible< T > > factory )
+		{
+			this.factory = factory;
+		}
+
+		/**
+		 * Create {@code Interpolation} using {@link NearestNeighborInterpolatorFactory}.
+		 */
+		public static < T > Interpolation< T > nearestNeighbor()
+		{
+			return new Interpolation<>( new NearestNeighborInterpolatorFactory<>() );
+		}
+
+		/**
+		 * Create {@code Interpolation} using {@link NLinearInterpolatorFactory}.
+		 */
+		public static < T extends NumericType< T > > Interpolation< T > nLinear()
+		{
+			return new Interpolation< T >( new NLinearInterpolatorFactory<>() );
+		}
+
+		/**
+		 * Create {@code Interpolation} using {@link ClampingNLinearInterpolatorFactory}.
+		 */
+		public static < T extends NumericType< T > > Interpolation< T > clampingNLinear()
+		{
+			return new Interpolation< T >( new ClampingNLinearInterpolatorFactory<>() );
+		}
+
+		/**
+		 * Create {@code Interpolation} using {@link LanczosInterpolatorFactory}.
+		 */
+		public static < T extends RealType< T > > Interpolation< T > lanczos()
+		{
+			return new Interpolation< T >( new LanczosInterpolatorFactory<>() );
+		}
+	}
+
+	/**
+	 * Returns a {@link RealRandomAccessible} view of this {@code RandomAccessible}
+	 * using interpolation with the given {@code interpolation} method.
+	 * <p>
+	 * {@link Interpolation} can be created by one of its static factory
+	 * methods. For example
+	 * <pre>
+	 * {@code
+	 * RealRandomAccessible<IntType> interpolated =
+	 *                img.view()
+	 *                   .extend( Extension.zero() )
+	 *                   .interpolate( Interpolation.lanczos() );
+	 * }
+	 * </pre>
+	 *
+	 * @param interpolation
+	 *            the {@link Interpolation} method
+	 *
+	 * @return an interpolated view
+	 */
+	default RraView< T > interpolate( final Interpolation< T > interpolation )
+	{
+		return RraView.wrap( Views.interpolate( delegate(), interpolation.factory ) );
+	}
+
 
 
 	// done until here
