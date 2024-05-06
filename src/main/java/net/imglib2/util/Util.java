@@ -181,7 +181,7 @@ public class Util
 		return expandedValues;
 	}
 
-	final public static double distance( final RealLocalizable position1, final RealLocalizable position2 )
+	public static double distance( final RealLocalizable position1, final RealLocalizable position2 )
 	{
 		double dist = 0;
 
@@ -196,7 +196,7 @@ public class Util
 		return Math.sqrt( dist );
 	}
 
-	final public static double distance( final long[] position1, final long[] position2 )
+	public static double distance( final long[] position1, final long[] position2 )
 	{
 		double dist = 0;
 
