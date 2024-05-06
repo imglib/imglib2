@@ -43,8 +43,8 @@ import net.imglib2.view.Views;
  * {@code RandomAccessibleInterval< IntType > view =
  *                img.view()
  *                   .permute( 0, 1 )
- *                   .extendBorder()
- *                   .interval( interval );
+ *                   .expand( Extension.border(), 5 )
+ *                   .zeroMin();
  * }
  * </pre>
  *
