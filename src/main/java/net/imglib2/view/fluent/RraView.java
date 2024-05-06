@@ -44,7 +44,7 @@ public interface RraView< T > extends RealRandomAccessible< T >
 
 	static < T > RraView< T > wrap( final RealRandomAccessible< T > delegate )
 	{
-		return new RraWrapper<>( delegate );
+		return () -> delegate;
 	}
 
 	// -- Views methods -------------------------------------------------------

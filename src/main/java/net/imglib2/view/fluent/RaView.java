@@ -54,9 +54,9 @@ public interface RaView< T, V extends RaView< T, V > > extends RandomAccessible<
 {
 	RandomAccessible< T > delegate();
 
-	static < T > RaView< T, ? > wrap( final RandomAccessible< T > delegate )
+	static < T, V extends RaView< T, V > > RaView< T, ? > wrap( final RandomAccessible< T > delegate )
 	{
-		return new RaWrapper<>( delegate );
+		return ( RaView< T, V > ) () -> delegate;
 	}
 
 	// -- Views methods -------------------------------------------------------

@@ -58,7 +58,7 @@ public interface RaiView< T > extends RaView< T, RaiView< T > >, RandomAccessibl
 
 	static < T > RaiView< T > wrap( final RandomAccessibleInterval< T > delegate )
 	{
-		return new RaiWrapper<>( delegate );
+		return () -> delegate;
 	}
 
 	// -- Views methods -------------------------------------------------------
