@@ -1,8 +1,15 @@
 package net.imglib2.streamifiedview;
 
+import java.util.function.Function;
+import java.util.function.Supplier;
+
 import net.imglib2.Interval;
 import net.imglib2.RandomAccess;
 import net.imglib2.RandomAccessible;
+import net.imglib2.converter.Converter;
+import net.imglib2.converter.Converters;
+import net.imglib2.converter.TypeIdentity;
+import net.imglib2.converter.read.ConvertedRandomAccessible;
 import net.imglib2.interpolation.InterpolatorFactory;
 import net.imglib2.view.Views;
 
@@ -13,13 +20,13 @@ import net.imglib2.view.Views;
  * @author Michael Innerberger
  * @see Views
  */
-public interface RaView< T > extends RandomAccessible< T >
+public interface RaView< T, V extends RaView< T, V > > extends RandomAccessible< T >
 {
 	RandomAccessible< T > delegate();
 
 	default RaiView< T > interval( Interval interval )
 	{
-		return RaiView.wrap( Views.interval(delegate(), interval) );
+		return RaiView.wrap( Views.interval( delegate(), interval ) );
 	}
 
 	default RraView< T > interpolate( final InterpolatorFactory< T, ? super RandomAccessible< T > > factory )
@@ -27,7 +34,19 @@ public interface RaView< T > extends RandomAccessible< T >
 		return RraView.wrap( Views.interpolate( delegate(), factory ) );
 	}
 
-	static < T > RaView< T > wrap( final RandomAccessible< T > delegate )
+	default < U > RaView< U, ? > convert(
+			final Converter< ? super T, ? super U > converter,
+			final Supplier< U > targetSupplier )
+	{
+		return wrap( Converters.convert2( delegate(), converter, targetSupplier ) );
+	}
+
+	default < U > U apply( Function< ? super V, U > function )
+	{
+		return function.apply( ( V ) this );
+	}
+
+	static < T > RaView< T, ? > wrap( final RandomAccessible< T > delegate )
 	{
 		return new RaWrapper<>( delegate );
 	}
