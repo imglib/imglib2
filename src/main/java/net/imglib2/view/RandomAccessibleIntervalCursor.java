@@ -67,8 +67,13 @@ public final class RandomAccessibleIntervalCursor< T > extends AbstractInterval 
 
 	public < I extends RandomAccessible< T > & Interval > RandomAccessibleIntervalCursor( final I interval )
 	{
+		this( interval, interval );
+	}
+
+	public RandomAccessibleIntervalCursor( final RandomAccessible< T > randomAccessible, final Interval interval )
+	{
 		super( interval );
-		randomAccess = interval.randomAccess();
+		randomAccess = randomAccessible.randomAccess();
 		dimensions = new long[ n ];
 		dimensions( dimensions );
 		tmp = new long[ n ];

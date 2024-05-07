@@ -46,8 +46,8 @@ import net.imglib2.transform.integer.BoundingBox;
 import net.imglib2.transform.integer.SlicingTransform;
 import net.imglib2.util.Intervals;
 import net.imglib2.view.IterableRandomAccessibleInterval;
+import net.imglib2.view.RandomAccessibleIntervalCursor;
 import net.imglib2.view.TransformBuilder;
-import net.imglib2.view.Views;
 
 /**
  * Simplifies View cascades to provide the most efficient {@link Cursor}.
@@ -209,6 +209,44 @@ public class IterableTransformBuilder< T > extends TransformBuilder< T >
 		}
 	}
 
+	private class IterableIntervalView extends AbstractWrappedInterval< Interval > implements IterableInterval< T >
+	{
+		private final RandomAccessible< T > randomAccessible;
+
+		private final long size;
+
+		public IterableIntervalView( final RandomAccessible< T > randomAccessible, final Interval interval )
+		{
+			super( interval );
+			this.randomAccessible = randomAccessible;
+			size = Intervals.numElements( interval );
+		}
+
+		@Override
+		public long size()
+		{
+			return size;
+		}
+
+		@Override
+		public FlatIterationOrder iterationOrder()
+		{
+			return new FlatIterationOrder( sourceInterval );
+		}
+
+		@Override
+		public Cursor< T > cursor()
+		{
+			return new RandomAccessibleIntervalCursor<>( randomAccessible, sourceInterval );
+		}
+
+		@Override
+		public Cursor< T > localizingCursor()
+		{
+			return cursor();
+		}
+	}
+
 	/**
 	 * Create an {@link IterableInterval} on the {@link Interval} specified in
 	 * the constructor of the {@link RandomAccessible} specified in the
@@ -272,6 +310,7 @@ public class IterableTransformBuilder< T > extends TransformBuilder< T >
 				}
 			}
 		}
-		return new IterableRandomAccessibleInterval< T >( Views.interval( build(), interval ) );
+
+		return new IterableIntervalView( build(), interval );
 	}
 }
