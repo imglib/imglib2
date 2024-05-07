@@ -1,8 +1,9 @@
 package net.imglib2.streamifiedview;
 
+import java.util.function.Function;
+
 import net.imglib2.Cursor;
 import net.imglib2.Interval;
-import net.imglib2.IterableInterval;
 import net.imglib2.RandomAccess;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.view.Views;
@@ -14,7 +15,7 @@ import net.imglib2.view.Views;
  * @author Michael Innerberger
  * @see Views
  */
-public interface RaiView< T > extends RaView< T >, RandomAccessibleInterval< T >
+public interface RaiView< T > extends RaView< T, RaiView< T > >, RandomAccessibleInterval< T >
 {
 	default RaiView< T > expandValue( final T value, long... border )
 	{
@@ -31,10 +32,39 @@ public interface RaiView< T > extends RaView< T >, RandomAccessibleInterval< T >
 		return wrap( Views.translate( delegate(), translation ) );
 	}
 
-	default RaView< T > extendBorder()
+	default RaiView< T >  zeroMin()
+	{
+		return wrap( Views.zeroMin( delegate() ) );
+	}
+
+	default RaiView< T > rotate( int fromAxis, int toAxis )
+	{
+		return wrap( Views.rotate( delegate(), fromAxis, toAxis ) );
+	}
+
+	default RaiView< T > hyperSlice( int d, long pos )
+	{
+		return wrap( Views.hyperSlice( delegate(), d, pos ) );
+	}
+
+	default RaView< T, ? > extendBorder()
 	{
 		return RaView.wrap( Views.extendBorder( delegate() ) );
 	}
+
+	// TODO: here we have a problem. We would like to override this
+	//   from
+	//	    default < U > U apply( Function< ? super RaView< T >, U > function )
+	//   to
+	//	    default < U > U apply( Function< ? super RaiView< T >, U > function ).
+	//   That is: broaden the allowed range of the Function argument to also allow RaiView (a subclass of RaView)
+	//   Can recursive generics solve that?
+
+	// TODO: rename? transform()? apply()? map()?
+//	default < U > U apply( Function< ? super RaView< T >, U > function )
+//	{
+//		return function.apply( this );
+//	}
 
 	@Override
 	RandomAccessibleInterval< T > delegate();
@@ -83,30 +113,27 @@ public interface RaiView< T > extends RaView< T >, RandomAccessibleInterval< T >
 		return delegate().randomAccess(interval);
 	}
 
-	// TODO: Not sure about the following.
-	//       It's not so nice to have to use Views.iterable() always.
-
 	@Override
 	default Cursor< T > cursor()
 	{
-		return Views.iterable( delegate() ).cursor();
+		return delegate().cursor();
 	}
 
 	@Override
 	default Cursor< T > localizingCursor()
 	{
-		return Views.iterable( delegate() ).localizingCursor();
+		return delegate().localizingCursor();
 	}
 
 	@Override
 	default long size()
 	{
-		return Views.iterable( delegate() ).size();
+		return delegate().size();
 	}
 
 	@Override
 	default Object iterationOrder()
 	{
-		return Views.iterable( delegate() ).iterationOrder();
+		return delegate().iterationOrder();
 	}
 }
