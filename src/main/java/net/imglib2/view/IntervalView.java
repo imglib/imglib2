@@ -44,6 +44,7 @@ import net.imglib2.RandomAccess;
 import net.imglib2.RandomAccessible;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.View;
+import net.imglib2.stream.LocalizableSpliterator;
 import net.imglib2.view.iteration.IterableTransformBuilder;
 
 /**
@@ -172,6 +173,18 @@ public class IntervalView< T > extends AbstractInterval implements RandomAccessi
 	public Cursor< T > localizingCursor()
 	{
 		return getFullViewIterableInterval().localizingCursor();
+	}
+
+	@Override
+	public LocalizableSpliterator< T > spliterator()
+	{
+		return getFullViewIterableInterval().spliterator();
+	}
+
+	@Override
+	public LocalizableSpliterator< T > localizingSpliterator()
+	{
+		return getFullViewIterableInterval().localizingSpliterator();
 	}
 
 	@Override
