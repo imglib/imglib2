@@ -38,6 +38,7 @@ import java.util.Iterator;
 
 import net.imglib2.AbstractInterval;
 import net.imglib2.Cursor;
+import net.imglib2.FinalInterval;
 import net.imglib2.Interval;
 import net.imglib2.IterableInterval;
 import net.imglib2.RandomAccess;
@@ -54,7 +55,7 @@ import net.imglib2.view.iteration.IterableTransformBuilder;
  * created through the {@link Views#interval(RandomAccessible, Interval)} method
  * instead.
  */
-public class IntervalView< T > extends AbstractInterval implements RandomAccessibleInterval< T >, IterableInterval< T >, View
+public class IntervalView< T > extends AbstractInterval implements RandomAccessibleInterval< T >, View
 {
 	/**
 	 * The source {@link RandomAccessible}.
@@ -101,11 +102,7 @@ public class IntervalView< T > extends AbstractInterval implements RandomAccessi
 	 */
 	public IntervalView( final RandomAccessible< T > source, final long[] min, final long[] max )
 	{
-		super( min, max );
-		assert ( source.numDimensions() == min.length );
-
-		this.source = source;
-		this.fullViewRandomAccessible = null;
+		this( source, FinalInterval.wrap( min, max ) );
 	}
 
 	/**

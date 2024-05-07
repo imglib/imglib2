@@ -35,11 +35,8 @@ package net.imglib2.img.cell;
 
 import java.util.Arrays;
 
-import net.imglib2.Cursor;
 import net.imglib2.FinalInterval;
-import net.imglib2.FlatIterationOrder;
 import net.imglib2.Interval;
-import net.imglib2.IterableInterval;
 import net.imglib2.Localizable;
 import net.imglib2.Point;
 import net.imglib2.Positionable;
@@ -48,7 +45,6 @@ import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.util.IntervalIndexer;
 import net.imglib2.util.Intervals;
 import net.imglib2.util.Util;
-import net.imglib2.view.RandomAccessibleIntervalCursor;
 
 /**
  * Defines {@link AbstractCellImg} geometry and translates between image, cell,
@@ -708,7 +704,7 @@ public class CellGrid
 		}
 	}
 
-	public class CellIntervals implements RandomAccessibleInterval< Interval >, IterableInterval< Interval >
+	public class CellIntervals implements RandomAccessibleInterval< Interval >
 	{
 		private final long size = Intervals.numElements( numCells );
 
@@ -743,27 +739,9 @@ public class CellGrid
 		}
 
 		@Override
-		public Cursor< Interval > cursor()
-		{
-			return new RandomAccessibleIntervalCursor<>( this );
-		}
-
-		@Override
-		public Cursor< Interval > localizingCursor()
-		{
-			return cursor();
-		}
-
-		@Override
 		public long size()
 		{
 			return size;
-		}
-
-		@Override
-		public FlatIterationOrder iterationOrder()
-		{
-			return new FlatIterationOrder( this );
 		}
 
 		@Override

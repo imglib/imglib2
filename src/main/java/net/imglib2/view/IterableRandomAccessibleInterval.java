@@ -53,7 +53,7 @@ public class IterableRandomAccessibleInterval< T > extends AbstractWrappedInterv
 {
 	public static < T > IterableRandomAccessibleInterval< T > create( final RandomAccessibleInterval< T > interval )
 	{
-		return new IterableRandomAccessibleInterval< T >( interval );
+		return new IterableRandomAccessibleInterval<>( interval );
 	}
 
 	public IterableRandomAccessibleInterval( final RandomAccessibleInterval< T > interval )
@@ -76,7 +76,7 @@ public class IterableRandomAccessibleInterval< T > extends AbstractWrappedInterv
 	@Override
 	public Cursor< T > cursor()
 	{
-		return new RandomAccessibleIntervalCursor< T >( sourceInterval );
+		return new RandomAccessibleIntervalCursor<>( sourceInterval );
 	}
 
 	@Override

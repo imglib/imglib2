@@ -34,7 +34,6 @@
 
 package net.imglib2.img;
 
-import net.imglib2.IterableInterval;
 import net.imglib2.RandomAccessibleInterval;
 
 /**
@@ -45,10 +44,7 @@ import net.imglib2.RandomAccessibleInterval;
  * @author Stephan Saalfeld
  * @author Stephan Preibisch
  */
-public interface Img< T >
-		extends
-		RandomAccessibleInterval< T >,
-		IterableInterval< T >
+public interface Img< T > extends RandomAccessibleInterval< T >
 {
 	/**
 	 * Get a {@link ImgFactory} that creates {@link Img}s of the same kind as
