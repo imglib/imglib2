@@ -33,12 +33,16 @@
  */
 package net.imglib2.blocks;
 
+import static net.imglib2.outofbounds.OutOfBoundsMirrorFactory.Boundary.SINGLE;
+
+import net.imglib2.blocks.ViewNode.ExtensionViewNode;
 import net.imglib2.outofbounds.OutOfBoundsBorderFactory;
 import net.imglib2.outofbounds.OutOfBoundsConstantValueFactory;
 import net.imglib2.outofbounds.OutOfBoundsFactory;
 import net.imglib2.outofbounds.OutOfBoundsMirrorFactory;
-
-import static net.imglib2.outofbounds.OutOfBoundsMirrorFactory.Boundary.SINGLE;
+import net.imglib2.outofbounds.OutOfBoundsZeroFactory;
+import net.imglib2.type.operators.SetZero;
+import net.imglib2.util.Cast;
 
 interface Extension
 {
@@ -111,5 +115,18 @@ interface Extension
 		{
 			return new ExtensionImpl.UnknownExtension<>( oobFactory );
 		}
+	}
+
+	static Extension of( ExtensionViewNode node )
+	{
+		OutOfBoundsFactory< ?, ? > oobFactory = node.getOutOfBoundsFactory();
+		if ( oobFactory instanceof OutOfBoundsZeroFactory )
+		{
+			final net.imglib2.type.Type< ? > type = Cast.unchecked( node.view().getType() );
+			final SetZero zero = Cast.unchecked( type.createVariable() );
+			zero.setZero();
+			oobFactory = new OutOfBoundsConstantValueFactory<>( zero );
+		}
+		return of( oobFactory );
 	}
 }
