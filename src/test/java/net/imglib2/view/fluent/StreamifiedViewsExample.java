@@ -23,7 +23,7 @@ public class StreamifiedViewsExample
 		RealRandomAccessible< DoubleType > doubleView = img.view()
 				.extend( Extension.zero() )
 				.permute( 0, 1 )
-				.convert( ( i, o ) -> o.set( i.get() ), DoubleType::new )
+				.convert( DoubleType::new, ( i, o ) -> o.set( i.get() ) )
 				.interpolate( Interpolation.lanczos() );
 
 		RandomAccess< IntType > access = img.view()
