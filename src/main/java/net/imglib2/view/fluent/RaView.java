@@ -54,7 +54,7 @@ public interface RaView< T, V extends RaView< T, V > > extends RandomAccessible<
 {
 	RandomAccessible< T > delegate();
 
-	static < T, V extends RaView< T, V > > RaView< T, ? > wrap( final RandomAccessible< T > delegate )
+	static < T, V extends RaView< T, V > > RaView< T, V > wrap( final RandomAccessible< T > delegate )
 	{
 		return ( RaView< T, V > ) () -> delegate;
 	}
@@ -335,18 +335,18 @@ public interface RaView< T, V extends RaView< T, V > > extends RandomAccessible<
 	 * U>} that reads a value from its first argument and writes a converted
 	 * value to its second argument.
 	 *
-	 * @param converter
-	 * 		converts pixel values from {@code T} to {@code U}
-	 * @param targetSupplier
-	 * 		creates instances of {@code U} for storing converted values
 	 * @param <U>
 	 * 		target pixel type
+	 * @param targetSupplier
+	 * 		creates instances of {@code U} for storing converted values
+	 * @param converter
+	 * 		converts pixel values from {@code T} to {@code U}
 	 *
 	 * @return a converted view
 	 */
 	default < U > RaView< U, ? > convert(
-			final Converter< ? super T, ? super U > converter,
-			final Supplier< U > targetSupplier )
+			final Supplier< U > targetSupplier,
+			final Converter< ? super T, ? super U > converter )
 	{
 		return wrap( Converters.convert2( delegate(), converter, targetSupplier ) );
 	}
@@ -361,18 +361,18 @@ public interface RaView< T, V extends RaView< T, V > > extends RandomAccessible<
 	 * from its first argument and writes a converted value to its second
 	 * argument.
 	 *
-	 * @param converterSupplier
-	 * 		converts pixel values from {@code T} to {@code U}
-	 * @param targetSupplier
-	 * 		creates instances of {@code U} for storing converted values
 	 * @param <U>
 	 * 		target pixel type
+	 * @param targetSupplier
+	 * 		creates instances of {@code U} for storing converted values
+	 * @param converterSupplier
+	 * 		converts pixel values from {@code T} to {@code U}
 	 *
 	 * @return a converted view
 	 */
 	default < U > RaView< U, ? > convert(
-			final Supplier< Converter< ? super T, ? super U > > converterSupplier,
-			final Supplier< U > targetSupplier )
+			final Supplier< U > targetSupplier,
+			final Supplier< Converter< ? super T, ? super U > > converterSupplier )
 	{
 		return wrap( Converters.convert2( delegate(), converterSupplier, targetSupplier ) );
 	}
