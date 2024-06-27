@@ -401,4 +401,17 @@ public class IntervalIndexer
 			steps[ d ] = steps[ d - 1 ] * dimensions[ d - 1 ];
 	}
 
+	public static long[] createAllocationSteps( final long[] dimensions )
+	{
+		final long[] steps = new long[ dimensions.length ];
+		createAllocationSteps( dimensions, steps );
+		return steps;
+	}
+
+	public static int[] createAllocationSteps( final int[] dimensions )
+	{
+		final int[] steps = new int[ dimensions.length ];
+		createAllocationSteps( dimensions, steps );
+		return steps;
+	}
 }
