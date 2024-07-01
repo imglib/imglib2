@@ -596,9 +596,10 @@ class ViewAnalyzer
 	private < T extends NativeType< T >, R extends NativeType< R > > ViewProperties< T, R > getViewProperties()
 	{
 		final T viewType = Cast.unchecked( ra.getType() );
+		final int viewNumDimensions = ra.numDimensions();
 		final NativeImg< R, ? > root = Cast.unchecked( nodes.get( nodes.size() - 1 ).view() );
 		final R rootType = root.createLinkedType();
-		return new ViewProperties<>( viewType, root, rootType, oobExtension, transform, permuteInvertTransform, converterSupplier );
+		return new ViewProperties<>( viewType, viewNumDimensions, root, rootType, oobExtension, transform, permuteInvertTransform, converterSupplier );
 	}
 
 	private < T extends NativeType< T > > FallbackProperties< T > getFallbackProperties()

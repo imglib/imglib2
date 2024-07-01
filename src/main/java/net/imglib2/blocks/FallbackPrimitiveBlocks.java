@@ -78,6 +78,12 @@ class FallbackPrimitiveBlocks< T extends NativeType< T >, A extends ArrayDataAcc
 	}
 
 	@Override
+	public int numDimensions()
+	{
+		return source.numDimensions();
+	}
+
+	@Override
 	public void copy( final long[] srcPos, final Object dest, final int[] size )
 	{
 		final ArrayImg< T, A > img = new ArrayImg<>( primitiveTypeProperties.wrap( dest ), Util.int2long( size ), type.getEntitiesPerPixel() );
