@@ -58,6 +58,8 @@ class ViewProperties< T extends NativeType< T >, R extends NativeType< R > >
 {
 	private final T viewType;
 
+	private final int viewNumDimensions;
+
 	private final NativeImg< R, ? > root;
 
 	private final R rootType;
@@ -78,6 +80,7 @@ class ViewProperties< T extends NativeType< T >, R extends NativeType< R > >
 	 * Create {@code ViewProperties}.
 	 *
 	 * @param viewType pixel type of the View to copy from
+	 * @param viewNumDimensions number of dimensions of the View to copy from
 	 * @param root the {@code NativeImg} at the root of the View chain
 	 * @param rootType pixel type of the root {@code NativeImg}
 	 * @param extension out-of-bounds extension to apply to the root
@@ -87,6 +90,7 @@ class ViewProperties< T extends NativeType< T >, R extends NativeType< R > >
 	 */
 	ViewProperties(
 			final T viewType,
+			final int viewNumDimensions,
 			final NativeImg< R, ? > root,
 			final R rootType,
 			final Extension extension,
@@ -95,6 +99,7 @@ class ViewProperties< T extends NativeType< T >, R extends NativeType< R > >
 			final Supplier< ? extends Converter< ?, ? > > converterSupplier )
 	{
 		this.viewType = viewType;
+		this.viewNumDimensions = viewNumDimensions;
 		this.root = root;
 		this.rootType = rootType;
 		this.extension = extension;
@@ -110,6 +115,7 @@ class ViewProperties< T extends NativeType< T >, R extends NativeType< R > >
 	{
 		return "ViewProperties{" +
 				"viewType=" + viewType.getClass().getSimpleName() +
+				", viewNumDimensions=" + viewNumDimensions +
 				", root=" + root +
 				", rootType=" + rootType.getClass().getSimpleName() +
 				", extension=" + extension +
@@ -123,6 +129,11 @@ class ViewProperties< T extends NativeType< T >, R extends NativeType< R > >
 	public T getViewType()
 	{
 		return viewType;
+	}
+
+	public int getViewNumDimensions()
+	{
+		return viewNumDimensions;
 	}
 
 	public NativeImg< R, ? > getRoot()

@@ -36,7 +36,9 @@ package net.imglib2.blocks;
 import static net.imglib2.blocks.PrimitiveBlocks.OnFallback.FAIL;
 import static net.imglib2.blocks.PrimitiveBlocks.OnFallback.WARN;
 
+import net.imglib2.EuclideanSpace;
 import net.imglib2.RandomAccessible;
+import net.imglib2.Typed;
 import net.imglib2.type.NativeType;
 import net.imglib2.util.Util;
 
@@ -101,10 +103,8 @@ import net.imglib2.util.Util;
  * @param <T>
  * 		pixel type
  */
-public interface PrimitiveBlocks< T extends NativeType< T > >
+public interface PrimitiveBlocks< T extends NativeType< T > > extends Typed< T >, EuclideanSpace
 {
-	T getType();
-
 	/**
 	 * Copy a block from the ({@code T}-typed) source into primitive arrays (of
 	 * the appropriate type).

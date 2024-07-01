@@ -87,6 +87,12 @@ class ViewPrimitiveBlocks< T extends NativeType< T >, R extends NativeType< R > 
 		return props.getViewType();
 	}
 
+	@Override
+	public int numDimensions()
+	{
+		return props.getViewNumDimensions();
+	}
+
 	/**
 	 * @param srcPos
 	 * 		min coordinates of block to copy from src Img.
@@ -170,6 +176,12 @@ class ViewPrimitiveBlocks< T extends NativeType< T >, R extends NativeType< R > 
 			public T getType()
 			{
 				return props.getViewType();
+			}
+
+			@Override
+			public int numDimensions()
+			{
+				return props.getViewNumDimensions();
 			}
 
 			@Override
