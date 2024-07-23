@@ -147,6 +147,32 @@ public class Util
 	 *
 	 * @return an array where {@code array.length == newLength} and {@code array[i] == values[Math.max(i, values.length)]}
 	 */
+	public static double[] expandArray( final double[] values, final int newLength )
+	{
+		final double[] expandedValues = ( values.length == newLength ) ? values : Arrays.copyOf( values, newLength );
+		if ( values.length < newLength )
+			Arrays.fill( expandedValues, values.length, newLength, values[ values.length - 1 ] );
+		return expandedValues;
+	}
+
+	/**
+	 * Expand or truncate the provided array of {@code values} to length {@code
+	 * newLength}.
+	 * <p>
+	 * If {@code values.length < newLength} then the last value is repeated.
+	 * That is, the remaining elements are filled with {@code
+	 * values[values.length - 1]}.
+	 * <p>
+	 * If {@code values.length == newLength} then {@code values} is returned,
+	 * otherwise a new array is created.
+	 *
+	 * @param values
+	 * 		values to copy
+	 * @param newLength
+	 * 		length of expanded array
+	 *
+	 * @return an array where {@code array.length == newLength} and {@code array[i] == values[Math.max(i, values.length)]}
+	 */
 	public static long[] expandArray( final long[] values, final int newLength )
 	{
 		final long[] expandedValues = ( values.length == newLength ) ? values : Arrays.copyOf( values, newLength );
@@ -176,6 +202,32 @@ public class Util
 	public static int[] expandArray( final int[] values, final int newLength )
 	{
 		final int[] expandedValues = ( values.length == newLength ) ? values : Arrays.copyOf( values, newLength );
+		if ( values.length < newLength )
+			Arrays.fill( expandedValues, values.length, newLength, values[ values.length - 1 ] );
+		return expandedValues;
+	}
+
+	/**
+	 * Expand or truncate the provided array of {@code values} to length {@code
+	 * newLength}.
+	 * <p>
+	 * If {@code values.length < newLength} then the last value is repeated.
+	 * That is, the remaining elements are filled with {@code
+	 * values[values.length - 1]}.
+	 * <p>
+	 * If {@code values.length == newLength} then {@code values} is returned,
+	 * otherwise a new array is created.
+	 *
+	 * @param values
+	 * 		values to copy
+	 * @param newLength
+	 * 		length of expanded array
+	 *
+	 * @return an array where {@code array.length == newLength} and {@code array[i] == values[Math.max(i, values.length)]}
+	 */
+	public static boolean[] expandArray( final boolean[] values, final int newLength )
+	{
+		final boolean[] expandedValues = ( values.length == newLength ) ? values : Arrays.copyOf( values, newLength );
 		if ( values.length < newLength )
 			Arrays.fill( expandedValues, values.length, newLength, values[ values.length - 1 ] );
 		return expandedValues;
