@@ -7,8 +7,8 @@ import net.imglib2.RealRandomAccessible;
 import net.imglib2.img.array.ArrayImgs;
 import net.imglib2.type.numeric.integer.IntType;
 import net.imglib2.type.numeric.real.DoubleType;
-import net.imglib2.view.fluent.RaView.Interpolation;
-import net.imglib2.view.fluent.RaiView.Extension;
+import net.imglib2.view.fluent.RandomAccessibleView.Interpolation;
+import net.imglib2.view.fluent.RandomAccessibleIntervalView.Extension;
 
 public class StreamifiedViewsExample
 {
