@@ -377,9 +377,18 @@ public interface RaView< T, V extends RaView< T, V > > extends RandomAccessible<
 		return wrap( Converters.convert2( delegate(), converterSupplier, targetSupplier ) );
 	}
 
-	// TODO: javadoc
-	// TODO: rename? transform()? apply()? map()?
-	default < U > U apply( Function< ? super V, U > function )
+	/**
+	 * Apply the specified {@code function} to this {@code RandomAccessible} and
+	 * return the result.
+	 *
+	 * @param function
+	 * 		function to evaluate on this {@code RandomAccessible}
+	 * @param <U>
+	 * 		the type of the result of the function
+	 *
+	 * @return {@code function.apply(this)}
+	 */
+	default < U > U use( Function< ? super V, U > function )
 	{
 		return function.apply( ( V ) this );
 	}

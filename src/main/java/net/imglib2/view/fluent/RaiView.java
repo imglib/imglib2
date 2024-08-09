@@ -1,5 +1,6 @@
 package net.imglib2.view.fluent;
 
+import java.util.function.Function;
 import java.util.function.Supplier;
 
 import net.imglib2.Cursor;
@@ -474,6 +475,23 @@ public interface RaiView< T > extends RaView< T, RaiView< T > >, RandomAccessibl
 			final Supplier< U > targetSupplier, final Supplier< Converter< ? super T, ? super U > > converterSupplier )
 	{
 		return wrap( Converters.convert2( delegate(), converterSupplier, targetSupplier ) );
+	}
+
+	/**
+	 * Apply the specified {@code function} to this {@code
+	 * RandomAccessibleInterval} and return the result.
+	 *
+	 * @param function
+	 * 		function to evaluate on this {@code RandomAccessibleInterval}
+	 * @param <U>
+	 * 		the type of the result of the function
+	 *
+	 * @return {@code function.apply(this)}
+	 */
+	@Override
+	default < U > U use( Function< ? super RaiView< T >, U > function )
+	{
+		return function.apply( this );
 	}
 
 

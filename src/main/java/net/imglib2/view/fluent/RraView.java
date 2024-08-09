@@ -112,9 +112,18 @@ public interface RraView< T > extends RealRandomAccessible< T >
 		return wrap( Converters.convert2( delegate(), converterSupplier, targetSupplier ) );
 	}
 
-	// TODO: javadoc
-	// TODO: rename? transform()? apply()? map()?
-	default < U > U apply( Function< ? super RraView< T >, U > function )
+	/**
+	 * Apply the specified {@code function} to this {@code RealRandomAccessible}
+	 * and return the result.
+	 *
+	 * @param function
+	 * 		function to evaluate on this {@code RealRandomAccessible}
+	 * @param <U>
+	 * 		the type of the result of the function
+	 *
+	 * @return {@code function.apply(this)}
+	 */
+	default < U > U use( Function< ? super RraView< T >, U > function )
 	{
 		return function.apply( this );
 	}
