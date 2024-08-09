@@ -37,6 +37,7 @@ import static net.imglib2.blocks.PrimitiveBlocksUtils.extractOobValue;
 
 import java.util.function.Supplier;
 
+import net.imglib2.img.basictypeaccess.nio.BufferAccess;
 import net.imglib2.transform.integer.MixedTransform;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.PrimitiveType;
@@ -67,7 +68,7 @@ class ViewPrimitiveBlocks< T extends NativeType< T >, R extends NativeType< R > 
 	{
 		this.props = props;
 		final PrimitiveType primitiveType = props.getRootType().getNativeTypeFactory().getPrimitiveType();
-		final MemCopy memCopy = MemCopy.forPrimitiveType( primitiveType );
+		final MemCopy memCopy = MemCopy.forPrimitiveType( primitiveType, props.getRootAccessType() instanceof BufferAccess, false );
 		final Extension extension = props.getExtension() != null ? props.getExtension() : Extension.border();
 		final Object oob = extractOobValue( props.getRootType(), extension );
 		final Ranges findRanges = Ranges.forExtension( extension );
