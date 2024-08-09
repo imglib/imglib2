@@ -85,12 +85,13 @@ public class ArrayImgFactory< T extends NativeType< T > > extends NativeImgFacto
 	private < A extends ArrayDataAccess< A > > ArrayImg< T, A > create(
 			final long[] dimensions,
 			final T type,
-			final NativeTypeFactory< T, A > typeFactory )
+			final NativeTypeFactory< T, ? super A > typeFactory )
 	{
 		Dimensions.verify( dimensions );
 		final Fraction entitiesPerPixel = type.getEntitiesPerPixel();
 		final int numEntities = numEntitiesRangeCheck( dimensions, entitiesPerPixel );
-		final A data = ArrayDataAccessFactory.get( typeFactory ).createArray( numEntities );
+		final A access = ArrayDataAccessFactory.get( typeFactory );
+		final A data = access.createArray( numEntities );
 		final ArrayImg< T, A > img = new ArrayImg<>( data, dimensions, entitiesPerPixel );
 		img.setLinkedType( typeFactory.createLinkedType( img ) );
 		return img;

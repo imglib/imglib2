@@ -115,7 +115,7 @@ public class CellImgFactory< T extends NativeType< T > > extends NativeImgFactor
 	private < A extends ArrayDataAccess< A > > CellImg< T, A > create(
 			final long[] dimensions,
 			final T type,
-			final NativeTypeFactory< T, A > typeFactory )
+			final NativeTypeFactory< T, ? super A > typeFactory )
 	{
 		Dimensions.verify( dimensions );
 

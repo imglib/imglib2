@@ -86,11 +86,12 @@ public class PlanarImgFactory< T extends NativeType< T > > extends NativeImgFact
 	private < A extends ArrayDataAccess< A > > PlanarImg< T, ? > create(
 			final long[] dimensions,
 			final T type,
-			final NativeTypeFactory< T, A > typeFactory )
+			final NativeTypeFactory< T, ? super A > typeFactory )
 	{
 		Dimensions.verify( dimensions );
 		final Fraction entitiesPerPixel = type.getEntitiesPerPixel();
-		final PlanarImg< T, A > img = new PlanarImg<>( ArrayDataAccessFactory.get( typeFactory ), dimensions, entitiesPerPixel );
+		final A access = ArrayDataAccessFactory.get( typeFactory );
+		final PlanarImg< T, A > img = new PlanarImg<>( access, dimensions, entitiesPerPixel );
 		img.setLinkedType( typeFactory.createLinkedType( img ) );
 		return img;
 	}

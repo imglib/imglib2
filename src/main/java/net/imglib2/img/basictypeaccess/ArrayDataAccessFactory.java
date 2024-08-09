@@ -98,13 +98,13 @@ public class ArrayDataAccessFactory
 	}
 
 	public static < A extends ArrayDataAccess< A > > A get(
-			final NativeTypeFactory< ?, ? super A > typeFactory )
+			final NativeTypeFactory< ?, ? > typeFactory )
 	{
 		return get( typeFactory.getPrimitiveType(), AccessFlags.setOf() );
 	}
 
 	public static < A extends ArrayDataAccess< A > > A get(
-			final NativeTypeFactory< ?, ? super A > typeFactory,
+			final NativeTypeFactory< ?, ? > typeFactory,
 			final Set< AccessFlags > flags )
 	{
 		return get( typeFactory.getPrimitiveType(), flags );
