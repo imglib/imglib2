@@ -6,7 +6,7 @@ import net.imglib2.RandomAccessible;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.img.array.ArrayImgs;
 import net.imglib2.type.numeric.integer.IntType;
-import net.imglib2.view.fluent.RaiView.Extension;
+import net.imglib2.view.fluent.RandomAccessibleIntervalView.Extension;
 
 public class StreamifiedViewsUseExample
 {

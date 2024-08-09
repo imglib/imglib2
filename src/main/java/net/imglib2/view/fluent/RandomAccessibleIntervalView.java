@@ -31,11 +31,12 @@ import net.imglib2.view.Views;
  * transformations are concatenated and simplified to provide optimally
  * efficient accessors.
  * <p>
- * The {@code RaiView} gateway implements {@code RandomAccessibleInterval},
- * forwarding all methods to its {@link #delegate}. Additionally, it provides
- * methods analogous to the {@code static} {@link Views} methods that operate on
- * its {@link #delegate} and return {@code RaiView}, {@code RaView}, or {@code
- * RraView} wrappers.
+ * The {@code RandomAccessibleIntervalView} gateway implements {@code
+ * RandomAccessibleInterval}, forwarding all methods to its {@link #delegate}.
+ * Additionally, it provides methods analogous to the {@code static} {@link
+ * Views} methods that operate on its {@link #delegate} and return {@code
+ * RandomAccessibleIntervalView}, {@code RandomAccessibleView}, or {@code
+ * RealRandomAccessibleView} wrappers.
  * <p>
  * This provides a fluent API for conveniently chaining {@code Views} methods.
  * For example
@@ -52,12 +53,12 @@ import net.imglib2.view.Views;
  * @author Michael Innerberger
  * @see Views
  */
-public interface RaiView< T > extends RaView< T, RaiView< T > >, RandomAccessibleInterval< T >
+public interface RandomAccessibleIntervalView< T > extends RandomAccessibleView< T, RandomAccessibleIntervalView< T > >, RandomAccessibleInterval< T >
 {
 	@Override
 	RandomAccessibleInterval< T > delegate();
 
-	static < T > RaiView< T > wrap( final RandomAccessibleInterval< T > delegate )
+	static < T > RandomAccessibleIntervalView< T > wrap( final RandomAccessibleInterval< T > delegate )
 	{
 		return () -> delegate;
 	}
@@ -74,7 +75,7 @@ public interface RaiView< T > extends RaView< T, RaiView< T > >, RandomAccessibl
 	 *
 	 * @return a view with flat iteration order
 	 */
-	default RaiView< T > flatIterable()
+	default RandomAccessibleIntervalView< T > flatIterable()
 	{
 		return wrap( Views.flatIterable( delegate() ) );
 	}
@@ -92,7 +93,7 @@ public interface RaiView< T > extends RaView< T, RaiView< T > >, RandomAccessibl
 	 * @return a view on the given slice
 	 */
 	@Override
-	default RaiView< T > slice( int d, long pos )
+	default RandomAccessibleIntervalView< T > slice( int d, long pos )
 	{
 		return wrap( Views.hyperSlice( delegate(), d, pos ) );
 	}
@@ -113,7 +114,7 @@ public interface RaiView< T > extends RaView< T, RaiView< T > >, RandomAccessibl
 	 *
 	 * @return a view with an additional dimension
 	 */
-	default RaiView< T > addDimension( long minOfNewDim, long maxOfNewDim )
+	default RandomAccessibleIntervalView< T > addDimension( long minOfNewDim, long maxOfNewDim )
 	{
 		return wrap( Views.addDimension( delegate(), minOfNewDim, maxOfNewDim ) );
 	}
@@ -130,7 +131,7 @@ public interface RaiView< T > extends RaView< T, RaiView< T > >, RandomAccessibl
 	 * @return a translated view
 	 */
 	@Override
-	default RaiView< T > translate( long... translation )
+	default RandomAccessibleIntervalView< T > translate( long... translation )
 	{
 		return wrap( Views.translate( delegate(), translation ) );
 	}
@@ -148,7 +149,7 @@ public interface RaiView< T > extends RaView< T, RaiView< T > >, RandomAccessibl
 	 * @return an inverse-translated view
 	 */
 	@Override
-	default RaiView< T > translateInverse( long... translation )
+	default RandomAccessibleIntervalView< T > translateInverse( long... translation )
 	{
 		return wrap( Views.translateInverse( delegate(), translation ) );
 	}
@@ -159,7 +160,7 @@ public interface RaiView< T > extends RaView< T, RaiView< T > >, RandomAccessibl
 	 *
 	 * @return a view that is translated to the origin
 	 */
-	default RaiView< T > zeroMin()
+	default RandomAccessibleIntervalView< T > zeroMin()
 	{
 		return wrap( Views.zeroMin( delegate() ) );
 	}
@@ -179,7 +180,7 @@ public interface RaiView< T > extends RaView< T, RaiView< T > >, RandomAccessibl
 	 * @return a subsampled view
 	 */
 	@Override
-	default RaiView< T > subsample( final long... steps )
+	default RandomAccessibleIntervalView< T > subsample( final long... steps )
 	{
 		return wrap( Views.subsample( delegate(), Util.expandArray( steps, numDimensions() ) ) );
 	}
@@ -208,7 +209,7 @@ public interface RaiView< T > extends RaView< T, RaiView< T > >, RandomAccessibl
 	 * @return a view rotated 90 degrees
 	 */
 	@Override
-	default RaiView< T > rotate( int fromAxis, int toAxis )
+	default RandomAccessibleIntervalView< T > rotate( int fromAxis, int toAxis )
 	{
 		return wrap( Views.rotate( delegate(), fromAxis, toAxis ) );
 	}
@@ -225,7 +226,7 @@ public interface RaiView< T > extends RaView< T, RaiView< T > >, RandomAccessibl
 	 * @return a view with permuted axes
 	 */
 	@Override
-	default RaiView< T > permute( int fromAxis, int toAxis )
+	default RandomAccessibleIntervalView< T > permute( int fromAxis, int toAxis )
 	{
 		return wrap( Views.permute( delegate(), fromAxis, toAxis ) );
 	}
@@ -246,7 +247,7 @@ public interface RaiView< T > extends RaView< T, RaiView< T > >, RandomAccessibl
 	 * @return a view with permuted axes
 	 */
 	@Override
-	default RaiView< T > moveAxis( int fromAxis, int toAxis )
+	default RandomAccessibleIntervalView< T > moveAxis( int fromAxis, int toAxis )
 	{
 		return wrap( Views.moveAxis( delegate(), fromAxis, toAxis ) );
 	}
@@ -269,7 +270,7 @@ public interface RaiView< T > extends RaView< T, RaiView< T > >, RandomAccessibl
 	 * @return a view with {@code axis} inverted
 	 */
 	@Override
-	default RaiView< T > invertAxis( int axis )
+	default RandomAccessibleIntervalView< T > invertAxis( int axis )
 	{
 		return wrap( Views.invertAxis( delegate(), axis ) );
 	}
@@ -293,9 +294,9 @@ public interface RaiView< T > extends RaView< T, RaiView< T > >, RandomAccessibl
 	 */
 	class Extension< T >
 	{
-		final OutOfBoundsFactory< T, RaiView< T > > factory;
+		final OutOfBoundsFactory< T, RandomAccessibleIntervalView< T > > factory;
 
-		private Extension( OutOfBoundsFactory< T, RaiView< T > > factory )
+		private Extension( OutOfBoundsFactory< T, RandomAccessibleIntervalView< T > > factory )
 		{
 			this.factory = factory;
 		}
@@ -317,7 +318,7 @@ public interface RaiView< T > extends RaView< T, RaiView< T > >, RandomAccessibl
 		 */
 		public static < T extends Type< T > & SetZero > Extension< T > zero()
 		{
-			return new Extension<>( new OutOfBoundsZeroFactory< T, RaiView< T > >() );
+			return new Extension<>( new OutOfBoundsZeroFactory< T, RandomAccessibleIntervalView< T > >() );
 		}
 
 		/**
@@ -385,9 +386,9 @@ public interface RaiView< T > extends RaView< T, RaiView< T > >, RandomAccessibl
 	 *
 	 * @return an extended (unbounded) view
 	 */
-	default RaView< T, ? > extend( Extension< T > extension )
+	default RandomAccessibleView< T, ? > extend( Extension< T > extension )
 	{
-		return RaView.wrap( Views.extend( this, extension.factory ) );
+		return RandomAccessibleView.wrap( Views.extend( this, extension.factory ) );
 	}
 
 	/**
@@ -421,9 +422,9 @@ public interface RaiView< T > extends RaView< T, RaiView< T > >, RandomAccessibl
 	 *
 	 * @return an expanded view
 	 */
-	default RaiView< T > expand( Extension< T > extension, long... border )
+	default RandomAccessibleIntervalView< T > expand( Extension< T > extension, long... border )
 	{
-		return RaiView.wrap( Views.expand( this, extension.factory, Util.expandArray( border, numDimensions() ) ) );
+		return RandomAccessibleIntervalView.wrap( Views.expand( this, extension.factory, Util.expandArray( border, numDimensions() ) ) );
 	}
 
 	/**
@@ -445,7 +446,7 @@ public interface RaiView< T > extends RaView< T, RaiView< T > >, RandomAccessibl
 	 * @return a converted view
 	 */
 	@Override
-	default < U > RaiView< U > convert(
+	default < U > RandomAccessibleIntervalView< U > convert(
 			final Supplier< U > targetSupplier, final Converter< ? super T, ? super U > converter )
 	{
 		return wrap( Converters.convert2( delegate(), converter, targetSupplier ) );
@@ -471,7 +472,7 @@ public interface RaiView< T > extends RaView< T, RaiView< T > >, RandomAccessibl
 	 * @return a converted view
 	 */
 	@Override
-	default < U > RaiView< U > convert(
+	default < U > RandomAccessibleIntervalView< U > convert(
 			final Supplier< U > targetSupplier, final Supplier< Converter< ? super T, ? super U > > converterSupplier )
 	{
 		return wrap( Converters.convert2( delegate(), converterSupplier, targetSupplier ) );
@@ -489,7 +490,7 @@ public interface RaiView< T > extends RaView< T, RaiView< T > >, RandomAccessibl
 	 * @return {@code function.apply(this)}
 	 */
 	@Override
-	default < U > U use( Function< ? super RaiView< T >, U > function )
+	default < U > U use( Function< ? super RandomAccessibleIntervalView< T >, U > function )
 	{
 		return function.apply( this );
 	}
@@ -498,7 +499,7 @@ public interface RaiView< T > extends RaView< T, RaiView< T > >, RandomAccessibl
 	// -- RandomAccessibleInterval --------------------------------------------
 
 	@Override
-	default RaiView< T > view()
+	default RandomAccessibleIntervalView< T > view()
 	{
 		return this;
 	}

@@ -18,11 +18,12 @@ import net.imglib2.view.Views;
  * copying the underlying data. Consecutive transformations are concatenated and
  * simplified to provide optimally efficient accessors.
  * <p>
- * The {@code RraView} gateway implements {@code RealRandomAccessible},
- * forwarding all methods to its {@link #delegate}. Additionally, it provides
- * methods analogous to the {@code static} {@link Views} methods that operate on
- * its {@link #delegate} and return {@code RaiView}, {@code RaView}, or {@code
- * RraView} wrappers.
+ * The {@code RealRandomAccessibleView} gateway implements {@code
+ * RealRandomAccessible}, forwarding all methods to its {@link #delegate}.
+ * Additionally, it provides methods analogous to the {@code static} {@link
+ * Views} methods that operate on its {@link #delegate} and return {@code
+ * RandomAccessibleIntervalView}, {@code RandomAccessibleView}, or {@code
+ * RealRandomAccessibleView} wrappers.
  * <p>
  * This provides a fluent API for conveniently chaining {@code Views} methods.
  * For example
@@ -38,11 +39,11 @@ import net.imglib2.view.Views;
  * @author Michael Innerberger
  * @see Views
  */
-public interface RraView< T > extends RealRandomAccessible< T >
+public interface RealRandomAccessibleView< T > extends RealRandomAccessible< T >
 {
 	RealRandomAccessible< T > delegate();
 
-	static < T > RraView< T > wrap( final RealRandomAccessible< T > delegate )
+	static < T > RealRandomAccessibleView< T > wrap( final RealRandomAccessible< T > delegate )
 	{
 		return () -> delegate;
 	}
@@ -56,9 +57,9 @@ public interface RraView< T > extends RealRandomAccessible< T >
 	 *
 	 * @return a rasterized view
 	 */
-	default RaView< T, ? > raster()
+	default RandomAccessibleView< T, ? > raster()
 	{
-		return RaView.wrap( Views.raster( delegate() ) );
+		return RandomAccessibleView.wrap( Views.raster( delegate() ) );
 	}
 
 	/**
@@ -79,7 +80,7 @@ public interface RraView< T > extends RealRandomAccessible< T >
 	 *
 	 * @return a converted view
 	 */
-	default < U > RraView< U > convert(
+	default < U > RealRandomAccessibleView< U > convert(
 			final Converter< ? super T, ? super U > converter,
 			final Supplier< U > targetSupplier )
 	{
@@ -105,7 +106,7 @@ public interface RraView< T > extends RealRandomAccessible< T >
 	 *
 	 * @return a converted view
 	 */
-	default < U > RraView< U > convert(
+	default < U > RealRandomAccessibleView< U > convert(
 			final Supplier< Converter< ? super T, ? super U > > converterSupplier,
 			final Supplier< U > targetSupplier )
 	{
@@ -123,7 +124,7 @@ public interface RraView< T > extends RealRandomAccessible< T >
 	 *
 	 * @return {@code function.apply(this)}
 	 */
-	default < U > U use( Function< ? super RraView< T >, U > function )
+	default < U > U use( Function< ? super RealRandomAccessibleView< T >, U > function )
 	{
 		return function.apply( this );
 	}
@@ -132,7 +133,7 @@ public interface RraView< T > extends RealRandomAccessible< T >
 	// -- RealRandomAccessible ------------------------------------------------
 
 	@Override
-	default RraView< T > realView()
+	default RealRandomAccessibleView< T > realView()
 	{
 		return this;
 	}
