@@ -154,7 +154,7 @@ public class Intervals
 			min[ d ] -= border;
 			max[ d ] += border;
 		}
-		return new FinalInterval( min, max );
+		return FinalInterval.wrap( min, max );
 	}
 
 	/**
@@ -198,7 +198,7 @@ public class Intervals
 			min[ d ] -= border.dimension( d );
 			max[ d ] += border.dimension( d );
 		}
-		return new FinalInterval( min, max );
+		return FinalInterval.wrap( min, max );
 	}
 
 	/**
@@ -224,7 +224,7 @@ public class Intervals
 		interval.max( max );
 		min[ d ] -= border;
 		max[ d ] += border;
-		return new FinalInterval( min, max );
+		return FinalInterval.wrap( min, max );
 	}
 
 	/**
@@ -250,7 +250,7 @@ public class Intervals
 		interval.max( max );
 		min[ d ] += t;
 		max[ d ] += t;
-		return new FinalInterval( min, max );
+		return FinalInterval.wrap( min, max );
 	}
 
 	/**
@@ -277,7 +277,7 @@ public class Intervals
 			min[ d ] += translation[ d ];
 			max[ d ] += translation[ d ];
 		}
-		return new FinalInterval( min, max );
+		return FinalInterval.wrap( min, max );
 	}
 
 	/**
@@ -304,7 +304,7 @@ public class Intervals
 			min[ d ] -= translation[ d ];
 			max[ d ] -= translation[ d ];
 		}
-		return new FinalInterval( min, max );
+		return FinalInterval.wrap( min, max );
 	}
 
 	/**
@@ -333,7 +333,7 @@ public class Intervals
 		}
 		min[ m ] = minOfNewDim;
 		max[ m ] = maxOfNewDim;
-		return new FinalInterval( min, max );
+		return FinalInterval.wrap( min, max );
 	}
 
 	/**
@@ -354,7 +354,7 @@ public class Intervals
 		final long tmp = min[ d ];
 		min[ d ] = -max[ d ];
 		max[ d ] = -tmp;
-		return new FinalInterval( min, max );
+		return FinalInterval.wrap( min, max );
 	}
 
 	/**
@@ -380,7 +380,7 @@ public class Intervals
 				max[ e - 1 ] = interval.max( e );
 			}
 		}
-		return new FinalInterval( min, max );
+		return FinalInterval.wrap( min, max );
 	}
 
 	/**
@@ -404,7 +404,7 @@ public class Intervals
 			min[ newAxisIndices[ d ] ] = interval.min( d );
 			max[ newAxisIndices[ d ] ] = interval.max( d );
 		}
-		return new FinalInterval( min, max );
+		return FinalInterval.wrap( min, max );
 	}
 
 	/**
@@ -427,7 +427,7 @@ public class Intervals
 		max[ toAxis ] = max[ fromAxis ];
 		min[ fromAxis ] = fromMinNew;
 		max[ fromAxis ] = fromMaxNew;
-		return new FinalInterval( min, max );
+		return FinalInterval.wrap( min, max );
 	}
 
 	/**
@@ -458,7 +458,7 @@ public class Intervals
 			min[ fromAxis ] = fromMinNew;
 			max[ fromAxis ] = fromMaxNew;
 		}
-		return new FinalInterval( min, max );
+		return FinalInterval.wrap( min, max );
 	}
 
 	/**
@@ -510,7 +510,7 @@ public class Intervals
 			min[ d ] = Math.max( intervalA.min( d ), intervalB.min( d ) );
 			max[ d ] = Math.min( intervalA.max( d ), intervalB.max( d ) );
 		}
-		return new FinalInterval( min, max );
+		return FinalInterval.wrap( min, max );
 	}
 
 	/**
@@ -566,7 +566,7 @@ public class Intervals
 			min[ d ] = Math.min( intervalA.min( d ), intervalB.min( d ) );
 			max[ d ] = Math.max( intervalA.max( d ), intervalB.max( d ) );
 		}
-		return new FinalInterval( min, max );
+		return FinalInterval.wrap( min, max );
 	}
 
 	/**
@@ -663,7 +663,7 @@ public class Intervals
 			min[ d ] = ( long ) Math.floor( ri.realMin( d ) );
 			max[ d ] = ( long ) Math.ceil( ri.realMax( d ) );
 		}
-		return new FinalInterval( min, max );
+		return FinalInterval.wrap( min, max );
 	}
 
 	/**
@@ -685,7 +685,7 @@ public class Intervals
 			min[ d ] = ( long ) Math.ceil( ri.realMin( d ) );
 			max[ d ] = ( long ) Math.floor( ri.realMax( d ) );
 		}
-		return new FinalInterval( min, max );
+		return FinalInterval.wrap( min, max );
 	}
 
 	/**
