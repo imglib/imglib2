@@ -68,7 +68,7 @@ class ViewPrimitiveBlocks< T extends NativeType< T >, R extends NativeType< R > 
 	{
 		this.props = props;
 		final PrimitiveType primitiveType = props.getRootType().getNativeTypeFactory().getPrimitiveType();
-		final MemCopy memCopy = MemCopy.forPrimitiveType( primitiveType, props.getRootAccessType() instanceof BufferAccess, false );
+		final MemCopy memCopy = MemCopy.forPrimitiveType( primitiveType, /*props.getRootAccessType() instanceof BufferAccess*/ false, false );
 		final Extension extension = props.getExtension() != null ? props.getExtension() : Extension.border();
 		final Object oob = extractOobValue( props.getRootType(), extension );
 		final Ranges findRanges = Ranges.forExtension( extension );
