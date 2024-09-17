@@ -37,7 +37,6 @@ import java.util.function.Supplier;
 import net.imglib2.RandomAccessible;
 import net.imglib2.converter.Converter;
 import net.imglib2.img.NativeImg;
-import net.imglib2.img.basictypeaccess.array.ArrayDataAccess;
 import net.imglib2.transform.integer.MixedTransform;
 import net.imglib2.type.NativeType;
 import net.imglib2.view.TransformBuilder;
@@ -144,22 +143,6 @@ class ViewProperties< T extends NativeType< T >, R extends NativeType< R > >
 	public R getRootType()
 	{
 		return rootType;
-	}
-
-	public ArrayDataAccess< ? > getRootAccessType()
-	{
-		return ( ArrayDataAccess< ? > ) getDataAccess( root );
-	}
-
-	/*
-	 * TODO: There should be a better way to get straight to a DataAccess instance.
-	 *       This is similar to the getType() problem.
-	 *       For now, this will work.
-	 *       Make an issue about getDataAccess() ...
-	 */
-	private static < A > A getDataAccess( NativeImg< ?, A > img )
-	{
-		return img.update( img.cursor() );
 	}
 
 	public Extension getExtension()

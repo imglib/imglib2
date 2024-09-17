@@ -57,4 +57,18 @@ public interface NativeImg< T extends Type< T >, A > extends Img< T >
 	void setLinkedType( T type );
 
 	T createLinkedType();
+
+	/**
+	 * This is used for checking whether a {@link NativeImg} is backed by
+	 * primitive arrays or {@code ByteBuffer}.
+	 * <p>
+	 * This may return the actual data backing this {@code NativeImg}, or just
+	 * some {@code A} of the same type. <em>Do not store a reference to the
+	 * returned object to avoid memory leaks!</em>
+	 *
+	 * @return an instance of the access type {@code A} backing this image.
+	 */
+	default A getAccessType() {
+		return update( cursor() );
+	}
 }
