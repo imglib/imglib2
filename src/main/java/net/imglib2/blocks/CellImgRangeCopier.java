@@ -33,12 +33,18 @@
  */
 package net.imglib2.blocks;
 
+import java.util.Arrays;
 import java.util.List;
+
+import net.imglib2.FinalInterval;
+import net.imglib2.Interval;
 import net.imglib2.RandomAccess;
 import net.imglib2.img.basictypeaccess.array.ArrayDataAccess;
+import net.imglib2.img.basictypeaccess.volatiles.VolatileAccess;
 import net.imglib2.img.cell.AbstractCellImg;
 import net.imglib2.img.cell.Cell;
 import net.imglib2.img.cell.CellGrid;
+import net.imglib2.util.Intervals;
 
 import static net.imglib2.blocks.Ranges.Direction.CONSTANT;
 
@@ -48,7 +54,7 @@ import static net.imglib2.blocks.Ranges.Direction.CONSTANT;
  *
  * @param <T> a primitive array type, e.g., {@code byte[]}.
  */
-class CellImgRangeCopier< S, T > implements RangeCopier< T >
+class CellImgRangeCopier< S, T > implements RangeCopier< T >, VolatileRangeCopier< T >
 {
 	private final int n;
 	private final CellGrid cellGrid;
@@ -140,10 +146,27 @@ class CellImgRangeCopier< S, T > implements RangeCopier< T >
 		for ( int d = 0; d < n; ++d )
 			rangesPerDimension[ d ] = findRanges.findRanges( srcPos[ d ], size[ d ], srcDims[ d ], cellGrid.cellDimension( d ) );
 
+		// collect Cells that will be visited
+		// collectCellPositions(); // TODO: do we want something like this ???
+
 		// copy data
 		setupDestSize( size );
 		copy( dest, n - 1 );
 	}
+
+	@Override
+	public void VOLATILE_copy( final long[] srcPos, final T dest, final byte[] destValid, final int[] size )
+	{
+		// find ranges
+		for ( int d = 0; d < n; ++d )
+			rangesPerDimension[ d ] = findRanges.findRanges( srcPos[ d ], size[ d ], srcDims[ d ], cellGrid.cellDimension( d ) );
+
+		// copy data
+		setupDestSize( size );
+		VOLATILE_copy( dest, destValid, n - 1 );
+	}
+
+
 
 	/**
 	 * Iterates the {@code rangesPerDimension} list for the given dimension {@code d}
@@ -168,6 +191,21 @@ class CellImgRangeCopier< S, T > implements RangeCopier< T >
 				copy( dest, d - 1 );
 			else
 				copyRanges( dest );
+		}
+	}
+
+	private void VOLATILE_copy( final T dest, final byte[] destValid, final int d )
+	{
+		for ( Ranges.Range range : rangesPerDimension[ d ] )
+		{
+			ranges[ d ] = range;
+			updateRange( d );
+			if ( range.dir == CONSTANT )
+				VOLATILE_fillRanges( dest, destValid, d );
+			else if ( d > 0 )
+				VOLATILE_copy( dest, destValid, d - 1 );
+			else
+				VOLATILE_copyRanges( dest, destValid );
 		}
 	}
 
@@ -245,6 +283,77 @@ class CellImgRangeCopier< S, T > implements RangeCopier< T >
 		}
 	}
 
+	private void VOLATILE_copyRanges( final T dest, final byte[] destValid )
+	{
+		csteps[ 0 ] = 1;
+		for ( int d = 0; d < n - 1; ++d )
+			csteps[ d + 1 ] = csteps[ d ] * cdims[ d ];
+
+		int sOffset = 0;
+		for ( int d = 0; d < n; ++d )
+		{
+			final Ranges.Range r = ranges[ d ];
+			sOffset += csteps[ d ] * r.cellx;
+			switch( r.dir )
+			{
+			case BACKWARD:
+				csteps[ d ] = -csteps[ d ];
+				break;
+			case STAY:
+				csteps[ d ] = 0;
+				break;
+			}
+		}
+
+		final int dOffset = doffsets[ 0 ];
+
+		final Cell< ? > cell = cellAccess.get();
+		final ArrayDataAccess< ? > data = ( ArrayDataAccess< ? > ) cell.getData();
+		final boolean isValid = ( ( VolatileAccess ) data ).isValid();
+		final byte b_isValid = ( byte ) ( isValid ? 1 : 0 );
+		System.out.println( Arrays.toString( cellAccess.positionAsLongArray() ) + ": isValid = " + isValid );
+		// TODO: Revise! Probably, we can just use VOLATILE_fillRangesRecursively if !isValid.
+		final S src = ( S ) data.getCurrentStorageArray();
+		if ( n > 1 )
+			VOLATILE_copyRangesRecursively( src, sOffset, dest, destValid, b_isValid, dOffset, n - 1 );
+		else
+		{
+			final int l0 = lengths[ 0 ];
+			final int cstep0 = csteps[ 0 ];
+			memCopy.copyLines( cstep0, l0, 1, src, sOffset, 0, dest, dOffset, 0 );
+			fillLines( l0, 1, destValid, dOffset, 0, b_isValid );
+		}
+	}
+
+	private static void fillLines(
+			final int lineLength,
+			final int numLines,
+			final byte[] dest,
+			final int destPos,
+			final int destStep,
+			final byte value )
+	{
+		for ( int i = 0; i < numLines; ++i )
+			Arrays.fill( dest, destPos + i * destStep, lineLength, value );
+	}
+
+	private void VOLATILE_copyRangesRecursively( final S src, final int srcPos, final T dest, final byte[] destValid, final byte isValid, final int destPos, final int d )
+	{
+		final int length = lengths[ d ];
+		final int cstep = csteps[ d ];
+		final int dstep = dsteps[ d ];
+		if ( d > 1 )
+			for ( int i = 0; i < length; ++i )
+				VOLATILE_copyRangesRecursively( src, srcPos + i * cstep, dest, destValid, isValid, destPos + i * dstep, d - 1 );
+		else
+		{
+			final int l0 = lengths[ 0 ];
+			final int cstep0 = csteps[ 0 ];
+			memCopy.copyLines( cstep0, l0, length, src, srcPos, cstep, dest, destPos, dstep );
+			fillLines( l0, length, destValid, destPos, dstep, isValid );
+		}
+	}
+
 	/**
      * Once we get here, {@link #setupDestSize} and {@link #updateRange} for
      * all dimensions have been called, so the {@code dsteps}, {@code
@@ -274,4 +383,69 @@ class CellImgRangeCopier< S, T > implements RangeCopier< T >
 			for ( int i = 0; i < length; ++i )
 				memCopy.copyValue( oob, 0, dest, destPos + i * dstep, lengths[ dConst ] );
 	}
+
+	void VOLATILE_fillRanges( final T dest, final byte[] destValid, final int dConst )
+	{
+		final int dOffset = doffsets[ dConst ];
+		lengths[ dConst ] *= dsteps[ dConst ];
+
+		if ( n - 1 > dConst )
+			VOLATILE_fillRangesRecursively( dest,  destValid, dOffset, n - 1, dConst );
+		else
+		{
+			memCopy.copyValue( oob, 0, dest, dOffset, lengths[ dConst ] );
+			Arrays.fill( destValid, dOffset, lengths[ dConst ], ( byte ) 1 );
+		}
+	}
+
+	private void VOLATILE_fillRangesRecursively( final T dest, final byte[] destValid, final int destPos, final int d, final int dConst )
+	{
+		final int length = lengths[ d ];
+		final int dstep = dsteps[ d ];
+		if ( d > dConst + 1 )
+			for ( int i = 0; i < length; ++i )
+				fillRangesRecursively( dest, destPos + i * dstep, d - 1, dConst );
+		else
+			for ( int i = 0; i < length; ++i )
+			{
+				memCopy.copyValue( oob, 0, dest, destPos + i * dstep, lengths[ dConst ] );
+				Arrays.fill( destValid, destPos + i * dstep, lengths[ dConst ], ( byte ) 1 );
+			}
+	}
+
+
+
+
+
+
+
+	private void collectCellPositions() {
+		System.out.println( "CellImgRangeCopier.collectCellPositions" );
+
+		final long[] min = new long[ n ];
+		final long[] max = new long[ n ];
+		final Interval gridInterval = FinalInterval.wrap( min, max );
+		for ( int d = 0; d < n; ++d ) {
+			int mind = Integer.MAX_VALUE;
+			int maxd = Integer.MIN_VALUE;
+			for ( final Ranges.Range range : rangesPerDimension[ d ] )
+			{
+				if ( range.dir != CONSTANT )
+				{
+					final int x = range.gridx;
+					mind = Math.min( x, mind );
+					maxd = Math.max( x, maxd );
+				}
+			}
+			min[ d ] = mind;
+			max[ d ] = maxd;
+		}
+
+		if( !Intervals.isEmpty( gridInterval ) ) {
+			System.out.println( Intervals.toString( gridInterval ) );
+		} else {
+			System.out.println("empty");
+		}
+	}
 }
+
