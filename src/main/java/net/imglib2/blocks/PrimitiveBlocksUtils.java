@@ -34,23 +34,39 @@
 package net.imglib2.blocks;
 
 import java.util.Arrays;
+import java.util.Set;
 
+import net.imglib2.Volatile;
 import net.imglib2.img.array.ArrayImg;
-import net.imglib2.img.array.ArrayImgFactory;
+import net.imglib2.img.basictypeaccess.AccessFlags;
+import net.imglib2.img.basictypeaccess.ArrayDataAccessFactory;
 import net.imglib2.img.basictypeaccess.array.ArrayDataAccess;
 import net.imglib2.transform.integer.MixedTransform;
 import net.imglib2.type.NativeType;
+import net.imglib2.type.NativeTypeFactory;
+import net.imglib2.util.Cast;
+import net.imglib2.util.Fraction;
 
 class PrimitiveBlocksUtils
 {
-	static < T extends NativeType< T > > Object extractOobValue( final T type, final Extension extension )
+	static < T extends NativeType< T >, A extends ArrayDataAccess< A > > Object extractOobValue( final T type, final Extension extension )
 	{
 		if ( extension.type() == Extension.Type.CONSTANT )
 		{
+			@SuppressWarnings( "unchecked" )
 			final T oobValue = ( ( ExtensionImpl.ConstantExtension< T > ) extension ).getValue();
-			final ArrayImg< T, ? > img = new ArrayImgFactory<>( type ).create( 1 );
+			final NativeTypeFactory< T, ? super A > typeFactory = Cast.unchecked( type.getNativeTypeFactory() );
+			final Fraction entitiesPerPixel = type.getEntitiesPerPixel();
+			final int numEntities = ( int ) entitiesPerPixel.mulCeil( 1 );
+			final Set< AccessFlags > flags = ( type instanceof Volatile )
+					? AccessFlags.setOf( AccessFlags.VOLATILE )
+					: AccessFlags.setOf();
+			final A access = ArrayDataAccessFactory.get( typeFactory, flags );
+			final A data = access.createArray( numEntities );
+			final ArrayImg< T, A > img = new ArrayImg<>( data, new long[] { 1 }, entitiesPerPixel );
+			img.setLinkedType( typeFactory.createLinkedType( img ) );
 			img.firstElement().set( oobValue );
-			return ( ( ArrayDataAccess< ? > ) ( img.update( null ) ) ).getCurrentStorageArray();
+			return data.getCurrentStorageArray();
 		}
 		else
 			return null;
