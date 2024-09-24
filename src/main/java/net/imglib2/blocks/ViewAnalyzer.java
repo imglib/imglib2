@@ -285,7 +285,7 @@ class ViewAnalyzer
 		if (oobIndex >= 0)
 		{
 			final ExtensionViewNode node = ( ExtensionViewNode ) nodes.get( oobIndex );
-			oobExtension = Extension.of( node.getOutOfBoundsFactory() );
+			oobExtension = Extension.of( node );
 		}
 		return true;
 	}
