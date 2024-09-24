@@ -120,6 +120,19 @@ public interface PrimitiveBlocks< T extends NativeType< T > > extends Typed< T >
 	void copy( Interval interval, Object dest );
 
 	/**
+	 * TODO
+	 *
+	 * @param interval
+	 * @param dest
+	 * @param destValid
+	 */
+	// TODO: should go into VolatilePrimitiveBlocks interface
+	default void copy( Interval interval, Object dest, byte[] destValid )
+	{
+		throw new UnsupportedOperationException( "TODO: implement" );
+	}
+
+	/**
 	 * Copy a block from the ({@code T}-typed) source into primitive arrays (of
 	 * the appropriate type).
 	 *
