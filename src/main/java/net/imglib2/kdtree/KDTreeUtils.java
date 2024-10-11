@@ -226,7 +226,7 @@ final class KDTreeUtils
 		for (int i = 0; i < positions.length; ++i )
 		{
 			final int d = i % n;
-			unflattened[ d ][ i / n + d ] = positions[ i ];
+			unflattened[ d ][ i / n ] = positions[ i ];
 		}
 		return unflattened;
 
