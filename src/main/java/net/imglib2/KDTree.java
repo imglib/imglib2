@@ -33,12 +33,14 @@
  */
 package net.imglib2;
 
+import java.util.Iterator;
 import java.util.List;
 
 import net.imglib2.converter.AbstractConvertedIterableRealInterval;
 import net.imglib2.converter.AbstractConvertedRealCursor;
 import net.imglib2.kdtree.KDTreeData;
 import net.imglib2.kdtree.KDTreeImpl;
+import net.imglib2.util.Cast;
 
 public class KDTree< T > implements EuclideanSpace, IterableRealInterval< T >
 {
@@ -98,7 +100,7 @@ public class KDTree< T > implements EuclideanSpace, IterableRealInterval< T >
 	 */
 	public KDTree( final IterableRealInterval< T > interval )
 	{
-		this( verifySize( interval ), interval, positionsIterable( interval ) );
+		this( verifySize( interval ), copySamplesIterable( interval ), positionsIterable( interval ) );
 	}
 
 	private static final int MAX_ARRAY_SIZE = Integer.MAX_VALUE - 8;
@@ -155,6 +157,32 @@ public class KDTree< T > implements EuclideanSpace, IterableRealInterval< T >
 			{
 				return new Cursor( sourceInterval.localizingCursor() );
 			}
+		};
+	}
+
+	private static < T > Iterable< T > copySamplesIterable( Iterable< T > source )
+	{
+		if ( !( source.iterator() instanceof Sampler ) )
+			throw new IllegalArgumentException();
+
+		return () -> {
+			final Iterator< T > it = source.iterator();
+			final Sampler< T > sampler = Cast.unchecked( it );
+			return new Iterator< T >()
+			{
+				@Override
+				public boolean hasNext()
+				{
+					return it.hasNext();
+				}
+
+				@Override
+				public T next()
+				{
+					it.next();
+					return sampler.copy().get();
+				}
+			};
 		};
 	}
 
