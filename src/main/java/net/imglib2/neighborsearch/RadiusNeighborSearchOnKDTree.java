@@ -75,10 +75,10 @@ public class RadiusNeighborSearchOnKDTree< T > implements RadiusNeighborSearch< 
 	public void search( final RealLocalizable reference, final double radius, final boolean sortResults )
 	{
 		impl.search( reference, radius, sortResults );
-		fillMatches( 0, impl.numNeighbors() - 1 );
+		fillMatches( impl.numNeighbors() - 1 );
 	}
 
-	private void fillMatches( final int first, final int last )
+	private void fillMatches( final int last )
 	{
 		while ( matches.size() < last + 1 )
 			matches.add( tree.createNode() );
