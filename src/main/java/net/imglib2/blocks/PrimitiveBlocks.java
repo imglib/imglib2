@@ -37,6 +37,7 @@ import static net.imglib2.blocks.PrimitiveBlocks.OnFallback.FAIL;
 import static net.imglib2.blocks.PrimitiveBlocks.OnFallback.WARN;
 
 import net.imglib2.EuclideanSpace;
+import net.imglib2.Interval;
 import net.imglib2.RandomAccessible;
 import net.imglib2.Typed;
 import net.imglib2.type.NativeType;
@@ -109,6 +110,19 @@ public interface PrimitiveBlocks< T extends NativeType< T > > extends Typed< T >
 	 * Copy a block from the ({@code T}-typed) source into primitive arrays (of
 	 * the appropriate type).
 	 *
+	 * @param interval
+	 * 		position and size of the block to copy
+	 * @param dest
+	 * 		primitive array to copy into. Must correspond to {@code T}, for
+	 *      example, if {@code T} is {@code UnsignedByteType} then {@code dest} must
+	 *      be {@code byte[]}.
+	 */
+	void copy( Interval interval, Object dest );
+
+	/**
+	 * Copy a block from the ({@code T}-typed) source into primitive arrays (of
+	 * the appropriate type).
+	 *
 	 * @param srcPos
 	 * 		min coordinate of the block to copy
 	 * @param dest
@@ -118,7 +132,10 @@ public interface PrimitiveBlocks< T extends NativeType< T > > extends Typed< T >
 	 * @param size
 	 * 		the size of the block to copy
 	 */
-	void copy( long[] srcPos, Object dest, int[] size );
+	default void copy( long[] srcPos, Object dest, int[] size )
+	{
+		copy( BlockInterval.wrap( srcPos, size ), dest );
+	}
 
 	/**
 	 * Copy a block from the ({@code T}-typed) source into primitive arrays (of
