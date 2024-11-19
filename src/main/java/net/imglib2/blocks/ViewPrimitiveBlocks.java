@@ -37,6 +37,7 @@ import static net.imglib2.blocks.PrimitiveBlocksUtils.extractOobValue;
 
 import java.util.function.Supplier;
 
+import net.imglib2.Interval;
 import net.imglib2.img.basictypeaccess.nio.BufferAccess;
 import net.imglib2.transform.integer.MixedTransform;
 import net.imglib2.type.NativeType;
@@ -94,16 +95,22 @@ class ViewPrimitiveBlocks< T extends NativeType< T >, R extends NativeType< R > 
 	}
 
 	/**
-	 * @param srcPos
-	 * 		min coordinates of block to copy from src Img.
+	 * Copy a block from the ({@code T}-typed) source into primitive arrays (of
+	 * the appropriate type).
+	 *
+	 * @param interval
+	 * 		position and size of the block to copy
 	 * @param dest
-	 * 		destination array. Type is {@code byte[]}, {@code float[]},
-	 * 		etc, corresponding to the src Img's native type.
-	 * @param size
-	 * 		dimensions of block to copy from src Img.
+	 * 		primitive array to copy into. Must correspond to {@code T}, for
+	 *      example, if {@code T} is {@code UnsignedByteType} then {@code dest} must
+	 *      be {@code byte[]}.
 	 */
-	public void copy( final long[] srcPos, final Object dest, final int[] size )
+	public void copy( final Interval interval, final Object dest )
 	{
+		final BlockInterval blockInterval = BlockInterval.asBlockInterval( interval );
+		final long[] srcPos = blockInterval.min();
+		final int[] size = blockInterval.size();
+
 		final long[] destPos;
 		final int[] destSize;
 		if ( props.hasTransform() )
@@ -185,9 +192,9 @@ class ViewPrimitiveBlocks< T extends NativeType< T >, R extends NativeType< R > 
 			}
 
 			@Override
-			public void copy( final long[] srcPos, final Object dest, final int[] size )
+			public void copy( final Interval interval, final Object dest )
 			{
-				threadSafeSupplier.get().copy( srcPos, dest, size );
+				threadSafeSupplier.get().copy( interval, dest );
 			}
 
 			@Override
