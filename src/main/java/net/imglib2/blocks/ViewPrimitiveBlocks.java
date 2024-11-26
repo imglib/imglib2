@@ -74,8 +74,8 @@ class ViewPrimitiveBlocks< T extends NativeType< T >, R extends NativeType< R > 
 		final Object oob = extractOobValue( props.getRootType(), extension );
 		final Ranges findRanges = Ranges.forExtension( extension );
 		copier = RangeCopier.create( props.getRoot(), findRanges, memCopy, oob );
-		tempArrayConvert = Cast.unchecked( TempArray.forPrimitiveType( primitiveType ) );
-		tempArrayPermute = Cast.unchecked( TempArray.forPrimitiveType( primitiveType ) );
+		tempArrayConvert = TempArray.forPrimitiveType( primitiveType );
+		tempArrayPermute = TempArray.forPrimitiveType( primitiveType );
 		permuteInvert = new PermuteInvert( memCopy, props.getPermuteInvertTransform() );
 		convert = props.hasConverterSupplier()
 				? Convert.create( props.getRootType(), props.getViewType(), props.getConverterSupplier() )
@@ -94,6 +94,38 @@ class ViewPrimitiveBlocks< T extends NativeType< T >, R extends NativeType< R > 
 		return props.getViewNumDimensions();
 	}
 
+	private BlockInterval getTransformedInterval( final BlockInterval interval )
+	{
+		if ( !props.hasTransform() )
+			return interval;
+
+		final long[] srcPos = interval.min();
+		final int[] srcSize = interval.size();
+		final MixedTransform transform = props.getTransform();
+		final int n = transform.numTargetDimensions();
+		final BlockInterval destInterval = new BlockInterval( n );
+		final long[] destPos = destInterval.min();
+		final int[] destSize = destInterval.size();
+		for ( int d = 0; d < n; d++ )
+		{
+			final int t = ( int ) transform.getTranslation( d );
+			if ( transform.getComponentZero( d ) )
+			{
+				destPos[ d ] = t;
+				destSize[ d ] = 1;
+			}
+			else
+			{
+				final int c = transform.getComponentMapping( d );
+				destPos[ d ] = transform.getComponentInversion( d )
+						? t - srcPos[ c ] - srcSize[ c ] + 1
+						: t + srcPos[ c ];
+				destSize[ d ] = srcSize[ c ];
+			}
+		}
+		return destInterval;
+	}
+
 	/**
 	 * Copy a block from the ({@code T}-typed) source into primitive arrays (of
 	 * the appropriate type).
@@ -105,47 +137,19 @@ class ViewPrimitiveBlocks< T extends NativeType< T >, R extends NativeType< R > 
 	 *      example, if {@code T} is {@code UnsignedByteType} then {@code dest} must
 	 *      be {@code byte[]}.
 	 */
+	@Override
 	public void copy( final Interval interval, final Object dest )
 	{
 		final BlockInterval blockInterval = BlockInterval.asBlockInterval( interval );
-		final long[] srcPos = blockInterval.min();
 		final int[] size = blockInterval.size();
+		final int length = ( int ) Intervals.numElements( size );
 
-		final long[] destPos;
-		final int[] destSize;
-		if ( props.hasTransform() )
-		{
-			final MixedTransform transform = props.getTransform();
-			final int n = transform.numTargetDimensions();
-			destPos = new long[ n ];
-			destSize = new int[ n ];
-			for ( int d = 0; d < n; d++ )
-			{
-				final int t = ( int ) transform.getTranslation( d );
-				if ( transform.getComponentZero( d ) )
-				{
-					destPos[ d ] = t;
-					destSize[ d ] = 1;
-				}
-				else
-				{
-					final int c = transform.getComponentMapping( d );
-					destPos[ d ] = transform.getComponentInversion( d )
-							? t - srcPos[ c ] - size[ c ] + 1
-							: t + srcPos[ c ];
-					destSize[ d ] = size[ c ];
-				}
-			}
-		}
-		else
-		{
-			destPos = srcPos;
-			destSize = size;
-		}
+		final BlockInterval destInterval = getTransformedInterval( blockInterval );
+		final long[] destPos = destInterval.min();
+		final int[] destSize = destInterval.size();
 
 		final boolean doPermute = props.hasPermuteInvertTransform();
 		final boolean doConvert = props.hasConverterSupplier();
-		final int length = ( int ) Intervals.numElements( size );
 		if ( doPermute && doConvert )
 		{
 			final Object copyDest = tempArrayPermute.get( length );
