@@ -62,7 +62,7 @@ interface RangeCopier< T >
 	 * @param size
 	 * 		dimensions of block to copy from src Img.
 	 */
-	void copy( final long[] srcPos, final T dest, final int[] size );
+	void copy( long[] srcPos, T dest, int[] size );
 
 	/**
 	 * Return a new independent instance of this {@code RangeCopier}. This is
