@@ -36,11 +36,16 @@
  */
 package net.imglib2.transform.integer.permutation;
 
+import static org.junit.Assert.assertEquals;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Random;
+import java.util.function.Function;
+import java.util.stream.IntStream;
 
 import net.imglib2.Cursor;
+import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.img.array.ArrayCursor;
 import net.imglib2.img.array.ArrayImg;
 import net.imglib2.img.array.ArrayImgs;
@@ -200,6 +205,56 @@ public class SingleDimensionPermutationTransformTest
 			}
 		}
 
+	}
+
+	@Test
+	public void testViewsPermuteCoordinatesInverse()
+	{
+		final ArrayImg<IntType, IntArray> img = ArrayImgs.ints(2, 3, 4);
+
+		// identity permutation
+		testHelper( img, d -> {
+			return IntStream.iterate(0, i -> i+1).limit(img.dimension(d)).toArray();
+		});
+
+		// reversal permutation
+		testHelper( img, d -> {
+			return IntStream.iterate((int)img.dimension(d) - 1, i -> i-1).limit(img.dimension(d)).toArray();
+		});
+
+		// cycle permutation
+		testHelper( img, d -> {
+			int N = (int)img.dimension(d);
+			return IntStream.iterate(1, i -> (i+1) % N  ).limit(N).toArray();
+		});
+	}
+
+	private void testHelper(
+			final RandomAccessibleInterval<IntType> img,
+			Function<Integer, int[]> permutationForDimension ) {
+
+		final int nd = img.numDimensions();
+		for( int dimToPermute = 0; dimToPermute < nd; dimToPermute++ ) {
+
+			fillHyperSlicesWithIndex(img, dimToPermute);
+			final int[] permutation = permutationForDimension.apply(dimToPermute);
+
+			final IntervalView<IntType> permuted = Views.permuteCoordinatesInverse(img, permutation, dimToPermute);
+			for( int i = 0; i < permuted.dimension(dimToPermute); i++ ) {
+				final int expectedVal = permutation[i];
+				Views.hyperSlice(permuted, dimToPermute, i).forEach( x -> {
+					assertEquals(expectedVal, x.get());
+				});
+			}
+		}
+	}
+
+	private void fillHyperSlicesWithIndex(final RandomAccessibleInterval<IntType> img, int d ) {
+
+		for( int i = 0; i < img.dimension(d); i++ ) {
+			final int val = i;
+			Views.hyperSlice(img, d, i).forEach( x -> x.set(val));
+		}
 	}
 
 }
