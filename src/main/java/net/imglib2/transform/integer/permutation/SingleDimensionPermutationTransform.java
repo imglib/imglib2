@@ -71,7 +71,7 @@ public class SingleDimensionPermutationTransform extends AbstractPermutationTran
 			final int d )
 	{
 		super( lut );
-		assert d > 0 && d < numTargetDimensions && d < numSourceDimensions;
+		assert d >= 0 && d < numTargetDimensions && d < numSourceDimensions;
 		this.numSourceDimensions = numSourceDimensions;
 		this.numTargetDimensions = numTargetDimensions;
 		this.d = d;
