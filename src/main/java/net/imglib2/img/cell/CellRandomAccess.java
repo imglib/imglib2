@@ -122,10 +122,19 @@ public class CellRandomAccess< T extends NativeType< T >, C extends Cell< ? > >
 		updatePosition( false );
 	}
 
+	/**
+	 * {@code CellImgSampler} Hold a strong reference to the {@code Cell}
+	 * that was returned by the previous {@link #getCell()} invocation. For
+	 * cached {@code CellImgs}, this ensures that a strongly referenced
+	 * {@code CellImgSampler} keeps its current {@code Cell} from being
+	 * evicted.
+	 */
+	private C cell;
+
 	@Override
 	public C getCell()
 	{
-		return randomAccessOnCells.get();
+		return cell = randomAccessOnCells.get();
 	}
 
 	@Override

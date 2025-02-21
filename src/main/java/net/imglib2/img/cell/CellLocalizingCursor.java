@@ -104,10 +104,19 @@ public class CellLocalizingCursor< T extends NativeType< T >, C extends Cell< ? 
 		reset();
 	}
 
+	/**
+	 * {@code CellImgSampler} Hold a strong reference to the {@code Cell}
+	 * that was returned by the previous {@link #getCell()} invocation. For
+	 * cached {@code CellImgs}, this ensures that a strongly referenced
+	 * {@code CellImgSampler} keeps its current {@code Cell} from being
+	 * evicted.
+	 */
+	private C cell;
+
 	@Override
 	public C getCell()
 	{
-		return cursorOnCells.get();
+		return cell = cursorOnCells.get();
 	}
 
 	@Override
