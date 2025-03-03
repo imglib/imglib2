@@ -34,12 +34,96 @@
 
 package net.imglib2.img;
 
+import net.imglib2.Cursor;
+import net.imglib2.Interval;
+import net.imglib2.RandomAccess;
+import net.imglib2.stream.LocalizableSpliterator;
+
 /**
  * An object that wraps an {@link Img} somehow.
  * 
  * @author Christian Dietz
  */
-public interface WrappedImg< T >
+public interface WrappedImg< T > extends Img< T >
 {
 	Img< T > getImg();
+
+	@Override
+	default T getType()
+	{
+		return getImg().getType();
+	}
+
+	@Override
+	default int numDimensions()
+	{
+		return getImg().numDimensions();
+	}
+
+	@Override
+	default long min( final int d )
+	{
+		return getImg().min( d );
+	}
+
+	@Override
+	default long max( final int d )
+	{
+		return getImg().max( d );
+	}
+
+	@Override
+	default long dimension( final int d )
+	{
+		return getImg().dimension( d );
+	}
+
+	@Override
+	default RandomAccess< T > randomAccess()
+	{
+		return getImg().randomAccess();
+	}
+
+	@Override
+	default RandomAccess< T > randomAccess( final Interval interval )
+	{
+		return getImg().randomAccess( interval );
+	}
+
+	@Override
+	default Cursor< T > cursor()
+	{
+		return getImg().cursor();
+	}
+
+	@Override
+	default Cursor< T > localizingCursor()
+	{
+		return getImg().localizingCursor();
+	}
+
+	@Override
+	default LocalizableSpliterator< T > spliterator()
+	{
+		return getImg().spliterator();
+	}
+
+	@Override
+	default LocalizableSpliterator< T > localizingSpliterator()
+	{
+		return getImg().localizingSpliterator();
+	}
+
+	@Override
+	default long size()
+	{
+		return getImg().size();
+	}
+
+	@Override
+	default Object iterationOrder()
+	{
+		return getImg().iterationOrder();
+	}
+
 }
