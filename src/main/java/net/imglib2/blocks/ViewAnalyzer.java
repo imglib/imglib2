@@ -34,6 +34,7 @@
 package net.imglib2.blocks;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.function.Supplier;
 import net.imglib2.RandomAccessible;
@@ -348,7 +349,7 @@ class ViewAnalyzer
 			if ( node.viewType() == ViewNode.ViewType.MIXED_TRANSFORM )
 			{
 				final MixedTransform t = ( ( MixedTransformViewNode ) node ).getTransformToSource();
-				bb = transform( t, bb );
+				bb = applyInverse( t, bb );
 			}
 		}
 
@@ -365,58 +366,59 @@ class ViewAnalyzer
 	}
 
 	/**
-	 * Apply the {@code transformToSource} to a target vector to obtain a
-	 * source vector.
+	 * Apply the inverse of {@code transform} to a {@code target} vector to obtain a {@code source} vector.
 	 *
-	 * @param transformToSource
-	 * 		the transformToSource from target to source.
+	 * @param transform
+	 * 		the transform
 	 * @param source
 	 * 		set this to the source coordinates.
 	 * @param target
 	 * 		target coordinates.
 	 */
-	private static void apply( MixedTransform transformToSource, long[] source, long[] target )
+	private static void applyInverse( MixedTransform transform, long[] source, long[] target )
 	{
-		assert source.length >= transformToSource.numSourceDimensions();
-		assert target.length >= transformToSource.numSourceDimensions();
+		assert source.length >= transform.numSourceDimensions();
+		assert target.length >= transform.numTargetDimensions();
 
-		for ( int d = 0; d < transformToSource.numTargetDimensions(); ++d )
+		Arrays.fill( source, 0, transform.numSourceDimensions(), 0 );
+		for ( int d = 0; d < transform.numTargetDimensions(); ++d )
 		{
-			if ( !transformToSource.getComponentZero( d ) )
+			if ( !transform.getComponentZero( d ) )
 			{
-				long v = target[ d ] - transformToSource.getTranslation( d );
-				source[ transformToSource.getComponentMapping( d ) ] = transformToSource.getComponentInversion( d ) ? -v : v;
+				long v = target[ d ] - transform.getTranslation( d );
+				source[ transform.getComponentMapping( d ) ] = transform.getComponentInversion( d ) ? -v : v;
 			}
 		}
 	}
 
 	/**
-	 * Apply the {@code transformToSource} to a target bounding box to obtain a
-	 * source bounding box.
+	 * Apply the inverse of {@code transform} to the given {@code boundingBox}.
+	 * <p>
+	 * This is called with {@code transform} being the {@link
+	 * MixedTransformView#getTransformToSource transformToSource} of a {@code
+	 * MixedTransformView} (that is going from view to source coordinates), and
+	 * {@code boundingBox} being the bounding box in the views source. {@code
+	 * applyInverse} will then return the bounding box in the views target
+	 * coordinates.
 	 *
-	 * @param transformToSource
-	 * 		the transformToSource from target to source.
-	 * @param boundingBox
-	 * 		the target bounding box.
-	 *
-	 * @return the source bounding box.
+	 * @return the transformed bounding box.
 	 */
-	private static BoundingBox transform( final MixedTransform transformToSource, final BoundingBox boundingBox )
+	private static BoundingBox applyInverse( final MixedTransform transform, final BoundingBox boundingBox )
 	{
-		assert boundingBox.numDimensions() == transformToSource.numSourceDimensions();
+		assert boundingBox.numDimensions() == transform.numTargetDimensions();
 
-		if ( transformToSource.numSourceDimensions() == transformToSource.numTargetDimensions() )
+		if ( transform.numSourceDimensions() == transform.numTargetDimensions() )
 		{ // apply in-place
-			final long[] tmp = new long[ transformToSource.numTargetDimensions() ];
+			final long[] tmp = new long[ transform.numTargetDimensions() ];
 			boundingBox.corner1( tmp );
-			apply( transformToSource, boundingBox.corner1, tmp );
+			applyInverse( transform, boundingBox.corner1, tmp );
 			boundingBox.corner2( tmp );
-			apply( transformToSource, boundingBox.corner2, tmp );
+			applyInverse( transform, boundingBox.corner2, tmp );
 			return boundingBox;
 		}
-		final BoundingBox b = new BoundingBox( transformToSource.numSourceDimensions() );
-		apply( transformToSource, b.corner1, boundingBox.corner1 );
-		apply( transformToSource, b.corner2, boundingBox.corner2 );
+		final BoundingBox b = new BoundingBox( transform.numSourceDimensions() );
+		applyInverse( transform, b.corner1, boundingBox.corner1 );
+		applyInverse( transform, b.corner2, boundingBox.corner2 );
 		return b;
 	}
 
