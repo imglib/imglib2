@@ -137,6 +137,8 @@ class PrimitiveBlocksUtils
 				component[ i ] = j++;
 			}
 		}
+		for ( ; j < m; j++ )
+			splitComponent[ j ] = j;
 
 		final MixedTransform permuteInvert = new MixedTransform( m, m );
 		permuteInvert.setComponentMapping( splitComponent );

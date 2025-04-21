@@ -650,7 +650,7 @@ class ViewAnalyzer
 				&& v.concatenateTransforms()
 
 				// Check that all View dimensions are used (mapped to some root dimension)
-				&& v.checkNoDimensionsAdded()
+//				&& v.checkNoDimensionsAdded()
 
 				// Split concatenated transform into remainder * permuteInvert
 				&& v.splitTransform();
