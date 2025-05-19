@@ -109,7 +109,7 @@ public interface RandomAccessibleView< T, V extends RandomAccessibleView< T, V >
 	 *
 	 * @return a view on the given interval
 	 */
-	default RandomAccessibleIntervalView< T > interval( Interval interval )
+	default RandomAccessibleIntervalView< T, ? > interval( Interval interval )
 	{
 		return RandomAccessibleIntervalView.wrap( Views.interval( delegate(), interval ) );
 	}
