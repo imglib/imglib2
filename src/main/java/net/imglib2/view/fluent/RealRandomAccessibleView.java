@@ -72,13 +72,13 @@ import net.imglib2.view.Views;
  * @author Michael Innerberger
  * @see Views
  */
-public interface RealRandomAccessibleView< T > extends RealRandomAccessible< T >
+public interface RealRandomAccessibleView< T, V extends RealRandomAccessibleView<T, V> > extends RealRandomAccessible< T >
 {
 	RealRandomAccessible< T > delegate();
 
-	static < T > RealRandomAccessibleView< T > wrap( final RealRandomAccessible< T > delegate )
+	static < T, V extends RealRandomAccessibleView<T, V>> RealRandomAccessibleView< T, ? > wrap( final RealRandomAccessible< T > delegate )
 	{
-		return () -> delegate;
+		return (RealRandomAccessibleView<T, V>) () -> null;
 	}
 
 	// -- Views methods -------------------------------------------------------
@@ -113,7 +113,7 @@ public interface RealRandomAccessibleView< T > extends RealRandomAccessible< T >
 	 *
 	 * @return a converted view
 	 */
-	default < U > RealRandomAccessibleView< U > convert(
+	default < U > RealRandomAccessibleView< U, ? > convert(
 			final Supplier< U > targetSupplier,
 			final Converter< ? super T, ? super U > converter )
 	{
@@ -139,7 +139,7 @@ public interface RealRandomAccessibleView< T > extends RealRandomAccessible< T >
 	 *
 	 * @return a converted view
 	 */
-	default < U > RealRandomAccessibleView< U > convert(
+	default < U > RealRandomAccessibleView< U, ? > convert(
 			final Supplier< U > targetSupplier,
 			final Supplier< Converter< ? super T, ? super U > > converterSupplier )
 	{
@@ -157,7 +157,7 @@ public interface RealRandomAccessibleView< T > extends RealRandomAccessible< T >
 	 *
 	 * @return {@code function.apply(this)}
 	 */
-	default < U > U use( Function< ? super RealRandomAccessibleView< T >, U > function )
+	default < U > U use( Function< ? super RealRandomAccessibleView< T, ? >, U > function )
 	{
 		return function.apply( this );
 	}
@@ -166,7 +166,7 @@ public interface RealRandomAccessibleView< T > extends RealRandomAccessible< T >
 	// -- RealRandomAccessible ------------------------------------------------
 
 	@Override
-	default RealRandomAccessibleView< T > realView()
+	default RealRandomAccessibleView< T, ? > realView()
 	{
 		return this;
 	}

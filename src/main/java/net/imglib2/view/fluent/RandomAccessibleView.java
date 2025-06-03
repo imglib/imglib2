@@ -87,9 +87,9 @@ public interface RandomAccessibleView< T, V extends RandomAccessibleView< T, V >
 {
 	RandomAccessible< T > delegate();
 
-	static < T, V extends RandomAccessibleView< T, V > > RandomAccessibleView< T, V > wrap( final RandomAccessible< T > delegate )
+	static <T, V extends RandomAccessibleView<T, V>> RandomAccessibleView< T, ? > wrap( final RandomAccessible< T > delegate )
 	{
-		return ( RandomAccessibleView< T, V > ) () -> delegate;
+		return (RandomAccessibleView<T, V>) () -> null;
 	}
 
 	// -- Views methods -------------------------------------------------------
@@ -354,7 +354,7 @@ public interface RandomAccessibleView< T, V extends RandomAccessibleView< T, V >
 	 *
 	 * @return an interpolated view
 	 */
-	default RealRandomAccessibleView< T > interpolate( final Interpolation< T > interpolation )
+	default RealRandomAccessibleView< T, ? > interpolate( final Interpolation< T > interpolation )
 	{
 		return RealRandomAccessibleView.wrap( Views.interpolate( delegate(), interpolation.factory ) );
 	}
