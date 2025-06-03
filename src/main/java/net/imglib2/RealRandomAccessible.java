@@ -57,7 +57,7 @@ import net.imglib2.view.fluent.RealRandomAccessibleView;
  *
  * @author Stephan Saalfeld
  */
-public interface RealRandomAccessible< T > extends EuclideanSpace, Typed< T >
+public interface RealRandomAccessible< T > extends RandomAccessible<T>
 {
 	/**
 	 * Create a random access sampler for real coordinates.
@@ -144,6 +144,167 @@ public interface RealRandomAccessible< T > extends EuclideanSpace, Typed< T >
 		return RealRandomAccessibleView.wrap( this );
 	}
 
+	/* RandomAccessible overrides*/
+
+	@Override
+	default RandomAccess< T > randomAccess() {
+		return randomAccess(null);
+	}
+
+	@Override
+	default RandomAccess< T > randomAccess(final Interval interval) {
+		final RealRandomAccess<T> sourceAccess = interval == null ? realRandomAccess() : realRandomAccess(interval);
+		final int n = numDimensions();
+		return new RandomAccess<T>() {
+
+			@Override
+			public void localize( final int[] position )
+			{
+				for ( int d = 0; d < n; ++d )
+					position[ d ] = ( int ) Math.round( sourceAccess.getDoublePosition( d ) );
+			}
+
+			@Override
+			public void localize( final long[] position )
+			{
+				for ( int d = 0; d < n; ++d )
+					position[ d ] = Math.round( sourceAccess.getDoublePosition( d ) );
+			}
+
+			@Override
+			public int getIntPosition( final int d )
+			{
+				return ( int ) Math.round( sourceAccess.getDoublePosition( d ) );
+			}
+
+			@Override
+			public long getLongPosition( final int d )
+			{
+				return Math.round( sourceAccess.getDoublePosition( d ) );
+			}
+
+			@Override
+			public void localize( final float[] position )
+			{
+				sourceAccess.localize( position );
+			}
+
+			@Override
+			public void localize( final double[] position )
+			{
+				sourceAccess.localize( position );
+			}
+
+			@Override
+			public float getFloatPosition( final int d )
+			{
+				return sourceAccess.getFloatPosition( d );
+			}
+
+			@Override
+			public double getDoublePosition( final int d )
+			{
+				return sourceAccess.getDoublePosition( d );
+			}
+
+			@Override
+			public void fwd( final int d )
+			{
+				sourceAccess.fwd( d );
+			}
+
+			@Override
+			public void bck( final int d )
+			{
+				sourceAccess.bck( d );
+			}
+
+			@Override
+			public void move( final int distance, final int d )
+			{
+				sourceAccess.move( distance, d );
+			}
+
+			@Override
+			public void move( final long distance, final int d )
+			{
+				sourceAccess.move( distance, d );
+			}
+
+			@Override
+			public void move( final Localizable localizable )
+			{
+				sourceAccess.move( localizable );
+			}
+
+			@Override
+			public void move( final int[] distance )
+			{
+				sourceAccess.move( distance );
+			}
+
+			@Override
+			public void move( final long[] distance )
+			{
+				sourceAccess.move( distance );
+			}
+
+			@Override
+			public void setPosition( final Localizable localizable )
+			{
+				sourceAccess.setPosition( localizable );
+			}
+
+			@Override
+			public void setPosition( final int[] position )
+			{
+				sourceAccess.setPosition( position );
+			}
+
+			@Override
+			public void setPosition( final long[] position )
+			{
+				sourceAccess.setPosition( position );
+			}
+
+			@Override
+			public void setPosition( final int position, final int d )
+			{
+				sourceAccess.setPosition( position, d );
+			}
+
+			@Override
+			public void setPosition( final long position, final int d )
+			{
+				sourceAccess.setPosition( position, d );
+			}
+
+			@Override
+			public T get()
+			{
+				return sourceAccess.get();
+			}
+
+			@Override
+			public T getType()
+			{
+				return sourceAccess.getType();
+			}
+
+			@Override
+			public RandomAccess<T> copy()
+			{
+				return randomAccess();
+			}
+
+			@Override
+			public int numDimensions()
+			{
+				return n;
+			}
+		};
+	}
+
 	/*
 	 * NB: We cannot have a default implementation here because of
 	 * https://bugs.openjdk.org/browse/JDK-7120669
@@ -154,3 +315,4 @@ public interface RealRandomAccessible< T > extends EuclideanSpace, Typed< T >
 //		return realRandomAccess().get();
 //	}
 }
+
