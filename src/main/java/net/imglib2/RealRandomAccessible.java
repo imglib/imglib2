@@ -57,7 +57,7 @@ import net.imglib2.view.fluent.RealRandomAccessibleView;
  *
  * @author Stephan Saalfeld
  */
-public interface RealRandomAccessible< T > extends EuclideanSpace, Typed< T >
+public interface RealRandomAccessible< T > extends RandomAccessible<T>
 {
 	/**
 	 * Create a random access sampler for real coordinates.
@@ -144,6 +144,18 @@ public interface RealRandomAccessible< T > extends EuclideanSpace, Typed< T >
 		return RealRandomAccessibleView.wrap( this );
 	}
 
+	/* RandomAccessible overrides*/
+
+	@Override
+	default RandomAccess< T > randomAccess() {
+		return realRandomAccess();
+	}
+
+	@Override
+	default RandomAccess< T > randomAccess(final Interval interval) {
+		return realRandomAccess(interval);
+	}
+
 	/*
 	 * NB: We cannot have a default implementation here because of
 	 * https://bugs.openjdk.org/browse/JDK-7120669
@@ -154,3 +166,4 @@ public interface RealRandomAccessible< T > extends EuclideanSpace, Typed< T >
 //		return realRandomAccess().get();
 //	}
 }
+
