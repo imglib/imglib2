@@ -139,7 +139,7 @@ public interface RealRandomAccessible< T > extends RandomAccessible<T>
 	 * @return gateway for creating light-weight views into this {@code
 	 *         RealRandomAccessible}.
 	 */
-	default RealRandomAccessibleView< T > realView()
+	default RealRandomAccessibleView< T, ? > realView()
 	{
 		return RealRandomAccessibleView.wrap( this );
 	}

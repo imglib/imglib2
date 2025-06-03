@@ -85,9 +85,9 @@ public interface RandomAccessibleIntervalView< T , V extends RandomAccessibleInt
 	@Override
 	RandomAccessibleInterval< T > delegate();
 
-	static < T, V extends RandomAccessibleIntervalView<T, V> > RandomAccessibleIntervalView< T, V > wrap( final RandomAccessibleInterval< T > delegate )
+	static < T, V extends RandomAccessibleIntervalView<T, V> > RandomAccessibleIntervalView< T, ? > wrap( final RandomAccessibleInterval< T > delegate )
 	{
-		return () -> delegate;
+		return (RandomAccessibleIntervalView<T, V>) () -> delegate;
 	}
 
 	// -- Views methods -------------------------------------------------------
