@@ -115,7 +115,7 @@ public interface RealRandomAccessibleView< T, V extends RealRandomAccessibleView
 	 */
 	default < U > RealRandomAccessibleView< U, ? > convert(
 			final Supplier< U > targetSupplier,
-			final Converter< ? super T, ? super U > converter )
+			final Converter< ? super T, ? super U > converter)
 	{
 		return wrap( Converters.convert2( delegate(), converter, targetSupplier ) );
 	}
@@ -141,7 +141,7 @@ public interface RealRandomAccessibleView< T, V extends RealRandomAccessibleView
 	 */
 	default < U > RealRandomAccessibleView< U, ? > convert(
 			final Supplier< U > targetSupplier,
-			final Supplier< Converter< ? super T, ? super U > > converterSupplier )
+			final Supplier< Converter< ? super T, ? super U > > converterSupplier)
 	{
 		return wrap( Converters.convert2( delegate(), converterSupplier, targetSupplier ) );
 	}
@@ -157,9 +157,9 @@ public interface RealRandomAccessibleView< T, V extends RealRandomAccessibleView
 	 *
 	 * @return {@code function.apply(this)}
 	 */
-	default < U > U use( Function< ? super RealRandomAccessibleView< T, ? >, U > function )
+	default < U > U use( Function< ? super V, U > function )
 	{
-		return function.apply( this );
+		return function.apply( (V) this );
 	}
 
 
