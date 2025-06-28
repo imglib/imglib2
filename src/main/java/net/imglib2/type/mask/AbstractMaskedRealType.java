@@ -76,6 +76,7 @@ public abstract class AbstractMaskedRealType< V extends RealType< V >, M extends
 		final double v1 = c.value.getRealDouble();
 		final double a1 = c.mask.getRealDouble();
 		final double alpha = a0 + a1;
+		// TODO: alpha < EPSILON
 		value.setReal( alpha == 0 ? 0 : ( v0 * a0 + v1 * a1 ) / alpha );
 		mask.setReal( alpha );
 	}
@@ -89,6 +90,7 @@ public abstract class AbstractMaskedRealType< V extends RealType< V >, M extends
 		final double v1 = c.value.getRealDouble();
 		final double a1 = -c.mask.getRealDouble();
 		final double alpha = a0 + a1;
+		// TODO: alpha < EPSILON
 		value.setReal( alpha == 0 ? 0 : ( v0 * a0 + v1 * a1 ) / alpha );
 		mask.setReal( alpha );
 	}
