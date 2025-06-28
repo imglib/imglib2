@@ -16,7 +16,7 @@ import net.imglib2.util.Util;
  * @param <T>
  */
 public abstract class AbstractMaskedRealType< V extends RealType< V >, M extends RealType< M >, T extends AbstractMaskedRealType< V, M, T > >
-		implements NumericType< T >
+		implements NumericType< T >, Masked< V, M >
 //		implements Type< T >, Add< T >, Sub< T >, SetOne, SetZero, MulFloatingPoint
 {
 	protected final V value;
@@ -33,11 +33,13 @@ public abstract class AbstractMaskedRealType< V extends RealType< V >, M extends
 
 	// --- get components ---
 
+	@Override
 	public V value()
 	{
 		return value;
 	}
 
+	@Override
 	public M mask()
 	{
 		return mask;

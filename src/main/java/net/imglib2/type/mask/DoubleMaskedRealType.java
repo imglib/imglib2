@@ -1,5 +1,7 @@
 package net.imglib2.type.mask;
 
+import java.util.function.Supplier;
+
 import net.imglib2.type.numeric.RealType;
 import net.imglib2.type.numeric.real.DoubleType;
 
@@ -30,5 +32,10 @@ public class DoubleMaskedRealType<  V extends RealType< V > > extends AbstractMa
 	public DoubleMaskedRealType< V > copy()
 	{
 		return new DoubleMaskedRealType<>( value.copy(), mask.copy() );
+	}
+
+	public static < V extends RealType< V > > Supplier< DoubleMaskedRealType< V > > supplier( Supplier< V > valueSupplier, final double mask )
+	{
+		return () -> new DoubleMaskedRealType<>( valueSupplier.get(), mask );
 	}
 }
