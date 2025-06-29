@@ -1,4 +1,4 @@
-package net.imglib2.type.mask;
+package net.imglib2.type.mask.old;
 
 import java.util.function.Supplier;
 

@@ -34,9 +34,8 @@
 
 package net.imglib2.interpolation.randomaccess;
 
-import java.sql.SQLOutput;
 import net.imglib2.RandomAccessible;
-import net.imglib2.type.mask.AbstractMaskedRealType;
+import net.imglib2.type.mask.old.AbstractMaskedRealType;
 import net.imglib2.type.numeric.RealType;
 
 /**

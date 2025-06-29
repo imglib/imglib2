@@ -1,4 +1,4 @@
-package net.imglib2.type.mask;
+package net.imglib2.type.mask.old;
 
 import net.imglib2.type.numeric.NumericType;
 import net.imglib2.type.numeric.RealType;
@@ -15,21 +15,18 @@ import net.imglib2.util.Util;
  * @param <M> the alpha mask type. Note that values are <em>not</em>> clamped to [0,1].
  * @param <T>
  */
-public abstract class AbstractMaskedNumericType< V extends NumericType< V >, M extends RealType< M >, T extends AbstractMaskedNumericType< V, M, T > >
+public abstract class AbstractMaskedRealType< V extends RealType< V >, M extends RealType< M >, T extends AbstractMaskedRealType< V, M, T > >
 		implements NumericType< T >, Masked< V, M >
 //		implements Type< T >, Add< T >, Sub< T >, SetOne, SetZero, MulFloatingPoint
 {
 	protected final V value;
 
-	protected final V tmp;
-
 	protected final M mask;
 
-	public AbstractMaskedNumericType( final V value, final M mask )
+	public AbstractMaskedRealType( final V value, final M mask )
 	{
 		this.value = value;
 		this.mask = mask;
-		this.tmp = value.createVariable();
 	}
 
 
@@ -74,19 +71,13 @@ public abstract class AbstractMaskedNumericType< V extends NumericType< V >, M e
 	@Override
 	public void add( final T c )
 	{
+		final double v0 = value.getRealDouble();
 		final double a0 = mask.getRealDouble();
+		final double v1 = c.value.getRealDouble();
 		final double a1 = c.mask.getRealDouble();
 		final double alpha = a0 + a1;
 		// TODO: alpha < EPSILON
-		if ( alpha == 0 ) {
-			value.setZero();
-		} else {
-			value.mul( a0 );
-			tmp.set( c.value );
-			tmp.mul( a1 );
-			value.add( tmp );
-			value.mul( 1 / alpha );
-		}
+		value.setReal( alpha == 0 ? 0 : ( v0 * a0 + v1 * a1 ) / alpha );
 		mask.setReal( alpha );
 	}
 
@@ -94,19 +85,13 @@ public abstract class AbstractMaskedNumericType< V extends NumericType< V >, M e
 	public void sub( final T c )
 	{
 		// N.B. equivalent to add(c.mul(-1))
+		final double v0 = value.getRealDouble();
 		final double a0 = mask.getRealDouble();
+		final double v1 = c.value.getRealDouble();
 		final double a1 = -c.mask.getRealDouble();
 		final double alpha = a0 + a1;
 		// TODO: alpha < EPSILON
-		if ( alpha == 0 ) {
-			value.setZero();
-		} else {
-			value.mul( a0 );
-			tmp.set( c.value );
-			tmp.mul( a1 );
-			value.add( tmp );
-			value.mul( 1 / alpha );
-		}
+		value.setReal( alpha == 0 ? 0 : ( v0 * a0 + v1 * a1 ) / alpha );
 		mask.setReal( alpha );
 	}
 
@@ -137,7 +122,7 @@ public abstract class AbstractMaskedNumericType< V extends NumericType< V >, M e
 			return false;
 		@SuppressWarnings( "unchecked" )
 		T t = ( T ) obj;
-		return AbstractMaskedNumericType.this.valueEquals( t );
+		return AbstractMaskedRealType.this.valueEquals( t );
 	}
 
 	@Override
