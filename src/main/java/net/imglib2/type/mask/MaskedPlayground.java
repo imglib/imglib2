@@ -4,6 +4,9 @@ import java.util.Objects;
 import java.util.function.Supplier;
 
 import net.imglib2.RandomAccessibleInterval;
+import net.imglib2.Volatile;
+import net.imglib2.converter.Converter;
+import net.imglib2.type.Type;
 import net.imglib2.type.numeric.NumericType;
 import net.imglib2.type.numeric.RealType;
 import net.imglib2.util.Util;
@@ -17,36 +20,196 @@ public class MaskedPlayground
 	//       ~~> see CastingHell experiment
 
 
-
-	static final double EPSILON = 1e-10;
-
-	public interface Masked< V >
+	public interface Masked< T >
 	{
-		V value();
+		T value();
 
 		double mask();
 	}
 
-
-	public static class DefaultMaskedRealType< V extends RealType< V > > implements Masked< V >, NumericType< DefaultMaskedRealType< V > >
+	public static class MaskedObj< T > implements Masked< T >
 	{
-		private final V value;
+		private T value;
 
 		private double mask;
 
-		public DefaultMaskedRealType( V value )
+		public MaskedObj( T value )
 		{
 			this( value, 0 );
 		}
 
-		public DefaultMaskedRealType( V value, double mask )
+		public MaskedObj( T value, double mask )
 		{
 			this.value = value;
 			this.mask = mask;
 		}
 
 		@Override
-		public V value()
+		public T value()
+		{
+			return value;
+		}
+
+		public void setValue( T value )
+		{
+			this.value = value;
+		}
+
+		@Override
+		public double mask()
+		{
+			return mask;
+		}
+
+		public void setMask( final double mask )
+		{
+			this.mask = mask;
+		}
+
+		// TODO equals, hashcode
+	}
+
+	// TODO: after this all works, consider making parallel recursively typed
+	//       abstract class hierarchy to reduce code duplication
+	//       i.e. AbstractMaskedType< T extends Type< T >, M extends AbstractMaskedType< T, M > >
+	//	          		implements Masked< T >, Type< M >
+	//       and AbstractMaskedRealTypeType< T extends RealType< T >, M extends AbstractMaskedRealType< T, M > > extends AbstractMaskedType< T, M >
+	//	          		implements RealType< M >
+	public static class MaskedType< T extends Type< T > > implements Masked< T >, Type< MaskedType< T > >
+	{
+		private final T value;
+
+		private double mask;
+
+		public MaskedType( T value )
+		{
+			this( value, 0 );
+		}
+
+		public MaskedType( T value, double mask )
+		{
+			this.value = value;
+			this.mask = mask;
+		}
+
+		@Override
+		public T value()
+		{
+			return value;
+		}
+
+		@Override
+		public double mask()
+		{
+			return mask;
+		}
+
+		public void setMask( final double mask )
+		{
+			this.mask = mask;
+		}
+
+		@Override
+		public MaskedType< T > createVariable()
+		{
+			return new MaskedType<>( value().createVariable() );
+		}
+
+		@Override
+		public MaskedType< T > copy()
+		{
+			return new MaskedType<>( value().copy(), mask() );
+		}
+
+		@Override
+		public void set( final MaskedType< T > c )
+		{
+			value().set( c.value() );
+			setMask( c.mask() );
+		}
+
+		@Override
+		public boolean valueEquals( MaskedType< T > other )
+		{
+			return mask() == other.mask() && value().valueEquals( other.value() );
+		}
+
+		// TODO equals, hashcode
+	}
+
+	public class VolatileToVolatileMaskedConverter<
+			T extends Type< T >,
+			A extends Volatile< T >,
+			B extends Volatile< ? extends MaskedType< T > > >
+		implements Converter< A, B >
+	{
+		@Override
+		public void convert( final A input, final B output )
+		{
+			output.setValid( input.isValid() );
+			output.get().value().set( input.get() );
+		}
+	}
+
+	public static class VolatileMaskedType< T extends Type< T > & Masked< ? > > extends Volatile< T > implements Type< VolatileMaskedType< T > >
+	{
+		public VolatileMaskedType( final T t, final boolean valid )
+		{
+			super( t, valid );
+		}
+
+		public VolatileMaskedType( final T t )
+		{
+			this( t, true );
+		}
+
+		@Override
+		public void set( final VolatileMaskedType< T > c )
+		{
+			get().set( c.get() );
+			setValid( c.isValid() );
+		}
+
+		@Override
+		public VolatileMaskedType< T > createVariable()
+		{
+			return new VolatileMaskedType<>( get().createVariable(), true );
+		}
+
+		@Override
+		public VolatileMaskedType< T > copy()
+		{
+			return new VolatileMaskedType<>( get().copy(), isValid() );
+		}
+
+		@Override
+		public boolean valueEquals( final VolatileMaskedType< T > other )
+		{
+			return isValid() == other.isValid() && get().valueEquals( other.get() );
+		}
+	}
+
+
+
+	public static class MaskedRealType< T extends RealType< T > > implements Masked< T >, NumericType< MaskedRealType< T > >
+	{
+		private final T value;
+
+		private double mask;
+
+		public MaskedRealType( T value )
+		{
+			this( value, 0 );
+		}
+
+		public MaskedRealType( T value, double mask )
+		{
+			this.value = value;
+			this.mask = mask;
+		}
+
+		@Override
+		public T value()
 		{
 			return value;
 		}
@@ -67,7 +230,7 @@ public class MaskedPlayground
 		{
 			if ( !getClass().isInstance( obj ) )
 				return false;
-			final DefaultMaskedRealType< ? > other = ( DefaultMaskedRealType< ? > ) obj;
+			final MaskedRealType< ? > other = ( MaskedRealType< ? > ) obj;
 			return mask() == other.mask() && Objects.equals( value, other.value );
 		}
 
@@ -77,33 +240,41 @@ public class MaskedPlayground
 			return Util.combineHash( Objects.hashCode( value ), Double.hashCode( mask() ) );
 		}
 
-		static < T extends RealType< T > > RandomAccessibleInterval< DefaultMaskedRealType< T > > withMask( final RandomAccessibleInterval< T > rai, final double mask )
+		static < T extends RealType< T > > RandomAccessibleInterval< MaskedRealType< T > > withMask( final RandomAccessibleInterval< T > rai, final double mask )
 		{
 			final T type = rai.getType();
-			final Supplier< DefaultMaskedRealType< T > > targetSupplier = () -> new DefaultMaskedRealType<>( type.createVariable(), mask );
+			final Supplier< MaskedRealType< T > > targetSupplier = () -> new MaskedRealType<>( type.createVariable(), mask );
 			return rai.view().convert( targetSupplier, ( i, o ) -> o.value().set( i ) );
 		}
 
-		// --- Type< T >, Add< T >, Sub< T >, SetOne, SetZero, MulFloatingPoint ---
+		// --- Type< T > ---
 
 		@Override
-		public DefaultMaskedRealType< V > createVariable()
+		public MaskedRealType< T > createVariable()
 		{
-			return new DefaultMaskedRealType<>( value.createVariable() );
+			return new MaskedRealType<>( value.createVariable() );
 		}
 
 		@Override
-		public DefaultMaskedRealType< V > copy()
+		public MaskedRealType< T > copy()
 		{
-			return new DefaultMaskedRealType<>( value.copy(), mask );
+			return new MaskedRealType<>( value.copy(), mask );
 		}
 
 		@Override
-		public void set( final DefaultMaskedRealType< V > c )
+		public void set( final MaskedRealType< T > c )
 		{
 			value().set( c.value() );
 			setMask( c.mask() );
 		}
+
+		@Override
+		public boolean valueEquals( MaskedRealType< T > other )
+		{
+			return mask() == other.mask() && value().valueEquals( other.value() );
+		}
+
+		// --- Add< T >, Sub< T >, SetOne, SetZero, MulFloatingPoint ---
 
 		@Override
 		public void mul( final float c )
@@ -118,7 +289,7 @@ public class MaskedPlayground
 		}
 
 		@Override
-		public void add( final DefaultMaskedRealType< V > c )
+		public void add( final MaskedRealType< T > c )
 		{
 			final double a0 = mask();
 			final double a1 = c.mask();
@@ -130,7 +301,7 @@ public class MaskedPlayground
 		}
 
 		@Override
-		public void sub( final DefaultMaskedRealType< V > c )
+		public void sub( final MaskedRealType< T > c )
 		{
 			// N.B. equivalent to add(c.mul(-1))
 			final double a0 = mask();
@@ -156,28 +327,22 @@ public class MaskedPlayground
 			setMask( 1 );
 		}
 
-		@Override
-		public boolean valueEquals( DefaultMaskedRealType< V > other )
-		{
-			return mask() == other.mask() && value().valueEquals( other.value() );
-		}
-
 		// --- unsupported NumericType methods ---
 
 		@Override
-		public void mul( final DefaultMaskedRealType< V > c )
+		public void mul( final MaskedRealType< T > c )
 		{
 			throw new UnsupportedOperationException();
 		}
 
 		@Override
-		public void div( final DefaultMaskedRealType< V > c )
+		public void div( final MaskedRealType< T > c )
 		{
 			throw new UnsupportedOperationException();
 		}
 
 		@Override
-		public void pow( final DefaultMaskedRealType< V > c )
+		public void pow( final MaskedRealType< T > c )
 		{
 			throw new UnsupportedOperationException();
 		}
@@ -188,4 +353,6 @@ public class MaskedPlayground
 			throw new UnsupportedOperationException();
 		}
 	}
+
+	static final double EPSILON = 1e-10;
 }
