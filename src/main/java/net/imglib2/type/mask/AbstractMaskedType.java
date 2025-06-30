@@ -1,10 +1,6 @@
 package net.imglib2.type.mask;
 
-import java.util.Objects;
-
 import net.imglib2.type.Type;
-import net.imglib2.util.Cast;
-import net.imglib2.util.Util;
 
 public abstract class AbstractMaskedType< T extends Type< T >, M extends AbstractMaskedType< T, M > >
 		extends AbstractMasked< T, M >
