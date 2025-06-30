@@ -56,12 +56,12 @@ public class VolatileMaskedRealType< T extends AbstractMaskedRealType< ?, ?, T >
 	@Override
 	public VolatileMaskedRealType< T > createVariable()
 	{
-		return new VolatileMaskedRealType< T >( t.createVariable(), true );
+		return new VolatileMaskedRealType< T >( get().createVariable(), true );
 	}
 
 	@Override
 	public VolatileMaskedRealType< T > copy()
 	{
-		return new VolatileMaskedRealType< T >( t.copy(), valid );
+		return new VolatileMaskedRealType< T >( get().copy(), isValid() );
 	}
 }

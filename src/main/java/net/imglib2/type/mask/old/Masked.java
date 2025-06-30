@@ -9,6 +9,7 @@ import net.imglib2.converter.Converter;
 import net.imglib2.type.Type;
 import net.imglib2.type.numeric.RealType;
 import net.imglib2.type.numeric.real.DoubleType;
+import net.imglib2.type.volatiles.AbstractVolatile;
 
 public interface Masked< V, M extends RealType< M > >
 {
@@ -16,7 +17,7 @@ public interface Masked< V, M extends RealType< M > >
 
 	M mask();
 
-	class VolatileMasked< V extends Volatile< ? >, M extends RealType< M > > extends Volatile< V > implements Masked< V, M >
+	class VolatileMasked< V extends Volatile< ? >, M extends RealType< M > > extends AbstractVolatile< V > implements Masked< V, M >
 	{
 		private Masked< V, M > delegate;
 
