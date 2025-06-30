@@ -11,13 +11,13 @@
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice,
  *    this list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  *    this list of conditions and the following disclaimer in the documentation
  *    and/or other materials provided with the distribution.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -35,92 +35,37 @@
 package net.imglib2.type.volatiles;
 
 import net.imglib2.Volatile;
-import net.imglib2.type.numeric.NumericType;
-import net.imglib2.util.Util;
+import net.imglib2.type.Type;
 
 /**
- * Abstract base class for {@link VolatileNumericType}s that wrap a
- * {@link NumericType} that is either VALID or INVALID.
- * 
- * @param <N>
- *            wrapped {@link NumericType}.
+ * Abstract base class for {@link Volatile}s that wrap {@link Type}.
+ *
+ * @param <V>
+ *            wrapped {@link Type}.
  * @param <T>
- *            type of derived concrete class.
- * 
+ *            recursive type of derived class.
+ *
  * @author Tobias Pietzsch
- * @author Stephan Saalfeld
  */
-public abstract class AbstractVolatileNumericType< N extends NumericType< N >, T extends AbstractVolatileNumericType< N, T > >
-		extends AbstractVolatileType< N, T >
-		implements NumericType< T >
+public abstract class AbstractVolatileType< V extends Type< V >, T extends AbstractVolatileType< V, T > >
+		extends Volatile< V >
+		implements Type< T >
 {
-	protected AbstractVolatileNumericType( final N t, final boolean valid )
+	protected AbstractVolatileType( final V t, final boolean valid )
 	{
 		super( t, valid );
 	}
 
 	@Override
-	public void add( final T c )
+	public void set( final T c )
 	{
-		t.add( c.t );
-		valid &= c.valid;
+		t.set( c.t );
+		valid = c.valid;
 	}
 
 	@Override
-	public void sub( final T c )
+	public boolean valueEquals( T other )
 	{
-		t.sub( c.t );
-		valid &= c.valid;
-	}
-
-	@Override
-	public void mul( final T c )
-	{
-		t.mul( c.t );
-		valid &= c.valid;
-	}
-
-	@Override
-	public void div( final T c )
-	{
-		t.div( c.t );
-		valid &= c.valid;
-	}
-
-	@Override
-	public void pow( final T c )
-	{
-		t.pow( c.t );
-		valid &= c.valid;
-	}
-
-	@Override
-	public void pow( final double power )
-	{
-		t.pow( power );
-	}
-
-	@Override
-	public void setZero()
-	{
-		t.setZero();
-	}
-
-	@Override
-	public void setOne()
-	{
-		t.setOne();
-	}
-
-	@Override
-	public void mul( final float c )
-	{
-		t.mul( c );
-	}
-
-	@Override
-	public void mul( final double c )
-	{
-		t.mul( c );
+		return isValid() == other.isValid() && t.valueEquals( other.t );
 	}
 }

@@ -34,6 +34,11 @@
 
 package net.imglib2;
 
+import java.util.Objects;
+
+import net.imglib2.util.Cast;
+import net.imglib2.util.Util;
+
 /**
  * Something volatile that has a value and is either VALID or INVALID.
  * 
@@ -69,5 +74,22 @@ public class Volatile< T >
 	public void setValid( final boolean valid )
 	{
 		this.valid = valid;
+	}
+
+	// --- Object ---
+
+	@Override
+	public boolean equals( final Object obj )
+	{
+		if ( ! getClass().isInstance( obj ) )
+			return false;
+		final Volatile< T > other = Cast.unchecked( obj );
+		return other.isValid() == isValid() && Objects.equals( other.t, t );
+	}
+
+	@Override
+	public int hashCode()
+	{
+		return Util.combineHash( Boolean.hashCode( isValid() ), Objects.hashCode( t ) );
 	}
 }
