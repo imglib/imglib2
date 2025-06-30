@@ -13,9 +13,9 @@ import net.imglib2.util.Util;
  */
 public class AbstractVolatile< T > implements Volatile< T >
 {
-	private final T t;
+	final T t;
 
-	private boolean valid;
+	boolean valid;
 
 	public AbstractVolatile( final T t, final boolean valid )
 	{
