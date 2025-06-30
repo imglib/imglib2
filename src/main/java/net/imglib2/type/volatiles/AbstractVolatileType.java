@@ -48,7 +48,7 @@ import net.imglib2.type.Type;
  * @author Tobias Pietzsch
  */
 public abstract class AbstractVolatileType< V extends Type< V >, T extends AbstractVolatileType< V, T > >
-		extends Volatile< V >
+		extends AbstractVolatile< V >
 		implements Type< T >
 {
 	protected AbstractVolatileType( final V t, final boolean valid )
@@ -59,13 +59,13 @@ public abstract class AbstractVolatileType< V extends Type< V >, T extends Abstr
 	@Override
 	public void set( final T c )
 	{
-		t.set( c.t );
-		valid = c.valid;
+		get().set( c.get() );
+		setValid( c.isValid() );
 	}
 
 	@Override
 	public boolean valueEquals( T other )
 	{
-		return isValid() == other.isValid() && t.valueEquals( other.t );
+		return isValid() == other.isValid() && get().valueEquals( other.get() );
 	}
 }

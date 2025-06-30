@@ -34,62 +34,16 @@
 
 package net.imglib2;
 
-import java.util.Objects;
-
-import net.imglib2.util.Cast;
-import net.imglib2.util.Util;
-
 /**
  * Something volatile that has a value and is either VALID or INVALID.
- * 
+ *
  * @author Stephan Saalfeld
  */
-public class Volatile< T >
+public interface Volatile< T >
 {
-	final protected T t;
+	T get();
 
-	protected boolean valid;
+	boolean isValid();
 
-	public Volatile( final T t, final boolean valid )
-	{
-		this.t = t;
-		this.valid = valid;
-	}
-
-	public Volatile( final T t )
-	{
-		this( t, false );
-	}
-
-	public T get()
-	{
-		return t;
-	}
-
-	public boolean isValid()
-	{
-		return valid;
-	}
-
-	public void setValid( final boolean valid )
-	{
-		this.valid = valid;
-	}
-
-	// --- Object ---
-
-	@Override
-	public boolean equals( final Object obj )
-	{
-		if ( ! getClass().isInstance( obj ) )
-			return false;
-		final Volatile< T > other = Cast.unchecked( obj );
-		return other.isValid() == isValid() && Objects.equals( other.t, t );
-	}
-
-	@Override
-	public int hashCode()
-	{
-		return Util.combineHash( Boolean.hashCode( isValid() ), Objects.hashCode( t ) );
-	}
+	void setValid( boolean valid );
 }
