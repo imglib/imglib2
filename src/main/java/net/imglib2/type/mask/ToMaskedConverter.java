@@ -1,7 +1,6 @@
 package net.imglib2.type.mask;
 
 import net.imglib2.converter.Converter;
-import net.imglib2.type.Type;
 
 /**
  * Converts a {@code Type<T>} to a {@code Masked<T>}. It just sets the {@code
@@ -13,11 +12,11 @@ import net.imglib2.type.Type;
  * result is a {@code RandomAccessible} that is fully opaque inside the original
  * interval and fully transparent outside.
  */
-public class TypeToMaskedTypeConverter< A extends Type< A >, B extends Masked< A > > implements Converter< A, B >
+public class ToMaskedConverter< A, B extends Masked< A > > implements Converter< A, B >
 {
 	@Override
 	public void convert( final A input, final B output )
 	{
-		output.value().set( input );
+		output.setValue( input );
 	}
 }

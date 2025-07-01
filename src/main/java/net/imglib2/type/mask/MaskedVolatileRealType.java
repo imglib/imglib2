@@ -63,17 +63,19 @@ public class MaskedVolatileRealType< T extends RealType< T > & Volatile< ? > >
 	}
 
 	@Override
+	// TODO: move to super-class --> createVariable + set
 	public MaskedVolatileRealType< T > copy()
 	{
 		return new MaskedVolatileRealType<>( value().copy(), mask() );
 	}
 
+	// TODO: remove?
 	static < T extends RealType< T > & Volatile< ? > > RandomAccessibleInterval< MaskedVolatileRealType< T > > withConstant( final RandomAccessibleInterval< T > rai, final double mask )
 	{
 		final T type = rai.getType();
 		return rai.view().convert(
 				() -> new MaskedVolatileRealType<>( type.createVariable(), mask ),
-				new TypeToMaskedTypeConverter<>() );
+				new ToMaskedConverter<>() );
 	}
 
 }

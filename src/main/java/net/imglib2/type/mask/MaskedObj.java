@@ -4,12 +4,12 @@ public class MaskedObj< T > extends AbstractMasked< T, MaskedObj< T > >
 {
 	private T value;
 
-	public MaskedObj( T value )
+	public MaskedObj( final T value )
 	{
 		this( value, 0 );
 	}
 
-	public MaskedObj( T value, double mask )
+	public MaskedObj( final T value, double mask )
 	{
 		super( mask );
 		this.value = value;
@@ -21,7 +21,8 @@ public class MaskedObj< T > extends AbstractMasked< T, MaskedObj< T > >
 		return value;
 	}
 
-	public void setValue( T value )
+	@Override
+	public void setValue( final T value )
 	{
 		this.value = value;
 	}

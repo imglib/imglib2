@@ -8,7 +8,7 @@ public abstract class AbstractMaskedType< T extends Type< T >, M extends Abstrac
 {
 	private final T value;
 
-	protected AbstractMaskedType( T value, double mask )
+	protected AbstractMaskedType( final T value, final double mask )
 	{
 		super( mask );
 		this.value = value;
@@ -22,12 +22,18 @@ public abstract class AbstractMaskedType< T extends Type< T >, M extends Abstrac
 		return value;
 	}
 
+	@Override
+	public void setValue( final T value )
+	{
+		this.value.set( value );
+	}
+
 	// --- Type< M > ---
 
 	@Override
 	public void set( final M c )
 	{
-		value().set( c.value() );
+		setValue( c.value() );
 		setMask( c.mask() );
 	}
 

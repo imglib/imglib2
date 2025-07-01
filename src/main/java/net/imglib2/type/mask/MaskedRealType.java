@@ -32,6 +32,6 @@ public class MaskedRealType< T extends RealType< T > > extends AbstractMaskedRea
 		final T type = rai.getType();
 		return rai.view().convert(
 				() -> new MaskedRealType<>( type.createVariable(), mask ),
-				new TypeToMaskedTypeConverter<>() );
+				new ToMaskedConverter<>() );
 	}
 }

@@ -1,19 +1,16 @@
 package net.imglib2.type.mask;
 
-import java.util.function.BiFunction;
-import java.util.function.Supplier;
-
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.RealRandomAccessible;
 import net.imglib2.Volatile;
-import net.imglib2.type.numeric.RealType;
 import net.imglib2.type.Type;
-import net.imglib2.type.numeric.integer.IntType;
 import net.imglib2.util.Cast;
 
 public interface Masked< T >
 {
 	T value();
+
+	void setValue( T value );
 
 	double mask();
 
@@ -21,18 +18,18 @@ public interface Masked< T >
 
 	@SuppressWarnings( { "unchecked", "rawtypes" } )
 	static < T,
-			R extends RealType<R>,
-			VR extends RealType<VR> & Volatile< ? >>
+			R extends Type<R>,
+			VR extends Type<VR> & Volatile< ? >>
 
 	RandomAccessibleInterval< ? extends Masked< T > > withConstant( final RandomAccessibleInterval< T > rai, final double mask )
 	{
 		T type = rai.getType();
-		if ( type instanceof RealType )
+		if ( type instanceof Type )
 		{
 			if ( type instanceof Volatile )
-				return Cast.unchecked( withConstant( ( RandomAccessibleInterval< VR > ) rai, mask, MaskedVolatileRealType::new ) );
+				return Cast.unchecked( withConstant( ( RandomAccessibleInterval< VR > ) rai, mask, MaskedVolatileType::new ) );
 			else
-				return Cast.unchecked( withConstant( ( RandomAccessibleInterval< R > ) rai, mask, MaskedRealType::new ) );
+				return Cast.unchecked( withConstant( ( RandomAccessibleInterval< R > ) rai, mask, MaskedType::new ) );
 		}
 		else
 		{
@@ -58,7 +55,7 @@ public interface Masked< T >
 		final T type = rai.getType();
 		return rai.view().convert(
 				() -> maskedSupplier.get( type.createVariable(), mask ),
-				new TypeToMaskedTypeConverter<>() );
+				new ToMaskedConverter<>() );
 	}
 
 	static < T > RealRandomAccessible< ? extends Masked< T > > withConstant( final RealRandomAccessible< T > rra, final double mask )

@@ -31,52 +31,44 @@
  * POSSIBILITY OF SUCH DAMAGE.
  * #L%
  */
-package net.imglib2.interpolation.randomaccess;
+package net.imglib2.type.mask.interpolation;
 
 import net.imglib2.RandomAccessible;
 import net.imglib2.RealInterval;
 import net.imglib2.RealRandomAccess;
 import net.imglib2.Volatile;
 import net.imglib2.interpolation.InterpolatorFactory;
-import net.imglib2.type.numeric.ARGBType;
+import net.imglib2.type.Type;
+import net.imglib2.type.mask.Masked;
 import net.imglib2.type.numeric.NumericType;
 import net.imglib2.type.numeric.RealType;
-import net.imglib2.type.volatiles.VolatileARGBType;
 
 /**
- * Provides clamping n-linear interpolators for volatile and non-volatile types.
+ * Provides clamping n-linear interpolators for masked volatile and non-volatile types.
  *
- * @param <T>
+ * @param <N> the value type
+ * @param <T> the masked type
  *
- * @author Tobias Pietzsch &lt;tobias.pietzsch@gmail.com&gt;
+ * @author Tobias Pietzsch
  */
-public class ClampingNLinearInterpolatorFactory< T extends NumericType< T > > implements InterpolatorFactory< T, RandomAccessible< T > >
+public class MaskedClampingNLinearInterpolatorFactory< T extends Type< T > & Masked< ? extends NumericType< ? > > > implements InterpolatorFactory< T, RandomAccessible< T > >
 {
 	@SuppressWarnings( { "unchecked", "rawtypes" } )
 	@Override
 	public RealRandomAccess< T > create( final RandomAccessible< T > randomAccessible )
 	{
 		final T type = randomAccessible.getType();
-		if ( type instanceof RealType )
+		if ( type.value() instanceof RealType )
 		{
 			if ( type instanceof Volatile )
-				return new ClampingNLinearInterpolatorVolatileRealType( randomAccessible );
+				return ( RealRandomAccess ) new MaskedClampingNLinearInterpolatorVolatileRealType( randomAccessible );
 			else
-				return new ClampingNLinearInterpolatorRealType( randomAccessible );
-		}
-		else if ( type instanceof ARGBType )
-		{
-			return ( RealRandomAccess ) new NLinearInterpolatorARGB( ( RandomAccessible ) randomAccessible );
-		}
-		else if ( type instanceof VolatileARGBType )
-		{
-			return ( RealRandomAccess ) new ClampingNLinearInterpolatorVolatileARGB< VolatileARGBType >( ( RandomAccessible ) randomAccessible );
+				return ( RealRandomAccess ) new MaskedClampingNLinearInterpolatorRealType( randomAccessible );
 		}
 		else
 		{
-			// fall back to (non-clamping) NLinearInterpolator
-			System.out.println("fallback!");
-			return new NLinearInterpolator<>( randomAccessible );
+			// TODO: implement interpolator for generic Masked<NumericType<?>>
+			throw new UnsupportedOperationException( "TODO. Not implemented yet..." );
 		}
 	}
 
