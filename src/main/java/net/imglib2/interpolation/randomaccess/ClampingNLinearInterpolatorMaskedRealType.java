@@ -35,7 +35,7 @@
 package net.imglib2.interpolation.randomaccess;
 
 import net.imglib2.RandomAccessible;
-import net.imglib2.type.mask.old.AbstractMaskedRealType;
+import net.imglib2.type.mask.AbstractMaskedRealType;
 import net.imglib2.type.numeric.RealType;
 
 /**
@@ -46,7 +46,7 @@ import net.imglib2.type.numeric.RealType;
  *
  * @author Tobias Pietzsch &lt;tobias.pietzsch@gmail.com&gt;
  */
-public class ClampingNLinearInterpolatorMaskedRealType< T extends AbstractMaskedRealType< ?, ?, T > > extends NLinearInterpolator< T >
+public class ClampingNLinearInterpolatorMaskedRealType< T extends AbstractMaskedRealType< ?, T > > extends NLinearInterpolator< T >
 {
 	protected double accValue;
 	protected double accAlpha;
@@ -88,7 +88,7 @@ public class ClampingNLinearInterpolatorMaskedRealType< T extends AbstractMasked
 	{
 		fillWeights();
 		final T t = target.get();
-		final double walpha = weights[ 0 ] * t.mask().getRealDouble();
+		final double walpha = weights[ 0 ] * t.mask();
 		accAlpha = walpha;
 		accValue = t.value().getRealDouble() * walpha;
 		code = 0;
@@ -96,7 +96,7 @@ public class ClampingNLinearInterpolatorMaskedRealType< T extends AbstractMasked
 		target.bck( n - 1 );
 		accValue = accAlpha < EPSILON ? 0 : Math.max( clampMin, Math.min( clampMax, accValue / accAlpha ) );
 		accumulator.value().setReal( accValue );
-		accumulator.mask().setReal( accAlpha );
+		accumulator.setMask( accAlpha );
 		return accumulator;
 	}
 
@@ -108,7 +108,7 @@ public class ClampingNLinearInterpolatorMaskedRealType< T extends AbstractMasked
 		return new ClampingNLinearInterpolatorMaskedRealType<>( this );
 	}
 
-	final private void graycodeFwdRecursive( final int dimension )
+	private void graycodeFwdRecursive( final int dimension )
 	{
 		if ( dimension == 0 )
 		{
@@ -126,7 +126,7 @@ public class ClampingNLinearInterpolatorMaskedRealType< T extends AbstractMasked
 		}
 	}
 
-	final private void graycodeBckRecursive( final int dimension )
+	private void graycodeBckRecursive( final int dimension )
 	{
 		if ( dimension == 0 )
 		{
@@ -147,10 +147,10 @@ public class ClampingNLinearInterpolatorMaskedRealType< T extends AbstractMasked
 	/**
 	 * multiply current target value with current weight and add to accumulator.
 	 */
-	final private void accumulate()
+	private void accumulate()
 	{
 		final T t = target.get();
-		final double walpha = weights[ code ] * t.mask().getRealDouble();
+		final double walpha = weights[ code ] * t.mask();
 		accAlpha += walpha;
 		accValue += t.value().getRealDouble() * walpha;
 	}

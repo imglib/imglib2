@@ -35,8 +35,8 @@
 package net.imglib2.interpolation.randomaccess;
 
 import net.imglib2.RandomAccessible;
-import net.imglib2.type.mask.old.AbstractMaskedRealType;
-import net.imglib2.type.mask.old.VolatileMaskedRealType;
+import net.imglib2.Volatile;
+import net.imglib2.type.mask.MaskedVolatileRealType;
 import net.imglib2.type.numeric.RealType;
 
 /**
@@ -47,7 +47,7 @@ import net.imglib2.type.numeric.RealType;
  *
  * @author Tobias Pietzsch &lt;tobias.pietzsch@gmail.com&gt;
  */
-public class ClampingNLinearInterpolatorVolatileMaskedRealType< T extends AbstractMaskedRealType< ?, ?, T > > extends NLinearInterpolator< VolatileMaskedRealType< T > >
+public class ClampingNLinearInterpolatorMaskedVolatileRealType< T extends RealType< T > & Volatile< ? > > extends NLinearInterpolator< MaskedVolatileRealType< T > >
 {
 	protected double accValue;
 	protected double accAlpha;
@@ -55,21 +55,21 @@ public class ClampingNLinearInterpolatorVolatileMaskedRealType< T extends Abstra
 	protected final double clampMin;
 	protected final double clampMax;
 
-	protected ClampingNLinearInterpolatorVolatileMaskedRealType( final ClampingNLinearInterpolatorVolatileMaskedRealType< T > interpolator )
+	protected ClampingNLinearInterpolatorMaskedVolatileRealType( final ClampingNLinearInterpolatorMaskedVolatileRealType< T > interpolator )
 	{
 		super( interpolator );
 		clampMin = interpolator.clampMin;
 		clampMax = interpolator.clampMax;
 	}
 
-	protected ClampingNLinearInterpolatorVolatileMaskedRealType( final RandomAccessible< VolatileMaskedRealType< T > > randomAccessible, final VolatileMaskedRealType< T > type )
+	protected ClampingNLinearInterpolatorMaskedVolatileRealType( final RandomAccessible< MaskedVolatileRealType< T > > randomAccessible, final MaskedVolatileRealType< T > type )
 	{
 		super( randomAccessible, type );
-		clampMin = type.get().value().getMinValue();
-		clampMax = type.get().value().getMaxValue();
+		clampMin = type.value().getMinValue();
+		clampMax = type.value().getMaxValue();
 	}
 
-	protected ClampingNLinearInterpolatorVolatileMaskedRealType( final RandomAccessible< VolatileMaskedRealType< T > > randomAccessible )
+	protected ClampingNLinearInterpolatorMaskedVolatileRealType( final RandomAccessible< MaskedVolatileRealType< T > > randomAccessible )
 	{
 		this( randomAccessible, randomAccessible.randomAccess().get() );
 	}
@@ -86,20 +86,20 @@ public class ClampingNLinearInterpolatorVolatileMaskedRealType< T extends Abstra
 	 * @see <a href="http://en.wikipedia.org/wiki/Gray_code">Gray code</a>.
 	 */
 	@Override
-	public VolatileMaskedRealType< T > get()
+	public MaskedVolatileRealType< T > get()
 	{
 		fillWeights();
-		final VolatileMaskedRealType< T > t = target.get();
-		final double walpha = weights[ 0 ] * t.get().mask().getRealDouble();
+		final MaskedVolatileRealType< T > t = target.get();
+		final double walpha = weights[ 0 ] * t.mask();
 		accAlpha = walpha;
-		accValue = t.get().value().getRealDouble() * walpha;
+		accValue = t.value().getRealDouble() * walpha;
 		valid = t.isValid();
 		code = 0;
 		graycodeFwdRecursive( n - 1 );
 		target.bck( n - 1 );
 		accValue = accAlpha < EPSILON ? 0 : Math.max( clampMin, Math.min( clampMax, accValue / accAlpha ) );
-		accumulator.get().value().setReal( accValue );
-		accumulator.get().mask().setReal( accAlpha );
+		accumulator.value().setReal( accValue );
+		accumulator.setMask( accAlpha );
 		accumulator.setValid( valid );
 		return accumulator;
 	}
@@ -107,12 +107,12 @@ public class ClampingNLinearInterpolatorVolatileMaskedRealType< T extends Abstra
 	private static final double EPSILON = 1e-10;
 
 	@Override
-	public ClampingNLinearInterpolatorVolatileMaskedRealType< T > copy()
+	public ClampingNLinearInterpolatorMaskedVolatileRealType< T > copy()
 	{
-		return new ClampingNLinearInterpolatorVolatileMaskedRealType<>( this );
+		return new ClampingNLinearInterpolatorMaskedVolatileRealType<>( this );
 	}
 
-	final private void graycodeFwdRecursive( final int dimension )
+	private void graycodeFwdRecursive( final int dimension )
 	{
 		if ( dimension == 0 )
 		{
@@ -130,7 +130,7 @@ public class ClampingNLinearInterpolatorVolatileMaskedRealType< T extends Abstra
 		}
 	}
 
-	final private void graycodeBckRecursive( final int dimension )
+	private void graycodeBckRecursive( final int dimension )
 	{
 		if ( dimension == 0 )
 		{
@@ -151,12 +151,12 @@ public class ClampingNLinearInterpolatorVolatileMaskedRealType< T extends Abstra
 	/**
 	 * multiply current target value with current weight and add to accumulator.
 	 */
-	final private void accumulate()
+	private void accumulate()
 	{
-		final VolatileMaskedRealType< T > t = target.get();
-		final double walpha = weights[ code ] * t.get().mask().getRealDouble();
+		final MaskedVolatileRealType< T > t = target.get();
+		final double walpha = weights[ code ] * t.mask();
 		accAlpha += walpha;
-		accValue += t.get().value().getRealDouble() * walpha;
+		accValue += t.value().getRealDouble() * walpha;
 		valid &= t.isValid();
 	}
 }
