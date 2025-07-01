@@ -54,14 +54,12 @@ public class ClampingNLinearInterpolatorMaskedRealType< R extends RealType< R >,
 	private double accAlpha;
 	private final double clampMin;
 	private final double clampMax;
-	private final T accumulator;
 
 	protected ClampingNLinearInterpolatorMaskedRealType( final ClampingNLinearInterpolatorMaskedRealType< R, T > interpolator )
 	{
 		super( interpolator );
 		clampMin = interpolator.clampMin;
 		clampMax = interpolator.clampMax;
-		accumulator = type.createVariable();
 	}
 
 	protected ClampingNLinearInterpolatorMaskedRealType( final RandomAccessible< T > randomAccessible, final T type )
@@ -69,7 +67,6 @@ public class ClampingNLinearInterpolatorMaskedRealType< R extends RealType< R >,
 		super( randomAccessible, type );
 		clampMin = type.value().getMinValue();
 		clampMax = type.value().getMaxValue();
-		accumulator = type.createVariable();
 	}
 
 	protected ClampingNLinearInterpolatorMaskedRealType( final RandomAccessible< T > randomAccessible )

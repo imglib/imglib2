@@ -72,27 +72,12 @@ public class NLinearInterpolator< T extends NumericType< T > > extends AbstractN
 	 */
 	private int code;
 
-	/**
-	 * Weights for each pixel of the <em>2x2x...x2</em> hypercube of pixels
-	 * participating in the interpolation.
-	 *
-	 * <p>
-	 * Indices into this array are arranged in the standard iteration order (as
-	 * provided by {@link IntervalIndexer#positionToIndex}). Element 0 refers to
-	 * position <em>(0,0,...,0)</em>, element 1 refers to position
-	 * <em>(1,0,...,0)</em>, element 2 refers to position <em>(0,1,...,0)</em>,
-	 * etc.
-	 * </p>
-	 */
-	protected final T accumulator;
-
 	protected final T tmp;
 
 	protected NLinearInterpolator( final NLinearInterpolator< T > interpolator )
 	{
 		super( interpolator );
 
-		accumulator = type.createVariable();
 		tmp = type.createVariable();
 	}
 
@@ -100,7 +85,6 @@ public class NLinearInterpolator< T extends NumericType< T > > extends AbstractN
 	{
 		super( randomAccessible, type );
 
-		accumulator = type.createVariable();
 		tmp = type.createVariable();
 	}
 

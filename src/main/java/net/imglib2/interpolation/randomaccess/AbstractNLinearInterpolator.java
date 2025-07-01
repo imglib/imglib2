@@ -38,7 +38,7 @@ import net.imglib2.RandomAccess;
 import net.imglib2.RandomAccessible;
 import net.imglib2.RealRandomAccess;
 import net.imglib2.position.transform.Floor;
-import net.imglib2.type.numeric.NumericType;
+import net.imglib2.type.Type;
 import net.imglib2.util.IntervalIndexer;
 
 /**
@@ -50,11 +50,19 @@ import net.imglib2.util.IntervalIndexer;
  * @author Stephan Saalfeld
  * @author Tobias Pietzsch
  */
-public abstract class AbstractNLinearInterpolator< T > extends Floor< RandomAccess< T > > implements RealRandomAccess< T >
+public abstract class AbstractNLinearInterpolator< T extends Type< T > > extends Floor< RandomAccess< T > > implements RealRandomAccess< T >
 {
-	/*
-	 * Index into {@link #weights} array.
+	/**
+	 * Weights for each pixel of the <em>2x2x...x2</em> hypercube of pixels
+	 * participating in the interpolation.
 	 *
+	 * <p>
+	 * Indices into this array are arranged in the standard iteration order (as
+	 * provided by {@link IntervalIndexer#positionToIndex}). Element 0 refers to
+	 * position <em>(0,0,...,0)</em>, element 1 refers to position
+	 * <em>(1,0,...,0)</em>, element 2 refers to position <em>(0,1,...,0)</em>,
+	 * etc.
+	 * </p>
 	 * <p>
 	 * To visit the pixels that contribute to an interpolated value, we move in
 	 * a (binary-reflected) Gray code pattern, such that only one dimension of
@@ -70,23 +78,11 @@ public abstract class AbstractNLinearInterpolator< T > extends Floor< RandomAcce
 	 * wiki/Gray_code</a>
 	 * </p>
 	 */
-//	int code;
-
-	/**
-	 * Weights for each pixel of the <em>2x2x...x2</em> hypercube of pixels
-	 * participating in the interpolation.
-	 *
-	 * <p>
-	 * Indices into this array are arranged in the standard iteration order (as
-	 * provided by {@link IntervalIndexer#positionToIndex}). Element 0 refers to
-	 * position <em>(0,0,...,0)</em>, element 1 refers to position
-	 * <em>(1,0,...,0)</em>, element 2 refers to position <em>(0,1,...,0)</em>,
-	 * etc.
-	 * </p>
-	 */
 	protected final double[] weights;
 
 	protected final T type;
+
+	protected final T accumulator;
 
 	protected AbstractNLinearInterpolator( final AbstractNLinearInterpolator< T > interpolator )
 	{
@@ -94,6 +90,7 @@ public abstract class AbstractNLinearInterpolator< T > extends Floor< RandomAcce
 
 		weights = interpolator.weights.clone();
 		type = interpolator.type;
+		accumulator = type.createVariable();
 
 		for ( int d = 0; d < n; ++d )
 		{
@@ -108,6 +105,7 @@ public abstract class AbstractNLinearInterpolator< T > extends Floor< RandomAcce
 
 		weights = new double[ 1 << n ];
 		this.type = type;
+		accumulator = type.createVariable();
 	}
 
 	/**

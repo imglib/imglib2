@@ -56,14 +56,12 @@ public class ClampingNLinearInterpolatorMaskedVolatileRealType< R extends RealTy
 	private boolean valid;
 	private final double clampMin;
 	private final double clampMax;
-	private final T accumulator;
 
 	protected ClampingNLinearInterpolatorMaskedVolatileRealType( final ClampingNLinearInterpolatorMaskedVolatileRealType< R, T > interpolator )
 	{
 		super( interpolator );
 		clampMin = interpolator.clampMin;
 		clampMax = interpolator.clampMax;
-		accumulator = type.createVariable();
 	}
 
 	protected ClampingNLinearInterpolatorMaskedVolatileRealType( final RandomAccessible< T > randomAccessible, final T type )
@@ -71,7 +69,6 @@ public class ClampingNLinearInterpolatorMaskedVolatileRealType< R extends RealTy
 		super( randomAccessible, type );
 		clampMin = type.value().getMinValue();
 		clampMax = type.value().getMaxValue();
-		accumulator = type.createVariable();
 	}
 
 	protected ClampingNLinearInterpolatorMaskedVolatileRealType( final RandomAccessible<  T > randomAccessible )
