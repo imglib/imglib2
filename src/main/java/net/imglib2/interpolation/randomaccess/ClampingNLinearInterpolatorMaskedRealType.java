@@ -35,7 +35,8 @@
 package net.imglib2.interpolation.randomaccess;
 
 import net.imglib2.RandomAccessible;
-import net.imglib2.type.mask.AbstractMaskedRealType;
+import net.imglib2.type.Type;
+import net.imglib2.type.mask.Masked;
 import net.imglib2.type.numeric.RealType;
 
 /**
@@ -46,18 +47,21 @@ import net.imglib2.type.numeric.RealType;
  *
  * @author Tobias Pietzsch &lt;tobias.pietzsch@gmail.com&gt;
  */
-public class ClampingNLinearInterpolatorMaskedRealType< T extends AbstractMaskedRealType< ?, T > > extends NLinearInterpolator< T >
+public class ClampingNLinearInterpolatorMaskedRealType< R extends RealType< R >, T extends Masked< R > & Type< T > > extends AbstractNLinearInterpolator< T >
 {
-	protected double accValue;
-	protected double accAlpha;
-	protected final double clampMin;
-	protected final double clampMax;
+	private int code;
+	private double accValue;
+	private double accAlpha;
+	private final double clampMin;
+	private final double clampMax;
+	private final T accumulator;
 
-	protected ClampingNLinearInterpolatorMaskedRealType( final ClampingNLinearInterpolatorMaskedRealType< T > interpolator )
+	protected ClampingNLinearInterpolatorMaskedRealType( final ClampingNLinearInterpolatorMaskedRealType< R, T > interpolator )
 	{
 		super( interpolator );
 		clampMin = interpolator.clampMin;
 		clampMax = interpolator.clampMax;
+		accumulator = type.createVariable();
 	}
 
 	protected ClampingNLinearInterpolatorMaskedRealType( final RandomAccessible< T > randomAccessible, final T type )
@@ -65,11 +69,12 @@ public class ClampingNLinearInterpolatorMaskedRealType< T extends AbstractMasked
 		super( randomAccessible, type );
 		clampMin = type.value().getMinValue();
 		clampMax = type.value().getMaxValue();
+		accumulator = type.createVariable();
 	}
 
 	protected ClampingNLinearInterpolatorMaskedRealType( final RandomAccessible< T > randomAccessible )
 	{
-		this( randomAccessible, randomAccessible.randomAccess().get() );
+		this( randomAccessible, randomAccessible.getType() );
 	}
 
 	/**
@@ -103,7 +108,7 @@ public class ClampingNLinearInterpolatorMaskedRealType< T extends AbstractMasked
 	private static final double EPSILON = 1e-10;
 
 	@Override
-	public ClampingNLinearInterpolatorMaskedRealType< T > copy()
+	public ClampingNLinearInterpolatorMaskedRealType< R, T > copy()
 	{
 		return new ClampingNLinearInterpolatorMaskedRealType<>( this );
 	}

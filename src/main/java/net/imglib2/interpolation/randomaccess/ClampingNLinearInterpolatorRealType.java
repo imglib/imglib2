@@ -11,13 +11,13 @@
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice,
  *    this list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  *    this list of conditions and the following disclaimer in the documentation
  *    and/or other materials provided with the distribution.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -47,9 +47,10 @@ import net.imglib2.type.numeric.RealType;
  */
 public class ClampingNLinearInterpolatorRealType< T extends RealType< T > > extends NLinearInterpolator< T >
 {
-	protected double acc;
-	protected final double clampMin;
-	protected final double clampMax;
+	private int code;
+	private double acc;
+	private final double clampMin;
+	private final double clampMax;
 
 	protected ClampingNLinearInterpolatorRealType( final ClampingNLinearInterpolatorRealType< T > interpolator )
 	{
@@ -67,7 +68,7 @@ public class ClampingNLinearInterpolatorRealType< T extends RealType< T > > exte
 
 	protected ClampingNLinearInterpolatorRealType( final RandomAccessible< T > randomAccessible )
 	{
-		this( randomAccessible, randomAccessible.randomAccess().get() );
+		this( randomAccessible, randomAccessible.getType() );
 	}
 
 	/**
@@ -99,7 +100,7 @@ public class ClampingNLinearInterpolatorRealType< T extends RealType< T > > exte
 		return new ClampingNLinearInterpolatorRealType<>( this );
 	}
 
-	final private void graycodeFwdRecursive( final int dimension )
+	private void graycodeFwdRecursive( final int dimension )
 	{
 		if ( dimension == 0 )
 		{
@@ -117,7 +118,7 @@ public class ClampingNLinearInterpolatorRealType< T extends RealType< T > > exte
 		}
 	}
 
-	final private void graycodeBckRecursive( final int dimension )
+	private void graycodeBckRecursive( final int dimension )
 	{
 		if ( dimension == 0 )
 		{
@@ -138,7 +139,7 @@ public class ClampingNLinearInterpolatorRealType< T extends RealType< T > > exte
 	/**
 	 * multiply current target value with current weight and add to accumulator.
 	 */
-	final private void accumulate()
+	private void accumulate()
 	{
 		acc += target.get().getRealDouble() * weights[ code ];
 	}

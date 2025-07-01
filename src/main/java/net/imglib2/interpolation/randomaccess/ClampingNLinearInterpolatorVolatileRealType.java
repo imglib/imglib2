@@ -48,10 +48,11 @@ import net.imglib2.type.volatiles.AbstractVolatileRealType;
  */
 public class ClampingNLinearInterpolatorVolatileRealType< R extends RealType< R >, T extends AbstractVolatileRealType< R, T > > extends NLinearInterpolator< T >
 {
-	protected double acc;
-	protected boolean valid;
-	protected final double clampMin;
-	protected final double clampMax;
+	private int code;
+	private double acc;
+	private boolean valid;
+	private final double clampMin;
+	private final double clampMax;
 
 	protected ClampingNLinearInterpolatorVolatileRealType( final ClampingNLinearInterpolatorVolatileRealType< R, T > interpolator )
 	{
@@ -69,7 +70,7 @@ public class ClampingNLinearInterpolatorVolatileRealType< R extends RealType< R 
 
 	protected ClampingNLinearInterpolatorVolatileRealType( final RandomAccessible< T > randomAccessible )
 	{
-		this( randomAccessible, randomAccessible.randomAccess().get() );
+		this( randomAccessible, randomAccessible.getType() );
 	}
 
 	/**

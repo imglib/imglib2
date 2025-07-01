@@ -39,7 +39,6 @@ import net.imglib2.RealRandomAccess;
 import net.imglib2.Volatile;
 import net.imglib2.interpolation.InterpolatorFactory;
 import net.imglib2.type.mask.AbstractMaskedRealType;
-import net.imglib2.type.mask.MaskedVolatileRealType;
 import net.imglib2.type.numeric.ARGBType;
 import net.imglib2.type.numeric.NumericType;
 import net.imglib2.type.numeric.RealType;
