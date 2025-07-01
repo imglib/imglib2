@@ -19,10 +19,4 @@ public class MaskedType< T extends Type< T > > extends AbstractMaskedType< T, Ma
 	{
 		return new MaskedType<>( value().createVariable() );
 	}
-
-	@Override
-	public MaskedType< T > copy()
-	{
-		return new MaskedType<>( value().copy(), mask() );
-	}
 }

@@ -1,15 +1,15 @@
 package net.imglib2.type.mask;
 
-public class MaskedObj< T > extends AbstractMasked< T, MaskedObj< T > >
+public class MaskedObject< T > extends AbstractMasked< T, MaskedObject< T > >
 {
 	private T value;
 
-	public MaskedObj( final T value )
+	public MaskedObject( final T value )
 	{
 		this( value, 0 );
 	}
 
-	public MaskedObj( final T value, double mask )
+	public MaskedObject( final T value, double mask )
 	{
 		super( mask );
 		this.value = value;

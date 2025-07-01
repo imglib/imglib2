@@ -2,11 +2,10 @@ package net.imglib2.type.mask;
 
 import java.util.Objects;
 
-import net.imglib2.type.Type;
 import net.imglib2.util.Cast;
 import net.imglib2.util.Util;
 
-public abstract class AbstractMasked< T, M extends AbstractMasked< T, M > >
+abstract class AbstractMasked< T, M extends AbstractMasked< T, M > >
 		implements Masked< T >
 {
 	private double mask;
