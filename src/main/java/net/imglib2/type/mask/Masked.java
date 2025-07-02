@@ -1,5 +1,6 @@
 package net.imglib2.type.mask;
 
+import net.imglib2.RandomAccessible;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.RealRandomAccessible;
 import net.imglib2.Volatile;
@@ -46,6 +47,26 @@ public interface Masked< T >
 		else
 		{
 			return MaskedObject.withConstant( rai, mask );
+		}
+	}
+
+	/**
+	 * Augments a {@code RandomAccessible} with the given constant {@code mask}.
+	 */
+	@SuppressWarnings( { "unchecked", "rawtypes" } )
+	static < T > RandomAccessible< ? extends Masked< T > > withConstant( final RandomAccessible< T > ra, final double mask )
+	{
+		T type = ra.getType();
+		if ( type instanceof Type )
+		{
+			if ( type instanceof Volatile )
+				return MaskedVolatileType.withConstant( ( RandomAccessible ) ra, mask );
+			else
+				return MaskedType.withConstant( ( RandomAccessible ) ra, mask );
+		}
+		else
+		{
+			return MaskedObject.withConstant( ra, mask );
 		}
 	}
 

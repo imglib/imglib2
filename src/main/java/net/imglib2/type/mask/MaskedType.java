@@ -1,5 +1,6 @@
 package net.imglib2.type.mask;
 
+import net.imglib2.RandomAccessible;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.RealRandomAccessible;
 import net.imglib2.type.Type;
@@ -26,6 +27,14 @@ public class MaskedType< T extends Type< T > > extends AbstractMaskedType< T, Ma
 	{
 		final T type = rai.getType();
 		return rai.view().convert(
+				() -> new MaskedType<>( type.createVariable(), mask ),
+				new ToMaskedConverter<>() );
+	}
+
+	static < T extends Type< T > > RandomAccessible< MaskedType< T > > withConstant( final RandomAccessible< T > ra, final double mask )
+	{
+		final T type = ra.getType();
+		return ra.view().convert(
 				() -> new MaskedType<>( type.createVariable(), mask ),
 				new ToMaskedConverter<>() );
 	}
