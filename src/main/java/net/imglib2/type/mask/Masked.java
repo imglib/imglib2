@@ -5,16 +5,33 @@ import net.imglib2.RealRandomAccessible;
 import net.imglib2.Volatile;
 import net.imglib2.type.Type;
 
+/**
+ * A {@code T} value with an associated {@code double} mask.
+ * <p>
+ * The maske is intended to be used as an alpha value in the range {@code [0, 1]},
+ * but values are <em>not</em>> clamped to that range.
+ *
+ * @param <T>
+ * 		the value type.
+ */
 public interface Masked< T >
 {
 	T value();
 
+	/**
+	 * If {@code T extends Type<T>} uses the {@link Type#set(Type)} method to
+	 * update the internal value instance. Otherwise, updates {@link #value()}
+	 * to reference the given {@code value}.
+	 */
 	void setValue( T value );
 
 	double mask();
 
 	void setMask( double mask );
 
+	/**
+	 * Augments a {@code RandomAccessibleInterval} with the given constant {@code mask}.
+	 */
 	@SuppressWarnings( { "unchecked", "rawtypes" } )
 	static < T > RandomAccessibleInterval< ? extends Masked< T > > withConstant( final RandomAccessibleInterval< T > rai, final double mask )
 	{
@@ -32,6 +49,9 @@ public interface Masked< T >
 		}
 	}
 
+	/**
+	 * Augments a {@code RealRandomAccessible} with the given constant {@code mask}.
+	 */
 	@SuppressWarnings( { "unchecked", "rawtypes" } )
 	static < T > RealRandomAccessible< ? extends Masked< T > > withConstant( final RealRandomAccessible< T > rra, final double mask )
 	{
