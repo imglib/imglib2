@@ -16,8 +16,7 @@ public interface Masked< T >
 	void setMask( double mask );
 
 	@SuppressWarnings( { "unchecked", "rawtypes" } )
-	static < T >
-	RandomAccessibleInterval< ? extends Masked< T > > withConstant( final RandomAccessibleInterval< T > rai, final double mask )
+	static < T > RandomAccessibleInterval< ? extends Masked< T > > withConstant( final RandomAccessibleInterval< T > rai, final double mask )
 	{
 		T type = rai.getType();
 		if ( type instanceof Type )
@@ -33,8 +32,20 @@ public interface Masked< T >
 		}
 	}
 
+	@SuppressWarnings( { "unchecked", "rawtypes" } )
 	static < T > RealRandomAccessible< ? extends Masked< T > > withConstant( final RealRandomAccessible< T > rra, final double mask )
 	{
-		throw new UnsupportedOperationException("NOT IMPLEMENTED. TODO.");
+		T type = rra.getType();
+		if ( type instanceof Type )
+		{
+			if ( type instanceof Volatile )
+				return MaskedVolatileType.withConstant( ( RealRandomAccessible ) rra, mask );
+			else
+				return MaskedType.withConstant( ( RealRandomAccessible ) rra, mask );
+		}
+		else
+		{
+			return MaskedObject.withConstant( rra, mask );
+		}
 	}
 }

@@ -1,6 +1,7 @@
 package net.imglib2.type.mask;
 
 import net.imglib2.RandomAccessibleInterval;
+import net.imglib2.RealRandomAccessible;
 import net.imglib2.Volatile;
 import net.imglib2.type.Type;
 
@@ -50,6 +51,14 @@ public class MaskedVolatileType< T extends Type< T > & Volatile< ? > >
 	{
 		final T type = rai.getType();
 		return rai.view().convert(
+				() -> new MaskedVolatileType<>( type.createVariable(), mask ),
+				new ToMaskedConverter<>() );
+	}
+
+	static < T extends Type< T > & Volatile< ? > > RealRandomAccessible< MaskedVolatileType< T > > withConstant( final RealRandomAccessible< T > rra, final double mask )
+	{
+		final T type = rra.getType();
+		return rra.realView().convert(
 				() -> new MaskedVolatileType<>( type.createVariable(), mask ),
 				new ToMaskedConverter<>() );
 	}
