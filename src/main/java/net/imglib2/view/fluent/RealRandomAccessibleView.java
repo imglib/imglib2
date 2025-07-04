@@ -104,18 +104,18 @@ public interface RealRandomAccessibleView< T > extends RealRandomAccessible< T >
 	 * U>} that reads a value from its first argument and writes a converted
 	 * value to its second argument.
 	 *
-	 * @param converter
-	 * 		converts pixel values from {@code T} to {@code U}
 	 * @param targetSupplier
 	 * 		creates instances of {@code U} for storing converted values
+	 * @param converter
+	 * 		converts pixel values from {@code T} to {@code U}
 	 * @param <U>
 	 * 		target pixel type
 	 *
 	 * @return a converted view
 	 */
 	default < U > RealRandomAccessibleView< U > convert(
-			final Converter< ? super T, ? super U > converter,
-			final Supplier< U > targetSupplier )
+			final Supplier< U > targetSupplier,
+			final Converter< ? super T, ? super U > converter )
 	{
 		return wrap( Converters.convert2( delegate(), converter, targetSupplier ) );
 	}
@@ -130,18 +130,18 @@ public interface RealRandomAccessibleView< T > extends RealRandomAccessible< T >
 	 * from its first argument and writes a converted value to its second
 	 * argument.
 	 *
-	 * @param converterSupplier
-	 * 		converts pixel values from {@code T} to {@code U}
 	 * @param targetSupplier
 	 * 		creates instances of {@code U} for storing converted values
+	 * @param converterSupplier
+	 * 		converts pixel values from {@code T} to {@code U}
 	 * @param <U>
 	 * 		target pixel type
 	 *
 	 * @return a converted view
 	 */
 	default < U > RealRandomAccessibleView< U > convert(
-			final Supplier< Converter< ? super T, ? super U > > converterSupplier,
-			final Supplier< U > targetSupplier )
+			final Supplier< U > targetSupplier,
+			final Supplier< Converter< ? super T, ? super U > > converterSupplier )
 	{
 		return wrap( Converters.convert2( delegate(), converterSupplier, targetSupplier ) );
 	}
