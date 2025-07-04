@@ -68,6 +68,7 @@ import net.imglib2.type.Type;
 import net.imglib2.type.numeric.IntegerType;
 import net.imglib2.type.numeric.NumericType;
 import net.imglib2.type.numeric.RealType;
+import net.imglib2.type.operators.SetZero;
 import net.imglib2.util.Grid;
 import net.imglib2.util.Intervals;
 import net.imglib2.util.Pair;
@@ -313,7 +314,7 @@ public class Views
 	 *         infinity with a constant value of zero.
 	 * @see net.imglib2.outofbounds.OutOfBoundsConstantValue
 	 */
-	public static < T extends NumericType< T >, F extends RandomAccessibleInterval< T > > ExtendedRandomAccessibleInterval< T, F > extendZero( final F source )
+	public static < T extends Type< T > & SetZero, F extends RandomAccessibleInterval< T > > ExtendedRandomAccessibleInterval< T, F > extendZero( final F source )
 	{
 		final T zero = source.getType().createVariable();
 		zero.setZero();
@@ -1547,7 +1548,7 @@ public class Views
 	 * @return Expansion of the {@link RandomAccessibleInterval} source as
 	 *         specified by border.
 	 */
-	public static < T extends NumericType< T > > IntervalView< T > expandZero( final RandomAccessibleInterval< T > source, final long... border )
+	public static < T extends Type< T > & SetZero > IntervalView< T > expandZero( final RandomAccessibleInterval< T > source, final long... border )
 	{
 		return interval( extendZero( source ), Intervals.expand( source, border ) );
 	}
