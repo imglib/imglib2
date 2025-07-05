@@ -40,7 +40,7 @@ import net.imglib2.type.volatiles.AbstractVolatileRealType;
 
 /**
  * N-linear interpolator for {@link RealType} values with overflow check.
- * Interpoalted values are clamped to the range {@link RealType#getMinValue()},{@link RealType#getMaxValue()}.
+ * Interpolated values are clamped to the range {@link RealType#getMinValue()},{@link RealType#getMaxValue()}.
  *
  * @param <T>
  *
@@ -48,10 +48,11 @@ import net.imglib2.type.volatiles.AbstractVolatileRealType;
  */
 public class ClampingNLinearInterpolatorVolatileRealType< R extends RealType< R >, T extends AbstractVolatileRealType< R, T > > extends NLinearInterpolator< T >
 {
-	protected double acc;
-	protected boolean valid;
-	protected final double clampMin;
-	protected final double clampMax;
+	private int code;
+	private double acc;
+	private boolean valid;
+	private final double clampMin;
+	private final double clampMax;
 
 	protected ClampingNLinearInterpolatorVolatileRealType( final ClampingNLinearInterpolatorVolatileRealType< R, T > interpolator )
 	{
@@ -69,7 +70,7 @@ public class ClampingNLinearInterpolatorVolatileRealType< R extends RealType< R 
 
 	protected ClampingNLinearInterpolatorVolatileRealType( final RandomAccessible< T > randomAccessible )
 	{
-		this( randomAccessible, randomAccessible.randomAccess().get() );
+		this( randomAccessible, randomAccessible.getType() );
 	}
 
 	/**
@@ -104,7 +105,7 @@ public class ClampingNLinearInterpolatorVolatileRealType< R extends RealType< R 
 		return new ClampingNLinearInterpolatorVolatileRealType<>( this );
 	}
 
-	final private void graycodeFwdRecursive( final int dimension )
+	private void graycodeFwdRecursive( final int dimension )
 	{
 		if ( dimension == 0 )
 		{
@@ -122,7 +123,7 @@ public class ClampingNLinearInterpolatorVolatileRealType< R extends RealType< R 
 		}
 	}
 
-	final private void graycodeBckRecursive( final int dimension )
+	private void graycodeBckRecursive( final int dimension )
 	{
 		if ( dimension == 0 )
 		{
@@ -143,7 +144,7 @@ public class ClampingNLinearInterpolatorVolatileRealType< R extends RealType< R 
 	/**
 	 * multiply current target value with current weight and add to accumulator.
 	 */
-	final private void accumulate()
+	private void accumulate()
 	{
 		final T t = target.get();
 		acc += t.getRealDouble() * weights[ code ];

@@ -59,7 +59,7 @@ public class NLinearInterpolator2D< T extends NumericType< T > > extends NLinear
 
 	protected NLinearInterpolator2D( final RandomAccessible< T > randomAccessible )
 	{
-		super( randomAccessible );
+		this( randomAccessible, randomAccessible.getType() );
 	}
 
 	@Override
