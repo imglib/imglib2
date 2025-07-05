@@ -39,7 +39,7 @@ import net.imglib2.type.numeric.RealType;
 
 /**
  * N-linear interpolator for {@link RealType} values with overflow check.
- * Interpoalted values are clamped to the range {@link RealType#getMinValue()},{@link RealType#getMaxValue()}.
+ * Interpolated values are clamped to the range {@link RealType#getMinValue()},{@link RealType#getMaxValue()}.
  *
  * @param <T>
  *
@@ -47,9 +47,10 @@ import net.imglib2.type.numeric.RealType;
  */
 public class ClampingNLinearInterpolatorRealType< T extends RealType< T > > extends NLinearInterpolator< T >
 {
-	protected double acc;
-	protected final double clampMin;
-	protected final double clampMax;
+	private int code;
+	private double acc;
+	private final double clampMin;
+	private final double clampMax;
 
 	protected ClampingNLinearInterpolatorRealType( final ClampingNLinearInterpolatorRealType< T > interpolator )
 	{
@@ -67,7 +68,7 @@ public class ClampingNLinearInterpolatorRealType< T extends RealType< T > > exte
 
 	protected ClampingNLinearInterpolatorRealType( final RandomAccessible< T > randomAccessible )
 	{
-		this( randomAccessible, randomAccessible.randomAccess().get() );
+		this( randomAccessible, randomAccessible.getType() );
 	}
 
 	/**
@@ -99,7 +100,7 @@ public class ClampingNLinearInterpolatorRealType< T extends RealType< T > > exte
 		return new ClampingNLinearInterpolatorRealType<>( this );
 	}
 
-	final private void graycodeFwdRecursive( final int dimension )
+	private void graycodeFwdRecursive( final int dimension )
 	{
 		if ( dimension == 0 )
 		{
@@ -117,7 +118,7 @@ public class ClampingNLinearInterpolatorRealType< T extends RealType< T > > exte
 		}
 	}
 
-	final private void graycodeBckRecursive( final int dimension )
+	private void graycodeBckRecursive( final int dimension )
 	{
 		if ( dimension == 0 )
 		{
@@ -138,7 +139,7 @@ public class ClampingNLinearInterpolatorRealType< T extends RealType< T > > exte
 	/**
 	 * multiply current target value with current weight and add to accumulator.
 	 */
-	final private void accumulate()
+	private void accumulate()
 	{
 		acc += target.get().getRealDouble() * weights[ code ];
 	}
