@@ -45,21 +45,17 @@ import net.imglib2.util.Util;
  */
 public class NLinearInterpolatorARGB extends NLinearInterpolator< ARGBType >
 {
-	protected double accA, accR, accG, accB;
+	private int code;
+	private double accA, accR, accG, accB;
 
 	protected NLinearInterpolatorARGB( final NLinearInterpolatorARGB interpolator )
 	{
 		super( interpolator );
 	}
 
-	protected NLinearInterpolatorARGB( final RandomAccessible< ARGBType > randomAccessible, final ARGBType type )
-	{
-		super( randomAccessible, type );
-	}
-
 	protected NLinearInterpolatorARGB( final RandomAccessible< ARGBType > randomAccessible )
 	{
-		this( randomAccessible, randomAccessible.randomAccess().get() );
+		super( randomAccessible, randomAccessible.getType() );
 	}
 
 	/**
@@ -105,7 +101,7 @@ public class NLinearInterpolatorARGB extends NLinearInterpolator< ARGBType >
 		return new NLinearInterpolatorARGB( this );
 	}
 
-	final private void graycodeFwdRecursive( final int dimension )
+	private void graycodeFwdRecursive( final int dimension )
 	{
 		if ( dimension == 0 )
 		{
@@ -123,7 +119,7 @@ public class NLinearInterpolatorARGB extends NLinearInterpolator< ARGBType >
 		}
 	}
 
-	final private void graycodeBckRecursive( final int dimension )
+	private void graycodeBckRecursive( final int dimension )
 	{
 		if ( dimension == 0 )
 		{
@@ -144,34 +140,12 @@ public class NLinearInterpolatorARGB extends NLinearInterpolator< ARGBType >
 	/**
 	 * multiply current target value with current weight and add to accumulator.
 	 */
-	final private void accumulate()
+	private void accumulate()
 	{
 		final int argb = target.get().get();
 		accA += ( ( argb >> 24 ) & 0xff ) * weights[ code ];
 		accR += ( ( argb >> 16 ) & 0xff ) * weights[ code ];
 		accG += ( ( argb >> 8 ) & 0xff ) * weights[ code ];
 		accB += ( argb & 0xff ) * weights[ code ];
-
-//		System.out.print( "accumulating value at " + target );
-//		System.out.print( "with weights [" );
-//		printCode();
-//		System.out.printf( "] = %f" + "\n", weights[ code ] );
-	}
-
-	@SuppressWarnings( "unused" )
-	final private void printWeights()
-	{
-		for ( int i = 0; i < weights.length; ++i )
-			System.out.printf( "weights [ %2d ] = %f\n", i, weights[ i ] );
-	}
-
-	@SuppressWarnings( "unused" )
-	final private void printCode()
-	{
-		final int maxbits = 4;
-		final String binary = Integer.toBinaryString( code );
-		for ( int i = binary.length(); i < maxbits; ++i )
-			System.out.print( "0" );
-		System.out.print( binary );
 	}
 }

@@ -49,8 +49,9 @@ import net.imglib2.util.Util;
  */
 public class ClampingNLinearInterpolatorVolatileARGB< T extends AbstractVolatileNumericType< ARGBType, T > > extends NLinearInterpolator< T >
 {
-	protected double accA, accR, accG, accB;
-	protected boolean valid;
+	private int code;
+	private double accA, accR, accG, accB;
+	private boolean valid;
 
 	protected ClampingNLinearInterpolatorVolatileARGB( final ClampingNLinearInterpolatorVolatileARGB< T > interpolator )
 	{
@@ -64,7 +65,7 @@ public class ClampingNLinearInterpolatorVolatileARGB< T extends AbstractVolatile
 
 	protected ClampingNLinearInterpolatorVolatileARGB( final RandomAccessible< T > randomAccessible )
 	{
-		this( randomAccessible, randomAccessible.randomAccess().get() );
+		this( randomAccessible, randomAccessible.getType() );
 	}
 
 	/**
@@ -112,7 +113,7 @@ public class ClampingNLinearInterpolatorVolatileARGB< T extends AbstractVolatile
 		return new ClampingNLinearInterpolatorVolatileARGB<>( this );
 	}
 
-	final private void graycodeFwdRecursive( final int dimension )
+	private void graycodeFwdRecursive( final int dimension )
 	{
 		if ( dimension == 0 )
 		{
@@ -130,7 +131,7 @@ public class ClampingNLinearInterpolatorVolatileARGB< T extends AbstractVolatile
 		}
 	}
 
-	final private void graycodeBckRecursive( final int dimension )
+	private void graycodeBckRecursive( final int dimension )
 	{
 		if ( dimension == 0 )
 		{
@@ -151,7 +152,7 @@ public class ClampingNLinearInterpolatorVolatileARGB< T extends AbstractVolatile
 	/**
 	 * multiply current target value with current weight and add to accumulator.
 	 */
-	final private void accumulate()
+	private void accumulate()
 	{
 		final T t = target.get();
 		final int argb = t.get().get();

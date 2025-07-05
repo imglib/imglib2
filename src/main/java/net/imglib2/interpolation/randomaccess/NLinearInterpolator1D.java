@@ -59,7 +59,7 @@ public class NLinearInterpolator1D< T extends NumericType< T > > extends NLinear
 
 	protected NLinearInterpolator1D( final RandomAccessible< T > randomAccessible )
 	{
-		super( randomAccessible );
+		this( randomAccessible, randomAccessible.getType() );
 	}
 
 	@Override
@@ -69,17 +69,8 @@ public class NLinearInterpolator1D< T extends NumericType< T > > extends NLinear
 	}
 
 	@Override
-	protected void fillWeights()
-	{
-		final double w0 = position[ 0 ] - target.getLongPosition( 0 );
-		weights[ 0 ] = 1.0d - w0;
-		weights[ 1 ] = w0;
-	}
-
-	@Override
 	public T get()
 	{
-		// fillWeights();
 		final double w0 = position[ 0 ] - target.getLongPosition( 0 );
 
 		accumulator.set( target.get() );
@@ -96,6 +87,6 @@ public class NLinearInterpolator1D< T extends NumericType< T > > extends NLinear
 	@Override
 	public NLinearInterpolator1D< T > copy()
 	{
-		return new NLinearInterpolator1D< T >( this );
+		return new NLinearInterpolator1D<>( this );
 	}
 }
