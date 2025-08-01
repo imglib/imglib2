@@ -9,6 +9,16 @@ import net.imglib2.type.Type;
 /**
  * A {@code Masked} {@code Volatile} {@code Type} wrapping a {@code Volatile}
  * {@code Type<T>}.
+ * <p>
+ * The {@code MaskedVolatileType} is valid if the wrapped value is valid.
+ * Setting validity of the {@code MaskedVolatileType} is also forwarded to the
+ * wrapped value.
+ * <p>
+ * Not that implementing {@code Volatile} in this way is mostly for convenience
+ * Existing code (e.g., in BigDataViewer) that has branches for volatile and
+ * non-volatile types doesn't have to add another branch for masked volatile
+ * types (because {@code instanceof Volatile} checks and casting to {@code
+ * Volatile} work as expected).
  *
  * @param <T>
  * 		the value type.
