@@ -148,12 +148,12 @@ public interface RealRandomAccessible< T > extends RandomAccessible<T>
 
 	@Override
 	default RandomAccess< T > randomAccess() {
-		return realRandomAccess();
+		return new RandomAccessOnRealRandomAccessible<>(realRandomAccess());
 	}
 
 	@Override
 	default RandomAccess< T > randomAccess(final Interval interval) {
-		return realRandomAccess(interval);
+		return new RandomAccessOnRealRandomAccessible<>(realRandomAccess(interval));
 	}
 
 	/*
@@ -165,5 +165,170 @@ public interface RealRandomAccessible< T > extends RandomAccessible<T>
 //	{
 //		return realRandomAccess().get();
 //	}
+}
+
+/**
+ * It's tempting to make {@link RealRandomAccess} extends {@link RandomAccess}.
+ * However a {@link RealRandomAccess} is not {@link Localizable}, because its
+ * position cannot always be reported in discrete space. This class wraps a
+ * {@link RealRandomAccess} such that all calls are in discrete space
+ *
+ * @author Stephan Saalfeld
+ * @author Gabriel Selzer
+ */
+final class RandomAccessOnRealRandomAccessible<T> implements RandomAccess< T >
+{
+	private final RealRandomAccess< T > sourceAccess;
+
+	public RandomAccessOnRealRandomAccessible( final RealRandomAccess< T > sourceAccess )
+	{
+		this.sourceAccess = sourceAccess;
+	}
+
+	@Override
+	public void localize( final int[] position )
+	{
+		for ( int d = 0; d < sourceAccess.numDimensions(); ++d )
+			position[ d ] = ( int ) Math.round( sourceAccess.getDoublePosition( d ) );
+	}
+
+	@Override
+	public void localize( final long[] position )
+	{
+		for ( int d = 0; d < sourceAccess.numDimensions(); ++d )
+			position[ d ] = Math.round( sourceAccess.getDoublePosition( d ) );
+	}
+
+	@Override
+	public int getIntPosition( final int d )
+	{
+		return ( int ) Math.round( sourceAccess.getDoublePosition( d ) );
+	}
+
+	@Override
+	public long getLongPosition( final int d )
+	{
+		return Math.round( sourceAccess.getDoublePosition( d ) );
+	}
+
+	@Override
+	public void localize( final float[] position )
+	{
+		sourceAccess.localize( position );
+	}
+
+	@Override
+	public void localize( final double[] position )
+	{
+		sourceAccess.localize( position );
+	}
+
+	@Override
+	public float getFloatPosition( final int d )
+	{
+		return sourceAccess.getFloatPosition( d );
+	}
+
+	@Override
+	public double getDoublePosition( final int d )
+	{
+		return sourceAccess.getDoublePosition( d );
+	}
+
+	@Override
+	public void fwd( final int d )
+	{
+		sourceAccess.fwd( d );
+	}
+
+	@Override
+	public void bck( final int d )
+	{
+		sourceAccess.bck( d );
+	}
+
+	@Override
+	public void move( final int distance, final int d )
+	{
+		sourceAccess.move( distance, d );
+	}
+
+	@Override
+	public void move( final long distance, final int d )
+	{
+		sourceAccess.move( distance, d );
+	}
+
+	@Override
+	public void move( final Localizable localizable )
+	{
+		sourceAccess.move( localizable );
+	}
+
+	@Override
+	public void move( final int[] distance )
+	{
+		sourceAccess.move( distance );
+	}
+
+	@Override
+	public void move( final long[] distance )
+	{
+		sourceAccess.move( distance );
+	}
+
+	@Override
+	public void setPosition( final Localizable localizable )
+	{
+		sourceAccess.setPosition( localizable );
+	}
+
+	@Override
+	public void setPosition( final int[] position )
+	{
+		sourceAccess.setPosition( position );
+	}
+
+	@Override
+	public void setPosition( final long[] position )
+	{
+		sourceAccess.setPosition( position );
+	}
+
+	@Override
+	public void setPosition( final int position, final int d )
+	{
+		sourceAccess.setPosition( position, d );
+	}
+
+	@Override
+	public void setPosition( final long position, final int d )
+	{
+		sourceAccess.setPosition( position, d );
+	}
+
+	@Override
+	public T get()
+	{
+		return sourceAccess.get();
+	}
+
+	@Override
+	public T getType()
+	{
+		return sourceAccess.getType();
+	}
+
+	@Override
+	public RandomAccessOnRealRandomAccessible<T> copy()
+	{
+		return new RandomAccessOnRealRandomAccessible<>( sourceAccess.copy() );
+	}
+
+	@Override
+	public int numDimensions()
+	{
+		return sourceAccess.numDimensions();
+	}
 }
 

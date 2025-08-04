@@ -39,7 +39,7 @@ package net.imglib2;
  * @author Stephan Preibisch
  * @author Stephan Saalfeld
  */
-public interface RealRandomAccess< T > extends RealLocalizable, RealPositionable, RandomAccess<T>
+public interface RealRandomAccess< T > extends RealLocalizable, RealPositionable, Sampler<T>
 {
 	// NB: Ideally, we would utilize covariant inheritance to narrow the return
 	// type of a single copy() method here, rather than needing separate methods
@@ -166,11 +166,6 @@ public interface RealRandomAccess< T > extends RealLocalizable, RealPositionable
 
 		setPosition( position );
 		return get();
-	}
-
-	@Override
-	default long getLongPosition(int d) {
-		return (long) getDoublePosition(d);
 	}
 
 }
