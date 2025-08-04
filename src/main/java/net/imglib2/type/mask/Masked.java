@@ -10,7 +10,7 @@ import net.imglib2.type.Type;
  * A {@code T} value with an associated {@code double} mask.
  * <p>
  * The mask is intended to be used as an alpha value in the range {@code [0, 1]},
- * but values are <em>not</em>> clamped to that range.
+ * but values are <em>not</em> clamped to that range.
  *
  * @param <T>
  * 		the value type.

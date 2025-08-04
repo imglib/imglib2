@@ -46,7 +46,6 @@ import net.imglib2.type.numeric.RealType;
 /**
  * Provides clamping n-linear interpolators for masked volatile and non-volatile types.
  *
- * @param <N> the value type
  * @param <T> the masked type
  *
  * @author Tobias Pietzsch
