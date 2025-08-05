@@ -49,10 +49,10 @@ import net.imglib2.util.Util;
  * @author Stephan Saalfeld
  */
 public abstract class AbstractVolatileRealType< R extends RealType< R >, T extends AbstractVolatileRealType< R, T > >
-		extends Volatile< R >
+		extends AbstractVolatileNumericType< R, T >
 		implements RealType< T >
 {
-	public AbstractVolatileRealType( final R t, final boolean valid )
+	protected AbstractVolatileRealType( final R t, final boolean valid )
 	{
 		super( t, valid );
 	}
@@ -184,102 +184,8 @@ public abstract class AbstractVolatileRealType< R extends RealType< R >, T exten
 	}
 
 	@Override
-	public void set( final T c )
-	{
-		t.set( c.t );
-		valid = c.valid;
-	}
-
-	@Override
-	public void add( final T c )
-	{
-		t.add( c.t );
-		valid &= c.valid;
-	}
-
-	@Override
-	public void sub( final T c )
-	{
-		t.sub( c.t );
-		valid &= c.valid;
-	}
-
-	@Override
-	public void mul( final T c )
-	{
-		t.mul( c.t );
-		valid &= c.valid;
-	}
-
-	@Override
-	public void div( final T c )
-	{
-		t.div( c.t );
-		valid &= c.valid;
-	}
-
-	@Override
-	public void pow( final T c )
-	{
-		t.pow( c.t );
-		valid &= c.valid;
-	}
-
-	@Override
-	public void pow( final double power )
-	{
-		t.pow( power );
-	}
-
-	@Override
-	public void setZero()
-	{
-		t.setZero();
-	}
-
-	@Override
-	public void setOne()
-	{
-		t.setOne();
-	}
-
-	@Override
-	public void mul( final float c )
-	{
-		t.mul( c );
-	}
-
-	@Override
-	public void mul( final double c )
-	{
-		t.mul( c );
-	}
-
-	@Override
 	public int compareTo( final T o )
 	{
 		return t.compareTo( o.t );
-	}
-
-	@Override
-	public boolean valueEquals( T other )
-	{
-		return isValid() == other.isValid() && t.valueEquals( other.t );
-	}
-
-	@Override
-	public boolean equals( final Object obj )
-	{
-		if ( ! getClass().isInstance( obj ) )
-			return false;
-		@SuppressWarnings( "unchecked" )
-		T t = ( T ) obj;
-		return AbstractVolatileRealType.this.valueEquals( t );
-	}
-
-	@Override
-	public int hashCode()
-	{
-		return Util.combineHash( Boolean.hashCode( isValid() ), t.hashCode() );
 	}
 }
