@@ -11,7 +11,7 @@
 
 	<groupId>net.imglib2</groupId>
 	<artifactId>imglib2</artifactId>
-	<version>8.0.0-SNAPSHOT</version>
+	<version>8.0.0</version>
 
 	<name>ImgLib2 Core Library</name>
 	<description>A multidimensional, type-agnostic image processing library.</description>
@@ -38,7 +38,7 @@
 	<scm>
 		<connection>scm:git:https://github.com/imglib/imglib2</connection>
 		<developerConnection>scm:git:git@github.com:imglib/imglib2</developerConnection>
-		<tag>HEAD</tag>
+		<tag>imglib2-8.0.0</tag>
 		<url>https://github.com/imglib/imglib2</url>
 	</scm>
 	<issueManagement>
@@ -62,9 +62,6 @@ Aivar Grislis, Jonathan Hale, Grant Harris, Stefan Helfrich, Mark Hiner,
 Martin Horn, Steffen Jaensch, Lee Kamentsky, Larry Lindsey, Melissa Linkert,
 Mark Longair, Brian Northan, Nick Perry, Curtis Rueden, Johannes Schindelin,
 Jean-Yves Tinevez and Michael Zinsmaier.</license.copyrightOwners>
-
-		<!-- NB: Deploy releases to the SciJava Maven repository. -->
-		<releaseProfiles>sign,deploy-to-scijava</releaseProfiles>
 	</properties>
 
 	<developers>
