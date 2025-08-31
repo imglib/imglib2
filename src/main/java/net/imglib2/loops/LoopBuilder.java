@@ -173,16 +173,16 @@ public class LoopBuilder< T >
 	 * <pre>
 	 * {@code
 	 *
-	 * List<IntType> listOfSums = LoopBuilder.setImages( image ).multithreaded().forEachChunk(
+	 * List<IntType> listOfSums = LoopBuilder.setImages( image ).multiThreaded().forEachChunk(
 	 *     chunk -> {
 	 *         IntType sum = new IntType();
-	 *         chunk.forEach( pixel -> sum.add( pixel ) ):
+	 *         chunk.forEachPixel(pixel -> sum.add( new IntType( (int) pixel.getRealDouble() ) ) );
 	 *         return sum;
 	 *     }
 	 * );
 	 *
 	 * IntType totalSum = new IntType();
-	 * listOfSums.forEach( sum -> totalSum.add( sum );
+	 * listOfSums.forEach( totalSum::add );
 	 * return totalSum;
 	 * }
 	 * </pre>
