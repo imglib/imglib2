@@ -172,11 +172,12 @@ public class LoopBuilder< T >
 	 *
 	 * <pre>
 	 * {@code
-	 *
+	 * 
+     * RandomAccessibleInterval<IntType> image;
 	 * List<IntType> listOfSums = LoopBuilder.setImages( image ).multiThreaded().forEachChunk(
 	 *     chunk -> {
 	 *         IntType sum = new IntType();
-	 *         chunk.forEachPixel(pixel -> sum.add( new IntType( (int) pixel.getRealDouble() ) ) );
+	 *         chunk.forEachPixel(pixel -> sum.add( pixel ) );
 	 *         return sum;
 	 *     }
 	 * );
