@@ -41,8 +41,6 @@ package net.imglib2.img.basictypeaccess.array;
  */
 public class IntArray extends AbstractIntArray< IntArray >
 {
-	protected int data[];
-
 	public IntArray( final int numEntities )
 	{
 		super( numEntities );
