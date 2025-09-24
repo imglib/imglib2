@@ -34,10 +34,8 @@
 package net.imglib2.blocks;
 
 import net.imglib2.img.NativeImg;
-import net.imglib2.img.array.ArrayImg;
 import net.imglib2.img.cell.AbstractCellImg;
 import net.imglib2.img.cell.Cell;
-import net.imglib2.img.planar.PlanarImg;
 
 /**
  * TODO javadoc
@@ -49,5 +47,26 @@ interface VolatileRangeCopier< T >
 	/**
 	 * TODO javadoc
 	 */
-	void VOLATILE_copy( long[] srcPos, T dest, byte[] destValid, int[] size );
+	void copy( long[] srcPos, T dest, byte[] destValid, int[] size );
+
+	/**
+	 * Return a new independent instance of this {@code VolatileRangeCopier}.
+	 * This is used for multi-threading. The new instance works on the same
+	 * source image, but has independent internal state.
+	 *
+	 * @return new independent instance of this {@code VolatileRangeCopier}
+	 */
+	VolatileRangeCopier< T > newInstance();
+
+	static < S, T > VolatileRangeCopier< T > create(
+			final NativeImg< ?, ? > img,
+			final Ranges findRanges,
+			final MemCopy< S, T > memCopy,
+			final S oob )
+	{
+		if ( img instanceof AbstractCellImg )
+			return new VolatileCellImgRangeCopier<>( ( AbstractCellImg< ?, ?, ? extends Cell< ? >, ? > ) img, findRanges, memCopy, oob );
+		else
+			throw new IllegalArgumentException();
+	}
 }

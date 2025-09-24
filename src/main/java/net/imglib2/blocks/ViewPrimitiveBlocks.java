@@ -42,7 +42,6 @@ import net.imglib2.img.basictypeaccess.nio.BufferAccess;
 import net.imglib2.transform.integer.MixedTransform;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.PrimitiveType;
-import net.imglib2.util.Cast;
 import net.imglib2.util.CloseableThreadLocal;
 import net.imglib2.util.Intervals;
 
@@ -53,6 +52,9 @@ class ViewPrimitiveBlocks< T extends NativeType< T >, R extends NativeType< R > 
 
 	// copies from view root. root type primitive equivalent
 	private final RangeCopier copier;
+
+	// copies from view root. root type primitive equivalent
+	private final VolatileRangeCopier volatileCopier;
 
 	// root primitive type
 	private final TempArray< R > tempArrayPermute;
@@ -78,7 +80,9 @@ class ViewPrimitiveBlocks< T extends NativeType< T >, R extends NativeType< R > 
 		final Extension extension = props.getExtension() != null ? props.getExtension() : Extension.border();
 		final Object oob = extractOobValue( props.getRootType(), extension );
 		final Ranges findRanges = Ranges.forExtension( extension );
+		// TOOD: one of these will fail ... make a workaround until splitting of Volatile version of ViewPrimitiveBlocks
 		copier = RangeCopier.create( props.getRoot(), findRanges, memCopy, oob );
+		volatileCopier = VolatileRangeCopier.create( props.getRoot(), findRanges, memCopy, oob );
 		tempArrayConvert = TempArray.forPrimitiveType( primitiveType );
 		tempArrayPermute = TempArray.forPrimitiveType( primitiveType );
 		permuteInvert = new PermuteInvert( memCopy, props.getPermuteInvertTransform() );
@@ -202,13 +206,12 @@ class ViewPrimitiveBlocks< T extends NativeType< T >, R extends NativeType< R > 
 
 		// TODO: Revisit conversion. I'm not sure whether it is relevant for the Volatile case.
 
-		final VolatileRangeCopier volatileCopier = ( VolatileRangeCopier ) copier;
 		if ( doPermute && doConvert )
 		{
 			final Object copyDest = tempArrayPermute.get( length );
 			final byte[] copyDestValid = tempArrayValid.get( length );
 			final Object permuteDest = tempArrayConvert.get( length );
-			volatileCopier.VOLATILE_copy( destPos, copyDest, copyDestValid, destSize );
+			volatileCopier.copy( destPos, copyDest, copyDestValid, destSize );
 			permuteInvert.permuteAndInvert( copyDest, permuteDest, size );
 			permuteInvertValid.permuteAndInvert( copyDestValid, destValid, size );
 			convert.convert( permuteDest, dest, length );
@@ -217,19 +220,19 @@ class ViewPrimitiveBlocks< T extends NativeType< T >, R extends NativeType< R > 
 		{
 			final Object copyDest = tempArrayConvert.get( length );
 			final byte[] copyDestValid = tempArrayValid.get( length );
-			volatileCopier.VOLATILE_copy( destPos, copyDest, copyDestValid, destSize );
+			volatileCopier.copy( destPos, copyDest, copyDestValid, destSize );
 			permuteInvert.permuteAndInvert( copyDest, dest, size );
 			permuteInvertValid.permuteAndInvert( copyDestValid, destValid, size );
 		}
 		else if ( doConvert )
 		{
 			final Object copyDest = tempArrayPermute.get( length );
-			volatileCopier.VOLATILE_copy( destPos, dest, destValid, destSize );
+			volatileCopier.copy( destPos, dest, destValid, destSize );
 			convert.convert( copyDest, dest, length );
 		}
 		else
 		{
-			volatileCopier.VOLATILE_copy( destPos, dest, destValid, destSize );
+			volatileCopier.copy( destPos, dest, destValid, destSize );
 		}
 	}
 
@@ -282,6 +285,7 @@ class ViewPrimitiveBlocks< T extends NativeType< T >, R extends NativeType< R > 
 	{
 		props = blocks.props;
 		copier = blocks.copier.newInstance();
+		volatileCopier = blocks.volatileCopier.newInstance();
 		permuteInvert = blocks.permuteInvert.newInstance();
 		convert = blocks.convert == null ? null : blocks.convert.newInstance();
 		tempArrayConvert = blocks.tempArrayConvert.newInstance();
