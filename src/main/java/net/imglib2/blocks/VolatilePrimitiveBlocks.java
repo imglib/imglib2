@@ -160,10 +160,10 @@ public interface VolatilePrimitiveBlocks< T extends Volatile< ? > & NativeType< 
 	 * @return a {@code VolatilePrimitiveBlocks} accessor for {@code ra}.
 	 * @param <T> volatile pixel type
 	 */
-	static < T extends Volatile< ? > & NativeType< T > > VolatilePrimitiveBlocks< T > of(
-			RandomAccessible< T > ra )
+	static < T extends Volatile< ? > & NativeType< T >, R extends Volatile< ? > & NativeType< R > >
+	VolatilePrimitiveBlocks< T > of( RandomAccessible< T > ra )
 	{
-		final ViewPropertiesOrError< T, ? > props = ViewAnalyzer.getViewProperties( ra );
+		final ViewPropertiesOrError< T, R > props = ViewAnalyzer.getViewProperties( ra );
 		if ( props.isFullySupported() )
 		{
 			return new VolatileViewPrimitiveBlocks<>( props.getViewProperties() );
