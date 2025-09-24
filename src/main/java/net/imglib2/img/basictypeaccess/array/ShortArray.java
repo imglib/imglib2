@@ -41,8 +41,6 @@ package net.imglib2.img.basictypeaccess.array;
  */
 public class ShortArray extends AbstractShortArray< ShortArray >
 {
-	protected short data[];
-
 	public ShortArray( final int numEntities )
 	{
 		super( numEntities );
