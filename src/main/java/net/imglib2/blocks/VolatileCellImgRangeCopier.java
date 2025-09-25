@@ -257,7 +257,11 @@ class VolatileCellImgRangeCopier< S, T > implements VolatileRangeCopier< T >
 			final byte value )
 	{
 		for ( int i = 0; i < numLines; ++i )
-			Arrays.fill( dest, destPos + i * destStep, lineLength, value );
+		{
+			final int from = destPos + i * destStep;
+			final int to = from + lineLength;
+			Arrays.fill( dest, from, to, value );
+		}
 	}
 
 	private void copyRangesRecursively( final S src, final int srcPos, final T dest, final byte[] destValid, final byte isValid, final int destPos, final int d )
