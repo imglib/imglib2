@@ -11,13 +11,13 @@
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice,
  *    this list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  *    this list of conditions and the following disclaimer in the documentation
  *    and/or other materials provided with the distribution.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -32,18 +32,40 @@
  * #L%
  */
 
-package net.imglib2;
+package net.imglib2.type.volatiles;
+
+import net.imglib2.Volatile;
+import net.imglib2.type.Type;
 
 /**
- * Something volatile that has a value and is either VALID or INVALID.
+ * Abstract base class for {@link Volatile}s that wrap {@link Type}.
  *
- * @author Stephan Saalfeld
+ * @param <V>
+ *            wrapped {@link Type}.
+ * @param <T>
+ *            recursive type of derived class.
+ *
+ * @author Tobias Pietzsch
  */
-public interface Volatile< T >
+public abstract class AbstractVolatileType< V extends Type< V >, T extends AbstractVolatileType< V, T > >
+		extends AbstractVolatile< V >
+		implements Type< T >
 {
-	T get();
+	protected AbstractVolatileType( final V t, final boolean valid )
+	{
+		super( t, valid );
+	}
 
-	boolean isValid();
+	@Override
+	public void set( final T c )
+	{
+		get().set( c.get() );
+		setValid( c.isValid() );
+	}
 
-	void setValid( boolean valid );
+	@Override
+	public boolean valueEquals( T other )
+	{
+		return isValid() == other.isValid() && get().valueEquals( other.get() );
+	}
 }

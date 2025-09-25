@@ -11,13 +11,13 @@
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice,
  *    this list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  *    this list of conditions and the following disclaimer in the documentation
  *    and/or other materials provided with the distribution.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -32,18 +32,36 @@
  * #L%
  */
 
-package net.imglib2;
+package net.imglib2.type.volatiles;
+
+import net.imglib2.type.Type;
 
 /**
  * Something volatile that has a value and is either VALID or INVALID.
  *
- * @author Stephan Saalfeld
+ * @author Tobias Pietzsch
  */
-public interface Volatile< T >
+public class VolatileType< T extends Type< T > > extends AbstractVolatileType< T, VolatileType< T > >
 {
-	T get();
+	public VolatileType( final T t, final boolean valid )
+	{
+		super( t, valid );
+	}
 
-	boolean isValid();
+	public VolatileType( final T t )
+	{
+		this( t, true );
+	}
 
-	void setValid( boolean valid );
+	@Override
+	public VolatileType< T > createVariable()
+	{
+		return new VolatileType< T >( t.createVariable(), true );
+	}
+
+	@Override
+	public VolatileType< T > copy()
+	{
+		return new VolatileType< T >( t.copy(), valid );
+	}
 }
