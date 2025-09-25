@@ -11,13 +11,13 @@
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice,
  *    this list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  *    this list of conditions and the following disclaimer in the documentation
  *    and/or other materials provided with the distribution.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -118,19 +118,6 @@ public interface PrimitiveBlocks< T extends NativeType< T > > extends Typed< T >
 	 *      be {@code byte[]}.
 	 */
 	void copy( Interval interval, Object dest );
-
-	/**
-	 * TODO
-	 *
-	 * @param interval
-	 * @param dest
-	 * @param destValid
-	 */
-	// TODO: should go into VolatilePrimitiveBlocks interface
-	default void copy( Interval interval, Object dest, byte[] destValid )
-	{
-		throw new UnsupportedOperationException( "TODO: implement" );
-	}
 
 	/**
 	 * Copy a block from the ({@code T}-typed) source into primitive arrays (of
