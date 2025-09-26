@@ -11,13 +11,13 @@
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice,
  *    this list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  *    this list of conditions and the following disclaimer in the documentation
  *    and/or other materials provided with the distribution.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -33,44 +33,35 @@
  */
 package net.imglib2.blocks;
 
-import net.imglib2.Volatile;
-import net.imglib2.type.NativeType;
-import net.imglib2.type.PrimitiveType;
+import java.lang.ref.WeakReference;
 
-/**
- * Provides a temporary array of type {@code T}.
- * <p>
- * {@link #get} returns an array of type {@code T} with at least the specified
- * length. If {@code get} is called multiple times, it will either return a
- * previously returned array if it has at least requested length, or allocate a
- * new array, if the requested length exceeds the previously allocated length.
- *
- * @param <T> a primitive array type
- */
-public interface TempArray< T >
+class TempArrayVolatileImpl< T > implements TempArray< VolatileArray< T > >
 {
-	T get( final int minSize );
+	private final PrimitiveTypeProperties< T, ? > props;
 
-	TempArray<T> newInstance();
+	private WeakReference< VolatileArray< T > > arrayRef;
 
-	static < T > TempArray< T > forPrimitiveType( PrimitiveType primitiveType )
+	TempArrayVolatileImpl( PrimitiveTypeProperties< T, ? > props )
 	{
-		return forPrimitiveType( primitiveType, false );
+		arrayRef = new WeakReference<>( null );
+		this.props = props;
 	}
 
-	@SuppressWarnings( { "unchecked" } )
-	static < T > TempArray< T > forPrimitiveType( PrimitiveType primitiveType, boolean isVolatile )
+	@Override
+	public VolatileArray< T > get( final int minSize )
 	{
-		final PrimitiveTypeProperties< ?, ? > props = PrimitiveTypeProperties.get( primitiveType );
-		return ( TempArray< T > ) ( isVolatile
-				? new TempArrayVolatileImpl<>( props )
-				: new TempArrayImpl<>( props ) );
+		VolatileArray< T > array = arrayRef.get();
+		if ( array == null || array.length() < minSize )
+		{
+			array = new VolatileArray<>( props, minSize );
+			arrayRef = new WeakReference<>( array );
+		}
+		return array;
 	}
 
-	static < T > TempArray< T > forType( NativeType< ? > type )
+	@Override
+	public TempArray< VolatileArray< T > > newInstance()
 	{
-		return forPrimitiveType(
-				type.getNativeTypeFactory().getPrimitiveType(),
-				type instanceof Volatile );
+		return new TempArrayVolatileImpl<>( props );
 	}
 }
