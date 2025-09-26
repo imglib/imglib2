@@ -46,7 +46,7 @@ import net.imglib2.type.PrimitiveType;
 import net.imglib2.util.CloseableThreadLocal;
 import net.imglib2.util.Intervals;
 
-class VolatileViewPrimitiveBlocks< T extends Volatile< ? > & NativeType< T >, R extends Volatile< ? > & NativeType< R > > implements VolatilePrimitiveBlocks< T >
+class VolatileViewPrimitiveBlocks< T extends Volatile< ? > & NativeType< T >, R extends Volatile< ? > & NativeType< R > > implements PrimitiveBlocks< T >
 {
 	private final ViewProperties< T, R > props;
 
@@ -67,7 +67,7 @@ class VolatileViewPrimitiveBlocks< T extends Volatile< ? > & NativeType< T >, R 
 
 	private final PermuteInvert permuteInvertValid;
 
-	private Supplier< VolatilePrimitiveBlocks< T > > threadSafeSupplier;
+	private Supplier< PrimitiveBlocks< T > > threadSafeSupplier;
 
 	public VolatileViewPrimitiveBlocks( final ViewProperties< T, R > props )
 	{
@@ -134,6 +134,24 @@ class VolatileViewPrimitiveBlocks< T extends Volatile< ? > & NativeType< T >, R 
 	}
 
 	/**
+	 * Copy a block from the ({@code T}-typed) source into a {@link
+	 * VolatileArray} (of the appropriate type).
+	 *
+	 * @param interval
+	 * 		position and size of the block to copy
+	 * @param dest
+	 *      {@link VolatileArray} array to copy into. Must correspond to
+	 *      {@code T}, for example, if {@code T} is {@code UnsignedByteType}
+	 * 		then {@code dest} must be {@code VolatileArray<byte[]>}.
+	 */
+	@Override
+	public void copy( final Interval interval, final Object dest )
+	{
+		final VolatileArray< ? > va = ( VolatileArray< ? > ) dest;
+		copy( interval, va.data(), va.valid() );
+	}
+
+	/**
 	 * Copy a block from the ({@code T}-typed) source into primitive arrays (of
 	 * the appropriate type).
 	 *
@@ -147,8 +165,7 @@ class VolatileViewPrimitiveBlocks< T extends Volatile< ? > & NativeType< T >, R 
 	 * 		primitive {@code byte[]} array to copy {@link Volatile#isValid()
 	 * 		validity} mask into.
 	 */
-	@Override
-	public void copy( final Interval interval, final Object dest, final byte[] destValid )
+	private void copy( final Interval interval, final Object dest, final byte[] destValid )
 	{
 		final BlockInterval blockInterval = BlockInterval.asBlockInterval( interval );
 		final int[] size = blockInterval.size();
@@ -194,11 +211,11 @@ class VolatileViewPrimitiveBlocks< T extends Volatile< ? > & NativeType< T >, R 
 	}
 
 	@Override
-	public VolatilePrimitiveBlocks< T > threadSafe()
+	public PrimitiveBlocks< T > threadSafe()
 	{
 		if ( threadSafeSupplier == null )
 			threadSafeSupplier = CloseableThreadLocal.withInitial( this::independentCopy )::get;
-		return new VolatilePrimitiveBlocks< T >()
+		return new PrimitiveBlocks< T >()
 		{
 			@Override
 			public T getType()
@@ -213,19 +230,19 @@ class VolatileViewPrimitiveBlocks< T extends Volatile< ? > & NativeType< T >, R 
 			}
 
 			@Override
-			public void copy( final Interval interval, final Object dest, final byte[] destValid )
+			public void copy( final Interval interval, final Object dest )
 			{
-				threadSafeSupplier.get().copy( interval, dest, destValid );
+				threadSafeSupplier.get().copy( interval, dest );
 			}
 
 			@Override
-			public VolatilePrimitiveBlocks< T > independentCopy()
+			public PrimitiveBlocks< T > independentCopy()
 			{
 				return VolatileViewPrimitiveBlocks.this.independentCopy().threadSafe();
 			}
 
 			@Override
-			public VolatilePrimitiveBlocks< T > threadSafe()
+			public PrimitiveBlocks< T > threadSafe()
 			{
 				return this;
 			}
@@ -233,7 +250,7 @@ class VolatileViewPrimitiveBlocks< T extends Volatile< ? > & NativeType< T >, R 
 	}
 
 	@Override
-	public VolatilePrimitiveBlocks< T > independentCopy()
+	public PrimitiveBlocks< T > independentCopy()
 	{
 		return new VolatileViewPrimitiveBlocks<>( this );
 	}
