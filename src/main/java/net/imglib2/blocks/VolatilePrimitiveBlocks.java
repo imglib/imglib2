@@ -33,143 +33,44 @@
  */
 package net.imglib2.blocks;
 
-import net.imglib2.EuclideanSpace;
-import net.imglib2.Interval;
 import net.imglib2.RandomAccessible;
-import net.imglib2.Typed;
 import net.imglib2.Volatile;
 import net.imglib2.type.NativeType;
-import net.imglib2.util.Util;
 
 
-/**
- * TODO: revise javadoc
- * <p>
- * Copy blocks of data out of a {@code NativeType<T>} source into primitive
- * arrays (of the appropriate type).
- * <p>
- * Use the static method {@link VolatilePrimitiveBlocks#of(RandomAccessible)
- * VolatilePrimitiveBlocks.of} to create a {@code VolatilePrimitiveBlocks}
- * accessor for an arbitrary {@code RandomAccessible} source.
- * Then use the {@link VolatilePrimitiveBlocks#copy} method, to copy blocks out
- * of the source into flat primitive arrays.
- * <p>
- * {@link VolatilePrimitiveBlocks#of(RandomAccessible)
- * VolatilePrimitiveBlocks.of} understands a lot of View constructions (that
- * ultimately end in {@code CellImg}, {@code ArrayImg}, etc) and will try to
- * build an optimized copier.
- * <p>
- * If a source {@code RandomAccessible} cannot be understood, {@link
- * VolatilePrimitiveBlocks#of(RandomAccessible) VolatilePrimitiveBlocks.of} will
- * throw an {@code IllegalArgumentException} explaining why the source {@code
- * RandomAccessible} is not suitable.
- * <p>
- * Implementations are not thread-safe in general. Use {@link #threadSafe()} to
- * obtain a thread-safe instance (implemented using {@link ThreadLocal} copies).
- * E.g.,
- * <pre>{@code
- * 		VolatilePrimitiveBlocks< T > blocks = VolatilePrimitiveBlocks.of( view ).threadSafe();
- * }</pre>
- *
- * @param <T>
- * 		volatile pixel type
- */
-public interface VolatilePrimitiveBlocks< T extends Volatile< ? > & NativeType< T > > extends Typed< T >, EuclideanSpace
+public interface VolatilePrimitiveBlocks
 {
 	/**
-	 * Copy a block from the ({@code T}-typed) source into primitive arrays (of
-	 * the appropriate type).
-	 *
-	 * @param interval
-	 * 		position and size of the block to copy
-	 * @param dest
-	 * 		primitive array to copy into. Must correspond to {@code T}, for
-	 *      example, if {@code T} is {@code VolatileUnsignedByteType} then
-	 *      {@code dest} must be {@code byte[]}.
-	 * @param destValid
-	 * 		primitive {@code byte[]} array to copy {@link Volatile#isValid()
-	 * 		validity} mask into.
-	 */
-	void copy( Interval interval, Object dest, byte[] destValid );
-
-	/**
-	 * Copy a block from the ({@code T}-typed) source into primitive arrays (of
-	 * the appropriate type).
-	 *
-	 * @param srcPos
-	 * 		min coordinate of the block to copy
-	 * @param dest
-	 * 		primitive array to copy into. Must correspond to {@code T}, for
-	 *      example, if {@code T} is {@code VolatileUnsignedByteType} then
-	 *      {@code dest} must be {@code byte[]}.
-	 * @param destValid
-	 * 		primitive {@code byte[]} array to copy {@link Volatile#isValid()
-	 * 		validity} mask into.
-	 * @param size
-	 * 		the size of the block to copy
-	 */
-	default void copy( long[] srcPos, Object dest, byte[] destValid, int[] size )
-	{
-		copy( BlockInterval.wrap( srcPos, size ), dest, destValid );
-	}
-
-	/**
-	 * Copy a block from the ({@code T}-typed) source into primitive arrays (of
-	 * the appropriate type).
-	 *
-	 * @param srcPos
-	 * 		min coordinate of the block to copy
-	 * @param dest
-	 * 		primitive array to copy into. Must correspond to {@code T}, for
-	 *      example, if {@code T} is {@code VolatileUnsignedByteType} then
-	 *      {@code dest} must be {@code byte[]}.
-	 * @param destValid
-	 * 		primitive {@code byte[]} array to copy {@link Volatile#isValid()
-	 * 		validity} mask into.
-	 * @param size
-	 * 		the size of the block to copy
-	 */
-	default void copy( int[] srcPos, Object dest, byte[] destValid, int[] size )
-	{
-		copy( Util.int2long( srcPos ), dest, destValid, size );
-	}
-
-	/**
-	 * Get a thread-safe version of this {@code VolatilePrimitiveBlocks}.
-	 * (Implemented as a wrapper that makes {@link ThreadLocal} copies).
-	 */
-	VolatilePrimitiveBlocks< T > threadSafe();
-
-	VolatilePrimitiveBlocks< T > independentCopy();
-
-	/**
-	 * Create a {@code VolatilePrimitiveBlocks} accessor for an arbitrary {@code
+	 * Create a {@code PrimitiveBlocks} accessor for an arbitrary {@code
 	 * RandomAccessible} source. Many View constructions (that ultimately end in
 	 * {@code CellImg}, {@code ArrayImg}, etc.) are understood and will be
 	 * handled by an optimized copier.
 	 * <p>
-	 * If the source {@code VolatilePrimitiveBlocks} cannot be understood, an
-	 * {@code IllegalArgumentException} is thrown, explaining why the input
-	 * {@code ra} is not suitable.
+	 * If a source {@code RandomAccessible} cannot be understood, an {@code
+	 * IllegalArgumentException} is thrown, explaining why the {@code
+	 * RandomAccessible} is not suitable.
 	 * <p>
-	 * The returned {@code VolatilePrimitiveBlocks} is not thread-safe in
-	 * general. Use {@link #threadSafe()} to obtain a thread-safe instance,
+	 * The returned {@code PrimitiveBlocks} is not thread-safe in general. Use
+	 * {@link PrimitiveBlocks#threadSafe()} to obtain a thread-safe instance,
 	 * e.g., {@code VolatilePrimitiveBlocks.of(view).threadSafe()}.
 	 *
-	 * @param ra the source
+	 * @param ra
+	 * 		the source
+	 * @param <T>
+	 * 		volatile pixel type
+	 *
 	 * @return a {@code VolatilePrimitiveBlocks} accessor for {@code ra}.
-	 * @param <T> volatile pixel type
 	 */
 	static < T extends Volatile< ? > & NativeType< T >, R extends Volatile< ? > & NativeType< R > >
-	VolatilePrimitiveBlocks< T > of( RandomAccessible< T > ra )
+	PrimitiveBlocks< T > of( RandomAccessible< T > ra )
 	{
 		final ViewPropertiesOrError< T, R > props = ViewAnalyzer.getViewProperties( ra );
 		if ( props.isFullySupported() )
 		{
 			return new VolatileViewPrimitiveBlocks<>( props.getViewProperties() );
 		}
+		// TODO: Consider adding a fallback implementation (like in PrimitiveBlocks)
 		throw new IllegalArgumentException( props.getErrorMessage() );
 	}
 
-	// TODO: Consider adding a fallback implementation (like in PrimitiveBlocks)
 }
