@@ -85,14 +85,14 @@ import java.util.function.Supplier;
  * @author Michael Innerberger
  * @see Views
  */
-public interface RandomAccessibleIntervalView< T , V extends RandomAccessibleIntervalView<T, V>> extends RandomAccessibleView< T, V >, RandomAccessibleInterval< T >
+public interface RandomAccessibleIntervalView< T , V extends RandomAccessibleIntervalView< T , V >> extends RandomAccessibleView< T, V >, RandomAccessibleInterval< T >
 {
 	@Override
 	RandomAccessibleInterval< T > delegate();
 
-	static < T, V extends RandomAccessibleIntervalView<T, V> > RandomAccessibleIntervalView< T, ? > wrap( final RandomAccessibleInterval< T > delegate )
+	static < T, V extends RandomAccessibleIntervalView< T, V > > RandomAccessibleIntervalView< T, ? > wrap( final RandomAccessibleInterval< T > delegate )
 	{
-		return (RandomAccessibleIntervalView<T, V>) () -> delegate;
+		return (RandomAccessibleIntervalView< T, V >) () -> delegate;
 	}
 
 	// -- Views methods -------------------------------------------------------
@@ -324,7 +324,7 @@ public interface RandomAccessibleIntervalView< T , V extends RandomAccessibleInt
 	 * @param <T>
 	 *     pixel type ot the {@code RandomAccessible} to be extended
 	 */
-	class Extension< T, V extends RandomAccessibleIntervalView<T, V>>
+	class Extension< T, V extends RandomAccessibleIntervalView< T, V >>
 	{
 		final OutOfBoundsFactory< T, RandomAccessibleIntervalView< T, V > > factory;
 
@@ -338,7 +338,7 @@ public interface RandomAccessibleIntervalView< T , V extends RandomAccessibleInt
 		 * <p>
 		 * Out-of-bounds pixels are created by repeating border pixels.
 		 */
-		public static < T, V extends RandomAccessibleIntervalView<T, V> > Extension< T, V > border()
+		public static < T, V extends RandomAccessibleIntervalView< T, V > > Extension< T, V > border()
 		{
 			return new Extension<>(new OutOfBoundsBorderFactory<>() );
 		}
@@ -348,7 +348,7 @@ public interface RandomAccessibleIntervalView< T , V extends RandomAccessibleInt
 		 * <p>
 		 * All out-of-bounds pixels have value zero.
 		 */
-		public static < T extends Type< T > & SetZero, V extends RandomAccessibleIntervalView<T, V>> Extension< T, V > zero()
+		public static < T extends Type< T > & SetZero, V extends RandomAccessibleIntervalView< T, V >> Extension< T, V > zero()
 		{
 			return new Extension<>( new OutOfBoundsZeroFactory< T, RandomAccessibleIntervalView< T, V > >() );
 		}
@@ -358,7 +358,7 @@ public interface RandomAccessibleIntervalView< T , V extends RandomAccessibleInt
 		 * <p>
 		 * All out-of-bounds pixels have the provided {@code value}.
 		 */
-		public static < T, V extends RandomAccessibleIntervalView<T, V> > Extension< T, V > value( T value )
+		public static < T, V extends RandomAccessibleIntervalView< T, V > > Extension< T, V > value( T value )
 		{
 			return new Extension<>(new OutOfBoundsConstantValueFactory<>( value ) );
 		}
@@ -370,7 +370,7 @@ public interface RandomAccessibleIntervalView< T , V extends RandomAccessibleInt
 		 * are not repeated. Note that this requires that all dimensions of the
 		 * source must be &gt; 1.
 		 */
-		public static < T, V extends RandomAccessibleIntervalView<T, V> > Extension< T, V > mirrorSingle()
+		public static < T, V extends RandomAccessibleIntervalView< T, V > > Extension< T, V > mirrorSingle()
 		{
 			return new Extension<>(new OutOfBoundsMirrorFactory<>( OutOfBoundsMirrorFactory.Boundary.SINGLE ) );
 		}
@@ -381,7 +381,7 @@ public interface RandomAccessibleIntervalView< T , V extends RandomAccessibleInt
 		 * Out-of-bounds pixels are created by mirroring, where boundary pixels
 		 * are repeated.
 		 */
-		public static < T, V extends RandomAccessibleIntervalView<T, V> > Extension< T, V > mirrorDouble()
+		public static < T, V extends RandomAccessibleIntervalView< T, V > > Extension< T, V > mirrorDouble()
 		{
 			return new Extension<>(new OutOfBoundsMirrorFactory<>( OutOfBoundsMirrorFactory.Boundary.DOUBLE ) );
 		}
@@ -392,7 +392,7 @@ public interface RandomAccessibleIntervalView< T , V extends RandomAccessibleInt
 		 * Out-of-bounds pixels are created by periodically repeating the source
 		 * image.
 		 */
-		public static < T, V extends RandomAccessibleIntervalView<T, V> > Extension< T, V > periodic()
+		public static < T, V extends RandomAccessibleIntervalView< T, V > > Extension< T, V > periodic()
 		{
 			return new Extension<>(new OutOfBoundsPeriodicFactory<>() );
 		}

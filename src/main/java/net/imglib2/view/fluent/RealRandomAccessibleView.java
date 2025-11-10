@@ -72,13 +72,13 @@ import net.imglib2.view.Views;
  * @author Michael Innerberger
  * @see Views
  */
-public interface RealRandomAccessibleView< T, V extends RealRandomAccessibleView<T, V> > extends RealRandomAccessible< T >
+public interface RealRandomAccessibleView< T, V extends RealRandomAccessibleView< T, V > > extends RealRandomAccessible< T >
 {
 	RealRandomAccessible< T > delegate();
 
-	static < T, V extends RealRandomAccessibleView<T, V>> RealRandomAccessibleView< T, ? > wrap( final RealRandomAccessible< T > delegate )
+	static < T, V extends RealRandomAccessibleView< T, V >> RealRandomAccessibleView< T, ? > wrap( final RealRandomAccessible< T > delegate )
 	{
-		return (RealRandomAccessibleView<T, V>) () -> delegate;
+		return (RealRandomAccessibleView< T, V >) () -> delegate;
 	}
 
 	// -- Views methods -------------------------------------------------------

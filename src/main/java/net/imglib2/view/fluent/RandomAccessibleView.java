@@ -87,9 +87,9 @@ public interface RandomAccessibleView< T, V extends RandomAccessibleView< T, V >
 {
 	RandomAccessible< T > delegate();
 
-	static <T, V extends RandomAccessibleView<T, V>> RandomAccessibleView< T, ? > wrap( final RandomAccessible< T > delegate )
+	static < T, V extends RandomAccessibleView< T, V >> RandomAccessibleView< T, ? > wrap( final RandomAccessible< T > delegate )
 	{
-		return (RandomAccessibleView<T, V>) () -> delegate;
+		return (RandomAccessibleView< T, V >) () -> delegate;
 	}
 
 	// -- Views methods -------------------------------------------------------
