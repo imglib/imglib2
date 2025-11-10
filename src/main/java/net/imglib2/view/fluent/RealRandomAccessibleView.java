@@ -78,7 +78,7 @@ public interface RealRandomAccessibleView< T, V extends RealRandomAccessibleView
 
 	static < T, V extends RealRandomAccessibleView<T, V>> RealRandomAccessibleView< T, ? > wrap( final RealRandomAccessible< T > delegate )
 	{
-		return (RealRandomAccessibleView<T, V>) () -> null;
+		return (RealRandomAccessibleView<T, V>) () -> delegate;
 	}
 
 	// -- Views methods -------------------------------------------------------
