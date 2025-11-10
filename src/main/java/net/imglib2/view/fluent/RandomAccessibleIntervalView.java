@@ -33,9 +33,6 @@
  */
 package net.imglib2.view.fluent;
 
-import java.util.function.Function;
-import java.util.function.Supplier;
-
 import net.imglib2.Cursor;
 import net.imglib2.FlatIterationOrder;
 import net.imglib2.RandomAccessible;
@@ -54,6 +51,8 @@ import net.imglib2.type.operators.SetZero;
 import net.imglib2.util.Util;
 import net.imglib2.view.IterableRandomAccessibleInterval;
 import net.imglib2.view.Views;
+
+import java.util.function.Supplier;
 
 /**
  * Gateway for creating light-weight views on a {@code RandomAccessibleInterval}.
@@ -86,14 +85,14 @@ import net.imglib2.view.Views;
  * @author Michael Innerberger
  * @see Views
  */
-public interface RandomAccessibleIntervalView< T > extends RandomAccessibleView< T, RandomAccessibleIntervalView< T > >, RandomAccessibleInterval< T >
+public interface RandomAccessibleIntervalView< T , V extends RandomAccessibleIntervalView< T , V >> extends RandomAccessibleView< T, V >, RandomAccessibleInterval< T >
 {
 	@Override
 	RandomAccessibleInterval< T > delegate();
 
-	static < T > RandomAccessibleIntervalView< T > wrap( final RandomAccessibleInterval< T > delegate )
+	static < T, V extends RandomAccessibleIntervalView< T, V > > RandomAccessibleIntervalView< T, ? > wrap( final RandomAccessibleInterval< T > delegate )
 	{
-		return () -> delegate;
+		return (RandomAccessibleIntervalView< T, V >) () -> delegate;
 	}
 
 	// -- Views methods -------------------------------------------------------
@@ -108,7 +107,7 @@ public interface RandomAccessibleIntervalView< T > extends RandomAccessibleView<
 	 *
 	 * @return a view with flat iteration order
 	 */
-	default RandomAccessibleIntervalView< T > flatIterable()
+	default RandomAccessibleIntervalView< T, ? > flatIterable()
 	{
 		return wrap( Views.flatIterable( delegate() ) );
 	}
@@ -126,7 +125,7 @@ public interface RandomAccessibleIntervalView< T > extends RandomAccessibleView<
 	 * @return a view on the given slice
 	 */
 	@Override
-	default RandomAccessibleIntervalView< T > slice( int d, long pos )
+	default RandomAccessibleIntervalView< T, ? > slice( int d, long pos )
 	{
 		return wrap( Views.hyperSlice( delegate(), d, pos ) );
 	}
@@ -147,7 +146,7 @@ public interface RandomAccessibleIntervalView< T > extends RandomAccessibleView<
 	 *
 	 * @return a view with an additional dimension
 	 */
-	default RandomAccessibleIntervalView< T > addDimension( long minOfNewDim, long maxOfNewDim )
+	default RandomAccessibleIntervalView< T, ? > addDimension( long minOfNewDim, long maxOfNewDim )
 	{
 		return wrap( Views.addDimension( delegate(), minOfNewDim, maxOfNewDim ) );
 	}
@@ -164,7 +163,7 @@ public interface RandomAccessibleIntervalView< T > extends RandomAccessibleView<
 	 * @return a translated view
 	 */
 	@Override
-	default RandomAccessibleIntervalView< T > translate( long... translation )
+	default RandomAccessibleIntervalView< T, ? > translate( long... translation )
 	{
 		return wrap( Views.translate( delegate(), translation ) );
 	}
@@ -182,7 +181,7 @@ public interface RandomAccessibleIntervalView< T > extends RandomAccessibleView<
 	 * @return an inverse-translated view
 	 */
 	@Override
-	default RandomAccessibleIntervalView< T > translateInverse( long... translation )
+	default RandomAccessibleIntervalView< T, ? > translateInverse( long... translation )
 	{
 		return wrap( Views.translateInverse( delegate(), translation ) );
 	}
@@ -193,7 +192,7 @@ public interface RandomAccessibleIntervalView< T > extends RandomAccessibleView<
 	 *
 	 * @return a view that is translated to the origin
 	 */
-	default RandomAccessibleIntervalView< T > zeroMin()
+	default RandomAccessibleIntervalView< T, ? > zeroMin()
 	{
 		return wrap( Views.zeroMin( delegate() ) );
 	}
@@ -213,7 +212,7 @@ public interface RandomAccessibleIntervalView< T > extends RandomAccessibleView<
 	 * @return a subsampled view
 	 */
 	@Override
-	default RandomAccessibleIntervalView< T > subsample( final long... steps )
+	default RandomAccessibleIntervalView< T, ? > subsample( final long... steps )
 	{
 		return wrap( Views.subsample( delegate(), Util.expandArray( steps, numDimensions() ) ) );
 	}
@@ -242,7 +241,7 @@ public interface RandomAccessibleIntervalView< T > extends RandomAccessibleView<
 	 * @return a view rotated 90 degrees
 	 */
 	@Override
-	default RandomAccessibleIntervalView< T > rotate( int fromAxis, int toAxis )
+	default RandomAccessibleIntervalView< T, ? > rotate( int fromAxis, int toAxis )
 	{
 		return wrap( Views.rotate( delegate(), fromAxis, toAxis ) );
 	}
@@ -259,7 +258,7 @@ public interface RandomAccessibleIntervalView< T > extends RandomAccessibleView<
 	 * @return a view with permuted axes
 	 */
 	@Override
-	default RandomAccessibleIntervalView< T > permute( int fromAxis, int toAxis )
+	default RandomAccessibleIntervalView< T, ? > permute( int fromAxis, int toAxis )
 	{
 		return wrap( Views.permute( delegate(), fromAxis, toAxis ) );
 	}
@@ -280,7 +279,7 @@ public interface RandomAccessibleIntervalView< T > extends RandomAccessibleView<
 	 * @return a view with permuted axes
 	 */
 	@Override
-	default RandomAccessibleIntervalView< T > moveAxis( int fromAxis, int toAxis )
+	default RandomAccessibleIntervalView< T, ? > moveAxis( int fromAxis, int toAxis )
 	{
 		return wrap( Views.moveAxis( delegate(), fromAxis, toAxis ) );
 	}
@@ -303,7 +302,7 @@ public interface RandomAccessibleIntervalView< T > extends RandomAccessibleView<
 	 * @return a view with {@code axis} inverted
 	 */
 	@Override
-	default RandomAccessibleIntervalView< T > invertAxis( int axis )
+	default RandomAccessibleIntervalView< T, ? > invertAxis( int axis )
 	{
 		return wrap( Views.invertAxis( delegate(), axis ) );
 	}
@@ -325,11 +324,11 @@ public interface RandomAccessibleIntervalView< T > extends RandomAccessibleView<
 	 * @param <T>
 	 *     pixel type ot the {@code RandomAccessible} to be extended
 	 */
-	class Extension< T >
+	class Extension< T, V extends RandomAccessibleIntervalView< T, V >>
 	{
-		final OutOfBoundsFactory< T, RandomAccessibleIntervalView< T > > factory;
+		final OutOfBoundsFactory< T, RandomAccessibleIntervalView< T, V > > factory;
 
-		private Extension( OutOfBoundsFactory< T, RandomAccessibleIntervalView< T > > factory )
+		private Extension( OutOfBoundsFactory< T, RandomAccessibleIntervalView< T, V > > factory )
 		{
 			this.factory = factory;
 		}
@@ -339,7 +338,7 @@ public interface RandomAccessibleIntervalView< T > extends RandomAccessibleView<
 		 * <p>
 		 * Out-of-bounds pixels are created by repeating border pixels.
 		 */
-		public static < T > Extension< T > border()
+		public static < T, V extends RandomAccessibleIntervalView< T, V > > Extension< T, V > border()
 		{
 			return new Extension<>(new OutOfBoundsBorderFactory<>() );
 		}
@@ -349,9 +348,9 @@ public interface RandomAccessibleIntervalView< T > extends RandomAccessibleView<
 		 * <p>
 		 * All out-of-bounds pixels have value zero.
 		 */
-		public static < T extends Type< T > & SetZero > Extension< T > zero()
+		public static < T extends Type< T > & SetZero, V extends RandomAccessibleIntervalView< T, V >> Extension< T, V > zero()
 		{
-			return new Extension<>( new OutOfBoundsZeroFactory< T, RandomAccessibleIntervalView< T > >() );
+			return new Extension<>( new OutOfBoundsZeroFactory< T, RandomAccessibleIntervalView< T, V > >() );
 		}
 
 		/**
@@ -359,7 +358,7 @@ public interface RandomAccessibleIntervalView< T > extends RandomAccessibleView<
 		 * <p>
 		 * All out-of-bounds pixels have the provided {@code value}.
 		 */
-		public static < T > Extension< T > value( T value )
+		public static < T, V extends RandomAccessibleIntervalView< T, V > > Extension< T, V > value( T value )
 		{
 			return new Extension<>(new OutOfBoundsConstantValueFactory<>( value ) );
 		}
@@ -371,7 +370,7 @@ public interface RandomAccessibleIntervalView< T > extends RandomAccessibleView<
 		 * are not repeated. Note that this requires that all dimensions of the
 		 * source must be &gt; 1.
 		 */
-		public static < T > Extension< T > mirrorSingle()
+		public static < T, V extends RandomAccessibleIntervalView< T, V > > Extension< T, V > mirrorSingle()
 		{
 			return new Extension<>(new OutOfBoundsMirrorFactory<>( OutOfBoundsMirrorFactory.Boundary.SINGLE ) );
 		}
@@ -382,7 +381,7 @@ public interface RandomAccessibleIntervalView< T > extends RandomAccessibleView<
 		 * Out-of-bounds pixels are created by mirroring, where boundary pixels
 		 * are repeated.
 		 */
-		public static < T > Extension< T > mirrorDouble()
+		public static < T, V extends RandomAccessibleIntervalView< T, V > > Extension< T, V > mirrorDouble()
 		{
 			return new Extension<>(new OutOfBoundsMirrorFactory<>( OutOfBoundsMirrorFactory.Boundary.DOUBLE ) );
 		}
@@ -393,7 +392,7 @@ public interface RandomAccessibleIntervalView< T > extends RandomAccessibleView<
 		 * Out-of-bounds pixels are created by periodically repeating the source
 		 * image.
 		 */
-		public static < T > Extension< T > periodic()
+		public static < T, V extends RandomAccessibleIntervalView< T, V > > Extension< T, V > periodic()
 		{
 			return new Extension<>(new OutOfBoundsPeriodicFactory<>() );
 		}
@@ -419,7 +418,7 @@ public interface RandomAccessibleIntervalView< T > extends RandomAccessibleView<
 	 *
 	 * @return an extended (unbounded) view
 	 */
-	default RandomAccessibleView< T, ? > extend( Extension< T > extension )
+	default RandomAccessibleView< T, ? > extend( Extension< T, V > extension )
 	{
 		return RandomAccessibleView.wrap( Views.extend( this, extension.factory ) );
 	}
@@ -455,7 +454,7 @@ public interface RandomAccessibleIntervalView< T > extends RandomAccessibleView<
 	 *
 	 * @return an expanded view
 	 */
-	default RandomAccessibleIntervalView< T > expand( Extension< T > extension, long... border )
+	default RandomAccessibleIntervalView< T, ? > expand( Extension< T, V > extension, long... border )
 	{
 		return RandomAccessibleIntervalView.wrap( Views.expand( this, extension.factory, Util.expandArray( border, numDimensions() ) ) );
 	}
@@ -479,7 +478,7 @@ public interface RandomAccessibleIntervalView< T > extends RandomAccessibleView<
 	 * @return a converted view
 	 */
 	@Override
-	default < U > RandomAccessibleIntervalView< U > convert(
+	default < U > RandomAccessibleIntervalView< U, ? > convert(
 			final Supplier< U > targetSupplier, final Converter< ? super T, ? super U > converter )
 	{
 		return wrap( Converters.convert2( delegate(), converter, targetSupplier ) );
@@ -505,34 +504,16 @@ public interface RandomAccessibleIntervalView< T > extends RandomAccessibleView<
 	 * @return a converted view
 	 */
 	@Override
-	default < U > RandomAccessibleIntervalView< U > convert(
+	default < U > RandomAccessibleIntervalView< U, ? > convert(
 			final Supplier< U > targetSupplier, final Supplier< Converter< ? super T, ? super U > > converterSupplier )
 	{
 		return wrap( Converters.convert2( delegate(), converterSupplier, targetSupplier ) );
 	}
 
-	/**
-	 * Apply the specified {@code function} to this {@code
-	 * RandomAccessibleInterval} and return the result.
-	 *
-	 * @param function
-	 * 		function to evaluate on this {@code RandomAccessibleInterval}
-	 * @param <U>
-	 * 		the type of the result of the function
-	 *
-	 * @return {@code function.apply(this)}
-	 */
-	@Override
-	default < U > U use( Function< ? super RandomAccessibleIntervalView< T >, U > function )
-	{
-		return function.apply( this );
-	}
-
-
 	// -- RandomAccessibleInterval --------------------------------------------
 
 	@Override
-	default RandomAccessibleIntervalView< T > view()
+	default RandomAccessibleIntervalView< T, V > view()
 	{
 		return this;
 	}
