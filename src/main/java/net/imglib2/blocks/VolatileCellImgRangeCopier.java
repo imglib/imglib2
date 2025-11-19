@@ -258,9 +258,8 @@ class VolatileCellImgRangeCopier< S, T > implements VolatileRangeCopier< T >
 	{
 		for ( int i = 0; i < numLines; ++i )
 		{
-			final int from = destPos + i * destStep;
-			final int to = from + lineLength;
-			Arrays.fill( dest, from, to, value );
+			final int offset = destPos + i * destStep;
+			Arrays.fill( dest, offset, offset + lineLength, value );
 		}
 	}
 
@@ -298,7 +297,7 @@ class VolatileCellImgRangeCopier< S, T > implements VolatileRangeCopier< T >
 		else
 		{
 			memCopy.copyValue( oob, 0, dest, dOffset, lengths[ dConst ] );
-			Arrays.fill( destValid, dOffset, lengths[ dConst ], ( byte ) 1 );
+			Arrays.fill( destValid, dOffset, dOffset + lengths[ dConst ], ( byte ) 1 );
 		}
 	}
 
@@ -312,8 +311,9 @@ class VolatileCellImgRangeCopier< S, T > implements VolatileRangeCopier< T >
 		else
 			for ( int i = 0; i < length; ++i )
 			{
-				memCopy.copyValue( oob, 0, dest, destPos + i * dstep, lengths[ dConst ] );
-				Arrays.fill( destValid, destPos + i * dstep, lengths[ dConst ], ( byte ) 1 );
+				final int offset = destPos + i * dstep;
+				memCopy.copyValue( oob, 0, dest, offset, lengths[ dConst ] );
+				Arrays.fill( destValid, offset, offset + lengths[ dConst ], ( byte ) 1 );
 			}
 	}
 
