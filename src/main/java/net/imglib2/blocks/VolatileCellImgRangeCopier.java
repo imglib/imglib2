@@ -234,7 +234,6 @@ class VolatileCellImgRangeCopier< S, T > implements VolatileRangeCopier< T >
 		final ArrayDataAccess< ? > data = ( ArrayDataAccess< ? > ) cell.getData();
 		final boolean isValid = ( ( VolatileAccess ) data ).isValid();
 		final byte b_isValid = ( byte ) ( isValid ? 1 : 0 );
-		System.out.println( Arrays.toString( cellAccess.positionAsLongArray() ) + ": isValid = " + isValid );
 		// TODO: Revise! Probably, we can just use VOLATILE_fillRangesRecursively if !isValid.
 		final S src = ( S ) data.getCurrentStorageArray();
 		if ( n > 1 )
