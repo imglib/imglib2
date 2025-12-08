@@ -56,11 +56,11 @@ public final class Cast
 	 * </pre>
 	 * Can be rewritten as:
 	 * <pre>
-	 * {@code Img<T> image = Casts.unchecked( ArrayImgs.ints(100, 100) );}
+	 * {@code Img<T> image = Cast.unchecked( ArrayImgs.ints(100, 100) );}
 	 * </pre>
 	 * It's possible to explicitly specify the return type:
 	 * <pre>
-	 * {@code Img<T> image = Casts.<Img<T>>unchecked( ArrayImgs.ints(100, 100) );}
+	 * {@code Img<T> image = Cast.<Img<T>>unchecked( ArrayImgs.ints(100, 100) );}
 	 * </pre>
 	 * @throws ClassCastException during runtime, if the cast is not possible.
 	 */
