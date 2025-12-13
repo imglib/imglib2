@@ -36,12 +36,15 @@ package net.imglib2.util;
 
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.ListIterator;
+import java.util.NoSuchElementException;
 
 import org.junit.Test;
 
@@ -404,6 +407,21 @@ public class PartitionTest
 		for ( int k = 0; k < permutation.length; ++k )
 			assertTrue( values.get( k ).equals( origvalues.get( permutation[ k ] ) ) );
 	}
+
+	@Test
+	public void testPartitionEmptyFloatObjectIteratorPermutation()
+        {
+            final ArrayList< Float > values = new ArrayList< Float >();
+            final ListIterator< Float > iIterator = values.listIterator();
+            final ListIterator< Float > jIterator = values.listIterator( values.size() );
+            final int[] permutation = new int[ values.size() ];
+            try {
+                Partition.partitionSubList( iIterator, jIterator, permutation );
+                fail( "Expected a NoSuchElementException to be thrown" );
+            } catch ( NoSuchElementException noSuchElementException )  {
+                assertEquals( noSuchElementException.getMessage(), "Invalid iterators for partitioning a sublist." );
+            }
+        }
 
 	@Test
 	public void testPartitionFloatObjectIteratorPermutation()
