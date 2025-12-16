@@ -38,6 +38,7 @@ import net.imglib2.img.array.ArrayImg;
 import net.imglib2.img.basictypeaccess.array.ArrayDataAccess;
 
 import static net.imglib2.blocks.Ranges.Direction.CONSTANT;
+import static net.imglib2.blocks.Ranges.Direction.FORWARD;
 
 /**
  * Does the actual copying work from an {@code ArrayImg} into a primitive array.
@@ -205,6 +206,23 @@ class ArrayImgRangeCopier< S, T > implements RangeCopier< T >
 			case STAY:
 				csteps[ d ] = 0;
 				break;
+			}
+		}
+
+		// try to merge adjacent FORWARD runs
+		for ( int d = 0; d < n; ++d )
+		{
+			final Ranges.Range r = ranges[ d ];
+			if( r.dir != FORWARD )
+				break;
+
+			if( d > 0 )
+			{
+				if ( csteps[ d ] != dsteps[ d ] || dsteps[ d ] != lengths[ 0 ] )
+					break;
+
+				lengths[ 0 ] *= lengths[ d ];
+				lengths[ d ] = 1;
 			}
 		}
 
