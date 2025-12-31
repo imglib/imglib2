@@ -33,8 +33,6 @@
  */
 package net.imglib2.display;
 
-import java.awt.Color;
-
 import net.imglib2.type.numeric.ARGBType;
 
 /**
@@ -46,17 +44,108 @@ import net.imglib2.type.numeric.ARGBType;
 public class ScaledBrightnessARGBConverter
 {
 
-	// Not thread-safe!
-	private static final float[] hsb = new float[ 3 ];
-
 	private static final int getScaledColor( final int color, final double scale )
 	{
 		final int r = ARGBType.red( color );
 		final int g = ARGBType.green( color );
 		final int b = ARGBType.blue( color );
-		Color.RGBtoHSB( r, g, b, hsb );
-		hsb[ 2 ] = ( float ) Math.min( 1f, hsb[ 2 ] / scale );
-		return Color.HSBtoRGB( hsb[ 0 ], hsb[ 1 ], hsb[ 2 ] );
+
+		// Convert RGB to normalized float values
+		final float rf = r / 255f;
+		final float gf = g / 255f;
+		final float bf = b / 255f;
+
+		final float max = Math.max( rf, Math.max( gf, bf ) );
+		final float min = Math.min( rf, Math.min( gf, bf ) );
+		final float delta = max - min;
+
+		// Calculate HSB values
+		float hue;
+		float saturation;
+		float brightness = max;
+
+		// Saturation
+		saturation = ( max == 0 ) ? 0 : delta / max;
+
+		// Hue
+		if ( delta == 0 )
+		{
+			hue = 0;
+		}
+		else if ( max == rf )
+		{
+			hue = ( ( gf - bf ) / delta ) / 6f;
+			if ( hue < 0 )
+				hue += 1f;
+		}
+		else if ( max == gf )
+		{
+			hue = ( 2f + ( bf - rf ) / delta ) / 6f;
+		}
+		else
+		{
+			hue = ( 4f + ( rf - gf ) / delta ) / 6f;
+		}
+
+		// Scale brightness
+		brightness = ( float ) Math.min( 1f, brightness / scale );
+
+		// Convert HSB back to RGB
+		return hsbToRGB( hue, saturation, brightness );
+	}
+
+	private static int hsbToRGB( final float h, final float s, final float b )
+	{
+		int r = 0, g = 0, bl = 0;
+
+		if ( s == 0 )
+		{
+			r = g = bl = ( int ) ( b * 255f + 0.5f );
+		}
+		else
+		{
+			final float h6 = ( h - ( float ) Math.floor( h ) ) * 6f;
+			final float f = h6 - ( float ) Math.floor( h6 );
+			final float p = b * ( 1f - s );
+			final float q = b * ( 1f - s * f );
+			final float t = b * ( 1f - s * ( 1f - f ) );
+
+			switch ( ( int ) h6 )
+			{
+			case 0:
+				r = ( int ) ( b * 255f + 0.5f );
+				g = ( int ) ( t * 255f + 0.5f );
+				bl = ( int ) ( p * 255f + 0.5f );
+				break;
+			case 1:
+				r = ( int ) ( q * 255f + 0.5f );
+				g = ( int ) ( b * 255f + 0.5f );
+				bl = ( int ) ( p * 255f + 0.5f );
+				break;
+			case 2:
+				r = ( int ) ( p * 255f + 0.5f );
+				g = ( int ) ( b * 255f + 0.5f );
+				bl = ( int ) ( t * 255f + 0.5f );
+				break;
+			case 3:
+				r = ( int ) ( p * 255f + 0.5f );
+				g = ( int ) ( q * 255f + 0.5f );
+				bl = ( int ) ( b * 255f + 0.5f );
+				break;
+			case 4:
+				r = ( int ) ( t * 255f + 0.5f );
+				g = ( int ) ( p * 255f + 0.5f );
+				bl = ( int ) ( b * 255f + 0.5f );
+				break;
+			case 5:
+				r = ( int ) ( b * 255f + 0.5f );
+				g = ( int ) ( p * 255f + 0.5f );
+				bl = ( int ) ( q * 255f + 0.5f );
+				break;
+			}
+		}
+
+		return 0xff000000 | ( r << 16 ) | ( g << 8 ) | bl;
 	}
 
 	public static class ARGB extends ScaledARGBConverter.ARGB
