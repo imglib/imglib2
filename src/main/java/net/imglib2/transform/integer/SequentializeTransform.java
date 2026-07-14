@@ -41,7 +41,7 @@ import net.imglib2.transform.InvertibleTransform;
 /**
  * Transform n-dimensional to m-dimensional coordinates {@code (m<n)} by
  * flattening dimensions {@code >m}. An example of this transformation is the
- * way, a 2D image is flattened out as a 1D array in memory.
+ * way a 2D image is flattened out as a 1D array in memory.
  *
  * @author Tobias Pietzsch
  */

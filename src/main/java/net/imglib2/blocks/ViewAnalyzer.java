@@ -614,7 +614,7 @@ class ViewAnalyzer
 	{
 		final ViewAnalyzer v = new ViewAnalyzer( view );
 
-		// Check whether the pixel type of ciew is supported (NativeType with entitiesPerPixel==1)
+		// Check whether the pixel type of view is supported (NativeType with entitiesPerPixel==1)
 		final boolean supportsFallback = v.checkViewTypeSupported();
 		if ( !supportsFallback )
 		{
