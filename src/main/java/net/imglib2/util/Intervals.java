@@ -418,6 +418,29 @@ public class Intervals
 	}
 
 	/**
+	 * Create a new interval that selects a subset of {@code axes} from {@code
+	 * interval}. If an element of {@code axes} is {@code <0}, a new axis is
+	 * inserted (with min and max {@code = 0}).
+	 */
+	public static Interval selectAxes( final Interval interval, final int... axes )
+	{
+		final int n = interval.numDimensions();
+		final int m = axes.length;
+		final long[] min = new long[ m ];
+		final long[] max = new long[ m ];
+		for ( int s = 0; s < m; ++s ) {
+			final int t = axes[ s ];
+			if ( t > n )
+				throw new IndexOutOfBoundsException( "Non-existent target dimension" );
+			if ( t < 0 )
+				continue; // insert axis
+			min[ s ] = interval.min( t );
+			max[ s ] = interval.max( t );
+		}
+		return FinalInterval.wrap( min, max );
+	}
+
+	/**
 	 * Returns an {@link Interval} with the same dimensions as the given
 	 * interval, but min is all zero.
 	 */

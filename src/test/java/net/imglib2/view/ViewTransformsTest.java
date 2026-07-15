@@ -108,9 +108,26 @@ public class ViewTransformsTest
 		assertArrayEquals( new long[] { 1, 2, 3 }, result );
 	}
 
+	@Test
+	public void testSelectAxes()
+	{
+		{ // hyperSlice
+			final Mixed transform = ViewTransforms.selectAxes( 4, 0, 1, 3 );
+			final long[] result = apply( transform, new long[] { 1, 2, 3 } );
+			assertArrayEquals( new long[] { 1, 2, 0, 3 }, result );
+		}
+
+		{ // addDimension
+			final Mixed transform = ViewTransforms.selectAxes( 3, 0, 1, 2, -1 );
+			final long[] result = apply( transform, new long[] { 1, 2, 3, 17 } );
+			assertArrayEquals( new long[] { 1, 2, 3 }, result );
+		}
+	}
+
+
 	private long[] apply( Mixed transform, long[] source )
 	{
-		long[] result = new long[ 3 ];
+		long[] result = new long[ transform.numTargetDimensions() ];
 		transform.apply( source, result );
 		return result;
 	}

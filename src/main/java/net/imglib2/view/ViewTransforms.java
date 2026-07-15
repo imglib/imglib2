@@ -58,6 +58,42 @@ public class ViewTransforms
 {
 	/**
 	 * Returns the transformation that is used by
+	 * {@link Views#selectAxes(RandomAccessible, int...)}.
+	 * <p>
+	 * Warning: The transformations used in {@link Views} are always inverse to
+	 * the operations that are performed by the views.
+	 */
+	public static Mixed selectAxes( final int numTargetDimensions, final int... axes )
+	{
+		final int numSourceDimensions = axes.length;
+
+		final int[] component = new int[ numTargetDimensions ];
+		Arrays.fill( component, -1 );
+		for ( int s = 0; s < numSourceDimensions; s++ )
+		{
+			final int t = axes[ s ];
+			if ( t > numTargetDimensions )
+				throw new IndexOutOfBoundsException( "Non-existent target dimension" );
+			if ( t < 0 )
+				// insert axis: source dimension s is discarded.
+				continue;
+			if ( component[ t ] != -1 )
+				throw new IllegalArgumentException( "Cannot map more than one source dimension to the same target dimension" );
+			component[ t ] = s;
+		}
+
+		final boolean[] zero = new boolean[ numTargetDimensions ];
+		for ( int t = 0; t < numTargetDimensions; t++ )
+			zero[ t ] = component[ t ] < 0;
+
+		final MixedTransform t = new MixedTransform( numSourceDimensions, numTargetDimensions );
+		t.setComponentMapping( component );
+		t.setComponentZero( zero );
+		return t;
+	}
+
+	/**
+	 * Returns the transformation that is used by
 	 * {@link Views#rotate(RandomAccessible, int, int)}.
 	 * <p>
 	 * Warning: The transformations used in {@link Views} are always

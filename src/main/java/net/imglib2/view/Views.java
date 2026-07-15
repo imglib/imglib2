@@ -499,6 +499,35 @@ public class Views
 	}
 
 	/**
+	 * Create a view that selects a subset of {@code axes} from the {@code parent}.
+	 * If an element of {@code axes} is {@code <0}, a new axis is inserted (with
+	 * {@code parent} values broadcast along this axis).
+	 *
+	 * @param parent the {@link RandomAccessible} to create a view of
+	 * @param axes the axes to select
+	 * @return the view
+	 */
+	public static < T > RandomAccessible< T > selectAxes( final RandomAccessible< T > parent, final int... axes )
+	{
+		final int n = parent.numDimensions();
+		return new MixedTransformView<>( parent, ViewTransforms.selectAxes( n, axes ) );
+	}
+
+	/**
+	 * Create a view that selects a subset of {@code axes} from the {@code parent}.
+	 * If an element of {@code axes} is {@code <0}, a new axis is inserted (with
+	 * min and max {@code = 0}).
+	 *
+	 * @param parent the {@link RandomAccessibleInterval} to create a view of
+	 * @param axes the axes to select
+	 * @return the view
+	 */
+	public static < T > RandomAccessibleInterval< T > selectAxes( final RandomAccessibleInterval< T > parent, final int... axes )
+	{
+		return Views.interval( Views.selectAxes( ( RandomAccessible< T > ) parent, axes), Intervals.selectAxes( parent, axes ) );
+	}
+
+	/**
 	 * Create view with permuted axes. fromAxis and toAxis are swapped.
 	 * <p>
 	 * If fromAxis=0 and toAxis=2, this means that the X-axis of the source view

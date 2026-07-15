@@ -88,6 +88,22 @@ public class ViewsTest
 	}
 
 	@Test
+	public void testSelectAxes() {
+		RandomAccessible< Localizable > input = Localizables.randomAccessible( 4 );
+		RandomAccessible< Localizable > view = Views.selectAxes( input, 0, 3, 2, -1 );
+		RandomAccess< Localizable > ra = view.randomAccess();
+		ra.setPosition( new long[] {1, 4, 3, 5} );
+		assertArrayEquals( new long[] {1, 0, 3, 4}, ra.get().positionAsLongArray() );
+	}
+
+	@Test
+	public void testSelectAxesForInterval() {
+		Img<?> img = ArrayImgs.bytes( 1, 2, 3, 4 );
+		RandomAccessibleInterval< ? > view = Views.selectAxes( img, 0, 3, 2, -1 );
+		assertArrayEquals( new long[] { 1, 4, 3, 1 }, Intervals.dimensionsAsLongArray( view ) );
+	}
+
+	@Test
 	public void testExtendValue() {
 		final long[] dims = { 2, 3, 4 };
 		final long[] border = { 1, 1, 1 };
