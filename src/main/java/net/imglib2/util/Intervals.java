@@ -34,6 +34,7 @@
 
 package net.imglib2.util;
 
+import java.util.Arrays;
 import java.util.StringJoiner;
 
 import net.imglib2.Dimensions;
@@ -132,7 +133,7 @@ public class Intervals
 
 	/**
 	 * Grow/shrink an interval in all dimensions.
-	 *
+	 * <p>
 	 * Create a {@link FinalInterval}, which is the input interval plus border
 	 * pixels on every side, in every dimension.
 	 *
@@ -145,10 +146,8 @@ public class Intervals
 	public static FinalInterval expand( final Interval interval, final long border )
 	{
 		final int n = interval.numDimensions();
-		final long[] min = new long[ n ];
-		final long[] max = new long[ n ];
-		interval.min( min );
-		interval.max( max );
+		final long[] min = interval.minAsLongArray();
+		final long[] max = interval.maxAsLongArray();
 		for ( int d = 0; d < n; ++d )
 		{
 			min[ d ] -= border;
@@ -159,7 +158,7 @@ public class Intervals
 
 	/**
 	 * Grow/shrink an interval in all dimensions.
-	 *
+	 * <p>
 	 * Create a {@link FinalInterval}, which is the input interval plus border
 	 * pixels on every side, in every dimension.
 	 *
@@ -176,7 +175,7 @@ public class Intervals
 
 	/**
 	 * Grow/shrink an interval in all dimensions.
-	 *
+	 * <p>
 	 * Create a {@link FinalInterval}, which is the input interval plus border
 	 * pixels on every side, in every dimension.
 	 *
@@ -189,10 +188,8 @@ public class Intervals
 	public static FinalInterval expand( final Interval interval, final Dimensions border )
 	{
 		final int n = interval.numDimensions();
-		final long[] min = new long[ n ];
-		final long[] max = new long[ n ];
-		interval.min( min );
-		interval.max( max );
+		final long[] min = interval.minAsLongArray();
+		final long[] max = interval.maxAsLongArray();
 		for ( int d = 0; d < n; ++d )
 		{
 			min[ d ] -= border.dimension( d );
@@ -203,7 +200,7 @@ public class Intervals
 
 	/**
 	 * Grow/shrink an interval in one dimensions.
-	 *
+	 * <p>
 	 * Create a {@link FinalInterval}, which is the input interval plus border
 	 * pixels on every side, in dimension d.
 	 *
@@ -217,11 +214,8 @@ public class Intervals
 	 */
 	public static FinalInterval expand( final Interval interval, final long border, final int d )
 	{
-		final int n = interval.numDimensions();
-		final long[] min = new long[ n ];
-		final long[] max = new long[ n ];
-		interval.min( min );
-		interval.max( max );
+		final long[] min = interval.minAsLongArray();
+		final long[] max = interval.maxAsLongArray();
 		min[ d ] -= border;
 		max[ d ] += border;
 		return FinalInterval.wrap( min, max );
@@ -229,7 +223,7 @@ public class Intervals
 
 	/**
 	 * Translate an interval in one dimension.
-	 *
+	 * <p>
 	 * Create a {@link FinalInterval}, which is the input interval shifted by t
 	 * in dimension d.
 	 *
@@ -243,11 +237,8 @@ public class Intervals
 	 */
 	public static FinalInterval translate( final Interval interval, final long t, final int d )
 	{
-		final int n = interval.numDimensions();
-		final long[] min = new long[ n ];
-		final long[] max = new long[ n ];
-		interval.min( min );
-		interval.max( max );
+		final long[] min = interval.minAsLongArray();
+		final long[] max = interval.maxAsLongArray();
 		min[ d ] += t;
 		max[ d ] += t;
 		return FinalInterval.wrap( min, max );
@@ -255,7 +246,7 @@ public class Intervals
 
 	/**
 	 * Translate an interval.
-	 *
+	 * <p>
 	 * Create a {@link FinalInterval}, which is the input interval shifted by
 	 * {@code translation}.
 	 *
@@ -268,10 +259,8 @@ public class Intervals
 	public static FinalInterval translate( final Interval interval, final long... translation )
 	{
 		final int n = interval.numDimensions();
-		final long[] min = new long[ n ];
-		final long[] max = new long[ n ];
-		interval.min( min );
-		interval.max( max );
+		final long[] min = interval.minAsLongArray();
+		final long[] max = interval.maxAsLongArray();
 		for ( int d = 0; d < n; ++d )
 		{
 			min[ d ] += translation[ d ];
@@ -282,7 +271,7 @@ public class Intervals
 
 	/**
 	 * Translate an interval by {@code -translation}.
-	 *
+	 * <p>
 	 * Create a {@link FinalInterval}, which is the input interval shifted by
 	 * {@code -translation}.
 	 *
@@ -295,10 +284,8 @@ public class Intervals
 	public static FinalInterval translateInverse( final Interval interval, final long... translation )
 	{
 		final int n = interval.numDimensions();
-		final long[] min = new long[ n ];
-		final long[] max = new long[ n ];
-		interval.min( min );
-		interval.max( max );
+		final long[] min = interval.minAsLongArray();
+		final long[] max = interval.maxAsLongArray();
 		for ( int d = 0; d < n; ++d )
 		{
 			min[ d ] -= translation[ d ];
@@ -311,7 +298,7 @@ public class Intervals
 	 * Create new interval by adding a dimension to the source {@link Interval}.
 	 * The {@link Interval} boundaries in the additional dimension are set to
 	 * the specified values.
-	 *
+	 * <p>
 	 * The additional dimension is the last dimension.
 	 *
 	 * @param interval
@@ -346,14 +333,10 @@ public class Intervals
 	 */
 	public static FinalInterval invertAxis( final Interval interval, final int d )
 	{
-		final int n = interval.numDimensions();
-		final long[] min = new long[ n ];
-		final long[] max = new long[ n ];
-		interval.min( min );
-		interval.max( max );
-		final long tmp = min[ d ];
-		min[ d ] = -max[ d ];
-		max[ d ] = -tmp;
+		final long[] min = interval.minAsLongArray();
+		final long[] max = interval.maxAsLongArray();
+		min[ d ] = -interval.max( d );
+		max[ d ] = -interval.min( d );
 		return FinalInterval.wrap( min, max );
 	}
 
@@ -363,22 +346,14 @@ public class Intervals
 	 */
 	public static FinalInterval hyperSlice( final Interval interval, final int d )
 	{
-		final int m = interval.numDimensions();
-		final int n = m - 1;
+		final int n = interval.numDimensions() - 1;
 		final long[] min = new long[ n ];
 		final long[] max = new long[ n ];
-		for ( int e = 0; e < m; ++e )
+		for ( int i = 0; i < n; ++i )
 		{
-			if ( e < d )
-			{
-				min[ e ] = interval.min( e );
-				max[ e ] = interval.max( e );
-			}
-			else if ( e > d )
-			{
-				min[ e - 1 ] = interval.min( e );
-				max[ e - 1 ] = interval.max( e );
-			}
+			final int shift = ( i < d ) ? 0 : 1;
+			min[ i ] = interval.min( i + shift );
+			max[ i ] = interval.max( i + shift );
 		}
 		return FinalInterval.wrap( min, max );
 	}
@@ -386,78 +361,59 @@ public class Intervals
 	/**
 	 * Create an interval with permuted axes. The {@code fromAxis} is moved to
 	 * {@code toAxis}, while the order of the other axes is preserved.
-	 *
+	 * <p>
 	 * If fromAxis=2 and toAxis=4, and axis order of {@code interval} was XYCZT,
 	 * then an interval with axis order XYZTC would be created.
 	 */
 	public static FinalInterval moveAxis( final Interval interval, final int fromAxis, final int toAxis )
 	{
 		final int n = interval.numDimensions();
-		final Mixed t = ViewTransforms.moveAxis( n, fromAxis, toAxis );
-		final int[] newAxisIndices = new int[ n ];
-		t.getComponentMapping( newAxisIndices );
-
+		final Mixed t = ViewTransforms.moveAxis( n, toAxis, fromAxis );
 		final long[] min = new long[ n ];
 		final long[] max = new long[ n ];
-		for ( int d = 0; d < n; d++ )
-		{
-			min[ newAxisIndices[ d ] ] = interval.min( d );
-			max[ newAxisIndices[ d ] ] = interval.max( d );
-		}
+		t.apply( interval.minAsLongArray(), min );
+		t.apply( interval.maxAsLongArray(), max );
 		return FinalInterval.wrap( min, max );
 	}
 
 	/**
 	 * Create an interval with permuted axes. fromAxis and toAxis are swapped.
-	 *
+	 * <p>
 	 * If fromAxis=0 and toAxis=2, this means that the X-axis of the source
 	 * interval is mapped to the Z-Axis of the permuted interval and vice versa.
 	 * For a XYZ source, a ZYX interval would be created.
 	 */
 	public static FinalInterval permuteAxes( final Interval interval, final int fromAxis, final int toAxis )
 	{
-		final int n = interval.numDimensions();
-		final long[] min = new long[ n ];
-		final long[] max = new long[ n ];
-		interval.min( min );
-		interval.max( max );
-		final long fromMinNew = min[ toAxis ];
-		final long fromMaxNew = max[ toAxis ];
-		min[ toAxis ] = min[ fromAxis ];
-		max[ toAxis ] = max[ fromAxis ];
-		min[ fromAxis ] = fromMinNew;
-		max[ fromAxis ] = fromMaxNew;
+		final long[] min = interval.minAsLongArray();
+		final long[] max = interval.maxAsLongArray();
+		min[ toAxis ] = interval.min( fromAxis );
+		min[ fromAxis ] = interval.min( toAxis );
+		max[ toAxis ] = interval.max( fromAxis );
+		max[ fromAxis ] = interval.max( toAxis );
 		return FinalInterval.wrap( min, max );
 	}
 
 	/**
 	 * Create an interval that is rotated by 90 degrees. The rotation is
 	 * specified by the fromAxis and toAxis arguments.
-	 *
+	 * <p>
 	 * If fromAxis=0 and toAxis=1, this means that the X-axis of the source
 	 * interval is mapped to the Y-Axis of the rotated interval. That is, it
 	 * corresponds to a 90 degree clock-wise rotation of the source interval in
 	 * the XY plane.
-	 *
+	 * <p>
 	 * fromAxis=1 and toAxis=0 corresponds to a counter-clock-wise rotation in
 	 * the XY plane.
 	 */
 	public static FinalInterval rotate( final Interval interval, final int fromAxis, final int toAxis )
 	{
-		final int n = interval.numDimensions();
-		final long[] min = new long[ n ];
-		final long[] max = new long[ n ];
-		interval.min( min );
-		interval.max( max );
-		if ( fromAxis != toAxis )
-		{
-			final long fromMinNew = -max[ toAxis ];
-			final long fromMaxNew = -min[ toAxis ];
-			min[ toAxis ] = min[ fromAxis ];
-			max[ toAxis ] = max[ fromAxis ];
-			min[ fromAxis ] = fromMinNew;
-			max[ fromAxis ] = fromMaxNew;
-		}
+		final long[] min = interval.minAsLongArray();
+		final long[] max = interval.maxAsLongArray();
+		min[ toAxis ] = interval.min( fromAxis );
+		min[ fromAxis ] = -interval.max( toAxis );
+		max[ toAxis ] = interval.max( fromAxis );
+		max[ fromAxis ] = -interval.min( toAxis );
 		return FinalInterval.wrap( min, max );
 	}
 
@@ -467,7 +423,7 @@ public class Intervals
 	 */
 	public static FinalInterval zeroMin( final Interval interval )
 	{
-		return new FinalInterval( dimensionsAsLongArray( interval ) );
+		return new FinalInterval( ( Dimensions ) interval );
 	}
 
 	/**
@@ -476,8 +432,8 @@ public class Intervals
 	public static RealInterval scale( final RealInterval interval, final double scale )
 	{
 		final int n = interval.numDimensions();
-		final double[] min = minAsDoubleArray( interval );
-		final double[] max = maxAsDoubleArray( interval );
+		final double[] min = interval.minAsDoubleArray();
+		final double[] max = interval.maxAsDoubleArray();
 		for ( int i = 0; i < n; i++ )
 		{
 			min[ i ] *= scale;
@@ -488,8 +444,8 @@ public class Intervals
 
 	/**
 	 * Compute the intersection of two intervals.
-	 *
-	 * Create a {@link FinalInterval} , which is the intersection of the input
+	 * <p>
+	 * Create a {@link FinalInterval} which is the intersection of the input
 	 * intervals (i.e., the area contained in both input intervals).
 	 *
 	 * @param intervalA
@@ -515,8 +471,8 @@ public class Intervals
 
 	/**
 	 * Compute the intersection of two intervals.
-	 *
-	 * Create a {@link RealInterval} , which is the intersection of the input
+	 * <p>
+	 * Create a {@link RealInterval} which is the intersection of the input
 	 * intervals (i.e., the area contained in both input intervals).
 	 *
 	 * @param intervalA
@@ -542,9 +498,9 @@ public class Intervals
 
 	/**
 	 * Compute the smallest interval that contains both input intervals.
-	 *
+	 * <p>
 	 * Create a {@link FinalInterval} that represents that interval.
-	 *
+	 * <p>
 	 * May produce unexpected results for empty {@link Interval}s.
 	 * Use {@link #union(Interval, Interval)} if either input interval could be empty.
 	 *
@@ -571,7 +527,7 @@ public class Intervals
 
 	/**
 	 * Compute the smallest interval that contains both input intervals.
-	 *
+	 * <p>
 	 * Create a {@link FinalInterval} that represents that interval.
 	 *
 	 * @param intervalA
@@ -594,9 +550,9 @@ public class Intervals
 
 	/**
 	 * Compute the smallest interval that contains both input intervals.
-	 *
+	 * <p>
 	 * Create a {@link RealInterval} that represents that interval.
-	 *
+	 * <p>
 	 * May produce unexpected results for empty {@link RealInterval}s.
 	 * Use {@link #union(RealInterval, RealInterval)} if either input interval could be empty.
 	 *
@@ -623,7 +579,7 @@ public class Intervals
 
 	/**
 	 * Compute the smallest interval that contains both input intervals.
-	 *
+	 * <p>
 	 * Create a {@link RealInterval} that represents that interval.
 	 *
 	 * @param intervalA
@@ -922,195 +878,151 @@ public class Intervals
 	}
 
 	/**
-	 * Create a <code>long[]</code> with the dimensions of a {@link Dimensions}.
-	 *
+	 * Create a {@code long[]} with the dimensions of a {@link Dimensions}.
 	 * <p>
 	 * Keep in mind that creating arrays wildly is not good practice and
 	 * consider using the interval directly. See
 	 * {@link Dimensions#dimensions(long[])}.
-	 * </p>
-	 * <p>
-	 * Consider using the more convenient {@link Dimensions#dimensionsAsLongArray}.
-	 * This method may be deprecated in a future release.
-	 * </p>
 	 *
 	 * @param dimensions
-	 *            something which has dimensions
+	 *            something that has dimensions
 	 *
-	 * @return dimensions as a new <code>long[]</code>
+	 * @return dimensions as a new {@code long[]}
+	 *
+	 * @deprecated Use {@link Dimensions#dimensionsAsLongArray} instead.
 	 */
+	@Deprecated
 	public static long[] dimensionsAsLongArray( final Dimensions dimensions )
 	{
-		final long[] dims = new long[ dimensions.numDimensions() ];
-		dimensions.dimensions( dims );
-		return dims;
+		return dimensions.dimensionsAsLongArray();
 	}
 
 	/**
-	 * Create a <code>int[]</code> with the dimensions of an {@link Interval}.
-	 *
+	 * Create a {@code int[]} with the dimensions of an {@link Interval}.
 	 * <p>
 	 * Keep in mind that creating arrays wildly is not good practice and
 	 * consider using the interval directly.
-	 * </p>
 	 *
 	 * @param dimensions
-	 *            something which has dimensions
+	 *            something that has dimensions
 	 *
-	 * @return dimensions as a new <code>int[]</code>
+	 * @return dimensions as a new {@code int[]}
 	 */
 	public static int[] dimensionsAsIntArray( final Dimensions dimensions )
 	{
-		final int n = dimensions.numDimensions();
-		final int[] dims = new int[ n ];
-		for ( int d = 0; d < n; ++d )
-			dims[ d ] = ( int ) dimensions.dimension( d );
+		final int[] dims = new int[ dimensions.numDimensions() ];
+		Arrays.setAll( dims, d -> ( int ) dimensions.dimension( d ) );
 		return dims;
 	}
 
 	/**
-	 * Create a <code>long[]</code> with the minimum of an {@link Interval}.
-	 *
+	 * Create a {@code long[]} with the minimum of an {@link Interval}.
 	 * <p>
 	 * Keep in mind that creating arrays wildly is not good practice and
 	 * consider using the interval directly. See {@link Interval#min(long[])}.
-	 * </p>
-	 * <p>
-	 * Consider using the more convenient {@link Interval#minAsLongArray}.
-	 * This method may be deprecated in a future release.
-	 * </p>
 	 *
 	 * @param interval
 	 *            something with interval boundaries
 	 *
-	 * @return minimum as a new <code>long[]</code>
+	 * @return minimum as a new {@code long[]}
+	 * @deprecated Use {@link Interval#minAsLongArray()} instead.
 	 */
+	@Deprecated
 	public static long[] minAsLongArray( final Interval interval )
 	{
-		final long[] min = new long[ interval.numDimensions() ];
-		interval.min( min );
-		return min;
+		return interval.minAsLongArray();
 	}
 
 	/**
-	 * Create a <code>int[]</code> with the minimum of an {@link Interval}.
-	 *
+	 * Create a {@code int[]} with the minimum of an {@link Interval}.
 	 * <p>
 	 * Keep in mind that creating arrays wildly is not good practice and
 	 * consider using the interval directly.
-	 * </p>
 	 *
 	 * @param interval
 	 *            something with interval boundaries
 	 *
-	 * @return minimum as a new <code>int[]</code>
+	 * @return minimum as a new {@code int[]}
 	 */
 	public static int[] minAsIntArray( final Interval interval )
 	{
-		final int n = interval.numDimensions();
-		final int[] min = new int[ n ];
-		for ( int d = 0; d < n; ++d )
-			min[ d ] = ( int ) interval.min( d );
+		final int[] min = new int[ interval.numDimensions() ];
+		Arrays.setAll( min, d -> ( int ) interval.min( d ) );
 		return min;
 	}
 
 	/**
-	 * Create a <code>long[]</code> with the maximum of an {@link Interval}.
-	 *
+	 * Create a {@code long[]} with the maximum of an {@link Interval}.
 	 * <p>
 	 * Keep in mind that creating arrays wildly is not good practice and
 	 * consider using the interval directly. See {@link Interval#max(long[])}.
-	 * </p>
-	 *
-	 * <p>
-	 * Consider using the more convenient {@link Interval#maxAsLongArray}.
-	 * This method may be deprecated in a future release.
-	 * </p>
 	 *
 	 * @param interval
 	 *            something with interval boundaries
 	 *
-	 * @return maximum as a new <code>long[]</code>
+	 * @return maximum as a new {@code long[]}
+	 * @deprecated Use {@link Interval#maxAsLongArray()} instead.
 	 */
+	@Deprecated
 	public static long[] maxAsLongArray( final Interval interval )
 	{
-		final long[] max = new long[ interval.numDimensions() ];
-		interval.max( max );
-		return max;
+		return interval.maxAsLongArray();
 	}
 
 	/**
-	 * Create a <code>int[]</code> with the maximum of an {@link Interval}.
-	 *
+	 * Create a {@code int[]} with the maximum of an {@link Interval}.
 	 * <p>
 	 * Keep in mind that creating arrays wildly is not good practice and
 	 * consider using the interval directly.
-	 * </p>
 	 *
 	 * @param interval
 	 *            something with interval boundaries
 	 *
-	 * @return maximum as a new <code>int[]</code>
+	 * @return maximum as a new {@code int[]}
 	 */
 	public static int[] maxAsIntArray( final Interval interval )
 	{
-		final int n = interval.numDimensions();
-		final int[] max = new int[ n ];
-		for ( int d = 0; d < n; ++d )
-			max[ d ] = ( int ) interval.max( d );
-		return max;
+		final int[] min = new int[ interval.numDimensions() ];
+		Arrays.setAll( min, d -> ( int ) interval.max( d ) );
+		return min;
 	}
 
 	/**
-	 * Create a <code>double[]</code> with the maximum of a {@link RealInterval}
-	 * .
-	 *
+	 * Create a {@code double[]} with the maximum of a {@link RealInterval}.
 	 * <p>
 	 * Keep in mind that creating arrays wildly is not good practice and
 	 * consider using the interval directly. See
 	 * {@link RealInterval#realMax(double[])}.
-	 * </p>
-	 * <p>
-	 * Consider using the more convenient {@link RealInterval#maxAsDoubleArray}.
-	 * This method may be deprecated in a future release.
-	 * </p>
 	 *
 	 * @param interval
 	 *            something with interval boundaries
 	 *
 	 * @return maximum as a new double[]
+	 * @deprecated Use {@link RealInterval#maxAsDoubleArray()} instead.
 	 */
+	@Deprecated
 	public static double[] maxAsDoubleArray( final RealInterval interval )
 	{
-		final double[] max = new double[ interval.numDimensions() ];
-		interval.realMax( max );
-		return max;
+		return interval.maxAsDoubleArray();
 	}
 
 	/**
-	 * Create a <code>double[]</code> with the minimum of a {@link RealInterval}
-	 * .
-	 *
+	 * Create a {@code double[]} with the minimum of a {@link RealInterval}.
 	 * <p>
 	 * Keep in mind that creating arrays wildly is not good practice and
 	 * consider using the interval directly. See
 	 * {@link RealInterval#realMin(double[])}.
-	 * </p>
-	 * <p>
-	 * Consider using the more convenient {@link RealInterval#minAsDoubleArray}
-	 * This method may be deprecated in a future release.
-	 * </p>
 	 *
 	 * @param interval
 	 *            something with interval boundaries
 	 *
 	 * @return minimum as a new double[]
+	 * @deprecated Use {@link RealInterval#minAsDoubleArray()} instead.
 	 */
+	@Deprecated
 	public static double[] minAsDoubleArray( final RealInterval interval )
 	{
-		final double[] min = new double[ interval.numDimensions() ];
-		interval.realMin( min );
-		return min;
+		return interval.minAsDoubleArray();
 	}
 
 	/**
@@ -1120,12 +1032,13 @@ public class Intervals
 	 * @param interval
 	 *            Interval of the returned image.
 	 */
-	public static RandomAccessibleInterval< Localizable > positions( final Interval interval ) {
-		return Localizables.randomAccessibleInterval( interval);
+	public static RandomAccessibleInterval< Localizable > positions( final Interval interval )
+	{
+		return Localizables.randomAccessibleInterval( interval );
 	}
 
 	/**
-	 * Returns a string that contains min, max and the dimensions of the
+	 * Returns a string that contains min, max, and the dimensions of the
 	 * {@link Interval}.
 	 */
 	public static String toString( final Interval value )

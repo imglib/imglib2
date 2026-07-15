@@ -74,14 +74,14 @@ public class ViewsTest
 	}
 
 	@Test
-	public void testMoveAxisUpForInteval() {
+	public void testMoveAxisUpForInterval() {
 		Img<?> img = ArrayImgs.bytes( 1, 2, 3, 4 );
 		RandomAccessibleInterval< ? > view = Views.moveAxis( img, 1, 3 );
 		assertArrayEquals( new long[]{ 1, 3, 4, 2 }, Intervals.dimensionsAsLongArray( view ) );
 	}
 
 	@Test
-	public void testMoveAxisDownForInteval() {
+	public void testMoveAxisDownForInterval() {
 		Img<?> img = ArrayImgs.bytes( 1, 2, 3, 4 );
 		RandomAccessibleInterval< ? > view = Views.moveAxis( img, 3, 1 );
 		assertArrayEquals( new long[]{ 1, 4, 2, 3 }, Intervals.dimensionsAsLongArray( view ) );

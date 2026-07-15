@@ -468,11 +468,11 @@ public class Views
 	/**
 	 * Create view that is rotated by 90 degrees. The rotation is specified by
 	 * the fromAxis and toAxis arguments.
-	 *
+	 * <p>
 	 * If fromAxis=0 and toAxis=1, this means that the X-axis of the source view
 	 * is mapped to the Y-Axis of the rotated view. That is, it corresponds to a
 	 * 90 degree clock-wise rotation of the source view in the XY plane.
-	 *
+	 * <p>
 	 * fromAxis=1 and toAxis=0 corresponds to a counter-clock-wise rotation in
 	 * the XY plane.
 	 */
@@ -485,11 +485,11 @@ public class Views
 	/**
 	 * Create view that is rotated by 90 degrees. The rotation is specified by
 	 * the fromAxis and toAxis arguments.
-	 *
+	 * <p>
 	 * If fromAxis=0 and toAxis=1, this means that the X-axis of the source view
 	 * is mapped to the Y-Axis of the rotated view. That is, it corresponds to a
 	 * 90 degree clock-wise rotation of the source view in the XY plane.
-	 *
+	 * <p>
 	 * fromAxis=1 and toAxis=0 corresponds to a counter-clock-wise rotation in
 	 * the XY plane.
 	 */
@@ -500,7 +500,7 @@ public class Views
 
 	/**
 	 * Create view with permuted axes. fromAxis and toAxis are swapped.
-	 *
+	 * <p>
 	 * If fromAxis=0 and toAxis=2, this means that the X-axis of the source view
 	 * is mapped to the Z-Axis of the permuted view and vice versa. For a XYZ
 	 * source, a ZYX view would be created.
@@ -513,7 +513,7 @@ public class Views
 
 	/**
 	 * Create view with permuted axes. fromAxis and toAxis are swapped.
-	 *
+	 * <p>
 	 * If fromAxis=0 and toAxis=2, this means that the X-axis of the source view
 	 * is mapped to the Z-Axis of the permuted view and vice versa. For a XYZ
 	 * source, a ZYX view would be created.
@@ -526,7 +526,7 @@ public class Views
 	/**
 	 * Create view with permuted axes. fromAxis is moved to toAxis. While the
 	 * order of the other axes is preserved.
-	 *
+	 * <p>
 	 * If fromAxis=2 and toAxis=4, and axis order of image is XYCZT, then a view
 	 * to the image with axis order XYZTC would be created.
 	 */
@@ -538,7 +538,7 @@ public class Views
 	/**
 	 * Create view with permuted axes. fromAxis is moved to toAxis. While the
 	 * order of the other axes is preserved.
-	 *
+	 * <p>
 	 * If fromAxis=2 and toAxis=4, and axis order of image is XYCZT, then a view
 	 * to the image with axis order XYZTC would be created.
 	 */
@@ -704,9 +704,8 @@ public class Views
 	}
 
 	/**
-	 * Create view which adds a dimension to the source {@link RandomAccessible}
-	 * .
-	 *
+	 * Create view which adds a dimension to the source {@link RandomAccessible}.
+	 * <p>
 	 * The additional dimension is the last dimension. For example, an XYZ view
 	 * is created for an XY source. When accessing an XYZ sample in the view,
 	 * the final coordinate is discarded and the source XY sample is accessed.
@@ -725,7 +724,7 @@ public class Views
 	 * Create view which adds a dimension to the source
 	 * {@link RandomAccessibleInterval}. The {@link Interval} boundaries in the
 	 * additional dimension are set to the specified values.
-	 *
+	 * <p>
 	 * The additional dimension is the last dimension. For example, an XYZ view
 	 * is created for an XY source. When accessing an XYZ sample in the view,
 	 * the final coordinate is discarded and the source XY sample is accessed.

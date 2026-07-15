@@ -145,7 +145,7 @@ public interface Interval extends RealInterval, Dimensions
 
 	/**
 	 * Allocates a new long array with the minimum of this Interval.
-	 *
+	 * <p>
 	 * Please note that his method allocates a new array each time which
 	 * introduces notable overhead in both compute and memory.
 	 * If you query it frequently, you should allocate a dedicated array
@@ -162,7 +162,7 @@ public interface Interval extends RealInterval, Dimensions
 
 	/**
 	 * Allocates a new {@link Point} with the maximum of this Interval.
-	 *
+	 * <p>
 	 * Please note that his method allocates a new {@link Point} each time
 	 * which introduces notable overhead in both compute and memory.
 	 * If you query it frequently, you should allocate a dedicated
@@ -172,14 +172,12 @@ public interface Interval extends RealInterval, Dimensions
 	 */
 	default Point minAsPoint()
 	{
-		final Point min = new Point( numDimensions() );
-		min( min );
-		return min;
+		return Point.wrap( minAsLongArray() );
 	}
 
 	/**
 	 * Allocates a new long array with the maximum of this Interval.
-	 *
+	 * <p>
 	 * Please note that his method allocates a new array each time which
 	 * introduces notable overhead in both compute and memory.
 	 * If you query it frequently, you should allocate a dedicated array
@@ -196,7 +194,7 @@ public interface Interval extends RealInterval, Dimensions
 
 	/**
 	 * Allocates a new {@link Point} with the maximum of this Interval.
-	 *
+	 * <p>
 	 * Please note that his method allocates a new {@link Point} each time
 	 * which introduces notable overhead in both compute and memory.
 	 * If you query it frequently, you should allocate a dedicated
@@ -206,9 +204,7 @@ public interface Interval extends RealInterval, Dimensions
 	 */
 	default Point maxAsPoint()
 	{
-		final Point max = new Point( numDimensions() );
-		max( max );
-		return max;
+		return Point.wrap( maxAsLongArray() );
 	}
 
 }
