@@ -118,7 +118,7 @@ public interface RandomAccessibleInterval< T > extends RandomAccessible< T >, It
 	 *         views} into this {@code RandomAccessibleInterval}.
 	 */
 	@Override
-	default RandomAccessibleIntervalView< T > view()
+	default RandomAccessibleIntervalView< T, ? > view()
 	{
 		return RandomAccessibleIntervalView.wrap( this );
 	}
