@@ -37,6 +37,7 @@ package net.imglib2.util;
 import java.util.Comparator;
 import java.util.List;
 import java.util.ListIterator;
+import java.util.NoSuchElementException;
 
 /**
  * TODO
@@ -1115,6 +1116,9 @@ public class Partition
 	 */
 	public static < T extends Comparable< T > > void partitionSubList( final ListIterator< T > i, final ListIterator< T > j, final int[] permutation )
 	{
+                if (!i.hasNext() || !j.hasPrevious()) {
+                    throw new NoSuchElementException("Invalid iterators for partitioning a sublist.");
+                }
 		final int pivotIndex = j.previousIndex();
 		final int permutationPivot = permutation[ pivotIndex ];
 		final T pivot = j.previous();
