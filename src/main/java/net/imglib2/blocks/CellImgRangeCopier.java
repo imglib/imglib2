@@ -49,7 +49,7 @@ import static net.imglib2.blocks.Ranges.Direction.FORWARD;
  *
  * @param <T> a primitive array type, e.g., {@code byte[]}.
  */
-class CellImgRangeCopier< S, T > implements RangeCopier< T >
+class CellImgRangeCopier< S, P, T > implements RangeCopier< T >
 {
 	private final int n;
 	private final CellGrid cellGrid;
@@ -57,7 +57,8 @@ class CellImgRangeCopier< S, T > implements RangeCopier< T >
 	private final long[] srcDims;
 	private final Ranges findRanges;
 	private final MemCopy< S, T > memCopy;
-	private final S oob;
+	private final MemCopy< P, T > fillCopy;
+	private final P oob;
 
 	private final List< Ranges.Range >[] rangesPerDimension;
 	private final Ranges.Range[] ranges;
@@ -72,7 +73,8 @@ class CellImgRangeCopier< S, T > implements RangeCopier< T >
 			final AbstractCellImg< ?, ?, ?, ? > cellImg,
 			final Ranges findRanges,
 			final MemCopy< S, T > memCopy,
-			final S oob )
+			final MemCopy< P, T > fillCopy,
+			final P oob )
 	{
 		n = cellImg.numDimensions();
 		cellGrid = cellImg.getCellGrid();
@@ -81,6 +83,7 @@ class CellImgRangeCopier< S, T > implements RangeCopier< T >
 
 		this.findRanges = findRanges;
 		this.memCopy = memCopy;
+		this.fillCopy = fillCopy;
 		this.oob = oob;
 
 		rangesPerDimension = new List[ n ];
@@ -94,7 +97,7 @@ class CellImgRangeCopier< S, T > implements RangeCopier< T >
 	}
 
 	// creates an independent copy of {@code other}
-	private CellImgRangeCopier( CellImgRangeCopier< S, T > copier )
+	private CellImgRangeCopier( CellImgRangeCopier< S, P, T > copier )
 	{
 		n = copier.n;
 		cellGrid = copier.cellGrid;
@@ -102,6 +105,7 @@ class CellImgRangeCopier< S, T > implements RangeCopier< T >
 		srcDims = copier.srcDims.clone();
 		findRanges = copier.findRanges;
 		memCopy = copier.memCopy;
+		fillCopy = copier.fillCopy;
 		oob = copier.oob;
 
 		rangesPerDimension = new List[ n ];
@@ -114,7 +118,7 @@ class CellImgRangeCopier< S, T > implements RangeCopier< T >
 	}
 
 	@Override
-	public CellImgRangeCopier< S, T > newInstance()
+	public CellImgRangeCopier< S, P, T > newInstance()
 	{
 		return new CellImgRangeCopier<>( this );
 	}
@@ -278,7 +282,7 @@ class CellImgRangeCopier< S, T > implements RangeCopier< T >
 		if ( n - 1 > dConst )
 			fillRangesRecursively( dest, dOffset, n - 1, dConst );
 		else
-			memCopy.copyValue( oob, 0, dest, dOffset, lengths[ dConst ] );
+			fillCopy.copyValue( oob, 0, dest, dOffset, lengths[ dConst ] );
 	}
 
 	private void fillRangesRecursively( final T dest, final int destPos, final int d, final int dConst )
@@ -290,6 +294,6 @@ class CellImgRangeCopier< S, T > implements RangeCopier< T >
 				fillRangesRecursively( dest, destPos + i * dstep, d - 1, dConst );
 		else
 			for ( int i = 0; i < length; ++i )
-				memCopy.copyValue( oob, 0, dest, destPos + i * dstep, lengths[ dConst ] );
+				fillCopy.copyValue( oob, 0, dest, destPos + i * dstep, lengths[ dConst ] );
 	}
 }

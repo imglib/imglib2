@@ -70,10 +70,13 @@ class ViewPrimitiveBlocks< T extends NativeType< T >, R extends NativeType< R > 
 		this.props = props;
 		final PrimitiveType primitiveType = props.getRootType().getNativeTypeFactory().getPrimitiveType();
 		final MemCopy memCopy = MemCopy.forPrimitiveType( primitiveType, props.getRoot().getAccessType() instanceof BufferAccess, false );
+		// The oob value is always extracted into a primitive array, never a
+		// Buffer, so filling it needs a MemCopy with a primitive array source.
+		final MemCopy fillCopy = MemCopy.forPrimitiveType( primitiveType, false, false );
 		final Extension extension = props.getExtension() != null ? props.getExtension() : Extension.border();
 		final Object oob = extractOobValue( props.getRootType(), extension );
 		final Ranges findRanges = Ranges.forExtension( extension );
-		copier = RangeCopier.create( props.getRoot(), findRanges, memCopy, oob );
+		copier = RangeCopier.create( props.getRoot(), findRanges, memCopy, fillCopy, oob );
 		tempArrayConvert = TempArray.forPrimitiveType( primitiveType );
 		tempArrayPermute = TempArray.forPrimitiveType( primitiveType );
 		permuteInvert = new PermuteInvert( memCopy, props.getPermuteInvertTransform() );
