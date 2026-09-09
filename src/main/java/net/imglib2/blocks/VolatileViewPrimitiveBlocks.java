@@ -201,7 +201,7 @@ class VolatileViewPrimitiveBlocks< T extends Volatile< ? > & NativeType< T >, R 
 		else if ( doConvert )
 		{
 			final Object copyDest = tempArrayPermute.get( length );
-			copier.copy( destPos, dest, destValid, destSize );
+			copier.copy( destPos, copyDest, destValid, destSize );
 			convert.convert( copyDest, dest, length );
 		}
 		else
