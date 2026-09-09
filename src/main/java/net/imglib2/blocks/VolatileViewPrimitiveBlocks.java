@@ -74,11 +74,14 @@ class VolatileViewPrimitiveBlocks< T extends Volatile< ? > & NativeType< T >, R 
 		this.props = props;
 		final PrimitiveType primitiveType = props.getRootType().getNativeTypeFactory().getPrimitiveType();
 		final MemCopy memCopy = MemCopy.forPrimitiveType( primitiveType, props.getRoot().getAccessType() instanceof BufferAccess, false );
+		// The oob value is always extracted into a primitive array, never a
+		// Buffer, so filling it needs a MemCopy with a primitive array source.
+		final MemCopy fillCopy = MemCopy.forPrimitiveType( primitiveType, false, false );
 		final MemCopy memCopyValid = MemCopy.forPrimitiveType( PrimitiveType.BYTE );
 		final Extension extension = props.getExtension() != null ? props.getExtension() : Extension.border();
 		final Object oob = extractOobValue( props.getRootType(), extension );
 		final Ranges findRanges = Ranges.forExtension( extension );
-		copier = VolatileRangeCopier.create( props.getRoot(), findRanges, memCopy, oob );
+		copier = VolatileRangeCopier.create( props.getRoot(), findRanges, memCopy, fillCopy, oob );
 		tempArrayConvert = TempArray.forPrimitiveType( primitiveType );
 		tempArrayPermute = TempArray.forPrimitiveType( primitiveType );
 		tempArrayValid = TempArray.forPrimitiveType( PrimitiveType.BYTE );

@@ -58,14 +58,29 @@ interface VolatileRangeCopier< T >
 	 */
 	VolatileRangeCopier< T > newInstance();
 
-	static < S, T > VolatileRangeCopier< T > create(
+	/**
+	 * Create a {@code VolatileRangeCopier} for the given {@code NativeImg}.
+	 *
+	 * @param memCopy
+	 * 		copies pixel data out of the image. Its source type {@code S} is the
+	 * 		image's access type, which may be a {@code Buffer}.
+	 * @param fillCopy
+	 * 		fills out-of-bounds regions from {@code oob}. Its source type {@code
+	 * 		P} is always a primitive array, because that is what {@code oob} is,
+	 * 		regardless of the image's access type.
+	 * @param oob
+	 * 		primitive array holding the out-of-bounds value (or {@code null}, if
+	 * 		the extension method does not use a constant value).
+	 */
+	static < S, P, T > VolatileRangeCopier< T > create(
 			final NativeImg< ?, ? > img,
 			final Ranges findRanges,
 			final MemCopy< S, T > memCopy,
-			final S oob )
+			final MemCopy< P, T > fillCopy,
+			final P oob )
 	{
 		if ( img instanceof AbstractCellImg )
-			return new VolatileCellImgRangeCopier<>( ( AbstractCellImg< ?, ?, ? extends Cell< ? >, ? > ) img, findRanges, memCopy, oob );
+			return new VolatileCellImgRangeCopier<>( ( AbstractCellImg< ?, ?, ? extends Cell< ? >, ? > ) img, findRanges, memCopy, fillCopy, oob );
 		else
 			throw new IllegalArgumentException();
 	}

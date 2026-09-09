@@ -56,7 +56,7 @@ import net.imglib2.util.Intervals;
  *
  * @param <T> a primitive array type, e.g., {@code byte[]}.
  */
-class VolatileCellImgRangeCopier< S, T > implements VolatileRangeCopier< T >
+class VolatileCellImgRangeCopier< S, P, T > implements VolatileRangeCopier< T >
 {
 	private final int n;
 	private final CellGrid cellGrid;
@@ -64,7 +64,8 @@ class VolatileCellImgRangeCopier< S, T > implements VolatileRangeCopier< T >
 	private final long[] srcDims;
 	private final Ranges findRanges;
 	private final MemCopy< S, T > memCopy;
-	private final S oob;
+	private final MemCopy< P, T > fillCopy;
+	private final P oob;
 
 	private final List< Ranges.Range >[] rangesPerDimension;
 	private final Ranges.Range[] ranges;
@@ -79,7 +80,8 @@ class VolatileCellImgRangeCopier< S, T > implements VolatileRangeCopier< T >
 			final AbstractCellImg< ?, ?, ?, ? > cellImg,
 			final Ranges findRanges,
 			final MemCopy< S, T > memCopy,
-			final S oob )
+			final MemCopy< P, T > fillCopy,
+			final P oob )
 	{
 		n = cellImg.numDimensions();
 		cellGrid = cellImg.getCellGrid();
@@ -88,6 +90,7 @@ class VolatileCellImgRangeCopier< S, T > implements VolatileRangeCopier< T >
 
 		this.findRanges = findRanges;
 		this.memCopy = memCopy;
+		this.fillCopy = fillCopy;
 		this.oob = oob;
 
 		rangesPerDimension = new List[ n ];
@@ -101,7 +104,7 @@ class VolatileCellImgRangeCopier< S, T > implements VolatileRangeCopier< T >
 	}
 
 	// creates an independent copy of {@code other}
-	private VolatileCellImgRangeCopier( VolatileCellImgRangeCopier< S, T > copier )
+	private VolatileCellImgRangeCopier( VolatileCellImgRangeCopier< S, P, T > copier )
 	{
 		n = copier.n;
 		cellGrid = copier.cellGrid;
@@ -109,6 +112,7 @@ class VolatileCellImgRangeCopier< S, T > implements VolatileRangeCopier< T >
 		srcDims = copier.srcDims.clone();
 		findRanges = copier.findRanges;
 		memCopy = copier.memCopy;
+		fillCopy = copier.fillCopy;
 		oob = copier.oob;
 
 		rangesPerDimension = new List[ n ];
@@ -121,7 +125,7 @@ class VolatileCellImgRangeCopier< S, T > implements VolatileRangeCopier< T >
 	}
 
 	@Override
-	public VolatileCellImgRangeCopier< S, T > newInstance()
+	public VolatileCellImgRangeCopier< S, P, T > newInstance()
 	{
 		return new VolatileCellImgRangeCopier<>( this );
 	}
@@ -295,7 +299,7 @@ class VolatileCellImgRangeCopier< S, T > implements VolatileRangeCopier< T >
 			fillRangesRecursively( dest,  destValid, dOffset, n - 1, dConst );
 		else
 		{
-			memCopy.copyValue( oob, 0, dest, dOffset, lengths[ dConst ] );
+			fillCopy.copyValue( oob, 0, dest, dOffset, lengths[ dConst ] );
 			Arrays.fill( destValid, dOffset, dOffset + lengths[ dConst ], ( byte ) 1 );
 		}
 	}
@@ -311,7 +315,7 @@ class VolatileCellImgRangeCopier< S, T > implements VolatileRangeCopier< T >
 			for ( int i = 0; i < length; ++i )
 			{
 				final int offset = destPos + i * dstep;
-				memCopy.copyValue( oob, 0, dest, offset, lengths[ dConst ] );
+				fillCopy.copyValue( oob, 0, dest, offset, lengths[ dConst ] );
 				Arrays.fill( destValid, offset, offset + lengths[ dConst ], ( byte ) 1 );
 			}
 	}
