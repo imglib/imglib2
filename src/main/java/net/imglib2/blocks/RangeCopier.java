@@ -73,18 +73,33 @@ interface RangeCopier< T >
 	 */
 	RangeCopier< T > newInstance();
 
-	static < S, T > RangeCopier< T > create(
+	/**
+	 * Create a {@code RangeCopier} for the given {@code NativeImg}.
+	 *
+	 * @param memCopy
+	 * 		copies pixel data out of the image. Its source type {@code S} is the
+	 * 		image's access type, which may be a {@code Buffer}.
+	 * @param fillCopy
+	 * 		fills out-of-bounds regions from {@code oob}. Its source type {@code
+	 * 		P} is always a primitive array, because that is what {@code oob} is,
+	 * 		regardless of the image's access type.
+	 * @param oob
+	 * 		primitive array holding the out-of-bounds value (or {@code null}, if
+	 * 		the extension method does not use a constant value).
+	 */
+	static < S, P, T > RangeCopier< T > create(
 			final NativeImg< ?, ? > img,
 			final Ranges findRanges,
 			final MemCopy< S, T > memCopy,
-			final S oob )
+			final MemCopy< P, T > fillCopy,
+			final P oob )
 	{
 		if ( img instanceof AbstractCellImg )
-			return new CellImgRangeCopier<>( ( AbstractCellImg< ?, ?, ? extends Cell< ? >, ? > ) img, findRanges, memCopy, oob );
+			return new CellImgRangeCopier<>( ( AbstractCellImg< ?, ?, ? extends Cell< ? >, ? > ) img, findRanges, memCopy, fillCopy, oob );
 		else if ( img instanceof PlanarImg )
-			return new PlanarImgRangeCopier<>( ( PlanarImg< ?, ? > ) img, findRanges, memCopy, oob );
+			return new PlanarImgRangeCopier<>( ( PlanarImg< ?, ? > ) img, findRanges, memCopy, fillCopy, oob );
 		else if ( img instanceof ArrayImg )
-			return new ArrayImgRangeCopier<>( ( ArrayImg< ?, ? > ) img, findRanges, memCopy, oob );
+			return new ArrayImgRangeCopier<>( ( ArrayImg< ?, ? > ) img, findRanges, memCopy, fillCopy, oob );
 		else
 			throw new IllegalArgumentException();
 	}
