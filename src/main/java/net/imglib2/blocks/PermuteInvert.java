@@ -11,13 +11,13 @@
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice,
  *    this list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  *    this list of conditions and the following disclaimer in the documentation
  *    and/or other materials provided with the distribution.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -112,6 +112,58 @@ class PermuteInvert
 			for ( int i = 0; i < length; ++i )
 				copyRecursively( src, srcPos + i * srcStride, dest, destPos + i * destStride, d - 1 );
 		}
+	}
+
+	/**
+	 * Translate source-order sizes into target-order sizes, that is, apply the
+	 * axis permutation (inversions do not change sizes).
+	 */
+	void permuteSize( final int[] srcSize, final int[] destSize )
+	{
+		for ( int d = 0; d < n; ++d )
+			destSize[ scomp[ d ] ] = srcSize[ d ];
+	}
+
+	/**
+	 * Apply this permutation and inversion to per-range validity, returning a
+	 * new {@code RangeValidity} in target order.
+	 * <p>
+	 * Axes are permuted as for pixel data. Inverting an axis reverses the order
+	 * of the ranges along it, so the range widths of that dimension are reversed
+	 * alongside the validity values.
+	 * <p>
+	 * This works in range space, so it costs one byte per range combination
+	 * rather than one per pixel, and leaves the result compact.
+	 * <p>
+	 * Must be called on a {@code PermuteInvert} constructed with a {@code
+	 * byte[]} {@link MemCopy}, because the validity values are bytes.
+	 */
+	RangeValidity permuteAndInvert( final RangeValidity src )
+	{
+		final int[][] srcWidths = src.widths();
+		final int[][] destWidths = new int[ n ][];
+		final int[] destCounts = new int[ n ];
+		for ( int d = 0; d < n; ++d )
+		{
+			final int c = scomp[ d ];
+			final int[] w_d = srcWidths[ d ];
+			destWidths[ c ] = sinv[ d ] ? reverse( w_d ) : w_d;
+			destCounts[ c ] = w_d.length;
+		}
+
+		final byte[] srcValues = src.values();
+		final byte[] destValues = new byte[ srcValues.length ];
+		permuteAndInvert( srcValues, destValues, destCounts );
+		return new RangeValidity( destWidths, destValues );
+	}
+
+	private static int[] reverse( final int[] values )
+	{
+		final int len = values.length;
+		final int[] reversed = new int[ len ];
+		for ( int i = 0; i < len; ++i )
+			reversed[ i ] = values[ len - 1 - i ];
+		return reversed;
 	}
 
 	// creates an independent copy of {@code copier}

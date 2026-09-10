@@ -46,8 +46,26 @@ interface VolatileRangeCopier< T >
 {
 	/**
 	 * TODO javadoc
+	 * <p>
+	 * Pixels that come from an invalid {@code Cell} are not copied: they are
+	 * set to zero, and marked invalid in the returned {@code RangeValidity}.
+	 * Out-of-bounds pixels are filled with the out-of-bounds value and count as
+	 * valid.
 	 */
-	void copy( long[] srcPos, T dest, byte[] destValid, int[] size );
+	RangeValidity copy( long[] srcPos, T dest, int[] size );
+
+	/**
+	 * Whether every pixel of the block at {@code srcPos} with the given {@code
+	 * size} is valid, without copying any data.
+	 * <p>
+	 * Pixels that would be filled with Out-of-bounds value count as valid.
+	 *
+	 * @param failFast
+	 * 		if {@code true}, return as soon as an invalid cell is found. If
+	 * 		{@code false}, every cell the block touches is visited, which for a
+	 * 		cached source has the side effect of requesting all of them.
+	 */
+	boolean allValid( long[] srcPos, int[] size, boolean failFast );
 
 	/**
 	 * Return a new independent instance of this {@code VolatileRangeCopier}.

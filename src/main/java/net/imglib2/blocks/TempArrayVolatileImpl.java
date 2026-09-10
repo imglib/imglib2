@@ -51,11 +51,12 @@ class TempArrayVolatileImpl< T > implements TempArray< VolatileArray< T > >
 	public VolatileArray< T > get( final int minSize )
 	{
 		VolatileArray< T > array = arrayRef.get();
-		if ( array == null || array.length() < minSize )
+		if ( array == null || array.capacity() < minSize )
 		{
 			array = new VolatileArray<>( props, minSize );
 			arrayRef = new WeakReference<>( array );
 		}
+		array.reset( minSize );
 		return array;
 	}
 

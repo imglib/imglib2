@@ -33,6 +33,7 @@
  */
 package net.imglib2.blocks;
 
+import static net.imglib2.blocks.VolatilePrimitiveBlocks.AllValid;
 import static net.imglib2.blocks.PrimitiveBlocksUtils.extractOobValue;
 
 import java.util.function.Supplier;
@@ -46,7 +47,7 @@ import net.imglib2.type.PrimitiveType;
 import net.imglib2.util.CloseableThreadLocal;
 import net.imglib2.util.Intervals;
 
-class VolatileViewPrimitiveBlocks< T extends Volatile< ? > & NativeType< T >, R extends Volatile< ? > & NativeType< R > > implements PrimitiveBlocks< T >
+class VolatileViewPrimitiveBlocks< T extends Volatile< ? > & NativeType< T >, R extends Volatile< ? > & NativeType< R > > implements VolatilePrimitiveBlocks< T >
 {
 	private final ViewProperties< T, R > props;
 
@@ -63,11 +64,10 @@ class VolatileViewPrimitiveBlocks< T extends Volatile< ? > & NativeType< T >, R 
 
 	private final Convert convert;
 
-	private final TempArray< byte[] > tempArrayValid;
 
 	private final PermuteInvert permuteInvertValid;
 
-	private Supplier< PrimitiveBlocks< T > > threadSafeSupplier;
+	private Supplier< VolatilePrimitiveBlocks< T > > threadSafeSupplier;
 
 	public VolatileViewPrimitiveBlocks( final ViewProperties< T, R > props )
 	{
@@ -84,7 +84,6 @@ class VolatileViewPrimitiveBlocks< T extends Volatile< ? > & NativeType< T >, R 
 		copier = VolatileRangeCopier.create( props.getRoot(), findRanges, memCopy, fillCopy, oob );
 		tempArrayConvert = TempArray.forPrimitiveType( primitiveType );
 		tempArrayPermute = TempArray.forPrimitiveType( primitiveType );
-		tempArrayValid = TempArray.forPrimitiveType( PrimitiveType.BYTE );
 		permuteInvert = new PermuteInvert( memCopy, props.getPermuteInvertTransform() );
 		permuteInvertValid = new PermuteInvert( memCopyValid, props.getPermuteInvertTransform() );
 		convert = props.hasConverterSupplier()
@@ -138,37 +137,25 @@ class VolatileViewPrimitiveBlocks< T extends Volatile< ? > & NativeType< T >, R 
 
 	/**
 	 * Copy a block from the ({@code T}-typed) source into a {@link
-	 * VolatileArray} (of the appropriate type).
+	 * VolatileArray}.
 	 *
 	 * @param interval
 	 * 		position and size of the block to copy
 	 * @param dest
-	 *      {@link VolatileArray} array to copy into. Must correspond to
-	 *      {@code T}, for example, if {@code T} is {@code UnsignedByteType}
-	 * 		then {@code dest} must be {@code VolatileArray<byte[]>}.
+	 * 		{@link VolatileArray} to copy into. Its {@link VolatileArray#data()
+	 * 		data} must correspond to {@code T}, for example, if {@code T} is
+	 * 		{@code VolatileUnsignedByteType} then it must be {@code byte[]}. Its
+	 * 		{@link VolatileArray#getValidity() validity} is set to the {@link
+	 * 		Volatile#isValid() validity} of the copied block.
+	 * <p>
+	 * Pixels that come from an invalid {@code Cell} are set to zero, instead of
+	 * copying the meaningless data of the invalid {@code Cell}. Note that the
+	 * zeros are written in the root type, before conversion: with a converter
+	 * in the chain, such a pixel ends up as {@code converter(0)}, not
+	 * necessarily {@code 0}.
 	 */
 	@Override
-	public void copy( final Interval interval, final Object dest )
-	{
-		final VolatileArray< ? > va = ( VolatileArray< ? > ) dest;
-		copy( interval, va.data(), va.valid() );
-	}
-
-	/**
-	 * Copy a block from the ({@code T}-typed) source into primitive arrays (of
-	 * the appropriate type).
-	 *
-	 * @param interval
-	 * 		position and size of the block to copy
-	 * @param dest
-	 * 		primitive array to copy into. Must correspond to {@code T}, for
-	 *      example, if {@code T} is {@code VolatileUnsignedByteType} then
-	 *      {@code dest} must be {@code byte[]}.
-	 * @param destValid
-	 * 		primitive {@code byte[]} array to copy {@link Volatile#isValid()
-	 * 		validity} mask into.
-	 */
-	private void copy( final Interval interval, final Object dest, final byte[] destValid )
+	public void copy( final Interval interval, final VolatileArray< ? > dest )
 	{
 		final BlockInterval blockInterval = BlockInterval.asBlockInterval( interval );
 		final int[] size = blockInterval.size();
@@ -186,39 +173,64 @@ class VolatileViewPrimitiveBlocks< T extends Volatile< ? > & NativeType< T >, R 
 		if ( doPermute && doConvert )
 		{
 			final Object copyDest = tempArrayPermute.get( length );
-			final byte[] copyDestValid = tempArrayValid.get( length );
 			final Object permuteDest = tempArrayConvert.get( length );
-			copier.copy( destPos, copyDest, copyDestValid, destSize );
+			final RangeValidity validity = copier.copy( destPos, copyDest, destSize );
 			permuteInvert.permuteAndInvert( copyDest, permuteDest, size );
-			permuteInvertValid.permuteAndInvert( copyDestValid, destValid, size );
-			convert.convert( permuteDest, dest, length );
+			dest.setValidity( permuteInvertValid.permuteAndInvert( validity ) );
+			convert.convert( permuteDest, dest.data(), length );
 		}
 		else if ( doPermute )
 		{
 			final Object copyDest = tempArrayConvert.get( length );
-			final byte[] copyDestValid = tempArrayValid.get( length );
-			copier.copy( destPos, copyDest, copyDestValid, destSize );
-			permuteInvert.permuteAndInvert( copyDest, dest, size );
-			permuteInvertValid.permuteAndInvert( copyDestValid, destValid, size );
+			final RangeValidity validity = copier.copy( destPos, copyDest, destSize );
+			permuteInvert.permuteAndInvert( copyDest, dest.data(), size );
+			dest.setValidity( permuteInvertValid.permuteAndInvert( validity ) );
 		}
 		else if ( doConvert )
 		{
 			final Object copyDest = tempArrayPermute.get( length );
-			copier.copy( destPos, copyDest, destValid, destSize );
-			convert.convert( copyDest, dest, length );
+			dest.setValidity( copier.copy( destPos, copyDest, destSize ) );
+			convert.convert( copyDest, dest.data(), length );
 		}
 		else
 		{
-			copier.copy( destPos, dest, destValid, destSize );
+			dest.setValidity( copier.copy( destPos, dest.data(), destSize ) );
 		}
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * <p>
+	 * Equivalent to {@code copy(interval, …)} followed by {@link
+	 * Validity#allValid()}, but it only looks at the validity of the {@code
+	 * Cell}s the block reads from, so it costs one check per cell instead of a
+	 * block copy.
+	 * <p>
+	 * Neither the permutation nor the converter of a View affects the answer: a
+	 * permutation is a bijection on pixels, and conversion is per-pixel, so it
+	 * is the answer for the corresponding block of the root image.
+	 *
+	 * @param failFast
+	 * 		if {@code true}, return as soon as an invalid {@code Cell} is found. If
+	 * 		{@code false}, every {@code Cell} the block reads from is visited,
+	 * 		which for a cached source has the side effect of requesting all of
+	 * 		them.
+	 */
 	@Override
-	public PrimitiveBlocks< T > threadSafe()
+	public AllValid allValid( final Interval interval, final boolean failFast )
+	{
+		final BlockInterval blockInterval = BlockInterval.asBlockInterval( interval );
+		final BlockInterval destInterval = getTransformedInterval( blockInterval );
+		// the copier always knows: it looks at the Cells themselves
+		return AllValid.of( copier.allValid( destInterval.min(), destInterval.size(), failFast ) );
+	}
+
+	@Override
+	public VolatilePrimitiveBlocks< T > threadSafe()
 	{
 		if ( threadSafeSupplier == null )
 			threadSafeSupplier = CloseableThreadLocal.withInitial( this::independentCopy )::get;
-		return new PrimitiveBlocks< T >()
+		return new VolatilePrimitiveBlocks< T >()
 		{
 			@Override
 			public T getType()
@@ -233,19 +245,25 @@ class VolatileViewPrimitiveBlocks< T extends Volatile< ? > & NativeType< T >, R 
 			}
 
 			@Override
-			public void copy( final Interval interval, final Object dest )
+			public void copy( final Interval interval, final VolatileArray< ? > dest )
 			{
 				threadSafeSupplier.get().copy( interval, dest );
 			}
 
 			@Override
-			public PrimitiveBlocks< T > independentCopy()
+			public AllValid allValid( final Interval interval, final boolean failFast )
+			{
+				return threadSafeSupplier.get().allValid( interval, failFast );
+			}
+
+			@Override
+			public VolatilePrimitiveBlocks< T > independentCopy()
 			{
 				return VolatileViewPrimitiveBlocks.this.independentCopy().threadSafe();
 			}
 
 			@Override
-			public PrimitiveBlocks< T > threadSafe()
+			public VolatilePrimitiveBlocks< T > threadSafe()
 			{
 				return this;
 			}
@@ -253,7 +271,7 @@ class VolatileViewPrimitiveBlocks< T extends Volatile< ? > & NativeType< T >, R 
 	}
 
 	@Override
-	public PrimitiveBlocks< T > independentCopy()
+	public VolatilePrimitiveBlocks< T > independentCopy()
 	{
 		return new VolatileViewPrimitiveBlocks<>( this );
 	}
@@ -266,7 +284,6 @@ class VolatileViewPrimitiveBlocks< T extends Volatile< ? > & NativeType< T >, R 
 		convert = blocks.convert == null ? null : blocks.convert.newInstance();
 		tempArrayConvert = blocks.tempArrayConvert.newInstance();
 		tempArrayPermute = blocks.tempArrayPermute.newInstance();
-		tempArrayValid = blocks.tempArrayValid.newInstance();
 		permuteInvertValid = blocks.permuteInvertValid.newInstance();
 	}
 }
