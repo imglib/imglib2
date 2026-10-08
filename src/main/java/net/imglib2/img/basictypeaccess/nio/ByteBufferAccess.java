@@ -70,6 +70,11 @@ public class ByteBufferAccess extends AbstractBufferAccess< ByteBufferAccess, By
 		this( numEntities, DEFAULT_IS_VALID );
 	}
 
+	public ByteBufferAccess( final ByteBuffer buffer )
+	{
+		this( buffer, DEFAULT_IS_VALID );
+	}
+
 	public ByteBufferAccess()
 	{
 		this( ( ByteBuffer ) null, false );
