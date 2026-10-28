@@ -2,7 +2,7 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2025 Tobias Pietzsch, Stephan Preibisch, Stephan Saalfeld,
+ * Copyright (C) 2009 - 2026 Tobias Pietzsch, Stephan Preibisch, Stephan Saalfeld,
  * John Bogovic, Albert Cardona, Barry DeZonia, Christian Dietz, Jan Funke,
  * Aivar Grislis, Jonathan Hale, Grant Harris, Stefan Helfrich, Mark Hiner,
  * Martin Horn, Steffen Jaensch, Lee Kamentsky, Larry Lindsey, Melissa Linkert,
@@ -11,13 +11,13 @@
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice,
  *    this list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  *    this list of conditions and the following disclaimer in the documentation
  *    and/or other materials provided with the distribution.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -105,6 +105,13 @@ interface MemCopy< S, T >
 	 * array.
 	 */
 	void copyStrided( S src, int srcPos, T dest, int destPos, int destStride, int length );
+
+	/**
+	 * Set {@code length} components of the {@code dest} array, at positions
+	 * {@code destPos} through {@code destPos+length-1}, to zero ({@code false}
+	 * for {@code boolean}).
+	 */
+	void clear( T dest, int destPos, int length );
 
 	/**
 	 * Copy {@code numLines} stretches of {@code lineLength} elements.
@@ -359,6 +366,13 @@ interface MemCopy< S, T >
 				for ( int i = 0; i < length; ++i )
 					dest[ destPos + i * destStride ] = src[ srcPos + i ];
 		}
+
+		@Override
+		public void clear( final boolean[] dest, final int destPos, final int length )
+		{
+			Arrays.fill( dest, destPos, destPos + length, false );
+		}
+
 		@Override
 		public void copyLines( final int lineDir, final int lineLength, final int numLines, final boolean[] src, final int srcPos, final int srcStep, final boolean[] dest, final int destPos, final int destStep )
 		{
@@ -433,6 +447,13 @@ interface MemCopy< S, T >
 				for ( int i = 0; i < length; ++i )
 					dest[ destPos + i * destStride ] = src[ srcPos + i ];
 		}
+
+		@Override
+		public void clear( final byte[] dest, final int destPos, final int length )
+		{
+			Arrays.fill( dest, destPos, destPos + length, ( byte ) 0 );
+		}
+
 		@Override
 		public void copyLines( final int lineDir, final int lineLength, final int numLines, final byte[] src, final int srcPos, final int srcStep, final byte[] dest, final int destPos, final int destStep )
 		{
@@ -508,6 +529,12 @@ interface MemCopy< S, T >
 		}
 
 		@Override
+		public void clear( final byte[] dest, final int destPos, final int length )
+		{
+			Arrays.fill( dest, destPos, destPos + length, ( byte ) 0 );
+		}
+
+		@Override
 		public void copyLines( final int lineDir, final int lineLength, final int numLines, final ByteBuffer src, final int srcPos, final int srcStep, final byte[] dest, final int destPos, final int destStep )
 		{
 			if ( lineDir == 1 )
@@ -580,6 +607,13 @@ interface MemCopy< S, T >
 			else
 				for ( int i = 0; i < length; ++i )
 					dest.put( destPos + i * destStride, src[ srcPos + i ] );
+		}
+
+		@Override
+		public void clear( final ByteBuffer dest, final int destPos, final int length )
+		{
+			for ( int i = 0; i < length; ++i )
+				dest.put( destPos + i, ( byte ) 0 );
 		}
 
 		@Override
@@ -660,6 +694,13 @@ interface MemCopy< S, T >
 		}
 
 		@Override
+		public void clear( final ByteBuffer dest, final int destPos, final int length )
+		{
+			for ( int i = 0; i < length; ++i )
+				dest.put( destPos + i, ( byte ) 0 );
+		}
+
+		@Override
 		public void copyLines( final int lineDir, final int lineLength, final int numLines, final ByteBuffer src, final int srcPos, final int srcStep, final ByteBuffer dest, final int destPos, final int destStep )
 		{
 			if ( lineDir == 1 )
@@ -733,6 +774,13 @@ interface MemCopy< S, T >
 				for ( int i = 0; i < length; ++i )
 					dest[ destPos + i * destStride ] = src[ srcPos + i ];
 		}
+
+		@Override
+		public void clear( final char[] dest, final int destPos, final int length )
+		{
+			Arrays.fill( dest, destPos, destPos + length, ( char ) 0 );
+		}
+
 		@Override
 		public void copyLines( final int lineDir, final int lineLength, final int numLines, final char[] src, final int srcPos, final int srcStep, final char[] dest, final int destPos, final int destStep )
 		{
@@ -808,6 +856,12 @@ interface MemCopy< S, T >
 		}
 
 		@Override
+		public void clear( final char[] dest, final int destPos, final int length )
+		{
+			Arrays.fill( dest, destPos, destPos + length, ( char ) 0 );
+		}
+
+		@Override
 		public void copyLines( final int lineDir, final int lineLength, final int numLines, final CharBuffer src, final int srcPos, final int srcStep, final char[] dest, final int destPos, final int destStep )
 		{
 			if ( lineDir == 1 )
@@ -880,6 +934,13 @@ interface MemCopy< S, T >
 			else
 				for ( int i = 0; i < length; ++i )
 					dest.put( destPos + i * destStride, src[ srcPos + i ] );
+		}
+
+		@Override
+		public void clear( final CharBuffer dest, final int destPos, final int length )
+		{
+			for ( int i = 0; i < length; ++i )
+				dest.put( destPos + i, ( char ) 0 );
 		}
 
 		@Override
@@ -960,6 +1021,13 @@ interface MemCopy< S, T >
 		}
 
 		@Override
+		public void clear( final CharBuffer dest, final int destPos, final int length )
+		{
+			for ( int i = 0; i < length; ++i )
+				dest.put( destPos + i, ( char ) 0 );
+		}
+
+		@Override
 		public void copyLines( final int lineDir, final int lineLength, final int numLines, final CharBuffer src, final int srcPos, final int srcStep, final CharBuffer dest, final int destPos, final int destStep )
 		{
 			if ( lineDir == 1 )
@@ -1033,6 +1101,13 @@ interface MemCopy< S, T >
 				for ( int i = 0; i < length; ++i )
 					dest[ destPos + i * destStride ] = src[ srcPos + i ];
 		}
+
+		@Override
+		public void clear( final short[] dest, final int destPos, final int length )
+		{
+			Arrays.fill( dest, destPos, destPos + length, ( short ) 0 );
+		}
+
 		@Override
 		public void copyLines( final int lineDir, final int lineLength, final int numLines, final short[] src, final int srcPos, final int srcStep, final short[] dest, final int destPos, final int destStep )
 		{
@@ -1108,6 +1183,12 @@ interface MemCopy< S, T >
 		}
 
 		@Override
+		public void clear( final short[] dest, final int destPos, final int length )
+		{
+			Arrays.fill( dest, destPos, destPos + length, ( short ) 0 );
+		}
+
+		@Override
 		public void copyLines( final int lineDir, final int lineLength, final int numLines, final ShortBuffer src, final int srcPos, final int srcStep, final short[] dest, final int destPos, final int destStep )
 		{
 			if ( lineDir == 1 )
@@ -1180,6 +1261,13 @@ interface MemCopy< S, T >
 			else
 				for ( int i = 0; i < length; ++i )
 					dest.put( destPos + i * destStride, src[ srcPos + i ] );
+		}
+
+		@Override
+		public void clear( final ShortBuffer dest, final int destPos, final int length )
+		{
+			for ( int i = 0; i < length; ++i )
+				dest.put( destPos + i, ( short ) 0 );
 		}
 
 		@Override
@@ -1260,6 +1348,13 @@ interface MemCopy< S, T >
 		}
 
 		@Override
+		public void clear( final ShortBuffer dest, final int destPos, final int length )
+		{
+			for ( int i = 0; i < length; ++i )
+				dest.put( destPos + i, ( short ) 0 );
+		}
+
+		@Override
 		public void copyLines( final int lineDir, final int lineLength, final int numLines, final ShortBuffer src, final int srcPos, final int srcStep, final ShortBuffer dest, final int destPos, final int destStep )
 		{
 			if ( lineDir == 1 )
@@ -1333,6 +1428,13 @@ interface MemCopy< S, T >
 				for ( int i = 0; i < length; ++i )
 					dest[ destPos + i * destStride ] = src[ srcPos + i ];
 		}
+
+		@Override
+		public void clear( final int[] dest, final int destPos, final int length )
+		{
+			Arrays.fill( dest, destPos, destPos + length, ( int ) 0 );
+		}
+
 		@Override
 		public void copyLines( final int lineDir, final int lineLength, final int numLines, final int[] src, final int srcPos, final int srcStep, final int[] dest, final int destPos, final int destStep )
 		{
@@ -1408,6 +1510,12 @@ interface MemCopy< S, T >
 		}
 
 		@Override
+		public void clear( final int[] dest, final int destPos, final int length )
+		{
+			Arrays.fill( dest, destPos, destPos + length, ( int ) 0 );
+		}
+
+		@Override
 		public void copyLines( final int lineDir, final int lineLength, final int numLines, final IntBuffer src, final int srcPos, final int srcStep, final int[] dest, final int destPos, final int destStep )
 		{
 			if ( lineDir == 1 )
@@ -1480,6 +1588,13 @@ interface MemCopy< S, T >
 			else
 				for ( int i = 0; i < length; ++i )
 					dest.put( destPos + i * destStride, src[ srcPos + i ] );
+		}
+
+		@Override
+		public void clear( final IntBuffer dest, final int destPos, final int length )
+		{
+			for ( int i = 0; i < length; ++i )
+				dest.put( destPos + i, ( int ) 0 );
 		}
 
 		@Override
@@ -1560,6 +1675,13 @@ interface MemCopy< S, T >
 		}
 
 		@Override
+		public void clear( final IntBuffer dest, final int destPos, final int length )
+		{
+			for ( int i = 0; i < length; ++i )
+				dest.put( destPos + i, ( int ) 0 );
+		}
+
+		@Override
 		public void copyLines( final int lineDir, final int lineLength, final int numLines, final IntBuffer src, final int srcPos, final int srcStep, final IntBuffer dest, final int destPos, final int destStep )
 		{
 			if ( lineDir == 1 )
@@ -1633,6 +1755,13 @@ interface MemCopy< S, T >
 				for ( int i = 0; i < length; ++i )
 					dest[ destPos + i * destStride ] = src[ srcPos + i ];
 		}
+
+		@Override
+		public void clear( final long[] dest, final int destPos, final int length )
+		{
+			Arrays.fill( dest, destPos, destPos + length, ( long ) 0 );
+		}
+
 		@Override
 		public void copyLines( final int lineDir, final int lineLength, final int numLines, final long[] src, final int srcPos, final int srcStep, final long[] dest, final int destPos, final int destStep )
 		{
@@ -1708,6 +1837,12 @@ interface MemCopy< S, T >
 		}
 
 		@Override
+		public void clear( final long[] dest, final int destPos, final int length )
+		{
+			Arrays.fill( dest, destPos, destPos + length, ( long ) 0 );
+		}
+
+		@Override
 		public void copyLines( final int lineDir, final int lineLength, final int numLines, final LongBuffer src, final int srcPos, final int srcStep, final long[] dest, final int destPos, final int destStep )
 		{
 			if ( lineDir == 1 )
@@ -1780,6 +1915,13 @@ interface MemCopy< S, T >
 			else
 				for ( int i = 0; i < length; ++i )
 					dest.put( destPos + i * destStride, src[ srcPos + i ] );
+		}
+
+		@Override
+		public void clear( final LongBuffer dest, final int destPos, final int length )
+		{
+			for ( int i = 0; i < length; ++i )
+				dest.put( destPos + i, ( long ) 0 );
 		}
 
 		@Override
@@ -1860,6 +2002,13 @@ interface MemCopy< S, T >
 		}
 
 		@Override
+		public void clear( final LongBuffer dest, final int destPos, final int length )
+		{
+			for ( int i = 0; i < length; ++i )
+				dest.put( destPos + i, ( long ) 0 );
+		}
+
+		@Override
 		public void copyLines( final int lineDir, final int lineLength, final int numLines, final LongBuffer src, final int srcPos, final int srcStep, final LongBuffer dest, final int destPos, final int destStep )
 		{
 			if ( lineDir == 1 )
@@ -1933,6 +2082,13 @@ interface MemCopy< S, T >
 				for ( int i = 0; i < length; ++i )
 					dest[ destPos + i * destStride ] = src[ srcPos + i ];
 		}
+
+		@Override
+		public void clear( final float[] dest, final int destPos, final int length )
+		{
+			Arrays.fill( dest, destPos, destPos + length, ( float ) 0 );
+		}
+
 		@Override
 		public void copyLines( final int lineDir, final int lineLength, final int numLines, final float[] src, final int srcPos, final int srcStep, final float[] dest, final int destPos, final int destStep )
 		{
@@ -2008,6 +2164,12 @@ interface MemCopy< S, T >
 		}
 
 		@Override
+		public void clear( final float[] dest, final int destPos, final int length )
+		{
+			Arrays.fill( dest, destPos, destPos + length, ( float ) 0 );
+		}
+
+		@Override
 		public void copyLines( final int lineDir, final int lineLength, final int numLines, final FloatBuffer src, final int srcPos, final int srcStep, final float[] dest, final int destPos, final int destStep )
 		{
 			if ( lineDir == 1 )
@@ -2080,6 +2242,13 @@ interface MemCopy< S, T >
 			else
 				for ( int i = 0; i < length; ++i )
 					dest.put( destPos + i * destStride, src[ srcPos + i ] );
+		}
+
+		@Override
+		public void clear( final FloatBuffer dest, final int destPos, final int length )
+		{
+			for ( int i = 0; i < length; ++i )
+				dest.put( destPos + i, ( float ) 0 );
 		}
 
 		@Override
@@ -2160,6 +2329,13 @@ interface MemCopy< S, T >
 		}
 
 		@Override
+		public void clear( final FloatBuffer dest, final int destPos, final int length )
+		{
+			for ( int i = 0; i < length; ++i )
+				dest.put( destPos + i, ( float ) 0 );
+		}
+
+		@Override
 		public void copyLines( final int lineDir, final int lineLength, final int numLines, final FloatBuffer src, final int srcPos, final int srcStep, final FloatBuffer dest, final int destPos, final int destStep )
 		{
 			if ( lineDir == 1 )
@@ -2233,6 +2409,13 @@ interface MemCopy< S, T >
 				for ( int i = 0; i < length; ++i )
 					dest[ destPos + i * destStride ] = src[ srcPos + i ];
 		}
+
+		@Override
+		public void clear( final double[] dest, final int destPos, final int length )
+		{
+			Arrays.fill( dest, destPos, destPos + length, ( double ) 0 );
+		}
+
 		@Override
 		public void copyLines( final int lineDir, final int lineLength, final int numLines, final double[] src, final int srcPos, final int srcStep, final double[] dest, final int destPos, final int destStep )
 		{
@@ -2305,6 +2488,12 @@ interface MemCopy< S, T >
 			else
 				for ( int i = 0; i < length; ++i )
 					dest[ destPos + i * destStride ] = src.get( srcPos + i );
+		}
+
+		@Override
+		public void clear( final double[] dest, final int destPos, final int length )
+		{
+			Arrays.fill( dest, destPos, destPos + length, ( double ) 0 );
 		}
 
 		@Override
@@ -2383,6 +2572,13 @@ interface MemCopy< S, T >
 		}
 
 		@Override
+		public void clear( final DoubleBuffer dest, final int destPos, final int length )
+		{
+			for ( int i = 0; i < length; ++i )
+				dest.put( destPos + i, ( double ) 0 );
+		}
+
+		@Override
 		public void copyLines( final int lineDir, final int lineLength, final int numLines, final double[] src, final int srcPos, final int srcStep, final DoubleBuffer dest, final int destPos, final int destStep )
 		{
 			if ( lineDir == 1 )
@@ -2457,6 +2653,13 @@ interface MemCopy< S, T >
 			else
 				for ( int i = 0; i < length; ++i )
 					dest.put( destPos + i * destStride, src.get( srcPos + i ) );
+		}
+
+		@Override
+		public void clear( final DoubleBuffer dest, final int destPos, final int length )
+		{
+			for ( int i = 0; i < length; ++i )
+				dest.put( destPos + i, ( double ) 0 );
 		}
 
 		@Override
