@@ -40,20 +40,15 @@ import java.util.List;
  * Per-range validity, that is, validity in <em>range space</em>.
  * <p>
  * A block copy is decomposed into {@link Ranges.Range Ranges} per dimension.
- * This tiles the target block into rectangular boxes. All pixels in a box come from
- * the same {@code Cell} (or are out-of-bounds). Validity is constant
- * in each box, and is therefore stored with per box instead of per pixel.
- * <p>
- * TODO: REVISE javadoc below
+ * This tiles the target block into rectangular boxes. All pixels in a box come
+ * from the same {@code Cell} (or are out-of-bounds). Validity is constant
+ * in each box, and is therefore stored with one {@code byte} per box instead
+ * of per pixel.
  * <p>
  * Consumers that only need to know whether the block was fully loaded use
  * {@link #allValid()} and never pay for per-pixel validity. Consumers that need
  * random access to per-pixel validity (interpolation, for example) call {@link
  * #expandTo(byte[])}.
- * <p>
- * Instances are constructed complete and are then treated as immutable. The one
- * exception is {@link #values()}, which the copier fills in immediately after
- * construction, and which permute-invert may later rewrite in place.
  */
 public final class RangeValidity implements Validity
 {
@@ -67,7 +62,9 @@ public final class RangeValidity implements Validity
 	private final int[][] widths;
 
 	/**
-	 * Flattened strides in range space.
+	 * Flattened strides in range space. {@code rangeSteps()[d]} is the
+	 * distance, in {@link #values()}, between successive ranges of dimension
+	 * {@code d}.
 	 */
 	private final int[] rangeSteps;
 
@@ -79,6 +76,12 @@ public final class RangeValidity implements Validity
 	/**
 	 * Uses {@code widths} and {@code valid} (no copies!)
 	 * and populates {@link #rangeSteps} from the widths.
+	 * <p>
+	 * {@code widths[d][i]} is the width (in pixels) of the {@code i}-th range
+	 * in dimension {@code d}. The ranges of a dimension tile the block in that
+	 * dimension without gaps or overlap.
+	 * <p>
+	 * {@code widths[d].length} is the number of ranges in dimension {@code d}.
 	 *
 	 * @param widths
 	 * 		per-dimension range widths
@@ -165,8 +168,8 @@ public final class RangeValidity implements Validity
 	@Override
 	public boolean allValid()
 	{
-		for ( int i = 0; i < valid.length; ++i )
-			if ( valid[ i ] == 0 )
+		for ( final byte b : valid )
+			if ( b == 0 )
 				return false;
 		return true;
 	}
@@ -214,8 +217,11 @@ public final class RangeValidity implements Validity
 			if ( d == 0 )
 				Arrays.fill( dest, po, po + w, valid[ ro ] );
 			else
-				for ( int j = 0; j < w; ++j )
-					expand( dest, pixelSteps, d - 1, ro, po + j * pstep );
+			{
+				expand( dest, pixelSteps, d - 1, ro, po );
+				for ( int j = 1; j < w; ++j )
+					System.arraycopy( dest, po, dest, po + j * pstep, pstep );
+			}
 			x += w;
 		}
 	}
