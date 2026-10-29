@@ -76,23 +76,33 @@ interface RangeCopier< T >
 	/**
 	 * Create a {@code RangeCopier} for the given {@code NativeImg}.
 	 *
+	 * @param img
+	 * 		the source image
+	 * @param findRanges
+	 * 		finds {@link Ranges.Range ranges} for one dimension, including
+	 * 		out-of-bounds, so it depends on extension method applied that should
+	 * 		be applied to the {@code img}
 	 * @param memCopy
 	 * 		copies pixel data out of the image. Its source type {@code S} is the
 	 * 		image's access type, which may be a {@code Buffer}.
 	 * @param fillCopy
-	 * 		fills out-of-bounds regions from {@code oob}. Its source type {@code
-	 * 		P} is always a primitive array, because that is what {@code oob} is,
-	 * 		regardless of the image's access type.
+	 * 		fills out-of-bounds regions from {@code oob}. Unlike {@code memCopy}, it
+	 * 		always copies array to array: {@code oob} has the type {@code T} of
+	 * 		the destination, regardless of the image's access type.
 	 * @param oob
 	 * 		primitive array holding the out-of-bounds value (or {@code null}, if
 	 * 		the extension method does not use a constant value).
+	 * @param <S>
+	 * 		backs the source image's accesses, may be a primitive array or a {@code Buffer}.
+	 * @param <T>
+	 * 		the destination type, always a primitive array type
 	 */
-	static < S, P, T > RangeCopier< T > create(
+	static < S, T > RangeCopier< T > create(
 			final NativeImg< ?, ? > img,
 			final Ranges findRanges,
 			final MemCopy< S, T > memCopy,
-			final MemCopy< P, T > fillCopy,
-			final P oob )
+			final MemCopy< T, T > fillCopy,
+			final T oob )
 	{
 		if ( img instanceof AbstractCellImg )
 			return new CellImgRangeCopier<>( ( AbstractCellImg< ?, ?, ? extends Cell< ? >, ? > ) img, findRanges, memCopy, fillCopy, oob );

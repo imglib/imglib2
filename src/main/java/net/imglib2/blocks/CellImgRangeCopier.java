@@ -47,9 +47,14 @@ import static net.imglib2.blocks.Ranges.Direction.FORWARD;
  * Does the actual copying work from an {@code AbstractCellImg} into a primitive
  * array.
  *
- * @param <T> a primitive array type, e.g., {@code byte[]}.
+ * @param <S>
+ * 		source type, a primitive array or buffer type
+ * 		(e.g., {@code int[]} or {@code IntBuffer})
+ * @param <T>
+ * 		target type, the  primitive array type corresponding to {@code S}
+ * 		({@code S} itself, if {@code S} is an array type)
  */
-class CellImgRangeCopier< S, P, T > implements RangeCopier< T >
+class CellImgRangeCopier< S, T > implements RangeCopier< T >
 {
 	private final int n;
 	private final CellGrid cellGrid;
@@ -57,8 +62,8 @@ class CellImgRangeCopier< S, P, T > implements RangeCopier< T >
 	private final long[] srcDims;
 	private final Ranges findRanges;
 	private final MemCopy< S, T > memCopy;
-	private final MemCopy< P, T > fillCopy;
-	private final P oob;
+	private final MemCopy< T, T > fillCopy;
+	private final T oob;
 
 	private final List< Ranges.Range >[] rangesPerDimension;
 	private final Ranges.Range[] ranges;
@@ -73,8 +78,8 @@ class CellImgRangeCopier< S, P, T > implements RangeCopier< T >
 			final AbstractCellImg< ?, ?, ?, ? > cellImg,
 			final Ranges findRanges,
 			final MemCopy< S, T > memCopy,
-			final MemCopy< P, T > fillCopy,
-			final P oob )
+			final MemCopy< T, T > fillCopy,
+			final T oob )
 	{
 		n = cellImg.numDimensions();
 		cellGrid = cellImg.getCellGrid();
@@ -97,7 +102,7 @@ class CellImgRangeCopier< S, P, T > implements RangeCopier< T >
 	}
 
 	// creates an independent copy of {@code other}
-	private CellImgRangeCopier( CellImgRangeCopier< S, P, T > copier )
+	private CellImgRangeCopier( CellImgRangeCopier< S, T > copier )
 	{
 		n = copier.n;
 		cellGrid = copier.cellGrid;
@@ -118,7 +123,7 @@ class CellImgRangeCopier< S, P, T > implements RangeCopier< T >
 	}
 
 	@Override
-	public CellImgRangeCopier< S, P, T > newInstance()
+	public CellImgRangeCopier< S, T > newInstance()
 	{
 		return new CellImgRangeCopier<>( this );
 	}
