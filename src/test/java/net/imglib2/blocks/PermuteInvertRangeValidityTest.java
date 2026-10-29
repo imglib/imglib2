@@ -126,8 +126,10 @@ public class PermuteInvertRangeValidityTest
 		for ( int d = 0; d < n; ++d )
 			for ( final int w : widths[ d ] )
 				srcSize[ d ] += w;
+		// permutation is the component mapping: source dim d becomes target dim permutation[d]
 		final int[] destSize = new int[ n ];
-		permuteInvert.permuteSize( srcSize, destSize );
+		for ( int d = 0; d < n; ++d )
+			destSize[ permutation[ d ] ] = srcSize[ d ];
 
 		final byte[] srcExpanded = new byte[ src.length() ];
 		src.expandTo( srcExpanded );

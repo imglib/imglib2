@@ -115,16 +115,6 @@ class PermuteInvert
 	}
 
 	/**
-	 * Translate source-order sizes into target-order sizes, that is, apply the
-	 * axis permutation (inversions do not change sizes).
-	 */
-	void permuteSize( final int[] srcSize, final int[] destSize )
-	{
-		for ( int d = 0; d < n; ++d )
-			destSize[ scomp[ d ] ] = srcSize[ d ];
-	}
-
-	/**
 	 * Apply this permutation and inversion to per-range validity, returning a
 	 * new {@code RangeValidity} in target order.
 	 * <p>
