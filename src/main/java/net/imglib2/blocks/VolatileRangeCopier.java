@@ -38,19 +38,35 @@ import net.imglib2.img.cell.AbstractCellImg;
 import net.imglib2.img.cell.Cell;
 
 /**
- * TODO javadoc
+ * {@code VolatileRangeCopier} does the actual copying work from a
+ * {@code Volatile}-typed {@code NativeImg} into a primitive array.
+ * <p>
+ * The static {@link VolatileRangeCopier#create} method will pick the correct
+ * implementation for a given {@link NativeImg}.
  *
  * @param <T> a primitive array type, e.g., {@code byte[]}.
  */
 interface VolatileRangeCopier< T >
 {
 	/**
-	 * TODO javadoc
+	 * Copy the block starting at {@code srcPos} with the given {@code size}
+	 * into the (appropriately sized) {@code dest} array.
 	 * <p>
 	 * Pixels that come from an invalid {@code Cell} are not copied: they are
 	 * set to zero, and marked invalid in the returned {@code RangeValidity}.
 	 * Out-of-bounds pixels are filled with the out-of-bounds value and count as
 	 * valid.
+	 *
+	 * @param srcPos
+	 * 		min coordinates of block to copy from src Img.
+	 * @param dest
+	 * 		destination array. Type is {@code byte[]}, {@code float[]},
+	 * 		etc, corresponding to the src Img's native type.
+	 * @param size
+	 * 		dimensions of block to copy from src Img.
+	 *
+	 * @return validity of the copied block, in range space (roughly: one value
+	 * 		per cell instead of one value per pixel).
 	 */
 	RangeValidity copy( long[] srcPos, T dest, int[] size );
 
@@ -78,24 +94,38 @@ interface VolatileRangeCopier< T >
 
 	/**
 	 * Create a {@code VolatileRangeCopier} for the given {@code NativeImg}.
+	 * <p>
+	 * TODO: Currently only AbstractCellImg is supported. This is probably the
+	 *   only case that will happen, but we should support ArrayImg and PlanarImg
+	 *   for completeness...
 	 *
+	 * @param img
+	 * 		the source image
+	 * @param findRanges
+	 * 		finds {@link Ranges.Range ranges} for one dimension, including
+	 * 		out-of-bounds, so it depends on extension method applied that should
+	 * 		be applied to the {@code img}
 	 * @param memCopy
 	 * 		copies pixel data out of the image. Its source type {@code S} is the
 	 * 		image's access type, which may be a {@code Buffer}.
 	 * @param fillCopy
-	 * 		fills out-of-bounds regions from {@code oob}. Its source type {@code
-	 * 		P} is always a primitive array, because that is what {@code oob} is,
-	 * 		regardless of the image's access type.
+	 * 		fills out-of-bounds regions from {@code oob}. Unlike {@code memCopy}, it
+	 * 		always copies array to array: {@code oob} has the type {@code T} of
+	 * 		the destination, regardless of the image's access type.
 	 * @param oob
 	 * 		primitive array holding the out-of-bounds value (or {@code null}, if
 	 * 		the extension method does not use a constant value).
+	 * @param <S>
+	 * 		backs the source image's accesses, may be a primitive array or a {@code Buffer}.
+	 * @param <T>
+	 * 		the destination type, always a primitive array type
 	 */
-	static < S, P, T > VolatileRangeCopier< T > create(
+	static < S, T > VolatileRangeCopier< T > create(
 			final NativeImg< ?, ? > img,
 			final Ranges findRanges,
 			final MemCopy< S, T > memCopy,
-			final MemCopy< P, T > fillCopy,
-			final P oob )
+			final MemCopy< T, T > fillCopy,
+			final T oob )
 	{
 		if ( img instanceof AbstractCellImg )
 			return new VolatileCellImgRangeCopier<>( ( AbstractCellImg< ?, ?, ? extends Cell< ? >, ? > ) img, findRanges, memCopy, fillCopy, oob );
