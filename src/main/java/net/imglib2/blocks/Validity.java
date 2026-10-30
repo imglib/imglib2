@@ -44,7 +44,7 @@ package net.imglib2.blocks;
  * (interpolation, for example) go through {@link #expandTo(byte[])}, or more
  * usually {@link VolatileArray#valid()}, which manages the expansion buffer.
  */
-public interface Validity
+interface Validity
 {
 	/**
 	 * Number of pixels in the block.

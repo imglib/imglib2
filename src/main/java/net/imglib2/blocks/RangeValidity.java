@@ -50,7 +50,7 @@ import java.util.List;
  * random access to per-pixel validity (interpolation, for example) call {@link
  * #expandTo(byte[])}.
  */
-public final class RangeValidity implements Validity
+final class RangeValidity implements Validity
 {
 	/**
 	 * {@code widths[d][i]} is the width (in pixels) of the {@code i}-th range

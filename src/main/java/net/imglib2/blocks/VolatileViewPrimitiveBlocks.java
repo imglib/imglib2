@@ -33,7 +33,6 @@
  */
 package net.imglib2.blocks;
 
-import static net.imglib2.blocks.VolatilePrimitiveBlocks.AllValid;
 import static net.imglib2.blocks.PrimitiveBlocksUtils.extractOobValue;
 
 import java.util.function.Supplier;
@@ -145,8 +144,9 @@ class VolatileViewPrimitiveBlocks< T extends Volatile< ? > & NativeType< T >, R 
 	 * 		{@link VolatileArray} to copy into. Its {@link VolatileArray#data()
 	 * 		data} must correspond to {@code T}, for example, if {@code T} is
 	 * 		{@code VolatileUnsignedByteType} then it must be {@code byte[]}. Its
-	 * 		{@link VolatileArray#getValidity() validity} is set to the {@link
-	 * 		Volatile#isValid() validity} of the copied block.
+	 * 		validity ({@link VolatileArray#allValid()}, {@link
+	 * 		VolatileArray#valid()}) is set to the {@link Volatile#isValid()
+	 * 		validity} of the copied block.
 	 * <p>
 	 * Pixels that come from an invalid {@code Cell} are set to zero, instead of
 	 * copying the meaningless data of the invalid {@code Cell}. Note that the

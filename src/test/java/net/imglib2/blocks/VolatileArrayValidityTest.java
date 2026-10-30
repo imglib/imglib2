@@ -91,6 +91,54 @@ public class VolatileArrayValidityTest
 		for ( int i = 0; i < v.length(); ++i )
 			all &= valid[ i ] != 0;
 		assertEquals( "allValid() disagrees with valid()", all, v.allValid() );
+		assertEquals( "VolatileArray.allValid() disagrees with valid()", all, a.allValid() );
+	}
+
+	@Test
+	public void allValidDoesNotExpandRangeValidity()
+	{
+		final VolatileArray< byte[] > a = array( 15 );
+		final byte[] own = a.valid();
+
+		a.setValidity( rangeValidity() );
+		assertFalse( a.allValid() );
+		assertArrayEquals( "allValid() must not expand into the own buffer", new byte[ 15 ], own );
+
+		a.setValidity( new RangeValidity( WIDTHS, new byte[] { 1, 1, 1, 1 } ) );
+		assertTrue( a.allValid() );
+		assertArrayEquals( "allValid() must not expand into the own buffer", new byte[ 15 ], own );
+	}
+
+	@Test
+	public void allValidOnNullValidityReadsOwnBuffer()
+	{
+		final VolatileArray< byte[] > a = array( 15 );
+		final byte[] own = a.validForWriting();
+		java.util.Arrays.fill( own, ( byte ) 1 );
+		assertTrue( a.allValid() );
+		own[ 14 ] = 0;
+		assertFalse( a.allValid() );
+	}
+
+	/**
+	 * {@link VolatileArray#setValidityFrom} forwards a compact validity as-is,
+	 * so the target expands it lazily, into its own buffer.
+	 */
+	@Test
+	public void setValidityFromForwardsRangeValidity()
+	{
+		final VolatileArray< byte[] > src = array( 15 );
+		src.setValidity( rangeValidity() );
+
+		final VolatileArray< byte[] > dst = array( 15 );
+		final byte[] dstOwn = dst.valid();
+		dst.setValidityFrom( src );
+
+		assertSame( src.getValidity(), dst.getValidity() );
+		assertFalse( dst.allValid() );
+		assertSame( dstOwn, dst.valid() );
+		assertArrayEquals( expandedRangeValidity(), dst.valid() );
+		assertValidityAgreesWithValid( dst );
 	}
 
 	@Test
@@ -172,8 +220,8 @@ public class VolatileArrayValidityTest
 		final byte[] foreign = b.valid();
 		foreign[ 5 ] = 1;
 
-		a.setValidity( b.getValidity() );
-		assertSame( "no copy on setValidity", foreign, a.valid() );
+		a.setValidityFrom( b );
+		assertSame( "no copy on setValidityFrom", foreign, a.valid() );
 	}
 
 	@Test
@@ -195,7 +243,7 @@ public class VolatileArrayValidityTest
 		final byte[] foreign = b.valid();
 		java.util.Arrays.fill( foreign, ( byte ) 1 );
 
-		a.setValidity( b.getValidity() );
+		a.setValidityFrom( b );
 		final byte[] writable = a.validForWriting();
 
 		assertNotSame( "must be our own buffer", foreign, writable );
@@ -235,7 +283,7 @@ public class VolatileArrayValidityTest
 		src.validForWriting()[ 0 ] = 0;
 
 		final VolatileArray< byte[] > dst = array( 15 );
-		dst.setValidity( src.getValidity() );
+		dst.setValidityFrom( src );
 
 		assertEquals( "forwarded validity lost the write", 0, dst.valid()[ 0 ] );
 		assertValidityAgreesWithValid( dst );
@@ -246,7 +294,7 @@ public class VolatileArrayValidityTest
 	{
 		final VolatileArray< byte[] > a = array( 15 );
 		final VolatileArray< byte[] > b = array( 15 );
-		a.setValidity( b.getValidity() );
+		a.setValidityFrom( b );
 
 		final byte[] writable = a.validForWriting();
 		java.util.Arrays.fill( writable, ( byte ) 1 );

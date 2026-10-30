@@ -39,7 +39,7 @@ package net.imglib2.blocks;
  * Note that the backing array may be longer than {@link #length()} (it is
  * typically a reused buffer owned by a {@link VolatileArray}).
  */
-public final class DenseValidity implements Validity
+final class DenseValidity implements Validity
 {
 	private final byte[] valid;
 

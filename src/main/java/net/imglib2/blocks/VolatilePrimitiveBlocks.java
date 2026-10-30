@@ -81,8 +81,9 @@ public interface VolatilePrimitiveBlocks< T extends Volatile< ? > & NativeType< 
 	 * 		{@link VolatileArray} to copy into. Its {@link VolatileArray#data()
 	 * 		data} must correspond to {@code T}, for example, if {@code T} is
 	 * 		{@code VolatileUnsignedByteType} then it must be {@code byte[]}. Its
-	 * 		{@link VolatileArray#getValidity() validity} is set to the {@link
-	 * 		Volatile#isValid() validity} of the copied block.
+	 * 		validity ({@link VolatileArray#allValid()}, {@link
+	 * 		VolatileArray#valid()}) is set to the {@link Volatile#isValid()
+	 * 		validity} of the copied block.
 	 */
 	void copy( Interval interval, VolatileArray< ? > dest );
 

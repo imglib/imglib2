@@ -40,17 +40,22 @@ package net.imglib2.blocks;
  * per-pixel validity. Like the data buffer, this is allocated once and reused
  * (e.g., when {@code VolatileArray} is obtained from {@link TempArray}).
  * <p>
- * In addition, {@code VolatileArray} may have a {@link Validity} set.
+ * Consumers that only need to know whether the whole block is valid should use
+ * {@link #allValid()}, which can be answered without per-pixel validity.
+ * Consumers that need individual pixels use {@link #valid()}. A pass-through
+ * stage forwards validity with {@link #setValidityFrom}, without copying it.
+ * <p>
+ * Internally, {@code VolatileArray} may have a {@code Validity} set:
  * <ul>
  * <li>{@code null} means <em>this array's own buffer is the validity</em>. This
  *     is the state a {@code VolatileArray} is handed out in, and the state a
  *     producer leaves it in when it writes per-pixel validity directly.</li>
- * <li>A {@link RangeValidity} is the compact form produced by a block copy. It
+ * <li>A {@code RangeValidity} is the compact form produced by a block copy. It
  *     is expanded into the own buffer lazily, on the first {@link #valid()}
- *     call, and not at all if only {@link Validity#allValid()} is ever asked.</li>
- * <li>A {@link DenseValidity} may be backed by this array's own buffer or by a
- *     foreign one (after {@link #setValidity}, which is how a pass-through stage
- *     forwards validity without copying it).</li>
+ *     call, and not at all if only {@link #allValid()} is ever asked.</li>
+ * <li>A {@code DenseValidity} may be backed by this array's own buffer or by a
+ *     foreign one (after {@link #setValidityFrom}): a pass-through stage
+ *     may forward validity without copying it..</li>
  * </ul>
  * Instances are not thread-safe.
  *
@@ -142,8 +147,8 @@ public final class VolatileArray< T >
 	 * If no {@code Validity} is set, {@link #ownValid} is returned as-is. Its
 	 * contents are then whatever was last written there (the buffer is not
 	 * cleared for a reused {@code VolatileArray}). Producers are expected to
-	 * either {@link #setValidity} or fill the buffer completely (via
-	 * {@link #validForWriting}).
+	 * either set it ({@link #setValidityFrom}, or {@link #setValidity} inside
+	 * this package) or fill the buffer completely (via {@link #validForWriting}).
 	 */
 	public byte[] valid()
 	{
@@ -193,10 +198,40 @@ public final class VolatileArray< T >
 	}
 
 	/**
+	 * Whether every pixel of the block is valid.
+	 * <p>
+	 * For validity produced by a block copy, this does not expand per-pixel
+	 * validity: it costs one check per range combination, not per pixel.
+	 *
+	 * @return {@code true}, if every pixel of the block is valid.
+	 */
+	public boolean allValid()
+	{
+		return getValidity().allValid();
+	}
+
+	/**
+	 * Take over the validity of {@code src}, without copying it. Typically
+	 * used by a pass-through stage (for example a converter) whose output
+	 * pixels correspond one-to-one to those of its input.
+	 * <p>
+	 * <em>Potential foot gun: Nothing is copied, so a subsequent {@link
+	 * #valid()} may return a buffer owned by {@code src}. {@code src} must not
+	 * be reused while we still use its buffer.</em>
+	 *
+	 * @param src
+	 * 		{@code VolatileArray} of the same length as this one
+	 */
+	public void setValidityFrom( final VolatileArray< ? > src )
+	{
+		setValidity( src.getValidity() );
+	}
+
+	/**
 	 * The current {@link Validity}. If none is set, a {@link DenseValidity}
 	 * over {@link #ownValid} is created.
 	 */
-	public Validity getValidity()
+	Validity getValidity()
 	{
 		if ( validity == null )
 			validity = new DenseValidity( ownValid, length );
@@ -211,7 +246,7 @@ public final class VolatileArray< T >
 	 * That other {@code VolatileArray} must not be reused while we still use
 	 * its buffer.</em>
 	 */
-	public void setValidity( final Validity validity )
+	void setValidity( final Validity validity )
 	{
 		assert validity == null || validity.length() == length;
 		this.validity = validity;
