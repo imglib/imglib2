@@ -41,6 +41,7 @@ import net.imglib2.Interval;
 import net.imglib2.RandomAccessible;
 import net.imglib2.Typed;
 import net.imglib2.type.NativeType;
+import net.imglib2.util.Cast;
 import net.imglib2.util.Util;
 
 
@@ -228,9 +229,36 @@ public interface PrimitiveBlocks< T extends NativeType< T > > extends Typed< T >
 		else if ( props.isSupported() && onFallback != FAIL )
 		{
 			if ( onFallback == WARN )
-				System.err.println( props.getErrorMessage() );
+				new Throwable( "WARNING: " + props.getErrorMessage() ).printStackTrace();
 			return new FallbackPrimitiveBlocks<>( props.getFallbackProperties() );
 		}
 		throw new IllegalArgumentException( props.getErrorMessage() );
+	}
+
+	/**
+	 * Whether {@link #of(RandomAccessible, OnFallback) PrimitiveBlocks.of(ra, onFallback)}
+	 * would succeed, that is, not throw {@code IllegalArgumentException}.
+	 * <p>
+	 * With {@link OnFallback#FAIL FAIL}, this is {@code true} iff {@code ra}
+	 * can be handled by the optimized copier. Otherwise
+	 * ({@link OnFallback#ACCEPT ACCEPT}, {@link OnFallback#WARN WARN}, it is
+	 * {@code true} if {@code ra} can be handled at all, by the optimized copier
+	 * or by the fall-back implementation.
+	 * <p>
+	 * This only analyzes the view; it is cheaper than {@code of}, which also
+	 * builds the copier.
+	 *
+	 * @param ra
+	 * 		the source
+	 * @param onFallback
+	 * 		how {@link #of} would be asked to handle the fall-back case
+	 *
+	 * @return {@code true}, if {@code PrimitiveBlocks.of( ra, onFallback )} would succeed.
+	 */
+	static boolean isSupported( final RandomAccessible< ? > ra, final OnFallback onFallback )
+	{
+		final ViewPropertiesOrError< ?, ? > props = ViewAnalyzer.getViewProperties( Cast.unchecked( ra ) );
+		return props.isFullySupported()
+				|| ( props.isSupported() && onFallback != FAIL );
 	}
 }
