@@ -33,6 +33,8 @@
  */
 package net.imglib2.blocks;
 
+import net.imglib2.Volatile;
+import net.imglib2.type.NativeType;
 import net.imglib2.type.PrimitiveType;
 
 /**
@@ -51,9 +53,24 @@ public interface TempArray< T >
 
 	TempArray<T> newInstance();
 
-	@SuppressWarnings( { "unchecked" } )
 	static < T > TempArray< T > forPrimitiveType( PrimitiveType primitiveType )
 	{
-		return ( TempArray< T > ) new TempArrayImpl<>( PrimitiveTypeProperties.get( primitiveType ) );
+		return forPrimitiveType( primitiveType, false );
+	}
+
+	@SuppressWarnings( { "unchecked" } )
+	static < T > TempArray< T > forPrimitiveType( PrimitiveType primitiveType, boolean isVolatile )
+	{
+		final PrimitiveTypeProperties< ?, ? > props = PrimitiveTypeProperties.get( primitiveType );
+		return ( TempArray< T > ) ( isVolatile
+				? new TempArrayVolatileImpl<>( props )
+				: new TempArrayImpl<>( props ) );
+	}
+
+	static < T > TempArray< T > forType( NativeType< ? > type )
+	{
+		return forPrimitiveType(
+				type.getNativeTypeFactory().getPrimitiveType(),
+				type instanceof Volatile );
 	}
 }
