@@ -123,11 +123,11 @@ public class Views
 	 *
 	 * @param source
 	 *            the {@link RealRandomAccessible} to be rasterized.
-	 * @return a {@link RandomAccessibleOnRealRandomAccessible} wrapping source.
+	 * @return source
 	 */
-	public static < T > RandomAccessibleOnRealRandomAccessible< T > raster( final RealRandomAccessible< T > source )
+	public static < T > RandomAccessible< T > raster( final RealRandomAccessible< T > source )
 	{
-		return new RandomAccessibleOnRealRandomAccessible<>( source );
+		return source;
 	}
 
 	/**
