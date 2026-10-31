@@ -47,7 +47,12 @@ import static net.imglib2.blocks.Ranges.Direction.FORWARD;
  * Does the actual copying work from an {@code AbstractCellImg} into a primitive
  * array.
  *
- * @param <T> a primitive array type, e.g., {@code byte[]}.
+ * @param <S>
+ * 		source type, a primitive array or buffer type
+ * 		(e.g., {@code int[]} or {@code IntBuffer})
+ * @param <T>
+ * 		target type, the  primitive array type corresponding to {@code S}
+ * 		({@code S} itself, if {@code S} is an array type)
  */
 class CellImgRangeCopier< S, T > implements RangeCopier< T >
 {
@@ -57,7 +62,8 @@ class CellImgRangeCopier< S, T > implements RangeCopier< T >
 	private final long[] srcDims;
 	private final Ranges findRanges;
 	private final MemCopy< S, T > memCopy;
-	private final S oob;
+	private final MemCopy< T, T > fillCopy;
+	private final T oob;
 
 	private final List< Ranges.Range >[] rangesPerDimension;
 	private final Ranges.Range[] ranges;
@@ -72,7 +78,8 @@ class CellImgRangeCopier< S, T > implements RangeCopier< T >
 			final AbstractCellImg< ?, ?, ?, ? > cellImg,
 			final Ranges findRanges,
 			final MemCopy< S, T > memCopy,
-			final S oob )
+			final MemCopy< T, T > fillCopy,
+			final T oob )
 	{
 		n = cellImg.numDimensions();
 		cellGrid = cellImg.getCellGrid();
@@ -81,6 +88,7 @@ class CellImgRangeCopier< S, T > implements RangeCopier< T >
 
 		this.findRanges = findRanges;
 		this.memCopy = memCopy;
+		this.fillCopy = fillCopy;
 		this.oob = oob;
 
 		rangesPerDimension = new List[ n ];
@@ -102,6 +110,7 @@ class CellImgRangeCopier< S, T > implements RangeCopier< T >
 		srcDims = copier.srcDims.clone();
 		findRanges = copier.findRanges;
 		memCopy = copier.memCopy;
+		fillCopy = copier.fillCopy;
 		oob = copier.oob;
 
 		rangesPerDimension = new List[ n ];
@@ -156,7 +165,7 @@ class CellImgRangeCopier< S, T > implements RangeCopier< T >
 	 * @param d
 	 * 		current dimension. This method calls itself recursively with
 	 * 		        {@code d-1} until {@code d==0} is reached.
-     */
+	 */
 	private void copy( final T dest, final int d )
 	{
 		for ( Ranges.Range range : rangesPerDimension[ d ] )
@@ -189,12 +198,12 @@ class CellImgRangeCopier< S, T > implements RangeCopier< T >
 	}
 
 	/**
-     * Once we get here, {@link #setupDestSize} and {@link #updateRange} for
-     * all dimensions have been called, so the {@code dsteps}, {@code
-     * doffsets}, {@code cdims}, and {@code lengths} fields have been
-     * appropriately set up for the current Range combination. Also {@code
-     * cellAccess} is positioned on the corresponding cell.
-     */
+	 * Once we get here, {@link #setupDestSize} and {@link #updateRange} for
+	 * all dimensions have been called, so the {@code dsteps}, {@code
+	 * doffsets}, {@code cdims}, and {@code lengths} fields have been
+	 * appropriately set up for the current Range combination. Also {@code
+	 * cellAccess} is positioned on the corresponding cell.
+	 */
 	private void copyRanges( final T dest )
 	{
 		csteps[ 0 ] = 1;
@@ -264,12 +273,12 @@ class CellImgRangeCopier< S, T > implements RangeCopier< T >
 	}
 
 	/**
-     * Once we get here, {@link #setupDestSize} and {@link #updateRange} for
-     * all dimensions have been called, so the {@code dsteps}, {@code
-     * doffsets}, {@code cdims}, and {@code lengths} fields have been
-     * appropriately set up for the current Range combination. Also {@code
-     * cellAccess} is positioned on the corresponding cell.
-     */
+	 * Once we get here, {@link #setupDestSize} and {@link #updateRange} for
+	 * all dimensions have been called, so the {@code dsteps}, {@code
+	 * doffsets}, {@code cdims}, and {@code lengths} fields have been
+	 * appropriately set up for the current Range combination. Also {@code
+	 * cellAccess} is positioned on the corresponding cell.
+	 */
 	void fillRanges( final T dest, final int dConst )
 	{
 		final int dOffset = doffsets[ dConst ];
@@ -278,7 +287,7 @@ class CellImgRangeCopier< S, T > implements RangeCopier< T >
 		if ( n - 1 > dConst )
 			fillRangesRecursively( dest, dOffset, n - 1, dConst );
 		else
-			memCopy.copyValue( oob, 0, dest, dOffset, lengths[ dConst ] );
+			fillCopy.copyValue( oob, 0, dest, dOffset, lengths[ dConst ] );
 	}
 
 	private void fillRangesRecursively( final T dest, final int destPos, final int d, final int dConst )
@@ -290,6 +299,6 @@ class CellImgRangeCopier< S, T > implements RangeCopier< T >
 				fillRangesRecursively( dest, destPos + i * dstep, d - 1, dConst );
 		else
 			for ( int i = 0; i < length; ++i )
-				memCopy.copyValue( oob, 0, dest, destPos + i * dstep, lengths[ dConst ] );
+				fillCopy.copyValue( oob, 0, dest, destPos + i * dstep, lengths[ dConst ] );
 	}
 }

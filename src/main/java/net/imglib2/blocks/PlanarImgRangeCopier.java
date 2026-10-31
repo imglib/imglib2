@@ -43,7 +43,12 @@ import static net.imglib2.blocks.Ranges.Direction.FORWARD;
 /**
  * Does the actual copying work from a {@code PlanarImg} into a primitive array.
  *
- * @param <T> a primitive array type, e.g., {@code byte[]}.
+ * @param <S>
+ * 		source type, a primitive array or buffer type
+ * 		(e.g., {@code int[]} or {@code IntBuffer})
+ * @param <T>
+ * 		target type, the  primitive array type corresponding to {@code S}
+ * 		({@code S} itself, if {@code S} is an array type)
  */
 class PlanarImgRangeCopier< S, T > implements RangeCopier< T >
 {
@@ -52,7 +57,8 @@ class PlanarImgRangeCopier< S, T > implements RangeCopier< T >
 	private final int[] srcDims;
 	private final Ranges findRanges;
 	private final MemCopy< S, T > memCopy;
-	private final S oob;
+	private final MemCopy< T, T > fillCopy;
+	private final T oob;
 
 	private final List< Ranges.Range >[] rangesPerDimension;
 	private final Ranges.Range[] ranges;
@@ -68,7 +74,8 @@ class PlanarImgRangeCopier< S, T > implements RangeCopier< T >
 			final PlanarImg< ?, ? > planarImg,
 			final Ranges findRanges,
 			final MemCopy< S, T > memCopy,
-			final S oob )
+			final MemCopy< T, T > fillCopy,
+			final T oob )
 	{
 		n = planarImg.numDimensions();
 		sliceAccess = new SliceAccess<>( planarImg );
@@ -76,6 +83,7 @@ class PlanarImgRangeCopier< S, T > implements RangeCopier< T >
 
 		this.findRanges = findRanges;
 		this.memCopy = memCopy;
+		this.fillCopy = fillCopy;
 		this.oob = oob;
 
 		rangesPerDimension = new List[ n ];
@@ -102,6 +110,7 @@ class PlanarImgRangeCopier< S, T > implements RangeCopier< T >
 		srcDims = copier.srcDims.clone();
 		findRanges = copier.findRanges;
 		memCopy = copier.memCopy;
+		fillCopy = copier.fillCopy;
 		oob = copier.oob;
 
 		rangesPerDimension = new List[ n ];
@@ -277,7 +286,7 @@ class PlanarImgRangeCopier< S, T > implements RangeCopier< T >
 		if ( n - 1 > dConst )
 			fillRangesRecursively( dest, dOffset, n - 1, dConst );
 		else
-			memCopy.copyValue( oob, 0, dest, dOffset, lengths[ dConst ] );
+			fillCopy.copyValue( oob, 0, dest, dOffset, lengths[ dConst ] );
 	}
 
 	private void fillRangesRecursively( final T dest, final int destPos, final int d, final int dConst )
@@ -289,7 +298,7 @@ class PlanarImgRangeCopier< S, T > implements RangeCopier< T >
 				fillRangesRecursively( dest, destPos + i * dstep, d - 1, dConst );
 		else
 			for ( int i = 0; i < length; ++i )
-				memCopy.copyValue( oob, 0, dest, destPos + i * dstep, lengths[ dConst ] );
+				fillCopy.copyValue( oob, 0, dest, destPos + i * dstep, lengths[ dConst ] );
 	}
 
 	static class SliceAccess< T > implements PlanarImg.PlanarContainerSampler
