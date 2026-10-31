@@ -2,7 +2,7 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2024 Tobias Pietzsch, Stephan Preibisch, Stephan Saalfeld,
+ * Copyright (C) 2009 - 2026 Tobias Pietzsch, Stephan Preibisch, Stephan Saalfeld,
  * John Bogovic, Albert Cardona, Barry DeZonia, Christian Dietz, Jan Funke,
  * Aivar Grislis, Jonathan Hale, Grant Harris, Stefan Helfrich, Mark Hiner,
  * Martin Horn, Steffen Jaensch, Lee Kamentsky, Larry Lindsey, Melissa Linkert,
@@ -105,6 +105,13 @@ interface MemCopy< S, T >
 	 * array.
 	 */
 	void copyStrided( S src, int srcPos, T dest, int destPos, int destStride, int length );
+
+	/**
+	 * Set {@code length} components of the {@code dest} array, at positions
+	 * {@code destPos} through {@code destPos+length-1}, to zero ({@code false}
+	 * for {@code boolean}).
+	 */
+	void clear( T dest, int destPos, int length );
 
 	/**
 	 * Copy {@code numLines} stretches of {@code lineLength} elements.
@@ -371,6 +378,11 @@ interface MemCopy< S, T >
 #foreach( $t in $primitive_types )
 #set( $tuc = $t.substring(0,1).toUpperCase() + $t.substring(1))
 #set( $b = $tuc + "Buffer" )
+#if( $t.equals("boolean") )
+#set( $zero = "false" )
+#else
+#set( $zero = "( $t ) 0" )
+#end
 
 
 
@@ -404,6 +416,13 @@ interface MemCopy< S, T >
 				for ( int i = 0; i < length; ++i )
 					dest[ destPos + i * destStride ] = src[ srcPos + i ];
 		}
+
+		@Override
+		public void clear( final ${t}[] dest, final int destPos, final int length )
+		{
+			Arrays.fill( dest, destPos, destPos + length, ${zero} );
+		}
+
 #set( $src_t = $t + "[]" )
 #set( $dest_t = $t + "[]" )
 #override_default_methods()
@@ -441,6 +460,12 @@ interface MemCopy< S, T >
 			else
 				for ( int i = 0; i < length; ++i )
 					dest[ destPos + i * destStride ] = src.get( srcPos + i );
+		}
+
+		@Override
+		public void clear( final ${t}[] dest, final int destPos, final int length )
+		{
+			Arrays.fill( dest, destPos, destPos + length, ${zero} );
 		}
 
 #set( $src_t = $b )
@@ -482,6 +507,13 @@ interface MemCopy< S, T >
 					dest.put( destPos + i * destStride, src[ srcPos + i ] );
 		}
 
+		@Override
+		public void clear( final ${b} dest, final int destPos, final int length )
+		{
+			for ( int i = 0; i < length; ++i )
+				dest.put( destPos + i, ${zero} );
+		}
+
 #set( $src_t = $t + "[]" )
 #set( $dest_t = $b )
 #override_default_methods()
@@ -521,6 +553,13 @@ interface MemCopy< S, T >
 			else
 				for ( int i = 0; i < length; ++i )
 					dest.put( destPos + i * destStride, src.get( srcPos + i ) );
+		}
+
+		@Override
+		public void clear( final ${b} dest, final int destPos, final int length )
+		{
+			for ( int i = 0; i < length; ++i )
+				dest.put( destPos + i, ${zero} );
 		}
 
 #set( $src_t = $b )
