@@ -42,8 +42,10 @@ import net.imglib2.converter.read.ConvertedRandomAccessibleInterval;
 import net.imglib2.outofbounds.OutOfBoundsFactory;
 import net.imglib2.transform.integer.BoundingBox;
 import net.imglib2.transform.integer.MixedTransform;
+import net.imglib2.transform.integer.ReshapeTransform;
 import net.imglib2.view.ExtendedRandomAccessibleInterval;
 import net.imglib2.view.MixedTransformView;
+import net.imglib2.view.ReshapeTransformView;
 
 interface ViewNode
 {
@@ -54,6 +56,7 @@ interface ViewNode
 		INTERVAL, //
 		CONVERTER, //
 		MIXED_TRANSFORM, // for Mixed transforms
+		RESHAPE, // for ReshapeTransformView
 		EXTENSION // oob extensions
 	}
 
@@ -138,6 +141,25 @@ interface ViewNode
 		public String toString()
 		{
 			return "MixedTransformViewNode{viewType=" + viewType + ", view=" + view + ", interval=" + interval + ", transformToSource=" + getTransformToSource() + '}';
+		}
+	}
+
+	class ReshapeViewNode extends AbstractViewNode< ReshapeTransformView< ? > >
+	{
+		ReshapeViewNode( final ReshapeTransformView< ? > view )
+		{
+			super( ViewType.RESHAPE, view );
+		}
+
+		public ReshapeTransform getTransformToSource()
+		{
+			return view.getTransformToSource();
+		}
+
+		@Override
+		public String toString()
+		{
+			return "ReshapeViewNode{viewType=" + viewType + ", view=" + view + ", interval=" + interval + ", transformToSource=" + getTransformToSource() + '}';
 		}
 	}
 

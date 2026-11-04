@@ -42,6 +42,7 @@ import net.imglib2.blocks.ViewNode.ConverterViewNode;
 import net.imglib2.blocks.ViewNode.DefaultViewNode;
 import net.imglib2.blocks.ViewNode.ExtensionViewNode;
 import net.imglib2.blocks.ViewNode.MixedTransformViewNode;
+import net.imglib2.blocks.ViewNode.ReshapeViewNode;
 import net.imglib2.converter.Converter;
 import net.imglib2.converter.read.ConvertedRandomAccessible;
 import net.imglib2.converter.read.ConvertedRandomAccessibleInterval;
@@ -49,18 +50,23 @@ import net.imglib2.img.ImgView;
 import net.imglib2.img.NativeImg;
 import net.imglib2.img.WrappedImg;
 import net.imglib2.img.array.ArrayImg;
+import net.imglib2.img.basictypeaccess.DataAccess;
 import net.imglib2.img.cell.AbstractCellImg;
 import net.imglib2.img.planar.PlanarImg;
 import net.imglib2.view.fluent.RandomAccessibleView;
 import net.imglib2.transform.integer.BoundingBox;
 import net.imglib2.transform.integer.MixedTransform;
+import net.imglib2.transform.integer.ReshapeTransform;
 import net.imglib2.type.NativeType;
+import net.imglib2.type.NativeTypeFactory;
 import net.imglib2.type.Type;
 import net.imglib2.util.Cast;
 import net.imglib2.util.Intervals;
 import net.imglib2.view.ExtendedRandomAccessibleInterval;
 import net.imglib2.view.IntervalView;
 import net.imglib2.view.MixedTransformView;
+import net.imglib2.view.ReshapeTransformView;
+import net.imglib2.view.TransformBuilder;
 
 class ViewAnalyzer
 {
@@ -171,6 +177,13 @@ class ViewAnalyzer
 				nodes.add( new MixedTransformViewNode( view ) );
 				source = view.getSource();
 			}
+			// RESHAPE,
+			else if ( source instanceof ReshapeTransformView )
+			{
+				final ReshapeTransformView< ? > view = ( ReshapeTransformView< ? > ) source;
+				nodes.add( new ReshapeViewNode( view ) );
+				source = view.getSource();
+			}
 			// EXTENSION
 			else if ( source instanceof ExtendedRandomAccessibleInterval )
 			{
@@ -240,6 +253,120 @@ class ViewAnalyzer
 							+ type.getClass().getSimpleName() + ")" );
 			return false;
 		}
+	}
+
+	/**
+	 * The index of the reshape in {@link #nodes}, or -1 if there is none.
+	 */
+	private int reshapeIndex = -1;
+
+	/**
+	 * The transform of the reshape at {@link #reshapeIndex}.
+	 */
+	private ReshapeTransform reshape;
+
+	/**
+	 * Check whether there is at most one reshape. If a reshape is found, store
+	 * its index into {@link #reshapeIndex}, and its transform into {@link
+	 * #reshape}.
+	 * <p>
+	 * If the reshape is applied (only through converters and views that don't
+	 * change coordinates) to an {@code ArrayImg}, the reshape is removed by
+	 * replacing the {@code ArrayImg} with a reshaped {@code ArrayImg} on the
+	 * same data. See {@link #reshapeArrayImgRoot()}.
+	 *
+	 * @return {@code true}, if there is at most one reshape.
+	 *         {@code false}, otherwise
+	 */
+	private boolean checkReshape()
+	{
+		reshapeIndex = -1;
+		for ( int i = 0; i < nodes.size(); i++ )
+		{
+			if ( nodes.get( i ).viewType() == ViewNode.ViewType.RESHAPE )
+			{
+				if ( reshapeIndex < 0 )
+					reshapeIndex = i;
+				else
+				{
+					errorDescription.append( "There must be at most one reshape." );
+					return false;
+				}
+			}
+		}
+
+		if ( reshapeIndex >= 0 )
+		{
+			reshape = ( ( ReshapeViewNode ) nodes.get( reshapeIndex ) ).getTransformToSource();
+			reshapeArrayImgRoot();
+		}
+		return true;
+	}
+
+	/**
+	 * If the reshape at {@link #reshapeIndex} is applied to an {@code
+	 * ArrayImg} root, through nothing but converters and views that don't
+	 * change coordinates, then replace the root by an {@code ArrayImg} with
+	 * the reshaped dimensions on the same data, and remove the reshape (and
+	 * everything between it and the root, except converters) from {@link
+	 * #nodes}. Reshaping an {@code ArrayImg} just re-interprets its flat
+	 * storage.
+	 */
+	private void reshapeArrayImgRoot()
+	{
+		final int last = nodes.size() - 1;
+		final ViewNode root = nodes.get( last );
+		if ( !( root.view() instanceof ArrayImg ) )
+			return;
+
+		final ArrayImg< ?, ? > img = ( ArrayImg< ?, ? > ) root.view();
+		if ( !Arrays.equals( reshape.getTargetDimensions(), img.dimensionsAsLongArray() ) )
+			return;
+
+		final int m = reshape.numTargetDimensions();
+		MixedTransform bottom = new MixedTransform( m, m );
+		final List< ViewNode > converters = new ArrayList<>();
+		for ( int i = reshapeIndex + 1; i < last; ++i )
+		{
+			final ViewNode node = nodes.get( i );
+			switch ( node.viewType() )
+			{
+			case MIXED_TRANSFORM:
+				bottom = bottom.preConcatenate( ( ( MixedTransformViewNode ) node ).getTransformToSource() );
+				break;
+			case CONVERTER:
+				converters.add( node );
+				break;
+			case IDENTITY:
+			case INTERVAL:
+				break;
+			default:
+				return;
+			}
+		}
+		if ( !TransformBuilder.isIdentity( bottom ) )
+			return;
+
+		final List< ViewNode > rewritten = new ArrayList<>( nodes.subList( 0, reshapeIndex ) );
+		rewritten.addAll( converters );
+		rewritten.add( new DefaultViewNode( ViewNode.ViewType.NATIVE_IMG, reshapeArrayImg( Cast.unchecked( img ), reshape.getSourceDimensions() ) ) );
+		nodes.clear();
+		nodes.addAll( rewritten );
+		reshapeIndex = -1;
+		reshape = null;
+	}
+
+	/**
+	 * Create an {@code ArrayImg} with the given {@code dimensions} (and the
+	 * same number of elements as {@code img}) on the same data as {@code img}.
+	 */
+	private static < T extends NativeType< T >, A extends DataAccess > ArrayImg< T, A > reshapeArrayImg( final ArrayImg< T, A > img, final long[] dimensions )
+	{
+		final T type = img.createLinkedType();
+		final ArrayImg< T, A > reshaped = new ArrayImg<>( img.update( null ), dimensions, type.getEntitiesPerPixel() );
+		final NativeTypeFactory< T, ? super A > factory = Cast.unchecked( type.getNativeTypeFactory() );
+		reshaped.setLinkedType( factory.createLinkedType( reshaped ) );
+		return reshaped;
 	}
 
 	/**
@@ -350,6 +477,11 @@ class ViewAnalyzer
 			{
 				final MixedTransform t = ( ( MixedTransformViewNode ) node ).getTransformToSource();
 				bb = applyInverse( t, bb );
+			}
+			else if ( node.viewType() == ViewNode.ViewType.RESHAPE )
+			{
+				errorDescription.append( "A reshape must not be applied to the out-of-bounds extension." );
+				return false;
 			}
 		}
 
@@ -521,29 +653,52 @@ class ViewAnalyzer
 	}
 
 	/**
-	 * The concatenated transform from the View {@link #ra RandomAccessible} to the root.
+	 * The concatenated transform from the View {@link #ra RandomAccessible} to
+	 * the root, or to the source of the {@link #reshape} (if there is one).
 	 */
 	private MixedTransform transform;
 
 	/**
+	 * The concatenated transform from the target of the {@link #reshape} to the
+	 * root, or {@code null} if there is no reshape.
+	 */
+	private MixedTransform bottomTransform;
+
+	/**
 	 * Compute the concatenated {@link #transform transform} from the View
-	 * {@link #ra RandomAccessible} to the root.
+	 * {@link #ra RandomAccessible} to the root. If there is a {@link #reshape},
+	 * compute the concatenated {@link #transform} from the View to the source
+	 * of the reshape, and the concatenated {@link #bottomTransform} from the
+	 * target of the reshape to the root.
 	 *
 	 * @return {@code true}
 	 */
 	private boolean concatenateTransforms()
 	{
 		final int n = ra.numDimensions();
-		transform = new MixedTransform( n, n );
-		for ( ViewNode node : nodes )
+		final int end = reshapeIndex < 0 ? nodes.size() : reshapeIndex;
+		transform = concatenateTransforms( n, 0, end );
+		if ( reshapeIndex >= 0 )
+			bottomTransform = concatenateTransforms( reshape.numTargetDimensions(), reshapeIndex + 1, nodes.size() );
+		return true;
+	}
+
+	/**
+	 * Concatenate the {@code MixedTransform}s of {@code nodes[begin, end)}.
+	 */
+	private MixedTransform concatenateTransforms( final int numDimensions, final int begin, final int end )
+	{
+		MixedTransform t = new MixedTransform( numDimensions, numDimensions );
+		for ( int i = begin; i < end; ++i )
 		{
+			final ViewNode node = nodes.get( i );
 			if ( node.viewType() == ViewNode.ViewType.MIXED_TRANSFORM )
 			{
 				final MixedTransformViewNode tnode = ( MixedTransformViewNode ) node;
-				transform = transform.preConcatenate( tnode.getTransformToSource() );
+				t = t.preConcatenate( tnode.getTransformToSource() );
 			}
 		}
-		return true;
+		return t;
 	}
 
 	/**
@@ -556,7 +711,7 @@ class ViewAnalyzer
 		// TODO: Views.addDimension(...) is not allowed for now. This could be
 		//       supported by replicating hyperplanes in the target block.
 
-		if(transform.hasFullSourceMapping())
+		if ( transform.hasFullSourceMapping() && ( bottomTransform == null || bottomTransform.hasFullSourceMapping() ) )
 		{
 			return true;
 		}
@@ -572,6 +727,8 @@ class ViewAnalyzer
 	private MixedTransform permuteInvertTransform;
 
 	private MixedTransform remainderTransform;
+
+	private MixedTransform bottomPermuteInvertTransform;
 
 	/**
 	 * Split {@link #transform} into
@@ -592,6 +749,8 @@ class ViewAnalyzer
 		final MixedTransform[] split = PrimitiveBlocksUtils.split( transform );
 		permuteInvertTransform = split[ 0 ];
 		remainderTransform = split[ 1 ];
+		if ( bottomTransform != null )
+			bottomPermuteInvertTransform = PrimitiveBlocksUtils.split( bottomTransform )[ 0 ];
 		return true;
 	}
 
@@ -601,7 +760,8 @@ class ViewAnalyzer
 		final int viewNumDimensions = ra.numDimensions();
 		final NativeImg< R, ? > root = Cast.unchecked( nodes.get( nodes.size() - 1 ).view() );
 		final R rootType = root.createLinkedType();
-		return new ViewProperties<>( viewType, viewNumDimensions, root, rootType, oobExtension, transform, permuteInvertTransform, converterSupplier );
+		return new ViewProperties<>( viewType, viewNumDimensions, root, rootType, oobExtension, transform, permuteInvertTransform, converterSupplier,
+				reshape, bottomTransform, bottomPermuteInvertTransform );
 	}
 
 	private < T extends NativeType< T > > FallbackProperties< T > getFallbackProperties()
@@ -632,6 +792,10 @@ class ViewAnalyzer
 				// Check whether the pixel type of the root is supported
 				// (NativeType with entitiesPerPixel==1)
 				&& v.checkRootTypeSupported()
+
+				// Check whether there is at most one reshape
+				// (and remove it, if it is applied to an ArrayImg)
+				&& v.checkReshape()
 
 				// Check whether there is at most one out-of-bounds extension
 				&& v.checkExtensions1()

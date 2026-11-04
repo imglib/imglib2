@@ -38,6 +38,7 @@ import net.imglib2.RandomAccessible;
 import net.imglib2.converter.Converter;
 import net.imglib2.img.NativeImg;
 import net.imglib2.transform.integer.MixedTransform;
+import net.imglib2.transform.integer.ReshapeTransform;
 import net.imglib2.type.NativeType;
 import net.imglib2.view.TransformBuilder;
 
@@ -75,8 +76,18 @@ class ViewProperties< T extends NativeType< T >, R extends NativeType< R > >
 
 	private final Supplier< Converter< R, T > > converterSupplier;
 
+	private final ReshapeTransform reshape;
+
+	private final MixedTransform bottomTransform;
+
+	private final boolean hasBottomTransform;
+
+	private final MixedTransform bottomPermuteInvertTransform;
+
+	private final boolean hasBottomPermuteInvertTransform;
+
 	/**
-	 * Create {@code ViewProperties}.
+	 * Create {@code ViewProperties} for a View chain without reshape.
 	 *
 	 * @param viewType pixel type of the View to copy from
 	 * @param viewNumDimensions number of dimensions of the View to copy from
@@ -97,6 +108,44 @@ class ViewProperties< T extends NativeType< T >, R extends NativeType< R > >
 			final MixedTransform permuteInvertTransform,
 			final Supplier< ? extends Converter< ?, ? > > converterSupplier )
 	{
+		this( viewType, viewNumDimensions, root, rootType, extension, transform, permuteInvertTransform, converterSupplier, null, null, null );
+	}
+
+	/**
+	 * Create {@code ViewProperties}. If {@code reshape != null}, the View is
+	 * related to the root by {@code bottomTransform * reshape * transform}.
+	 *
+	 * @param viewType pixel type of the View to copy from
+	 * @param viewNumDimensions number of dimensions of the View to copy from
+	 * @param root the {@code NativeImg} at the root of the View chain
+	 * @param rootType pixel type of the root {@code NativeImg}
+	 * @param extension out-of-bounds extension to apply to the root
+	 * @param transform the concatenated transform from the final View to the root,
+	 *                  or to the source of the {@code reshape} (if any).
+	 * @param permuteInvertTransform captures axis permutation and inversion part in {@code transform}.
+	 * @param converterSupplier creates {@code Converter} from {@code rootType} to {@code viewType}.
+	 * @param reshape the reshape between View and root, or {@code null}.
+	 * @param bottomTransform the concatenated transform from the target of the {@code reshape} to the root.
+	 * @param bottomPermuteInvertTransform captures axis permutation and inversion part in {@code bottomTransform}.
+	 */
+	ViewProperties(
+			final T viewType,
+			final int viewNumDimensions,
+			final NativeImg< R, ? > root,
+			final R rootType,
+			final Extension extension,
+			final MixedTransform transform,
+			final MixedTransform permuteInvertTransform,
+			final Supplier< ? extends Converter< ?, ? > > converterSupplier,
+			final ReshapeTransform reshape,
+			final MixedTransform bottomTransform,
+			final MixedTransform bottomPermuteInvertTransform )
+	{
+		this.reshape = reshape;
+		this.bottomTransform = bottomTransform;
+		hasBottomTransform = bottomTransform != null && !TransformBuilder.isIdentity( bottomTransform );
+		this.bottomPermuteInvertTransform = bottomPermuteInvertTransform;
+		hasBottomPermuteInvertTransform = bottomPermuteInvertTransform != null && !TransformBuilder.isIdentity( bottomPermuteInvertTransform );
 		this.viewType = viewType;
 		this.viewNumDimensions = viewNumDimensions;
 		this.root = root;
@@ -122,6 +171,9 @@ class ViewProperties< T extends NativeType< T >, R extends NativeType< R > >
 				", hasPermuteInvertTransform=" + hasPermuteInvertTransform +
 				", permuteInvertTransform=" + permuteInvertTransform +
 				", converterSupplier=" + converterSupplier +
+				( reshape == null ? "" : ", reshape=" + reshape +
+						", bottomTransform=" + bottomTransform +
+						", bottomPermuteInvertTransform=" + bottomPermuteInvertTransform ) +
 				'}';
 	}
 
@@ -190,5 +242,43 @@ class ViewProperties< T extends NativeType< T >, R extends NativeType< R > >
 	public Supplier< Converter< R, T > > getConverterSupplier()
 	{
 		return converterSupplier;
+	}
+
+	/**
+	 * @return whether there is a {@link ReshapeTransform} between the View and
+	 *         the root.
+	 */
+	public boolean hasReshape()
+	{
+		return reshape != null;
+	}
+
+	public ReshapeTransform getReshape()
+	{
+		return reshape;
+	}
+
+	public boolean hasBottomTransform()
+	{
+		return hasBottomTransform;
+	}
+
+	/**
+	 * @return the transform from the target of the {@link #getReshape()
+	 *         reshape} to the root.
+	 */
+	public MixedTransform getBottomTransform()
+	{
+		return bottomTransform;
+	}
+
+	public boolean hasBottomPermuteInvertTransform()
+	{
+		return hasBottomPermuteInvertTransform;
+	}
+
+	public MixedTransform getBottomPermuteInvertTransform()
+	{
+		return bottomPermuteInvertTransform;
 	}
 }
