@@ -47,6 +47,7 @@ import net.imglib2.transform.integer.BoundingBox;
 import net.imglib2.transform.integer.BoundingBoxTransform;
 import net.imglib2.transform.integer.Mixed;
 import net.imglib2.transform.integer.MixedTransform;
+import net.imglib2.transform.integer.ReshapeTransform;
 import net.imglib2.transform.integer.SlicingTransform;
 import net.imglib2.transform.integer.TranslationTransform;
 import net.imglib2.util.Intervals;
@@ -289,10 +290,22 @@ public class TransformBuilder< T >
 	 * translation.
 	 * <li>replace it by a {@link SlicingTransform} if it is a pure slicing.
 	 * </ul>
+	 * Neighboring {@link ReshapeTransform}s are concatenated if their
+	 * dimensions match. A reshape is removed if it is the identity, and
+	 * replaced by a {@link MixedTransform} if it only inserts or removes
+	 * singleton dimensions. Because that can make new neighbors concatenable,
+	 * this is repeated until the list does not change anymore.
 	 */
 	protected void simplifyTransforms()
 	{
-		net.imglib2.concatenate.ConcatenateUtils.join( transforms );
+		boolean changed;
+		do
+		{
+			net.imglib2.concatenate.ConcatenateUtils.join( transforms );
+			changed = simplifyReshapeTransforms();
+			changed |= removeIdentityTransforms();
+		}
+		while ( changed );
 
 		for ( final ListIterator< Transform > i = transforms.listIterator(); i.hasNext(); )
 		{
@@ -344,6 +357,68 @@ public class TransformBuilder< T >
 	}
 
 	/**
+	 * Concatenate neighboring {@link ReshapeTransform}s in {@link #transforms}
+	 * whose dimensions match, remove identity reshapes, and replace
+	 * singleton-only reshapes by {@link MixedTransform}s.
+	 * <p>
+	 * Note that neighboring reshapes do not always match: an
+	 * {@link IntervalView} between them may crop the source of the outer one.
+	 *
+	 * @return whether {@link #transforms} was changed
+	 */
+	private boolean simplifyReshapeTransforms()
+	{
+		boolean changed = false;
+		final LinkedList< Transform > simplified = new LinkedList<>();
+		for ( final Transform t : transforms )
+		{
+			if ( !ReshapeTransform.class.isInstance( t ) )
+			{
+				simplified.add( t );
+				continue;
+			}
+			ReshapeTransform r = ( ReshapeTransform ) t;
+			final Transform previous = simplified.peekLast();
+			if ( ReshapeTransform.class.isInstance( previous ) && ( ( ReshapeTransform ) previous ).isConcatenable( r ) )
+			{
+				// previous is applied after r
+				simplified.removeLast();
+				r = ( ( ReshapeTransform ) previous ).concatenate( r );
+				changed = true;
+			}
+			if ( r.isIdentity() )
+			{
+				changed = true;
+			}
+			else if ( r.isSingletonOnly() )
+			{
+				simplified.add( r.toMixed() );
+				changed = true;
+			}
+			else
+			{
+				simplified.add( r );
+			}
+		}
+		if ( changed )
+		{
+			transforms.clear();
+			transforms.addAll( simplified );
+		}
+		return changed;
+	}
+
+	/**
+	 * Remove identity {@link Mixed} transforms from {@link #transforms}.
+	 *
+	 * @return whether {@link #transforms} was changed
+	 */
+	private boolean removeIdentityTransforms()
+	{
+		return transforms.removeIf( t -> Mixed.class.isInstance( t ) && isIdentity( ( Mixed ) t ) );
+	}
+
+	/**
 	 * Create a sequence of wrapped RandomAccessibles from the
 	 * {@link #transforms} list.
 	 * 
@@ -361,10 +436,42 @@ public class TransformBuilder< T >
 				result = wrapTranslationTransform( result, ( TranslationTransform ) t );
 			else if ( SlicingTransform.class.isInstance( t ) )
 				result = wrapSlicingTransform( result, ( SlicingTransform ) t );
+			else if ( ReshapeTransform.class.isInstance( t ) )
+				result = wrapReshapeTransform( result, ( ReshapeTransform ) t );
 			else
 				result = wrapGenericTransform( result, t );
 		}
 		return result;
+	}
+
+	protected RandomAccessible< T > wrapReshapeTransform( final RandomAccessible< T > s, final ReshapeTransform t )
+	{
+		return new RandomAccessible< T >()
+		{
+			@Override
+			public int numDimensions()
+			{
+				return t.numSourceDimensions();
+			}
+
+			@Override
+			public RandomAccess< T > randomAccess()
+			{
+				return new ReshapeRandomAccess< T >( s.randomAccess(), t );
+			}
+
+			@Override
+			public RandomAccess< T > randomAccess( final Interval interval )
+			{
+				return new ReshapeRandomAccess< T >( s.randomAccess(), t );
+			}
+
+			@Override
+			public T getType()
+			{
+				return s.getType();
+			}
+		};
 	}
 
 	protected RandomAccessible< T > wrapGenericTransform( final RandomAccessible< T > s, final Transform t )

@@ -34,7 +34,7 @@
 package net.imglib2.view.iteration;
 
 import java.util.Arrays;
-import java.util.Iterator;
+import java.util.function.Supplier;
 
 import net.imglib2.AbstractWrappedInterval;
 import net.imglib2.Cursor;
@@ -43,6 +43,8 @@ import net.imglib2.Interval;
 import net.imglib2.IterableInterval;
 import net.imglib2.RandomAccessible;
 import net.imglib2.transform.integer.BoundingBox;
+import net.imglib2.transform.integer.Mixed;
+import net.imglib2.transform.integer.ReshapeTransform;
 import net.imglib2.transform.integer.SlicingTransform;
 import net.imglib2.util.Intervals;
 import net.imglib2.view.IterableRandomAccessibleInterval;
@@ -311,6 +313,193 @@ public class IterableTransformBuilder< T > extends TransformBuilder< T >
 			}
 		}
 
+		final IterableInterval< T > flatRun = buildFlatRunIterableInterval();
+		if ( flatRun != null )
+			return flatRun;
+
 		return new IterableIntervalView( build(), interval );
+	}
+
+	/**
+	 * An {@link IterableInterval} on {@link IterableTransformBuilder#interval
+	 * interval}, whose elements are a box of {@link #source} elements, in the
+	 * same flat order. Iterates by forwarding to a flat-order cursor on the
+	 * source box.
+	 */
+	private class FlatRun extends AbstractWrappedInterval< Interval > implements IterableInterval< T >
+	{
+		private final long numElements;
+
+		private final Supplier< Cursor< T > > sourceCursors;
+
+		FlatRun( final Supplier< Cursor< T > > sourceCursors )
+		{
+			super( interval );
+			numElements = Intervals.numElements( interval );
+			this.sourceCursors = sourceCursors;
+		}
+
+		@Override
+		public long size()
+		{
+			return numElements;
+		}
+
+		@Override
+		public FlatIterationOrder iterationOrder()
+		{
+			return new FlatIterationOrder( interval );
+		}
+
+		@Override
+		public Cursor< T > cursor()
+		{
+			return new FlatIndexCursor<>( sourceCursors.get(), interval );
+		}
+
+		@Override
+		public Cursor< T > localizingCursor()
+		{
+			return new FlatIndexLocalizingCursor<>( sourceCursors.get(), interval );
+		}
+
+		@Override
+		public T getType()
+		{
+			return source.getType();
+		}
+	}
+
+	/**
+	 * If {@link #interval} maps to a box of {@link #source} elements, in the
+	 * same flat order, return an {@link IterableInterval} that forwards to a
+	 * cursor that iterates that box of the source in flat order. Otherwise
+	 * return {@code null}.
+	 * <p>
+	 * This is the case if {@link #transforms} is either
+	 * <ul>
+	 * <li>a single {@link Mixed} transform that {@link #isOrderPreserving(Mixed,
+	 * Interval) preserves flat order} on {@link #interval}, or</li>
+	 * <li>a {@link ReshapeTransform}, possibly between order-preserving {@link
+	 * Mixed} transforms, and the image of {@link #interval} is a box. (A reshape
+	 * preserves flat order: if the image of {@link #interval} inside the
+	 * reshape's domain has as many elements as its bounding box, the image is
+	 * exactly the bounding box, and both are iterated in the same order.)</li>
+	 * </ul>
+	 */
+	private IterableInterval< T > buildFlatRunIterableInterval()
+	{
+		if ( boundingBox == null || transforms.isEmpty() || transforms.size() > 3 )
+			return null;
+
+		// transforms are ordered from source to view: [M] or [M?, R, M?]
+		int r = -1;
+		for ( int i = 0; i < transforms.size(); ++i )
+		{
+			if ( transforms.get( i ) instanceof ReshapeTransform )
+			{
+				if ( r >= 0 )
+					return null;
+				r = i;
+			}
+			else if ( !( transforms.get( i ) instanceof Mixed ) )
+				return null;
+		}
+
+		if ( r < 0 )
+		{
+			if ( transforms.size() != 1 || !isOrderPreserving( ( Mixed ) transforms.get( 0 ), interval ) )
+				return null;
+		}
+		else
+		{
+			if ( r > 1 || transforms.size() > r + 2 )
+				return null;
+			if ( r == 1 && !isOrderPreserving( ( Mixed ) transforms.get( 0 ), null ) )
+				return null;
+			final ReshapeTransform reshape = ( ReshapeTransform ) transforms.get( r );
+
+			// interval must be inside the domain of the reshape
+			long[] min = interval.minAsLongArray();
+			long[] max = interval.maxAsLongArray();
+			if ( transforms.size() == r + 2 )
+			{
+				final Mixed top = ( Mixed ) transforms.get( r + 1 );
+				if ( !isOrderPreserving( top, interval ) )
+					return null;
+				final long[] tmin = new long[ top.numTargetDimensions() ];
+				final long[] tmax = new long[ top.numTargetDimensions() ];
+				top.apply( min, tmin );
+				top.apply( max, tmax );
+				min = tmin;
+				max = tmax;
+			}
+			for ( int d = 0; d < min.length; ++d )
+				if ( min[ d ] < 0 || max[ d ] >= reshape.getSourceDimension( d ) )
+					return null;
+		}
+
+		final Interval sourceInterval = boundingBox.getInterval();
+		if ( Intervals.numElements( sourceInterval ) != Intervals.numElements( interval ) )
+			return null;
+
+		if ( source instanceof SubIntervalIterable )
+		{
+			@SuppressWarnings( "unchecked" )
+			final SubIntervalIterable< T > iterableSource = ( SubIntervalIterable< T > ) source;
+			if ( iterableSource.supportsOptimizedCursor( sourceInterval )
+					&& iterableSource.subIntervalIterationOrder( sourceInterval ) instanceof FlatIterationOrder )
+				return new FlatRun( () -> iterableSource.cursor( sourceInterval ) );
+		}
+		if ( source instanceof IterableInterval )
+		{
+			@SuppressWarnings( "unchecked" )
+			final IterableInterval< T > iterableSource = ( IterableInterval< T > ) source;
+			if ( iterableSource.iterationOrder() instanceof FlatIterationOrder
+					&& Intervals.equals( iterableSource, sourceInterval ) )
+				return new FlatRun( iterableSource::cursor );
+		}
+		// Iterate the source interval in flat order by random access. This
+		// avoids the transform arithmetic, and is how any source with a
+		// different iteration order (for example a CellImg) would be iterated
+		// in flat order.
+		return new FlatRun( () -> new RandomAccessibleIntervalCursor<>( source, sourceInterval ) );
+	}
+
+	/**
+	 * Does {@code t} map boxes to boxes one-to-one, preserving flat
+	 * iteration order. That is:
+	 * <ul>
+	 * <li>no target dimension is inverted,</li>
+	 * <li>the target dimensions that are taken from source dimensions are taken
+	 * in increasing order (no permutation), and</li>
+	 * <li>every source dimension that is not mapped to any target dimension has
+	 * size 1 in {@code sourceInterval}.</li>
+	 * </ul>
+	 * If {@code sourceInterval == null}, every source dimension must be mapped.
+	 * <p>
+	 * Examples are translations, slicing, and inserting or removing dimensions
+	 * of size 1.
+	 */
+	private static boolean isOrderPreserving( final Mixed t, final Interval sourceInterval )
+	{
+		final boolean[] mapped = new boolean[ t.numSourceDimensions() ];
+		int previous = -1;
+		for ( int d = 0; d < t.numTargetDimensions(); ++d )
+		{
+			if ( t.getComponentZero( d ) )
+				continue;
+			if ( t.getComponentInversion( d ) )
+				return false;
+			final int c = t.getComponentMapping( d );
+			if ( c <= previous )
+				return false;
+			previous = c;
+			mapped[ c ] = true;
+		}
+		for ( int c = 0; c < mapped.length; ++c )
+			if ( !mapped[ c ] && ( sourceInterval == null || sourceInterval.dimension( c ) != 1 ) )
+				return false;
+		return true;
 	}
 }
