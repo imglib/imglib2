@@ -54,11 +54,13 @@ import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.img.array.AbstractArrayCursor;
 import net.imglib2.img.cell.CellCursor;
 import net.imglib2.img.planar.PlanarCursor;
+import net.imglib2.img.planar.PlanarPlaneSubsetCursor;
 import net.imglib2.parallel.TaskExecutor;
 import net.imglib2.parallel.Parallelization;
 import net.imglib2.parallel.TaskExecutors;
 import net.imglib2.util.Intervals;
 import net.imglib2.view.Views;
+import net.imglib2.view.iteration.FlatIndexCursor;
 import net.imglib2.view.iteration.SlicingCursor;
 
 /**
@@ -207,10 +209,33 @@ public class LoopBuilder< T >
 
 	private boolean cursorIsFast( IterableInterval< ? > image )
 	{
-		Cursor< ? > cursor = image.cursor();
-		return cursor instanceof AbstractArrayCursor ||
+		return isFastCursor( image.cursor() );
+	}
+
+	private static boolean isFastCursor( Cursor< ? > cursor )
+	{
+		// Note {@link FlatIndexCursor} is accepted directly.
+		//
+		// It is built by IterableTransformBuilder after that has established that
+		// the view is a single contiguous run of the source in flat order, so its
+		// source cursor walks that run directly and no transform arithmetic is left
+		// to do per element. 
+		// 
+		// If instead we recurse into the source cursor:
+		// if ( cursor instanceof FlatIndexCursor )
+		//	    return isFastCursor( ( ( FlatIndexCursor< ? > ) cursor ).getSourceCursor() );
+		// 
+		// this method would return false if the source cursor is not one of those listed.
+		// if the source cursor comes from a reshaped {@code CellImg}, then 
+		// this would result in {@link LoopBuilder} falling back to
+		// the random-access loop, which re-derives every position through the
+		// view's own {@code RandomAccess} and is about half the speed of
+		// accepting FlatIndexCursor directly in my benchmarks. -JB
+		return cursor instanceof FlatIndexCursor ||
+				cursor instanceof AbstractArrayCursor ||
 				cursor instanceof SlicingCursor ||
 				cursor instanceof PlanarCursor ||
+				cursor instanceof PlanarPlaneSubsetCursor ||
 				cursor instanceof CellCursor;
 	}
 

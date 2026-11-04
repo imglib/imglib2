@@ -199,6 +199,21 @@ public interface RandomAccessibleIntervalView< T > extends RandomAccessibleView<
 	}
 
 	/**
+	 * Create a zero-min view with the given {@code dimensions} and the same
+	 * elements in the same flat iteration order (dimension 0 fastest).
+	 *
+	 * @param dimensions
+	 *            the dimensions of the view. Must have the same number of
+	 *            elements as this view.
+	 *
+	 * @return a reshaped view
+	 */
+	default RandomAccessibleIntervalView< T > reshape( long... dimensions )
+	{
+		return wrap( Views.reshape( delegate(), dimensions ) );
+	}
+
+	/**
 	 * Sample only every <em>step<sub>d</sub></em><sup>th</sup> value of a
 	 * source {@link RandomAccessible}. This is effectively an integer scaling
 	 * transformation.
