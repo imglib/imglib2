@@ -1,0 +1,2658 @@
+<title>ReshapeViewBenchmark</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=Schibsted+Grotesk:wght@600;700&display=swap">
+<style>
+:root {
+  color-scheme: light;
+  --ground: #f3f5f7;
+  --surface: #fbfcfd;
+  --ink: #111820;
+  --ink-2: #4a5260;
+  --ink-3: #687080;
+  --rule: #dfe3e8;
+  --rule-strong: #c5ccd4;
+  --connector: #b9c1ca;
+  --now: #2a78d6;
+  --now-tint: #dce9f8;
+  --before: #eb6834;
+  --fallback: #7c8591;
+  --accent-ink: #1c5cab;
+  --chip: #e6ebf0;
+  --shadow: 0 1px 2px rgba(17, 24, 32, 0.06), 0 8px 24px rgba(17, 24, 32, 0.06);
+  --sans: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --display: "Schibsted Grotesk", "IBM Plex Sans", system-ui, sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --ground: #0d1015;
+    --surface: #151a21;
+    --ink: #edf1f5;
+    --ink-2: #b4bcc7;
+    --ink-3: #8e97a4;
+    --rule: #252c35;
+    --rule-strong: #343d48;
+    --connector: #46505c;
+    --now: #3987e5;
+    --now-tint: #1a2d45;
+    --before: #d95926;
+    --fallback: #8a939f;
+    --accent-ink: #86b6ef;
+    --chip: #1f262f;
+    --shadow: 0 1px 2px rgba(0, 0, 0, 0.4), 0 8px 24px rgba(0, 0, 0, 0.3);
+  }
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --ground: #0d1015;
+  --surface: #151a21;
+  --ink: #edf1f5;
+  --ink-2: #b4bcc7;
+  --ink-3: #8e97a4;
+  --rule: #252c35;
+  --rule-strong: #343d48;
+  --connector: #46505c;
+  --now: #3987e5;
+  --now-tint: #1a2d45;
+  --before: #d95926;
+  --fallback: #8a939f;
+  --accent-ink: #86b6ef;
+  --chip: #1f262f;
+  --shadow: 0 1px 2px rgba(0, 0, 0, 0.4), 0 8px 24px rgba(0, 0, 0, 0.3);
+}
+
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  background: var(--ground);
+  color: var(--ink);
+  font-family: var(--sans);
+  font-size: 16px;
+  line-height: 1.55;
+  padding-inline: 20px;
+  padding-block: 0 64px;
+}
+.page { max-width: 1040px; margin-inline: auto; }
+a { color: var(--accent-ink); }
+:focus-visible { outline: 2px solid var(--now); outline-offset: 2px; }
+code, .mono { font-family: var(--mono); font-size: 0.88em; }
+h1, h2, h3 { font-family: var(--display); text-wrap: balance; margin: 0; letter-spacing: -0.01em; }
+p { margin: 0; }
+.prose { max-width: 66ch; color: var(--ink-2); }
+.prose strong { color: var(--ink); font-weight: 600; }
+
+/* Header */
+.masthead {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 40px;
+  align-items: end;
+  padding-block: 56px 32px;
+  border-bottom: 1px solid var(--rule);
+}
+.eyebrow {
+  font-family: var(--mono); font-size: 12px; letter-spacing: 0.06em; text-transform: uppercase;
+  color: var(--ink-3); margin-bottom: 14px;
+}
+h1 { font-size: clamp(34px, 5vw, 52px); line-height: 1.02; font-weight: 700; }
+.dek { margin-top: 16px; font-size: 18px; max-width: 58ch; color: var(--ink-2); }
+.meta {
+  margin-top: 22px; display: flex; flex-wrap: wrap; gap: 6px 18px;
+  font-family: var(--mono); font-size: 12.5px; color: var(--ink-3);
+}
+.meta span { white-space: nowrap; }
+
+/* Group diagram */
+.groups-fig { margin: 0; }
+.groups { display: grid; grid-template-columns: auto repeat(3, auto); gap: 8px 10px; align-items: center; }
+.row-name { font-family: var(--mono); font-size: 11px; letter-spacing: 0.05em; text-transform: uppercase; color: var(--ink-3); }
+.axes { display: flex; gap: 3px; justify-content: center; }
+.ax {
+  font-family: var(--mono); font-size: 12px; font-variant-numeric: tabular-nums;
+  padding: 3px 8px; border-radius: 5px; background: var(--chip); color: var(--ink-2);
+}
+.ax.img { background: var(--now-tint); color: var(--accent-ink); }
+.link { height: 14px; border-left: 2px solid var(--connector); width: 0; margin-inline: auto; }
+.kind { font-family: var(--mono); font-size: 11px; color: var(--ink-3); text-align: center; white-space: nowrap; }
+.groups-caption { margin-top: 12px; font-size: 13px; color: var(--ink-3); max-width: 34ch; }
+
+/* Findings */
+.findings { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 0; margin-block: 36px 8px; }
+.finding { display: flex; flex-direction: column; gap: 8px; padding: 4px 22px 4px 18px; border-left: 1px solid var(--rule); }
+.finding:first-child { border-left: 0; padding-left: 0; }
+.figure { font-weight: 600; font-size: 34px; line-height: 1; letter-spacing: -0.02em; }
+.figure small { font-size: 15px; font-weight: 500; color: var(--ink-3); letter-spacing: 0; margin-left: 4px; }
+.finding-title { font-weight: 600; font-size: 14.5px; }
+.finding p { font-size: 14px; color: var(--ink-2); line-height: 1.5; }
+.chip {
+  display: inline-block; vertical-align: 1px; margin-left: 6px;
+  font-family: var(--mono); font-size: 11px; letter-spacing: 0.05em; text-transform: uppercase;
+  padding: 2px 8px; border-radius: 999px; background: var(--chip); color: var(--ink-2);
+}
+
+/* Filter row */
+.filter {
+  position: sticky; top: 0; z-index: 5;
+  display: flex; flex-wrap: wrap; align-items: center; gap: 12px 20px;
+  padding-block: 14px; margin-top: 36px;
+  background: var(--ground); border-bottom: 1px solid var(--rule);
+}
+.filter-label { font-size: 13px; color: var(--ink-3); }
+.seg { display: inline-flex; padding: 3px; border-radius: 9px; background: var(--chip); gap: 2px; }
+.seg input { position: absolute; opacity: 0; pointer-events: none; }
+.seg label { font-family: var(--mono); font-size: 13px; padding: 5px 14px; border-radius: 7px; cursor: pointer; color: var(--ink-2); }
+.seg input:checked + label { background: var(--surface); color: var(--ink); box-shadow: var(--shadow); }
+.seg input:focus-visible + label { outline: 2px solid var(--now); outline-offset: 1px; }
+.legend { display: flex; flex-wrap: wrap; gap: 6px 18px; font-size: 13px; color: var(--ink-2); margin-left: auto; }
+.key { display: inline-flex; align-items: center; gap: 7px; white-space: nowrap; }
+.key svg { flex: none; }
+
+/* Sections */
+section.result { padding-block: 44px 8px; }
+section.result + section.result { border-top: 1px solid var(--rule); }
+.section-head { display: flex; flex-direction: column; gap: 12px; margin-bottom: 22px; }
+h2 { font-size: 26px; line-height: 1.15; font-weight: 700; }
+.shape-key { display: flex; flex-wrap: wrap; gap: 4px 18px; font-family: var(--mono); font-size: 12px; color: var(--ink-3); margin-bottom: 10px; }
+.shape-key b { font-weight: 500; color: var(--ink-2); }
+.panel { background: var(--surface); border-radius: 12px; box-shadow: var(--shadow); padding: 20px 20px 14px; }
+.chart { position: relative; width: 100%; }
+.chart svg { display: block; width: 100%; font-family: var(--sans); overflow: visible; }
+.small-multiples { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 28px 32px; }
+.sm-title { font-weight: 600; font-size: 14px; margin-bottom: 6px; }
+.note { margin-top: 14px; font-size: 14px; color: var(--ink-2); max-width: 70ch; }
+.note + .note { margin-top: 8px; }
+
+/* SVG roles */
+.grid-line { stroke: var(--rule); stroke-width: 1; }
+.base-line { stroke: var(--rule-strong); stroke-width: 1; }
+.group-rule { stroke: var(--rule); stroke-width: 1; }
+.tick { fill: var(--ink-3); font-size: 11px; font-variant-numeric: tabular-nums; }
+.row-label { fill: var(--ink-2); font-size: 13px; }
+.row-label.mono { font-family: var(--mono); font-size: 12px; }
+.row-sub { fill: var(--ink-3); font-family: var(--mono); font-size: 11px; }
+.group-label { fill: var(--ink); font-size: 13px; font-weight: 600; }
+.val { fill: var(--ink); font-size: 13px; font-variant-numeric: tabular-nums; }
+.val-sub { fill: var(--ink-3); font-size: 12px; font-variant-numeric: tabular-nums; }
+.val-sub.worse { fill: var(--before); }
+.connector { stroke: var(--connector); stroke-width: 2; stroke-linecap: round; }
+.mark-before { fill: var(--surface); stroke: var(--before); stroke-width: 2.5; }
+.mark-fallback { fill: var(--surface); stroke: var(--fallback); stroke-width: 2.5; }
+.mark-now { fill: var(--now); stroke: var(--surface); stroke-width: 2; }
+.mark-raw { stroke: var(--ink); stroke-width: 2; stroke-linecap: round; }
+.hit { fill: transparent; cursor: default; }
+.hit:focus { outline: none; }
+.hit:focus-visible, .hit.active { fill: var(--ink); fill-opacity: 0.045; }
+
+.tooltip {
+  position: absolute; pointer-events: none; z-index: 4;
+  min-width: 200px; max-width: 290px;
+  background: var(--surface); color: var(--ink);
+  border: 1px solid var(--rule-strong); border-radius: 8px; box-shadow: var(--shadow);
+  padding: 10px 12px; font-size: 13px; line-height: 1.45;
+}
+.tooltip[hidden] { display: none !important; }
+.tt-title { font-weight: 600; margin-bottom: 4px; }
+.tt-row { display: flex; justify-content: space-between; gap: 16px; font-variant-numeric: tabular-nums; }
+.tt-row span:first-child { color: var(--ink-2); display: inline-flex; align-items: center; gap: 6px; }
+.tt-foot { margin-top: 6px; color: var(--ink-3); font-size: 12px; }
+
+/* Tables */
+details { margin-top: 16px; }
+summary { cursor: pointer; font-size: 14px; color: var(--accent-ink); }
+.table-wrap { overflow-x: auto; margin-top: 12px; }
+table { border-collapse: collapse; font-family: var(--mono); font-size: 12.5px; width: 100%; min-width: 560px; }
+th, td { text-align: right; padding: 5px 10px; border-bottom: 1px solid var(--rule); font-variant-numeric: tabular-nums; white-space: nowrap; }
+th { font-weight: 500; color: var(--ink-3); }
+th:first-child, td:first-child, th.l, td.l { text-align: left; }
+td .pm { color: var(--ink-3); }
+
+/* Method */
+.method { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 32px 48px; margin-top: 8px; }
+dl.spec { display: grid; grid-template-columns: max-content minmax(0, 1fr); gap: 6px 18px; margin: 0; font-size: 14px; }
+dl.spec dt { color: var(--ink-3); font-family: var(--mono); font-size: 12.5px; padding-top: 2px; }
+dl.spec dd { margin: 0; color: var(--ink-2); }
+ol.runs { margin: 0; padding-left: 20px; display: flex; flex-direction: column; gap: 10px; font-size: 14px; color: var(--ink-2); }
+ol.runs b { color: var(--ink); font-weight: 600; }
+h3 { font-size: 17px; font-weight: 600; margin-top: 32px; margin-bottom: 10px; }
+
+/* Raw output */
+.raw-root { margin-top: 48px; padding-top: 20px; border-top: 1px solid var(--rule); }
+.raw-root > summary { font-family: var(--display); font-weight: 600; font-size: 17px; color: var(--ink); }
+.raw-root > summary .count { font-family: var(--mono); font-weight: 400; font-size: 12.5px; color: var(--ink-3); margin-left: 8px; }
+.raw-intro { margin-top: 10px; font-size: 14px; color: var(--ink-2); max-width: 70ch; }
+.raw-file { margin-top: 12px; background: var(--surface); border-radius: 10px; box-shadow: var(--shadow); padding: 10px 14px; }
+.raw-file > summary { font-family: var(--mono); font-size: 13px; color: var(--ink); display: flex; flex-wrap: wrap; gap: 4px 14px; align-items: baseline; }
+.raw-file > summary .what { font-family: var(--sans); color: var(--ink-3); font-size: 13px; }
+.raw-file pre {
+  margin: 10px 0 4px; max-height: 480px; overflow: auto;
+  font-family: var(--mono); font-size: 11.5px; line-height: 1.45; color: var(--ink-2);
+  background: var(--ground); border-radius: 6px; padding: 12px 14px; white-space: pre;
+}
+footer { margin-top: 48px; padding-top: 20px; border-top: 1px solid var(--rule); font-size: 13px; color: var(--ink-3); display: flex; flex-wrap: wrap; gap: 6px 24px; }
+
+@media (max-width: 880px) {
+  .findings { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 28px 0; }
+  .finding:nth-child(3) { border-left: 0; padding-left: 0; }
+  .masthead { grid-template-columns: 1fr; gap: 28px; }
+  .method { grid-template-columns: 1fr; }
+  .legend { margin-left: 0; }
+  .small-multiples { grid-template-columns: 1fr; }
+}
+@media (max-width: 480px) {
+  body { padding-inline: 16px; }
+  .masthead { padding-block: 36px 24px; }
+  .findings { grid-template-columns: 1fr; }
+  .finding, .finding:nth-child(3) { border-left: 0; padding-left: 0; }
+  .panel { padding: 16px 12px 10px; }
+  .ax { padding: 3px 6px; font-size: 11px; }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .seg label { transition: background 120ms ease, color 120ms ease; }
+}
+</style>
+
+<div class="page">
+  <header class="masthead">
+    <div>
+      <div class="eyebrow">imglib2 &middot; mixed-reshape branch &middot; JMH</div>
+      <h1>ReshapeViewBenchmark</h1>
+      <p class="dek">A fresh run of the view-iteration benchmark, re-measured against the run the <a href="#sep">earlier page</a> charted. Every number here is from one run on 2026&#8209;11&#8209;04; the September marks are shown only to say whether the result still holds.</p>
+      <div class="meta">
+        <span>300&times;300&times;40 IntType</span>
+        <span>3,600,000 elements</span>
+        <span>56 data points</span>
+        <span>JDK 21.0.3 &middot; JMH 1.37</span>
+        <span>avgt &middot; ms/op</span>
+        <span>2026-11-04</span>
+      </div>
+    </div>
+    <figure class="groups-fig">
+      <div class="groups" role="img" aria-label="split4d reshapes 300 by 300 by 40 into 300, 300, 8 by 5: two copy groups and one split">
+        <span class="row-name">view</span>
+        <div class="axes"><span class="ax">300</span></div>
+        <div class="axes"><span class="ax">300</span></div>
+        <div class="axes"><span class="ax">8</span><span class="ax">5</span></div>
+        <span></span>
+        <div class="link"></div><div class="link"></div><div class="link"></div>
+        <span class="row-name">image</span>
+        <div class="axes"><span class="ax img">300</span></div>
+        <div class="axes"><span class="ax img">300</span></div>
+        <div class="axes"><span class="ax img">40</span></div>
+        <span></span>
+        <span class="kind">copy</span><span class="kind">copy</span><span class="kind">split</span>
+      </div>
+      <figcaption class="groups-caption"><span class="mono">split4d</span> as <code>ReshapeTransform</code> groups. The benchmark sweeps this and five other view shapes.</figcaption>
+    </figure>
+  </header>
+
+  <div class="findings">
+    <div class="finding">
+      <div class="figure">54<small>of 56</small></div>
+      <div class="finding-title">The September result reproduces</div>
+      <p>Points within &plusmn;10&#37; of the earlier run, median +2.5&#37;. The two outliers are both <code>CellImg</code> rows with wide error bars.</p>
+    </div>
+    <div class="finding">
+      <div class="figure">2.1&times;<small>slower</small></div>
+      <div class="finding-title">LoopBuilder loses to the cursor, but only through a reshape <span class="chip">New</span></div>
+      <p>A reshaped <code>CellImg</code>: 39&ndash;41 ms under <code>LoopBuilder</code>, 19 ms through <code>view.cursor()</code>. With no view the two agree.</p>
+    </div>
+    <div class="finding">
+      <div class="figure">4.7&times;<small>vs raw</small></div>
+      <div class="finding-title">Full-position random access <span class="chip">Still open</span></div>
+      <p><code>ArrayImg</code> reshapes: 76&ndash;78 ms against 16.5 ms for the bare image. Unchanged since September.</p>
+    </div>
+    <div class="finding">
+      <div class="figure">free</div>
+      <div class="finding-title">A no-op reshape costs nothing</div>
+      <p><span class="mono">identity3d</span> runs at 2.22 ms against the bare image&#8217;s 2.32 ms &mdash; <code>TransformBuilder</code> really does delete it.</p>
+    </div>
+  </div>
+
+  <div class="filter" role="group" aria-label="Chart filter">
+    <span class="filter-label" id="img-label">Source image</span>
+    <div class="seg" role="radiogroup" aria-labelledby="img-label">
+      <input type="radio" name="img" id="img-array" value="ArrayImg" checked><label for="img-array">ArrayImg</label>
+      <input type="radio" name="img" id="img-cell" value="CellImg"><label for="img-cell">CellImg</label>
+    </div>
+    <div class="legend" aria-hidden="true">
+      <span class="key"><svg width="14" height="14"><circle cx="7" cy="7" r="4.6" fill="none" stroke="var(--before)" stroke-width="2.5"/></svg>Sept run</span>
+      <span class="key"><svg width="14" height="14"><circle cx="7" cy="7" r="5.5" fill="var(--now)"/></svg>this run</span>
+      <span class="key"><svg width="10" height="16"><line x1="5" y1="2" x2="5" y2="14" stroke="var(--ink)" stroke-width="2" stroke-linecap="round"/></svg>raw image, no view</span>
+    </div>
+  </div>
+
+  <section class="result" id="all">
+    <div class="section-head">
+      <h2>Every loop, every view shape</h2>
+      <p class="prose">Each row increments all 3.6 million elements once. The tick is the same loop over the bare image, so the right-hand figure is what the view costs as a multiple of no view at all. Four loops &times; six shapes &times; two image types; the bare image is the tick, not a row.</p>
+    </div>
+    <div class="shape-key">
+      <span><b>flat1d</b> {3600000}</span><span><b>merge2d</b> {90000,40}</span><span><b>split4d</b> {300,300,8,5}</span><span><b>identity3d</b> {300,300,40}</span><span><b>singleton4d</b> {300,300,1,40}</span><span><b>translate3d</b> Views.translate(img,1,2,3)</span>
+    </div>
+    <div class="panel"><div class="chart" id="chart-all"></div></div>
+    <p class="note"><strong>On <code>ArrayImg</code> the view shape does not matter.</strong> flat1d, merge2d and split4d all land within 3.07&ndash;3.40 ms for the three cursor loops, although merge2d divides per element and split4d does not. The cost is the cursor layer, not the reshape arithmetic &mdash; which is what <code>FlatIndexCursorBenchmark</code> concluded independently.</p>
+    <p class="note"><strong><code>singleton4d</code> and <code>translate3d</code> now match the genuine reshapes</strong> at about 3.2 ms. Both are <code>MixedTransform</code>s, and both take the flat-run path added for order-preserving Mixed transforms.</p>
+    <p class="note"><strong>On <code>CellImg</code>, asking for flat order is not free.</strong> With no view, <code>Views.flatIterable</code> costs 16.4 ms against the cell cursor&#8217;s 7.75 ms, because it must impose an order the image does not have. Once a reshape is present the view already forces flat order and the two agree at about 19 ms.</p>
+    <p class="note"><strong><code>randomAccessWalk</code> remains the exception.</strong> It calls <code>setPosition</code> with a full position for every pixel, the one pattern an incremental accessor cannot exploit, and costs 4.7&times; the bare image on <code>ArrayImg</code>. The cause of its gap against the other branch&#8217;s <code>TransformRandomAccess</code> is still not identified.</p>
+    <details>
+      <summary>Show the numbers</summary>
+      <div class="table-wrap"><table id="table-all"></table></div>
+    </details>
+  </section>
+
+  <section class="result" id="loopbuilder">
+    <div class="section-head">
+      <h2>LoopBuilder against the plain cursor</h2>
+      <p class="prose">The clearest new finding in this run, measured against <code>Views.iterable(v).cursor()</code> &mdash; the cursor a caller gets without asking for flat order. <span class="mono">none</span> and <span class="mono">identity3d</span> are the controls: no transform survives in either, and there the two agree. On an <code>ArrayImg</code> they agree for every shape, because <code>LoopBuilder.isFastCursor</code> recognises a <code>FlatIndexCursor</code> whose source is an array cursor. On a <code>CellImg</code> with a real reshape it does not: the flat-run path hands out a <code>FlatIndexCursor</code> wrapping a <code>RandomAccessibleIntervalCursor</code>, which is not on the fast list, so <code>LoopBuilder</code> falls back to its own random-access loop and pays twice over.</p>
+    </div>
+    <div class="legend" aria-hidden="true" style="margin: 0 0 12px 0;">
+      <span class="key"><svg width="14" height="14"><circle cx="7" cy="7" r="4.6" fill="none" stroke="var(--before)" stroke-width="2.5"/></svg>view.cursor()</span>
+      <span class="key"><svg width="14" height="14"><circle cx="7" cy="7" r="5.5" fill="var(--now)"/></svg>LoopBuilder</span>
+    </div>
+    <div class="panel"><div class="chart" id="chart-lb"></div></div>
+    <p class="note">The gap tracks how much work the fallback accessor does: 2.1&times; for the three genuine reshapes, 1.42&times; for <span class="mono">singleton4d</span> and 1.23&times; for <span class="mono">translate3d</span>, whose accessors are plain <code>MixedRandomAccess</code>es. With no view at all it is 1.24&times; with overlapping error bars, and for <span class="mono">identity3d</span>, where the transform is deleted outright, 1.16&times;.</p>
+    <p class="note"><strong>The baseline matters here.</strong> Measured instead against <code>Views.flatIterable(v).cursor()</code>, <code>LoopBuilder</code> would look 1.7&times; <em>faster</em> on an un-viewed <code>CellImg</code> &mdash; not because it is quick, but because forcing flat order on a <code>CellImg</code> that needs none costs about 2&times; by itself (7.75 &rarr; 16.42 ms). Through a reshape the two cursors agree to within noise, so for the rows that carry the finding the choice of baseline changes nothing.</p>
+    <p class="note">This is a <code>LoopBuilder</code> whitelist question, not a reshape one: a caller reshaping a <code>CellImg</code> is better off today writing the cursor loop by hand. Not yet investigated.</p>
+    <details>
+      <summary>Show the numbers</summary>
+      <div class="table-wrap"><table id="table-lb"></table></div>
+    </details>
+  </section>
+
+  <section class="result" id="sep">
+    <div class="section-head">
+      <h2>Against the September run</h2>
+      <p class="prose">Same benchmark, same code, same machine, 54 days apart. Nothing in <code>src/main</code> changed in between except a javadoc edit, so this is a reproducibility check rather than a measurement of any change.</p>
+    </div>
+    <div class="panel"><div class="chart" id="chart-drift"></div></div>
+    <p class="note">This run is slightly slower across the board &mdash; median +2.5&#37;, and 48 of 56 points are above the September value. A uniform shift like that is machine state, not code: this is a 12th-gen mobile i7 with performance and efficiency cores and no pinning, so thermal and scheduling drift of a few percent between sessions is expected. The two points outside &plusmn;10&#37; are <span class="mono">loopBuilder&nbsp;/ CellImg&nbsp;/ translate3d</span> (+20&#37;) and <span class="mono">flatIterableCursor&nbsp;/ CellImg&nbsp;/ merge2d</span> (+10.5&#37;), both with error bars wide enough to cover the difference.</p>
+  </section>
+
+  <section class="result" id="method">
+    <div class="section-head">
+      <h2>How this was measured</h2>
+    </div>
+    <div class="method">
+      <dl class="spec">
+        <dt>source</dt><dd><span class="mono">src/test/java/net/imglib2/view/ReshapeViewBenchmark.java</span></dd>
+        <dt>harness</dt><dd>JMH 1.37 on JDK 21.0.3 (Zulu), average time, 5 &times; 100 ms warmup, 5 &times; 200 ms measurement, 1 fork per parameter set, single-threaded</dd>
+        <dt>machine</dt><dd>12th Gen Intel Core i7-1280P, 20 threads, 30 GB. Not pinned, not isolated, no CPU governor control</dd>
+        <dt>image</dt><dd>300 &times; 300 &times; 40 <code>IntType</code>, about 14 MB &mdash; out of cache. <code>CellImg</code> cells are 64 &times; 64 &times; 8, deliberately ragged against the image</dd>
+        <dt>operation</dt><dd><code>t.inc()</code> per element and nothing else, so the loop and the view are what is timed. No <code>Blackhole</code>: the increments land in the image&#8217;s own array, which stays reachable, so they cannot be elided</dd>
+        <dt>loops</dt><dd><code>Views.flatIterable(v).cursor()</code>, <code>Views.iterable(v).cursor()</code>, <code>LoopBuilder.forEachPixel</code>, and a <code>RandomAccess</code> driven over every position by a <code>LocalizingIntervalIterator</code></dd>
+        <dt>self-check</dt><dd>Before timing, all 56 combinations run once over a 5 &times; 4 &times; 6 image and every element of the underlying image must be exactly 1. A loop that silently skipped elements would otherwise report a fake speedup. It passed &mdash; see the first line of the raw output</dd>
+        <dt>caveats</dt><dd>Cursor and loop construction is inside the timed method, so each number includes one <code>TransformBuilder</code> setup amortized over 3.6 M elements. Error is JMH&#8217;s 99.9&#37; confidence interval and reaches &plusmn;6.9 ms on the random-access rows and &plusmn;5.7 ms on <code>CellImg</code></dd>
+      </dl>
+      <ol class="runs">
+        <li><b>Reproduce it.</b> <span class="mono">mvn -o clean test-compile</span>, then run the benchmark&#8217;s <span class="mono">main()</span>. The clean is not optional: an incremental test-compile truncates JMH&#8217;s <span class="mono">BenchmarkList</span> and the run silently finds no benchmarks.</li>
+        <li><b>Read the raw output below</b> for per-iteration numbers. The summary table the charts are parsed from is at the very end of the file.</li>
+        <li><b>The September run</b> and the blocks benchmark are on the earlier page, together with the comparison against the <code>ReshapeView</code> branch.</li>
+      </ol>
+    </div>
+  </section>
+
+  <details class="raw-root" id="raw">
+    <summary>Raw JMH output<span class="count">1 file &middot; 75 KB</span></summary>
+    <p class="raw-intro">The complete console output of the run, unedited: the self-check line, JMH&#8217;s configuration banner, every warmup and measurement iteration for all 56 parameter sets, and the summary table at the end. The charts above are parsed from that table.</p>
+    <details class="raw-file" id="raw-0">
+      <summary><span>bench-view4.txt</span><span class="what">ReshapeViewBenchmark &middot; 2026-11-04 &middot; 1,978 lines</span></summary>
+      <pre>Picked up _JAVA_OPTIONS: -Dsun.awt.disablegrab=true
+selfCheck: OK
+# JMH version: 1.37
+# VM version: JDK 21.0.3, OpenJDK 64-Bit Server VM, 21.0.3+9-LTS
+# VM invoker: /usr/lib/jvm/zulu-21-amd64/bin/java
+# VM options: -Dsun.awt.disablegrab=true
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 5 iterations, 100 ms each
+# Measurement: 5 iterations, 200 ms each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: net.imglib2.view.ReshapeViewBenchmark.flatIterableCursor
+# Parameters: (imgType = ArrayImg, viewShape = none)
+
+# Run progress: 0.00% complete, ETA 00:01:24
+# Fork: 1 of 1
+Picked up _JAVA_OPTIONS: -Dsun.awt.disablegrab=true
+# Warmup Iteration   1: 2.490 ms/op
+# Warmup Iteration   2: 2.295 ms/op
+# Warmup Iteration   3: 2.155 ms/op
+# Warmup Iteration   4: 2.069 ms/op
+# Warmup Iteration   5: 2.148 ms/op
+Iteration   1: 2.465 ms/op
+Iteration   2: 2.477 ms/op
+Iteration   3: 2.342 ms/op
+Iteration   4: 2.152 ms/op
+Iteration   5: 2.158 ms/op
+
+
+Result &quot;net.imglib2.view.ReshapeViewBenchmark.flatIterableCursor&quot;:
+  2.319 ±(99.9%) 0.611 ms/op [Average]
+  (min, avg, max) = (2.152, 2.319, 2.477), stdev = 0.159
+  CI (99.9%): [1.707, 2.930] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 21.0.3, OpenJDK 64-Bit Server VM, 21.0.3+9-LTS
+# VM invoker: /usr/lib/jvm/zulu-21-amd64/bin/java
+# VM options: -Dsun.awt.disablegrab=true
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 5 iterations, 100 ms each
+# Measurement: 5 iterations, 200 ms each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: net.imglib2.view.ReshapeViewBenchmark.flatIterableCursor
+# Parameters: (imgType = ArrayImg, viewShape = flat1d)
+
+# Run progress: 1.79% complete, ETA 00:01:37
+# Fork: 1 of 1
+Picked up _JAVA_OPTIONS: -Dsun.awt.disablegrab=true
+# Warmup Iteration   1: 3.537 ms/op
+# Warmup Iteration   2: 3.241 ms/op
+# Warmup Iteration   3: 3.068 ms/op
+# Warmup Iteration   4: 3.148 ms/op
+# Warmup Iteration   5: 3.134 ms/op
+Iteration   1: 3.066 ms/op
+Iteration   2: 2.903 ms/op
+Iteration   3: 3.049 ms/op
+Iteration   4: 3.225 ms/op
+Iteration   5: 3.155 ms/op
+
+
+Result &quot;net.imglib2.view.ReshapeViewBenchmark.flatIterableCursor&quot;:
+  3.080 ±(99.9%) 0.469 ms/op [Average]
+  (min, avg, max) = (2.903, 3.080, 3.225), stdev = 0.122
+  CI (99.9%): [2.611, 3.548] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 21.0.3, OpenJDK 64-Bit Server VM, 21.0.3+9-LTS
+# VM invoker: /usr/lib/jvm/zulu-21-amd64/bin/java
+# VM options: -Dsun.awt.disablegrab=true
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 5 iterations, 100 ms each
+# Measurement: 5 iterations, 200 ms each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: net.imglib2.view.ReshapeViewBenchmark.flatIterableCursor
+# Parameters: (imgType = ArrayImg, viewShape = merge2d)
+
+# Run progress: 3.57% complete, ETA 00:01:34
+# Fork: 1 of 1
+Picked up _JAVA_OPTIONS: -Dsun.awt.disablegrab=true
+# Warmup Iteration   1: 3.749 ms/op
+# Warmup Iteration   2: 3.237 ms/op
+# Warmup Iteration   3: 3.124 ms/op
+# Warmup Iteration   4: 3.114 ms/op
+# Warmup Iteration   5: 3.103 ms/op
+Iteration   1: 3.229 ms/op
+Iteration   2: 3.880 ms/op
+Iteration   3: 3.318 ms/op
+Iteration   4: 3.350 ms/op
+Iteration   5: 3.207 ms/op
+
+
+Result &quot;net.imglib2.view.ReshapeViewBenchmark.flatIterableCursor&quot;:
+  3.397 ±(99.9%) 1.065 ms/op [Average]
+  (min, avg, max) = (3.207, 3.397, 3.880), stdev = 0.277
+  CI (99.9%): [2.331, 4.462] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 21.0.3, OpenJDK 64-Bit Server VM, 21.0.3+9-LTS
+# VM invoker: /usr/lib/jvm/zulu-21-amd64/bin/java
+# VM options: -Dsun.awt.disablegrab=true
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 5 iterations, 100 ms each
+# Measurement: 5 iterations, 200 ms each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: net.imglib2.view.ReshapeViewBenchmark.flatIterableCursor
+# Parameters: (imgType = ArrayImg, viewShape = identity3d)
+
+# Run progress: 5.36% complete, ETA 00:01:32
+# Fork: 1 of 1
+Picked up _JAVA_OPTIONS: -Dsun.awt.disablegrab=true
+# Warmup Iteration   1: 2.550 ms/op
+# Warmup Iteration   2: 2.194 ms/op
+# Warmup Iteration   3: 2.215 ms/op
+# Warmup Iteration   4: 2.181 ms/op
+# Warmup Iteration   5: 2.068 ms/op
+Iteration   1: 2.149 ms/op
+Iteration   2: 2.143 ms/op
+Iteration   3: 2.226 ms/op
+Iteration   4: 2.258 ms/op
+Iteration   5: 2.313 ms/op
+
+
+Result &quot;net.imglib2.view.ReshapeViewBenchmark.flatIterableCursor&quot;:
+  2.218 ±(99.9%) 0.279 ms/op [Average]
+  (min, avg, max) = (2.143, 2.218, 2.313), stdev = 0.072
+  CI (99.9%): [1.939, 2.497] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 21.0.3, OpenJDK 64-Bit Server VM, 21.0.3+9-LTS
+# VM invoker: /usr/lib/jvm/zulu-21-amd64/bin/java
+# VM options: -Dsun.awt.disablegrab=true
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 5 iterations, 100 ms each
+# Measurement: 5 iterations, 200 ms each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: net.imglib2.view.ReshapeViewBenchmark.flatIterableCursor
+# Parameters: (imgType = ArrayImg, viewShape = split4d)
+
+# Run progress: 7.14% complete, ETA 00:01:30
+# Fork: 1 of 1
+Picked up _JAVA_OPTIONS: -Dsun.awt.disablegrab=true
+# Warmup Iteration   1: 3.892 ms/op
+# Warmup Iteration   2: 3.157 ms/op
+# Warmup Iteration   3: 3.070 ms/op
+# Warmup Iteration   4: 3.066 ms/op
+# Warmup Iteration   5: 3.138 ms/op
+Iteration   1: 3.052 ms/op
+Iteration   2: 3.329 ms/op
+Iteration   3: 3.265 ms/op
+Iteration   4: 3.167 ms/op
+Iteration   5: 3.086 ms/op
+
+
+Result &quot;net.imglib2.view.ReshapeViewBenchmark.flatIterableCursor&quot;:
+  3.180 ±(99.9%) 0.452 ms/op [Average]
+  (min, avg, max) = (3.052, 3.180, 3.329), stdev = 0.117
+  CI (99.9%): [2.728, 3.631] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 21.0.3, OpenJDK 64-Bit Server VM, 21.0.3+9-LTS
+# VM invoker: /usr/lib/jvm/zulu-21-amd64/bin/java
+# VM options: -Dsun.awt.disablegrab=true
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 5 iterations, 100 ms each
+# Measurement: 5 iterations, 200 ms each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: net.imglib2.view.ReshapeViewBenchmark.flatIterableCursor
+# Parameters: (imgType = ArrayImg, viewShape = singleton4d)
+
+# Run progress: 8.93% complete, ETA 00:01:28
+# Fork: 1 of 1
+Picked up _JAVA_OPTIONS: -Dsun.awt.disablegrab=true
+# Warmup Iteration   1: 4.287 ms/op
+# Warmup Iteration   2: 3.095 ms/op
+# Warmup Iteration   3: 3.164 ms/op
+# Warmup Iteration   4: 3.138 ms/op
+# Warmup Iteration   5: 3.277 ms/op
+Iteration   1: 3.249 ms/op
+Iteration   2: 3.205 ms/op
+Iteration   3: 2.985 ms/op
+Iteration   4: 3.156 ms/op
+Iteration   5: 3.175 ms/op
+
+
+Result &quot;net.imglib2.view.ReshapeViewBenchmark.flatIterableCursor&quot;:
+  3.154 ±(99.9%) 0.388 ms/op [Average]
+  (min, avg, max) = (2.985, 3.154, 3.249), stdev = 0.101
+  CI (99.9%): [2.766, 3.542] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 21.0.3, OpenJDK 64-Bit Server VM, 21.0.3+9-LTS
+# VM invoker: /usr/lib/jvm/zulu-21-amd64/bin/java
+# VM options: -Dsun.awt.disablegrab=true
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 5 iterations, 100 ms each
+# Measurement: 5 iterations, 200 ms each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: net.imglib2.view.ReshapeViewBenchmark.flatIterableCursor
+# Parameters: (imgType = ArrayImg, viewShape = translate3d)
+
+# Run progress: 10.71% complete, ETA 00:01:26
+# Fork: 1 of 1
+Picked up _JAVA_OPTIONS: -Dsun.awt.disablegrab=true
+# Warmup Iteration   1: 3.764 ms/op
+# Warmup Iteration   2: 3.224 ms/op
+# Warmup Iteration   3: 3.241 ms/op
+# Warmup Iteration   4: 3.167 ms/op
+# Warmup Iteration   5: 3.181 ms/op
+Iteration   1: 3.291 ms/op
+Iteration   2: 3.269 ms/op
+Iteration   3: 3.191 ms/op
+Iteration   4: 3.184 ms/op
+Iteration   5: 3.122 ms/op
+
+
+Result &quot;net.imglib2.view.ReshapeViewBenchmark.flatIterableCursor&quot;:
+  3.212 ±(99.9%) 0.263 ms/op [Average]
+  (min, avg, max) = (3.122, 3.212, 3.291), stdev = 0.068
+  CI (99.9%): [2.948, 3.475] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 21.0.3, OpenJDK 64-Bit Server VM, 21.0.3+9-LTS
+# VM invoker: /usr/lib/jvm/zulu-21-amd64/bin/java
+# VM options: -Dsun.awt.disablegrab=true
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 5 iterations, 100 ms each
+# Measurement: 5 iterations, 200 ms each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: net.imglib2.view.ReshapeViewBenchmark.flatIterableCursor
+# Parameters: (imgType = CellImg, viewShape = none)
+
+# Run progress: 12.50% complete, ETA 00:01:24
+# Fork: 1 of 1
+Picked up _JAVA_OPTIONS: -Dsun.awt.disablegrab=true
+# Warmup Iteration   1: 20.809 ms/op
+# Warmup Iteration   2: 15.472 ms/op
+# Warmup Iteration   3: 15.961 ms/op
+# Warmup Iteration   4: 15.505 ms/op
+# Warmup Iteration   5: 16.099 ms/op
+Iteration   1: 16.528 ms/op
+Iteration   2: 15.408 ms/op
+Iteration   3: 15.508 ms/op
+Iteration   4: 17.713 ms/op
+Iteration   5: 16.938 ms/op
+
+
+Result &quot;net.imglib2.view.ReshapeViewBenchmark.flatIterableCursor&quot;:
+  16.419 ±(99.9%) 3.757 ms/op [Average]
+  (min, avg, max) = (15.408, 16.419, 17.713), stdev = 0.976
+  CI (99.9%): [12.662, 20.176] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 21.0.3, OpenJDK 64-Bit Server VM, 21.0.3+9-LTS
+# VM invoker: /usr/lib/jvm/zulu-21-amd64/bin/java
+# VM options: -Dsun.awt.disablegrab=true
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 5 iterations, 100 ms each
+# Measurement: 5 iterations, 200 ms each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: net.imglib2.view.ReshapeViewBenchmark.flatIterableCursor
+# Parameters: (imgType = CellImg, viewShape = flat1d)
+
+# Run progress: 14.29% complete, ETA 00:01:23
+# Fork: 1 of 1
+Picked up _JAVA_OPTIONS: -Dsun.awt.disablegrab=true
+# Warmup Iteration   1: 25.783 ms/op
+# Warmup Iteration   2: 18.193 ms/op
+# Warmup Iteration   3: 18.417 ms/op
+# Warmup Iteration   4: 18.497 ms/op
+# Warmup Iteration   5: 18.691 ms/op
+Iteration   1: 18.952 ms/op
+Iteration   2: 18.635 ms/op
+Iteration   3: 18.940 ms/op
+Iteration   4: 18.202 ms/op
+Iteration   5: 20.875 ms/op
+
+
+Result &quot;net.imglib2.view.ReshapeViewBenchmark.flatIterableCursor&quot;:
+  19.121 ±(99.9%) 3.955 ms/op [Average]
+  (min, avg, max) = (18.202, 19.121, 20.875), stdev = 1.027
+  CI (99.9%): [15.166, 23.076] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 21.0.3, OpenJDK 64-Bit Server VM, 21.0.3+9-LTS
+# VM invoker: /usr/lib/jvm/zulu-21-amd64/bin/java
+# VM options: -Dsun.awt.disablegrab=true
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 5 iterations, 100 ms each
+# Measurement: 5 iterations, 200 ms each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: net.imglib2.view.ReshapeViewBenchmark.flatIterableCursor
+# Parameters: (imgType = CellImg, viewShape = merge2d)
+
+# Run progress: 16.07% complete, ETA 00:01:22
+# Fork: 1 of 1
+Picked up _JAVA_OPTIONS: -Dsun.awt.disablegrab=true
+# Warmup Iteration   1: 23.499 ms/op
+# Warmup Iteration   2: 19.321 ms/op
+# Warmup Iteration   3: 19.757 ms/op
+# Warmup Iteration   4: 19.856 ms/op
+# Warmup Iteration   5: 18.924 ms/op
+Iteration   1: 19.045 ms/op
+Iteration   2: 19.870 ms/op
+Iteration   3: 20.283 ms/op
+Iteration   4: 20.111 ms/op
+Iteration   5: 19.605 ms/op
+
+
+Result &quot;net.imglib2.view.ReshapeViewBenchmark.flatIterableCursor&quot;:
+  19.783 ±(99.9%) 1.868 ms/op [Average]
+  (min, avg, max) = (19.045, 19.783, 20.283), stdev = 0.485
+  CI (99.9%): [17.915, 21.651] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 21.0.3, OpenJDK 64-Bit Server VM, 21.0.3+9-LTS
+# VM invoker: /usr/lib/jvm/zulu-21-amd64/bin/java
+# VM options: -Dsun.awt.disablegrab=true
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 5 iterations, 100 ms each
+# Measurement: 5 iterations, 200 ms each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: net.imglib2.view.ReshapeViewBenchmark.flatIterableCursor
+# Parameters: (imgType = CellImg, viewShape = identity3d)
+
+# Run progress: 17.86% complete, ETA 00:01:20
+# Fork: 1 of 1
+Picked up _JAVA_OPTIONS: -Dsun.awt.disablegrab=true
+# Warmup Iteration   1: 21.820 ms/op
+# Warmup Iteration   2: 17.068 ms/op
+# Warmup Iteration   3: 17.131 ms/op
+# Warmup Iteration   4: 17.749 ms/op
+# Warmup Iteration   5: 17.687 ms/op
+Iteration   1: 17.168 ms/op
+Iteration   2: 16.372 ms/op
+Iteration   3: 17.390 ms/op
+Iteration   4: 16.737 ms/op
+Iteration   5: 16.538 ms/op
+
+
+Result &quot;net.imglib2.view.ReshapeViewBenchmark.flatIterableCursor&quot;:
+  16.841 ±(99.9%) 1.646 ms/op [Average]
+  (min, avg, max) = (16.372, 16.841, 17.390), stdev = 0.428
+  CI (99.9%): [15.195, 18.487] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 21.0.3, OpenJDK 64-Bit Server VM, 21.0.3+9-LTS
+# VM invoker: /usr/lib/jvm/zulu-21-amd64/bin/java
+# VM options: -Dsun.awt.disablegrab=true
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 5 iterations, 100 ms each
+# Measurement: 5 iterations, 200 ms each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: net.imglib2.view.ReshapeViewBenchmark.flatIterableCursor
+# Parameters: (imgType = CellImg, viewShape = split4d)
+
+# Run progress: 19.64% complete, ETA 00:01:19
+# Fork: 1 of 1
+Picked up _JAVA_OPTIONS: -Dsun.awt.disablegrab=true
+# Warmup Iteration   1: 25.848 ms/op
+# Warmup Iteration   2: 18.644 ms/op
+# Warmup Iteration   3: 19.344 ms/op
+# Warmup Iteration   4: 19.387 ms/op
+# Warmup Iteration   5: 20.158 ms/op
+Iteration   1: 19.208 ms/op
+Iteration   2: 18.627 ms/op
+Iteration   3: 18.047 ms/op
+Iteration   4: 18.755 ms/op
+Iteration   5: 19.294 ms/op
+
+
+Result &quot;net.imglib2.view.ReshapeViewBenchmark.flatIterableCursor&quot;:
+  18.786 ±(99.9%) 1.933 ms/op [Average]
+  (min, avg, max) = (18.047, 18.786, 19.294), stdev = 0.502
+  CI (99.9%): [16.854, 20.719] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 21.0.3, OpenJDK 64-Bit Server VM, 21.0.3+9-LTS
+# VM invoker: /usr/lib/jvm/zulu-21-amd64/bin/java
+# VM options: -Dsun.awt.disablegrab=true
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 5 iterations, 100 ms each
+# Measurement: 5 iterations, 200 ms each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: net.imglib2.view.ReshapeViewBenchmark.flatIterableCursor
+# Parameters: (imgType = CellImg, viewShape = singleton4d)
+
+# Run progress: 21.43% complete, ETA 00:01:17
+# Fork: 1 of 1
+Picked up _JAVA_OPTIONS: -Dsun.awt.disablegrab=true
+# Warmup Iteration   1: 23.235 ms/op
+# Warmup Iteration   2: 17.135 ms/op
+# Warmup Iteration   3: 18.389 ms/op
+# Warmup Iteration   4: 21.594 ms/op
+# Warmup Iteration   5: 18.793 ms/op
+Iteration   1: 19.252 ms/op
+Iteration   2: 19.284 ms/op
+Iteration   3: 18.929 ms/op
+Iteration   4: 19.431 ms/op
+Iteration   5: 18.862 ms/op
+
+
+Result &quot;net.imglib2.view.ReshapeViewBenchmark.flatIterableCursor&quot;:
+  19.152 ±(99.9%) 0.942 ms/op [Average]
+  (min, avg, max) = (18.862, 19.152, 19.431), stdev = 0.245
+  CI (99.9%): [18.210, 20.093] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 21.0.3, OpenJDK 64-Bit Server VM, 21.0.3+9-LTS
+# VM invoker: /usr/lib/jvm/zulu-21-amd64/bin/java
+# VM options: -Dsun.awt.disablegrab=true
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 5 iterations, 100 ms each
+# Measurement: 5 iterations, 200 ms each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: net.imglib2.view.ReshapeViewBenchmark.flatIterableCursor
+# Parameters: (imgType = CellImg, viewShape = translate3d)
+
+# Run progress: 23.21% complete, ETA 00:01:16
+# Fork: 1 of 1
+Picked up _JAVA_OPTIONS: -Dsun.awt.disablegrab=true
+# Warmup Iteration   1: 23.730 ms/op
+# Warmup Iteration   2: 18.468 ms/op
+# Warmup Iteration   3: 19.141 ms/op
+# Warmup Iteration   4: 18.961 ms/op
+# Warmup Iteration   5: 19.112 ms/op
+Iteration   1: 20.193 ms/op
+Iteration   2: 21.036 ms/op
+Iteration   3: 18.740 ms/op
+Iteration   4: 18.204 ms/op
+Iteration   5: 18.365 ms/op
+
+
+Result &quot;net.imglib2.view.ReshapeViewBenchmark.flatIterableCursor&quot;:
+  19.308 ±(99.9%) 4.794 ms/op [Average]
+  (min, avg, max) = (18.204, 19.308, 21.036), stdev = 1.245
+  CI (99.9%): [14.514, 24.102] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 21.0.3, OpenJDK 64-Bit Server VM, 21.0.3+9-LTS
+# VM invoker: /usr/lib/jvm/zulu-21-amd64/bin/java
+# VM options: -Dsun.awt.disablegrab=true
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 5 iterations, 100 ms each
+# Measurement: 5 iterations, 200 ms each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: net.imglib2.view.ReshapeViewBenchmark.loopBuilder
+# Parameters: (imgType = ArrayImg, viewShape = none)
+
+# Run progress: 25.00% complete, ETA 00:01:14
+# Fork: 1 of 1
+Picked up _JAVA_OPTIONS: -Dsun.awt.disablegrab=true
+# Warmup Iteration   1: 3.213 ms/op
+# Warmup Iteration   2: 2.274 ms/op
+# Warmup Iteration   3: 2.318 ms/op
+# Warmup Iteration   4: 2.385 ms/op
+# Warmup Iteration   5: 2.183 ms/op
+Iteration   1: 2.297 ms/op
+Iteration   2: 2.347 ms/op
+Iteration   3: 2.363 ms/op
+Iteration   4: 2.350 ms/op
+Iteration   5: 2.350 ms/op
+
+
+Result &quot;net.imglib2.view.ReshapeViewBenchmark.loopBuilder&quot;:
+  2.341 ±(99.9%) 0.098 ms/op [Average]
+  (min, avg, max) = (2.297, 2.341, 2.363), stdev = 0.026
+  CI (99.9%): [2.243, 2.440] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 21.0.3, OpenJDK 64-Bit Server VM, 21.0.3+9-LTS
+# VM invoker: /usr/lib/jvm/zulu-21-amd64/bin/java
+# VM options: -Dsun.awt.disablegrab=true
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 5 iterations, 100 ms each
+# Measurement: 5 iterations, 200 ms each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: net.imglib2.view.ReshapeViewBenchmark.loopBuilder
+# Parameters: (imgType = ArrayImg, viewShape = flat1d)
+
+# Run progress: 26.79% complete, ETA 00:01:12
+# Fork: 1 of 1
+Picked up _JAVA_OPTIONS: -Dsun.awt.disablegrab=true
+# Warmup Iteration   1: 4.660 ms/op
+# Warmup Iteration   2: 3.195 ms/op
+# Warmup Iteration   3: 3.233 ms/op
+# Warmup Iteration   4: 3.247 ms/op
+# Warmup Iteration   5: 3.287 ms/op
+Iteration   1: 3.388 ms/op
+Iteration   2: 3.303 ms/op
+Iteration   3: 3.365 ms/op
+Iteration   4: 3.323 ms/op
+Iteration   5: 3.260 ms/op
+
+
+Result &quot;net.imglib2.view.ReshapeViewBenchmark.loopBuilder&quot;:
+  3.328 ±(99.9%) 0.195 ms/op [Average]
+  (min, avg, max) = (3.260, 3.328, 3.388), stdev = 0.051
+  CI (99.9%): [3.133, 3.523] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 21.0.3, OpenJDK 64-Bit Server VM, 21.0.3+9-LTS
+# VM invoker: /usr/lib/jvm/zulu-21-amd64/bin/java
+# VM options: -Dsun.awt.disablegrab=true
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 5 iterations, 100 ms each
+# Measurement: 5 iterations, 200 ms each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: net.imglib2.view.ReshapeViewBenchmark.loopBuilder
+# Parameters: (imgType = ArrayImg, viewShape = merge2d)
+
+# Run progress: 28.57% complete, ETA 00:01:10
+# Fork: 1 of 1
+Picked up _JAVA_OPTIONS: -Dsun.awt.disablegrab=true
+# Warmup Iteration   1: 5.043 ms/op
+# Warmup Iteration   2: 3.533 ms/op
+# Warmup Iteration   3: 3.467 ms/op
+# Warmup Iteration   4: 3.346 ms/op
+# Warmup Iteration   5: 3.397 ms/op
+Iteration   1: 3.275 ms/op
+Iteration   2: 3.333 ms/op
+Iteration   3: 3.258 ms/op
+Iteration   4: 3.063 ms/op
+Iteration   5: 3.162 ms/op
+
+
+Result &quot;net.imglib2.view.ReshapeViewBenchmark.loopBuilder&quot;:
+  3.218 ±(99.9%) 0.409 ms/op [Average]
+  (min, avg, max) = (3.063, 3.218, 3.333), stdev = 0.106
+  CI (99.9%): [2.809, 3.628] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 21.0.3, OpenJDK 64-Bit Server VM, 21.0.3+9-LTS
+# VM invoker: /usr/lib/jvm/zulu-21-amd64/bin/java
+# VM options: -Dsun.awt.disablegrab=true
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 5 iterations, 100 ms each
+# Measurement: 5 iterations, 200 ms each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: net.imglib2.view.ReshapeViewBenchmark.loopBuilder
+# Parameters: (imgType = ArrayImg, viewShape = identity3d)
+
+# Run progress: 30.36% complete, ETA 00:01:08
+# Fork: 1 of 1
+Picked up _JAVA_OPTIONS: -Dsun.awt.disablegrab=true
+# Warmup Iteration   1: 3.397 ms/op
+# Warmup Iteration   2: 2.361 ms/op
+# Warmup Iteration   3: 2.370 ms/op
+# Warmup Iteration   4: 2.380 ms/op
+# Warmup Iteration   5: 2.178 ms/op
+Iteration   1: 2.237 ms/op
+Iteration   2: 2.208 ms/op
+Iteration   3: 2.247 ms/op
+Iteration   4: 2.288 ms/op
+Iteration   5: 2.290 ms/op
+
+
+Result &quot;net.imglib2.view.ReshapeViewBenchmark.loopBuilder&quot;:
+  2.254 ±(99.9%) 0.135 ms/op [Average]
+  (min, avg, max) = (2.208, 2.254, 2.290), stdev = 0.035
+  CI (99.9%): [2.119, 2.389] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 21.0.3, OpenJDK 64-Bit Server VM, 21.0.3+9-LTS
+# VM invoker: /usr/lib/jvm/zulu-21-amd64/bin/java
+# VM options: -Dsun.awt.disablegrab=true
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 5 iterations, 100 ms each
+# Measurement: 5 iterations, 200 ms each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: net.imglib2.view.ReshapeViewBenchmark.loopBuilder
+# Parameters: (imgType = ArrayImg, viewShape = split4d)
+
+# Run progress: 32.14% complete, ETA 00:01:06
+# Fork: 1 of 1
+Picked up _JAVA_OPTIONS: -Dsun.awt.disablegrab=true
+# Warmup Iteration   1: 4.256 ms/op
+# Warmup Iteration   2: 3.194 ms/op
+# Warmup Iteration   3: 3.129 ms/op
+# Warmup Iteration   4: 3.198 ms/op
+# Warmup Iteration   5: 3.248 ms/op
+Iteration   1: 3.146 ms/op
+Iteration   2: 3.114 ms/op
+Iteration   3: 3.123 ms/op
+Iteration   4: 3.122 ms/op
+Iteration   5: 3.192 ms/op
+
+
+Result &quot;net.imglib2.view.ReshapeViewBenchmark.loopBuilder&quot;:
+  3.139 ±(99.9%) 0.122 ms/op [Average]
+  (min, avg, max) = (3.114, 3.139, 3.192), stdev = 0.032
+  CI (99.9%): [3.018, 3.261] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 21.0.3, OpenJDK 64-Bit Server VM, 21.0.3+9-LTS
+# VM invoker: /usr/lib/jvm/zulu-21-amd64/bin/java
+# VM options: -Dsun.awt.disablegrab=true
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 5 iterations, 100 ms each
+# Measurement: 5 iterations, 200 ms each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: net.imglib2.view.ReshapeViewBenchmark.loopBuilder
+# Parameters: (imgType = ArrayImg, viewShape = singleton4d)
+
+# Run progress: 33.93% complete, ETA 00:01:05
+# Fork: 1 of 1
+Picked up _JAVA_OPTIONS: -Dsun.awt.disablegrab=true
+# Warmup Iteration   1: 4.482 ms/op
+# Warmup Iteration   2: 3.328 ms/op
+# Warmup Iteration   3: 3.228 ms/op
+# Warmup Iteration   4: 3.190 ms/op
+# Warmup Iteration   5: 3.292 ms/op
+Iteration   1: 3.217 ms/op
+Iteration   2: 3.168 ms/op
+Iteration   3: 3.166 ms/op
+Iteration   4: 3.297 ms/op
+Iteration   5: 3.127 ms/op
+
+
+Result &quot;net.imglib2.view.ReshapeViewBenchmark.loopBuilder&quot;:
+  3.195 ±(99.9%) 0.251 ms/op [Average]
+  (min, avg, max) = (3.127, 3.195, 3.297), stdev = 0.065
+  CI (99.9%): [2.944, 3.446] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 21.0.3, OpenJDK 64-Bit Server VM, 21.0.3+9-LTS
+# VM invoker: /usr/lib/jvm/zulu-21-amd64/bin/java
+# VM options: -Dsun.awt.disablegrab=true
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 5 iterations, 100 ms each
+# Measurement: 5 iterations, 200 ms each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: net.imglib2.view.ReshapeViewBenchmark.loopBuilder
+# Parameters: (imgType = ArrayImg, viewShape = translate3d)
+
+# Run progress: 35.71% complete, ETA 00:01:03
+# Fork: 1 of 1
+Picked up _JAVA_OPTIONS: -Dsun.awt.disablegrab=true
+# Warmup Iteration   1: 4.595 ms/op
+# Warmup Iteration   2: 3.242 ms/op
+# Warmup Iteration   3: 3.136 ms/op
+# Warmup Iteration   4: 3.237 ms/op
+# Warmup Iteration   5: 3.185 ms/op
+Iteration   1: 3.184 ms/op
+Iteration   2: 3.133 ms/op
+Iteration   3: 3.206 ms/op
+Iteration   4: 3.205 ms/op
+Iteration   5: 3.196 ms/op
+
+
+Result &quot;net.imglib2.view.ReshapeViewBenchmark.loopBuilder&quot;:
+  3.185 ±(99.9%) 0.117 ms/op [Average]
+  (min, avg, max) = (3.133, 3.185, 3.206), stdev = 0.030
+  CI (99.9%): [3.068, 3.302] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 21.0.3, OpenJDK 64-Bit Server VM, 21.0.3+9-LTS
+# VM invoker: /usr/lib/jvm/zulu-21-amd64/bin/java
+# VM options: -Dsun.awt.disablegrab=true
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 5 iterations, 100 ms each
+# Measurement: 5 iterations, 200 ms each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: net.imglib2.view.ReshapeViewBenchmark.loopBuilder
+# Parameters: (imgType = CellImg, viewShape = none)
+
+# Run progress: 37.50% complete, ETA 00:01:01
+# Fork: 1 of 1
+Picked up _JAVA_OPTIONS: -Dsun.awt.disablegrab=true
+# Warmup Iteration   1: 11.186 ms/op
+# Warmup Iteration   2: 9.217 ms/op
+# Warmup Iteration   3: 9.282 ms/op
+# Warmup Iteration   4: 9.240 ms/op
+# Warmup Iteration   5: 9.441 ms/op
+Iteration   1: 9.316 ms/op
+Iteration   2: 9.320 ms/op
+Iteration   3: 9.328 ms/op
+Iteration   4: 10.717 ms/op
+Iteration   5: 9.279 ms/op
+
+
+Result &quot;net.imglib2.view.ReshapeViewBenchmark.loopBuilder&quot;:
+  9.592 ±(99.9%) 2.422 ms/op [Average]
+  (min, avg, max) = (9.279, 9.592, 10.717), stdev = 0.629
+  CI (99.9%): [7.170, 12.014] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 21.0.3, OpenJDK 64-Bit Server VM, 21.0.3+9-LTS
+# VM invoker: /usr/lib/jvm/zulu-21-amd64/bin/java
+# VM options: -Dsun.awt.disablegrab=true
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 5 iterations, 100 ms each
+# Measurement: 5 iterations, 200 ms each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: net.imglib2.view.ReshapeViewBenchmark.loopBuilder
+# Parameters: (imgType = CellImg, viewShape = flat1d)
+
+# Run progress: 39.29% complete, ETA 00:00:59
+# Fork: 1 of 1
+Picked up _JAVA_OPTIONS: -Dsun.awt.disablegrab=true
+# Warmup Iteration   1: 59.941 ms/op
+# Warmup Iteration   2: 42.305 ms/op
+# Warmup Iteration   3: 41.329 ms/op
+# Warmup Iteration   4: 41.655 ms/op
+# Warmup Iteration   5: 40.558 ms/op
+Iteration   1: 40.174 ms/op
+Iteration   2: 39.978 ms/op
+Iteration   3: 43.449 ms/op
+Iteration   4: 40.293 ms/op
+Iteration   5: 40.247 ms/op
+
+
+Result &quot;net.imglib2.view.ReshapeViewBenchmark.loopBuilder&quot;:
+  40.829 ±(99.9%) 5.661 ms/op [Average]
+  (min, avg, max) = (39.978, 40.829, 43.449), stdev = 1.470
+  CI (99.9%): [35.168, 46.489] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 21.0.3, OpenJDK 64-Bit Server VM, 21.0.3+9-LTS
+# VM invoker: /usr/lib/jvm/zulu-21-amd64/bin/java
+# VM options: -Dsun.awt.disablegrab=true
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 5 iterations, 100 ms each
+# Measurement: 5 iterations, 200 ms each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: net.imglib2.view.ReshapeViewBenchmark.loopBuilder
+# Parameters: (imgType = CellImg, viewShape = merge2d)
+
+# Run progress: 41.07% complete, ETA 00:00:58
+# Fork: 1 of 1
+Picked up _JAVA_OPTIONS: -Dsun.awt.disablegrab=true
+# Warmup Iteration   1: 57.464 ms/op
+# Warmup Iteration   2: 39.963 ms/op
+# Warmup Iteration   3: 38.865 ms/op
+# Warmup Iteration   4: 38.703 ms/op
+# Warmup Iteration   5: 39.781 ms/op
+Iteration   1: 39.158 ms/op
+Iteration   2: 39.321 ms/op
+Iteration   3: 38.799 ms/op
+Iteration   4: 41.677 ms/op
+Iteration   5: 39.355 ms/op
+
+
+Result &quot;net.imglib2.view.ReshapeViewBenchmark.loopBuilder&quot;:
+  39.662 ±(99.9%) 4.420 ms/op [Average]
+  (min, avg, max) = (38.799, 39.662, 41.677), stdev = 1.148
+  CI (99.9%): [35.242, 44.082] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 21.0.3, OpenJDK 64-Bit Server VM, 21.0.3+9-LTS
+# VM invoker: /usr/lib/jvm/zulu-21-amd64/bin/java
+# VM options: -Dsun.awt.disablegrab=true
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 5 iterations, 100 ms each
+# Measurement: 5 iterations, 200 ms each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: net.imglib2.view.ReshapeViewBenchmark.loopBuilder
+# Parameters: (imgType = CellImg, viewShape = identity3d)
+
+# Run progress: 42.86% complete, ETA 00:00:56
+# Fork: 1 of 1
+Picked up _JAVA_OPTIONS: -Dsun.awt.disablegrab=true
+# Warmup Iteration   1: 10.921 ms/op
+# Warmup Iteration   2: 9.095 ms/op
+# Warmup Iteration   3: 9.471 ms/op
+# Warmup Iteration   4: 9.090 ms/op
+# Warmup Iteration   5: 10.353 ms/op
+Iteration   1: 9.363 ms/op
+Iteration   2: 9.407 ms/op
+Iteration   3: 9.132 ms/op
+Iteration   4: 9.255 ms/op
+Iteration   5: 9.092 ms/op
+
+
+Result &quot;net.imglib2.view.ReshapeViewBenchmark.loopBuilder&quot;:
+  9.250 ±(99.9%) 0.532 ms/op [Average]
+  (min, avg, max) = (9.092, 9.250, 9.407), stdev = 0.138
+  CI (99.9%): [8.718, 9.782] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 21.0.3, OpenJDK 64-Bit Server VM, 21.0.3+9-LTS
+# VM invoker: /usr/lib/jvm/zulu-21-amd64/bin/java
+# VM options: -Dsun.awt.disablegrab=true
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 5 iterations, 100 ms each
+# Measurement: 5 iterations, 200 ms each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: net.imglib2.view.ReshapeViewBenchmark.loopBuilder
+# Parameters: (imgType = CellImg, viewShape = split4d)
+
+# Run progress: 44.64% complete, ETA 00:00:54
+# Fork: 1 of 1
+Picked up _JAVA_OPTIONS: -Dsun.awt.disablegrab=true
+# Warmup Iteration   1: 56.767 ms/op
+# Warmup Iteration   2: 37.021 ms/op
+# Warmup Iteration   3: 38.533 ms/op
+# Warmup Iteration   4: 38.663 ms/op
+# Warmup Iteration   5: 38.688 ms/op
+Iteration   1: 39.009 ms/op
+Iteration   2: 39.223 ms/op
+Iteration   3: 39.353 ms/op
+Iteration   4: 38.525 ms/op
+Iteration   5: 39.064 ms/op
+
+
+Result &quot;net.imglib2.view.ReshapeViewBenchmark.loopBuilder&quot;:
+  39.035 ±(99.9%) 1.214 ms/op [Average]
+  (min, avg, max) = (38.525, 39.035, 39.353), stdev = 0.315
+  CI (99.9%): [37.821, 40.248] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 21.0.3, OpenJDK 64-Bit Server VM, 21.0.3+9-LTS
+# VM invoker: /usr/lib/jvm/zulu-21-amd64/bin/java
+# VM options: -Dsun.awt.disablegrab=true
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 5 iterations, 100 ms each
+# Measurement: 5 iterations, 200 ms each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: net.imglib2.view.ReshapeViewBenchmark.loopBuilder
+# Parameters: (imgType = CellImg, viewShape = singleton4d)
+
+# Run progress: 46.43% complete, ETA 00:00:53
+# Fork: 1 of 1
+Picked up _JAVA_OPTIONS: -Dsun.awt.disablegrab=true
+# Warmup Iteration   1: 40.477 ms/op
+# Warmup Iteration   2: 26.800 ms/op
+# Warmup Iteration   3: 26.684 ms/op
+# Warmup Iteration   4: 25.106 ms/op
+# Warmup Iteration   5: 25.910 ms/op
+Iteration   1: 26.302 ms/op
+Iteration   2: 26.495 ms/op
+Iteration   3: 26.310 ms/op
+Iteration   4: 26.268 ms/op
+Iteration   5: 26.120 ms/op
+
+
+Result &quot;net.imglib2.view.ReshapeViewBenchmark.loopBuilder&quot;:
+  26.299 ±(99.9%) 0.515 ms/op [Average]
+  (min, avg, max) = (26.120, 26.299, 26.495), stdev = 0.134
+  CI (99.9%): [25.784, 26.814] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 21.0.3, OpenJDK 64-Bit Server VM, 21.0.3+9-LTS
+# VM invoker: /usr/lib/jvm/zulu-21-amd64/bin/java
+# VM options: -Dsun.awt.disablegrab=true
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 5 iterations, 100 ms each
+# Measurement: 5 iterations, 200 ms each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: net.imglib2.view.ReshapeViewBenchmark.loopBuilder
+# Parameters: (imgType = CellImg, viewShape = translate3d)
+
+# Run progress: 48.21% complete, ETA 00:00:51
+# Fork: 1 of 1
+Picked up _JAVA_OPTIONS: -Dsun.awt.disablegrab=true
+# Warmup Iteration   1: 39.976 ms/op
+# Warmup Iteration   2: 23.080 ms/op
+# Warmup Iteration   3: 23.596 ms/op
+# Warmup Iteration   4: 23.550 ms/op
+# Warmup Iteration   5: 23.182 ms/op
+Iteration   1: 23.033 ms/op
+Iteration   2: 23.041 ms/op
+Iteration   3: 23.429 ms/op
+Iteration   4: 23.162 ms/op
+Iteration   5: 23.205 ms/op
+
+
+Result &quot;net.imglib2.view.ReshapeViewBenchmark.loopBuilder&quot;:
+  23.174 ±(99.9%) 0.620 ms/op [Average]
+  (min, avg, max) = (23.033, 23.174, 23.429), stdev = 0.161
+  CI (99.9%): [22.554, 23.794] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 21.0.3, OpenJDK 64-Bit Server VM, 21.0.3+9-LTS
+# VM invoker: /usr/lib/jvm/zulu-21-amd64/bin/java
+# VM options: -Dsun.awt.disablegrab=true
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 5 iterations, 100 ms each
+# Measurement: 5 iterations, 200 ms each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: net.imglib2.view.ReshapeViewBenchmark.randomAccessWalk
+# Parameters: (imgType = ArrayImg, viewShape = none)
+
+# Run progress: 50.00% complete, ETA 00:00:49
+# Fork: 1 of 1
+Picked up _JAVA_OPTIONS: -Dsun.awt.disablegrab=true
+# Warmup Iteration   1: 21.919 ms/op
+# Warmup Iteration   2: 16.019 ms/op
+# Warmup Iteration   3: 16.166 ms/op
+# Warmup Iteration   4: 16.378 ms/op
+# Warmup Iteration   5: 16.711 ms/op
+Iteration   1: 16.459 ms/op
+Iteration   2: 16.360 ms/op
+Iteration   3: 16.403 ms/op
+Iteration   4: 16.546 ms/op
+Iteration   5: 16.540 ms/op
+
+
+Result &quot;net.imglib2.view.ReshapeViewBenchmark.randomAccessWalk&quot;:
+  16.461 ±(99.9%) 0.317 ms/op [Average]
+  (min, avg, max) = (16.360, 16.461, 16.546), stdev = 0.082
+  CI (99.9%): [16.145, 16.778] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 21.0.3, OpenJDK 64-Bit Server VM, 21.0.3+9-LTS
+# VM invoker: /usr/lib/jvm/zulu-21-amd64/bin/java
+# VM options: -Dsun.awt.disablegrab=true
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 5 iterations, 100 ms each
+# Measurement: 5 iterations, 200 ms each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: net.imglib2.view.ReshapeViewBenchmark.randomAccessWalk
+# Parameters: (imgType = ArrayImg, viewShape = flat1d)
+
+# Run progress: 51.79% complete, ETA 00:00:47
+# Fork: 1 of 1
+Picked up _JAVA_OPTIONS: -Dsun.awt.disablegrab=true
+# Warmup Iteration   1: 90.923 ms/op
+# Warmup Iteration   2: 77.821 ms/op
+# Warmup Iteration   3: 75.719 ms/op
+# Warmup Iteration   4: 74.762 ms/op
+# Warmup Iteration   5: 81.403 ms/op
+Iteration   1: 75.759 ms/op
+Iteration   2: 75.925 ms/op
+Iteration   3: 77.877 ms/op
+Iteration   4: 80.080 ms/op
+Iteration   5: 76.630 ms/op
+
+
+Result &quot;net.imglib2.view.ReshapeViewBenchmark.randomAccessWalk&quot;:
+  77.254 ±(99.9%) 6.879 ms/op [Average]
+  (min, avg, max) = (75.759, 77.254, 80.080), stdev = 1.786
+  CI (99.9%): [70.375, 84.133] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 21.0.3, OpenJDK 64-Bit Server VM, 21.0.3+9-LTS
+# VM invoker: /usr/lib/jvm/zulu-21-amd64/bin/java
+# VM options: -Dsun.awt.disablegrab=true
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 5 iterations, 100 ms each
+# Measurement: 5 iterations, 200 ms each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: net.imglib2.view.ReshapeViewBenchmark.randomAccessWalk
+# Parameters: (imgType = ArrayImg, viewShape = merge2d)
+
+# Run progress: 53.57% complete, ETA 00:00:46
+# Fork: 1 of 1
+Picked up _JAVA_OPTIONS: -Dsun.awt.disablegrab=true
+# Warmup Iteration   1: 94.777 ms/op
+# Warmup Iteration   2: 76.220 ms/op
+# Warmup Iteration   3: 77.764 ms/op
+# Warmup Iteration   4: 78.110 ms/op
+# Warmup Iteration   5: 78.094 ms/op
+Iteration   1: 77.404 ms/op
+Iteration   2: 78.096 ms/op
+Iteration   3: 74.166 ms/op
+Iteration   4: 75.980 ms/op
+Iteration   5: 75.425 ms/op
+
+
+Result &quot;net.imglib2.view.ReshapeViewBenchmark.randomAccessWalk&quot;:
+  76.214 ±(99.9%) 6.035 ms/op [Average]
+  (min, avg, max) = (74.166, 76.214, 78.096), stdev = 1.567
+  CI (99.9%): [70.179, 82.249] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 21.0.3, OpenJDK 64-Bit Server VM, 21.0.3+9-LTS
+# VM invoker: /usr/lib/jvm/zulu-21-amd64/bin/java
+# VM options: -Dsun.awt.disablegrab=true
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 5 iterations, 100 ms each
+# Measurement: 5 iterations, 200 ms each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: net.imglib2.view.ReshapeViewBenchmark.randomAccessWalk
+# Parameters: (imgType = ArrayImg, viewShape = identity3d)
+
+# Run progress: 55.36% complete, ETA 00:00:45
+# Fork: 1 of 1
+Picked up _JAVA_OPTIONS: -Dsun.awt.disablegrab=true
+# Warmup Iteration   1: 21.631 ms/op
+# Warmup Iteration   2: 15.913 ms/op
+# Warmup Iteration   3: 16.400 ms/op
+# Warmup Iteration   4: 16.228 ms/op
+# Warmup Iteration   5: 17.148 ms/op
+Iteration   1: 16.868 ms/op
+Iteration   2: 16.770 ms/op
+Iteration   3: 16.513 ms/op
+Iteration   4: 16.465 ms/op
+Iteration   5: 16.461 ms/op
+
+
+Result &quot;net.imglib2.view.ReshapeViewBenchmark.randomAccessWalk&quot;:
+  16.615 ±(99.9%) 0.731 ms/op [Average]
+  (min, avg, max) = (16.461, 16.615, 16.868), stdev = 0.190
+  CI (99.9%): [15.884, 17.347] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 21.0.3, OpenJDK 64-Bit Server VM, 21.0.3+9-LTS
+# VM invoker: /usr/lib/jvm/zulu-21-amd64/bin/java
+# VM options: -Dsun.awt.disablegrab=true
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 5 iterations, 100 ms each
+# Measurement: 5 iterations, 200 ms each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: net.imglib2.view.ReshapeViewBenchmark.randomAccessWalk
+# Parameters: (imgType = ArrayImg, viewShape = split4d)
+
+# Run progress: 57.14% complete, ETA 00:00:43
+# Fork: 1 of 1
+Picked up _JAVA_OPTIONS: -Dsun.awt.disablegrab=true
+# Warmup Iteration   1: 102.715 ms/op
+# Warmup Iteration   2: 83.680 ms/op
+# Warmup Iteration   3: 78.972 ms/op
+# Warmup Iteration   4: 82.181 ms/op
+# Warmup Iteration   5: 80.131 ms/op
+Iteration   1: 78.306 ms/op
+Iteration   2: 78.544 ms/op
+Iteration   3: 77.845 ms/op
+Iteration   4: 77.596 ms/op
+Iteration   5: 78.151 ms/op
+
+
+Result &quot;net.imglib2.view.ReshapeViewBenchmark.randomAccessWalk&quot;:
+  78.088 ±(99.9%) 1.442 ms/op [Average]
+  (min, avg, max) = (77.596, 78.088, 78.544), stdev = 0.374
+  CI (99.9%): [76.647, 79.530] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 21.0.3, OpenJDK 64-Bit Server VM, 21.0.3+9-LTS
+# VM invoker: /usr/lib/jvm/zulu-21-amd64/bin/java
+# VM options: -Dsun.awt.disablegrab=true
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 5 iterations, 100 ms each
+# Measurement: 5 iterations, 200 ms each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: net.imglib2.view.ReshapeViewBenchmark.randomAccessWalk
+# Parameters: (imgType = ArrayImg, viewShape = singleton4d)
+
+# Run progress: 58.93% complete, ETA 00:00:41
+# Fork: 1 of 1
+Picked up _JAVA_OPTIONS: -Dsun.awt.disablegrab=true
+# Warmup Iteration   1: 67.895 ms/op
+# Warmup Iteration   2: 52.257 ms/op
+# Warmup Iteration   3: 53.366 ms/op
+# Warmup Iteration   4: 55.619 ms/op
+# Warmup Iteration   5: 53.790 ms/op
+Iteration   1: 49.622 ms/op
+Iteration   2: 48.289 ms/op
+Iteration   3: 49.170 ms/op
+Iteration   4: 48.269 ms/op
+Iteration   5: 48.088 ms/op
+
+
+Result &quot;net.imglib2.view.ReshapeViewBenchmark.randomAccessWalk&quot;:
+  48.687 ±(99.9%) 2.583 ms/op [Average]
+  (min, avg, max) = (48.088, 48.687, 49.622), stdev = 0.671
+  CI (99.9%): [46.105, 51.270] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 21.0.3, OpenJDK 64-Bit Server VM, 21.0.3+9-LTS
+# VM invoker: /usr/lib/jvm/zulu-21-amd64/bin/java
+# VM options: -Dsun.awt.disablegrab=true
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 5 iterations, 100 ms each
+# Measurement: 5 iterations, 200 ms each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: net.imglib2.view.ReshapeViewBenchmark.randomAccessWalk
+# Parameters: (imgType = ArrayImg, viewShape = translate3d)
+
+# Run progress: 60.71% complete, ETA 00:00:39
+# Fork: 1 of 1
+Picked up _JAVA_OPTIONS: -Dsun.awt.disablegrab=true
+# Warmup Iteration   1: 55.259 ms/op
+# Warmup Iteration   2: 38.431 ms/op
+# Warmup Iteration   3: 38.397 ms/op
+# Warmup Iteration   4: 37.843 ms/op
+# Warmup Iteration   5: 37.502 ms/op
+Iteration   1: 37.687 ms/op
+Iteration   2: 37.826 ms/op
+Iteration   3: 37.212 ms/op
+Iteration   4: 36.759 ms/op
+Iteration   5: 37.262 ms/op
+
+
+Result &quot;net.imglib2.view.ReshapeViewBenchmark.randomAccessWalk&quot;:
+  37.349 ±(99.9%) 1.629 ms/op [Average]
+  (min, avg, max) = (36.759, 37.349, 37.826), stdev = 0.423
+  CI (99.9%): [35.720, 38.978] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 21.0.3, OpenJDK 64-Bit Server VM, 21.0.3+9-LTS
+# VM invoker: /usr/lib/jvm/zulu-21-amd64/bin/java
+# VM options: -Dsun.awt.disablegrab=true
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 5 iterations, 100 ms each
+# Measurement: 5 iterations, 200 ms each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: net.imglib2.view.ReshapeViewBenchmark.randomAccessWalk
+# Parameters: (imgType = CellImg, viewShape = none)
+
+# Run progress: 62.50% complete, ETA 00:00:38
+# Fork: 1 of 1
+Picked up _JAVA_OPTIONS: -Dsun.awt.disablegrab=true
+# Warmup Iteration   1: 36.842 ms/op
+# Warmup Iteration   2: 26.846 ms/op
+# Warmup Iteration   3: 27.291 ms/op
+# Warmup Iteration   4: 28.714 ms/op
+# Warmup Iteration   5: 26.646 ms/op
+Iteration   1: 27.750 ms/op
+Iteration   2: 28.436 ms/op
+Iteration   3: 27.698 ms/op
+Iteration   4: 28.392 ms/op
+Iteration   5: 28.146 ms/op
+
+
+Result &quot;net.imglib2.view.ReshapeViewBenchmark.randomAccessWalk&quot;:
+  28.084 ±(99.9%) 1.339 ms/op [Average]
+  (min, avg, max) = (27.698, 28.084, 28.436), stdev = 0.348
+  CI (99.9%): [26.745, 29.424] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 21.0.3, OpenJDK 64-Bit Server VM, 21.0.3+9-LTS
+# VM invoker: /usr/lib/jvm/zulu-21-amd64/bin/java
+# VM options: -Dsun.awt.disablegrab=true
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 5 iterations, 100 ms each
+# Measurement: 5 iterations, 200 ms each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: net.imglib2.view.ReshapeViewBenchmark.randomAccessWalk
+# Parameters: (imgType = CellImg, viewShape = flat1d)
+
+# Run progress: 64.29% complete, ETA 00:00:36
+# Fork: 1 of 1
+Picked up _JAVA_OPTIONS: -Dsun.awt.disablegrab=true
+# Warmup Iteration   1: 111.464 ms/op
+# Warmup Iteration   2: 82.864 ms/op
+# Warmup Iteration   3: 81.460 ms/op
+# Warmup Iteration   4: 77.645 ms/op
+# Warmup Iteration   5: 78.565 ms/op
+Iteration   1: 80.017 ms/op
+Iteration   2: 80.765 ms/op
+Iteration   3: 80.648 ms/op
+Iteration   4: 80.597 ms/op
+Iteration   5: 80.974 ms/op
+
+
+Result &quot;net.imglib2.view.ReshapeViewBenchmark.randomAccessWalk&quot;:
+  80.600 ±(99.9%) 1.374 ms/op [Average]
+  (min, avg, max) = (80.017, 80.600, 80.974), stdev = 0.357
+  CI (99.9%): [79.227, 81.974] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 21.0.3, OpenJDK 64-Bit Server VM, 21.0.3+9-LTS
+# VM invoker: /usr/lib/jvm/zulu-21-amd64/bin/java
+# VM options: -Dsun.awt.disablegrab=true
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 5 iterations, 100 ms each
+# Measurement: 5 iterations, 200 ms each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: net.imglib2.view.ReshapeViewBenchmark.randomAccessWalk
+# Parameters: (imgType = CellImg, viewShape = merge2d)
+
+# Run progress: 66.07% complete, ETA 00:00:34
+# Fork: 1 of 1
+Picked up _JAVA_OPTIONS: -Dsun.awt.disablegrab=true
+# Warmup Iteration   1: 119.116 ms/op
+# Warmup Iteration   2: 90.305 ms/op
+# Warmup Iteration   3: 87.608 ms/op
+# Warmup Iteration   4: 86.468 ms/op
+# Warmup Iteration   5: 86.180 ms/op
+Iteration   1: 86.576 ms/op
+Iteration   2: 84.885 ms/op
+Iteration   3: 87.852 ms/op
+Iteration   4: 84.200 ms/op
+Iteration   5: 85.952 ms/op
+
+
+Result &quot;net.imglib2.view.ReshapeViewBenchmark.randomAccessWalk&quot;:
+  85.893 ±(99.9%) 5.510 ms/op [Average]
+  (min, avg, max) = (84.200, 85.893, 87.852), stdev = 1.431
+  CI (99.9%): [80.384, 91.403] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 21.0.3, OpenJDK 64-Bit Server VM, 21.0.3+9-LTS
+# VM invoker: /usr/lib/jvm/zulu-21-amd64/bin/java
+# VM options: -Dsun.awt.disablegrab=true
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 5 iterations, 100 ms each
+# Measurement: 5 iterations, 200 ms each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: net.imglib2.view.ReshapeViewBenchmark.randomAccessWalk
+# Parameters: (imgType = CellImg, viewShape = identity3d)
+
+# Run progress: 67.86% complete, ETA 00:00:33
+# Fork: 1 of 1
+Picked up _JAVA_OPTIONS: -Dsun.awt.disablegrab=true
+# Warmup Iteration   1: 36.996 ms/op
+# Warmup Iteration   2: 27.727 ms/op
+# Warmup Iteration   3: 27.757 ms/op
+# Warmup Iteration   4: 27.334 ms/op
+# Warmup Iteration   5: 28.248 ms/op
+Iteration   1: 29.043 ms/op
+Iteration   2: 30.029 ms/op
+Iteration   3: 28.616 ms/op
+Iteration   4: 27.633 ms/op
+Iteration   5: 28.031 ms/op
+
+
+Result &quot;net.imglib2.view.ReshapeViewBenchmark.randomAccessWalk&quot;:
+  28.670 ±(99.9%) 3.588 ms/op [Average]
+  (min, avg, max) = (27.633, 28.670, 30.029), stdev = 0.932
+  CI (99.9%): [25.083, 32.258] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 21.0.3, OpenJDK 64-Bit Server VM, 21.0.3+9-LTS
+# VM invoker: /usr/lib/jvm/zulu-21-amd64/bin/java
+# VM options: -Dsun.awt.disablegrab=true
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 5 iterations, 100 ms each
+# Measurement: 5 iterations, 200 ms each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: net.imglib2.view.ReshapeViewBenchmark.randomAccessWalk
+# Parameters: (imgType = CellImg, viewShape = split4d)
+
+# Run progress: 69.64% complete, ETA 00:00:31
+# Fork: 1 of 1
+Picked up _JAVA_OPTIONS: -Dsun.awt.disablegrab=true
+# Warmup Iteration   1: 101.087 ms/op
+# Warmup Iteration   2: 83.616 ms/op
+# Warmup Iteration   3: 78.319 ms/op
+# Warmup Iteration   4: 80.012 ms/op
+# Warmup Iteration   5: 78.216 ms/op
+Iteration   1: 80.482 ms/op
+Iteration   2: 79.574 ms/op
+Iteration   3: 82.530 ms/op
+Iteration   4: 80.756 ms/op
+Iteration   5: 79.194 ms/op
+
+
+Result &quot;net.imglib2.view.ReshapeViewBenchmark.randomAccessWalk&quot;:
+  80.507 ±(99.9%) 5.001 ms/op [Average]
+  (min, avg, max) = (79.194, 80.507, 82.530), stdev = 1.299
+  CI (99.9%): [75.506, 85.508] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 21.0.3, OpenJDK 64-Bit Server VM, 21.0.3+9-LTS
+# VM invoker: /usr/lib/jvm/zulu-21-amd64/bin/java
+# VM options: -Dsun.awt.disablegrab=true
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 5 iterations, 100 ms each
+# Measurement: 5 iterations, 200 ms each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: net.imglib2.view.ReshapeViewBenchmark.randomAccessWalk
+# Parameters: (imgType = CellImg, viewShape = singleton4d)
+
+# Run progress: 71.43% complete, ETA 00:00:29
+# Fork: 1 of 1
+Picked up _JAVA_OPTIONS: -Dsun.awt.disablegrab=true
+# Warmup Iteration   1: 66.329 ms/op
+# Warmup Iteration   2: 56.323 ms/op
+# Warmup Iteration   3: 53.787 ms/op
+# Warmup Iteration   4: 56.459 ms/op
+# Warmup Iteration   5: 56.361 ms/op
+Iteration   1: 58.129 ms/op
+Iteration   2: 58.273 ms/op
+Iteration   3: 58.508 ms/op
+Iteration   4: 57.927 ms/op
+Iteration   5: 56.224 ms/op
+
+
+Result &quot;net.imglib2.view.ReshapeViewBenchmark.randomAccessWalk&quot;:
+  57.812 ±(99.9%) 3.515 ms/op [Average]
+  (min, avg, max) = (56.224, 57.812, 58.508), stdev = 0.913
+  CI (99.9%): [54.298, 61.327] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 21.0.3, OpenJDK 64-Bit Server VM, 21.0.3+9-LTS
+# VM invoker: /usr/lib/jvm/zulu-21-amd64/bin/java
+# VM options: -Dsun.awt.disablegrab=true
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 5 iterations, 100 ms each
+# Measurement: 5 iterations, 200 ms each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: net.imglib2.view.ReshapeViewBenchmark.randomAccessWalk
+# Parameters: (imgType = CellImg, viewShape = translate3d)
+
+# Run progress: 73.21% complete, ETA 00:00:27
+# Fork: 1 of 1
+Picked up _JAVA_OPTIONS: -Dsun.awt.disablegrab=true
+# Warmup Iteration   1: 69.117 ms/op
+# Warmup Iteration   2: 50.439 ms/op
+# Warmup Iteration   3: 46.926 ms/op
+# Warmup Iteration   4: 47.654 ms/op
+# Warmup Iteration   5: 45.482 ms/op
+Iteration   1: 47.481 ms/op
+Iteration   2: 48.581 ms/op
+Iteration   3: 48.314 ms/op
+Iteration   4: 45.893 ms/op
+Iteration   5: 47.324 ms/op
+
+
+Result &quot;net.imglib2.view.ReshapeViewBenchmark.randomAccessWalk&quot;:
+  47.519 ±(99.9%) 4.059 ms/op [Average]
+  (min, avg, max) = (45.893, 47.519, 48.581), stdev = 1.054
+  CI (99.9%): [43.459, 51.578] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 21.0.3, OpenJDK 64-Bit Server VM, 21.0.3+9-LTS
+# VM invoker: /usr/lib/jvm/zulu-21-amd64/bin/java
+# VM options: -Dsun.awt.disablegrab=true
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 5 iterations, 100 ms each
+# Measurement: 5 iterations, 200 ms each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: net.imglib2.view.ReshapeViewBenchmark.rawCursor
+# Parameters: (imgType = ArrayImg, viewShape = none)
+
+# Run progress: 75.00% complete, ETA 00:00:25
+# Fork: 1 of 1
+Picked up _JAVA_OPTIONS: -Dsun.awt.disablegrab=true
+# Warmup Iteration   1: 2.609 ms/op
+# Warmup Iteration   2: 2.210 ms/op
+# Warmup Iteration   3: 2.142 ms/op
+# Warmup Iteration   4: 2.186 ms/op
+# Warmup Iteration   5: 2.177 ms/op
+Iteration   1: 2.177 ms/op
+Iteration   2: 2.172 ms/op
+Iteration   3: 2.120 ms/op
+Iteration   4: 2.184 ms/op
+Iteration   5: 2.129 ms/op
+
+
+Result &quot;net.imglib2.view.ReshapeViewBenchmark.rawCursor&quot;:
+  2.157 ±(99.9%) 0.114 ms/op [Average]
+  (min, avg, max) = (2.120, 2.157, 2.184), stdev = 0.030
+  CI (99.9%): [2.043, 2.270] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 21.0.3, OpenJDK 64-Bit Server VM, 21.0.3+9-LTS
+# VM invoker: /usr/lib/jvm/zulu-21-amd64/bin/java
+# VM options: -Dsun.awt.disablegrab=true
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 5 iterations, 100 ms each
+# Measurement: 5 iterations, 200 ms each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: net.imglib2.view.ReshapeViewBenchmark.rawCursor
+# Parameters: (imgType = ArrayImg, viewShape = flat1d)
+
+# Run progress: 76.79% complete, ETA 00:00:24
+# Fork: 1 of 1
+Picked up _JAVA_OPTIONS: -Dsun.awt.disablegrab=true
+# Warmup Iteration   1: 3.783 ms/op
+# Warmup Iteration   2: 3.173 ms/op
+# Warmup Iteration   3: 3.026 ms/op
+# Warmup Iteration   4: 3.046 ms/op
+# Warmup Iteration   5: 3.047 ms/op
+Iteration   1: 3.074 ms/op
+Iteration   2: 3.081 ms/op
+Iteration   3: 2.980 ms/op
+Iteration   4: 3.148 ms/op
+Iteration   5: 3.090 ms/op
+
+
+Result &quot;net.imglib2.view.ReshapeViewBenchmark.rawCursor&quot;:
+  3.074 ±(99.9%) 0.234 ms/op [Average]
+  (min, avg, max) = (2.980, 3.074, 3.148), stdev = 0.061
+  CI (99.9%): [2.841, 3.308] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 21.0.3, OpenJDK 64-Bit Server VM, 21.0.3+9-LTS
+# VM invoker: /usr/lib/jvm/zulu-21-amd64/bin/java
+# VM options: -Dsun.awt.disablegrab=true
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 5 iterations, 100 ms each
+# Measurement: 5 iterations, 200 ms each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: net.imglib2.view.ReshapeViewBenchmark.rawCursor
+# Parameters: (imgType = ArrayImg, viewShape = merge2d)
+
+# Run progress: 78.57% complete, ETA 00:00:22
+# Fork: 1 of 1
+Picked up _JAVA_OPTIONS: -Dsun.awt.disablegrab=true
+# Warmup Iteration   1: 3.662 ms/op
+# Warmup Iteration   2: 2.964 ms/op
+# Warmup Iteration   3: 3.087 ms/op
+# Warmup Iteration   4: 3.043 ms/op
+# Warmup Iteration   5: 3.037 ms/op
+Iteration   1: 3.062 ms/op
+Iteration   2: 3.063 ms/op
+Iteration   3: 3.075 ms/op
+Iteration   4: 3.088 ms/op
+Iteration   5: 3.082 ms/op
+
+
+Result &quot;net.imglib2.view.ReshapeViewBenchmark.rawCursor&quot;:
+  3.074 ±(99.9%) 0.044 ms/op [Average]
+  (min, avg, max) = (3.062, 3.074, 3.088), stdev = 0.011
+  CI (99.9%): [3.030, 3.118] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 21.0.3, OpenJDK 64-Bit Server VM, 21.0.3+9-LTS
+# VM invoker: /usr/lib/jvm/zulu-21-amd64/bin/java
+# VM options: -Dsun.awt.disablegrab=true
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 5 iterations, 100 ms each
+# Measurement: 5 iterations, 200 ms each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: net.imglib2.view.ReshapeViewBenchmark.rawCursor
+# Parameters: (imgType = ArrayImg, viewShape = identity3d)
+
+# Run progress: 80.36% complete, ETA 00:00:20
+# Fork: 1 of 1
+Picked up _JAVA_OPTIONS: -Dsun.awt.disablegrab=true
+# Warmup Iteration   1: 2.564 ms/op
+# Warmup Iteration   2: 2.166 ms/op
+# Warmup Iteration   3: 2.230 ms/op
+# Warmup Iteration   4: 2.251 ms/op
+# Warmup Iteration   5: 2.199 ms/op
+Iteration   1: 2.267 ms/op
+Iteration   2: 2.258 ms/op
+Iteration   3: 2.376 ms/op
+Iteration   4: 2.682 ms/op
+Iteration   5: 2.300 ms/op
+
+
+Result &quot;net.imglib2.view.ReshapeViewBenchmark.rawCursor&quot;:
+  2.377 ±(99.9%) 0.682 ms/op [Average]
+  (min, avg, max) = (2.258, 2.377, 2.682), stdev = 0.177
+  CI (99.9%): [1.695, 3.058] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 21.0.3, OpenJDK 64-Bit Server VM, 21.0.3+9-LTS
+# VM invoker: /usr/lib/jvm/zulu-21-amd64/bin/java
+# VM options: -Dsun.awt.disablegrab=true
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 5 iterations, 100 ms each
+# Measurement: 5 iterations, 200 ms each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: net.imglib2.view.ReshapeViewBenchmark.rawCursor
+# Parameters: (imgType = ArrayImg, viewShape = split4d)
+
+# Run progress: 82.14% complete, ETA 00:00:18
+# Fork: 1 of 1
+Picked up _JAVA_OPTIONS: -Dsun.awt.disablegrab=true
+# Warmup Iteration   1: 4.083 ms/op
+# Warmup Iteration   2: 3.262 ms/op
+# Warmup Iteration   3: 3.072 ms/op
+# Warmup Iteration   4: 3.148 ms/op
+# Warmup Iteration   5: 3.207 ms/op
+Iteration   1: 3.187 ms/op
+Iteration   2: 3.086 ms/op
+Iteration   3: 3.126 ms/op
+Iteration   4: 3.029 ms/op
+Iteration   5: 3.114 ms/op
+
+
+Result &quot;net.imglib2.view.ReshapeViewBenchmark.rawCursor&quot;:
+  3.108 ±(99.9%) 0.222 ms/op [Average]
+  (min, avg, max) = (3.029, 3.108, 3.187), stdev = 0.058
+  CI (99.9%): [2.887, 3.330] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 21.0.3, OpenJDK 64-Bit Server VM, 21.0.3+9-LTS
+# VM invoker: /usr/lib/jvm/zulu-21-amd64/bin/java
+# VM options: -Dsun.awt.disablegrab=true
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 5 iterations, 100 ms each
+# Measurement: 5 iterations, 200 ms each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: net.imglib2.view.ReshapeViewBenchmark.rawCursor
+# Parameters: (imgType = ArrayImg, viewShape = singleton4d)
+
+# Run progress: 83.93% complete, ETA 00:00:16
+# Fork: 1 of 1
+Picked up _JAVA_OPTIONS: -Dsun.awt.disablegrab=true
+# Warmup Iteration   1: 3.889 ms/op
+# Warmup Iteration   2: 3.180 ms/op
+# Warmup Iteration   3: 3.173 ms/op
+# Warmup Iteration   4: 3.193 ms/op
+# Warmup Iteration   5: 3.142 ms/op
+Iteration   1: 3.146 ms/op
+Iteration   2: 3.118 ms/op
+Iteration   3: 3.197 ms/op
+Iteration   4: 3.170 ms/op
+Iteration   5: 3.183 ms/op
+
+
+Result &quot;net.imglib2.view.ReshapeViewBenchmark.rawCursor&quot;:
+  3.163 ±(99.9%) 0.120 ms/op [Average]
+  (min, avg, max) = (3.118, 3.163, 3.197), stdev = 0.031
+  CI (99.9%): [3.043, 3.283] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 21.0.3, OpenJDK 64-Bit Server VM, 21.0.3+9-LTS
+# VM invoker: /usr/lib/jvm/zulu-21-amd64/bin/java
+# VM options: -Dsun.awt.disablegrab=true
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 5 iterations, 100 ms each
+# Measurement: 5 iterations, 200 ms each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: net.imglib2.view.ReshapeViewBenchmark.rawCursor
+# Parameters: (imgType = ArrayImg, viewShape = translate3d)
+
+# Run progress: 85.71% complete, ETA 00:00:14
+# Fork: 1 of 1
+Picked up _JAVA_OPTIONS: -Dsun.awt.disablegrab=true
+# Warmup Iteration   1: 3.575 ms/op
+# Warmup Iteration   2: 3.055 ms/op
+# Warmup Iteration   3: 3.045 ms/op
+# Warmup Iteration   4: 2.981 ms/op
+# Warmup Iteration   5: 3.220 ms/op
+Iteration   1: 3.164 ms/op
+Iteration   2: 3.149 ms/op
+Iteration   3: 3.214 ms/op
+Iteration   4: 3.162 ms/op
+Iteration   5: 3.179 ms/op
+
+
+Result &quot;net.imglib2.view.ReshapeViewBenchmark.rawCursor&quot;:
+  3.174 ±(99.9%) 0.097 ms/op [Average]
+  (min, avg, max) = (3.149, 3.174, 3.214), stdev = 0.025
+  CI (99.9%): [3.077, 3.271] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 21.0.3, OpenJDK 64-Bit Server VM, 21.0.3+9-LTS
+# VM invoker: /usr/lib/jvm/zulu-21-amd64/bin/java
+# VM options: -Dsun.awt.disablegrab=true
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 5 iterations, 100 ms each
+# Measurement: 5 iterations, 200 ms each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: net.imglib2.view.ReshapeViewBenchmark.rawCursor
+# Parameters: (imgType = CellImg, viewShape = none)
+
+# Run progress: 87.50% complete, ETA 00:00:12
+# Fork: 1 of 1
+Picked up _JAVA_OPTIONS: -Dsun.awt.disablegrab=true
+# Warmup Iteration   1: 8.565 ms/op
+# Warmup Iteration   2: 8.117 ms/op
+# Warmup Iteration   3: 7.981 ms/op
+# Warmup Iteration   4: 7.473 ms/op
+# Warmup Iteration   5: 7.758 ms/op
+Iteration   1: 7.875 ms/op
+Iteration   2: 7.528 ms/op
+Iteration   3: 7.719 ms/op
+Iteration   4: 7.711 ms/op
+Iteration   5: 7.900 ms/op
+
+
+Result &quot;net.imglib2.view.ReshapeViewBenchmark.rawCursor&quot;:
+  7.747 ±(99.9%) 0.577 ms/op [Average]
+  (min, avg, max) = (7.528, 7.747, 7.900), stdev = 0.150
+  CI (99.9%): [7.169, 8.324] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 21.0.3, OpenJDK 64-Bit Server VM, 21.0.3+9-LTS
+# VM invoker: /usr/lib/jvm/zulu-21-amd64/bin/java
+# VM options: -Dsun.awt.disablegrab=true
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 5 iterations, 100 ms each
+# Measurement: 5 iterations, 200 ms each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: net.imglib2.view.ReshapeViewBenchmark.rawCursor
+# Parameters: (imgType = CellImg, viewShape = flat1d)
+
+# Run progress: 89.29% complete, ETA 00:00:10
+# Fork: 1 of 1
+Picked up _JAVA_OPTIONS: -Dsun.awt.disablegrab=true
+# Warmup Iteration   1: 23.088 ms/op
+# Warmup Iteration   2: 18.536 ms/op
+# Warmup Iteration   3: 17.323 ms/op
+# Warmup Iteration   4: 17.878 ms/op
+# Warmup Iteration   5: 18.166 ms/op
+Iteration   1: 18.698 ms/op
+Iteration   2: 18.970 ms/op
+Iteration   3: 18.551 ms/op
+Iteration   4: 19.446 ms/op
+Iteration   5: 19.772 ms/op
+
+
+Result &quot;net.imglib2.view.ReshapeViewBenchmark.rawCursor&quot;:
+  19.088 ±(99.9%) 1.973 ms/op [Average]
+  (min, avg, max) = (18.551, 19.088, 19.772), stdev = 0.512
+  CI (99.9%): [17.114, 21.061] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 21.0.3, OpenJDK 64-Bit Server VM, 21.0.3+9-LTS
+# VM invoker: /usr/lib/jvm/zulu-21-amd64/bin/java
+# VM options: -Dsun.awt.disablegrab=true
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 5 iterations, 100 ms each
+# Measurement: 5 iterations, 200 ms each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: net.imglib2.view.ReshapeViewBenchmark.rawCursor
+# Parameters: (imgType = CellImg, viewShape = merge2d)
+
+# Run progress: 91.07% complete, ETA 00:00:09
+# Fork: 1 of 1
+Picked up _JAVA_OPTIONS: -Dsun.awt.disablegrab=true
+# Warmup Iteration   1: 22.790 ms/op
+# Warmup Iteration   2: 18.929 ms/op
+# Warmup Iteration   3: 19.251 ms/op
+# Warmup Iteration   4: 19.123 ms/op
+# Warmup Iteration   5: 19.166 ms/op
+Iteration   1: 19.186 ms/op
+Iteration   2: 18.814 ms/op
+Iteration   3: 19.160 ms/op
+Iteration   4: 18.855 ms/op
+Iteration   5: 19.002 ms/op
+
+
+Result &quot;net.imglib2.view.ReshapeViewBenchmark.rawCursor&quot;:
+  19.004 ±(99.9%) 0.655 ms/op [Average]
+  (min, avg, max) = (18.814, 19.004, 19.186), stdev = 0.170
+  CI (99.9%): [18.348, 19.659] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 21.0.3, OpenJDK 64-Bit Server VM, 21.0.3+9-LTS
+# VM invoker: /usr/lib/jvm/zulu-21-amd64/bin/java
+# VM options: -Dsun.awt.disablegrab=true
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 5 iterations, 100 ms each
+# Measurement: 5 iterations, 200 ms each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: net.imglib2.view.ReshapeViewBenchmark.rawCursor
+# Parameters: (imgType = CellImg, viewShape = identity3d)
+
+# Run progress: 92.86% complete, ETA 00:00:07
+# Fork: 1 of 1
+Picked up _JAVA_OPTIONS: -Dsun.awt.disablegrab=true
+# Warmup Iteration   1: 8.654 ms/op
+# Warmup Iteration   2: 8.012 ms/op
+# Warmup Iteration   3: 7.681 ms/op
+# Warmup Iteration   4: 7.829 ms/op
+# Warmup Iteration   5: 7.688 ms/op
+Iteration   1: 8.257 ms/op
+Iteration   2: 8.064 ms/op
+Iteration   3: 7.779 ms/op
+Iteration   4: 7.919 ms/op
+Iteration   5: 7.876 ms/op
+
+
+Result &quot;net.imglib2.view.ReshapeViewBenchmark.rawCursor&quot;:
+  7.979 ±(99.9%) 0.716 ms/op [Average]
+  (min, avg, max) = (7.779, 7.979, 8.257), stdev = 0.186
+  CI (99.9%): [7.263, 8.695] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 21.0.3, OpenJDK 64-Bit Server VM, 21.0.3+9-LTS
+# VM invoker: /usr/lib/jvm/zulu-21-amd64/bin/java
+# VM options: -Dsun.awt.disablegrab=true
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 5 iterations, 100 ms each
+# Measurement: 5 iterations, 200 ms each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: net.imglib2.view.ReshapeViewBenchmark.rawCursor
+# Parameters: (imgType = CellImg, viewShape = split4d)
+
+# Run progress: 94.64% complete, ETA 00:00:05
+# Fork: 1 of 1
+Picked up _JAVA_OPTIONS: -Dsun.awt.disablegrab=true
+# Warmup Iteration   1: 22.990 ms/op
+# Warmup Iteration   2: 19.054 ms/op
+# Warmup Iteration   3: 18.688 ms/op
+# Warmup Iteration   4: 18.926 ms/op
+# Warmup Iteration   5: 19.075 ms/op
+Iteration   1: 19.016 ms/op
+Iteration   2: 19.200 ms/op
+Iteration   3: 18.227 ms/op
+Iteration   4: 18.490 ms/op
+Iteration   5: 18.784 ms/op
+
+
+Result &quot;net.imglib2.view.ReshapeViewBenchmark.rawCursor&quot;:
+  18.743 ±(99.9%) 1.510 ms/op [Average]
+  (min, avg, max) = (18.227, 18.743, 19.200), stdev = 0.392
+  CI (99.9%): [17.233, 20.253] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 21.0.3, OpenJDK 64-Bit Server VM, 21.0.3+9-LTS
+# VM invoker: /usr/lib/jvm/zulu-21-amd64/bin/java
+# VM options: -Dsun.awt.disablegrab=true
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 5 iterations, 100 ms each
+# Measurement: 5 iterations, 200 ms each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: net.imglib2.view.ReshapeViewBenchmark.rawCursor
+# Parameters: (imgType = CellImg, viewShape = singleton4d)
+
+# Run progress: 96.43% complete, ETA 00:00:03
+# Fork: 1 of 1
+Picked up _JAVA_OPTIONS: -Dsun.awt.disablegrab=true
+# Warmup Iteration   1: 27.810 ms/op
+# Warmup Iteration   2: 19.583 ms/op
+# Warmup Iteration   3: 18.845 ms/op
+# Warmup Iteration   4: 18.648 ms/op
+# Warmup Iteration   5: 18.715 ms/op
+Iteration   1: 18.613 ms/op
+Iteration   2: 18.733 ms/op
+Iteration   3: 18.206 ms/op
+Iteration   4: 18.449 ms/op
+Iteration   5: 18.565 ms/op
+
+
+Result &quot;net.imglib2.view.ReshapeViewBenchmark.rawCursor&quot;:
+  18.513 ±(99.9%) 0.768 ms/op [Average]
+  (min, avg, max) = (18.206, 18.513, 18.733), stdev = 0.199
+  CI (99.9%): [17.745, 19.281] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 21.0.3, OpenJDK 64-Bit Server VM, 21.0.3+9-LTS
+# VM invoker: /usr/lib/jvm/zulu-21-amd64/bin/java
+# VM options: -Dsun.awt.disablegrab=true
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 5 iterations, 100 ms each
+# Measurement: 5 iterations, 200 ms each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: net.imglib2.view.ReshapeViewBenchmark.rawCursor
+# Parameters: (imgType = CellImg, viewShape = translate3d)
+
+# Run progress: 98.21% complete, ETA 00:00:01
+# Fork: 1 of 1
+Picked up _JAVA_OPTIONS: -Dsun.awt.disablegrab=true
+# Warmup Iteration   1: 22.628 ms/op
+# Warmup Iteration   2: 18.599 ms/op
+# Warmup Iteration   3: 18.961 ms/op
+# Warmup Iteration   4: 19.074 ms/op
+# Warmup Iteration   5: 18.890 ms/op
+Iteration   1: 18.761 ms/op
+Iteration   2: 18.707 ms/op
+Iteration   3: 18.740 ms/op
+Iteration   4: 18.809 ms/op
+Iteration   5: 18.874 ms/op
+
+
+Result &quot;net.imglib2.view.ReshapeViewBenchmark.rawCursor&quot;:
+  18.778 ±(99.9%) 0.251 ms/op [Average]
+  (min, avg, max) = (18.707, 18.778, 18.874), stdev = 0.065
+  CI (99.9%): [18.527, 19.029] (assumes normal distribution)
+
+
+# Run complete. Total time: 00:01:42
+
+REMEMBER: The numbers below are just data. To gain reusable insights, you need to follow up on
+why the numbers are the way they are. Use profilers (see -prof, -lprof), design factorial
+experiments, perform baseline and negative tests that provide experimental control, make sure
+the benchmarking environment is safe on JVM/OS/HW level, ask for reviews from the domain experts.
+Do not assume the numbers tell you what you want them to tell.
+
+NOTE: Current JVM experimentally supports Compiler Blackholes, and they are in use. Please exercise
+extra caution when trusting the results, look into the generated code to check the benchmark still
+works, and factor in a small probability of new VM bugs. Additionally, while comparisons between
+different JVMs are already problematic, the performance difference caused by different Blackhole
+modes can be very significant. Please make sure you use the consistent Blackhole mode for comparisons.
+
+Benchmark                                (imgType)  (viewShape)  Mode  Cnt   Score   Error  Units
+ReshapeViewBenchmark.flatIterableCursor   ArrayImg         none  avgt    5   2.319 ± 0.611  ms/op
+ReshapeViewBenchmark.flatIterableCursor   ArrayImg       flat1d  avgt    5   3.080 ± 0.469  ms/op
+ReshapeViewBenchmark.flatIterableCursor   ArrayImg      merge2d  avgt    5   3.397 ± 1.065  ms/op
+ReshapeViewBenchmark.flatIterableCursor   ArrayImg   identity3d  avgt    5   2.218 ± 0.279  ms/op
+ReshapeViewBenchmark.flatIterableCursor   ArrayImg      split4d  avgt    5   3.180 ± 0.452  ms/op
+ReshapeViewBenchmark.flatIterableCursor   ArrayImg  singleton4d  avgt    5   3.154 ± 0.388  ms/op
+ReshapeViewBenchmark.flatIterableCursor   ArrayImg  translate3d  avgt    5   3.212 ± 0.263  ms/op
+ReshapeViewBenchmark.flatIterableCursor    CellImg         none  avgt    5  16.419 ± 3.757  ms/op
+ReshapeViewBenchmark.flatIterableCursor    CellImg       flat1d  avgt    5  19.121 ± 3.955  ms/op
+ReshapeViewBenchmark.flatIterableCursor    CellImg      merge2d  avgt    5  19.783 ± 1.868  ms/op
+ReshapeViewBenchmark.flatIterableCursor    CellImg   identity3d  avgt    5  16.841 ± 1.646  ms/op
+ReshapeViewBenchmark.flatIterableCursor    CellImg      split4d  avgt    5  18.786 ± 1.933  ms/op
+ReshapeViewBenchmark.flatIterableCursor    CellImg  singleton4d  avgt    5  19.152 ± 0.942  ms/op
+ReshapeViewBenchmark.flatIterableCursor    CellImg  translate3d  avgt    5  19.308 ± 4.794  ms/op
+ReshapeViewBenchmark.loopBuilder          ArrayImg         none  avgt    5   2.341 ± 0.098  ms/op
+ReshapeViewBenchmark.loopBuilder          ArrayImg       flat1d  avgt    5   3.328 ± 0.195  ms/op
+ReshapeViewBenchmark.loopBuilder          ArrayImg      merge2d  avgt    5   3.218 ± 0.409  ms/op
+ReshapeViewBenchmark.loopBuilder          ArrayImg   identity3d  avgt    5   2.254 ± 0.135  ms/op
+ReshapeViewBenchmark.loopBuilder          ArrayImg      split4d  avgt    5   3.139 ± 0.122  ms/op
+ReshapeViewBenchmark.loopBuilder          ArrayImg  singleton4d  avgt    5   3.195 ± 0.251  ms/op
+ReshapeViewBenchmark.loopBuilder          ArrayImg  translate3d  avgt    5   3.185 ± 0.117  ms/op
+ReshapeViewBenchmark.loopBuilder           CellImg         none  avgt    5   9.592 ± 2.422  ms/op
+ReshapeViewBenchmark.loopBuilder           CellImg       flat1d  avgt    5  40.829 ± 5.661  ms/op
+ReshapeViewBenchmark.loopBuilder           CellImg      merge2d  avgt    5  39.662 ± 4.420  ms/op
+ReshapeViewBenchmark.loopBuilder           CellImg   identity3d  avgt    5   9.250 ± 0.532  ms/op
+ReshapeViewBenchmark.loopBuilder           CellImg      split4d  avgt    5  39.035 ± 1.214  ms/op
+ReshapeViewBenchmark.loopBuilder           CellImg  singleton4d  avgt    5  26.299 ± 0.515  ms/op
+ReshapeViewBenchmark.loopBuilder           CellImg  translate3d  avgt    5  23.174 ± 0.620  ms/op
+ReshapeViewBenchmark.randomAccessWalk     ArrayImg         none  avgt    5  16.461 ± 0.317  ms/op
+ReshapeViewBenchmark.randomAccessWalk     ArrayImg       flat1d  avgt    5  77.254 ± 6.879  ms/op
+ReshapeViewBenchmark.randomAccessWalk     ArrayImg      merge2d  avgt    5  76.214 ± 6.035  ms/op
+ReshapeViewBenchmark.randomAccessWalk     ArrayImg   identity3d  avgt    5  16.615 ± 0.731  ms/op
+ReshapeViewBenchmark.randomAccessWalk     ArrayImg      split4d  avgt    5  78.088 ± 1.442  ms/op
+ReshapeViewBenchmark.randomAccessWalk     ArrayImg  singleton4d  avgt    5  48.687 ± 2.583  ms/op
+ReshapeViewBenchmark.randomAccessWalk     ArrayImg  translate3d  avgt    5  37.349 ± 1.629  ms/op
+ReshapeViewBenchmark.randomAccessWalk      CellImg         none  avgt    5  28.084 ± 1.339  ms/op
+ReshapeViewBenchmark.randomAccessWalk      CellImg       flat1d  avgt    5  80.600 ± 1.374  ms/op
+ReshapeViewBenchmark.randomAccessWalk      CellImg      merge2d  avgt    5  85.893 ± 5.510  ms/op
+ReshapeViewBenchmark.randomAccessWalk      CellImg   identity3d  avgt    5  28.670 ± 3.588  ms/op
+ReshapeViewBenchmark.randomAccessWalk      CellImg      split4d  avgt    5  80.507 ± 5.001  ms/op
+ReshapeViewBenchmark.randomAccessWalk      CellImg  singleton4d  avgt    5  57.812 ± 3.515  ms/op
+ReshapeViewBenchmark.randomAccessWalk      CellImg  translate3d  avgt    5  47.519 ± 4.059  ms/op
+ReshapeViewBenchmark.rawCursor            ArrayImg         none  avgt    5   2.157 ± 0.114  ms/op
+ReshapeViewBenchmark.rawCursor            ArrayImg       flat1d  avgt    5   3.074 ± 0.234  ms/op
+ReshapeViewBenchmark.rawCursor            ArrayImg      merge2d  avgt    5   3.074 ± 0.044  ms/op
+ReshapeViewBenchmark.rawCursor            ArrayImg   identity3d  avgt    5   2.377 ± 0.682  ms/op
+ReshapeViewBenchmark.rawCursor            ArrayImg      split4d  avgt    5   3.108 ± 0.222  ms/op
+ReshapeViewBenchmark.rawCursor            ArrayImg  singleton4d  avgt    5   3.163 ± 0.120  ms/op
+ReshapeViewBenchmark.rawCursor            ArrayImg  translate3d  avgt    5   3.174 ± 0.097  ms/op
+ReshapeViewBenchmark.rawCursor             CellImg         none  avgt    5   7.747 ± 0.577  ms/op
+ReshapeViewBenchmark.rawCursor             CellImg       flat1d  avgt    5  19.088 ± 1.973  ms/op
+ReshapeViewBenchmark.rawCursor             CellImg      merge2d  avgt    5  19.004 ± 0.655  ms/op
+ReshapeViewBenchmark.rawCursor             CellImg   identity3d  avgt    5   7.979 ± 0.716  ms/op
+ReshapeViewBenchmark.rawCursor             CellImg      split4d  avgt    5  18.743 ± 1.510  ms/op
+ReshapeViewBenchmark.rawCursor             CellImg  singleton4d  avgt    5  18.513 ± 0.768  ms/op
+ReshapeViewBenchmark.rawCursor             CellImg  translate3d  avgt    5  18.778 ± 0.251  ms/op
+</pre>
+    </details>
+  </details>
+
+  <footer>
+    <span>imglib2 &middot; mixed-reshape branch</span>
+    <span>ReshapeViewBenchmark</span>
+    <span>2026-11-04</span>
+  </footer>
+</div>
+
+<script>
+const DATA = {"now":[{"bench":"flatIterableCursor","imgType":"ArrayImg","viewShape":"none","score":2.319,"error":0.611},{"bench":"flatIterableCursor","imgType":"ArrayImg","viewShape":"flat1d","score":3.08,"error":0.469},{"bench":"flatIterableCursor","imgType":"ArrayImg","viewShape":"merge2d","score":3.397,"error":1.065},{"bench":"flatIterableCursor","imgType":"ArrayImg","viewShape":"identity3d","score":2.218,"error":0.279},{"bench":"flatIterableCursor","imgType":"ArrayImg","viewShape":"split4d","score":3.18,"error":0.452},{"bench":"flatIterableCursor","imgType":"ArrayImg","viewShape":"singleton4d","score":3.154,"error":0.388},{"bench":"flatIterableCursor","imgType":"ArrayImg","viewShape":"translate3d","score":3.212,"error":0.263},{"bench":"flatIterableCursor","imgType":"CellImg","viewShape":"none","score":16.419,"error":3.757},{"bench":"flatIterableCursor","imgType":"CellImg","viewShape":"flat1d","score":19.121,"error":3.955},{"bench":"flatIterableCursor","imgType":"CellImg","viewShape":"merge2d","score":19.783,"error":1.868},{"bench":"flatIterableCursor","imgType":"CellImg","viewShape":"identity3d","score":16.841,"error":1.646},{"bench":"flatIterableCursor","imgType":"CellImg","viewShape":"split4d","score":18.786,"error":1.933},{"bench":"flatIterableCursor","imgType":"CellImg","viewShape":"singleton4d","score":19.152,"error":0.942},{"bench":"flatIterableCursor","imgType":"CellImg","viewShape":"translate3d","score":19.308,"error":4.794},{"bench":"loopBuilder","imgType":"ArrayImg","viewShape":"none","score":2.341,"error":0.098},{"bench":"loopBuilder","imgType":"ArrayImg","viewShape":"flat1d","score":3.328,"error":0.195},{"bench":"loopBuilder","imgType":"ArrayImg","viewShape":"merge2d","score":3.218,"error":0.409},{"bench":"loopBuilder","imgType":"ArrayImg","viewShape":"identity3d","score":2.254,"error":0.135},{"bench":"loopBuilder","imgType":"ArrayImg","viewShape":"split4d","score":3.139,"error":0.122},{"bench":"loopBuilder","imgType":"ArrayImg","viewShape":"singleton4d","score":3.195,"error":0.251},{"bench":"loopBuilder","imgType":"ArrayImg","viewShape":"translate3d","score":3.185,"error":0.117},{"bench":"loopBuilder","imgType":"CellImg","viewShape":"none","score":9.592,"error":2.422},{"bench":"loopBuilder","imgType":"CellImg","viewShape":"flat1d","score":40.829,"error":5.661},{"bench":"loopBuilder","imgType":"CellImg","viewShape":"merge2d","score":39.662,"error":4.42},{"bench":"loopBuilder","imgType":"CellImg","viewShape":"identity3d","score":9.25,"error":0.532},{"bench":"loopBuilder","imgType":"CellImg","viewShape":"split4d","score":39.035,"error":1.214},{"bench":"loopBuilder","imgType":"CellImg","viewShape":"singleton4d","score":26.299,"error":0.515},{"bench":"loopBuilder","imgType":"CellImg","viewShape":"translate3d","score":23.174,"error":0.62},{"bench":"randomAccessWalk","imgType":"ArrayImg","viewShape":"none","score":16.461,"error":0.317},{"bench":"randomAccessWalk","imgType":"ArrayImg","viewShape":"flat1d","score":77.254,"error":6.879},{"bench":"randomAccessWalk","imgType":"ArrayImg","viewShape":"merge2d","score":76.214,"error":6.035},{"bench":"randomAccessWalk","imgType":"ArrayImg","viewShape":"identity3d","score":16.615,"error":0.731},{"bench":"randomAccessWalk","imgType":"ArrayImg","viewShape":"split4d","score":78.088,"error":1.442},{"bench":"randomAccessWalk","imgType":"ArrayImg","viewShape":"singleton4d","score":48.687,"error":2.583},{"bench":"randomAccessWalk","imgType":"ArrayImg","viewShape":"translate3d","score":37.349,"error":1.629},{"bench":"randomAccessWalk","imgType":"CellImg","viewShape":"none","score":28.084,"error":1.339},{"bench":"randomAccessWalk","imgType":"CellImg","viewShape":"flat1d","score":80.6,"error":1.374},{"bench":"randomAccessWalk","imgType":"CellImg","viewShape":"merge2d","score":85.893,"error":5.51},{"bench":"randomAccessWalk","imgType":"CellImg","viewShape":"identity3d","score":28.67,"error":3.588},{"bench":"randomAccessWalk","imgType":"CellImg","viewShape":"split4d","score":80.507,"error":5.001},{"bench":"randomAccessWalk","imgType":"CellImg","viewShape":"singleton4d","score":57.812,"error":3.515},{"bench":"randomAccessWalk","imgType":"CellImg","viewShape":"translate3d","score":47.519,"error":4.059},{"bench":"rawCursor","imgType":"ArrayImg","viewShape":"none","score":2.157,"error":0.114},{"bench":"rawCursor","imgType":"ArrayImg","viewShape":"flat1d","score":3.074,"error":0.234},{"bench":"rawCursor","imgType":"ArrayImg","viewShape":"merge2d","score":3.074,"error":0.044},{"bench":"rawCursor","imgType":"ArrayImg","viewShape":"identity3d","score":2.377,"error":0.682},{"bench":"rawCursor","imgType":"ArrayImg","viewShape":"split4d","score":3.108,"error":0.222},{"bench":"rawCursor","imgType":"ArrayImg","viewShape":"singleton4d","score":3.163,"error":0.12},{"bench":"rawCursor","imgType":"ArrayImg","viewShape":"translate3d","score":3.174,"error":0.097},{"bench":"rawCursor","imgType":"CellImg","viewShape":"none","score":7.747,"error":0.577},{"bench":"rawCursor","imgType":"CellImg","viewShape":"flat1d","score":19.088,"error":1.973},{"bench":"rawCursor","imgType":"CellImg","viewShape":"merge2d","score":19.004,"error":0.655},{"bench":"rawCursor","imgType":"CellImg","viewShape":"identity3d","score":7.979,"error":0.716},{"bench":"rawCursor","imgType":"CellImg","viewShape":"split4d","score":18.743,"error":1.51},{"bench":"rawCursor","imgType":"CellImg","viewShape":"singleton4d","score":18.513,"error":0.768},{"bench":"rawCursor","imgType":"CellImg","viewShape":"translate3d","score":18.778,"error":0.251}],"sep":[{"bench":"flatIterableCursor","score":2.213,"error":0.062,"imgType":"ArrayImg","viewShape":"none"},{"bench":"flatIterableCursor","score":3.196,"error":0.148,"imgType":"ArrayImg","viewShape":"flat1d"},{"bench":"flatIterableCursor","score":3.161,"error":0.096,"imgType":"ArrayImg","viewShape":"merge2d"},{"bench":"flatIterableCursor","score":2.218,"error":0.211,"imgType":"ArrayImg","viewShape":"identity3d"},{"bench":"flatIterableCursor","score":3.103,"error":0.241,"imgType":"ArrayImg","viewShape":"split4d"},{"bench":"flatIterableCursor","score":3.135,"error":0.143,"imgType":"ArrayImg","viewShape":"singleton4d"},{"bench":"flatIterableCursor","score":3.106,"error":0.143,"imgType":"ArrayImg","viewShape":"translate3d"},{"bench":"flatIterableCursor","score":16.221,"error":3.892,"imgType":"CellImg","viewShape":"none"},{"bench":"flatIterableCursor","score":17.645,"error":1.068,"imgType":"CellImg","viewShape":"flat1d"},{"bench":"flatIterableCursor","score":17.907,"error":0.911,"imgType":"CellImg","viewShape":"merge2d"},{"bench":"flatIterableCursor","score":16.185,"error":0.767,"imgType":"CellImg","viewShape":"identity3d"},{"bench":"flatIterableCursor","score":18.168,"error":1.521,"imgType":"CellImg","viewShape":"split4d"},{"bench":"flatIterableCursor","score":17.983,"error":0.775,"imgType":"CellImg","viewShape":"singleton4d"},{"bench":"flatIterableCursor","score":18.177,"error":0.919,"imgType":"CellImg","viewShape":"translate3d"},{"bench":"loopBuilder","score":2.281,"error":0.057,"imgType":"ArrayImg","viewShape":"none"},{"bench":"loopBuilder","score":3.184,"error":0.107,"imgType":"ArrayImg","viewShape":"flat1d"},{"bench":"loopBuilder","score":3.155,"error":0.107,"imgType":"ArrayImg","viewShape":"merge2d"},{"bench":"loopBuilder","score":2.225,"error":0.025,"imgType":"ArrayImg","viewShape":"identity3d"},{"bench":"loopBuilder","score":3.215,"error":0.266,"imgType":"ArrayImg","viewShape":"split4d"},{"bench":"loopBuilder","score":3.142,"error":0.285,"imgType":"ArrayImg","viewShape":"singleton4d"},{"bench":"loopBuilder","score":3.102,"error":0.106,"imgType":"ArrayImg","viewShape":"translate3d"},{"bench":"loopBuilder","score":8.879,"error":0.131,"imgType":"CellImg","viewShape":"none"},{"bench":"loopBuilder","score":37.644,"error":0.315,"imgType":"CellImg","viewShape":"flat1d"},{"bench":"loopBuilder","score":36.895,"error":0.56,"imgType":"CellImg","viewShape":"merge2d"},{"bench":"loopBuilder","score":9.074,"error":0.651,"imgType":"CellImg","viewShape":"identity3d"},{"bench":"loopBuilder","score":37.582,"error":3.335,"imgType":"CellImg","viewShape":"split4d"},{"bench":"loopBuilder","score":25.112,"error":1.4,"imgType":"CellImg","viewShape":"singleton4d"},{"bench":"loopBuilder","score":19.373,"error":0.425,"imgType":"CellImg","viewShape":"translate3d"},{"bench":"randomAccessWalk","score":15.609,"error":0.625,"imgType":"ArrayImg","viewShape":"none"},{"bench":"randomAccessWalk","score":74.691,"error":2.085,"imgType":"ArrayImg","viewShape":"flat1d"},{"bench":"randomAccessWalk","score":74.407,"error":4.065,"imgType":"ArrayImg","viewShape":"merge2d"},{"bench":"randomAccessWalk","score":15.669,"error":0.216,"imgType":"ArrayImg","viewShape":"identity3d"},{"bench":"randomAccessWalk","score":74.882,"error":1.605,"imgType":"ArrayImg","viewShape":"split4d"},{"bench":"randomAccessWalk","score":48.325,"error":6.135,"imgType":"ArrayImg","viewShape":"singleton4d"},{"bench":"randomAccessWalk","score":36.655,"error":1.27,"imgType":"ArrayImg","viewShape":"translate3d"},{"bench":"randomAccessWalk","score":28.217,"error":1.893,"imgType":"CellImg","viewShape":"none"},{"bench":"randomAccessWalk","score":86.537,"error":7.706,"imgType":"CellImg","viewShape":"flat1d"},{"bench":"randomAccessWalk","score":89.334,"error":5.108,"imgType":"CellImg","viewShape":"merge2d"},{"bench":"randomAccessWalk","score":29.925,"error":3.845,"imgType":"CellImg","viewShape":"identity3d"},{"bench":"randomAccessWalk","score":78.556,"error":3.185,"imgType":"CellImg","viewShape":"split4d"},{"bench":"randomAccessWalk","score":54.183,"error":2.384,"imgType":"CellImg","viewShape":"singleton4d"},{"bench":"randomAccessWalk","score":45.699,"error":0.663,"imgType":"CellImg","viewShape":"translate3d"},{"bench":"rawCursor","score":2.161,"error":0.126,"imgType":"ArrayImg","viewShape":"none"},{"bench":"rawCursor","score":3.116,"error":0.124,"imgType":"ArrayImg","viewShape":"flat1d"},{"bench":"rawCursor","score":3.12,"error":0.135,"imgType":"ArrayImg","viewShape":"merge2d"},{"bench":"rawCursor","score":2.166,"error":0.09,"imgType":"ArrayImg","viewShape":"identity3d"},{"bench":"rawCursor","score":3.11,"error":0.153,"imgType":"ArrayImg","viewShape":"split4d"},{"bench":"rawCursor","score":3.1,"error":0.2,"imgType":"ArrayImg","viewShape":"singleton4d"},{"bench":"rawCursor","score":3.121,"error":0.153,"imgType":"ArrayImg","viewShape":"translate3d"},{"bench":"rawCursor","score":7.714,"error":0.363,"imgType":"CellImg","viewShape":"none"},{"bench":"rawCursor","score":17.967,"error":1.276,"imgType":"CellImg","viewShape":"flat1d"},{"bench":"rawCursor","score":17.733,"error":1.05,"imgType":"CellImg","viewShape":"merge2d"},{"bench":"rawCursor","score":7.779,"error":0.092,"imgType":"CellImg","viewShape":"identity3d"},{"bench":"rawCursor","score":18.837,"error":2.078,"imgType":"CellImg","viewShape":"split4d"},{"bench":"rawCursor","score":18.869,"error":0.648,"imgType":"CellImg","viewShape":"singleton4d"},{"bench":"rawCursor","score":18.667,"error":1.123,"imgType":"CellImg","viewShape":"translate3d"}]};
+
+const LOOPS = [
+  { id: "flatIterableCursor", label: "Views.flatIterable cursor" },
+  { id: "rawCursor", label: "view.cursor()" },
+  { id: "loopBuilder", label: "LoopBuilder" },
+  { id: "randomAccessWalk", label: "RandomAccess walk" },
+];
+const SHAPES = ["flat1d", "merge2d", "split4d", "identity3d", "singleton4d", "translate3d"];
+const DOMAIN = 100;
+const TICKS = [0, 25, 50, 75, 100];
+const SVGNS = "http://www.w3.org/2000/svg";
+
+function pick(run, q) {
+  return DATA[run].find(r => Object.keys(q).every(k => r[k] === q[k]));
+}
+const f2 = v => v.toFixed(2);
+const ms = v => (v >= 10 ? v.toFixed(1) : v.toFixed(2));
+const times = v => (v >= 10 ? v.toFixed(0) : v.toFixed(1)) + "\u00d7";
+const pct = v => (v >= 0 ? "+" : "\u2212") + Math.abs(v).toFixed(1) + "%";
+
+function el(tag, attrs, parent) {
+  const e = document.createElementNS(SVGNS, tag);
+  for (const k in attrs) e.setAttribute(k, attrs[k]);
+  if (parent) parent.appendChild(e);
+  return e;
+}
+function text(parent, x, y, str, cls, anchor) {
+  const t = el("text", { x, y, class: cls, "text-anchor": anchor || "start", "dominant-baseline": "middle" }, parent);
+  t.textContent = str;
+  return t;
+}
+
+let imgType = "ArrayImg";
+try {
+  const saved = localStorage.getItem("reshape-view-bench-img");
+  if (saved === "ArrayImg" || saved === "CellImg") imgType = saved;
+} catch (e) {}
+document.getElementById(imgType === "CellImg" ? "img-cell" : "img-array").checked = true;
+
+/* ---------- tooltip ---------- */
+function makeTip(host) {
+  const tip = document.createElement("div");
+  tip.className = "tooltip";
+  tip.hidden = true;
+  tip.setAttribute("role", "status");
+  host.appendChild(tip);
+  return tip;
+}
+function placeTip(tip, host, x, y) {
+  tip.hidden = false;
+  const w = tip.offsetWidth, h = tip.offsetHeight, W = host.clientWidth;
+  let left = x + 14, top = y + 14;
+  if (left + w > W) left = Math.max(0, x - w - 14);
+  if (top + h > host.clientHeight + 40) top = Math.max(0, y - h - 10);
+  tip.style.left = left + "px";
+  tip.style.top = top + "px";
+}
+function swatch(kind) {
+  if (kind === "before") return '<svg width="12" height="12"><circle cx="6" cy="6" r="4" fill="none" stroke="var(--before)" stroke-width="2.2"/></svg>';
+  if (kind === "fallback") return '<svg width="12" height="12"><circle cx="6" cy="6" r="4" fill="none" stroke="var(--fallback)" stroke-width="2.2"/></svg>';
+  if (kind === "now") return '<svg width="12" height="12"><circle cx="6" cy="6" r="5" fill="var(--now)"/></svg>';
+  return '<svg width="8" height="12"><line x1="4" y1="1" x2="4" y2="11" stroke="var(--ink)" stroke-width="2"/></svg>';
+}
+function bindHit(hit, tip, host, html) {
+  hit.addEventListener("pointerenter", () => { tip.innerHTML = html; hit.classList.add("active"); });
+  hit.addEventListener("pointermove", ev => {
+    const r = host.getBoundingClientRect();
+    tip.innerHTML = html;
+    placeTip(tip, host, ev.clientX - r.left, ev.clientY - r.top);
+  });
+  hit.addEventListener("pointerleave", () => { tip.hidden = true; hit.classList.remove("active"); });
+  hit.addEventListener("focus", () => {
+    tip.innerHTML = html;
+    const hb = hit.getBBox();
+    placeTip(tip, host, host.clientWidth * 0.45, hb.y + hb.height);
+  });
+  hit.addEventListener("blur", () => { tip.hidden = true; });
+}
+function tipHtml(title, lines, foot) {
+  return `<div class="tt-title">${title}</div>` +
+    lines.map(([k, kind, v]) => `<div class="tt-row"><span>${kind ? swatch(kind) : ""}${k}</span><span>${v}</span></div>`).join("") +
+    (foot ? `<div class="tt-foot">${foot}</div>` : "");
+}
+const pm = (r, unit) => `${f2(r.score)} \u00b1 ${f2(r.error)}${unit ? " " + unit : ""}`;
+
+/* ---------- dumbbell chart ---------- */
+function dumbbell(host, groups, opts) {
+  host.innerHTML = "";
+  const W = host.clientWidth;
+  const narrow = W < 540 || opts.compact;
+  const labelW = opts.labelW || (narrow ? 104 : 150);
+  const rightW = narrow ? 88 : 128;
+  const x0 = labelW, x1 = W - rightW - 12;
+  const xs = opts.xs(x0, x1);
+  const groupH = 30, rowH = 26, axisH = 26;
+  let H = 0;
+  groups.forEach(g => { H += groupH + g.rows.length * rowH; });
+  const plotH = H;
+  H += axisH;
+
+  const svg = el("svg", { viewBox: `0 0 ${W} ${H}`, height: H, role: "img", "aria-label": opts.aria }, host);
+  const grid = el("g", {}, svg);
+  opts.ticks.forEach((t, i) => {
+    el("line", { x1: xs(t), x2: xs(t), y1: 0, y2: plotH, class: i === 0 ? "base-line" : "grid-line" }, grid);
+    text(grid, xs(t), plotH + 14, String(t), "tick", "middle");
+  });
+  text(svg, W, plotH + 14, opts.unit, "tick", "end");
+
+  const tip = makeTip(host);
+  let y = 0;
+  groups.forEach((g, gi) => {
+    if (gi > 0) el("line", { x1: 0, x2: W, y1: y + 0.5, y2: y + 0.5, class: "group-rule" }, svg);
+    text(svg, 0, y + groupH / 2 + 2, g.label, "group-label");
+    y += groupH;
+    g.rows.forEach(r => {
+      const cy = y + rowH / 2;
+      text(svg, 0, cy, r.label, "row-label mono");
+      if (r.before) el("line", { x1: xs(r.before.score), x2: xs(r.now.score), y1: cy, y2: cy, class: "connector" }, svg);
+      if (r.raw != null) el("line", { x1: xs(r.raw), x2: xs(r.raw), y1: cy - 8, y2: cy + 8, class: "mark-raw" }, svg);
+      if (r.before) el("circle", { cx: xs(r.before.score), cy, r: 5, class: opts.beforeClass }, svg);
+      el("circle", { cx: xs(r.now.score), cy, r: 6, class: "mark-now" }, svg);
+      text(svg, W - (narrow ? 38 : 48), cy, ms(r.now.score), "val", "end");
+      text(svg, W, cy, r.sub, r.worse ? "val-sub worse" : "val-sub", "end");
+      const hit = el("rect", { x: 0, y: y + 1, width: W, height: rowH - 2, rx: 4, class: "hit", tabindex: 0, "aria-label": r.aria }, svg);
+      bindHit(hit, tip, host, r.tip);
+      y += rowH;
+    });
+  });
+}
+const linear = (x0, x1) => v => x0 + (Math.min(v, DOMAIN) / DOMAIN) * (x1 - x0);
+
+/* ---------- chart 1: every loop, every shape ---------- */
+function renderAllChart() {
+  const groups = LOOPS.map(L => {
+    const raw = pick("now", { bench: L.id, imgType, viewShape: "none" });
+    return {
+      label: L.label,
+      rows: SHAPES.map(s => {
+        const now = pick("now", { bench: L.id, imgType, viewShape: s });
+        const before = pick("sep", { bench: L.id, imgType, viewShape: s });
+        const d = (now.score / before.score - 1) * 100;
+        return {
+          label: s, before, now, raw: raw.score,
+          worse: now.score / raw.score >= 2,
+          sub: times(now.score / raw.score),
+          tip: tipHtml(`${s} \u00b7 ${L.label} \u00b7 ${imgType}`, [
+            ["September run", "before", pm(before, "ms")],
+            ["This run", "now", pm(now, "ms")],
+            ["Raw image", "raw", f2(raw.score) + " ms"],
+          ], `${times(now.score / raw.score)} the bare image \u00b7 ${pct(d)} since September`),
+          aria: `${L.label}, ${s}: this run ${f2(now.score)} ms, September ${f2(before.score)} ms, raw image ${f2(raw.score)} ms`,
+        };
+      }),
+    };
+  });
+  dumbbell(document.getElementById("chart-all"), groups, {
+    aria: `All loops and view shapes on ${imgType}`,
+    xs: linear, ticks: TICKS, unit: "ms/op", beforeClass: "mark-before",
+  });
+
+  let h = "<thead><tr><th>loop</th><th class='l'>viewShape</th><th>raw image</th><th>September</th><th>this run</th><th>\u00f7 raw</th><th>drift</th></tr></thead><tbody>";
+  LOOPS.forEach(L => {
+    const raw = pick("now", { bench: L.id, imgType, viewShape: "none" });
+    SHAPES.forEach(s => {
+      const n = pick("now", { bench: L.id, imgType, viewShape: s });
+      const b = pick("sep", { bench: L.id, imgType, viewShape: s });
+      h += `<tr><td>${L.id}</td><td class="l">${s}</td><td>${f2(raw.score)}</td><td>${f2(b.score)} <span class="pm">\u00b1 ${f2(b.error)}</span></td><td>${f2(n.score)} <span class="pm">\u00b1 ${f2(n.error)}</span></td><td>${times(n.score / raw.score)}</td><td>${pct((n.score / b.score - 1) * 100)}</td></tr>`;
+    });
+  });
+  document.getElementById("table-all").innerHTML = h + "</tbody>";
+}
+
+/* ---------- chart 2: LoopBuilder vs cursor ---------- */
+const LB_SHAPES = ["none", "identity3d", "flat1d", "merge2d", "split4d", "singleton4d", "translate3d"];
+function renderLoopBuilder() {
+  const groups = ["ArrayImg", "CellImg"].map(img => ({
+    label: img,
+    rows: LB_SHAPES.map(s => {
+      const cur = pick("now", { bench: "rawCursor", imgType: img, viewShape: s });
+      const lb = pick("now", { bench: "loopBuilder", imgType: img, viewShape: s });
+      const ratio = lb.score / cur.score;
+      return {
+        label: s, before: cur, now: lb, raw: null,
+        worse: ratio >= 1.15,
+        sub: times(ratio),
+        tip: tipHtml(`${s} \u00b7 ${img}`, [
+          ["view.cursor()", "before", pm(cur, "ms")],
+          ["LoopBuilder", "now", pm(lb, "ms")],
+        ], s === "none" || s === "identity3d" ? `control: no transform survives \u00b7 ${times(ratio)}` : (ratio >= 1.05 ? `LoopBuilder is ${times(ratio)} slower` : "the two agree within noise")),
+        aria: `${img}, ${s}: cursor ${f2(cur.score)} ms, LoopBuilder ${f2(lb.score)} ms`,
+      };
+    }),
+  }));
+  dumbbell(document.getElementById("chart-lb"), groups, {
+    aria: "LoopBuilder against the flatIterable cursor",
+    xs: linear, ticks: TICKS, unit: "ms/op", beforeClass: "mark-before",
+  });
+
+  let h = "<thead><tr><th>image</th><th class='l'>viewShape</th><th>view.cursor()</th><th>flatIterable</th><th>LoopBuilder</th><th>LB \u00f7 cursor</th></tr></thead><tbody>";
+  ["ArrayImg", "CellImg"].forEach(img => LB_SHAPES.forEach(s => {
+    const fi = pick("now", { bench: "flatIterableCursor", imgType: img, viewShape: s });
+    const c = pick("now", { bench: "rawCursor", imgType: img, viewShape: s });
+    const l = pick("now", { bench: "loopBuilder", imgType: img, viewShape: s });
+    h += `<tr><td>${img}</td><td class="l">${s}</td><td>${f2(c.score)} <span class="pm">\u00b1 ${f2(c.error)}</span></td><td>${f2(fi.score)}</td><td>${f2(l.score)} <span class="pm">\u00b1 ${f2(l.error)}</span></td><td>${times(l.score / c.score)}</td></tr>`;
+  }));
+  document.getElementById("table-lb").innerHTML = h + "</tbody>";
+}
+
+/* ---------- chart 3: drift ---------- */
+function renderDrift() {
+  const host = document.getElementById("chart-drift");
+  host.innerHTML = "";
+  const W = host.clientWidth;
+  const H = 240, padL = 54, padR = 16, padT = 16, padB = 34;
+  const all = DATA.now.map(n => {
+    const b = pick("sep", { bench: n.bench, imgType: n.imgType, viewShape: n.viewShape });
+    return { n, b, d: (n.score / b.score - 1) * 100 };
+  });
+  const svg = el("svg", { viewBox: `0 0 ${W} ${H}`, height: H, role: "img",
+    "aria-label": "Percent change from the September run against the September time, for all 56 points" }, host);
+  const xmin = 2, xmax = 100;
+  const sx = v => padL + (Math.log10(Math.min(Math.max(v, xmin), xmax)) - Math.log10(xmin)) / (Math.log10(xmax) - Math.log10(xmin)) * (W - padL - padR);
+  const dmax = 25;
+  const sy = d => padT + (dmax - Math.max(Math.min(d, dmax), -dmax)) / (2 * dmax) * (H - padT - padB);
+  [-20, -10, 0, 10, 20].forEach(d => {
+    el("line", { x1: padL, x2: W - padR, y1: sy(d), y2: sy(d), class: d === 0 ? "base-line" : "grid-line" }, svg);
+    text(svg, padL - 8, sy(d), (d > 0 ? "+" : "") + d + "%", "tick", "end");
+  });
+  [2, 5, 10, 20, 50, 100].forEach(v => {
+    el("line", { x1: sx(v), x2: sx(v), y1: padT, y2: H - padB, class: "grid-line" }, svg);
+    text(svg, sx(v), H - padB + 14, String(v), "tick", "middle");
+  });
+  text(svg, W - padR, H - padB + 14, "September ms/op (log)", "tick", "end");
+  const tip = makeTip(host);
+  all.forEach(p => {
+    const cx = sx(p.b.score), cy = sy(p.d);
+    const out = Math.abs(p.d) > 10;
+    const c = el("circle", { cx, cy, r: out ? 5.5 : 4,
+      class: out ? "mark-before" : "mark-now", tabindex: 0,
+      "aria-label": `${p.n.bench}, ${p.n.imgType}, ${p.n.viewShape}: ${pct(p.d)}` }, svg);
+    c.style.cursor = "default";
+    bindHit(c, tip, host, tipHtml(`${p.n.viewShape} \u00b7 ${p.n.imgType}`, [
+      [p.n.bench, null, ""],
+      ["September", "before", pm(p.b, "ms")],
+      ["This run", "now", pm(p.n, "ms")],
+    ], pct(p.d)));
+  });
+}
+
+function renderAll() {
+  renderAllChart();
+  renderLoopBuilder();
+  renderDrift();
+}
+document.querySelectorAll('input[name="img"]').forEach(inp => {
+  inp.addEventListener("change", () => {
+    imgType = inp.value;
+    try { localStorage.setItem("reshape-view-bench-img", imgType); } catch (e) {}
+    renderAllChart();
+  });
+});
+renderAll();
+let lastW = document.querySelector(".page").clientWidth;
+new ResizeObserver(() => {
+  const w = document.querySelector(".page").clientWidth;
+  if (Math.abs(w - lastW) > 2) { lastW = w; renderAll(); }
+}).observe(document.querySelector(".page"));
+</script>

@@ -1,0 +1,1977 @@
+Picked up _JAVA_OPTIONS: -Dsun.awt.disablegrab=true
+selfCheck: OK
+# JMH version: 1.37
+# VM version: JDK 21.0.3, OpenJDK 64-Bit Server VM, 21.0.3+9-LTS
+# VM invoker: /usr/lib/jvm/zulu-21-amd64/bin/java
+# VM options: -Dsun.awt.disablegrab=true
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 5 iterations, 100 ms each
+# Measurement: 5 iterations, 200 ms each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: net.imglib2.view.ReshapeViewBenchmark.flatIterableCursor
+# Parameters: (imgType = ArrayImg, viewShape = none)
+
+# Run progress: 0.00% complete, ETA 00:01:24
+# Fork: 1 of 1
+Picked up _JAVA_OPTIONS: -Dsun.awt.disablegrab=true
+# Warmup Iteration   1: 2.490 ms/op
+# Warmup Iteration   2: 2.295 ms/op
+# Warmup Iteration   3: 2.155 ms/op
+# Warmup Iteration   4: 2.069 ms/op
+# Warmup Iteration   5: 2.148 ms/op
+Iteration   1: 2.465 ms/op
+Iteration   2: 2.477 ms/op
+Iteration   3: 2.342 ms/op
+Iteration   4: 2.152 ms/op
+Iteration   5: 2.158 ms/op
+
+
+Result "net.imglib2.view.ReshapeViewBenchmark.flatIterableCursor":
+  2.319 ±(99.9%) 0.611 ms/op [Average]
+  (min, avg, max) = (2.152, 2.319, 2.477), stdev = 0.159
+  CI (99.9%): [1.707, 2.930] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 21.0.3, OpenJDK 64-Bit Server VM, 21.0.3+9-LTS
+# VM invoker: /usr/lib/jvm/zulu-21-amd64/bin/java
+# VM options: -Dsun.awt.disablegrab=true
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 5 iterations, 100 ms each
+# Measurement: 5 iterations, 200 ms each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: net.imglib2.view.ReshapeViewBenchmark.flatIterableCursor
+# Parameters: (imgType = ArrayImg, viewShape = flat1d)
+
+# Run progress: 1.79% complete, ETA 00:01:37
+# Fork: 1 of 1
+Picked up _JAVA_OPTIONS: -Dsun.awt.disablegrab=true
+# Warmup Iteration   1: 3.537 ms/op
+# Warmup Iteration   2: 3.241 ms/op
+# Warmup Iteration   3: 3.068 ms/op
+# Warmup Iteration   4: 3.148 ms/op
+# Warmup Iteration   5: 3.134 ms/op
+Iteration   1: 3.066 ms/op
+Iteration   2: 2.903 ms/op
+Iteration   3: 3.049 ms/op
+Iteration   4: 3.225 ms/op
+Iteration   5: 3.155 ms/op
+
+
+Result "net.imglib2.view.ReshapeViewBenchmark.flatIterableCursor":
+  3.080 ±(99.9%) 0.469 ms/op [Average]
+  (min, avg, max) = (2.903, 3.080, 3.225), stdev = 0.122
+  CI (99.9%): [2.611, 3.548] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 21.0.3, OpenJDK 64-Bit Server VM, 21.0.3+9-LTS
+# VM invoker: /usr/lib/jvm/zulu-21-amd64/bin/java
+# VM options: -Dsun.awt.disablegrab=true
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 5 iterations, 100 ms each
+# Measurement: 5 iterations, 200 ms each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: net.imglib2.view.ReshapeViewBenchmark.flatIterableCursor
+# Parameters: (imgType = ArrayImg, viewShape = merge2d)
+
+# Run progress: 3.57% complete, ETA 00:01:34
+# Fork: 1 of 1
+Picked up _JAVA_OPTIONS: -Dsun.awt.disablegrab=true
+# Warmup Iteration   1: 3.749 ms/op
+# Warmup Iteration   2: 3.237 ms/op
+# Warmup Iteration   3: 3.124 ms/op
+# Warmup Iteration   4: 3.114 ms/op
+# Warmup Iteration   5: 3.103 ms/op
+Iteration   1: 3.229 ms/op
+Iteration   2: 3.880 ms/op
+Iteration   3: 3.318 ms/op
+Iteration   4: 3.350 ms/op
+Iteration   5: 3.207 ms/op
+
+
+Result "net.imglib2.view.ReshapeViewBenchmark.flatIterableCursor":
+  3.397 ±(99.9%) 1.065 ms/op [Average]
+  (min, avg, max) = (3.207, 3.397, 3.880), stdev = 0.277
+  CI (99.9%): [2.331, 4.462] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 21.0.3, OpenJDK 64-Bit Server VM, 21.0.3+9-LTS
+# VM invoker: /usr/lib/jvm/zulu-21-amd64/bin/java
+# VM options: -Dsun.awt.disablegrab=true
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 5 iterations, 100 ms each
+# Measurement: 5 iterations, 200 ms each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: net.imglib2.view.ReshapeViewBenchmark.flatIterableCursor
+# Parameters: (imgType = ArrayImg, viewShape = identity3d)
+
+# Run progress: 5.36% complete, ETA 00:01:32
+# Fork: 1 of 1
+Picked up _JAVA_OPTIONS: -Dsun.awt.disablegrab=true
+# Warmup Iteration   1: 2.550 ms/op
+# Warmup Iteration   2: 2.194 ms/op
+# Warmup Iteration   3: 2.215 ms/op
+# Warmup Iteration   4: 2.181 ms/op
+# Warmup Iteration   5: 2.068 ms/op
+Iteration   1: 2.149 ms/op
+Iteration   2: 2.143 ms/op
+Iteration   3: 2.226 ms/op
+Iteration   4: 2.258 ms/op
+Iteration   5: 2.313 ms/op
+
+
+Result "net.imglib2.view.ReshapeViewBenchmark.flatIterableCursor":
+  2.218 ±(99.9%) 0.279 ms/op [Average]
+  (min, avg, max) = (2.143, 2.218, 2.313), stdev = 0.072
+  CI (99.9%): [1.939, 2.497] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 21.0.3, OpenJDK 64-Bit Server VM, 21.0.3+9-LTS
+# VM invoker: /usr/lib/jvm/zulu-21-amd64/bin/java
+# VM options: -Dsun.awt.disablegrab=true
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 5 iterations, 100 ms each
+# Measurement: 5 iterations, 200 ms each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: net.imglib2.view.ReshapeViewBenchmark.flatIterableCursor
+# Parameters: (imgType = ArrayImg, viewShape = split4d)
+
+# Run progress: 7.14% complete, ETA 00:01:30
+# Fork: 1 of 1
+Picked up _JAVA_OPTIONS: -Dsun.awt.disablegrab=true
+# Warmup Iteration   1: 3.892 ms/op
+# Warmup Iteration   2: 3.157 ms/op
+# Warmup Iteration   3: 3.070 ms/op
+# Warmup Iteration   4: 3.066 ms/op
+# Warmup Iteration   5: 3.138 ms/op
+Iteration   1: 3.052 ms/op
+Iteration   2: 3.329 ms/op
+Iteration   3: 3.265 ms/op
+Iteration   4: 3.167 ms/op
+Iteration   5: 3.086 ms/op
+
+
+Result "net.imglib2.view.ReshapeViewBenchmark.flatIterableCursor":
+  3.180 ±(99.9%) 0.452 ms/op [Average]
+  (min, avg, max) = (3.052, 3.180, 3.329), stdev = 0.117
+  CI (99.9%): [2.728, 3.631] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 21.0.3, OpenJDK 64-Bit Server VM, 21.0.3+9-LTS
+# VM invoker: /usr/lib/jvm/zulu-21-amd64/bin/java
+# VM options: -Dsun.awt.disablegrab=true
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 5 iterations, 100 ms each
+# Measurement: 5 iterations, 200 ms each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: net.imglib2.view.ReshapeViewBenchmark.flatIterableCursor
+# Parameters: (imgType = ArrayImg, viewShape = singleton4d)
+
+# Run progress: 8.93% complete, ETA 00:01:28
+# Fork: 1 of 1
+Picked up _JAVA_OPTIONS: -Dsun.awt.disablegrab=true
+# Warmup Iteration   1: 4.287 ms/op
+# Warmup Iteration   2: 3.095 ms/op
+# Warmup Iteration   3: 3.164 ms/op
+# Warmup Iteration   4: 3.138 ms/op
+# Warmup Iteration   5: 3.277 ms/op
+Iteration   1: 3.249 ms/op
+Iteration   2: 3.205 ms/op
+Iteration   3: 2.985 ms/op
+Iteration   4: 3.156 ms/op
+Iteration   5: 3.175 ms/op
+
+
+Result "net.imglib2.view.ReshapeViewBenchmark.flatIterableCursor":
+  3.154 ±(99.9%) 0.388 ms/op [Average]
+  (min, avg, max) = (2.985, 3.154, 3.249), stdev = 0.101
+  CI (99.9%): [2.766, 3.542] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 21.0.3, OpenJDK 64-Bit Server VM, 21.0.3+9-LTS
+# VM invoker: /usr/lib/jvm/zulu-21-amd64/bin/java
+# VM options: -Dsun.awt.disablegrab=true
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 5 iterations, 100 ms each
+# Measurement: 5 iterations, 200 ms each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: net.imglib2.view.ReshapeViewBenchmark.flatIterableCursor
+# Parameters: (imgType = ArrayImg, viewShape = translate3d)
+
+# Run progress: 10.71% complete, ETA 00:01:26
+# Fork: 1 of 1
+Picked up _JAVA_OPTIONS: -Dsun.awt.disablegrab=true
+# Warmup Iteration   1: 3.764 ms/op
+# Warmup Iteration   2: 3.224 ms/op
+# Warmup Iteration   3: 3.241 ms/op
+# Warmup Iteration   4: 3.167 ms/op
+# Warmup Iteration   5: 3.181 ms/op
+Iteration   1: 3.291 ms/op
+Iteration   2: 3.269 ms/op
+Iteration   3: 3.191 ms/op
+Iteration   4: 3.184 ms/op
+Iteration   5: 3.122 ms/op
+
+
+Result "net.imglib2.view.ReshapeViewBenchmark.flatIterableCursor":
+  3.212 ±(99.9%) 0.263 ms/op [Average]
+  (min, avg, max) = (3.122, 3.212, 3.291), stdev = 0.068
+  CI (99.9%): [2.948, 3.475] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 21.0.3, OpenJDK 64-Bit Server VM, 21.0.3+9-LTS
+# VM invoker: /usr/lib/jvm/zulu-21-amd64/bin/java
+# VM options: -Dsun.awt.disablegrab=true
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 5 iterations, 100 ms each
+# Measurement: 5 iterations, 200 ms each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: net.imglib2.view.ReshapeViewBenchmark.flatIterableCursor
+# Parameters: (imgType = CellImg, viewShape = none)
+
+# Run progress: 12.50% complete, ETA 00:01:24
+# Fork: 1 of 1
+Picked up _JAVA_OPTIONS: -Dsun.awt.disablegrab=true
+# Warmup Iteration   1: 20.809 ms/op
+# Warmup Iteration   2: 15.472 ms/op
+# Warmup Iteration   3: 15.961 ms/op
+# Warmup Iteration   4: 15.505 ms/op
+# Warmup Iteration   5: 16.099 ms/op
+Iteration   1: 16.528 ms/op
+Iteration   2: 15.408 ms/op
+Iteration   3: 15.508 ms/op
+Iteration   4: 17.713 ms/op
+Iteration   5: 16.938 ms/op
+
+
+Result "net.imglib2.view.ReshapeViewBenchmark.flatIterableCursor":
+  16.419 ±(99.9%) 3.757 ms/op [Average]
+  (min, avg, max) = (15.408, 16.419, 17.713), stdev = 0.976
+  CI (99.9%): [12.662, 20.176] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 21.0.3, OpenJDK 64-Bit Server VM, 21.0.3+9-LTS
+# VM invoker: /usr/lib/jvm/zulu-21-amd64/bin/java
+# VM options: -Dsun.awt.disablegrab=true
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 5 iterations, 100 ms each
+# Measurement: 5 iterations, 200 ms each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: net.imglib2.view.ReshapeViewBenchmark.flatIterableCursor
+# Parameters: (imgType = CellImg, viewShape = flat1d)
+
+# Run progress: 14.29% complete, ETA 00:01:23
+# Fork: 1 of 1
+Picked up _JAVA_OPTIONS: -Dsun.awt.disablegrab=true
+# Warmup Iteration   1: 25.783 ms/op
+# Warmup Iteration   2: 18.193 ms/op
+# Warmup Iteration   3: 18.417 ms/op
+# Warmup Iteration   4: 18.497 ms/op
+# Warmup Iteration   5: 18.691 ms/op
+Iteration   1: 18.952 ms/op
+Iteration   2: 18.635 ms/op
+Iteration   3: 18.940 ms/op
+Iteration   4: 18.202 ms/op
+Iteration   5: 20.875 ms/op
+
+
+Result "net.imglib2.view.ReshapeViewBenchmark.flatIterableCursor":
+  19.121 ±(99.9%) 3.955 ms/op [Average]
+  (min, avg, max) = (18.202, 19.121, 20.875), stdev = 1.027
+  CI (99.9%): [15.166, 23.076] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 21.0.3, OpenJDK 64-Bit Server VM, 21.0.3+9-LTS
+# VM invoker: /usr/lib/jvm/zulu-21-amd64/bin/java
+# VM options: -Dsun.awt.disablegrab=true
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 5 iterations, 100 ms each
+# Measurement: 5 iterations, 200 ms each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: net.imglib2.view.ReshapeViewBenchmark.flatIterableCursor
+# Parameters: (imgType = CellImg, viewShape = merge2d)
+
+# Run progress: 16.07% complete, ETA 00:01:22
+# Fork: 1 of 1
+Picked up _JAVA_OPTIONS: -Dsun.awt.disablegrab=true
+# Warmup Iteration   1: 23.499 ms/op
+# Warmup Iteration   2: 19.321 ms/op
+# Warmup Iteration   3: 19.757 ms/op
+# Warmup Iteration   4: 19.856 ms/op
+# Warmup Iteration   5: 18.924 ms/op
+Iteration   1: 19.045 ms/op
+Iteration   2: 19.870 ms/op
+Iteration   3: 20.283 ms/op
+Iteration   4: 20.111 ms/op
+Iteration   5: 19.605 ms/op
+
+
+Result "net.imglib2.view.ReshapeViewBenchmark.flatIterableCursor":
+  19.783 ±(99.9%) 1.868 ms/op [Average]
+  (min, avg, max) = (19.045, 19.783, 20.283), stdev = 0.485
+  CI (99.9%): [17.915, 21.651] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 21.0.3, OpenJDK 64-Bit Server VM, 21.0.3+9-LTS
+# VM invoker: /usr/lib/jvm/zulu-21-amd64/bin/java
+# VM options: -Dsun.awt.disablegrab=true
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 5 iterations, 100 ms each
+# Measurement: 5 iterations, 200 ms each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: net.imglib2.view.ReshapeViewBenchmark.flatIterableCursor
+# Parameters: (imgType = CellImg, viewShape = identity3d)
+
+# Run progress: 17.86% complete, ETA 00:01:20
+# Fork: 1 of 1
+Picked up _JAVA_OPTIONS: -Dsun.awt.disablegrab=true
+# Warmup Iteration   1: 21.820 ms/op
+# Warmup Iteration   2: 17.068 ms/op
+# Warmup Iteration   3: 17.131 ms/op
+# Warmup Iteration   4: 17.749 ms/op
+# Warmup Iteration   5: 17.687 ms/op
+Iteration   1: 17.168 ms/op
+Iteration   2: 16.372 ms/op
+Iteration   3: 17.390 ms/op
+Iteration   4: 16.737 ms/op
+Iteration   5: 16.538 ms/op
+
+
+Result "net.imglib2.view.ReshapeViewBenchmark.flatIterableCursor":
+  16.841 ±(99.9%) 1.646 ms/op [Average]
+  (min, avg, max) = (16.372, 16.841, 17.390), stdev = 0.428
+  CI (99.9%): [15.195, 18.487] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 21.0.3, OpenJDK 64-Bit Server VM, 21.0.3+9-LTS
+# VM invoker: /usr/lib/jvm/zulu-21-amd64/bin/java
+# VM options: -Dsun.awt.disablegrab=true
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 5 iterations, 100 ms each
+# Measurement: 5 iterations, 200 ms each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: net.imglib2.view.ReshapeViewBenchmark.flatIterableCursor
+# Parameters: (imgType = CellImg, viewShape = split4d)
+
+# Run progress: 19.64% complete, ETA 00:01:19
+# Fork: 1 of 1
+Picked up _JAVA_OPTIONS: -Dsun.awt.disablegrab=true
+# Warmup Iteration   1: 25.848 ms/op
+# Warmup Iteration   2: 18.644 ms/op
+# Warmup Iteration   3: 19.344 ms/op
+# Warmup Iteration   4: 19.387 ms/op
+# Warmup Iteration   5: 20.158 ms/op
+Iteration   1: 19.208 ms/op
+Iteration   2: 18.627 ms/op
+Iteration   3: 18.047 ms/op
+Iteration   4: 18.755 ms/op
+Iteration   5: 19.294 ms/op
+
+
+Result "net.imglib2.view.ReshapeViewBenchmark.flatIterableCursor":
+  18.786 ±(99.9%) 1.933 ms/op [Average]
+  (min, avg, max) = (18.047, 18.786, 19.294), stdev = 0.502
+  CI (99.9%): [16.854, 20.719] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 21.0.3, OpenJDK 64-Bit Server VM, 21.0.3+9-LTS
+# VM invoker: /usr/lib/jvm/zulu-21-amd64/bin/java
+# VM options: -Dsun.awt.disablegrab=true
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 5 iterations, 100 ms each
+# Measurement: 5 iterations, 200 ms each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: net.imglib2.view.ReshapeViewBenchmark.flatIterableCursor
+# Parameters: (imgType = CellImg, viewShape = singleton4d)
+
+# Run progress: 21.43% complete, ETA 00:01:17
+# Fork: 1 of 1
+Picked up _JAVA_OPTIONS: -Dsun.awt.disablegrab=true
+# Warmup Iteration   1: 23.235 ms/op
+# Warmup Iteration   2: 17.135 ms/op
+# Warmup Iteration   3: 18.389 ms/op
+# Warmup Iteration   4: 21.594 ms/op
+# Warmup Iteration   5: 18.793 ms/op
+Iteration   1: 19.252 ms/op
+Iteration   2: 19.284 ms/op
+Iteration   3: 18.929 ms/op
+Iteration   4: 19.431 ms/op
+Iteration   5: 18.862 ms/op
+
+
+Result "net.imglib2.view.ReshapeViewBenchmark.flatIterableCursor":
+  19.152 ±(99.9%) 0.942 ms/op [Average]
+  (min, avg, max) = (18.862, 19.152, 19.431), stdev = 0.245
+  CI (99.9%): [18.210, 20.093] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 21.0.3, OpenJDK 64-Bit Server VM, 21.0.3+9-LTS
+# VM invoker: /usr/lib/jvm/zulu-21-amd64/bin/java
+# VM options: -Dsun.awt.disablegrab=true
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 5 iterations, 100 ms each
+# Measurement: 5 iterations, 200 ms each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: net.imglib2.view.ReshapeViewBenchmark.flatIterableCursor
+# Parameters: (imgType = CellImg, viewShape = translate3d)
+
+# Run progress: 23.21% complete, ETA 00:01:16
+# Fork: 1 of 1
+Picked up _JAVA_OPTIONS: -Dsun.awt.disablegrab=true
+# Warmup Iteration   1: 23.730 ms/op
+# Warmup Iteration   2: 18.468 ms/op
+# Warmup Iteration   3: 19.141 ms/op
+# Warmup Iteration   4: 18.961 ms/op
+# Warmup Iteration   5: 19.112 ms/op
+Iteration   1: 20.193 ms/op
+Iteration   2: 21.036 ms/op
+Iteration   3: 18.740 ms/op
+Iteration   4: 18.204 ms/op
+Iteration   5: 18.365 ms/op
+
+
+Result "net.imglib2.view.ReshapeViewBenchmark.flatIterableCursor":
+  19.308 ±(99.9%) 4.794 ms/op [Average]
+  (min, avg, max) = (18.204, 19.308, 21.036), stdev = 1.245
+  CI (99.9%): [14.514, 24.102] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 21.0.3, OpenJDK 64-Bit Server VM, 21.0.3+9-LTS
+# VM invoker: /usr/lib/jvm/zulu-21-amd64/bin/java
+# VM options: -Dsun.awt.disablegrab=true
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 5 iterations, 100 ms each
+# Measurement: 5 iterations, 200 ms each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: net.imglib2.view.ReshapeViewBenchmark.loopBuilder
+# Parameters: (imgType = ArrayImg, viewShape = none)
+
+# Run progress: 25.00% complete, ETA 00:01:14
+# Fork: 1 of 1
+Picked up _JAVA_OPTIONS: -Dsun.awt.disablegrab=true
+# Warmup Iteration   1: 3.213 ms/op
+# Warmup Iteration   2: 2.274 ms/op
+# Warmup Iteration   3: 2.318 ms/op
+# Warmup Iteration   4: 2.385 ms/op
+# Warmup Iteration   5: 2.183 ms/op
+Iteration   1: 2.297 ms/op
+Iteration   2: 2.347 ms/op
+Iteration   3: 2.363 ms/op
+Iteration   4: 2.350 ms/op
+Iteration   5: 2.350 ms/op
+
+
+Result "net.imglib2.view.ReshapeViewBenchmark.loopBuilder":
+  2.341 ±(99.9%) 0.098 ms/op [Average]
+  (min, avg, max) = (2.297, 2.341, 2.363), stdev = 0.026
+  CI (99.9%): [2.243, 2.440] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 21.0.3, OpenJDK 64-Bit Server VM, 21.0.3+9-LTS
+# VM invoker: /usr/lib/jvm/zulu-21-amd64/bin/java
+# VM options: -Dsun.awt.disablegrab=true
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 5 iterations, 100 ms each
+# Measurement: 5 iterations, 200 ms each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: net.imglib2.view.ReshapeViewBenchmark.loopBuilder
+# Parameters: (imgType = ArrayImg, viewShape = flat1d)
+
+# Run progress: 26.79% complete, ETA 00:01:12
+# Fork: 1 of 1
+Picked up _JAVA_OPTIONS: -Dsun.awt.disablegrab=true
+# Warmup Iteration   1: 4.660 ms/op
+# Warmup Iteration   2: 3.195 ms/op
+# Warmup Iteration   3: 3.233 ms/op
+# Warmup Iteration   4: 3.247 ms/op
+# Warmup Iteration   5: 3.287 ms/op
+Iteration   1: 3.388 ms/op
+Iteration   2: 3.303 ms/op
+Iteration   3: 3.365 ms/op
+Iteration   4: 3.323 ms/op
+Iteration   5: 3.260 ms/op
+
+
+Result "net.imglib2.view.ReshapeViewBenchmark.loopBuilder":
+  3.328 ±(99.9%) 0.195 ms/op [Average]
+  (min, avg, max) = (3.260, 3.328, 3.388), stdev = 0.051
+  CI (99.9%): [3.133, 3.523] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 21.0.3, OpenJDK 64-Bit Server VM, 21.0.3+9-LTS
+# VM invoker: /usr/lib/jvm/zulu-21-amd64/bin/java
+# VM options: -Dsun.awt.disablegrab=true
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 5 iterations, 100 ms each
+# Measurement: 5 iterations, 200 ms each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: net.imglib2.view.ReshapeViewBenchmark.loopBuilder
+# Parameters: (imgType = ArrayImg, viewShape = merge2d)
+
+# Run progress: 28.57% complete, ETA 00:01:10
+# Fork: 1 of 1
+Picked up _JAVA_OPTIONS: -Dsun.awt.disablegrab=true
+# Warmup Iteration   1: 5.043 ms/op
+# Warmup Iteration   2: 3.533 ms/op
+# Warmup Iteration   3: 3.467 ms/op
+# Warmup Iteration   4: 3.346 ms/op
+# Warmup Iteration   5: 3.397 ms/op
+Iteration   1: 3.275 ms/op
+Iteration   2: 3.333 ms/op
+Iteration   3: 3.258 ms/op
+Iteration   4: 3.063 ms/op
+Iteration   5: 3.162 ms/op
+
+
+Result "net.imglib2.view.ReshapeViewBenchmark.loopBuilder":
+  3.218 ±(99.9%) 0.409 ms/op [Average]
+  (min, avg, max) = (3.063, 3.218, 3.333), stdev = 0.106
+  CI (99.9%): [2.809, 3.628] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 21.0.3, OpenJDK 64-Bit Server VM, 21.0.3+9-LTS
+# VM invoker: /usr/lib/jvm/zulu-21-amd64/bin/java
+# VM options: -Dsun.awt.disablegrab=true
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 5 iterations, 100 ms each
+# Measurement: 5 iterations, 200 ms each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: net.imglib2.view.ReshapeViewBenchmark.loopBuilder
+# Parameters: (imgType = ArrayImg, viewShape = identity3d)
+
+# Run progress: 30.36% complete, ETA 00:01:08
+# Fork: 1 of 1
+Picked up _JAVA_OPTIONS: -Dsun.awt.disablegrab=true
+# Warmup Iteration   1: 3.397 ms/op
+# Warmup Iteration   2: 2.361 ms/op
+# Warmup Iteration   3: 2.370 ms/op
+# Warmup Iteration   4: 2.380 ms/op
+# Warmup Iteration   5: 2.178 ms/op
+Iteration   1: 2.237 ms/op
+Iteration   2: 2.208 ms/op
+Iteration   3: 2.247 ms/op
+Iteration   4: 2.288 ms/op
+Iteration   5: 2.290 ms/op
+
+
+Result "net.imglib2.view.ReshapeViewBenchmark.loopBuilder":
+  2.254 ±(99.9%) 0.135 ms/op [Average]
+  (min, avg, max) = (2.208, 2.254, 2.290), stdev = 0.035
+  CI (99.9%): [2.119, 2.389] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 21.0.3, OpenJDK 64-Bit Server VM, 21.0.3+9-LTS
+# VM invoker: /usr/lib/jvm/zulu-21-amd64/bin/java
+# VM options: -Dsun.awt.disablegrab=true
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 5 iterations, 100 ms each
+# Measurement: 5 iterations, 200 ms each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: net.imglib2.view.ReshapeViewBenchmark.loopBuilder
+# Parameters: (imgType = ArrayImg, viewShape = split4d)
+
+# Run progress: 32.14% complete, ETA 00:01:06
+# Fork: 1 of 1
+Picked up _JAVA_OPTIONS: -Dsun.awt.disablegrab=true
+# Warmup Iteration   1: 4.256 ms/op
+# Warmup Iteration   2: 3.194 ms/op
+# Warmup Iteration   3: 3.129 ms/op
+# Warmup Iteration   4: 3.198 ms/op
+# Warmup Iteration   5: 3.248 ms/op
+Iteration   1: 3.146 ms/op
+Iteration   2: 3.114 ms/op
+Iteration   3: 3.123 ms/op
+Iteration   4: 3.122 ms/op
+Iteration   5: 3.192 ms/op
+
+
+Result "net.imglib2.view.ReshapeViewBenchmark.loopBuilder":
+  3.139 ±(99.9%) 0.122 ms/op [Average]
+  (min, avg, max) = (3.114, 3.139, 3.192), stdev = 0.032
+  CI (99.9%): [3.018, 3.261] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 21.0.3, OpenJDK 64-Bit Server VM, 21.0.3+9-LTS
+# VM invoker: /usr/lib/jvm/zulu-21-amd64/bin/java
+# VM options: -Dsun.awt.disablegrab=true
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 5 iterations, 100 ms each
+# Measurement: 5 iterations, 200 ms each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: net.imglib2.view.ReshapeViewBenchmark.loopBuilder
+# Parameters: (imgType = ArrayImg, viewShape = singleton4d)
+
+# Run progress: 33.93% complete, ETA 00:01:05
+# Fork: 1 of 1
+Picked up _JAVA_OPTIONS: -Dsun.awt.disablegrab=true
+# Warmup Iteration   1: 4.482 ms/op
+# Warmup Iteration   2: 3.328 ms/op
+# Warmup Iteration   3: 3.228 ms/op
+# Warmup Iteration   4: 3.190 ms/op
+# Warmup Iteration   5: 3.292 ms/op
+Iteration   1: 3.217 ms/op
+Iteration   2: 3.168 ms/op
+Iteration   3: 3.166 ms/op
+Iteration   4: 3.297 ms/op
+Iteration   5: 3.127 ms/op
+
+
+Result "net.imglib2.view.ReshapeViewBenchmark.loopBuilder":
+  3.195 ±(99.9%) 0.251 ms/op [Average]
+  (min, avg, max) = (3.127, 3.195, 3.297), stdev = 0.065
+  CI (99.9%): [2.944, 3.446] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 21.0.3, OpenJDK 64-Bit Server VM, 21.0.3+9-LTS
+# VM invoker: /usr/lib/jvm/zulu-21-amd64/bin/java
+# VM options: -Dsun.awt.disablegrab=true
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 5 iterations, 100 ms each
+# Measurement: 5 iterations, 200 ms each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: net.imglib2.view.ReshapeViewBenchmark.loopBuilder
+# Parameters: (imgType = ArrayImg, viewShape = translate3d)
+
+# Run progress: 35.71% complete, ETA 00:01:03
+# Fork: 1 of 1
+Picked up _JAVA_OPTIONS: -Dsun.awt.disablegrab=true
+# Warmup Iteration   1: 4.595 ms/op
+# Warmup Iteration   2: 3.242 ms/op
+# Warmup Iteration   3: 3.136 ms/op
+# Warmup Iteration   4: 3.237 ms/op
+# Warmup Iteration   5: 3.185 ms/op
+Iteration   1: 3.184 ms/op
+Iteration   2: 3.133 ms/op
+Iteration   3: 3.206 ms/op
+Iteration   4: 3.205 ms/op
+Iteration   5: 3.196 ms/op
+
+
+Result "net.imglib2.view.ReshapeViewBenchmark.loopBuilder":
+  3.185 ±(99.9%) 0.117 ms/op [Average]
+  (min, avg, max) = (3.133, 3.185, 3.206), stdev = 0.030
+  CI (99.9%): [3.068, 3.302] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 21.0.3, OpenJDK 64-Bit Server VM, 21.0.3+9-LTS
+# VM invoker: /usr/lib/jvm/zulu-21-amd64/bin/java
+# VM options: -Dsun.awt.disablegrab=true
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 5 iterations, 100 ms each
+# Measurement: 5 iterations, 200 ms each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: net.imglib2.view.ReshapeViewBenchmark.loopBuilder
+# Parameters: (imgType = CellImg, viewShape = none)
+
+# Run progress: 37.50% complete, ETA 00:01:01
+# Fork: 1 of 1
+Picked up _JAVA_OPTIONS: -Dsun.awt.disablegrab=true
+# Warmup Iteration   1: 11.186 ms/op
+# Warmup Iteration   2: 9.217 ms/op
+# Warmup Iteration   3: 9.282 ms/op
+# Warmup Iteration   4: 9.240 ms/op
+# Warmup Iteration   5: 9.441 ms/op
+Iteration   1: 9.316 ms/op
+Iteration   2: 9.320 ms/op
+Iteration   3: 9.328 ms/op
+Iteration   4: 10.717 ms/op
+Iteration   5: 9.279 ms/op
+
+
+Result "net.imglib2.view.ReshapeViewBenchmark.loopBuilder":
+  9.592 ±(99.9%) 2.422 ms/op [Average]
+  (min, avg, max) = (9.279, 9.592, 10.717), stdev = 0.629
+  CI (99.9%): [7.170, 12.014] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 21.0.3, OpenJDK 64-Bit Server VM, 21.0.3+9-LTS
+# VM invoker: /usr/lib/jvm/zulu-21-amd64/bin/java
+# VM options: -Dsun.awt.disablegrab=true
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 5 iterations, 100 ms each
+# Measurement: 5 iterations, 200 ms each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: net.imglib2.view.ReshapeViewBenchmark.loopBuilder
+# Parameters: (imgType = CellImg, viewShape = flat1d)
+
+# Run progress: 39.29% complete, ETA 00:00:59
+# Fork: 1 of 1
+Picked up _JAVA_OPTIONS: -Dsun.awt.disablegrab=true
+# Warmup Iteration   1: 59.941 ms/op
+# Warmup Iteration   2: 42.305 ms/op
+# Warmup Iteration   3: 41.329 ms/op
+# Warmup Iteration   4: 41.655 ms/op
+# Warmup Iteration   5: 40.558 ms/op
+Iteration   1: 40.174 ms/op
+Iteration   2: 39.978 ms/op
+Iteration   3: 43.449 ms/op
+Iteration   4: 40.293 ms/op
+Iteration   5: 40.247 ms/op
+
+
+Result "net.imglib2.view.ReshapeViewBenchmark.loopBuilder":
+  40.829 ±(99.9%) 5.661 ms/op [Average]
+  (min, avg, max) = (39.978, 40.829, 43.449), stdev = 1.470
+  CI (99.9%): [35.168, 46.489] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 21.0.3, OpenJDK 64-Bit Server VM, 21.0.3+9-LTS
+# VM invoker: /usr/lib/jvm/zulu-21-amd64/bin/java
+# VM options: -Dsun.awt.disablegrab=true
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 5 iterations, 100 ms each
+# Measurement: 5 iterations, 200 ms each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: net.imglib2.view.ReshapeViewBenchmark.loopBuilder
+# Parameters: (imgType = CellImg, viewShape = merge2d)
+
+# Run progress: 41.07% complete, ETA 00:00:58
+# Fork: 1 of 1
+Picked up _JAVA_OPTIONS: -Dsun.awt.disablegrab=true
+# Warmup Iteration   1: 57.464 ms/op
+# Warmup Iteration   2: 39.963 ms/op
+# Warmup Iteration   3: 38.865 ms/op
+# Warmup Iteration   4: 38.703 ms/op
+# Warmup Iteration   5: 39.781 ms/op
+Iteration   1: 39.158 ms/op
+Iteration   2: 39.321 ms/op
+Iteration   3: 38.799 ms/op
+Iteration   4: 41.677 ms/op
+Iteration   5: 39.355 ms/op
+
+
+Result "net.imglib2.view.ReshapeViewBenchmark.loopBuilder":
+  39.662 ±(99.9%) 4.420 ms/op [Average]
+  (min, avg, max) = (38.799, 39.662, 41.677), stdev = 1.148
+  CI (99.9%): [35.242, 44.082] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 21.0.3, OpenJDK 64-Bit Server VM, 21.0.3+9-LTS
+# VM invoker: /usr/lib/jvm/zulu-21-amd64/bin/java
+# VM options: -Dsun.awt.disablegrab=true
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 5 iterations, 100 ms each
+# Measurement: 5 iterations, 200 ms each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: net.imglib2.view.ReshapeViewBenchmark.loopBuilder
+# Parameters: (imgType = CellImg, viewShape = identity3d)
+
+# Run progress: 42.86% complete, ETA 00:00:56
+# Fork: 1 of 1
+Picked up _JAVA_OPTIONS: -Dsun.awt.disablegrab=true
+# Warmup Iteration   1: 10.921 ms/op
+# Warmup Iteration   2: 9.095 ms/op
+# Warmup Iteration   3: 9.471 ms/op
+# Warmup Iteration   4: 9.090 ms/op
+# Warmup Iteration   5: 10.353 ms/op
+Iteration   1: 9.363 ms/op
+Iteration   2: 9.407 ms/op
+Iteration   3: 9.132 ms/op
+Iteration   4: 9.255 ms/op
+Iteration   5: 9.092 ms/op
+
+
+Result "net.imglib2.view.ReshapeViewBenchmark.loopBuilder":
+  9.250 ±(99.9%) 0.532 ms/op [Average]
+  (min, avg, max) = (9.092, 9.250, 9.407), stdev = 0.138
+  CI (99.9%): [8.718, 9.782] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 21.0.3, OpenJDK 64-Bit Server VM, 21.0.3+9-LTS
+# VM invoker: /usr/lib/jvm/zulu-21-amd64/bin/java
+# VM options: -Dsun.awt.disablegrab=true
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 5 iterations, 100 ms each
+# Measurement: 5 iterations, 200 ms each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: net.imglib2.view.ReshapeViewBenchmark.loopBuilder
+# Parameters: (imgType = CellImg, viewShape = split4d)
+
+# Run progress: 44.64% complete, ETA 00:00:54
+# Fork: 1 of 1
+Picked up _JAVA_OPTIONS: -Dsun.awt.disablegrab=true
+# Warmup Iteration   1: 56.767 ms/op
+# Warmup Iteration   2: 37.021 ms/op
+# Warmup Iteration   3: 38.533 ms/op
+# Warmup Iteration   4: 38.663 ms/op
+# Warmup Iteration   5: 38.688 ms/op
+Iteration   1: 39.009 ms/op
+Iteration   2: 39.223 ms/op
+Iteration   3: 39.353 ms/op
+Iteration   4: 38.525 ms/op
+Iteration   5: 39.064 ms/op
+
+
+Result "net.imglib2.view.ReshapeViewBenchmark.loopBuilder":
+  39.035 ±(99.9%) 1.214 ms/op [Average]
+  (min, avg, max) = (38.525, 39.035, 39.353), stdev = 0.315
+  CI (99.9%): [37.821, 40.248] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 21.0.3, OpenJDK 64-Bit Server VM, 21.0.3+9-LTS
+# VM invoker: /usr/lib/jvm/zulu-21-amd64/bin/java
+# VM options: -Dsun.awt.disablegrab=true
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 5 iterations, 100 ms each
+# Measurement: 5 iterations, 200 ms each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: net.imglib2.view.ReshapeViewBenchmark.loopBuilder
+# Parameters: (imgType = CellImg, viewShape = singleton4d)
+
+# Run progress: 46.43% complete, ETA 00:00:53
+# Fork: 1 of 1
+Picked up _JAVA_OPTIONS: -Dsun.awt.disablegrab=true
+# Warmup Iteration   1: 40.477 ms/op
+# Warmup Iteration   2: 26.800 ms/op
+# Warmup Iteration   3: 26.684 ms/op
+# Warmup Iteration   4: 25.106 ms/op
+# Warmup Iteration   5: 25.910 ms/op
+Iteration   1: 26.302 ms/op
+Iteration   2: 26.495 ms/op
+Iteration   3: 26.310 ms/op
+Iteration   4: 26.268 ms/op
+Iteration   5: 26.120 ms/op
+
+
+Result "net.imglib2.view.ReshapeViewBenchmark.loopBuilder":
+  26.299 ±(99.9%) 0.515 ms/op [Average]
+  (min, avg, max) = (26.120, 26.299, 26.495), stdev = 0.134
+  CI (99.9%): [25.784, 26.814] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 21.0.3, OpenJDK 64-Bit Server VM, 21.0.3+9-LTS
+# VM invoker: /usr/lib/jvm/zulu-21-amd64/bin/java
+# VM options: -Dsun.awt.disablegrab=true
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 5 iterations, 100 ms each
+# Measurement: 5 iterations, 200 ms each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: net.imglib2.view.ReshapeViewBenchmark.loopBuilder
+# Parameters: (imgType = CellImg, viewShape = translate3d)
+
+# Run progress: 48.21% complete, ETA 00:00:51
+# Fork: 1 of 1
+Picked up _JAVA_OPTIONS: -Dsun.awt.disablegrab=true
+# Warmup Iteration   1: 39.976 ms/op
+# Warmup Iteration   2: 23.080 ms/op
+# Warmup Iteration   3: 23.596 ms/op
+# Warmup Iteration   4: 23.550 ms/op
+# Warmup Iteration   5: 23.182 ms/op
+Iteration   1: 23.033 ms/op
+Iteration   2: 23.041 ms/op
+Iteration   3: 23.429 ms/op
+Iteration   4: 23.162 ms/op
+Iteration   5: 23.205 ms/op
+
+
+Result "net.imglib2.view.ReshapeViewBenchmark.loopBuilder":
+  23.174 ±(99.9%) 0.620 ms/op [Average]
+  (min, avg, max) = (23.033, 23.174, 23.429), stdev = 0.161
+  CI (99.9%): [22.554, 23.794] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 21.0.3, OpenJDK 64-Bit Server VM, 21.0.3+9-LTS
+# VM invoker: /usr/lib/jvm/zulu-21-amd64/bin/java
+# VM options: -Dsun.awt.disablegrab=true
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 5 iterations, 100 ms each
+# Measurement: 5 iterations, 200 ms each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: net.imglib2.view.ReshapeViewBenchmark.randomAccessWalk
+# Parameters: (imgType = ArrayImg, viewShape = none)
+
+# Run progress: 50.00% complete, ETA 00:00:49
+# Fork: 1 of 1
+Picked up _JAVA_OPTIONS: -Dsun.awt.disablegrab=true
+# Warmup Iteration   1: 21.919 ms/op
+# Warmup Iteration   2: 16.019 ms/op
+# Warmup Iteration   3: 16.166 ms/op
+# Warmup Iteration   4: 16.378 ms/op
+# Warmup Iteration   5: 16.711 ms/op
+Iteration   1: 16.459 ms/op
+Iteration   2: 16.360 ms/op
+Iteration   3: 16.403 ms/op
+Iteration   4: 16.546 ms/op
+Iteration   5: 16.540 ms/op
+
+
+Result "net.imglib2.view.ReshapeViewBenchmark.randomAccessWalk":
+  16.461 ±(99.9%) 0.317 ms/op [Average]
+  (min, avg, max) = (16.360, 16.461, 16.546), stdev = 0.082
+  CI (99.9%): [16.145, 16.778] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 21.0.3, OpenJDK 64-Bit Server VM, 21.0.3+9-LTS
+# VM invoker: /usr/lib/jvm/zulu-21-amd64/bin/java
+# VM options: -Dsun.awt.disablegrab=true
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 5 iterations, 100 ms each
+# Measurement: 5 iterations, 200 ms each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: net.imglib2.view.ReshapeViewBenchmark.randomAccessWalk
+# Parameters: (imgType = ArrayImg, viewShape = flat1d)
+
+# Run progress: 51.79% complete, ETA 00:00:47
+# Fork: 1 of 1
+Picked up _JAVA_OPTIONS: -Dsun.awt.disablegrab=true
+# Warmup Iteration   1: 90.923 ms/op
+# Warmup Iteration   2: 77.821 ms/op
+# Warmup Iteration   3: 75.719 ms/op
+# Warmup Iteration   4: 74.762 ms/op
+# Warmup Iteration   5: 81.403 ms/op
+Iteration   1: 75.759 ms/op
+Iteration   2: 75.925 ms/op
+Iteration   3: 77.877 ms/op
+Iteration   4: 80.080 ms/op
+Iteration   5: 76.630 ms/op
+
+
+Result "net.imglib2.view.ReshapeViewBenchmark.randomAccessWalk":
+  77.254 ±(99.9%) 6.879 ms/op [Average]
+  (min, avg, max) = (75.759, 77.254, 80.080), stdev = 1.786
+  CI (99.9%): [70.375, 84.133] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 21.0.3, OpenJDK 64-Bit Server VM, 21.0.3+9-LTS
+# VM invoker: /usr/lib/jvm/zulu-21-amd64/bin/java
+# VM options: -Dsun.awt.disablegrab=true
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 5 iterations, 100 ms each
+# Measurement: 5 iterations, 200 ms each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: net.imglib2.view.ReshapeViewBenchmark.randomAccessWalk
+# Parameters: (imgType = ArrayImg, viewShape = merge2d)
+
+# Run progress: 53.57% complete, ETA 00:00:46
+# Fork: 1 of 1
+Picked up _JAVA_OPTIONS: -Dsun.awt.disablegrab=true
+# Warmup Iteration   1: 94.777 ms/op
+# Warmup Iteration   2: 76.220 ms/op
+# Warmup Iteration   3: 77.764 ms/op
+# Warmup Iteration   4: 78.110 ms/op
+# Warmup Iteration   5: 78.094 ms/op
+Iteration   1: 77.404 ms/op
+Iteration   2: 78.096 ms/op
+Iteration   3: 74.166 ms/op
+Iteration   4: 75.980 ms/op
+Iteration   5: 75.425 ms/op
+
+
+Result "net.imglib2.view.ReshapeViewBenchmark.randomAccessWalk":
+  76.214 ±(99.9%) 6.035 ms/op [Average]
+  (min, avg, max) = (74.166, 76.214, 78.096), stdev = 1.567
+  CI (99.9%): [70.179, 82.249] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 21.0.3, OpenJDK 64-Bit Server VM, 21.0.3+9-LTS
+# VM invoker: /usr/lib/jvm/zulu-21-amd64/bin/java
+# VM options: -Dsun.awt.disablegrab=true
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 5 iterations, 100 ms each
+# Measurement: 5 iterations, 200 ms each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: net.imglib2.view.ReshapeViewBenchmark.randomAccessWalk
+# Parameters: (imgType = ArrayImg, viewShape = identity3d)
+
+# Run progress: 55.36% complete, ETA 00:00:45
+# Fork: 1 of 1
+Picked up _JAVA_OPTIONS: -Dsun.awt.disablegrab=true
+# Warmup Iteration   1: 21.631 ms/op
+# Warmup Iteration   2: 15.913 ms/op
+# Warmup Iteration   3: 16.400 ms/op
+# Warmup Iteration   4: 16.228 ms/op
+# Warmup Iteration   5: 17.148 ms/op
+Iteration   1: 16.868 ms/op
+Iteration   2: 16.770 ms/op
+Iteration   3: 16.513 ms/op
+Iteration   4: 16.465 ms/op
+Iteration   5: 16.461 ms/op
+
+
+Result "net.imglib2.view.ReshapeViewBenchmark.randomAccessWalk":
+  16.615 ±(99.9%) 0.731 ms/op [Average]
+  (min, avg, max) = (16.461, 16.615, 16.868), stdev = 0.190
+  CI (99.9%): [15.884, 17.347] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 21.0.3, OpenJDK 64-Bit Server VM, 21.0.3+9-LTS
+# VM invoker: /usr/lib/jvm/zulu-21-amd64/bin/java
+# VM options: -Dsun.awt.disablegrab=true
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 5 iterations, 100 ms each
+# Measurement: 5 iterations, 200 ms each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: net.imglib2.view.ReshapeViewBenchmark.randomAccessWalk
+# Parameters: (imgType = ArrayImg, viewShape = split4d)
+
+# Run progress: 57.14% complete, ETA 00:00:43
+# Fork: 1 of 1
+Picked up _JAVA_OPTIONS: -Dsun.awt.disablegrab=true
+# Warmup Iteration   1: 102.715 ms/op
+# Warmup Iteration   2: 83.680 ms/op
+# Warmup Iteration   3: 78.972 ms/op
+# Warmup Iteration   4: 82.181 ms/op
+# Warmup Iteration   5: 80.131 ms/op
+Iteration   1: 78.306 ms/op
+Iteration   2: 78.544 ms/op
+Iteration   3: 77.845 ms/op
+Iteration   4: 77.596 ms/op
+Iteration   5: 78.151 ms/op
+
+
+Result "net.imglib2.view.ReshapeViewBenchmark.randomAccessWalk":
+  78.088 ±(99.9%) 1.442 ms/op [Average]
+  (min, avg, max) = (77.596, 78.088, 78.544), stdev = 0.374
+  CI (99.9%): [76.647, 79.530] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 21.0.3, OpenJDK 64-Bit Server VM, 21.0.3+9-LTS
+# VM invoker: /usr/lib/jvm/zulu-21-amd64/bin/java
+# VM options: -Dsun.awt.disablegrab=true
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 5 iterations, 100 ms each
+# Measurement: 5 iterations, 200 ms each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: net.imglib2.view.ReshapeViewBenchmark.randomAccessWalk
+# Parameters: (imgType = ArrayImg, viewShape = singleton4d)
+
+# Run progress: 58.93% complete, ETA 00:00:41
+# Fork: 1 of 1
+Picked up _JAVA_OPTIONS: -Dsun.awt.disablegrab=true
+# Warmup Iteration   1: 67.895 ms/op
+# Warmup Iteration   2: 52.257 ms/op
+# Warmup Iteration   3: 53.366 ms/op
+# Warmup Iteration   4: 55.619 ms/op
+# Warmup Iteration   5: 53.790 ms/op
+Iteration   1: 49.622 ms/op
+Iteration   2: 48.289 ms/op
+Iteration   3: 49.170 ms/op
+Iteration   4: 48.269 ms/op
+Iteration   5: 48.088 ms/op
+
+
+Result "net.imglib2.view.ReshapeViewBenchmark.randomAccessWalk":
+  48.687 ±(99.9%) 2.583 ms/op [Average]
+  (min, avg, max) = (48.088, 48.687, 49.622), stdev = 0.671
+  CI (99.9%): [46.105, 51.270] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 21.0.3, OpenJDK 64-Bit Server VM, 21.0.3+9-LTS
+# VM invoker: /usr/lib/jvm/zulu-21-amd64/bin/java
+# VM options: -Dsun.awt.disablegrab=true
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 5 iterations, 100 ms each
+# Measurement: 5 iterations, 200 ms each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: net.imglib2.view.ReshapeViewBenchmark.randomAccessWalk
+# Parameters: (imgType = ArrayImg, viewShape = translate3d)
+
+# Run progress: 60.71% complete, ETA 00:00:39
+# Fork: 1 of 1
+Picked up _JAVA_OPTIONS: -Dsun.awt.disablegrab=true
+# Warmup Iteration   1: 55.259 ms/op
+# Warmup Iteration   2: 38.431 ms/op
+# Warmup Iteration   3: 38.397 ms/op
+# Warmup Iteration   4: 37.843 ms/op
+# Warmup Iteration   5: 37.502 ms/op
+Iteration   1: 37.687 ms/op
+Iteration   2: 37.826 ms/op
+Iteration   3: 37.212 ms/op
+Iteration   4: 36.759 ms/op
+Iteration   5: 37.262 ms/op
+
+
+Result "net.imglib2.view.ReshapeViewBenchmark.randomAccessWalk":
+  37.349 ±(99.9%) 1.629 ms/op [Average]
+  (min, avg, max) = (36.759, 37.349, 37.826), stdev = 0.423
+  CI (99.9%): [35.720, 38.978] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 21.0.3, OpenJDK 64-Bit Server VM, 21.0.3+9-LTS
+# VM invoker: /usr/lib/jvm/zulu-21-amd64/bin/java
+# VM options: -Dsun.awt.disablegrab=true
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 5 iterations, 100 ms each
+# Measurement: 5 iterations, 200 ms each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: net.imglib2.view.ReshapeViewBenchmark.randomAccessWalk
+# Parameters: (imgType = CellImg, viewShape = none)
+
+# Run progress: 62.50% complete, ETA 00:00:38
+# Fork: 1 of 1
+Picked up _JAVA_OPTIONS: -Dsun.awt.disablegrab=true
+# Warmup Iteration   1: 36.842 ms/op
+# Warmup Iteration   2: 26.846 ms/op
+# Warmup Iteration   3: 27.291 ms/op
+# Warmup Iteration   4: 28.714 ms/op
+# Warmup Iteration   5: 26.646 ms/op
+Iteration   1: 27.750 ms/op
+Iteration   2: 28.436 ms/op
+Iteration   3: 27.698 ms/op
+Iteration   4: 28.392 ms/op
+Iteration   5: 28.146 ms/op
+
+
+Result "net.imglib2.view.ReshapeViewBenchmark.randomAccessWalk":
+  28.084 ±(99.9%) 1.339 ms/op [Average]
+  (min, avg, max) = (27.698, 28.084, 28.436), stdev = 0.348
+  CI (99.9%): [26.745, 29.424] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 21.0.3, OpenJDK 64-Bit Server VM, 21.0.3+9-LTS
+# VM invoker: /usr/lib/jvm/zulu-21-amd64/bin/java
+# VM options: -Dsun.awt.disablegrab=true
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 5 iterations, 100 ms each
+# Measurement: 5 iterations, 200 ms each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: net.imglib2.view.ReshapeViewBenchmark.randomAccessWalk
+# Parameters: (imgType = CellImg, viewShape = flat1d)
+
+# Run progress: 64.29% complete, ETA 00:00:36
+# Fork: 1 of 1
+Picked up _JAVA_OPTIONS: -Dsun.awt.disablegrab=true
+# Warmup Iteration   1: 111.464 ms/op
+# Warmup Iteration   2: 82.864 ms/op
+# Warmup Iteration   3: 81.460 ms/op
+# Warmup Iteration   4: 77.645 ms/op
+# Warmup Iteration   5: 78.565 ms/op
+Iteration   1: 80.017 ms/op
+Iteration   2: 80.765 ms/op
+Iteration   3: 80.648 ms/op
+Iteration   4: 80.597 ms/op
+Iteration   5: 80.974 ms/op
+
+
+Result "net.imglib2.view.ReshapeViewBenchmark.randomAccessWalk":
+  80.600 ±(99.9%) 1.374 ms/op [Average]
+  (min, avg, max) = (80.017, 80.600, 80.974), stdev = 0.357
+  CI (99.9%): [79.227, 81.974] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 21.0.3, OpenJDK 64-Bit Server VM, 21.0.3+9-LTS
+# VM invoker: /usr/lib/jvm/zulu-21-amd64/bin/java
+# VM options: -Dsun.awt.disablegrab=true
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 5 iterations, 100 ms each
+# Measurement: 5 iterations, 200 ms each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: net.imglib2.view.ReshapeViewBenchmark.randomAccessWalk
+# Parameters: (imgType = CellImg, viewShape = merge2d)
+
+# Run progress: 66.07% complete, ETA 00:00:34
+# Fork: 1 of 1
+Picked up _JAVA_OPTIONS: -Dsun.awt.disablegrab=true
+# Warmup Iteration   1: 119.116 ms/op
+# Warmup Iteration   2: 90.305 ms/op
+# Warmup Iteration   3: 87.608 ms/op
+# Warmup Iteration   4: 86.468 ms/op
+# Warmup Iteration   5: 86.180 ms/op
+Iteration   1: 86.576 ms/op
+Iteration   2: 84.885 ms/op
+Iteration   3: 87.852 ms/op
+Iteration   4: 84.200 ms/op
+Iteration   5: 85.952 ms/op
+
+
+Result "net.imglib2.view.ReshapeViewBenchmark.randomAccessWalk":
+  85.893 ±(99.9%) 5.510 ms/op [Average]
+  (min, avg, max) = (84.200, 85.893, 87.852), stdev = 1.431
+  CI (99.9%): [80.384, 91.403] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 21.0.3, OpenJDK 64-Bit Server VM, 21.0.3+9-LTS
+# VM invoker: /usr/lib/jvm/zulu-21-amd64/bin/java
+# VM options: -Dsun.awt.disablegrab=true
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 5 iterations, 100 ms each
+# Measurement: 5 iterations, 200 ms each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: net.imglib2.view.ReshapeViewBenchmark.randomAccessWalk
+# Parameters: (imgType = CellImg, viewShape = identity3d)
+
+# Run progress: 67.86% complete, ETA 00:00:33
+# Fork: 1 of 1
+Picked up _JAVA_OPTIONS: -Dsun.awt.disablegrab=true
+# Warmup Iteration   1: 36.996 ms/op
+# Warmup Iteration   2: 27.727 ms/op
+# Warmup Iteration   3: 27.757 ms/op
+# Warmup Iteration   4: 27.334 ms/op
+# Warmup Iteration   5: 28.248 ms/op
+Iteration   1: 29.043 ms/op
+Iteration   2: 30.029 ms/op
+Iteration   3: 28.616 ms/op
+Iteration   4: 27.633 ms/op
+Iteration   5: 28.031 ms/op
+
+
+Result "net.imglib2.view.ReshapeViewBenchmark.randomAccessWalk":
+  28.670 ±(99.9%) 3.588 ms/op [Average]
+  (min, avg, max) = (27.633, 28.670, 30.029), stdev = 0.932
+  CI (99.9%): [25.083, 32.258] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 21.0.3, OpenJDK 64-Bit Server VM, 21.0.3+9-LTS
+# VM invoker: /usr/lib/jvm/zulu-21-amd64/bin/java
+# VM options: -Dsun.awt.disablegrab=true
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 5 iterations, 100 ms each
+# Measurement: 5 iterations, 200 ms each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: net.imglib2.view.ReshapeViewBenchmark.randomAccessWalk
+# Parameters: (imgType = CellImg, viewShape = split4d)
+
+# Run progress: 69.64% complete, ETA 00:00:31
+# Fork: 1 of 1
+Picked up _JAVA_OPTIONS: -Dsun.awt.disablegrab=true
+# Warmup Iteration   1: 101.087 ms/op
+# Warmup Iteration   2: 83.616 ms/op
+# Warmup Iteration   3: 78.319 ms/op
+# Warmup Iteration   4: 80.012 ms/op
+# Warmup Iteration   5: 78.216 ms/op
+Iteration   1: 80.482 ms/op
+Iteration   2: 79.574 ms/op
+Iteration   3: 82.530 ms/op
+Iteration   4: 80.756 ms/op
+Iteration   5: 79.194 ms/op
+
+
+Result "net.imglib2.view.ReshapeViewBenchmark.randomAccessWalk":
+  80.507 ±(99.9%) 5.001 ms/op [Average]
+  (min, avg, max) = (79.194, 80.507, 82.530), stdev = 1.299
+  CI (99.9%): [75.506, 85.508] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 21.0.3, OpenJDK 64-Bit Server VM, 21.0.3+9-LTS
+# VM invoker: /usr/lib/jvm/zulu-21-amd64/bin/java
+# VM options: -Dsun.awt.disablegrab=true
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 5 iterations, 100 ms each
+# Measurement: 5 iterations, 200 ms each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: net.imglib2.view.ReshapeViewBenchmark.randomAccessWalk
+# Parameters: (imgType = CellImg, viewShape = singleton4d)
+
+# Run progress: 71.43% complete, ETA 00:00:29
+# Fork: 1 of 1
+Picked up _JAVA_OPTIONS: -Dsun.awt.disablegrab=true
+# Warmup Iteration   1: 66.329 ms/op
+# Warmup Iteration   2: 56.323 ms/op
+# Warmup Iteration   3: 53.787 ms/op
+# Warmup Iteration   4: 56.459 ms/op
+# Warmup Iteration   5: 56.361 ms/op
+Iteration   1: 58.129 ms/op
+Iteration   2: 58.273 ms/op
+Iteration   3: 58.508 ms/op
+Iteration   4: 57.927 ms/op
+Iteration   5: 56.224 ms/op
+
+
+Result "net.imglib2.view.ReshapeViewBenchmark.randomAccessWalk":
+  57.812 ±(99.9%) 3.515 ms/op [Average]
+  (min, avg, max) = (56.224, 57.812, 58.508), stdev = 0.913
+  CI (99.9%): [54.298, 61.327] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 21.0.3, OpenJDK 64-Bit Server VM, 21.0.3+9-LTS
+# VM invoker: /usr/lib/jvm/zulu-21-amd64/bin/java
+# VM options: -Dsun.awt.disablegrab=true
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 5 iterations, 100 ms each
+# Measurement: 5 iterations, 200 ms each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: net.imglib2.view.ReshapeViewBenchmark.randomAccessWalk
+# Parameters: (imgType = CellImg, viewShape = translate3d)
+
+# Run progress: 73.21% complete, ETA 00:00:27
+# Fork: 1 of 1
+Picked up _JAVA_OPTIONS: -Dsun.awt.disablegrab=true
+# Warmup Iteration   1: 69.117 ms/op
+# Warmup Iteration   2: 50.439 ms/op
+# Warmup Iteration   3: 46.926 ms/op
+# Warmup Iteration   4: 47.654 ms/op
+# Warmup Iteration   5: 45.482 ms/op
+Iteration   1: 47.481 ms/op
+Iteration   2: 48.581 ms/op
+Iteration   3: 48.314 ms/op
+Iteration   4: 45.893 ms/op
+Iteration   5: 47.324 ms/op
+
+
+Result "net.imglib2.view.ReshapeViewBenchmark.randomAccessWalk":
+  47.519 ±(99.9%) 4.059 ms/op [Average]
+  (min, avg, max) = (45.893, 47.519, 48.581), stdev = 1.054
+  CI (99.9%): [43.459, 51.578] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 21.0.3, OpenJDK 64-Bit Server VM, 21.0.3+9-LTS
+# VM invoker: /usr/lib/jvm/zulu-21-amd64/bin/java
+# VM options: -Dsun.awt.disablegrab=true
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 5 iterations, 100 ms each
+# Measurement: 5 iterations, 200 ms each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: net.imglib2.view.ReshapeViewBenchmark.rawCursor
+# Parameters: (imgType = ArrayImg, viewShape = none)
+
+# Run progress: 75.00% complete, ETA 00:00:25
+# Fork: 1 of 1
+Picked up _JAVA_OPTIONS: -Dsun.awt.disablegrab=true
+# Warmup Iteration   1: 2.609 ms/op
+# Warmup Iteration   2: 2.210 ms/op
+# Warmup Iteration   3: 2.142 ms/op
+# Warmup Iteration   4: 2.186 ms/op
+# Warmup Iteration   5: 2.177 ms/op
+Iteration   1: 2.177 ms/op
+Iteration   2: 2.172 ms/op
+Iteration   3: 2.120 ms/op
+Iteration   4: 2.184 ms/op
+Iteration   5: 2.129 ms/op
+
+
+Result "net.imglib2.view.ReshapeViewBenchmark.rawCursor":
+  2.157 ±(99.9%) 0.114 ms/op [Average]
+  (min, avg, max) = (2.120, 2.157, 2.184), stdev = 0.030
+  CI (99.9%): [2.043, 2.270] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 21.0.3, OpenJDK 64-Bit Server VM, 21.0.3+9-LTS
+# VM invoker: /usr/lib/jvm/zulu-21-amd64/bin/java
+# VM options: -Dsun.awt.disablegrab=true
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 5 iterations, 100 ms each
+# Measurement: 5 iterations, 200 ms each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: net.imglib2.view.ReshapeViewBenchmark.rawCursor
+# Parameters: (imgType = ArrayImg, viewShape = flat1d)
+
+# Run progress: 76.79% complete, ETA 00:00:24
+# Fork: 1 of 1
+Picked up _JAVA_OPTIONS: -Dsun.awt.disablegrab=true
+# Warmup Iteration   1: 3.783 ms/op
+# Warmup Iteration   2: 3.173 ms/op
+# Warmup Iteration   3: 3.026 ms/op
+# Warmup Iteration   4: 3.046 ms/op
+# Warmup Iteration   5: 3.047 ms/op
+Iteration   1: 3.074 ms/op
+Iteration   2: 3.081 ms/op
+Iteration   3: 2.980 ms/op
+Iteration   4: 3.148 ms/op
+Iteration   5: 3.090 ms/op
+
+
+Result "net.imglib2.view.ReshapeViewBenchmark.rawCursor":
+  3.074 ±(99.9%) 0.234 ms/op [Average]
+  (min, avg, max) = (2.980, 3.074, 3.148), stdev = 0.061
+  CI (99.9%): [2.841, 3.308] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 21.0.3, OpenJDK 64-Bit Server VM, 21.0.3+9-LTS
+# VM invoker: /usr/lib/jvm/zulu-21-amd64/bin/java
+# VM options: -Dsun.awt.disablegrab=true
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 5 iterations, 100 ms each
+# Measurement: 5 iterations, 200 ms each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: net.imglib2.view.ReshapeViewBenchmark.rawCursor
+# Parameters: (imgType = ArrayImg, viewShape = merge2d)
+
+# Run progress: 78.57% complete, ETA 00:00:22
+# Fork: 1 of 1
+Picked up _JAVA_OPTIONS: -Dsun.awt.disablegrab=true
+# Warmup Iteration   1: 3.662 ms/op
+# Warmup Iteration   2: 2.964 ms/op
+# Warmup Iteration   3: 3.087 ms/op
+# Warmup Iteration   4: 3.043 ms/op
+# Warmup Iteration   5: 3.037 ms/op
+Iteration   1: 3.062 ms/op
+Iteration   2: 3.063 ms/op
+Iteration   3: 3.075 ms/op
+Iteration   4: 3.088 ms/op
+Iteration   5: 3.082 ms/op
+
+
+Result "net.imglib2.view.ReshapeViewBenchmark.rawCursor":
+  3.074 ±(99.9%) 0.044 ms/op [Average]
+  (min, avg, max) = (3.062, 3.074, 3.088), stdev = 0.011
+  CI (99.9%): [3.030, 3.118] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 21.0.3, OpenJDK 64-Bit Server VM, 21.0.3+9-LTS
+# VM invoker: /usr/lib/jvm/zulu-21-amd64/bin/java
+# VM options: -Dsun.awt.disablegrab=true
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 5 iterations, 100 ms each
+# Measurement: 5 iterations, 200 ms each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: net.imglib2.view.ReshapeViewBenchmark.rawCursor
+# Parameters: (imgType = ArrayImg, viewShape = identity3d)
+
+# Run progress: 80.36% complete, ETA 00:00:20
+# Fork: 1 of 1
+Picked up _JAVA_OPTIONS: -Dsun.awt.disablegrab=true
+# Warmup Iteration   1: 2.564 ms/op
+# Warmup Iteration   2: 2.166 ms/op
+# Warmup Iteration   3: 2.230 ms/op
+# Warmup Iteration   4: 2.251 ms/op
+# Warmup Iteration   5: 2.199 ms/op
+Iteration   1: 2.267 ms/op
+Iteration   2: 2.258 ms/op
+Iteration   3: 2.376 ms/op
+Iteration   4: 2.682 ms/op
+Iteration   5: 2.300 ms/op
+
+
+Result "net.imglib2.view.ReshapeViewBenchmark.rawCursor":
+  2.377 ±(99.9%) 0.682 ms/op [Average]
+  (min, avg, max) = (2.258, 2.377, 2.682), stdev = 0.177
+  CI (99.9%): [1.695, 3.058] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 21.0.3, OpenJDK 64-Bit Server VM, 21.0.3+9-LTS
+# VM invoker: /usr/lib/jvm/zulu-21-amd64/bin/java
+# VM options: -Dsun.awt.disablegrab=true
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 5 iterations, 100 ms each
+# Measurement: 5 iterations, 200 ms each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: net.imglib2.view.ReshapeViewBenchmark.rawCursor
+# Parameters: (imgType = ArrayImg, viewShape = split4d)
+
+# Run progress: 82.14% complete, ETA 00:00:18
+# Fork: 1 of 1
+Picked up _JAVA_OPTIONS: -Dsun.awt.disablegrab=true
+# Warmup Iteration   1: 4.083 ms/op
+# Warmup Iteration   2: 3.262 ms/op
+# Warmup Iteration   3: 3.072 ms/op
+# Warmup Iteration   4: 3.148 ms/op
+# Warmup Iteration   5: 3.207 ms/op
+Iteration   1: 3.187 ms/op
+Iteration   2: 3.086 ms/op
+Iteration   3: 3.126 ms/op
+Iteration   4: 3.029 ms/op
+Iteration   5: 3.114 ms/op
+
+
+Result "net.imglib2.view.ReshapeViewBenchmark.rawCursor":
+  3.108 ±(99.9%) 0.222 ms/op [Average]
+  (min, avg, max) = (3.029, 3.108, 3.187), stdev = 0.058
+  CI (99.9%): [2.887, 3.330] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 21.0.3, OpenJDK 64-Bit Server VM, 21.0.3+9-LTS
+# VM invoker: /usr/lib/jvm/zulu-21-amd64/bin/java
+# VM options: -Dsun.awt.disablegrab=true
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 5 iterations, 100 ms each
+# Measurement: 5 iterations, 200 ms each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: net.imglib2.view.ReshapeViewBenchmark.rawCursor
+# Parameters: (imgType = ArrayImg, viewShape = singleton4d)
+
+# Run progress: 83.93% complete, ETA 00:00:16
+# Fork: 1 of 1
+Picked up _JAVA_OPTIONS: -Dsun.awt.disablegrab=true
+# Warmup Iteration   1: 3.889 ms/op
+# Warmup Iteration   2: 3.180 ms/op
+# Warmup Iteration   3: 3.173 ms/op
+# Warmup Iteration   4: 3.193 ms/op
+# Warmup Iteration   5: 3.142 ms/op
+Iteration   1: 3.146 ms/op
+Iteration   2: 3.118 ms/op
+Iteration   3: 3.197 ms/op
+Iteration   4: 3.170 ms/op
+Iteration   5: 3.183 ms/op
+
+
+Result "net.imglib2.view.ReshapeViewBenchmark.rawCursor":
+  3.163 ±(99.9%) 0.120 ms/op [Average]
+  (min, avg, max) = (3.118, 3.163, 3.197), stdev = 0.031
+  CI (99.9%): [3.043, 3.283] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 21.0.3, OpenJDK 64-Bit Server VM, 21.0.3+9-LTS
+# VM invoker: /usr/lib/jvm/zulu-21-amd64/bin/java
+# VM options: -Dsun.awt.disablegrab=true
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 5 iterations, 100 ms each
+# Measurement: 5 iterations, 200 ms each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: net.imglib2.view.ReshapeViewBenchmark.rawCursor
+# Parameters: (imgType = ArrayImg, viewShape = translate3d)
+
+# Run progress: 85.71% complete, ETA 00:00:14
+# Fork: 1 of 1
+Picked up _JAVA_OPTIONS: -Dsun.awt.disablegrab=true
+# Warmup Iteration   1: 3.575 ms/op
+# Warmup Iteration   2: 3.055 ms/op
+# Warmup Iteration   3: 3.045 ms/op
+# Warmup Iteration   4: 2.981 ms/op
+# Warmup Iteration   5: 3.220 ms/op
+Iteration   1: 3.164 ms/op
+Iteration   2: 3.149 ms/op
+Iteration   3: 3.214 ms/op
+Iteration   4: 3.162 ms/op
+Iteration   5: 3.179 ms/op
+
+
+Result "net.imglib2.view.ReshapeViewBenchmark.rawCursor":
+  3.174 ±(99.9%) 0.097 ms/op [Average]
+  (min, avg, max) = (3.149, 3.174, 3.214), stdev = 0.025
+  CI (99.9%): [3.077, 3.271] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 21.0.3, OpenJDK 64-Bit Server VM, 21.0.3+9-LTS
+# VM invoker: /usr/lib/jvm/zulu-21-amd64/bin/java
+# VM options: -Dsun.awt.disablegrab=true
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 5 iterations, 100 ms each
+# Measurement: 5 iterations, 200 ms each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: net.imglib2.view.ReshapeViewBenchmark.rawCursor
+# Parameters: (imgType = CellImg, viewShape = none)
+
+# Run progress: 87.50% complete, ETA 00:00:12
+# Fork: 1 of 1
+Picked up _JAVA_OPTIONS: -Dsun.awt.disablegrab=true
+# Warmup Iteration   1: 8.565 ms/op
+# Warmup Iteration   2: 8.117 ms/op
+# Warmup Iteration   3: 7.981 ms/op
+# Warmup Iteration   4: 7.473 ms/op
+# Warmup Iteration   5: 7.758 ms/op
+Iteration   1: 7.875 ms/op
+Iteration   2: 7.528 ms/op
+Iteration   3: 7.719 ms/op
+Iteration   4: 7.711 ms/op
+Iteration   5: 7.900 ms/op
+
+
+Result "net.imglib2.view.ReshapeViewBenchmark.rawCursor":
+  7.747 ±(99.9%) 0.577 ms/op [Average]
+  (min, avg, max) = (7.528, 7.747, 7.900), stdev = 0.150
+  CI (99.9%): [7.169, 8.324] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 21.0.3, OpenJDK 64-Bit Server VM, 21.0.3+9-LTS
+# VM invoker: /usr/lib/jvm/zulu-21-amd64/bin/java
+# VM options: -Dsun.awt.disablegrab=true
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 5 iterations, 100 ms each
+# Measurement: 5 iterations, 200 ms each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: net.imglib2.view.ReshapeViewBenchmark.rawCursor
+# Parameters: (imgType = CellImg, viewShape = flat1d)
+
+# Run progress: 89.29% complete, ETA 00:00:10
+# Fork: 1 of 1
+Picked up _JAVA_OPTIONS: -Dsun.awt.disablegrab=true
+# Warmup Iteration   1: 23.088 ms/op
+# Warmup Iteration   2: 18.536 ms/op
+# Warmup Iteration   3: 17.323 ms/op
+# Warmup Iteration   4: 17.878 ms/op
+# Warmup Iteration   5: 18.166 ms/op
+Iteration   1: 18.698 ms/op
+Iteration   2: 18.970 ms/op
+Iteration   3: 18.551 ms/op
+Iteration   4: 19.446 ms/op
+Iteration   5: 19.772 ms/op
+
+
+Result "net.imglib2.view.ReshapeViewBenchmark.rawCursor":
+  19.088 ±(99.9%) 1.973 ms/op [Average]
+  (min, avg, max) = (18.551, 19.088, 19.772), stdev = 0.512
+  CI (99.9%): [17.114, 21.061] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 21.0.3, OpenJDK 64-Bit Server VM, 21.0.3+9-LTS
+# VM invoker: /usr/lib/jvm/zulu-21-amd64/bin/java
+# VM options: -Dsun.awt.disablegrab=true
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 5 iterations, 100 ms each
+# Measurement: 5 iterations, 200 ms each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: net.imglib2.view.ReshapeViewBenchmark.rawCursor
+# Parameters: (imgType = CellImg, viewShape = merge2d)
+
+# Run progress: 91.07% complete, ETA 00:00:09
+# Fork: 1 of 1
+Picked up _JAVA_OPTIONS: -Dsun.awt.disablegrab=true
+# Warmup Iteration   1: 22.790 ms/op
+# Warmup Iteration   2: 18.929 ms/op
+# Warmup Iteration   3: 19.251 ms/op
+# Warmup Iteration   4: 19.123 ms/op
+# Warmup Iteration   5: 19.166 ms/op
+Iteration   1: 19.186 ms/op
+Iteration   2: 18.814 ms/op
+Iteration   3: 19.160 ms/op
+Iteration   4: 18.855 ms/op
+Iteration   5: 19.002 ms/op
+
+
+Result "net.imglib2.view.ReshapeViewBenchmark.rawCursor":
+  19.004 ±(99.9%) 0.655 ms/op [Average]
+  (min, avg, max) = (18.814, 19.004, 19.186), stdev = 0.170
+  CI (99.9%): [18.348, 19.659] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 21.0.3, OpenJDK 64-Bit Server VM, 21.0.3+9-LTS
+# VM invoker: /usr/lib/jvm/zulu-21-amd64/bin/java
+# VM options: -Dsun.awt.disablegrab=true
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 5 iterations, 100 ms each
+# Measurement: 5 iterations, 200 ms each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: net.imglib2.view.ReshapeViewBenchmark.rawCursor
+# Parameters: (imgType = CellImg, viewShape = identity3d)
+
+# Run progress: 92.86% complete, ETA 00:00:07
+# Fork: 1 of 1
+Picked up _JAVA_OPTIONS: -Dsun.awt.disablegrab=true
+# Warmup Iteration   1: 8.654 ms/op
+# Warmup Iteration   2: 8.012 ms/op
+# Warmup Iteration   3: 7.681 ms/op
+# Warmup Iteration   4: 7.829 ms/op
+# Warmup Iteration   5: 7.688 ms/op
+Iteration   1: 8.257 ms/op
+Iteration   2: 8.064 ms/op
+Iteration   3: 7.779 ms/op
+Iteration   4: 7.919 ms/op
+Iteration   5: 7.876 ms/op
+
+
+Result "net.imglib2.view.ReshapeViewBenchmark.rawCursor":
+  7.979 ±(99.9%) 0.716 ms/op [Average]
+  (min, avg, max) = (7.779, 7.979, 8.257), stdev = 0.186
+  CI (99.9%): [7.263, 8.695] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 21.0.3, OpenJDK 64-Bit Server VM, 21.0.3+9-LTS
+# VM invoker: /usr/lib/jvm/zulu-21-amd64/bin/java
+# VM options: -Dsun.awt.disablegrab=true
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 5 iterations, 100 ms each
+# Measurement: 5 iterations, 200 ms each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: net.imglib2.view.ReshapeViewBenchmark.rawCursor
+# Parameters: (imgType = CellImg, viewShape = split4d)
+
+# Run progress: 94.64% complete, ETA 00:00:05
+# Fork: 1 of 1
+Picked up _JAVA_OPTIONS: -Dsun.awt.disablegrab=true
+# Warmup Iteration   1: 22.990 ms/op
+# Warmup Iteration   2: 19.054 ms/op
+# Warmup Iteration   3: 18.688 ms/op
+# Warmup Iteration   4: 18.926 ms/op
+# Warmup Iteration   5: 19.075 ms/op
+Iteration   1: 19.016 ms/op
+Iteration   2: 19.200 ms/op
+Iteration   3: 18.227 ms/op
+Iteration   4: 18.490 ms/op
+Iteration   5: 18.784 ms/op
+
+
+Result "net.imglib2.view.ReshapeViewBenchmark.rawCursor":
+  18.743 ±(99.9%) 1.510 ms/op [Average]
+  (min, avg, max) = (18.227, 18.743, 19.200), stdev = 0.392
+  CI (99.9%): [17.233, 20.253] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 21.0.3, OpenJDK 64-Bit Server VM, 21.0.3+9-LTS
+# VM invoker: /usr/lib/jvm/zulu-21-amd64/bin/java
+# VM options: -Dsun.awt.disablegrab=true
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 5 iterations, 100 ms each
+# Measurement: 5 iterations, 200 ms each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: net.imglib2.view.ReshapeViewBenchmark.rawCursor
+# Parameters: (imgType = CellImg, viewShape = singleton4d)
+
+# Run progress: 96.43% complete, ETA 00:00:03
+# Fork: 1 of 1
+Picked up _JAVA_OPTIONS: -Dsun.awt.disablegrab=true
+# Warmup Iteration   1: 27.810 ms/op
+# Warmup Iteration   2: 19.583 ms/op
+# Warmup Iteration   3: 18.845 ms/op
+# Warmup Iteration   4: 18.648 ms/op
+# Warmup Iteration   5: 18.715 ms/op
+Iteration   1: 18.613 ms/op
+Iteration   2: 18.733 ms/op
+Iteration   3: 18.206 ms/op
+Iteration   4: 18.449 ms/op
+Iteration   5: 18.565 ms/op
+
+
+Result "net.imglib2.view.ReshapeViewBenchmark.rawCursor":
+  18.513 ±(99.9%) 0.768 ms/op [Average]
+  (min, avg, max) = (18.206, 18.513, 18.733), stdev = 0.199
+  CI (99.9%): [17.745, 19.281] (assumes normal distribution)
+
+
+# JMH version: 1.37
+# VM version: JDK 21.0.3, OpenJDK 64-Bit Server VM, 21.0.3+9-LTS
+# VM invoker: /usr/lib/jvm/zulu-21-amd64/bin/java
+# VM options: -Dsun.awt.disablegrab=true
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 5 iterations, 100 ms each
+# Measurement: 5 iterations, 200 ms each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: net.imglib2.view.ReshapeViewBenchmark.rawCursor
+# Parameters: (imgType = CellImg, viewShape = translate3d)
+
+# Run progress: 98.21% complete, ETA 00:00:01
+# Fork: 1 of 1
+Picked up _JAVA_OPTIONS: -Dsun.awt.disablegrab=true
+# Warmup Iteration   1: 22.628 ms/op
+# Warmup Iteration   2: 18.599 ms/op
+# Warmup Iteration   3: 18.961 ms/op
+# Warmup Iteration   4: 19.074 ms/op
+# Warmup Iteration   5: 18.890 ms/op
+Iteration   1: 18.761 ms/op
+Iteration   2: 18.707 ms/op
+Iteration   3: 18.740 ms/op
+Iteration   4: 18.809 ms/op
+Iteration   5: 18.874 ms/op
+
+
+Result "net.imglib2.view.ReshapeViewBenchmark.rawCursor":
+  18.778 ±(99.9%) 0.251 ms/op [Average]
+  (min, avg, max) = (18.707, 18.778, 18.874), stdev = 0.065
+  CI (99.9%): [18.527, 19.029] (assumes normal distribution)
+
+
+# Run complete. Total time: 00:01:42
+
+REMEMBER: The numbers below are just data. To gain reusable insights, you need to follow up on
+why the numbers are the way they are. Use profilers (see -prof, -lprof), design factorial
+experiments, perform baseline and negative tests that provide experimental control, make sure
+the benchmarking environment is safe on JVM/OS/HW level, ask for reviews from the domain experts.
+Do not assume the numbers tell you what you want them to tell.
+
+NOTE: Current JVM experimentally supports Compiler Blackholes, and they are in use. Please exercise
+extra caution when trusting the results, look into the generated code to check the benchmark still
+works, and factor in a small probability of new VM bugs. Additionally, while comparisons between
+different JVMs are already problematic, the performance difference caused by different Blackhole
+modes can be very significant. Please make sure you use the consistent Blackhole mode for comparisons.
+
+Benchmark                                (imgType)  (viewShape)  Mode  Cnt   Score   Error  Units
+ReshapeViewBenchmark.flatIterableCursor   ArrayImg         none  avgt    5   2.319 ± 0.611  ms/op
+ReshapeViewBenchmark.flatIterableCursor   ArrayImg       flat1d  avgt    5   3.080 ± 0.469  ms/op
+ReshapeViewBenchmark.flatIterableCursor   ArrayImg      merge2d  avgt    5   3.397 ± 1.065  ms/op
+ReshapeViewBenchmark.flatIterableCursor   ArrayImg   identity3d  avgt    5   2.218 ± 0.279  ms/op
+ReshapeViewBenchmark.flatIterableCursor   ArrayImg      split4d  avgt    5   3.180 ± 0.452  ms/op
+ReshapeViewBenchmark.flatIterableCursor   ArrayImg  singleton4d  avgt    5   3.154 ± 0.388  ms/op
+ReshapeViewBenchmark.flatIterableCursor   ArrayImg  translate3d  avgt    5   3.212 ± 0.263  ms/op
+ReshapeViewBenchmark.flatIterableCursor    CellImg         none  avgt    5  16.419 ± 3.757  ms/op
+ReshapeViewBenchmark.flatIterableCursor    CellImg       flat1d  avgt    5  19.121 ± 3.955  ms/op
+ReshapeViewBenchmark.flatIterableCursor    CellImg      merge2d  avgt    5  19.783 ± 1.868  ms/op
+ReshapeViewBenchmark.flatIterableCursor    CellImg   identity3d  avgt    5  16.841 ± 1.646  ms/op
+ReshapeViewBenchmark.flatIterableCursor    CellImg      split4d  avgt    5  18.786 ± 1.933  ms/op
+ReshapeViewBenchmark.flatIterableCursor    CellImg  singleton4d  avgt    5  19.152 ± 0.942  ms/op
+ReshapeViewBenchmark.flatIterableCursor    CellImg  translate3d  avgt    5  19.308 ± 4.794  ms/op
+ReshapeViewBenchmark.loopBuilder          ArrayImg         none  avgt    5   2.341 ± 0.098  ms/op
+ReshapeViewBenchmark.loopBuilder          ArrayImg       flat1d  avgt    5   3.328 ± 0.195  ms/op
+ReshapeViewBenchmark.loopBuilder          ArrayImg      merge2d  avgt    5   3.218 ± 0.409  ms/op
+ReshapeViewBenchmark.loopBuilder          ArrayImg   identity3d  avgt    5   2.254 ± 0.135  ms/op
+ReshapeViewBenchmark.loopBuilder          ArrayImg      split4d  avgt    5   3.139 ± 0.122  ms/op
+ReshapeViewBenchmark.loopBuilder          ArrayImg  singleton4d  avgt    5   3.195 ± 0.251  ms/op
+ReshapeViewBenchmark.loopBuilder          ArrayImg  translate3d  avgt    5   3.185 ± 0.117  ms/op
+ReshapeViewBenchmark.loopBuilder           CellImg         none  avgt    5   9.592 ± 2.422  ms/op
+ReshapeViewBenchmark.loopBuilder           CellImg       flat1d  avgt    5  40.829 ± 5.661  ms/op
+ReshapeViewBenchmark.loopBuilder           CellImg      merge2d  avgt    5  39.662 ± 4.420  ms/op
+ReshapeViewBenchmark.loopBuilder           CellImg   identity3d  avgt    5   9.250 ± 0.532  ms/op
+ReshapeViewBenchmark.loopBuilder           CellImg      split4d  avgt    5  39.035 ± 1.214  ms/op
+ReshapeViewBenchmark.loopBuilder           CellImg  singleton4d  avgt    5  26.299 ± 0.515  ms/op
+ReshapeViewBenchmark.loopBuilder           CellImg  translate3d  avgt    5  23.174 ± 0.620  ms/op
+ReshapeViewBenchmark.randomAccessWalk     ArrayImg         none  avgt    5  16.461 ± 0.317  ms/op
+ReshapeViewBenchmark.randomAccessWalk     ArrayImg       flat1d  avgt    5  77.254 ± 6.879  ms/op
+ReshapeViewBenchmark.randomAccessWalk     ArrayImg      merge2d  avgt    5  76.214 ± 6.035  ms/op
+ReshapeViewBenchmark.randomAccessWalk     ArrayImg   identity3d  avgt    5  16.615 ± 0.731  ms/op
+ReshapeViewBenchmark.randomAccessWalk     ArrayImg      split4d  avgt    5  78.088 ± 1.442  ms/op
+ReshapeViewBenchmark.randomAccessWalk     ArrayImg  singleton4d  avgt    5  48.687 ± 2.583  ms/op
+ReshapeViewBenchmark.randomAccessWalk     ArrayImg  translate3d  avgt    5  37.349 ± 1.629  ms/op
+ReshapeViewBenchmark.randomAccessWalk      CellImg         none  avgt    5  28.084 ± 1.339  ms/op
+ReshapeViewBenchmark.randomAccessWalk      CellImg       flat1d  avgt    5  80.600 ± 1.374  ms/op
+ReshapeViewBenchmark.randomAccessWalk      CellImg      merge2d  avgt    5  85.893 ± 5.510  ms/op
+ReshapeViewBenchmark.randomAccessWalk      CellImg   identity3d  avgt    5  28.670 ± 3.588  ms/op
+ReshapeViewBenchmark.randomAccessWalk      CellImg      split4d  avgt    5  80.507 ± 5.001  ms/op
+ReshapeViewBenchmark.randomAccessWalk      CellImg  singleton4d  avgt    5  57.812 ± 3.515  ms/op
+ReshapeViewBenchmark.randomAccessWalk      CellImg  translate3d  avgt    5  47.519 ± 4.059  ms/op
+ReshapeViewBenchmark.rawCursor            ArrayImg         none  avgt    5   2.157 ± 0.114  ms/op
+ReshapeViewBenchmark.rawCursor            ArrayImg       flat1d  avgt    5   3.074 ± 0.234  ms/op
+ReshapeViewBenchmark.rawCursor            ArrayImg      merge2d  avgt    5   3.074 ± 0.044  ms/op
+ReshapeViewBenchmark.rawCursor            ArrayImg   identity3d  avgt    5   2.377 ± 0.682  ms/op
+ReshapeViewBenchmark.rawCursor            ArrayImg      split4d  avgt    5   3.108 ± 0.222  ms/op
+ReshapeViewBenchmark.rawCursor            ArrayImg  singleton4d  avgt    5   3.163 ± 0.120  ms/op
+ReshapeViewBenchmark.rawCursor            ArrayImg  translate3d  avgt    5   3.174 ± 0.097  ms/op
+ReshapeViewBenchmark.rawCursor             CellImg         none  avgt    5   7.747 ± 0.577  ms/op
+ReshapeViewBenchmark.rawCursor             CellImg       flat1d  avgt    5  19.088 ± 1.973  ms/op
+ReshapeViewBenchmark.rawCursor             CellImg      merge2d  avgt    5  19.004 ± 0.655  ms/op
+ReshapeViewBenchmark.rawCursor             CellImg   identity3d  avgt    5   7.979 ± 0.716  ms/op
+ReshapeViewBenchmark.rawCursor             CellImg      split4d  avgt    5  18.743 ± 1.510  ms/op
+ReshapeViewBenchmark.rawCursor             CellImg  singleton4d  avgt    5  18.513 ± 0.768  ms/op
+ReshapeViewBenchmark.rawCursor             CellImg  translate3d  avgt    5  18.778 ± 0.251  ms/op
