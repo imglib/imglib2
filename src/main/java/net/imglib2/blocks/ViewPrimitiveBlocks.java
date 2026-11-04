@@ -63,22 +63,52 @@ class ViewPrimitiveBlocks< T extends NativeType< T >, R extends NativeType< R > 
 
 	private final Convert convert;
 
+	// copies through a reshape, if there is one in the view chain
+	private final ReshapeCopier reshapeCopier;
+
 	private Supplier< PrimitiveBlocks< T > > threadSafeSupplier;
 
 	public ViewPrimitiveBlocks( final ViewProperties< T, R > props )
 	{
+		this( props, ReshapeCopier.DEFAULT_WASTE_FACTOR, ReshapeCopier.DEFAULT_MIN_SPLIT_SIZE, ReshapeCopier.DEFAULT_MAX_BUFFER_SIZE );
+	}
+
+	/**
+	 * The parameters {@code wasteFactor}, {@code minSplitSize}, and {@code
+	 * maxBufferSize} are only used if there is a reshape in the view chain.
+	 * See {@link ReshapeCopier}.
+	 */
+	ViewPrimitiveBlocks( final ViewProperties< T, R > props, final int wasteFactor, final long minSplitSize, final long maxBufferSize )
+	{
 		this.props = props;
 		final PrimitiveType primitiveType = props.getRootType().getNativeTypeFactory().getPrimitiveType();
-		final MemCopy memCopy = MemCopy.forPrimitiveType( primitiveType, props.getRoot().getAccessType() instanceof BufferAccess, false );
+		final boolean fromBuffer = props.getRoot().getAccessType() instanceof BufferAccess;
+		final MemCopy memCopy = MemCopy.forPrimitiveType( primitiveType, fromBuffer, false );
 		final Extension extension = props.getExtension() != null ? props.getExtension() : Extension.border();
-		final Object oob = extractOobValue( props.getRootType(), extension );
+		final Object oobValue = extractOobValue( props.getRootType(), extension );
+		// NB: memCopy copies the oob value from a Buffer, if the root is backed by buffers
+		final Object oob = fromBuffer && oobValue != null ? PrimitiveBlocksUtils.wrapAsBuffer( oobValue ) : oobValue;
 		final Ranges findRanges = Ranges.forExtension( extension );
 		copier = RangeCopier.create( props.getRoot(), findRanges, memCopy, oob );
 		tempArrayConvert = TempArray.forPrimitiveType( primitiveType );
 		tempArrayPermute = TempArray.forPrimitiveType( primitiveType );
-		permuteInvert = new PermuteInvert( memCopy, props.getPermuteInvertTransform() );
+		// NB: PermuteInvert copies between primitive arrays, even if the root is backed by buffers
+		permuteInvert = new PermuteInvert( MemCopy.forPrimitiveType( primitiveType ), props.getPermuteInvertTransform() );
 		convert = props.hasConverterSupplier()
 				? Convert.create( props.getRootType(), props.getViewType(), props.getConverterSupplier() )
+				: null;
+		reshapeCopier = props.hasReshape()
+				? new ReshapeCopier(
+						props.getReshape(),
+						props.hasTransform() ? props.getTransform() : null,
+						props.hasPermuteInvertTransform() ? props.getPermuteInvertTransform() : null,
+						props.hasBottomTransform() ? props.getBottomTransform() : null,
+						props.hasBottomPermuteInvertTransform() ? props.getBottomPermuteInvertTransform() : null,
+						copier,
+						primitiveType,
+						wasteFactor,
+						minSplitSize,
+						maxBufferSize )
 				: null;
 	}
 
@@ -99,30 +129,9 @@ class ViewPrimitiveBlocks< T extends NativeType< T >, R extends NativeType< R > 
 		if ( !props.hasTransform() )
 			return interval;
 
-		final long[] srcPos = interval.min();
-		final int[] srcSize = interval.size();
 		final MixedTransform transform = props.getTransform();
-		final int n = transform.numTargetDimensions();
-		final BlockInterval destInterval = new BlockInterval( n );
-		final long[] destPos = destInterval.min();
-		final int[] destSize = destInterval.size();
-		for ( int d = 0; d < n; d++ )
-		{
-			final int t = ( int ) transform.getTranslation( d );
-			if ( transform.getComponentZero( d ) )
-			{
-				destPos[ d ] = t;
-				destSize[ d ] = 1;
-			}
-			else
-			{
-				final int c = transform.getComponentMapping( d );
-				destPos[ d ] = transform.getComponentInversion( d )
-						? t - srcPos[ c ] - srcSize[ c ] + 1
-						: t + srcPos[ c ];
-				destSize[ d ] = srcSize[ c ];
-			}
-		}
+		final BlockInterval destInterval = new BlockInterval( transform.numTargetDimensions() );
+		PrimitiveBlocksUtils.transformInterval( transform, interval.min(), interval.size(), destInterval.min(), destInterval.size() );
 		return destInterval;
 	}
 
@@ -143,6 +152,15 @@ class ViewPrimitiveBlocks< T extends NativeType< T >, R extends NativeType< R > 
 		final BlockInterval blockInterval = BlockInterval.asBlockInterval( interval );
 		final int[] size = blockInterval.size();
 		final int length = ( int ) Intervals.numElements( size );
+
+		if ( reshapeCopier != null )
+		{
+			final Object copyDest = props.hasConverterSupplier() ? tempArrayConvert.get( length ) : dest;
+			reshapeCopier.copy( blockInterval.min(), size, copyDest );
+			if ( props.hasConverterSupplier() )
+				convert.convert( copyDest, dest, length );
+			return;
+		}
 
 		final BlockInterval destInterval = getTransformedInterval( blockInterval );
 		final long[] destPos = destInterval.min();
@@ -229,5 +247,6 @@ class ViewPrimitiveBlocks< T extends NativeType< T >, R extends NativeType< R > 
 		convert = blocks.convert == null ? null : blocks.convert.newInstance();
 		tempArrayConvert = blocks.tempArrayConvert.newInstance();
 		tempArrayPermute = blocks.tempArrayPermute.newInstance();
+		reshapeCopier = blocks.reshapeCopier == null ? null : blocks.reshapeCopier.newInstance();
 	}
 }

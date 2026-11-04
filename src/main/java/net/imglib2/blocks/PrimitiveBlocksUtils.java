@@ -33,6 +33,13 @@
  */
 package net.imglib2.blocks;
 
+import java.nio.ByteBuffer;
+import java.nio.CharBuffer;
+import java.nio.DoubleBuffer;
+import java.nio.FloatBuffer;
+import java.nio.IntBuffer;
+import java.nio.LongBuffer;
+import java.nio.ShortBuffer;
 import java.util.Arrays;
 
 import net.imglib2.img.array.ArrayImg;
@@ -54,6 +61,33 @@ class PrimitiveBlocksUtils
 		}
 		else
 			return null;
+	}
+
+	/**
+	 * Wrap a primitive array (as returned by {@link #extractOobValue}) into
+	 * the corresponding {@code java.nio.Buffer}. This is needed for the
+	 * out-of-bounds value of roots that are backed by {@code Buffer}s, because
+	 * the {@code MemCopy} of the {@code RangeCopier} then copies from {@code
+	 * Buffer}s.
+	 */
+	static Object wrapAsBuffer( final Object array )
+	{
+		if ( array instanceof byte[] )
+			return ByteBuffer.wrap( ( byte[] ) array );
+		else if ( array instanceof char[] )
+			return CharBuffer.wrap( ( char[] ) array );
+		else if ( array instanceof short[] )
+			return ShortBuffer.wrap( ( short[] ) array );
+		else if ( array instanceof int[] )
+			return IntBuffer.wrap( ( int[] ) array );
+		else if ( array instanceof long[] )
+			return LongBuffer.wrap( ( long[] ) array );
+		else if ( array instanceof float[] )
+			return FloatBuffer.wrap( ( float[] ) array );
+		else if ( array instanceof double[] )
+			return DoubleBuffer.wrap( ( double[] ) array );
+		else
+			throw new IllegalArgumentException( "cannot wrap " + array.getClass().getSimpleName() + " as a Buffer" );
 	}
 
 	/**
@@ -98,6 +132,45 @@ class PrimitiveBlocksUtils
 		invTransform.setComponentInversion( invInvert );
 		invTransform.setComponentZero( invZero );
 		return invTransform;
+	}
+
+	/**
+	 * Compute the bounding box of the {@code transform}ed block at {@code
+	 * srcPos} of size {@code srcSize}. For each target dimension, this is
+	 * either the translation (size 1), or the (possibly inverted) extent of the
+	 * source dimension it is taken from, shifted by the translation.
+	 *
+	 * @param transform
+	 * 		the transform
+	 * @param srcPos
+	 * 		min of the source block
+	 * @param srcSize
+	 * 		size of the source block
+	 * @param destPos
+	 * 		is set to the min of the target block
+	 * @param destSize
+	 * 		is set to the size of the target block
+	 */
+	static void transformInterval( final MixedTransform transform, final long[] srcPos, final int[] srcSize, final long[] destPos, final int[] destSize )
+	{
+		final int n = transform.numTargetDimensions();
+		for ( int d = 0; d < n; d++ )
+		{
+			final long t = transform.getTranslation( d );
+			if ( transform.getComponentZero( d ) )
+			{
+				destPos[ d ] = t;
+				destSize[ d ] = 1;
+			}
+			else
+			{
+				final int c = transform.getComponentMapping( d );
+				destPos[ d ] = transform.getComponentInversion( d )
+						? t - srcPos[ c ] - srcSize[ c ] + 1
+						: t + srcPos[ c ];
+				destSize[ d ] = srcSize[ c ];
+			}
+		}
 	}
 
 	/**
