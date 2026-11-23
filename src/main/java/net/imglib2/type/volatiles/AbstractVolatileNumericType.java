@@ -47,27 +47,16 @@ import net.imglib2.util.Util;
  * @param <T>
  *            type of derived concrete class.
  * 
+ * @author Tobias Pietzsch
  * @author Stephan Saalfeld
  */
-abstract public class AbstractVolatileNumericType< N extends NumericType< N >, T extends AbstractVolatileNumericType< N, T > >
-		extends Volatile< N >
+public abstract class AbstractVolatileNumericType< N extends NumericType< N >, T extends AbstractVolatileNumericType< N, T > >
+		extends AbstractVolatileType< N, T >
 		implements NumericType< T >
 {
-	public AbstractVolatileNumericType( final N t, final boolean valid )
+	protected AbstractVolatileNumericType( final N t, final boolean valid )
 	{
 		super( t, valid );
-	}
-
-	public AbstractVolatileNumericType( final N t )
-	{
-		this( t, false );
-	}
-
-	@Override
-	public void set( final T c )
-	{
-		t.set( c.t );
-		valid = c.valid;
 	}
 
 	@Override
@@ -133,27 +122,5 @@ abstract public class AbstractVolatileNumericType< N extends NumericType< N >, T
 	public void mul( final double c )
 	{
 		t.mul( c );
-	}
-
-	@Override
-	public boolean valueEquals( T other )
-	{
-		return isValid() == other.isValid() && t.valueEquals( other.t );
-	}
-
-	@Override
-	public boolean equals( final Object obj )
-	{
-		if ( ! getClass().isInstance( obj ) )
-			return false;
-		@SuppressWarnings( "unchecked" )
-		T t = ( T ) obj;
-		return AbstractVolatileNumericType.this.valueEquals( t );
-	}
-
-	@Override
-	public int hashCode()
-	{
-		return Util.combineHash( Boolean.hashCode( isValid() ), t.hashCode() );
 	}
 }

@@ -36,38 +36,14 @@ package net.imglib2;
 
 /**
  * Something volatile that has a value and is either VALID or INVALID.
- * 
+ *
  * @author Stephan Saalfeld
  */
-public class Volatile< T >
+public interface Volatile< T >
 {
-	final protected T t;
+	T get();
 
-	protected boolean valid;
+	boolean isValid();
 
-	public Volatile( final T t, final boolean valid )
-	{
-		this.t = t;
-		this.valid = valid;
-	}
-
-	public Volatile( final T t )
-	{
-		this( t, false );
-	}
-
-	public T get()
-	{
-		return t;
-	}
-
-	public boolean isValid()
-	{
-		return valid;
-	}
-
-	public void setValid( final boolean valid )
-	{
-		this.valid = valid;
-	}
+	void setValid( boolean valid );
 }
