@@ -56,6 +56,41 @@ import net.imglib2.transform.integer.ReshapeTransform;
  * Moves are computed in {@code long} arithmetic. The product of a distance and
  * the stride of the moved dimension must not overflow.
  *
+ * <h2>Encoding of targetAxis and sourceGroup</h2>
+ *
+ * We use {@link #targetAxisOrGroup} to compactly encode
+ * <ul>
+ * <li>whether a source axis is a singleton axis, belongs to a group with a single target dimension, or a digit group,</li>
+ * <li>the target dimension if it's a single target dimension group, and</li>
+ * <li>the group index if it's a digit group.</li>
+ * </ul>
+ * {@code targetAxisOrGroup[d]} for source axis {@code d} is
+ * <pre>
+ * {@code >=  0}  target axis for single target dimension group (){@code groupTargetAxes[sourceGroup[d]][0]}
+ * {@code == -1}  for singleton axis
+ * {@code <= -2}  group index for a digit group, encoded as {@code -2 - sourceGroup[d]}
+ * </pre>
+ * Additionally, {@link #firstAxis firstAxis[g]} stores the first (fastest)
+ * target axis of every group {@code g}.
+ * <p>
+ * This saves several dependent array lookups.
+ *
+ * <h2>Strides</h2>
+ *
+ * The first (fastest) source axis of every group has stride 1. All other axes
+ * of the group have larger strides, because all axes in the group have size of
+ * at least 2. Source axes of size 1 are not in any group, and have stride 0.
+ * Therefore {@code sourceStride[ d ] == 1} if and only if {@code d} is the
+ * first axis of a group.
+ * <p>
+ * This is what {@code updateAll()} relies on: It goes backwards through the source
+ * axes, summing up {@code f}. When it gets to an axis with stride 1, then
+ * {@code f} is complete for the current group.
+ * <p>
+ * In general, stride 1 (meaning that {@code d} is the first dimension of its
+ * group) is handled separately, because it is the common case when iterating,
+ * and {@code fwd()} of the source can be cheaper than {@code move()}.
+ *
  * @param <T>
  */
 public final class ReshapeRandomAccess< T > extends AbstractLocalizable implements RandomAccess< T >
@@ -67,48 +102,75 @@ public final class ReshapeRandomAccess< T > extends AbstractLocalizable implemen
 	private final RandomAccess< T > s;
 
 	/**
-	 * For each dimension of this, the group it belongs to, or -1.
-	 */
-	private final int[] group;
-
-	/**
-	 * For each dimension of this, its stride in the flat index of its group.
+	 * For each dimension of this, its stride in the flat index of its group. 1
+	 * for the first dimension of each group, and 0 for dimensions of size 1
+	 * (which are not in any group).
 	 */
 	private final long[] stride;
 
 	/**
-	 * The non-singleton target dimensions of all groups, in order. The target
-	 * dimensions of group {@code g} are {@code axis[ start[ g ] ]} to {@code
-	 * axis[ start[ g + 1 ] - 1 ]}. We call their positions "digits".
+	 * For each source axis, the target axis or the digit group that it maps to:
+	 * <ul>
+	 * <li>{@code >= 0}: the target axis, for source axes in a group with a single
+	 * target axis,</li>
+	 * <li>{@code -1}: for source axes of size 1,</li>
+	 * <li>{@code <= -2}: the {@link #encodeGroup encoded} index of the group in
+	 * {@link #groupTargetAxes}, for source axes in a digit group.</li>
+	 * </ul>
 	 */
-	private final int[] axis;
+	private final int[] targetAxisOrGroup;
 
 	/**
-	 * The size of each target dimension in {@link #axis}.
+	 * Encode the index of a digit group for {@link #targetAxisOrGroup}.
 	 */
-	private final long[] dim;
+	private static int encodeGroup( final int g )
+	{
+		return -2 - g;
+	}
 
 	/**
-	 * For each group, the index of its first digit in {@link #axis}. Has one
-	 * extra element at the end.
+	 * Decode the index of a digit group from {@link #targetAxisOrGroup}.
 	 */
-	private final int[] start;
+	private static int decodeGroup( final int encoded )
+	{
+		return -2 - encoded;
+	}
 
 	/**
-	 * For each group, the current flat index.
+	 * For each group, its target axes (without axes of size 1), fastest first.
+	 * <p>
+	 * This contains all groups, so that it can be indexed with the groups of the
+	 * {@link ReshapeTransform}. After construction, only the entries of digit
+	 * groups (which have at least 2 target axes) are used. For groups with a
+	 * single target axis, that axis is directly in {@link #targetAxisOrGroup}.
 	 */
-	private final long[] flat;
+	private final int[][] groupTargetAxes;
 
 	/**
-	 * The current position in each target dimension in {@link #axis}.
+	 * For each source axis, the first (fastest) target axis of its group {@code
+	 * g}: {@code groupTargetAxes[ g ][ 0 ]}. Undefined for source axes of size 1.
+	 * Only used for source axes in digit groups.
+	 * <p>
+	 * This is redundant, but saves two array lookups in {@link #fwd} and
+	 * {@link #bck}.
 	 */
-	private final long[] digit;
+	private final int[] firstAxis;
 
 	/**
-	 * Current target position. Only used for bulk position updates. Target
-	 * dimensions of size 1 stay 0.
+	 * The size of each source view axis. For the axes of a digit group, these
+	 * are the bases of the digits.
 	 */
-	private final long[] tmpPosition;
+	private final long[] targetDimensions;
+
+	/**
+	 * Position of the source RandomAccess.
+	 * <p>
+	 * This is always valid for axes in digit groups, where it holds the current
+	 * digits. Source axes of size 1 are always 0. For all other axes, it is only
+	 * set (temporarily) in {@link #updateAll()}. The position along these axes is
+	 * maintained by the source RandomAccess itself.
+	 */
+	private final long[] targetPosition;
 
 	ReshapeRandomAccess( final RandomAccess< T > source, final ReshapeTransform transformToSource )
 	{
@@ -117,34 +179,42 @@ public final class ReshapeRandomAccess< T > extends AbstractLocalizable implemen
 		assert source.numDimensions() == transformToSource.numTargetDimensions();
 
 		s = source;
-		group = new int[ n ];
-		stride = new long[ n ];
+		targetDimensions = transformToSource.getTargetDimensions();
+		groupTargetAxes = new int[ transformToSource.numGroups() ][];
+		Arrays.setAll( groupTargetAxes, transformToSource::getGroupTargetAxes );
+		stride = transformToSource.getSourceStride();
+
+		targetAxisOrGroup = new int[ n ];
+		firstAxis = new int[ n ];
 		for ( int d = 0; d < n; ++d )
 		{
-			group[ d ] = transformToSource.getSourceGroup( d );
-			stride[ d ] = transformToSource.getSourceStride( d );
-		}
-
-		final int numGroups = transformToSource.numGroups();
-		start = new int[ numGroups + 1 ];
-		for ( int g = 0; g < numGroups; ++g )
-			start[ g + 1 ] = start[ g ] + transformToSource.getGroupTargetAxes( g ).length;
-		axis = new int[ start[ numGroups ] ];
-		dim = new long[ start[ numGroups ] ];
-		for ( int g = 0; g < numGroups; ++g )
-		{
-			final int[] axes = transformToSource.getGroupTargetAxes( g );
-			for ( int i = 0; i < axes.length; ++i )
+			final int g = transformToSource.getSourceGroup( d );
+			if ( g < 0 )
 			{
-				axis[ start[ g ] + i ] = axes[ i ];
-				dim[ start[ g ] + i ] = transformToSource.getTargetDimension( axes[ i ] );
+				// d is a singleton axis: skipped
+				targetAxisOrGroup[ d ] = -1;
+			}
+			else
+			{
+				final int[] group = groupTargetAxes[ g ];
+				firstAxis[ d ] = group[ 0 ];
+				if ( group.length == 1 )
+				{
+					// d belongs to a group with a single target axis:
+					// point to target axis directly
+					targetAxisOrGroup[ d ] = group[ 0 ];
+				}
+				else
+				{
+					// d belongs to a group with multiple target axis:
+					// encode the group index
+					targetAxisOrGroup[ d ] = encodeGroup( g );
+				}
 			}
 		}
-		flat = new long[ numGroups ];
-		digit = new long[ axis.length ];
 
-		tmpPosition = new long[ transformToSource.numTargetDimensions() ];
-		s.setPosition( tmpPosition );
+		targetPosition = new long[ targetDimensions.length ];
+		s.setPosition( targetPosition );
 	}
 
 	private ReshapeRandomAccess( final ReshapeRandomAccess< T > randomAccess )
@@ -152,14 +222,12 @@ public final class ReshapeRandomAccess< T > extends AbstractLocalizable implemen
 		super( randomAccess.positionAsLongArray() );
 
 		s = randomAccess.s.copy();
-		group = randomAccess.group;
 		stride = randomAccess.stride;
-		axis = randomAccess.axis;
-		dim = randomAccess.dim;
-		start = randomAccess.start;
-		flat = randomAccess.flat.clone();
-		digit = randomAccess.digit.clone();
-		tmpPosition = randomAccess.tmpPosition.clone();
+		targetAxisOrGroup = randomAccess.targetAxisOrGroup;
+		groupTargetAxes = randomAccess.groupTargetAxes;
+		firstAxis = randomAccess.firstAxis;
+		targetDimensions = randomAccess.targetDimensions;
+		targetPosition = randomAccess.targetPosition.clone();
 	}
 
 	/**
@@ -171,136 +239,114 @@ public final class ReshapeRandomAccess< T > extends AbstractLocalizable implemen
 	}
 
 	/**
-	 * Add {@code df} to the flat index of group {@code g}, and move the source
-	 * accordingly.
+	 * Add {@code df} to the flat index of the digit group with the given source
+	 * {@code axes}, and move the source accordingly.
+	 * <p>
+	 * This is an addition in a mixed-radix number system, starting from the
+	 * first (fastest) digit: If the sum is outside the range of the digit, then
+	 * the remainder is the new digit, and the (floored) quotient is carried, that
+	 * is, added to the next digit. It ends at the first digit without a carry.
+	 * The last digit is unbounded.
 	 */
-	private void moveGroup( final int g, final long df )
+	private void moveGroup( final int[] axes, long df )
 	{
-		flat[ g ] += df;
-		final int first = start[ g ];
-		final int last = start[ g + 1 ] - 1;
-		if ( first == last )
+		final int last = axes.length - 1;
+		for ( int i = 0; df != 0 && i < last; ++i )
 		{
-			digit[ first ] += df;
-			s.move( df, axis[ first ] );
-			return;
-		}
-
-		if ( df == 1 )
-		{
-			increment( first, last );
-			return;
-		}
-		if ( df == -1 )
-		{
-			decrement( first, last );
-			return;
-		}
-
-		final long d0 = dim[ first ];
-		if ( df > -d0 && df < d0 )
-		{
-			// at most one carry
-			final long p = digit[ first ] + df;
-			if ( p >= d0 )
+			final int a = axes[ i ];
+			final long p = targetPosition[ a ] + df;
+			if ( p >= 0 && p < targetDimensions[ a ] )
 			{
-				s.move( p - d0 - digit[ first ], axis[ first ] );
-				digit[ first ] = p - d0;
-				increment( first + 1, last );
+				s.move( df, a );
+				targetPosition[ a ] = p;
+				return;
 			}
-			else if ( p < 0 )
-			{
-				s.move( p + d0 - digit[ first ], axis[ first ] );
-				digit[ first ] = p + d0;
-				decrement( first + 1, last );
-			}
-			else
-			{
-				s.move( df, axis[ first ] );
-				digit[ first ] = p;
-			}
-			return;
+			final long q = floorDiv( p, targetDimensions[ a ] );
+			final long r = p - q * targetDimensions[ a ];
+			if ( r != targetPosition[ a ] )
+				s.move( r - targetPosition[ a ], a );
+			targetPosition[ a ] = r;
+			df = q;
 		}
-
-		// recompute the position in the group
-		long f = flat[ g ];
-		for ( int i = first; i < last; ++i )
+		if ( df != 0 )
 		{
-			final long q = floorDiv( f, dim[ i ] );
-			final long r = f - q * dim[ i ];
-			if ( r != digit[ i ] )
-			{
-				s.move( r - digit[ i ], axis[ i ] );
-				digit[ i ] = r;
-			}
-			f = q;
-		}
-		if ( f != digit[ last ] )
-		{
-			s.move( f - digit[ last ], axis[ last ] );
-			digit[ last ] = f;
+			s.move( df, axes[ last ] );
+			targetPosition[ axes[ last ] ] += df;
 		}
 	}
 
 	/**
-	 * Add 1 to digit {@code i}, with carry up to digit {@code last}.
+	 * Add 1 to the first digit, with carry.
 	 */
-	private void increment( int i, final int last )
+	private void increment( final int[] axes )
 	{
-		while ( i < last && digit[ i ] == dim[ i ] - 1 )
+		final int last = axes.length - 1;
+		int i = 0;
+		while ( i < last && targetPosition[ axes[ i ] ] == targetDimensions[ axes[ i ] ] - 1 )
 		{
-			s.move( -digit[ i ], axis[ i ] );
-			digit[ i ] = 0;
+			s.move( -targetPosition[ axes[ i ] ], axes[ i ] );
+			targetPosition[ axes[ i ] ] = 0;
 			++i;
 		}
-		s.fwd( axis[ i ] );
-		++digit[ i ];
+		s.fwd( axes[ i ] );
+		++targetPosition[ axes[ i ] ];
 	}
 
 	/**
-	 * Subtract 1 from digit {@code i}, with borrow up to digit {@code last}.
+	 * Subtract 1 from the first digit, with borrow.
 	 */
-	private void decrement( int i, final int last )
+	private void decrement( final int[] axes )
 	{
-		while ( i < last && digit[ i ] == 0 )
+		final int last = axes.length - 1;
+		int i = 0;
+		while ( i < last && targetPosition[ axes[ i ] ] == 0 )
 		{
-			final long max = dim[ i ] - 1;
-			s.move( max, axis[ i ] );
-			digit[ i ] = max;
+			final long max = targetDimensions[ axes[ i ] ] - 1;
+			s.move( max, axes[ i ] );
+			targetPosition[ axes[ i ] ] = max;
 			++i;
 		}
-		s.bck( axis[ i ] );
-		--digit[ i ];
+		s.bck( axes[ i ] );
+		--targetPosition[ axes[ i ] ];
 	}
 
 	/**
 	 * Recompute the source position from {@link #position} and set it.
+	 * <p>
+	 * This is equivalent to {@link ReshapeTransform#apply}, but goes backwards
+	 * through the dimensions, summing up the flat index {@code f} of the current
+	 * group. The first dimension of each group has stride 1. When we get there,
+	 * {@code f} is complete.
 	 */
 	private void updateAll()
 	{
-		Arrays.fill( flat, 0 );
-		for ( int d = 0; d < n; ++d )
+		long f = 0;
+		for ( int d = n - 1; d >= 0; --d )
 		{
-			final int g = group[ d ];
-			if ( g >= 0 )
-				flat[ g ] += stride[ d ] * position[ d ];
-		}
-		for ( int g = 0; g < flat.length; ++g )
-		{
-			final int last = start[ g + 1 ] - 1;
-			long f = flat[ g ];
-			for ( int i = start[ g ]; i < last; ++i )
+			final long st = stride[ d ];
+			f += st * position[ d ];
+			if ( st == 1 )
 			{
-				final long q = floorDiv( f, dim[ i ] );
-				final long r = f - q * dim[ i ];
-				digit[ i ] = r;
-				tmpPosition[ axis[ i ] ] = r;
-				f = q;
+				final int t = targetAxisOrGroup[ d ];
+				if ( t >= 0 )
+					targetPosition[ t ] = f;
+				else
+				{
+					final int[] axes = groupTargetAxes[ decodeGroup( t ) ];
+					final int last = axes.length - 1;
+					for ( int i = 0; i < last; ++i )
+					{
+						final int a = axes[ i ];
+						final long q = floorDiv( f, targetDimensions[ a ] );
+						targetPosition[ a ] = f - q * targetDimensions[ a ];
+						f = q;
+					}
+					targetPosition[ axes[ last ] ] = f;
+				}
+				f = 0;
 			}
-			digit[ last ] = f;
-			tmpPosition[ axis[ last ] ] = f;
 		}
-		s.setPosition( tmpPosition );
+		s.setPosition( targetPosition );
 	}
 
 	@Override
@@ -308,9 +354,33 @@ public final class ReshapeRandomAccess< T > extends AbstractLocalizable implemen
 	{
 		assert d < n;
 		++position[ d ];
-		final int g = group[ d ];
-		if ( g >= 0 )
-			moveGroup( g, stride[ d ] );
+		final long st = stride[ d ];
+		if ( st == 1 )
+		{
+			final int t = targetAxisOrGroup[ d ];
+			if ( t >= 0 )
+				s.fwd( t );
+			else
+			{
+				// in most cases, only the first digit changes
+				final int a = firstAxis[ d ];
+				if ( targetPosition[ a ] < targetDimensions[ a ] - 1 )
+				{
+					++targetPosition[ a ];
+					s.fwd( a );
+				}
+				else
+					increment( groupTargetAxes[ decodeGroup( t ) ] );
+			}
+		}
+		else if ( st != 0 )
+		{
+			final int t = targetAxisOrGroup[ d ];
+			if ( t >= 0 )
+				s.move( st, t );
+			else
+				moveGroup( groupTargetAxes[ decodeGroup( t ) ], st );
+		}
 	}
 
 	@Override
@@ -318,9 +388,33 @@ public final class ReshapeRandomAccess< T > extends AbstractLocalizable implemen
 	{
 		assert d < n;
 		--position[ d ];
-		final int g = group[ d ];
-		if ( g >= 0 )
-			moveGroup( g, -stride[ d ] );
+		final long st = stride[ d ];
+		if ( st == 1 )
+		{
+			final int t = targetAxisOrGroup[ d ];
+			if ( t >= 0 )
+				s.bck( t );
+			else
+			{
+				// in most cases, only the first digit changes
+				final int a = firstAxis[ d ];
+				if ( targetPosition[ a ] > 0 )
+				{
+					--targetPosition[ a ];
+					s.bck( a );
+				}
+				else
+					decrement( groupTargetAxes[ decodeGroup( t ) ] );
+			}
+		}
+		else if ( st != 0 )
+		{
+			final int t = targetAxisOrGroup[ d ];
+			if ( t >= 0 )
+				s.move( -st, t );
+			else
+				moveGroup( groupTargetAxes[ decodeGroup( t ) ], -st );
+		}
 	}
 
 	@Override
@@ -334,9 +428,11 @@ public final class ReshapeRandomAccess< T > extends AbstractLocalizable implemen
 	{
 		assert d < n;
 		position[ d ] += distance;
-		final int g = group[ d ];
-		if ( g >= 0 && distance != 0 )
-			moveGroup( g, distance * stride[ d ] );
+		final int t = targetAxisOrGroup[ d ];
+		if ( t >= 0 )
+			s.move( distance * stride[ d ], t );
+		else if ( t != -1 )
+			moveGroup( groupTargetAxes[ decodeGroup( t ) ], distance * stride[ d ] );
 	}
 
 	@Override
@@ -405,9 +501,11 @@ public final class ReshapeRandomAccess< T > extends AbstractLocalizable implemen
 		assert d < n;
 		final long distance = pos - position[ d ];
 		position[ d ] = pos;
-		final int g = group[ d ];
-		if ( g >= 0 && distance != 0 )
-			moveGroup( g, distance * stride[ d ] );
+		final int t = targetAxisOrGroup[ d ];
+		if ( t >= 0 )
+			s.move( distance * stride[ d ], t );
+		else if ( t != -1 )
+			moveGroup( groupTargetAxes[ decodeGroup( t ) ], distance * stride[ d ] );
 	}
 
 	@Override
