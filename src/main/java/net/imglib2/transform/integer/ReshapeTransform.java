@@ -268,6 +268,17 @@ public class ReshapeTransform implements InvertibleTransform, BoundingBoxTransfo
 	}
 
 	/**
+	 * For each source dimension, its stride in the flat index of its group (0
+	 * for size-1 dimensions).
+	 *
+	 * @return a copy of the source strides.
+	 */
+	public long[] getSourceStride()
+	{
+		return sourceStride.clone();
+	}
+
+	/**
 	 * @return a copy of the non-singleton source dimensions of group
 	 *         {@code g}, in increasing order.
 	 */
