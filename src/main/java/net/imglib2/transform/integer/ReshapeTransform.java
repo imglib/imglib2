@@ -34,7 +34,12 @@
 
 package net.imglib2.transform.integer;
 
+import static net.imglib2.Dimensions.verifyAllPositive;
+import static net.imglib2.util.Intervals.numElements;
+
 import java.util.Arrays;
+import java.util.function.LongPredicate;
+import java.util.stream.IntStream;
 
 import net.imglib2.Localizable;
 import net.imglib2.Positionable;
@@ -195,51 +200,27 @@ public class ReshapeTransform implements InvertibleTransform, BoundingBoxTransfo
 
 	private static void checkDimensions( final long[] sourceDimensions, final long[] targetDimensions )
 	{
-		checkPositive( sourceDimensions, "source" );
-		checkPositive( targetDimensions, "target" );
-		long ns = 1, nt = 1;
-		for ( final long d : sourceDimensions )
-			ns *= d;
-		for ( final long d : targetDimensions )
-			nt *= d;
+		final long ns = numElements( verifyAllPositive( sourceDimensions ));
+		final long nt = numElements( verifyAllPositive( targetDimensions ));
 		if ( ns != nt )
 			throw new IllegalArgumentException( "cannot reshape "
 					+ Arrays.toString( sourceDimensions ) + " (" + ns + " elements) to "
 					+ Arrays.toString( targetDimensions ) + " (" + nt + " elements)" );
 	}
 
-	private static void checkPositive( final long[] dimensions, final String which )
-	{
-		for ( int d = 0; d < dimensions.length; ++d )
-			if ( dimensions[ d ] <= 0 )
-				throw new IllegalArgumentException( "reshape dimensions must be positive, but "
-						+ which + " dimension " + d + " is " + dimensions[ d ] );
-	}
-
 	private static int[] nonSingletonAxes( final long[] dimensions )
 	{
-		int count = 0;
-		for ( final long d : dimensions )
-			if ( d != 1 )
-				++count;
-		final int[] axes = new int[ count ];
-		for ( int d = 0, i = 0; d < dimensions.length; ++d )
-			if ( dimensions[ d ] != 1 )
-				axes[ i++ ] = d;
-		return axes;
+		return filterAxes( dimensions, dim -> dim != 1 );
 	}
 
 	private static int[] singletonAxes( final long[] dimensions )
 	{
-		int count = 0;
-		for ( final long d : dimensions )
-			if ( d == 1 )
-				++count;
-		final int[] axes = new int[ count ];
-		for ( int d = 0, i = 0; d < dimensions.length; ++d )
-			if ( dimensions[ d ] == 1 )
-				axes[ i++ ] = d;
-		return axes;
+		return filterAxes( dimensions, dim -> dim == 1 );
+	}
+
+	private static int[] filterAxes( final long[] dimensions, final LongPredicate predicate )
+	{
+		return IntStream.range( 0, dimensions.length ).filter( i -> predicate.test( dimensions[ i ] ) ).toArray();
 	}
 
 	@Override
