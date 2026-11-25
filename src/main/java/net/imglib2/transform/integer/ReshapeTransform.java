@@ -90,11 +90,6 @@ public class ReshapeTransform implements InvertibleTransform, BoundingBoxTransfo
 	private final long[] sourceStride;
 
 	/**
-	 * For each target dimension, the group it belongs to, or -1 if it has size 1.
-	 */
-	private final int[] targetGroup;
-
-	/**
 	 * For each group, its non-singleton source dimensions, in increasing order.
 	 */
 	private final int[][] groupSourceAxes;
@@ -136,9 +131,7 @@ public class ReshapeTransform implements InvertibleTransform, BoundingBoxTransfo
 		final int m = targetDimensions.length;
 		sourceGroup = new int[ n ];
 		sourceStride = new long[ n ];
-		targetGroup = new int[ m ];
 		Arrays.fill( sourceGroup, -1 );
-		Arrays.fill( targetGroup, -1 );
 
 		final int[] sourceAxes = nonSingletonAxes( sourceDimensions );
 		final int[] targetAxes = nonSingletonAxes( targetDimensions );
@@ -157,7 +150,6 @@ public class ReshapeTransform implements InvertibleTransform, BoundingBoxTransfo
 			sourceStride[ sourceAxes[ v ] ] = pv;
 			sourceGroup[ sourceAxes[ v ] ] = g;
 			pv *= sourceDimensions[ sourceAxes[ v++ ] ];
-			targetGroup[ targetAxes[ t ] ] = g;
 			pt *= targetDimensions[ targetAxes[ t++ ] ];
 			while ( pv != pt )
 			{
@@ -168,10 +160,7 @@ public class ReshapeTransform implements InvertibleTransform, BoundingBoxTransfo
 					pv *= sourceDimensions[ sourceAxes[ v++ ] ];
 				}
 				else
-				{
-					targetGroup[ targetAxes[ t ] ] = g;
 					pt *= targetDimensions[ targetAxes[ t++ ] ];
-				}
 			}
 			sourceEnd[ g ] = v;
 			targetEnd[ g ] = t;
@@ -276,15 +265,6 @@ public class ReshapeTransform implements InvertibleTransform, BoundingBoxTransfo
 	public long getSourceStride( final int d )
 	{
 		return sourceStride[ d ];
-	}
-
-	/**
-	 * @return the group target dimension {@code d} belongs to, or -1 if it has
-	 *         size 1 (and is always 0).
-	 */
-	public int getTargetGroup( final int d )
-	{
-		return targetGroup[ d ];
 	}
 
 	/**
