@@ -95,12 +95,6 @@ public class ReshapeTransform implements InvertibleTransform, BoundingBoxTransfo
 	private final int[] targetGroup;
 
 	/**
-	 * For each target dimension, its stride in the flat index of its group (0
-	 * for size-1 dimensions).
-	 */
-	private final long[] targetStride;
-
-	/**
 	 * For each group, its non-singleton source dimensions, in increasing order.
 	 */
 	private final int[][] groupSourceAxes;
@@ -143,7 +137,6 @@ public class ReshapeTransform implements InvertibleTransform, BoundingBoxTransfo
 		sourceGroup = new int[ n ];
 		sourceStride = new long[ n ];
 		targetGroup = new int[ m ];
-		targetStride = new long[ m ];
 		Arrays.fill( sourceGroup, -1 );
 		Arrays.fill( targetGroup, -1 );
 
@@ -164,7 +157,6 @@ public class ReshapeTransform implements InvertibleTransform, BoundingBoxTransfo
 			sourceStride[ sourceAxes[ v ] ] = pv;
 			sourceGroup[ sourceAxes[ v ] ] = g;
 			pv *= sourceDimensions[ sourceAxes[ v++ ] ];
-			targetStride[ targetAxes[ t ] ] = pt;
 			targetGroup[ targetAxes[ t ] ] = g;
 			pt *= targetDimensions[ targetAxes[ t++ ] ];
 			while ( pv != pt )
@@ -177,7 +169,6 @@ public class ReshapeTransform implements InvertibleTransform, BoundingBoxTransfo
 				}
 				else
 				{
-					targetStride[ targetAxes[ t ] ] = pt;
 					targetGroup[ targetAxes[ t ] ] = g;
 					pt *= targetDimensions[ targetAxes[ t++ ] ];
 				}
@@ -294,15 +285,6 @@ public class ReshapeTransform implements InvertibleTransform, BoundingBoxTransfo
 	public int getTargetGroup( final int d )
 	{
 		return targetGroup[ d ];
-	}
-
-	/**
-	 * @return the stride of target dimension {@code d} in the flat index of its
-	 *         group, or 0 if it has size 1.
-	 */
-	public long getTargetStride( final int d )
-	{
-		return targetStride[ d ];
 	}
 
 	/**

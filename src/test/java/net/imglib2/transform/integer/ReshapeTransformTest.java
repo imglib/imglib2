@@ -102,8 +102,6 @@ public class ReshapeTransformTest
 		assertArrayEquals( new int[] { 1, 2 }, t.getGroupTargetAxes( 1 ) );
 		assertEquals( -1, t.getSourceGroup( 1 ) );
 		assertEquals( 0, t.getSourceStride( 1 ) );
-		assertEquals( 1, t.getTargetStride( 1 ) );
-		assertEquals( 2, t.getTargetStride( 2 ) );
 	}
 
 	@Test
@@ -182,10 +180,10 @@ public class ReshapeTransformTest
 				fv += t.getSourceStride( d ) * view[ d ];
 			long ft = 0;
 			final int[] tAxes = t.getGroupTargetAxes( g );
-			for ( int i = 0; i < tAxes.length; ++i )
+			for ( int i = tAxes.length - 1; i >= 0; --i )
 			{
 				final int d = tAxes[ i ];
-				ft += t.getTargetStride( d ) * target[ d ];
+				ft = ft * t.getTargetDimension( d ) + target[ d ];
 				if ( i < tAxes.length - 1 )
 					assertTrue( target[ d ] >= 0 && target[ d ] < t.getTargetDimension( d ) );
 			}
