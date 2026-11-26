@@ -33,9 +33,12 @@
  */
 package net.imglib2.view;
 
+import java.util.Arrays;
 import java.util.concurrent.TimeUnit;
 
 import net.imglib2.Cursor;
+import net.imglib2.FinalInterval;
+import net.imglib2.Interval;
 import net.imglib2.RandomAccess;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.img.Img;
@@ -44,6 +47,7 @@ import net.imglib2.img.cell.CellImgFactory;
 import net.imglib2.iterator.LocalizingIntervalIterator;
 import net.imglib2.loops.LoopBuilder;
 import net.imglib2.type.numeric.integer.IntType;
+import net.imglib2.util.IntervalIndexer;
 import net.imglib2.util.Intervals;
 
 import org.openjdk.jmh.annotations.Benchmark;
@@ -81,6 +85,14 @@ import org.openjdk.jmh.runner.options.OptionsBuilder;
  * {@link Views#reshape} expresses as a {@code MixedTransform}.</li>
  * <li>{@code translate3d} &mdash; not a reshape, but {@code Views.translate},
  * for comparison with another {@code MixedTransform} view.</li>
+ * <li>{@code noneCrop}, {@code merge2dCrop}, {@code general3dCrop} &mdash;
+ * one element is cropped off each side of every axis, such that the elements
+ * are not a contiguous run of the source. Cursors and {@code LoopBuilder} then
+ * move a {@code ReshapeRandomAccess} incrementally. {@code noneCrop} crops the
+ * image itself, and is the baseline for the others. {@code general3dCrop} crops
+ * {@code general3d} (not benchmarked separately), a reshape to
+ * {@code (2 * d0, d1 / 2, d2)}, whose first group has two axes on both sides
+ * (merges two source axes then splits into two target axes).</li>
  * </ul>
  * <p>
  * Note when reading the numbers: reshape preserves flat iteration order, so
@@ -108,12 +120,12 @@ public class ReshapeViewBenchmark
 
 	static final String[] IMG_TYPES = { "ArrayImg", "CellImg" };
 
-	private static final String[] VIEW_SHAPES = { "none", "flat1d", "merge2d", "identity3d", "split4d", "singleton4d", "translate3d" };
+	private static final String[] VIEW_SHAPES = { "none", "flat1d", "merge2d", "identity3d", "split4d", "singleton4d", "translate3d", "noneCrop", "merge2dCrop", "general3dCrop" };
 
 	@Param( { "ArrayImg", "CellImg" } )
 	String imgType;
 
-	@Param( { "none", "flat1d", "merge2d", "identity3d", "split4d", "singleton4d", "translate3d" } )
+	@Param( { "none", "flat1d", "merge2d", "identity3d", "split4d", "singleton4d", "translate3d", "noneCrop", "merge2dCrop", "general3dCrop" } )
 	String viewShape;
 
 	private RandomAccessibleInterval< IntType > subject;
@@ -240,6 +252,15 @@ public class ReshapeViewBenchmark
 		final int n = dims.length;
 		switch ( viewShape )
 		{
+		case "none":
+			return dims.clone();
+		case "general3d":
+			if ( dims[ 1 ] % 2 != 0 )
+				throw new IllegalArgumentException( "dimension 1 must be even" );
+			final long[] g = dims.clone();
+			g[ 0 ] *= 2;
+			g[ 1 ] /= 2;
+			return g;
 		case "flat1d":
 			return new long[] { Intervals.numElements( dims ) };
 		case "merge2d":
@@ -275,6 +296,10 @@ public class ReshapeViewBenchmark
 
 	static RandomAccessibleInterval< IntType > wrap( final Img< IntType > img, final String viewShape, final long[] dims, final long split )
 	{
+		if ( isCrop( viewShape ) )
+			return Views.interval( wrap( img, uncropped( viewShape ), dims, split ),
+					cropInterval( viewDims( uncropped( viewShape ), dims, split ) ) );
+
 		switch ( viewShape )
 		{
 		case "none":
@@ -286,6 +311,24 @@ public class ReshapeViewBenchmark
 		}
 	}
 
+	private static final String CROP_SUFFIX = "Crop";
+
+	private static boolean isCrop( final String viewShape )
+	{
+		return viewShape.endsWith( CROP_SUFFIX );
+	}
+
+	private static String uncropped( final String viewShape )
+	{
+		return viewShape.substring( 0, viewShape.length() - CROP_SUFFIX.length() );
+	}
+
+	/** Crop one element off each side of every axis. */
+	private static Interval cropInterval( final long[] viewDims )
+	{
+		return Intervals.expand( new FinalInterval( viewDims ), -1 );
+	}
+
 	/*
 	 * Self check.
 	 */
@@ -293,12 +336,12 @@ public class ReshapeViewBenchmark
 	/**
 	 * A loop that silently visited nothing would report a spectacular and
 	 * entirely fake speedup. Run every (imgType, viewShape, loop) combination
-	 * once over a small image and check that each element was incremented
-	 * exactly once.
+	 * once over a small image and check that each element of the view was
+	 * incremented exactly once, and no other element of the image was touched.
 	 */
 	static void selfCheck()
 	{
-		final long[] dims = { 5, 4, 6 };
+		final long[] dims = { 5, 8, 6 };
 		final int[] cellDims = { 2, 3, 4 };
 		for ( final String imgType : IMG_TYPES )
 			for ( final String viewShape : VIEW_SHAPES )
@@ -307,21 +350,43 @@ public class ReshapeViewBenchmark
 					final Img< IntType > img = createImg( imgType, dims, cellDims );
 					final RandomAccessibleInterval< IntType > s = wrap( img, viewShape, dims, 2 );
 					runLoop( loop, s );
-					checkAllOnes( img, imgType + " / " + viewShape + " / " + loop );
+					checkIncrements( img, expectedIncrements( viewShape, dims, 2 ), imgType + " / " + viewShape + " / " + loop );
 				}
 		System.out.println( "selfCheck: OK" );
 	}
 
-	static void checkAllOnes( final Img< IntType > img, final String what )
+	/**
+	 * For each element of the image (in flat order), how often it should be
+	 * incremented. Computed from flat indices, without using any views.
+	 */
+	private static int[] expectedIncrements( final String viewShape, final long[] dims, final long split )
 	{
-		final Cursor< IntType > c = img.cursor();
-		long i = 0;
-		while ( c.hasNext() )
+		final int[] expected = new int[ ( int ) Intervals.numElements( dims ) ];
+		if ( !isCrop( viewShape ) )
+		{
+			Arrays.fill( expected, 1 );
+			return expected;
+		}
+		final long[] viewDims = viewDims( uncropped( viewShape ), dims, split );
+		final LocalizingIntervalIterator it = new LocalizingIntervalIterator( cropInterval( viewDims ) );
+		final long[] pos = new long[ viewDims.length ];
+		while ( it.hasNext() )
+		{
+			it.fwd();
+			it.localize( pos );
+			expected[ ( int ) IntervalIndexer.positionToIndex( pos, viewDims ) ] = 1;
+		}
+		return expected;
+	}
+
+	private static void checkIncrements( final Img< IntType > img, final int[] expected, final String what )
+	{
+		final Cursor< IntType > c = Views.flatIterable( img ).cursor();
+		for ( int i = 0; i < expected.length; ++i )
 		{
 			final int v = c.next().get();
-			if ( v != 1 )
-				throw new AssertionError( what + ": element " + i + " is " + v + ", expected 1" );
-			++i;
+			if ( v != expected[ i ] )
+				throw new AssertionError( what + ": element " + i + " is " + v + ", expected " + expected[ i ] );
 		}
 	}
 
