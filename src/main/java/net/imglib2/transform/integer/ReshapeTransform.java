@@ -49,24 +49,63 @@ import net.imglib2.transform.InvertibleTransform;
  * A reshape: maps positions in an n-dimensional source (the view) to positions
  * in an m-dimensional target (the underlying image) with the same number of
  * elements, such that both are traversed in the same flat order (dimension 0
- * fastest). This is the transform used by
+ * fastest). Both source and target are zero-min. This is the transform used by
  * {@link net.imglib2.view.Views#reshape}.
- * <p>
- * Both source and target are zero-min. The two shapes are cut into independent
- * <em>groups</em> wherever their running products (ignoring size-1 axes)
- * coincide. Within a group, the source position is flattened to an index
- * {@code f} and {@code f} is unflattened into the target axes of the group. A
- * group with a single target axis (a <em>split</em>, or a copy) is linear and
- * needs no division.
- * <p>
- * Size-1 axes are not part of any group: a size-1 source axis does not
- * contribute to the target position, and a size-1 target axis is always 0.
- * <p>
+ *
+ * <h2>Groups</h2>
+ *
+ * Ignoring axes of size 1, the source and target shapes are cut into
+ * independent <em>groups</em> wherever their running products coincide. For
+ * example
+ *
+ * <pre>
+ * source  [ 300 | 10   2 | 40   ]
+ * target  [ 300 | 20     | 5  8 ]
+ * </pre>
+ *
+ * Each group maps consecutive source axes to consecutive target axes: The
+ * source positions within a group are flattened to an index {@code f}, which is
+ * then unflattened to the group's target axes. To flatten, every source axis
+ * has a <em>stride</em>: {@code f} is the sum of {@code stride * position} over
+ * the source axes of the group. For the above example:
+ *
+ * <pre>
+ * source axis         0      1       2      3
+ * sourceGroup         0      1       1      2
+ * sourceStride        1      1      10      1
+ *
+ * group               0      1       2
+ * groupSourceAxes   { 0 }  { 1, 2 } { 3 }
+ * groupTargetAxes   { 0 }  { 1 }    { 2, 3 }
+ * </pre>
+ *
+ * If a group has a single target axis, the target position is just {@code f}.
+ * Only groups with several target axes need division. We call these <em>digit
+ * groups</em>, because the target positions are the digits of {@code f}, in a
+ * number system where the dimensions of the target axes are the bases.
+ *
+ * <h2>Strides</h2>
+ *
+ * The first (fastest) source axis of every group has stride 1. All other axes
+ * of the group have larger strides, because all axes in the group have a size
+ * of at least 2. Source axes of size 1 are not in any group, and have stride 0.
+ * Therefore, the stride of a source axis is 1 if and only if it is the first
+ * axis of a group. (This is used by {@code ReshapeRandomAccess} to
+ *
+ * <h2>Axes of size 1</h2>
+ *
+ * Axes of size 1 are not in any group. Source axes of size 1 do not affect the
+ * target position. Target axes of size 1 are always at position 0.
+ *
+ * <h2>Out of bounds</h2>
+ *
  * Positions outside the source interval are mapped using floor division, so
- * that the map is consistent with incremental moves: the outermost target axis
- * of each group is unbounded, all other target axes of the group stay inside
- * their dimensions.
- * <p>
+ * that the map is consistent with incremental moves: The last (slowest) target
+ * axis of each group is unbounded. All other target axes of the group stay
+ * inside their dimensions.
+ *
+ * <h2>Concatenation</h2>
+ *
  * Unlike {@link Mixed} transforms, a reshape depends on the dimensions of the
  * source and target, and it can only be concatenated with a reshape whose
  * target dimensions match its source dimensions (see
