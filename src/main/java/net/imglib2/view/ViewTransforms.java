@@ -33,11 +33,13 @@
  */
 package net.imglib2.view;
 
+import net.imglib2.Dimensions;
 import net.imglib2.Interval;
 import net.imglib2.RandomAccessible;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.transform.integer.Mixed;
 import net.imglib2.transform.integer.MixedTransform;
+import net.imglib2.transform.integer.ReshapeTransform;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -90,6 +92,27 @@ public class ViewTransforms
 		t.setComponentMapping( component );
 		t.setComponentZero( zero );
 		return t;
+	}
+
+	/**
+	 * Returns the transformation that is used by
+	 * {@link Views#reshape(RandomAccessibleInterval, long...)}: the reshape
+	 * from (zero-min) view coordinates with the given {@code dimensions} to
+	 * (zero-min) coordinates in {@code source}.
+	 * <p>
+	 * Warning: The transformations used in {@link Views} are always inverse to
+	 * the operations that are performed by the views.
+	 *
+	 * @throws IllegalArgumentException
+	 *             if {@code dimensions} is empty, contains a non-positive
+	 *             value, or has a different number of elements than
+	 *             {@code source}.
+	 */
+	public static ReshapeTransform reshape( final Dimensions source, final long... dimensions )
+	{
+		if ( dimensions.length == 0 )
+			throw new IllegalArgumentException( "reshape requires at least one dimension" );
+		return new ReshapeTransform( dimensions, source.dimensionsAsLongArray() );
 	}
 
 	/**

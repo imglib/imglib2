@@ -38,7 +38,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import net.imglib2.Dimensions;
 import net.imglib2.EuclideanSpace;
+import net.imglib2.FinalInterval;
 import net.imglib2.FlatIterationOrder;
 import net.imglib2.Interval;
 import net.imglib2.IterableInterval;
@@ -58,6 +60,7 @@ import net.imglib2.outofbounds.OutOfBoundsPeriodicFactory;
 import net.imglib2.outofbounds.OutOfBoundsRandomValueFactory;
 import net.imglib2.transform.integer.BoundingBox;
 import net.imglib2.transform.integer.Mixed;
+import net.imglib2.transform.integer.ReshapeTransform;
 import net.imglib2.transform.integer.permutation.AbstractPermutationTransform;
 import net.imglib2.transform.integer.permutation.PermutationTransform;
 import net.imglib2.transform.integer.permutation.SingleDimensionPermutationTransform;
@@ -525,6 +528,51 @@ public class Views
 	public static < T > RandomAccessibleInterval< T > selectAxes( final RandomAccessibleInterval< T > parent, final int... axes )
 	{
 		return Views.interval( Views.selectAxes( ( RandomAccessible< T > ) parent, axes), Intervals.selectAxes( parent, axes ) );
+	}
+
+	/**
+	 * Create a view of {@code source} with the given {@code dimensions} and
+	 * the same elements in the same flat iteration order (dimension 0
+	 * fastest), like {@code numpy.reshape}. The view is zero-min, and only the
+	 * dimensions of {@code source} matter, not its min.
+	 * <p>
+	 * A reshape that only inserts or removes dimensions of size 1 is
+	 * expressed as a {@link MixedTransformView}, all others use a
+	 * {@link ReshapeTransformView}.
+	 *
+	 * @param source
+	 *            the {@link RandomAccessibleInterval} to reshape
+	 * @param dimensions
+	 *            the dimensions of the view. Must have the same number of
+	 *            elements as {@code source}.
+	 * @return the reshaped view
+	 * @throws IllegalArgumentException
+	 *             if {@code dimensions} is empty, contains a non-positive
+	 *             value, or has a different number of elements than
+	 *             {@code source}.
+	 */
+	public static < T > RandomAccessibleInterval< T > reshape( final RandomAccessibleInterval< T > source, final long... dimensions )
+	{
+		final ReshapeTransform t = ViewTransforms.reshape( source, dimensions );
+		final RandomAccessibleInterval< T > zeroMin = isZeroMin( source ) ? source : zeroMin( source );
+		if ( t.isIdentity() )
+			return zeroMin;
+		final RandomAccessible< T > view = t.isSingletonOnly()
+				? new MixedTransformView<>( zeroMin, t.toMixed() )
+				: new ReshapeTransformView<>( zeroMin, t );
+		return interval( view, new FinalInterval( dimensions ) );
+	}
+
+	/**
+	 * Create a view of {@code source} with the given {@code dimensions} and
+	 * the same elements in the same flat iteration order (dimension 0
+	 * fastest), like {@code numpy.reshape}.
+	 *
+	 * @see #reshape(RandomAccessibleInterval, long...)
+	 */
+	public static < T > RandomAccessibleInterval< T > reshape( final RandomAccessibleInterval< T > source, final Dimensions dimensions )
+	{
+		return reshape( source, dimensions.dimensionsAsLongArray() );
 	}
 
 	/**
